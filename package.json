@@ -1,41 +1,45 @@
 {
-  "name": "styleframe",
-  "version": "0.0.1",
-  "description": "Write modern, clean, composable CSS using Typescript, with a focus on simplicity and performance.",
-  "author": "Alex Grozav <alex@styleframe.dev>",
-  "scripts": {
-    "build": "turbo run build",
-    "prepare": "husky"
-  },
-  "keywords": [
-    "styleframe",
-    "css"
-  ],
-  "homepage": "https://styleframe.dev",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/styleframe-dev/styleframe"
-  },
-  "bugs": {
-    "email": "support@styleframe.dev",
-    "url": "https://github.com/styleframe-dev/styleframe/issues"
-  },
-  "devDependencies": {
-    "@styleframe/config-typescript": "workspace:*",
-    "husky": "catalog:",
-    "lint-staged": "catalog:",
-    "oxlint": "catalog:",
-    "turbo": "catalog:",
-    "typescript": "catalog:"
-  },
-  "packageManager": "pnpm@10.7.1+sha512.2d92c86b7928dc8284f53494fb4201f983da65f0fb4f0d40baafa5cf628fa31dae3e5968f12466f17df7e97310e30f343a648baea1b9b350685dafafffdf5808",
-  "engines": {
-    "node": ">=7.6.0"
-  },
-  "lint-staged": {
-    "*.{js,ts,jsx,tsx}": [
-      "oxlint --fix"
-    ]
-  },
-  "license": "MIT"
+	"name": "styleframe",
+	"version": "0.0.1",
+	"description": "Write modern, clean, composable CSS using Typescript, with a focus on simplicity and performance.",
+	"author": "Alex Grozav <alex@styleframe.dev>",
+	"scripts": {
+		"build": "turbo run build",
+		"lint": "oxlint",
+		"format": "biome format --write",
+		"prepare": "husky"
+	},
+	"keywords": [
+		"styleframe",
+		"css"
+	],
+	"homepage": "https://styleframe.dev",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/styleframe-dev/styleframe"
+	},
+	"bugs": {
+		"email": "support@styleframe.dev",
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.0.0",
+		"@styleframe/config-typescript": "workspace:*",
+		"husky": "catalog:",
+		"lint-staged": "catalog:",
+		"oxlint": "catalog:",
+		"turbo": "catalog:",
+		"typescript": "catalog:"
+	},
+	"packageManager": "pnpm@10.7.1+sha512.2d92c86b7928dc8284f53494fb4201f983da65f0fb4f0d40baafa5cf628fa31dae3e5968f12466f17df7e97310e30f343a648baea1b9b350685dafafffdf5808",
+	"engines": {
+		"node": ">=7.6.0"
+	},
+	"lint-staged": {
+		"*.{js,ts,jsx,tsx}": [
+			"biome format --write",
+			"oxlint --fix"
+		]
+	},
+	"license": "MIT"
 }
