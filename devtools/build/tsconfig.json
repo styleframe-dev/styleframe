@@ -1,0 +1,4 @@
+{
+	"extends": "@styleframe/config-typescript",
+	"include": ["src"]
+}

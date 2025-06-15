@@ -9,3 +9,5 @@ yarn-error.log*
 .pnp.js
 
 .vscode/*
+
+.turbo

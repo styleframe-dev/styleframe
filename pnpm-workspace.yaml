@@ -1,11 +1,15 @@
 packages:
-  - config/**
-  - devtools/**
-  - docs
-
+    - config/**
+    - devtools/**
+    - docs
 catalog:
-  lint-staged: ^16.1.2
-  husky: ^9.1.7
-  oxlint: ^1.2.0
-  typescript: ^5.8.3
-  turbo: ^2.5.4
+    '@types/node': ^22.14.0
+    lint-staged: ^16.1.2
+    husky: ^9.1.7
+    oxlint: ^1.2.0
+    typescript: ^5.8.3
+    turbo: ^2.5.4
+    vite: ^6.3.5
+    vite-plugin-dts: ^4.5.4
+onlyBuiltDependencies:
+    - esbuild
