@@ -36,8 +36,10 @@
 		"node": ">=7.6.0"
 	},
 	"lint-staged": {
+		"*.{js,ts,jsx,tsx,json,yaml}": [
+			"biome format --write"
+		],
 		"*.{js,ts,jsx,tsx}": [
-			"biome format --write",
 			"oxlint --fix"
 		]
 	},
