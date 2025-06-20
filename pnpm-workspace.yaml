@@ -8,3 +8,4 @@ catalog:
   husky: ^9.1.7
   oxlint: ^1.2.0
   typescript: ^5.8.3
+  turbo: ^2.5.4
