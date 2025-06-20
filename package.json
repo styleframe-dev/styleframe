@@ -4,7 +4,8 @@
   "description": "Write modern, clean, composable CSS using Typescript, with a focus on simplicity and performance.",
   "author": "Alex Grozav <alex@styleframe.dev>",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "husky install"
   },
   "main": "dist/index.js",
   "keywords": [
@@ -20,9 +21,11 @@
     "email": "support@styleframe.dev",
     "url": "https://github.com/styleframe-dev/styleframe/issues"
   },
-  "dependencies": {},
   "devDependencies": {
-    "typescript": "^5.8.3"
+    "husky": "catalog:",
+    "lint-staged": "catalog:",
+    "oxlint": "catalog:",
+    "typescript": "catalog:"
   },
   "packageManager": "pnpm@10.7.1+sha512.2d92c86b7928dc8284f53494fb4201f983da65f0fb4f0d40baafa5cf628fa31dae3e5968f12466f17df7e97310e30f343a648baea1b9b350685dafafffdf5808",
   "engines": {
