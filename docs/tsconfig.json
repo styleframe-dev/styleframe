@@ -1,0 +1,3 @@
+{
+	"extends": ["@styleframe/config-typescript", "./.nuxt/tsconfig.json"]
+}
