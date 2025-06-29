@@ -106,13 +106,16 @@ importers:
         version: 11.10.0
       docus:
         specifier: latest
-        version: 3.0.3(@babel/parser@7.27.5)(@unhead/vue@2.0.10(vue@3.5.17(typescript@5.8.3)))(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0))(embla-carousel@8.6.0)(ioredis@5.6.1)(jwt-decode@4.0.0)(magicast@0.3.5)(nuxt@3.17.5(@biomejs/biome@2.0.0)(@parcel/watcher@2.5.1)(@types/node@22.15.32)(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(rollup@4.44.0)(terser@5.43.1)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(yaml@2.8.0))(typescript@5.8.3)(unstorage@1.16.0(db0@0.3.2(better-sqlite3@11.10.0))(ioredis@5.6.1))(valibot@1.1.0(typescript@5.8.3))(vite@6.3.5(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(vue-router@4.5.1(vue@3.5.17(typescript@5.8.3)))(vue@3.5.17(typescript@5.8.3))(zod@3.25.67)
+        version: 3.0.4(@babel/parser@7.27.5)(@unhead/vue@2.0.10(vue@3.5.17(typescript@5.8.3)))(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0))(embla-carousel@8.6.0)(ioredis@5.6.1)(jwt-decode@4.0.0)(magicast@0.3.5)(nuxt@3.17.5(@biomejs/biome@2.0.0)(@parcel/watcher@2.5.1)(@types/node@22.15.32)(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(rollup@4.44.0)(terser@5.43.1)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(yaml@2.8.0))(typescript@5.8.3)(unstorage@1.16.0(db0@0.3.2(better-sqlite3@11.10.0))(ioredis@5.6.1))(valibot@1.1.0(typescript@5.8.3))(vite@6.3.5(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(vue-router@4.5.1(vue@3.5.17(typescript@5.8.3)))(vue@3.5.17(typescript@5.8.3))(zod@3.25.67)
       nuxt:
         specifier: 'catalog:'
         version: 3.17.5(@biomejs/biome@2.0.0)(@parcel/watcher@2.5.1)(@types/node@22.15.32)(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(rollup@4.44.0)(terser@5.43.1)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(yaml@2.8.0)
       tailwindcss:
         specifier: ^4.1.10
         version: 4.1.10
+      zod:
+        specifier: ^3.25.67
+        version: 3.25.67
     devDependencies:
       '@nuxt/content':
         specifier: ^3.6.1
@@ -2615,8 +2618,8 @@ packages:
     resolution: {integrity: sha512-sSuxWU5j5SR9QQji/o2qMvqRNYRDOcBTgsJ/DeCf4iSN4gW+gNMXM7wFIP+fdXZxoNiAnHUTGjCr+TSWXdRDKg==}
     engines: {node: '>=0.3.1'}
 
-  docus@3.0.3:
-    resolution: {integrity: sha512-30TPrOWxf1V2yIBewSvJ27Fn5R6xvCGgO3syZRtWPQfkOXoEYuXfjjB7baDQ5DmQHvSgAZL+ekrh+HTQc/lc7w==}
+  docus@3.0.4:
+    resolution: {integrity: sha512-Mow1htigRqcy7X7uhYUc9dK+i+2w7PHivoysdEI0jZ/Nfn0e1yYIE6Gu99Q7dYqF7J18AcJDLVgYmF2rPIgTQw==}
     hasBin: true
     peerDependencies:
       better-sqlite3: 11.x
@@ -8655,7 +8658,7 @@ snapshots:
 
   diff@8.0.2: {}
 
-  docus@3.0.3(@babel/parser@7.27.5)(@unhead/vue@2.0.10(vue@3.5.17(typescript@5.8.3)))(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0))(embla-carousel@8.6.0)(ioredis@5.6.1)(jwt-decode@4.0.0)(magicast@0.3.5)(nuxt@3.17.5(@biomejs/biome@2.0.0)(@parcel/watcher@2.5.1)(@types/node@22.15.32)(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(rollup@4.44.0)(terser@5.43.1)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(yaml@2.8.0))(typescript@5.8.3)(unstorage@1.16.0(db0@0.3.2(better-sqlite3@11.10.0))(ioredis@5.6.1))(valibot@1.1.0(typescript@5.8.3))(vite@6.3.5(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(vue-router@4.5.1(vue@3.5.17(typescript@5.8.3)))(vue@3.5.17(typescript@5.8.3))(zod@3.25.67):
+  docus@3.0.4(@babel/parser@7.27.5)(@unhead/vue@2.0.10(vue@3.5.17(typescript@5.8.3)))(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0))(embla-carousel@8.6.0)(ioredis@5.6.1)(jwt-decode@4.0.0)(magicast@0.3.5)(nuxt@3.17.5(@biomejs/biome@2.0.0)(@parcel/watcher@2.5.1)(@types/node@22.15.32)(better-sqlite3@11.10.0)(db0@0.3.2(better-sqlite3@11.10.0))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(rollup@4.44.0)(terser@5.43.1)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(yaml@2.8.0))(typescript@5.8.3)(unstorage@1.16.0(db0@0.3.2(better-sqlite3@11.10.0))(ioredis@5.6.1))(valibot@1.1.0(typescript@5.8.3))(vite@6.3.5(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(vue-router@4.5.1(vue@3.5.17(typescript@5.8.3)))(vue@3.5.17(typescript@5.8.3))(zod@3.25.67):
     dependencies:
       '@iconify-json/lucide': 1.2.51
       '@iconify-json/simple-icons': 1.2.39

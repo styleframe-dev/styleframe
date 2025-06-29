@@ -21,9 +21,7 @@ export default defineAppConfig({
 	 * @docs https://www.docus.dev/concepts/configuration#socials-links
 	 */
 	socials: {
-		x: "https://x.com/nuxt_js",
-		discord: "https://discord.com/invite/ps2h6QT",
-		nuxt: "https://nuxt.com",
+		x: "https://x.com/styleframe_dev",
 	},
 	/**
 	 * @docs https://www.docus.dev/concepts/configuration#github-integration

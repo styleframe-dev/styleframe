@@ -1,8 +1,12 @@
 ---
 seo:
     title: Type-safe Composable CSS
-    description: Write a composable, type-safe, future-proof Design System using styleframe's powerful TypeScript CSS API.
+    description: Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
 ---
+
+<!--
+Hero Section ----------------------------------------------------------------------------------------------
+-->
 
 ::u-page-hero
 ---
@@ -36,7 +40,7 @@ export default s;
 Type-safe Composable CSS
 
 #description
-Write a type-safe, composable, future-proof Design System using styleframe's powerful TypeScript CSS API.
+Write type-safe, composable, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
 
 #links
     :::u-button
@@ -61,6 +65,10 @@ Write a type-safe, composable, future-proof Design System using styleframe's pow
     Star on GitHub
     :::
 ::
+
+<!--
+Features Section ----------------------------------------------------------------------------------------------
+-->
 
 ::u-page-section{class="border-t border-b border-default"}
 #title
@@ -146,17 +154,165 @@ Built for Excellent Developer Experience
     :::
 :: 
 
+<!-- 
+Composability Section ----------------------------------------------------------------------------------------------
+-->
 
 ::u-page-section
 ---
-headline: Coming Soon
 orientation: horizontal
 links:
--   label: Get notified about styleframe AI
+-   label: Explore the default theme
     color: neutral
     variant: outline
     to: /
-    icon: i-lucide-mail
+    icon: i-lucide-palette
+---
+
+::browser-frame
+---
+title: styleframe.config.ts
+---
+
+```ts
+import { stylefame } from 'stylefame';
+import { useReset, useBorder, useBorderRadius, useBoxShadow, useColors, useGrid, useScale, useSpacing, useTypography } from '@stylefame/theme-default';
+
+const s = stylefame();
+
+useReset(s);
+useBorder(s);
+useBorderRadius(s);
+useBoxShadow(s);
+useColors(s);
+useGrid(s);
+useScale(s);
+useSpacing(s);
+useTypography(s);
+
+export default s;
+```
+
+::
+
+#title
+Compose Design Systems in Minutes
+
+#description
+Use styleframe's native composability to construct your Design System out of existing parts. Plug and play composables, variables, selectors, variants, and utilities.
+
+#features
+    :::u-page-feature
+    ---
+    icon: i-lucide-infinity
+    target: _blank
+    to: /
+    ---
+    #title
+    Infinitely [Customizable]{.text-primary}
+
+    #description
+    Make your Design System your own. Use the default theme as a starting point and customize it to fit your needs.
+    :::
+
+    :::u-page-feature
+    ---
+    icon: i-lucide-blend
+    target: _blank
+    to: /
+    ---
+    #title
+    [Mix and Match]{.text-primary} Composables
+
+    #description
+    Colors from one theme, typography from another. Styleframe lets you combine different themes seamlessly.
+    :::
+::
+
+<!-- 
+Theming Section ----------------------------------------------------------------------------------------------
+-->
+
+::u-page-section
+---
+orientation: horizontal
+reverse: true
+links:
+-   label: Explore the default theme
+    color: neutral
+    variant: outline
+    to: /
+    icon: i-lucide-palette
+---
+
+::browser-frame
+---
+title: styleframe.config.ts
+---
+
+```ts
+import { stylefame } from 'stylefame';
+
+const s = stylefame();
+const { theme, variable, ref, selector } = s;
+
+const cardBackground = variable('card--background', '#ffffff');
+
+selector('.card', {
+    background: ref(cardBackground),
+});
+
+theme('dark', ({ variable }) => {
+    variable(cardBackground, '#18181b');
+});
+
+export default s;
+```
+
+::
+
+#title
+Dark and Light Themes
+
+#description
+Easily create and manage themes for your design system using styleframe's native theming capabilities.
+
+#features
+    :::u-page-feature
+    ---
+    icon: i-lucide-square-code
+    target: _blank
+    to: /
+    ---
+    #title
+    [Intuitive]{.text-primary} API
+
+    #description
+    Writing CSS for different themes is as easy as defining a variable. No need to remember complex syntax or class names.
+    :::
+
+    :::u-page-feature
+    ---
+    icon: i-lucide-blend
+    target: _blank
+    to: /
+    ---
+    #title
+    [Mix and Match]{.text-primary} Themes
+
+    #description
+    Colors from one theme, typography from another. Styleframe lets you combine different themes seamlessly.
+    :::
+::
+
+<!-- 
+AI Section ----------------------------------------------------------------------------------------------
+-->
+
+::u-page-section{class="border-t border-b border-default"}
+---
+headline: Coming Soon
+orientation: horizontal
 ---
 
 
@@ -178,7 +334,7 @@ Use styleframe for Agents. Choose from a variety of AI agents and start delegati
 #features
     :::u-page-feature
     ---
-    icon: i-lucide-settings
+    icon: i-lucide-image-up
     target: _blank
     to: /
     ---
@@ -191,32 +347,32 @@ Use styleframe for Agents. Choose from a variety of AI agents and start delegati
     
     :::u-page-feature
     ---
-    icon: i-lucide-settings
+    icon: i-lucide-bot
     target: _blank
     to: /
     ---
     #title
-    [AI]{.text-primary} natively built in
+    [Useful AI]{.text-primary} natively built in
 
     #description
     Styleframe uses the latest language models to power AI workflows that build your Design System for you.
     :::
 
+#links
+    ::subscribe-modal
+    ---
+    cta: Join waitlist for styleframe AI
+    title: Join waitlist for styleframe AI
+    group: ai
+    ---
+    ::
 ::
 
 
-::u-page-section
+::u-page-section{class="border-t border-b border-default"}
 ---
+headline: Coming Soon
 variant: primary
-links:
--   label: Discover styleframe Pro
-    to: /
-    trailingIcon: i-lucide-arrow-right
--   label: Explore templates
-    to: /
-    trailingIcon: i-lucide-arrow-right
-    variant: outline
-    color: neutral
 ---
 
 #title
@@ -225,4 +381,14 @@ Build faster with styleframe [Pro]{.text-primary}.
 #description
 A collection of premium design system themes, composables, component styles, and utils built on top of styleframe.
 
+#links
+    ::subscribe-modal
+    ---
+    cta: Join waitlist for styleframe Pro
+    title: Join waitlist for styleframe Pro
+    group: pro
+    ---
+    ::
 ::
+
+:image{ src="/assets/images/styleframe-footer.webp" class="w-full" }
