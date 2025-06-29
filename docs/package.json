@@ -20,6 +20,7 @@
 		"better-sqlite3": "^11.10.0",
 		"docus": "latest",
 		"nuxt": "catalog:",
+		"posthog-js": "^1.255.1",
 		"tailwindcss": "^4.1.10",
 		"zod": "^3.25.67"
 	}
