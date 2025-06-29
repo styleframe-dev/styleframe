@@ -4,7 +4,8 @@ export default defineAppConfig({
 	 */
 	seo: {
 		title: "styleframe",
-		description: "",
+		description:
+			"Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.",
 	},
 	/**
 	 * @docs https://www.docus.dev/concepts/configuration#header
