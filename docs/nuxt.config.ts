@@ -50,7 +50,7 @@ export default {
 	 */
 	nitro: {
 		routeRules: {
-			"/posthog": { proxy: "https://eu.i.posthog.com" },
+			"/posthog/**": { proxy: "https://eu.i.posthog.com" },
 		},
 	},
 } satisfies NuxtConfig;

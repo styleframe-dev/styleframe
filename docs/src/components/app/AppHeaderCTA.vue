@@ -3,6 +3,10 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 
 const route = useRoute();
 
+const useNuxt = useNuxtApp();
+
+console.log(useNuxt);
+
 const items = computed<NavigationMenuItem[]>(() => [
 	{
 		label: "Docs",
@@ -23,5 +27,5 @@ const items = computed<NavigationMenuItem[]>(() => [
 </script>
 
 <template>
-	<UNavigationMenu :items="items" />
+	<UNavigationMenu class="max-sm:hidden" :items="items" />
 </template>
