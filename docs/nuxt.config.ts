@@ -47,10 +47,14 @@ export default {
 
 	/**
 	 * https://nitro.build/guide/routing#route-rules
+	 * @TODO Look into using this for proxying PostHog requests
 	 */
-	nitro: {
-		routeRules: {
-			"/posthog/**": { proxy: "https://eu.i.posthog.com" },
-		},
-	},
+	// nitro: {
+	// 	routeRules: {
+	// 		"/posthog/**": {
+	// 			proxy: "https://eu.i.posthog.com",
+	// 			cors: true,
+	// 		},
+	// 	},
+	// },
 } satisfies NuxtConfig;
