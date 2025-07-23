@@ -20,9 +20,9 @@ title: styleframe.config.ts
 ---
 
 ```ts
-import { stylefame } from 'stylefame';
+import { styleframe } from 'styleframe';
 
-const s = stylefame();
+const s = styleframe();
 const { variable, ref, selector } = s;
 const { colorBlue } = useColors(s);
 
@@ -176,10 +176,10 @@ title: styleframe.config.ts
 ---
 
 ```ts
-import { stylefame } from 'stylefame';
-import { useReset, useBorder, useBorderRadius, useBoxShadow, useColors, useGrid, useScale, useSpacing, useTypography } from '@stylefame/theme-default';
+import { styleframe } from 'styleframe';
+import { useReset, useBorder, useBorderRadius, useBoxShadow, useColors, useGrid, useScale, useSpacing, useTypography } from '@styleframe/theme-default';
 
-const s = stylefame();
+const s = styleframe();
 
 useReset(s);
 useBorder(s);
@@ -252,9 +252,9 @@ title: styleframe.config.ts
 ---
 
 ```ts
-import { stylefame } from 'stylefame';
+import { styleframe } from 'styleframe';
 
-const s = stylefame();
+const s = styleframe();
 const { theme, variable, ref, selector } = s;
 
 const cardBackground = variable('card--background', '#ffffff');
