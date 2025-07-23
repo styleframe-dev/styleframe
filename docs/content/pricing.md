@@ -1,5 +1,5 @@
 ---
-home: true
+layout: example
 seo:
     title: Pricing
     description: Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
