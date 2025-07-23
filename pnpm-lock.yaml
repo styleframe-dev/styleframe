@@ -144,6 +144,9 @@ importers:
       '@styleframe/config-typescript':
         specifier: workspace:*
         version: link:../config/typescript
+      c12:
+        specifier: ^3.0.4
+        version: 3.0.4(magicast@0.3.5)
 
 packages:
 

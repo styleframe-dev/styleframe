@@ -7,6 +7,7 @@ export default {
 	site: {
 		name: "styleframe",
 	},
+	compatibilityDate: "2025-06-30",
 	srcDir: "./src",
 	css: ["~/app/assets/css/main.css"],
 
@@ -40,7 +41,7 @@ export default {
 	runtimeConfig: {
 		public: {
 			posthogPublicKey: "phc_Vu3wqbMj8M5iWzvEulIXlK5U0A3hqkb5rlVM1DLtZsb",
-			posthogHost: "https://www.styleframe.dev/posthog",
+			posthogHost: "https://eu.i.posthog.com",
 			posthogDefaults: "2025-05-24",
 		},
 	},

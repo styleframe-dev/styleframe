@@ -3,14 +3,10 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 
 const route = useRoute();
 
-const useNuxt = useNuxtApp();
-
-console.log(useNuxt);
-
 const items = computed<NavigationMenuItem[]>(() => [
 	{
 		label: "Docs",
-		to: "/getting-started/introduction",
+		to: "/docs/getting-started/introduction",
 		active: route.path.startsWith("/getting-started"),
 	},
 	{

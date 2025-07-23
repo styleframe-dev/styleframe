@@ -32,37 +32,7 @@ export default defineAppConfig({
 		branch: "main",
 	},
 	footer: {
-		// Update bottom left credits
-		credits: `Copyright © ${new Date().getFullYear()} UXFront`,
-		// Show or hide the color mode button
-		colorMode: false,
-		// Customize links
-		links: [
-			{
-				icon: "i-simple-icons-nuxtdotjs",
-				to: "https://nuxt.com",
-				target: "_blank",
-				"aria-label": "Nuxt Website",
-			},
-			{
-				icon: "i-simple-icons-discord",
-				to: "https://discord.com/invite/ps2h6QT",
-				target: "_blank",
-				"aria-label": "Nuxt UI on Discord",
-			},
-			{
-				icon: "i-simple-icons-x",
-				to: "https://x.com/nuxt_js",
-				target: "_blank",
-				"aria-label": "Nuxt on X",
-			},
-			{
-				icon: "i-simple-icons-github",
-				to: "https://github.com/nuxt/ui",
-				target: "_blank",
-				"aria-label": "Nuxt UI on GitHub",
-			},
-		],
+		credits: `Copyright © ${new Date().getFullYear()} styleframe`,
 	},
 	toc: {
 		// Title of the main table of contents
@@ -72,24 +42,18 @@ export default defineAppConfig({
 			// Title of the bottom table of contents
 			title: "Community",
 			// URL of your repository content folder
-			edit: "https://github.com/nuxt-ui-pro/docs/edit/main/content",
+			edit: "https://github.com/styleframe-dev/styleframe/edit/main/docs/content",
 			links: [
 				{
 					icon: "i-lucide-star",
 					label: "Star on GitHub",
-					to: "https://github.com/nuxt/ui",
-					target: "_blank",
-				},
-				{
-					icon: "i-lucide-book-open",
-					label: "Nuxt UI Pro docs",
-					to: "https://ui.nuxt.com/getting-started/installation/pro/nuxt",
+					to: "https://github.com/styleframe-dev/styleframe",
 					target: "_blank",
 				},
 				{
 					icon: "i-simple-icons-nuxtdotjs",
 					label: "Purchase a license",
-					to: "https://ui.nuxt.com/pro/purchase",
+					to: "https://www.styleframe.dev/pro/purchase",
 					target: "_blank",
 				},
 			],
