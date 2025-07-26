@@ -1,61 +1,42 @@
-import type { NuxtConfig } from "nuxt/schema";
+import { extendViteConfig } from "@nuxt/kit";
 
-export default {
-	/**
-	 * @docs https://www.docus.dev/concepts/configuration#global-configuration
-	 */
-	site: {
-		name: "styleframe",
-	},
-	compatibilityDate: "2025-06-30",
-	srcDir: "./src",
-	css: ["~/app/assets/css/main.css"],
-
-	/**
-	 * @docs https://content.nuxt.com/docs/studio/setup#enable-the-full-editing-experience
-	 */
-	content: {
-		preview: {
-			api: "https://api.nuxt.studio",
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+	compatibilityDate: "2025-07-15",
+	devtools: { enabled: true },
+	modules: [
+		"@nuxt/eslint",
+		"@nuxt/image",
+		"@nuxt/scripts",
+		"@nuxt/test-utils",
+		"@nuxt/ui-pro",
+		"@nuxt/content",
+		"@nuxtjs/robots",
+		"nuxt-og-image",
+		"nuxt-llms",
+		"./modules/default-configs",
+		() => {
+			// Update @nuxt/content optimizeDeps options
+			extendViteConfig((config) => {
+				config.optimizeDeps ||= {};
+				config.optimizeDeps.include ||= [];
+				config.optimizeDeps.include.push("@nuxt/content > slugify");
+			});
+		},
+	],
+	css: ["~/assets/css/main.css"],
+	nitro: {
+		prerender: {
+			routes: ["/"],
+			crawlLinks: true,
+			failOnError: false,
+			autoSubfolderIndex: false,
 		},
 	},
-
-	/**
-	 * @docs https://www.docus.dev/concepts/llms
-	 */
+	icon: {
+		provider: "iconify",
+	},
 	llms: {
 		domain: "https://styleframe.dev",
-		title: "Styleframe",
-		description:
-			"Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.",
-		full: {
-			title: "Styleframe",
-			description:
-				"Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.",
-		},
 	},
-
-	/**
-	 * @docs https://nuxt.com/docs/guide/going-further/runtime-config
-	 */
-	runtimeConfig: {
-		public: {
-			posthogPublicKey: "phc_Vu3wqbMj8M5iWzvEulIXlK5U0A3hqkb5rlVM1DLtZsb",
-			posthogHost: "https://eu.i.posthog.com",
-			posthogDefaults: "2025-05-24",
-		},
-	},
-
-	/**
-	 * https://nitro.build/guide/routing#route-rules
-	 * @TODO Look into using this for proxying PostHog requests
-	 */
-	// nitro: {
-	// 	routeRules: {
-	// 		"/posthog/**": {
-	// 			proxy: "https://eu.i.posthog.com",
-	// 			cors: true,
-	// 		},
-	// 	},
-	// },
-} satisfies NuxtConfig;
+});

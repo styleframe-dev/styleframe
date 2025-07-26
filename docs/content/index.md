@@ -38,7 +38,7 @@ export default s;
 ::
 
 #title
-Type-safe Composable CSS
+Type-safe Composable CSS 
 
 #description
 Write type-safe, composable, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
@@ -48,7 +48,7 @@ Write type-safe, composable, future-proof Design Systems code using styleframe's
     ---
     color: primary
     size: xl
-    to: /getting-started/introduction
+    to: /docs/getting-started/introduction
     trailing-icon: i-lucide-arrow-right
     ---
     Get started
@@ -246,31 +246,63 @@ links:
     icon: i-lucide-palette
 ---
 
-::browser-frame
----
-title: styleframe.config.ts
----
 
-```ts
-import { styleframe } from 'styleframe';
+::tabs
+    :::tabs-item{.my-5 icon="i-lucide-settings" label="Configuration"}
+        ::::browser-frame
+        ---
+        title: styleframe.config.ts
+        ---
 
-const s = styleframe();
-const { theme, variable, ref, selector } = s;
+             ```ts
+            import { compose } from 'styleframe';
 
-const cardBackground = variable('card--background', '#ffffff');
+            import lightTheme from './light.theme';
+            import darkTheme from './dark.theme';
+            
+            export default compose(lightTheme, darkTheme);
 
-selector('.card', {
-    background: ref(cardBackground),
-});
+        ::::
+    :::
+    :::tabs-item{.my-5 icon="i-lucide-sun" label="Light Theme"}
+        ::::browser-frame
+        ---
+        title: light.theme.ts
+        ---
+    
+            ```ts
+            import { styleframe } from 'styleframe';
+            
+            const s = styleframe();
+            const { variable } = s;
 
-theme('dark', ({ variable }) => {
-    variable(cardBackground, '#18181b');
-});
+            export const colorPrimary = variable('color-primary', '#007bff');
 
-export default s;
-```
+            export default s;
+        
+        ::::
+    :::
+    :::tabs-item{.my-5 icon="i-lucide-moon" label="Dark Theme"}
+        ::::browser-frame
+        ---
+        title: dark.theme.ts
+        ---
+    
+            ```ts
+            import { styleframe } from 'styleframe';
+            import { colorPrimary } from './light.theme';
+            
+            const s = styleframe('.dark-theme');
+            const { variable } = s;
 
+            variable(colorPrimary, '#0056b3');
+            
+            export default s;
+        
+        ::::
+    :::
 ::
+
 
 #title
 Dark and Light Themes
@@ -392,4 +424,3 @@ A collection of premium design system themes, composables, component styles, and
     ::
 ::
 
-:image{ src="/assets/images/styleframe-footer.webp" class="w-full" }
