@@ -37,11 +37,10 @@ export type CSS = {
 	value: TokenValue[];
 };
 
-export type Utility = {
+export type Utility<Name extends string = string> = {
 	type: "utility";
-	name: string;
+	name: Name;
 	declarations: (value: TokenValue) => DeclarationsBlock;
-	// @TODO Implement this
 };
 
 export type Recipe<Name extends string = string> = {
@@ -64,7 +63,8 @@ export type TokenType =
 	| Selector["type"]
 	| Media["type"]
 	| Keyframes["type"]
-	| CSS["type"];
+	| CSS["type"]
+	| Utility["type"];
 
 export type Container = Root | Selector | Media;
 

@@ -8,8 +8,8 @@ import type {
 	TokenType,
 	TokenValue,
 	// Theme,
+	Utility,
 	Variable,
-	// Utility,
 	// Variant
 } from "./types";
 
@@ -50,9 +50,11 @@ export function isKeyframes(value: unknown): value is Keyframes {
 	return isToken(value, "keyframes");
 }
 
-// export function isUtility(value: unknown): value is Utility {
-// 	return isToken(value, 'utility');
-// }
+export function isUtility<Name extends string = string>(
+	value: unknown,
+): value is Utility<Name> {
+	return isToken(value, "utility");
+}
 //
 // export function isVariant(value: unknown): value is Variant {
 // 	return isToken(value, 'variant');
