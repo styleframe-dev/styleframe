@@ -1,4 +1,4 @@
-import { isRef } from "../typeGuards";
+import { isRef, isTokenValue } from "../typeGuards";
 import type { Container, DeclarationsBlock, Root } from "../types";
 import { createKeyframesFunction } from "./keyframes";
 import { createMediaFunction } from "./media";
@@ -41,7 +41,11 @@ export function parseDeclarationsBlock(
 		// If the key represents a selector or media query, remove it and add it as a separate declaration
 		if (key.startsWith("@media")) {
 			const mediaQuery = declarations[key];
-			if (typeof mediaQuery === "object" && !isRef(mediaQuery)) {
+			if (
+				typeof mediaQuery === "object" &&
+				mediaQuery !== null &&
+				!isTokenValue(mediaQuery)
+			) {
 				context.media(key, mediaQuery);
 				delete declarations[key];
 			}

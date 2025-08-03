@@ -7,14 +7,15 @@ export default defineContentConfig({
 		landing: defineCollection({
 			type: "page",
 			source: {
-				include: "index.md",
+				include: "**/*.{md,yml}",
+				exclude: ["docs"],
 			},
 		}),
 		docs: defineCollection({
 			type: "page",
 			source: {
 				include: "**/*.{md,yml}",
-				exclude: ["index.md"],
+				exlcude: ["index.md", "pricing.md"],
 			},
 			schema: z.object({
 				links: z

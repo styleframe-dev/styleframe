@@ -9,7 +9,7 @@ layout: default
 Hero Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-hero
+::gradient-page-hero
 ---
 orientation: horizontal
 ---

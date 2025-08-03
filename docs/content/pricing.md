@@ -1,5 +1,5 @@
 ---
-layout: example
+layout: default
 seo:
   title: Pricing
   description: Write composable, type-safe, future-proof Design Systems code using
@@ -33,7 +33,7 @@ orientation: horizontal
   :::
 
 #title
-Type-safe Composable CSS
+Pricing
 
 #description
 Write type-safe, composable, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
