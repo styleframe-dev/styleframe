@@ -43,7 +43,7 @@ Write type-safe, composable, future-proof Design Systems code using styleframe's
   ---
   color: primary
   size: xl
-  to: /getting-started/introduction
+  to: /docs/getting-started/introduction
   trailing-icon: i-lucide-arrow-right
   ---
   Get started

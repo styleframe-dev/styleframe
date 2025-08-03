@@ -35,7 +35,6 @@ const videoRef = useTemplateRef<HTMLVideoElement | null>("video");
 const { stop } = useIntersectionObserver(
 	videoRef,
 	([entry], observerElement) => {
-		console.log(entry?.isIntersecting);
 		isIntersecting.value = entry?.isIntersecting || false;
 	},
 );

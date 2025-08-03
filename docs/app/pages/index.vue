@@ -11,8 +11,6 @@ if (!page.value) {
 	});
 }
 
-console.log(page.value);
-
 // Reconsider it once this is implemented: https://github.com/nuxt/content/issues/3419
 const prose = page.value.meta.prose;
 const title = page.value.seo?.title || page.value.title;
