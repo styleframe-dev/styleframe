@@ -19,7 +19,8 @@ export const createViteConfig = (cwd, options = {}) =>
 		},
 		test: {
 			globals: true,
-			include: ["src/**/*.spec.{ts,tsx}"],
+			include: [resolve(cwd, "src/**/*.test.{ts,tsx}")],
 			exclude: vitestConfig.exclude,
+			reporters: ["verbose"],
 		},
 	});

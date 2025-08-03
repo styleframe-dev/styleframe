@@ -12,7 +12,12 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "pnpm typecheck && vite build",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:dev": "vitest --watch"
+	},
+	"dependencies": {
+		"csstype": "^3.1.3"
 	},
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^",
