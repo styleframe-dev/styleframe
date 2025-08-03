@@ -1,0 +1,25 @@
+{
+	"name": "@styleframe/core",
+	"version": "0.0.0",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "pnpm typecheck && vite build",
+		"typecheck": "tsc --noEmit"
+	},
+	"devDependencies": {
+		"@styleframe/config-typescript": "workspace:^",
+		"@styleframe/config-vite": "workspace:^",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vitest": "catalog:",
+		"vite-plugin-dts": "catalog:"
+	}
+}

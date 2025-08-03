@@ -11,5 +11,6 @@ yarn-error.log*
 .vscode/*
 
 .turbo
+.tsbuildinfo
 
 .DS_Store

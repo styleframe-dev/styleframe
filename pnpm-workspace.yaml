@@ -1,5 +1,6 @@
 packages:
   - config/**
+  - core
   - devtools/**
   - docs
 catalog:
@@ -10,12 +11,14 @@ catalog:
   oxlint: ^1.2.0
   typescript: ^5.8.3
   turbo: ^2.5.4
-  vite: ^6.3.5
+  vite: ^7.0.6
+  vitest: ^3.2.4
   vite-plugin-dts: ^4.5.4
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@tailwindcss/oxide'
   - better-sqlite3
+  - core-js
   - esbuild
   - sharp
   - vue-demi
