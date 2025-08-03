@@ -1,7 +1,7 @@
 import { isVariable } from "../typeGuards";
-import type { Root, Selector, TokenValue, Variable } from "../types";
+import type { Container, Root, Selector, TokenValue, Variable } from "../types";
 
-export function createVariableFunction(root: Root | Selector) {
+export function createVariableFunction(parent: Container, _root: Root) {
 	return function variable<Name extends string>(
 		name: Name,
 		value: TokenValue,
@@ -11,7 +11,7 @@ export function createVariableFunction(root: Root | Selector) {
 			default: false,
 		},
 	): Variable<Name> {
-		const existingVariable = root.declarations
+		const existingVariable = parent.children
 			.filter(isVariable<Name>)
 			.find((child) => child.name === name);
 
@@ -33,7 +33,7 @@ export function createVariableFunction(root: Root | Selector) {
 			value,
 		};
 
-		root.declarations.push(instance);
+		parent.children.push(instance);
 		return instance;
 	};
 }

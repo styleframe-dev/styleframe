@@ -15,7 +15,15 @@ export type Reference<Name extends string = string> = {
 export type Selector = {
 	type: "selector";
 	query: string;
-	declarations: DeclarationsStore;
+	declarations: DeclarationsBlock;
+	children: ContainerChild[];
+};
+
+export type Media = {
+	type: "media";
+	query: string;
+	declarations: DeclarationsBlock;
+	children: ContainerChild[];
 };
 
 export type CSS = {
@@ -35,11 +43,14 @@ export type TokenType =
 	| Variable["type"]
 	| Reference["type"]
 	| Selector["type"]
+	| Media["type"]
 	| CSS["type"];
 
-export type DeclarationsStore = Array<Variable | DeclarationsBlock | Selector>;
+export type Container = Root | Selector | Media;
+
+export type ContainerChild = Variable | Selector | Media;
 
 export type Root = {
 	type: "root";
-	declarations: DeclarationsStore;
+	children: ContainerChild[];
 };

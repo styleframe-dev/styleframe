@@ -1,5 +1,6 @@
 import type {
 	CSS,
+	Media,
 	PrimitiveTokenValue,
 	Reference,
 	Selector,
@@ -38,6 +39,10 @@ export function isRef<Name extends string = string>(
 
 export function isSelector(value: unknown): value is Selector {
 	return isToken(value, "selector");
+}
+
+export function isMedia(value: unknown): value is Media {
+	return isToken(value, "media");
 }
 
 // export function isUtility(value: unknown): value is Utility {

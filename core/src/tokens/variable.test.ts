@@ -1,5 +1,5 @@
-import { styleframe } from "../styleframe";
 import type { Reference, Root, Selector, Variable } from "../types";
+import { createRoot } from "./root";
 import { createVariableFunction } from "./variable";
 
 describe("createVariableFunction", () => {
@@ -7,8 +7,8 @@ describe("createVariableFunction", () => {
 	let variable: ReturnType<typeof createVariableFunction>;
 
 	beforeEach(() => {
-		root = styleframe().root;
-		variable = createVariableFunction(root);
+		root = createRoot();
+		variable = createVariableFunction(root, root);
 	});
 
 	describe("basic variable creation", () => {
@@ -25,8 +25,8 @@ describe("createVariableFunction", () => {
 		it("should add the variable to root declarations", () => {
 			const result = variable("spacing", "1rem");
 
-			expect(root.declarations).toHaveLength(1);
-			expect(root.declarations[0]).toBe(result);
+			expect(root.children).toHaveLength(1);
+			expect(root.children[0]).toBe(result);
 		});
 	});
 
@@ -38,14 +38,14 @@ describe("createVariableFunction", () => {
 
 				expect(second).toBe(first); // Same instance
 				expect(second.value).toBe("2px"); // Updated value
-				expect(root.declarations).toHaveLength(1);
+				expect(root.children).toHaveLength(1);
 			});
 
 			it("should create new variable if none exists with default: false", () => {
 				const result = variable("line-height", "1.5", { default: false });
 
 				expect(result.value).toBe("1.5");
-				expect(root.declarations).toHaveLength(1);
+				expect(root.children).toHaveLength(1);
 			});
 		});
 
@@ -56,7 +56,7 @@ describe("createVariableFunction", () => {
 
 				expect(second).toBe(first);
 				expect(second.value).toBe("red");
-				expect(root.declarations).toHaveLength(1);
+				expect(root.children).toHaveLength(1);
 			});
 
 			it("should return existing variable with explicit default: true", () => {
@@ -65,14 +65,14 @@ describe("createVariableFunction", () => {
 
 				expect(second).toBe(first);
 				expect(second.value).toBe("16px");
-				expect(root.declarations).toHaveLength(1);
+				expect(root.children).toHaveLength(1);
 			});
 
 			it("should create new variable if none exists with default: true", () => {
 				const result = variable("margin", "10px", { default: true });
 
 				expect(result.value).toBe("10px");
-				expect(root.declarations).toHaveLength(1);
+				expect(root.children).toHaveLength(1);
 			});
 		});
 	});
@@ -83,10 +83,10 @@ describe("createVariableFunction", () => {
 			const spacing = variable("spacing", "8px");
 			const fontSize = variable("font-size", "14px");
 
-			expect(root.declarations).toHaveLength(3);
-			expect(root.declarations).toContain(color);
-			expect(root.declarations).toContain(spacing);
-			expect(root.declarations).toContain(fontSize);
+			expect(root.children).toHaveLength(3);
+			expect(root.children).toContain(color);
+			expect(root.children).toContain(spacing);
+			expect(root.children).toContain(fontSize);
 		});
 
 		it("should find correct existing variable among multiple", () => {
@@ -99,7 +99,7 @@ describe("createVariableFunction", () => {
 
 			expect(updatedSpacing).toBe(spacing);
 			expect(updatedSpacing.value).toBe("20px");
-			expect(root.declarations).toHaveLength(3);
+			expect(root.children).toHaveLength(3);
 		});
 	});
 
@@ -119,18 +119,19 @@ describe("createVariableFunction", () => {
 
 	describe("working with selectors", () => {
 		it("should work when root is a selector", () => {
-			const selectorRoot: Selector = {
+			const selectorInstance: Selector = {
 				type: "selector",
 				query: ".test",
-				declarations: [],
+				declarations: {},
+				children: [],
 			};
 
-			const selectorVariable = createVariableFunction(selectorRoot);
+			const selectorVariable = createVariableFunction(selectorInstance, root);
 			const result = selectorVariable("nested-var", "50px");
 
 			expect(result.name).toBe("nested-var");
-			expect(selectorRoot.declarations).toHaveLength(1);
-			expect(selectorRoot.declarations[0]).toBe(result);
+			expect(selectorInstance.children).toHaveLength(1);
+			expect(selectorInstance.children[0]).toBe(result);
 		});
 	});
 
