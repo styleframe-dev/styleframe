@@ -1,5 +1,6 @@
 import { isRef } from "../typeGuards";
 import type { Container, DeclarationsBlock, Root } from "../types";
+import { createKeyframesFunction } from "./keyframes";
 import { createMediaFunction } from "./media";
 import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
@@ -7,6 +8,7 @@ import { createVariableFunction } from "./variable";
 export type DeclarationsCallbackContext = {
 	variable: ReturnType<typeof createVariableFunction>;
 	selector: ReturnType<typeof createSelectorFunction>;
+	keyframes: ReturnType<typeof createKeyframesFunction>;
 	media: ReturnType<typeof createMediaFunction>;
 };
 
@@ -20,11 +22,13 @@ export function createDeclarationsCallbackContext(
 ): DeclarationsCallbackContext {
 	const variable = createVariableFunction(parent, root);
 	const selector = createSelectorFunction(parent, root);
+	const keyframes = createKeyframesFunction(parent, root);
 	const media = createMediaFunction(parent, root);
 
 	return {
 		variable,
 		selector,
+		keyframes,
 		media,
 	};
 }

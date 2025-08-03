@@ -201,6 +201,7 @@ describe("createSelectorFunction", () => {
 			expect(callback).toHaveBeenCalledWith({
 				variable: expect.any(Function),
 				selector: expect.any(Function),
+				keyframes: expect.any(Function),
 				media: expect.any(Function),
 			});
 		});

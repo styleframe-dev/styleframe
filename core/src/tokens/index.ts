@@ -1,5 +1,6 @@
 export * from "./css";
 export * from "./declarations";
+export * from "./keyframes";
 export * from "./media";
 export * from "./ref";
 export * from "./root";

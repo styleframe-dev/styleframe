@@ -1,5 +1,6 @@
 import type {
 	CSS,
+	Keyframes,
 	Media,
 	PrimitiveTokenValue,
 	Reference,
@@ -43,6 +44,10 @@ export function isSelector(value: unknown): value is Selector {
 
 export function isMedia(value: unknown): value is Media {
 	return isToken(value, "media");
+}
+
+export function isKeyframes(value: unknown): value is Keyframes {
+	return isToken(value, "keyframes");
 }
 
 // export function isUtility(value: unknown): value is Utility {

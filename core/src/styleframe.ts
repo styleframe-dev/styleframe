@@ -1,5 +1,6 @@
 import {
 	createCssFunction,
+	createKeyframesFunction,
 	createMediaFunction,
 	createRefFunction,
 	createRoot,
@@ -15,7 +16,7 @@ export interface Styleframe {
 	// 	utility: UtilityFunction;
 	// 	recipe: RecipeFunction;
 	// 	theme: ThemeFunction;
-	// 	keyframes: KeyframesFunction;
+	keyframes: ReturnType<typeof createKeyframesFunction>;
 	media: ReturnType<typeof createMediaFunction>;
 	ref: ReturnType<typeof createRefFunction>;
 	css: ReturnType<typeof createCssFunction>;
@@ -33,7 +34,7 @@ export function styleframe(config?: StyleframeConfig): Styleframe {
 	// const utility = createUtilityFunction(utilities);
 	// const recipe = createRecipeFunction(recipes);
 	// const theme = createThemeFunction(themes);
-	// const keyframes = createKeyframesFunction(keyframes);
+	const keyframes = createKeyframesFunction(root, root);
 	const media = createMediaFunction(root, root);
 	const ref = createRefFunction(root, root);
 	const css = createCssFunction(root, root);
@@ -45,8 +46,8 @@ export function styleframe(config?: StyleframeConfig): Styleframe {
 		// utility,
 		// recipe,
 		// theme,
-		// keyframes,
-		// media,
+		keyframes,
+		media,
 		ref,
 		css,
 	};

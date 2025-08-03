@@ -15,6 +15,7 @@ describe("parseDeclarationsBlock", () => {
 		mockContext = {
 			selector: vi.fn(),
 			variable: vi.fn(),
+			keyframes: vi.fn(),
 			media: vi.fn(),
 		};
 	});
@@ -405,13 +406,14 @@ describe("createDeclarationsCallbackContext", () => {
 	});
 
 	describe("context object properties", () => {
-		it("should return object with exactly three properties", () => {
+		it("should return object with exactly four properties", () => {
 			const context = createDeclarationsCallbackContext(root, root);
 			const keys = Object.keys(context);
 
-			expect(keys).toHaveLength(3);
+			expect(keys).toHaveLength(4);
 			expect(keys).toContain("variable");
 			expect(keys).toContain("selector");
+			expect(keys).toContain("keyframes");
 			expect(keys).toContain("media");
 		});
 
@@ -420,6 +422,7 @@ describe("createDeclarationsCallbackContext", () => {
 
 			expect(context.hasOwnProperty("variable")).toBe(true);
 			expect(context.hasOwnProperty("selector")).toBe(true);
+			expect(context.hasOwnProperty("keyframes")).toBe(true);
 			expect(context.hasOwnProperty("media")).toBe(true);
 		});
 
@@ -428,10 +431,15 @@ describe("createDeclarationsCallbackContext", () => {
 
 			const varResult = context.variable("test-var", "value");
 			const selectorResult = context.selector(".test", {});
+			const keyframesResult = context.keyframes("test-animation", {
+				"0%": { opacity: 0 },
+				"100%": { opacity: 1 },
+			});
 			const mediaResult = context.media("(test)", {});
 
 			expect(varResult.type).toBe("variable");
 			expect(selectorResult.type).toBe("selector");
+			expect(keyframesResult.type).toBe("keyframes");
 			expect(mediaResult.type).toBe("media");
 		});
 	});

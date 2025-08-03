@@ -26,9 +26,28 @@ export type Media = {
 	children: ContainerChild[];
 };
 
+export type Keyframes<Name extends string = string> = {
+	type: "keyframes";
+	name: Name;
+	declarations: Record<string, DeclarationsBlock>;
+};
+
 export type CSS = {
 	type: "css";
 	value: TokenValue[];
+};
+
+export type Utility = {
+	type: "utility";
+	name: string;
+	declarations: (value: TokenValue) => DeclarationsBlock;
+	// @TODO Implement this
+};
+
+export type Recipe<Name extends string = string> = {
+	type: "recipe";
+	name: Name;
+	// @TODO Implement this
 };
 
 export type PrimitiveTokenValue = number | string | boolean | null | undefined;
@@ -44,13 +63,16 @@ export type TokenType =
 	| Reference["type"]
 	| Selector["type"]
 	| Media["type"]
+	| Keyframes["type"]
 	| CSS["type"];
 
 export type Container = Root | Selector | Media;
 
-export type ContainerChild = Variable | Selector | Media;
+export type ContainerChild = Variable | Selector | Media | Keyframes;
 
 export type Root = {
 	type: "root";
+	utilities: Utility[];
+	recipes: Recipe[];
 	children: ContainerChild[];
 };

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import type { Reference, Root, Selector, Variable } from "../types";
+import type { Keyframes, Reference, Root, Selector, Variable } from "../types";
+import { createKeyframesFunction } from "./keyframes";
 import { createRefFunction } from "./ref";
 import { createRoot } from "./root";
 import { createVariableFunction } from "./variable";
@@ -9,6 +10,7 @@ describe("createRefFunction", () => {
 	let selector: Selector;
 	let ref: ReturnType<typeof createRefFunction>;
 	let variable: ReturnType<typeof createVariableFunction>;
+	let keyframes: ReturnType<typeof createKeyframesFunction>;
 
 	beforeEach(() => {
 		root = createRoot();
@@ -20,6 +22,7 @@ describe("createRefFunction", () => {
 		};
 		ref = createRefFunction(selector, root);
 		variable = createVariableFunction(selector, root);
+		keyframes = createKeyframesFunction(selector, root);
 	});
 
 	describe("basic reference creation", () => {
@@ -419,6 +422,45 @@ describe("createRefFunction", () => {
 
 			// And should be separate functions
 			expect(ref1).not.toBe(ref2);
+		});
+	});
+
+	describe("keyframes references", () => {
+		it("should create a reference from a keyframes instance", () => {
+			const fadeInKeyframes = keyframes("fade-in", {
+				"0%": {
+					opacity: 0,
+					transform: "translateY(20px)",
+				},
+				"100%": {
+					opacity: 1,
+					transform: "translateY(0)",
+				},
+			});
+
+			const result = ref(fadeInKeyframes);
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "fade-in",
+				fallback: undefined,
+			});
+		});
+
+		it("should create a reference from a keyframes instance with fallback", () => {
+			const bounceKeyframes = keyframes("bounce", {
+				"0%": { transform: "translateY(0)" },
+				"50%": { transform: "translateY(-10px)" },
+				"100%": { transform: "translateY(0)" },
+			});
+
+			const result = ref(bounceKeyframes, "none");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "bounce",
+				fallback: "none",
+			});
 		});
 	});
 });
