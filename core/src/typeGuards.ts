@@ -82,6 +82,8 @@ export function isPrimitiveTokenValue(
 export function isTokenValue(value: unknown): value is TokenValue {
 	return (
 		isPrimitiveTokenValue(value) ||
+		isRef(value) ||
+		isCSS(value) ||
 		(Array.isArray(value) && value.every(isTokenValue))
 	);
 }

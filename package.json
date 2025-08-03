@@ -1,7 +1,7 @@
 {
 	"name": "styleframe",
 	"version": "0.0.1",
-	"description": "Write modern, clean, composable CSS using Typescript, with a focus on simplicity and performance.",
+	"description": "Write modern, clean, composable CSS using TypeScript, with a focus on simplicity and performance.",
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"scripts": {
 		"build": "turbo run build",
