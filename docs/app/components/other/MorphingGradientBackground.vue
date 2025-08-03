@@ -1,27 +1,28 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from "vue";
 
-const interBubble = ref<HTMLDivElement>();
-const curX = ref(0);
-const curY = ref(0);
-const tgX = ref(0);
-const tgY = ref(0);
+const currentX = ref(0);
+const currentY = ref(0);
+const mouseX = ref(0);
+const mouseY = ref(0);
+
 let animationId: number | null = null;
 
+const interactiveBubbleStyle = computed(() => {
+	return {
+		transform: `translate(${Math.round(currentX.value)}px, ${Math.round(currentY.value)}px)`,
+	};
+});
+
 function move() {
-	curX.value += (tgX.value - curX.value) / 20;
-	curY.value += (tgY.value - curY.value) / 20;
-
-	if (interBubble.value) {
-		interBubble.value.style.transform = `translate(${Math.round(curX.value)}px, ${Math.round(curY.value)}px)`;
-	}
-
+	currentX.value += (mouseX.value - currentX.value) / 20;
+	currentY.value += (mouseY.value - currentY.value) / 20;
 	animationId = requestAnimationFrame(move);
 }
 
 function handleMouseMove(event: MouseEvent) {
-	tgX.value = event.clientX;
-	tgY.value = event.clientY;
+	mouseX.value = event.clientX;
+	mouseY.value = event.clientY;
 }
 
 onMounted(() => {
@@ -51,13 +52,13 @@ onBeforeUnmount(() => {
 			<div class="g3"></div>
 			<div class="g4"></div>
 			<div class="g5"></div>
-			<div class="interactive" ref="interBubble"></div>
+			<div class="interactive" :style="interactiveBubbleStyle"></div>
 		</div>
 		<slot :mousemove="handleMouseMove" />
 	</div>
 </template>
 
-<style>
+<style scoped>
 @keyframes moveInCircle {
 	0% {
 		transform: rotate(0deg);
@@ -106,7 +107,7 @@ onBeforeUnmount(() => {
 	--color-interactive: 140, 100, 255;
 	--circle-size: 80%;
 	--blending: hard-light;
-	--intensity: 0.25;
+	--intensity: 0.2;
 
 	background: linear-gradient(40deg, var(--color-bg1), var(--color-bg2));
 
