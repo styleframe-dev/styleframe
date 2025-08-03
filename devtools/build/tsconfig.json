@@ -1,4 +1,7 @@
 {
 	"extends": "@styleframe/config-typescript",
+	"compilerOptions": {
+		"tsBuildInfoFile": ".tsbuildinfo"
+	},
 	"include": ["src"]
 }
