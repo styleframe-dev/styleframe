@@ -1,3 +1,5 @@
 import { createViteConfig } from "@styleframe/config-vite";
 
-export default createViteConfig();
+const __dirname = new URL(".", import.meta.url).pathname;
+
+export default createViteConfig(__dirname);
