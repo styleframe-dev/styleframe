@@ -46,7 +46,7 @@ export function styleframe(config?: StyleframeConfig): Styleframe {
 		// recipe,
 		// theme,
 		// keyframes,
-		// media,
+		media,
 		ref,
 		css,
 	};
