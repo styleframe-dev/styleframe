@@ -4,6 +4,7 @@ export function createRoot(): Root {
 	return {
 		type: "root",
 		utilities: [],
+		modifiers: [],
 		recipes: [],
 		children: [],
 	};

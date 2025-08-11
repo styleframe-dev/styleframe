@@ -2,9 +2,11 @@ import {
 	createCssFunction,
 	createKeyframesFunction,
 	createMediaFunction,
+	createModifierFunction,
 	createRefFunction,
 	createRoot,
 	createSelectorFunction,
+	createUtilityFunction,
 	createVariableFunction,
 } from "./tokens";
 import type { Root } from "./types";
@@ -13,7 +15,8 @@ export interface Styleframe {
 	root: Root;
 	variable: ReturnType<typeof createVariableFunction>;
 	selector: ReturnType<typeof createSelectorFunction>;
-	// 	utility: UtilityFunction;
+	utility: ReturnType<typeof createUtilityFunction>;
+	modifier: ReturnType<typeof createModifierFunction>;
 	// 	recipe: RecipeFunction;
 	// 	theme: ThemeFunction;
 	keyframes: ReturnType<typeof createKeyframesFunction>;
@@ -31,7 +34,8 @@ export function styleframe(config?: StyleframeConfig): Styleframe {
 
 	const variable = createVariableFunction(root, root);
 	const selector = createSelectorFunction(root, root);
-	// const utility = createUtilityFunction(utilities);
+	const utility = createUtilityFunction(root, root);
+	const modifier = createModifierFunction(root, root);
 	// const recipe = createRecipeFunction(recipes);
 	// const theme = createThemeFunction(themes);
 	const keyframes = createKeyframesFunction(root, root);
@@ -43,7 +47,8 @@ export function styleframe(config?: StyleframeConfig): Styleframe {
 		root,
 		variable,
 		selector,
-		// utility,
+		utility,
+		modifier,
 		// recipe,
 		// theme,
 		keyframes,

@@ -13,7 +13,7 @@ export function createMediaFunction(parent: Container, root: Root) {
 	): Media {
 		const instance: Media = {
 			type: "media",
-			query,
+			query: query.replace("@media ", ""),
 			declarations: {},
 			children: [],
 		};

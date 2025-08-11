@@ -2,6 +2,7 @@ import type {
 	CSS,
 	Keyframes,
 	Media,
+	Modifier,
 	PrimitiveTokenValue,
 	Reference,
 	Selector,
@@ -55,10 +56,10 @@ export function isUtility<Name extends string = string>(
 ): value is Utility<Name> {
 	return isToken(value, "utility");
 }
-//
-// export function isVariant(value: unknown): value is Variant {
-// 	return isToken(value, 'variant');
-// }
+
+export function isModifier(value: unknown): value is Modifier {
+	return isToken(value, "modifier");
+}
 
 export function isCSS(value: unknown): value is CSS {
 	return isToken(value, "css");

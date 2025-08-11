@@ -1,12 +1,12 @@
 import type { Properties as CSSProperties } from "csstype";
-import type { Reference } from "./tokens";
+import type { TokenValue } from "./tokens";
 
 // Helper type to make CSS property values also accept Reference types
 type CSSValueWithReference<T> = T extends string | number | undefined
-	? T | Reference
+	? T | TokenValue
 	: T extends object
 		? CSSValueWithReference<T>
-		: T | Reference;
+		: T | TokenValue;
 
 // Recursively apply the Reference extension to all CSS properties
 export type DeclarationsBlock = {

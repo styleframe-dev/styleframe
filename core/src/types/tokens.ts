@@ -43,6 +43,24 @@ export type Utility<Name extends string = string> = {
 	declarations: (value: TokenValue) => DeclarationsBlock;
 };
 
+export type UtilityCreatorFn = (
+	values: Record<string, TokenValue>,
+	options?: {
+		modifiers?: Modifier[];
+	},
+) => void;
+
+export type Modifier = {
+	type: "modifier";
+	key: string[];
+	transform: ModifierTransformFn;
+};
+
+export type ModifierTransformFn = (args: {
+	declarations: DeclarationsBlock;
+	key?: string;
+}) => DeclarationsBlock;
+
 export type Recipe<Name extends string = string> = {
 	type: "recipe";
 	name: Name;
@@ -64,7 +82,8 @@ export type TokenType =
 	| Media["type"]
 	| Keyframes["type"]
 	| CSS["type"]
-	| Utility["type"];
+	| Utility["type"]
+	| Modifier["type"];
 
 export type Container = Root | Selector | Media;
 
@@ -73,6 +92,7 @@ export type ContainerChild = Variable | Selector | Media | Keyframes;
 export type Root = {
 	type: "root";
 	utilities: Utility[];
+	modifiers: Modifier[];
 	recipes: Recipe[];
 	children: ContainerChild[];
 };

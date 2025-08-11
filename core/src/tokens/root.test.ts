@@ -24,6 +24,9 @@ describe("createRoot", () => {
 			expect(root).toEqual({
 				type: "root",
 				children: [],
+				utilities: [],
+				modifiers: [],
+				recipes: [],
 			});
 		});
 

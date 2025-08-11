@@ -343,7 +343,7 @@ describe("createSelectorFunction", () => {
 
 			const mediaQuerySelector = result.children
 				.filter(isMedia)
-				.find((child) => child.query === "@media (min-width: 768px)");
+				.find((child) => child.query === "(min-width: 768px)");
 			expect(mediaQuerySelector?.declarations).toEqual({
 				width: "50%",
 			});
