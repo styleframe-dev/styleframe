@@ -7,5 +7,6 @@ export function createRoot(): Root {
 		modifiers: [],
 		recipes: [],
 		children: [],
+		themes: [],
 	};
 }

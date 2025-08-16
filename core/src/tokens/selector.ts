@@ -8,9 +8,15 @@ import {
 export function createSelectorFunction(parent: Container, root: Root) {
 	return function selector(
 		query: string,
-		declarations: DeclarationsBlock,
+		declarationsOrCallback: DeclarationsBlock | DeclarationsCallback,
 		callback?: DeclarationsCallback,
 	): Selector {
+		const declarationsArgumentIsCallback =
+			typeof declarationsOrCallback === "function";
+		const declarations = declarationsArgumentIsCallback
+			? {}
+			: declarationsOrCallback;
+
 		const instance: Selector = {
 			type: "selector",
 			query,
@@ -20,7 +26,10 @@ export function createSelectorFunction(parent: Container, root: Root) {
 
 		const callbackContext = createDeclarationsCallbackContext(instance, root);
 
-		parseDeclarationsBlock(declarations, callbackContext);
+		if (!declarationsArgumentIsCallback) {
+			parseDeclarationsBlock(declarations, callbackContext);
+		}
+
 		if (callback) {
 			callback(callbackContext);
 		}

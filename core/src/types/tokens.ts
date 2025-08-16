@@ -85,9 +85,15 @@ export type TokenType =
 	| Utility["type"]
 	| Modifier["type"];
 
-export type Container = Root | Selector | Media;
+export type Container = Root | Theme | Selector | Media;
 
 export type ContainerChild = Variable | Selector | Media | Keyframes;
+
+export type Theme = {
+	type: "theme";
+	name: string;
+	children: ContainerChild[];
+};
 
 export type Root = {
 	type: "root";
@@ -95,4 +101,5 @@ export type Root = {
 	modifiers: Modifier[];
 	recipes: Recipe[];
 	children: ContainerChild[];
+	themes: Theme[];
 };

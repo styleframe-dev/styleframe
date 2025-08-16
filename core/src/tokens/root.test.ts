@@ -27,6 +27,7 @@ describe("createRoot", () => {
 				utilities: [],
 				modifiers: [],
 				recipes: [],
+				themes: [],
 			});
 		});
 
