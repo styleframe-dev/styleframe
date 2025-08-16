@@ -7,8 +7,8 @@ defineOptions({
 </script>
 
 <template>
-	<MorphingGradientBackground v-slot="{ mousemove }">
-		<UPageHero v-bind="$attrs" @mousemove="mousemove">
+	<MorphingGradientBackground v-slot="{ onMousemove }">
+		<UPageHero v-bind="$attrs" @mousemove="onMousemove">
 			<slot />
 			<template #title><slot name="title" /></template>
 			<template #description><slot name="description" /></template>

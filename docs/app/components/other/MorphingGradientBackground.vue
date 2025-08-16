@@ -54,7 +54,7 @@ onBeforeUnmount(() => {
 			<div class="g5"></div>
 			<div class="interactive" :style="interactiveBubbleStyle"></div>
 		</div>
-		<slot :mousemove="handleMouseMove" />
+		<slot :onMousemove="handleMouseMove" />
 	</div>
 </template>
 
