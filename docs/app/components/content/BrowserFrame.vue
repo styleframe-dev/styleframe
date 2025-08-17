@@ -7,7 +7,7 @@ defineProps<Props>();
 </script>
 
 <template>
-	<div class="p-1 border border-default rounded text-sm bg-default">
+	<div class="p-1 border border-default rounded text-sm bg-default/70">
 		<div v-if="title" class="flex items-center bg-slate-100 dark:bg-slate-800 p-2 rounded font-bold">
 			<span class="flex gap-1 absolute">
 				<span class="rounded-full bg-error inline-flex w-3 h-3" />
