@@ -17,6 +17,7 @@ describe("parseDeclarationsBlock", () => {
 			variable: vi.fn(),
 			keyframes: vi.fn(),
 			media: vi.fn(),
+			css: vi.fn(),
 		};
 	});
 
@@ -410,11 +411,12 @@ describe("createDeclarationsCallbackContext", () => {
 			const context = createDeclarationsCallbackContext(root, root);
 			const keys = Object.keys(context);
 
-			expect(keys).toHaveLength(4);
+			expect(keys).toHaveLength(5);
 			expect(keys).toContain("variable");
 			expect(keys).toContain("selector");
 			expect(keys).toContain("keyframes");
 			expect(keys).toContain("media");
+			expect(keys).toContain("css");
 		});
 
 		it("should not have enumerable prototype properties", () => {

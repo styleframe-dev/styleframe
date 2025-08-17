@@ -203,6 +203,7 @@ describe("createSelectorFunction", () => {
 				selector: expect.any(Function),
 				keyframes: expect.any(Function),
 				media: expect.any(Function),
+				css: expect.any(Function),
 			});
 		});
 
