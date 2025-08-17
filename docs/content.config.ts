@@ -6,10 +6,7 @@ export default defineContentConfig({
 	collections: {
 		landing: defineCollection({
 			type: "page",
-			source: {
-				include: "**/*.{md,yml}",
-				exclude: ["docs"],
-			},
+			source: [{ include: "index.md" }, { include: "pricing.md" }],
 		}),
 		docs: defineCollection({
 			type: "page",
