@@ -21,6 +21,7 @@ export function createSelectorFunction(parent: Container, root: Root) {
 			type: "selector",
 			query,
 			declarations,
+			variables: [],
 			children: [],
 		};
 

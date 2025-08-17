@@ -15,6 +15,7 @@ export function createMediaFunction(parent: Container, root: Root) {
 			type: "media",
 			query: query.replace("@media ", ""),
 			declarations: {},
+			variables: [],
 			children: [],
 		};
 

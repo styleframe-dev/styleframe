@@ -1,4 +1,3 @@
-import { isVariable } from "../typeGuards";
 import type { Container, Root, TokenValue, Variable } from "../types";
 
 export function createVariableFunction(parent: Container, _root: Root) {
@@ -13,9 +12,9 @@ export function createVariableFunction(parent: Container, _root: Root) {
 	): Variable<Name> {
 		const name = (typeof target === "string" ? target : target.name) as Name;
 
-		const existingVariable = parent.children
-			.filter(isVariable<Name>)
-			.find((child) => child.name === name);
+		const existingVariable = parent.variables.find(
+			(child) => child.name === name,
+		) as Variable<Name> | undefined;
 
 		// If default is true and the variable exists, return existing
 		if (options.default && existingVariable) {
@@ -35,7 +34,7 @@ export function createVariableFunction(parent: Container, _root: Root) {
 			value,
 		};
 
-		parent.children.push(instance);
+		parent.variables.push(instance);
 		return instance;
 	};
 }

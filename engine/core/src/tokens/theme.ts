@@ -8,6 +8,7 @@ export function createThemeFunction(parent: Container, root: Root) {
 		const instance: Theme = existingTheme ?? {
 			type: "theme",
 			name,
+			variables: [],
 			children: [],
 		};
 

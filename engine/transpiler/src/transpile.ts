@@ -1,5 +1,4 @@
-import type { ContainerChild, Styleframe, Variable } from "@styleframe/core";
-import { isVariable } from "@styleframe/core";
+import type { ContainerChild, Styleframe } from "@styleframe/core";
 import { consume } from "./consume";
 import type { Output, OutputFile } from "./types";
 
@@ -22,7 +21,11 @@ export function transpile(instance: Styleframe, output: Output) {
 
 	output.files.push(indexFile);
 
-	if (instance.root.themes.length > 0 || instance.root.children.length > 0) {
+	if (
+		instance.root.themes.length > 0 ||
+		instance.root.children.length > 0 ||
+		instance.root.variables.length > 0
+	) {
 		const themesIndexFile = createFile(
 			"themes/index.css",
 			[`@import './default.css';`],
@@ -34,33 +37,16 @@ export function transpile(instance: Styleframe, output: Output) {
 		output.files.push(themesIndexFile);
 	}
 
-	if (instance.root.children.length > 0) {
+	if (instance.root.children.length > 0 || instance.root.variables.length > 0) {
 		const defaultThemeFile = createFile("theme/default.css", [], "component");
-		const categorized = instance.root.children.reduce<{
-			variables: Variable[];
-			other: ContainerChild[];
-		}>(
-			(acc, child) => {
-				if (isVariable(child)) {
-					acc.variables.push(child);
-				} else {
-					acc.other.push(child);
-				}
 
-				return acc;
-			},
-			{
-				variables: [],
-				other: [],
-			},
-		);
-
-		if (categorized.variables.length > 0) {
+		if (instance.root.variables.length > 0) {
 			defaultThemeFile.content.push(":root {");
-			defaultThemeFile.content.push(...categorized.variables.map(consume));
+			defaultThemeFile.content.push(...instance.root.variables.map(consume));
 			defaultThemeFile.content.push("}");
 		}
-		defaultThemeFile.content.push(...categorized.other.map(consume));
+
+		defaultThemeFile.content.push(...instance.root.children.map(consume));
 
 		output.files.push(defaultThemeFile);
 	}

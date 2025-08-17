@@ -17,6 +17,7 @@ export type Selector = {
 	type: "selector";
 	query: string;
 	declarations: DeclarationsBlock;
+	variables: Variable[];
 	children: ContainerChild[];
 };
 
@@ -24,6 +25,7 @@ export type Media = {
 	type: "media";
 	query: string;
 	declarations: DeclarationsBlock;
+	variables: Variable[];
 	children: ContainerChild[];
 };
 
@@ -116,6 +118,7 @@ export type ContainerChild = Variable | Selector | Media | Keyframes;
 export type Theme = {
 	type: "theme";
 	name: string;
+	variables: Variable[];
 	children: ContainerChild[];
 };
 
@@ -124,6 +127,7 @@ export type Root = {
 	utilities: Utility[];
 	modifiers: Modifier[];
 	recipes: Recipe[];
+	variables: Variable[];
 	children: ContainerChild[];
 	themes: Theme[];
 };
