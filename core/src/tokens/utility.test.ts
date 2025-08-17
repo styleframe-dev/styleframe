@@ -1,11 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import type {
-	Container,
-	DeclarationsBlock,
-	Modifier,
-	Root,
-	TokenValue,
-} from "../types";
+import type { Container, Modifier, Root, TokenValue } from "../types";
 import { createRoot } from "./root";
 import { createUtilityFunction } from "./utility";
 
@@ -34,6 +28,7 @@ describe("createUtilityFunction", () => {
 			type: "utility",
 			name: "margin",
 			declarations: declarationsFn,
+			values: {},
 		});
 	});
 
@@ -497,5 +492,28 @@ describe("createUtilityFunction", () => {
 
 		// Should have base utility + modifier variant
 		expect(root.children).toHaveLength(2);
+	});
+
+	test("should store registered utility values on the instance", () => {
+		const createMarginUtility = utility("margin", (value) => ({
+			margin: value,
+		}));
+
+		// Call the utility creator with some values
+		createMarginUtility({
+			sm: "8px",
+			md: "16px",
+			lg: "24px",
+		});
+
+		// Get the utility instance from the root
+		const utilityInstance = root.utilities.find((u) => u.name === "margin");
+
+		expect(utilityInstance).toBeDefined();
+		expect(utilityInstance?.values).toEqual({
+			sm: "8px",
+			md: "16px",
+			lg: "24px",
+		});
 	});
 });

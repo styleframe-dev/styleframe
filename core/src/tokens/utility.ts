@@ -19,6 +19,7 @@ export function createUtilityFunction(parent: Container, root: Root) {
 			type: "utility",
 			name,
 			declarations,
+			values: {},
 		};
 		const selector = createSelectorFunction(parent, root);
 
@@ -31,6 +32,9 @@ export function createUtilityFunction(parent: Container, root: Root) {
 			},
 		) => {
 			Object.entries(entries).forEach(([key, value]) => {
+				// Store the utility value on the instance
+				utilityInstance.values[key] = value;
+
 				const utilitySelectorPart =
 					value === true || !value ? name : `${name}:${key}`;
 
