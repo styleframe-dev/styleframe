@@ -41,6 +41,7 @@ export type Utility<Name extends string = string> = {
 	type: "utility";
 	name: Name;
 	declarations: (value: TokenValue) => DeclarationsBlock;
+	values: Record<string, TokenValue>;
 };
 
 export type UtilityCreatorFn = (
