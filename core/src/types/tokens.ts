@@ -61,10 +61,29 @@ export type ModifierTransformFn = (args: {
 	key?: string;
 }) => DeclarationsBlock;
 
-export type Recipe<Name extends string = string> = {
+export type VariantDeclarationsBlock = Record<string, string | true>;
+
+export type Recipe<
+	Name extends string = string,
+	Variants extends Record<
+		string,
+		Record<string, VariantDeclarationsBlock>
+	> = Record<string, Record<string, VariantDeclarationsBlock>>,
+> = {
 	type: "recipe";
 	name: Name;
-	// @TODO Implement this
+	defaults: VariantDeclarationsBlock;
+	variants: Variants;
+	defaultVariants?: {
+		[K in keyof Variants]?: keyof Variants[K] & string;
+	};
+	compoundVariants?: Array<
+		{
+			[K in keyof Variants]?: keyof Variants[K] & string;
+		} & {
+			declarations: VariantDeclarationsBlock;
+		}
+	>;
 };
 
 export type PrimitiveTokenValue = number | string | boolean | null | undefined;
