@@ -5,13 +5,13 @@ import type {
 	Modifier,
 	PrimitiveTokenValue,
 	Reference,
+	Root,
 	Selector,
+	Theme,
 	TokenType,
 	TokenValue,
-	// Theme,
 	Utility,
 	Variable,
-	// Variant
 } from "./types";
 
 /**
@@ -65,9 +65,13 @@ export function isCSS(value: unknown): value is CSS {
 	return isToken(value, "css");
 }
 
-// export function isTheme(value: unknown): value is Theme {
-// 	return isToken(value, 'theme');
-// }
+export function isTheme(value: unknown): value is Theme {
+	return isToken(value, "theme");
+}
+
+export function isRoot(value: unknown): value is Root {
+	return isToken(value, "root");
+}
 
 export function isPrimitiveTokenValue(
 	value: unknown,
