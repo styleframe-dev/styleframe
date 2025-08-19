@@ -3,15 +3,15 @@ import {
 	createKeyframesFunction,
 	createMediaFunction,
 	createModifierFunction,
+	createRecipeFunction,
 	createRefFunction,
 	createRoot,
 	createSelectorFunction,
+	createThemeFunction,
 	createUtilityFunction,
 	createVariableFunction,
-	createThemeFunction,
-	createRecipeFunction,
 } from "./tokens";
-import type { Root } from "./types";
+import type { Root, StyleframeOptions } from "./types";
 
 export interface Styleframe {
 	root: Root;
@@ -25,14 +25,13 @@ export interface Styleframe {
 	media: ReturnType<typeof createMediaFunction>;
 	ref: ReturnType<typeof createRefFunction>;
 	css: ReturnType<typeof createCssFunction>;
+	options: StyleframeOptions;
 }
 
-export interface StyleframeConfig {
-	// Configuration options
-}
-
-export function styleframe(config?: StyleframeConfig): Styleframe {
+export function styleframe(userOptions?: StyleframeOptions): Styleframe {
 	const root = createRoot();
+
+	const options = { ...userOptions };
 
 	const variable = createVariableFunction(root, root);
 	const selector = createSelectorFunction(root, root);
@@ -57,5 +56,6 @@ export function styleframe(config?: StyleframeConfig): Styleframe {
 		media,
 		ref,
 		css,
+		options,
 	};
 }

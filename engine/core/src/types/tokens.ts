@@ -1,4 +1,5 @@
 import type { DeclarationsBlock } from "./declarations";
+import type { StyleframeOptions } from "./options";
 
 export type Variable<Name extends string = string> = {
 	type: "variable";
@@ -103,7 +104,10 @@ export type TokenType =
 	| Keyframes["type"]
 	| CSS["type"]
 	| Utility["type"]
-	| Modifier["type"];
+	| Modifier["type"]
+	| Recipe["type"]
+	| Theme["type"]
+	| Root["type"];
 
 export type Container = Root | Theme | Selector | Media;
 
