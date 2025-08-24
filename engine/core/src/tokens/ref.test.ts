@@ -17,6 +17,7 @@ describe("createRefFunction", () => {
 		selector = {
 			type: "selector",
 			query: ".test",
+			variables: [],
 			declarations: {},
 			children: [],
 		};
@@ -148,6 +149,7 @@ describe("createRefFunction", () => {
 			const nestedSelector: Selector = {
 				type: "selector",
 				query: "&:hover",
+				variables: [],
 				declarations: {},
 				children: [],
 			};
@@ -406,6 +408,7 @@ describe("createRefFunction", () => {
 			const context2 = {
 				type: "selector" as const,
 				query: ".test",
+				variables: [],
 				declarations: {},
 				children: [],
 			};

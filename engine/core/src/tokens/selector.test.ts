@@ -24,6 +24,7 @@ describe("createSelectorFunction", () => {
 			expect(result).toEqual({
 				type: "selector",
 				query: ".button",
+				variables: [],
 				declarations: {
 					padding: "0.5rem 1rem",
 					backgroundColor: "#006cff",
@@ -356,6 +357,7 @@ describe("createSelectorFunction", () => {
 			const parentSelectorInstance: Selector = {
 				type: "selector",
 				query: ".parent",
+				variables: [],
 				declarations: {},
 				children: [],
 			};

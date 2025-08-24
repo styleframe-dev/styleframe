@@ -17,6 +17,7 @@ describe("createMediaFunction", () => {
 		selector = {
 			type: "selector",
 			query: ".test",
+			variables: [],
 			declarations: {},
 			children: [],
 		};
@@ -36,11 +37,13 @@ describe("createMediaFunction", () => {
 			expect(result).toEqual({
 				type: "media",
 				query: "(min-width: 768px)",
+				variables: [],
 				declarations: {},
 				children: [
 					{
 						type: "selector",
 						query: ".container",
+						variables: [],
 						declarations: {
 							width: "750px",
 						},
@@ -71,6 +74,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				query: ".text",
+				variables: [],
 				declarations: {
 					lineHeight: "1.4",
 				},
@@ -87,6 +91,7 @@ describe("createMediaFunction", () => {
 			expect(result).toEqual({
 				type: "media",
 				query: "(max-width: 767px)",
+				variables: [],
 				declarations: {
 					fontSize: "14px",
 					padding: "0.5rem",
@@ -127,6 +132,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				query: ".root-selector",
+				variables: [],
 				declarations: {
 					margin: "0 auto",
 				},
@@ -166,6 +172,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				query: ".media-selector",
+				variables: [],
 				declarations: {
 					display: "block",
 				},
@@ -183,6 +190,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "media",
 				query: "(orientation: landscape)",
+				variables: [],
 				declarations: {
 					width: "100vw",
 				},
@@ -260,6 +268,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "media",
 				query: "(orientation: portrait)",
+				variables: [],
 				declarations: {
 					width: "100%",
 				},
@@ -282,6 +291,7 @@ describe("createMediaFunction", () => {
 			expect(nestedMedia.children[0]).toEqual({
 				type: "selector",
 				query: ".nested-selector",
+				variables: [],
 				declarations: {
 					padding: "1rem",
 				},
@@ -346,6 +356,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				query: ".responsive-text",
+				variables: [],
 				declarations: {
 					fontSize: "18px",
 					lineHeight: "1.4",
@@ -365,6 +376,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				query: ".grid",
+				variables: [],
 				declarations: {
 					gridTemplateColumns: "repeat(4, 1fr)",
 					gap: "2rem",
@@ -468,6 +480,7 @@ describe("createMediaFunction", () => {
 			expect(result).toEqual({
 				type: "media",
 				query: "(min-width: 768px)",
+				variables: [],
 				declarations: {},
 				children: [],
 			});
@@ -488,6 +501,7 @@ describe("createMediaFunction", () => {
 			const context2: Selector = {
 				type: "selector",
 				query: ".different",
+				variables: [],
 				declarations: {},
 				children: [],
 			};

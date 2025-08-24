@@ -16,6 +16,7 @@ describe("createCSSFunction", () => {
 		selector = {
 			type: "selector",
 			query: ".test",
+			variables: [],
 			declarations: {},
 			children: [],
 		};
@@ -246,6 +247,7 @@ describe("createCSSFunction", () => {
 			const nestedSelector: Selector = {
 				type: "selector",
 				query: "&:hover",
+				variables: [],
 				declarations: {},
 				children: [],
 			};
@@ -382,6 +384,7 @@ describe("createCSSFunction", () => {
 			const context2: Selector = {
 				type: "selector",
 				query: ".test",
+				variables: [],
 				declarations: {},
 				children: [],
 			};

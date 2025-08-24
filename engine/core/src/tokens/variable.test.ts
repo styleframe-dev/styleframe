@@ -122,6 +122,7 @@ describe("createVariableFunction", () => {
 			const selectorInstance: Selector = {
 				type: "selector",
 				query: ".test",
+				variables: [],
 				declarations: {},
 				children: [],
 			};
@@ -221,6 +222,7 @@ describe("accepting variable instance as name", () => {
 		const selectorInstance: Selector = {
 			type: "selector",
 			query: ".x",
+			variables: [],
 			declarations: {},
 			children: [],
 		};

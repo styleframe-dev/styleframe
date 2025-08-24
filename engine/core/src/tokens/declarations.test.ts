@@ -186,12 +186,14 @@ describe("createDeclarationsCallbackContext", () => {
 		selector = {
 			type: "selector",
 			query: ".test",
+			variables: [],
 			declarations: {},
 			children: [],
 		};
 		media = {
 			type: "media",
 			query: "(min-width: 768px)",
+			variables: [],
 			declarations: {},
 			children: [],
 		};
@@ -516,6 +518,7 @@ describe("createDeclarationsCallbackContext", () => {
 			const emptySelector: Selector = {
 				type: "selector",
 				query: "",
+				variables: [],
 				declarations: {},
 				children: [],
 			};
