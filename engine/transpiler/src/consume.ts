@@ -35,7 +35,7 @@ import {
 	// 	isColor,
 	// 	isAtRule,
 	// 	isRef,
-	// 	isSelector,
+	isSelector,
 	// 	isUtility,
 	// 	isTheme,
 	isVariable,
@@ -121,7 +121,7 @@ export function consumeSelector(
 	instance: Selector,
 	options: StyleframeOptions,
 ): string {
-	const declarations = consumeDeclarations(instance.declarations, options);
+	const declarations = ""; //consumeDeclarations(instance.declarations, options);
 
 	return `${instance.query} {
 ${indentLines(declarations)}
