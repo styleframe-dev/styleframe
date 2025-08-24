@@ -85,21 +85,25 @@ export function consumeSelector(
 		(line) => addIndentToLine(line, options),
 	);
 
-	const children = instance.children.map((child) => consume(child, options));
+	const children = instance.children.map((child) =>
+		indentLines(consume(child, options), options),
+	);
+
+	const hasVariables = variables.length > 0;
+	const hasDeclarations = declarations.length > 0;
+	const hasChildren = children.length > 0;
 
 	const variablesSpacer =
-		variables.length > 0 && (declarations.length > 0 || children.length > 0)
-			? "\n"
-			: "";
+		hasVariables && (hasDeclarations || hasChildren) ? "\n\n" : "";
+	const declarationsSpacer = hasDeclarations && hasChildren ? "\n\n" : "";
+	const bracketSpacer =
+		hasVariables || hasDeclarations || hasChildren ? "\n" : "";
 
-	const declarationsSpacer =
-		declarations.length > 0 && children.length > 0 ? "\n" : "";
-
-	return `${instance.query} {
-${variables.join("\n")}${variablesSpacer}${declarations.join(
-	"\n",
-)}${declarationsSpacer}${children.join("\n")}
-}`;
+	return `${instance.query} {${bracketSpacer}${variables.join(
+		"\n",
+	)}${variablesSpacer}${declarations.join(
+		"\n",
+	)}${declarationsSpacer}${children.join("\n\n")}${bracketSpacer}}`;
 }
 
 // /**

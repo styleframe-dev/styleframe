@@ -11,6 +11,7 @@ import {
 	createRoot,
 	createSelectorFunction,
 	createVariableFunction,
+	isSelector,
 } from "@styleframe/core";
 import {
 	consumeCSS,
@@ -146,7 +147,7 @@ describe("consumeRef", () => {
 	});
 
 	it("should handle references with null fallback value", () => {
-		// @ts-ignore - Passing null for testing purposes
+		// @ts-expect-error Passing null for testing purposes
 		const nullRef = ref("null-var", null);
 		expect(consumeRef(nullRef, options)).toBe("var(--null-var)");
 	});
@@ -695,6 +696,7 @@ describe("consumeSelector", () => {
 	let variable: ReturnType<typeof createVariableFunction>;
 	let ref: ReturnType<typeof createRefFunction>;
 	let selector: ReturnType<typeof createSelectorFunction>;
+	let css: ReturnType<typeof createCssFunction>;
 
 	const options: StyleframeOptions = {};
 
@@ -703,6 +705,7 @@ describe("consumeSelector", () => {
 		variable = createVariableFunction(root, root);
 		ref = createRefFunction(root, root);
 		selector = createSelectorFunction(root, root);
+		css = createCssFunction(root, root);
 	});
 
 	it("should create a basic selector with declarations", () => {
@@ -715,17 +718,15 @@ describe("consumeSelector", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  padding: 0.5rem 1rem;
-  backgroundColor: #006cff;
-  color: white;
+	padding: 0.5rem 1rem;
+	backgroundColor: #006cff;
+	color: white;
 }`);
 	});
 
 	it("should create a selector with variables", () => {
-		const colorVar = variable("button-color", "#006cff");
-
-		const buttonSelector = selector(".button", {}, ({ variable }) => {
-			variable(colorVar);
+		const buttonSelector = selector(".button", ({ variable }) => {
+			variable("button-color", "#006cff");
 
 			return {
 				padding: "0.5rem 1rem",
@@ -735,73 +736,68 @@ describe("consumeSelector", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  --button-color: #006cff;
+	--button-color: #006cff;
 
-  padding: 0.5rem 1rem;
+	padding: 0.5rem 1rem;
 }`);
 	});
 
 	it("should create a selector with child selectors", () => {
-		const buttonSelector = selector(
-			".button",
-			{
+		const buttonSelector = selector(".button", ({ selector }) => {
+			selector("&:hover", {
+				backgroundColor: "#0056cc",
+			});
+
+			return {
 				padding: "0.5rem 1rem",
 				backgroundColor: "#006cff",
-			},
-			({ selector }) => {
-				selector("&:hover", {
-					backgroundColor: "#0056cc",
-				});
-			},
-		);
+			};
+		});
 
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  padding: 0.5rem 1rem;
-  backgroundColor: #006cff;
+	padding: 0.5rem 1rem;
+	backgroundColor: #006cff;
 
-&:hover {
-  backgroundColor: #0056cc;
-}
+	&:hover {
+		backgroundColor: #0056cc;
+	}
 }`);
 	});
 
 	it("should create a selector with variables, declarations and children", () => {
-		const colorVar = variable("button-color", "#006cff");
-		const hoverVar = variable("button-hover-color", "#0056cc");
+		const buttonSelector = selector(".button", ({ variable, selector }) => {
+			const colorVar = variable("button-color", "#006cff");
+			const hoverVar = variable("button-hover-color", "#0056cc");
 
-		const buttonSelector = selector(".button", {}, ({ variable, selector }) => {
-			variable(colorVar);
-			variable(hoverVar);
+			selector("&:hover", {
+				backgroundColor: ref(hoverVar),
+			});
 
 			return {
 				padding: "0.5rem 1rem",
 				backgroundColor: ref(colorVar),
 			};
-
-			selector("&:hover", {
-				backgroundColor: ref(hoverVar),
-			});
 		});
 
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  --button-color: #006cff;
-  --button-hover-color: #0056cc;
+	--button-color: #006cff;
+	--button-hover-color: #0056cc;
 
-  padding: 0.5rem 1rem;
-  backgroundColor: var(--button-color);
+	padding: 0.5rem 1rem;
+	backgroundColor: var(--button-color);
 
-&:hover {
-  backgroundColor: var(--button-hover-color);
-}
+	&:hover {
+		backgroundColor: var(--button-hover-color);
+	}
 }`);
 	});
 
 	it("should handle empty declarations", () => {
-		const buttonSelector = selector(".button", {}, ({ selector }) => {
+		const buttonSelector = selector(".button", ({ selector }) => {
 			selector("&:hover", {
 				backgroundColor: "#0056cc",
 			});
@@ -810,10 +806,9 @@ describe("consumeSelector", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-
-&:hover {
-  backgroundColor: #0056cc;
-}
+	&:hover {
+		backgroundColor: #0056cc;
+	}
 }`);
 	});
 
@@ -825,15 +820,13 @@ describe("consumeSelector", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  padding: 0.5rem 1rem;
+	padding: 0.5rem 1rem;
 }`);
 	});
 
 	it("should handle empty children", () => {
-		const colorVar = variable("button-color", "#006cff");
-
-		const buttonSelector = selector(".button", {}, ({ variable }) => {
-			variable(colorVar);
+		const buttonSelector = selector(".button", ({ variable }) => {
+			variable("button-color", "#006cff");
 
 			return {
 				padding: "0.5rem 1rem",
@@ -843,9 +836,9 @@ describe("consumeSelector", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  --button-color: #006cff;
+	--button-color: #006cff;
 
-  padding: 0.5rem 1rem;
+	padding: 0.5rem 1rem;
 }`);
 	});
 
@@ -854,9 +847,7 @@ describe("consumeSelector", () => {
 
 		const result = consumeSelector(emptySelector, options);
 
-		expect(result).toBe(`.empty {
-
-}`);
+		expect(result).toBe(`.empty {}`);
 	});
 
 	it("should respect custom indentation in options", () => {
@@ -878,95 +869,86 @@ describe("consumeSelector", () => {
 	});
 
 	it("should handle nested children multiple levels deep", () => {
-		const buttonSelector = selector(
-			".button",
-			{
+		const buttonSelector = selector(".button", ({ selector }) => {
+			selector("&:hover", ({ selector }) => {
+				selector("&:active", {
+					transform: "scale(0.98)",
+				});
+
+				return {
+					backgroundColor: "#0056cc",
+				};
+			});
+
+			return {
 				padding: "0.5rem 1rem",
 				backgroundColor: "#006cff",
-			},
-			({ selector }) => {
-				selector(
-					"&:hover",
-					{
-						backgroundColor: "#0056cc",
-					},
-					({ selector }) => {
-						selector("&:active", {
-							transform: "scale(0.98)",
-						});
-					},
-				);
-			},
-		);
+			};
+		});
 
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  padding: 0.5rem 1rem;
-  backgroundColor: #006cff;
+	padding: 0.5rem 1rem;
+	backgroundColor: #006cff;
 
-&:hover {
-  backgroundColor: #0056cc;
-
-&:active {
-  transform: scale(0.98);
-}
-}
+	&:hover {
+		backgroundColor: #0056cc;
+\t
+		&:active {
+			transform: scale(0.98);
+		}
+	}
 }`);
 	});
 
 	it("should handle complex nested selector structures", () => {
-		const colorVar = variable("button-color", "#006cff");
+		const buttonSelector = selector(".button", ({ selector, variable }) => {
+			const colorVar = variable("button-color", "#006cff");
 
-		const buttonSelector = selector(
-			".button",
-			{
+			selector("&:hover", ({ selector }) => {
+				selector("&:active", {
+					transform: "scale(0.98)",
+				});
+
+				return {
+					backgroundColor: "#0056cc",
+				};
+			});
+
+			selector("& > .icon", {
+				marginRight: "0.5rem",
+			});
+
+			return {
 				padding: "0.5rem 1rem",
 				backgroundColor: ref(colorVar),
 				display: "flex",
 				alignItems: "center",
-			},
-			({ selector, variable }) => {
-				variable(colorVar);
-
-				selector(
-					"&:hover",
-					{
-						backgroundColor: "#0056cc",
-					},
-					({ selector }) => {
-						selector("&:active", {
-							transform: "scale(0.98)",
-						});
-					},
-				);
-
-				selector("& > .icon", {
-					marginRight: "0.5rem",
-				});
-			},
-		);
+			};
+		});
 
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  --button-color: #006cff;
+	--button-color: #006cff;
 
-  padding: 0.5rem 1rem;
-  backgroundColor: var(--button-color);
-  display: flex;
-  alignItems: center;
+	padding: 0.5rem 1rem;
+	backgroundColor: var(--button-color);
+	display: flex;
+	alignItems: center;
 
-&:hover {
-  backgroundColor: #0056cc;
+	&:hover {
+		backgroundColor: #0056cc;
+\t
+		&:active {
+			transform: scale(0.98);
+		}
+	}
 
-&:active {
-  transform: scale(0.98);
-}
-}
-& > .icon {
-  marginRight: 0.5rem;
-}
+	& > .icon {
+		marginRight: 0.5rem;
+	}
 }`);
 	});
 
@@ -997,16 +979,17 @@ describe("consumeSelector", () => {
 		const result = consumeSelector(cardSelector, options);
 
 		expect(result).toBe(`.card {
-  padding: 1rem;
-  borderRadius: 8px;
+	padding: 1rem;
+	borderRadius: 8px;
 
-.card-title {
-  fontSize: 1.5rem;
-  fontWeight: bold;
-}
-.card-content {
-  marginTop: 0.5rem;
-}
+	.card-title {
+		fontSize: 1.5rem;
+		fontWeight: bold;
+	}
+
+	.card-content {
+		marginTop: 0.5rem;
+	}
 }`);
 	});
 
@@ -1035,34 +1018,35 @@ describe("consumeSelector", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  padding: 0.5rem 1rem;
-  backgroundColor: #006cff;
-  color: white;
-  transition: background-color 0.2s;
+	padding: 0.5rem 1rem;
+	backgroundColor: #006cff;
+	color: white;
+	transition: background-color 0.2s;
 
-&:hover {
-  backgroundColor: #0056cc;
-}
-&:active {
-  backgroundColor: #004099;
-}
-&::before {
-  content: "";
-  display: inline-block;
-  marginRight: 0.5rem;
-}
+	&:hover {
+		backgroundColor: #0056cc;
+	}
+
+	&:active {
+		backgroundColor: #004099;
+	}
+
+	&::before {
+		content: "";
+		display: inline-block;
+		marginRight: 0.5rem;
+	}
 }`);
 	});
 
 	it("should handle selectors with variable references for consistent theming", () => {
-		const borderRadiusSm = variable("border-radius-sm", "4px");
-		const colorPrimary = variable("color-primary", "#006cff");
-		const colorPrimaryDark = variable("color-primary-dark", "#0056cc");
-		const spacingMd = variable("spacing-md", "1rem");
+		const buttonSelector = selector(".button", ({ variable }) => {
+			const borderRadiusSm = variable("border-radius-sm", "4px");
+			const colorPrimary = variable("color-primary", "#006cff");
+			const colorPrimaryDark = variable("color-primary-dark", "#0056cc");
+			const spacingMd = variable("spacing-md", "1rem");
 
-		const buttonSelector = selector(
-			".button",
-			{
+			return {
 				backgroundColor: ref(colorPrimary),
 				borderRadius: ref(borderRadiusSm),
 				color: "white",
@@ -1071,31 +1055,25 @@ describe("consumeSelector", () => {
 				"&:hover": {
 					backgroundColor: ref(colorPrimaryDark),
 				},
-			},
-			({ variable }) => {
-				variable(borderRadiusSm);
-				variable(colorPrimary);
-				variable(colorPrimaryDark);
-				variable(spacingMd);
-			},
-		);
+			};
+		});
 
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-  --border-radius-sm: 4px;
-  --color-primary: #006cff;
-  --color-primary-dark: #0056cc;
-  --spacing-md: 1rem;
+	--border-radius-sm: 4px;
+	--color-primary: #006cff;
+	--color-primary-dark: #0056cc;
+	--spacing-md: 1rem;
 
-  backgroundColor: var(--color-primary);
-  borderRadius: var(--border-radius-sm);
-  color: white;
-  padding: var(--spacing-md);
+	backgroundColor: var(--color-primary);
+	borderRadius: var(--border-radius-sm);
+	color: white;
+	padding: var(--spacing-md);
 
-&:hover {
-  backgroundColor: var(--color-primary-dark);
-}
+	&:hover {
+		backgroundColor: var(--color-primary-dark);
+	}
 }`);
 	});
 
@@ -1113,39 +1091,31 @@ describe("consumeSelector", () => {
 		const result = consumeSelector(cardSelector, options);
 
 		expect(result).toBe(`.card {
-  width: 100%;
-  padding: 1rem;
+	width: 100%;
+	padding: 1rem;
 
-@media (min-width: 768px) {
-  width: 50%;
-  padding: 2rem;
-}
+	@media (min-width: 768px) {
+		width: 50%;
+		padding: 2rem;
+	}
 }`);
 	});
 
 	it("should handle selectors with calc() expressions", () => {
 		const spacingBase = variable("spacing-base", "8px");
 
-		const containerSelector = selector(
-			".container",
-			{
-				padding: "calc(2 * 1rem)",
-				margin: `calc(${ref(spacingBase)} * 2)`,
-				width: "calc(100% - 2rem)",
-			},
-			({ variable }) => {
-				variable(spacingBase);
-			},
-		);
+		const containerSelector = selector(".container", {
+			padding: "calc(2 * 1rem)",
+			margin: css`calc(${ref(spacingBase)} * 2)`,
+			width: "calc(100% - 2rem)",
+		});
 
 		const result = consumeSelector(containerSelector, options);
 
 		expect(result).toBe(`.container {
-  --spacing-base: 8px;
-
-  padding: calc(2 * 1rem);
-  margin: calc(var(--spacing-base) * 2);
-  width: calc(100% - 2rem);
+	padding: calc(2 * 1rem);
+	margin: calc(var(--spacing-base) * 2);
+	width: calc(100% - 2rem);
 }`);
 	});
 });
