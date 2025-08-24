@@ -149,7 +149,7 @@ describe("createThemeFunction", () => {
 
 			expect(callbackWasCalled).toBe(true);
 			expect(result).toBe(existingTheme);
-			expect(result.children.length).toBeGreaterThan(0);
+			expect(result.variables.length).toBeGreaterThan(0);
 		});
 	});
 
@@ -160,6 +160,7 @@ describe("createThemeFunction", () => {
 			expect(result).toEqual({
 				type: "theme",
 				name: "light",
+				variables: [],
 				children: [],
 			});
 			expect(root.themes).toHaveLength(1);
@@ -172,6 +173,7 @@ describe("createThemeFunction", () => {
 			expect(result).toEqual({
 				type: "theme",
 				name: "light",
+				variables: [],
 				children: [],
 			});
 			expect(root.themes).toHaveLength(1);
@@ -194,8 +196,8 @@ describe("createThemeFunction", () => {
 			expect(root.themes).toHaveLength(2);
 			expect(darkTheme.name).toBe("dark");
 			expect(lightTheme.name).toBe("light");
-			expect(darkTheme.children.length).toBeGreaterThan(0);
-			expect(lightTheme.children.length).toBeGreaterThan(0);
+			expect(darkTheme.variables.length).toBeGreaterThan(0);
+			expect(lightTheme.variables.length).toBeGreaterThan(0);
 		});
 
 		it("should handle mixed new and existing themes", () => {
@@ -217,8 +219,8 @@ describe("createThemeFunction", () => {
 			expect(root.themes).toHaveLength(2);
 			expect(retrievedTheme).toBe(existingTheme);
 			expect(newTheme.name).toBe("new");
-			expect(retrievedTheme.children.length).toBeGreaterThan(0);
-			expect(newTheme.children.length).toBeGreaterThan(0);
+			expect(retrievedTheme.variables.length).toBeGreaterThan(0);
+			expect(newTheme.variables.length).toBeGreaterThan(0);
 		});
 	});
 
@@ -232,7 +234,7 @@ describe("createThemeFunction", () => {
 			};
 
 			const result = theme("test", callback);
-			expect(result.children.length).toBe(1);
+			expect(result.variables.length).toBe(1);
 		});
 
 		it("should provide working selector function in callback context", () => {
@@ -264,7 +266,8 @@ describe("createThemeFunction", () => {
 
 			const result = theme("bootstrap-theme", callback);
 
-			expect(result.children).toHaveLength(4);
+			expect(result.children).toHaveLength(2);
+			expect(result.variables).toHaveLength(2);
 			expect(root.themes).toHaveLength(1);
 		});
 	});
@@ -307,8 +310,8 @@ describe("createThemeFunction", () => {
 
 			const result = theme("existing", callback);
 
-			expect(result.children).toHaveLength(2);
-			expect(result.children[0]).toEqual({
+			expect(result.variables).toHaveLength(2);
+			expect(result.variables[0]).toEqual({
 				type: "variable",
 				name: "existing-var",
 				value: "existing-value",

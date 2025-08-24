@@ -48,18 +48,21 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._padding:sm",
 			declarations: { padding: "8px" },
+			variables: [],
 			children: [],
 		});
 		expect(root.children[1]).toEqual({
 			type: "selector",
 			query: "._padding:md",
 			declarations: { padding: "16px" },
+			variables: [],
 			children: [],
 		});
 		expect(root.children[2]).toEqual({
 			type: "selector",
 			query: "._padding:lg",
 			declarations: { padding: "24px" },
+			variables: [],
 			children: [],
 		});
 	});
@@ -78,6 +81,7 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._hidden",
 			declarations: { display: "none" },
+			variables: [],
 			children: [],
 		});
 	});
@@ -113,6 +117,7 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._color:primary",
 			declarations: { color: "#007bff" },
+			variables: [],
 			children: [],
 		});
 
@@ -120,11 +125,13 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._hover:color:primary",
 			declarations: {},
+			variables: [],
 			children: [
 				{
 					type: "selector",
 					query: "&:hover",
 					declarations: { color: "#007bff" },
+					variables: [],
 					children: [],
 				},
 			],
@@ -134,6 +141,7 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._color:secondary",
 			declarations: { color: "#6c757d" },
+			variables: [],
 			children: [],
 		});
 
@@ -141,11 +149,13 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._hover:color:secondary",
 			declarations: {},
+			variables: [],
 			children: [
 				{
 					type: "selector",
 					query: "&:hover",
 					declarations: { color: "#6c757d" },
+					variables: [],
 					children: [],
 				},
 			],
@@ -190,6 +200,7 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._background:primary",
 			declarations: { background: "#007bff" },
+			variables: [],
 			children: [],
 		});
 
@@ -198,11 +209,13 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._focus:background:primary",
 			declarations: {},
+			variables: [],
 			children: [
 				{
 					type: "selector",
 					query: "&:focus",
 					declarations: { background: "#007bff" },
+					variables: [],
 					children: [],
 				},
 			],
@@ -212,11 +225,13 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._hover:background:primary",
 			declarations: {},
+			variables: [],
 			children: [
 				{
 					type: "selector",
 					query: "&:hover",
 					declarations: { background: "#007bff" },
+					variables: [],
 					children: [],
 				},
 			],
@@ -227,16 +242,19 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._focus:hover:background:primary",
 			declarations: {},
+			variables: [],
 			children: [
 				{
 					type: "selector",
 					query: "&:hover",
 					declarations: {},
+					variables: [],
 					children: [
 						{
 							type: "selector",
 							query: "&:focus",
 							declarations: { background: "#007bff" },
+							variables: [],
 							children: [],
 						},
 					],
@@ -276,6 +294,7 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._text:base",
 			declarations: { fontSize: "14px" },
+			variables: [],
 			children: [],
 		});
 
@@ -284,11 +303,13 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._lg:text:base",
 			declarations: {},
+			variables: [],
 			children: [
 				{
 					type: "media",
 					query: "screen and (min-width: 1024px)",
 					declarations: { fontSize: "14px" },
+					variables: [],
 					children: [],
 				},
 			],
@@ -298,11 +319,13 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._md:text:base",
 			declarations: {},
+			variables: [],
 			children: [
 				{
 					type: "media",
 					query: "screen and (min-width: 768px)",
 					declarations: { fontSize: "14px" },
+					variables: [],
 					children: [],
 				},
 			],
@@ -312,11 +335,13 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._sm:text:base",
 			declarations: {},
+			variables: [],
 			children: [
 				{
 					type: "media",
 					query: "screen and (min-width: 640px)",
 					declarations: { fontSize: "14px" },
+					variables: [],
 					children: [],
 				},
 			],
@@ -343,6 +368,7 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._width:full",
 			declarations: { width: "100%" },
+			variables: [],
 			children: [],
 		});
 	});
@@ -362,6 +388,7 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._height:screen",
 			declarations: { height: "100vh" },
+			variables: [],
 			children: [],
 		});
 	});
@@ -387,6 +414,7 @@ describe("createUtilityFunction", () => {
 				flexDirection: "row",
 				gap: "1rem",
 			},
+			variables: [],
 			children: [],
 		});
 		expect(root.children[1]).toEqual({
@@ -397,6 +425,7 @@ describe("createUtilityFunction", () => {
 				flexDirection: "column",
 				gap: "1rem",
 			},
+			variables: [],
 			children: [],
 		});
 	});
@@ -434,11 +463,13 @@ describe("createUtilityFunction", () => {
 			type: "selector",
 			query: "._md:m:4",
 			declarations: {},
+			variables: [],
 			children: [
 				{
 					type: "media",
 					query: "(min-width: 768px)",
 					declarations: { margin: "1rem" },
+					variables: [],
 					children: [],
 				},
 			],

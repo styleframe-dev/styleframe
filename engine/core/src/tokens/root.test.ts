@@ -23,10 +23,11 @@ describe("createRoot", () => {
 
 			expect(root).toEqual({
 				type: "root",
-				children: [],
 				utilities: [],
 				modifiers: [],
 				recipes: [],
+				variables: [],
+				children: [],
 				themes: [],
 			});
 		});
@@ -54,15 +55,15 @@ describe("createRoot", () => {
 			const root2 = createRoot();
 
 			// Modify one instance
-			root1.children.push({
+			root1.variables.push({
 				type: "variable",
 				name: "test",
 				value: "test-value",
 			} as any);
 
 			// Other instance should remain unaffected
-			expect(root1.children).toHaveLength(1);
-			expect(root2.children).toHaveLength(0);
+			expect(root1.variables).toHaveLength(1);
+			expect(root2.variables).toHaveLength(0);
 		});
 	});
 });

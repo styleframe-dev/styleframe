@@ -203,7 +203,8 @@ describe("createMediaFunction", () => {
 				});
 			});
 
-			expect(result.children).toHaveLength(2); // variable + selector
+			expect(result.children).toHaveLength(1); // selector
+			expect(result.variables).toHaveLength(1); // variable
 		});
 	});
 
@@ -394,7 +395,8 @@ describe("createMediaFunction", () => {
 				},
 			);
 
-			expect(result.children).toHaveLength(2); // variable + selector
+			expect(result.children).toHaveLength(1); // selector
+			expect(result.variables).toHaveLength(1); // variable
 		});
 
 		it("should support dark mode queries", () => {

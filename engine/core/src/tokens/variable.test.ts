@@ -28,8 +28,8 @@ describe("createVariableFunction", () => {
 		it("should add the variable to root declarations", () => {
 			const result = variable("spacing", "1rem");
 
-			expect(root.children).toHaveLength(1);
-			expect(root.children[0]).toBe(result);
+			expect(root.variables).toHaveLength(1);
+			expect(root.variables[0]).toBe(result);
 		});
 	});
 
@@ -41,14 +41,14 @@ describe("createVariableFunction", () => {
 
 				expect(second).toBe(first); // Same instance
 				expect(second.value).toBe("2px"); // Updated value
-				expect(root.children).toHaveLength(1);
+				expect(root.variables).toHaveLength(1);
 			});
 
 			it("should create new variable if none exists with default: false", () => {
 				const result = variable("line-height", "1.5", { default: false });
 
 				expect(result.value).toBe("1.5");
-				expect(root.children).toHaveLength(1);
+				expect(root.variables).toHaveLength(1);
 			});
 		});
 
@@ -59,7 +59,7 @@ describe("createVariableFunction", () => {
 
 				expect(second).toBe(first);
 				expect(second.value).toBe("red");
-				expect(root.children).toHaveLength(1);
+				expect(root.variables).toHaveLength(1);
 			});
 
 			it("should return existing variable with explicit default: true", () => {
@@ -68,14 +68,14 @@ describe("createVariableFunction", () => {
 
 				expect(second).toBe(first);
 				expect(second.value).toBe("16px");
-				expect(root.children).toHaveLength(1);
+				expect(root.variables).toHaveLength(1);
 			});
 
 			it("should create new variable if none exists with default: true", () => {
 				const result = variable("margin", "10px", { default: true });
 
 				expect(result.value).toBe("10px");
-				expect(root.children).toHaveLength(1);
+				expect(root.variables).toHaveLength(1);
 			});
 		});
 	});
@@ -86,10 +86,10 @@ describe("createVariableFunction", () => {
 			const spacing = variable("spacing", "8px");
 			const fontSize = variable("font-size", "14px");
 
-			expect(root.children).toHaveLength(3);
-			expect(root.children).toContain(color);
-			expect(root.children).toContain(spacing);
-			expect(root.children).toContain(fontSize);
+			expect(root.variables).toHaveLength(3);
+			expect(root.variables).toContain(color);
+			expect(root.variables).toContain(spacing);
+			expect(root.variables).toContain(fontSize);
 		});
 
 		it("should find correct existing variable among multiple", () => {
@@ -102,7 +102,7 @@ describe("createVariableFunction", () => {
 
 			expect(updatedSpacing).toBe(spacing);
 			expect(updatedSpacing.value).toBe("20px");
-			expect(root.children).toHaveLength(3);
+			expect(root.variables).toHaveLength(3);
 		});
 	});
 
@@ -128,8 +128,8 @@ describe("createVariableFunction", () => {
 			const result = selectorVariable("nested-var", "50px");
 
 			expect(result.name).toBe("nested-var");
-			expect(selectorInstance.children).toHaveLength(1);
-			expect(selectorInstance.children[0]).toBe(result);
+			expect(selectorInstance.variables).toHaveLength(1);
+			expect(selectorInstance.variables[0]).toBe(result);
 		});
 	});
 
@@ -201,7 +201,7 @@ describe("createVariableFunction", () => {
 
 			expect(updated).toBe(first);
 			expect(updated.value).toBe("b");
-			expect(root.children).toHaveLength(1);
+			expect(root.variables).toHaveLength(1);
 		});
 
 		it("should respect default: true when passing variable instance", () => {
@@ -210,7 +210,7 @@ describe("createVariableFunction", () => {
 
 			expect(result).toBe(first);
 			expect(first.value).toBe("red");
-			expect(root.children).toHaveLength(1);
+			expect(root.variables).toHaveLength(1);
 		});
 
 		it("should create variable in new container when target from different parent", () => {

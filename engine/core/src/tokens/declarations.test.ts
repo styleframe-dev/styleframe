@@ -242,7 +242,7 @@ describe("createDeclarationsCallbackContext", () => {
 
 			expect(testVar.name).toBe("test-var");
 			expect(testVar.value).toBe("test-value");
-			expect(selector.children).toContainEqual(testVar);
+			expect(selector.variables).toContainEqual(testVar);
 		});
 
 		it("should create selector function bound to correct parent and root", () => {
@@ -278,7 +278,7 @@ describe("createDeclarationsCallbackContext", () => {
 
 			expect(nestedVar.name).toBe("nested-var");
 			expect(nestedVar.value).toBe("#006cff");
-			expect(selector.children).toContainEqual(nestedVar);
+			expect(selector.variables).toContainEqual(nestedVar);
 		});
 
 		it("should support nested selector creation in media context", () => {
@@ -326,9 +326,9 @@ describe("createDeclarationsCallbackContext", () => {
 			context1.variable("var1", "value1");
 			context2.variable("var2", "value2");
 
-			expect(root1.children).toHaveLength(1);
-			expect(root2.children).toHaveLength(1);
-			expect(root1.children[0]).not.toEqual(root2.children[0]);
+			expect(root1.variables).toHaveLength(1);
+			expect(root2.variables).toHaveLength(1);
+			expect(root1.variables[0]).not.toEqual(root2.variables[0]);
 		});
 	});
 
@@ -354,16 +354,16 @@ describe("createDeclarationsCallbackContext", () => {
 
 			contexts.forEach(({ parent, name }) => {
 				const context = createDeclarationsCallbackContext(parent, root);
-				const initialChildrenCount = parent.children.length;
+				const initialVariablesCount = parent.variables.length;
 
 				context.variable(`${name}-var`, "test");
 
-				expect(parent.children).toHaveLength(initialChildrenCount + 1);
+				expect(parent.variables).toHaveLength(initialVariablesCount + 1);
 
-				const lastChild = parent.children[
-					parent.children.length - 1
+				const lastVar = parent.variables[
+					parent.variables.length - 1
 				] as Variable;
-				expect(lastChild.type).toBe("variable");
+				expect(lastVar.type).toBe("variable");
 			});
 		});
 	});
@@ -390,7 +390,7 @@ describe("createDeclarationsCallbackContext", () => {
 			const testVar = context.variable("root-var", "value");
 
 			expect(testVar.name).toBe("root-var");
-			expect(root.children).toContainEqual(testVar);
+			expect(root.variables).toContainEqual(testVar);
 		});
 
 		it("should handle when parent and root are different", () => {
@@ -403,8 +403,8 @@ describe("createDeclarationsCallbackContext", () => {
 			const testVar = context.variable("different-root-var", "value");
 
 			expect(testVar.name).toBe("different-root-var");
-			expect(selector.children).toContainEqual(testVar);
-			expect(differentRoot.children).not.toContainEqual(testVar);
+			expect(selector.variables).toContainEqual(testVar);
+			expect(differentRoot.variables).not.toContainEqual(testVar);
 		});
 	});
 
@@ -463,7 +463,8 @@ describe("createDeclarationsCallbackContext", () => {
 				});
 			});
 
-			expect(root.children).toHaveLength(3); // variable + selector + media
+			expect(root.children).toHaveLength(2); // selector + media
+			expect(root.variables).toHaveLength(1); // variable
 		});
 
 		it("should work in complex nested scenarios", () => {
@@ -483,7 +484,8 @@ describe("createDeclarationsCallbackContext", () => {
 
 			expect(root.children).toHaveLength(1); // main selector
 			const mainSelector = root.children[0] as Selector;
-			expect(mainSelector.children).toHaveLength(2); // variable + media
+			expect(mainSelector.children).toHaveLength(1); // media
+			expect(mainSelector.variables).toHaveLength(1); // variable
 		});
 
 		it("should support design system patterns", () => {
@@ -505,7 +507,8 @@ describe("createDeclarationsCallbackContext", () => {
 				};
 			});
 
-			expect(root.children).toHaveLength(3); // 2 variables + 1 selector
+			expect(root.children).toHaveLength(1); // 1 selector
+			expect(root.variables).toHaveLength(2); // 2 variables
 		});
 	});
 
@@ -533,14 +536,14 @@ describe("createDeclarationsCallbackContext", () => {
 				value: "value",
 			};
 
-			selector.children.push(existingVar);
-			const initialLength = selector.children.length;
+			selector.variables.push(existingVar as unknown as any);
+			const initialLength = selector.variables.length;
 
 			const context = createDeclarationsCallbackContext(selector, root);
 			context.variable("new-var", "new-value");
 
-			expect(selector.children).toHaveLength(initialLength + 1);
-			expect(selector.children).toContain(existingVar);
+			expect(selector.variables).toHaveLength(initialLength + 1);
+			expect(selector.variables).toContain(existingVar as unknown as any);
 		});
 	});
 

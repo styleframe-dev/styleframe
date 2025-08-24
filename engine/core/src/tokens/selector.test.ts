@@ -392,7 +392,7 @@ describe("createSelectorFunction", () => {
 			expect(primaryColor.value).toBe("#006cff");
 			expect(button.declarations).toEqual({
 				backgroundColor: {
-					type: "ref",
+					type: "reference",
 					name: "primary",
 					fallback: undefined,
 				},
