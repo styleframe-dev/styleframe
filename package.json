@@ -38,7 +38,7 @@
 	},
 	"lint-staged": {
 		"*.{js,ts,jsx,tsx,json,yaml}": [
-			"biome format --write"
+			"biome format --write --no-errors-on-unmatched"
 		],
 		"*.{js,ts,jsx,tsx}": [
 			"oxlint --fix"
