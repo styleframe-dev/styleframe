@@ -23,7 +23,7 @@
 		"url": "https://github.com/styleframe-dev/styleframe/issues"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.0.0",
+		"@biomejs/biome": "^2.2.2",
 		"@styleframe/config-typescript": "workspace:*",
 		"husky": "catalog:",
 		"lint-staged": "catalog:",

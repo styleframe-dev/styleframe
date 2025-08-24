@@ -1,5 +1,9 @@
 import type {
 	ContainerChild,
+	// Variant,
+	// ComponentValue,
+	CSS,
+	DeclarationsBlock,
 	Modifier,
 	Recipe,
 	Reference,
@@ -16,13 +20,10 @@ import type {
 	// Utility,
 	// Theme,
 	Variable,
-	// Variant,
-	// ComponentValue,
-	// CSS
 } from "@styleframe/core";
 import {
+	isCSS,
 	isRef,
-	// 	isCSS,
 	// 	Transform,
 	// 	isTransform,
 	// 	isTokenValue
@@ -40,79 +41,34 @@ import {
 	// 	isTheme,
 	isVariable,
 } from "@styleframe/core";
-import type { Output, OutputFile } from "./types";
-import { indentLines, normalizeVariableName } from "./utils";
+import type { ConsumeOptions, Output, OutputFile, OutputLine } from "./types";
+import { addIndentToLine, indentLines, normalizeVariableName } from "./utils";
 // import { indentLines } from '@styleframe/utils';
 // import { rootThemeTemplate, themeTemplate } from './templates';
 // import type { VariantProps } from '@styleframe/types';
 
 /**
- * Consumes each item in an array and joins the result
- */
-export function consumeArray(
-	instance: unknown[],
-	options: StyleframeOptions,
-): string {
-	return instance.map((child) => consume(child, options)).join(", ");
-}
-
-/**
  * Consumes a variable instance, equivalent to setting a CSS variable
  */
+
 export function consumeVariable(
 	instance: Variable,
 	options: StyleframeOptions,
 ): string {
-	return `${normalizeVariableName(instance.name)}: ${consume(instance.value, options)};`;
+	return `${normalizeVariableName(instance.name, options)}: ${consume(instance.value, options)};`;
 }
 
 /**
- * Consumes a ref instance, equivalent to referencing a CSS variable with optional fallback
+ * Consumes a declarations block, equivalent to setting CSS properties
  */
-export function consumeRef(
-	instance: Reference,
+export function consumeDeclarations(
+	instance: DeclarationsBlock,
 	options: StyleframeOptions,
-): string {
-	return `var(${normalizeVariableName(instance.name)}${instance.fallback ? `, ${consume(instance.fallback, options)}` : ""})`;
+): string[] {
+	return Object.entries(instance).map(([propertyName, propertyValue]) => {
+		return `${propertyName}: ${consume(propertyValue, options)};`;
+	});
 }
-
-// /**
-//  * Consumes a calc instance, equivalent to setting a CSS calc value
-//  */
-// export function consumeCalc(instance: Calc): string {
-// 	return `calc(${consume(instance.__value)})`;
-// }
-//
-// /**
-//  * Consumes a color instance, equivalent to setting a CSS color value
-//  */
-// export function consumeColor(instance: Color): string {
-// 	if (isCSS(instance.__value)) {
-// 		return `hsla(${consume(instance.__value)})`;
-// 	}
-//
-// 	const h = consume(instance.__value[0]);
-// 	const s = resolvePercentagePropertyValue(consume(instance.__value[1]));
-// 	const l = resolvePercentagePropertyValue(consume(instance.__value[2]));
-// 	const a = consume(instance.__value[3]);
-//
-// 	return `hsla(${h} ${s} ${l} / ${a})`;
-// }
-//
-// /**
-//  * Consumes a selector property, equivalent to setting a CSS property
-//  */
-// export function consumeSelectorProperty(key: string, value: unknown): string {
-// 	const resolvedKey = toCssName(key);
-// 	return `${resolvedKey}: ${consume(value)};`;
-// }
-//
-// /**
-//  * Consumes a selector variable, equivalent to setting a CSS variable within a selector
-//  */
-// export function consumeSelectorVariables(value: Variable[]): string {
-// 	return value.map(consumeVariable).join('\n');
-// }
 
 /**
  * Consumes a selector instance, equivalent to setting a CSS selector
@@ -121,10 +77,28 @@ export function consumeSelector(
 	instance: Selector,
 	options: StyleframeOptions,
 ): string {
-	const declarations = ""; //consumeDeclarations(instance.declarations, options);
+	const variables = instance.variables.map((variable) =>
+		addIndentToLine(consumeVariable(variable, options), options),
+	);
+
+	const declarations = consumeDeclarations(instance.declarations, options).map(
+		(line) => addIndentToLine(line, options),
+	);
+
+	const children = instance.children.map((child) => consume(child, options));
+
+	const variablesSpacer =
+		variables.length > 0 && (declarations.length > 0 || children.length > 0)
+			? "\n"
+			: "";
+
+	const declarationsSpacer =
+		declarations.length > 0 && children.length > 0 ? "\n" : "";
 
 	return `${instance.query} {
-${indentLines(declarations)}
+${variables.join("\n")}${variablesSpacer}${declarations.join(
+	"\n",
+)}${declarationsSpacer}${children.join("\n")}
 }`;
 }
 
@@ -173,13 +147,6 @@ ${indentLines(declarations)}
 //  */
 // export function consumeTransform(instance: Transform): string {
 // 	return `${instance.__name}(${instance.__value.map(consume).join(', ')})`;
-// }
-//
-// /**
-//  * Consumes a CSS value, equivalent to the string body of a selector
-//  */
-// export function consumeCSS(instance: CSS): string {
-// 	return instance.__value.map(consume).join('');
 // }
 //
 // /**
@@ -232,46 +199,67 @@ ${indentLines(declarations)}
 // 		: themeTemplate(`.${instance.__name}-theme`, variables, selectors, utilities);
 // }
 
-/**
- * Consumes a primitive instance, equivalent to setting a CSS value
- */
-export function consumePrimitive(
-	instance: unknown,
-	options: StyleframeOptions,
-): string {
-	return instance !== undefined && instance !== null
-		? `${instance as string}`
-		: "";
-}
-
-export function consumeTheme(instance: Theme): string[] {
-	return [];
-}
+// export function consumeTheme(instance: Theme): string[] {
+// 	return [];
+// }
 
 /**
  * Consumes any token instance and returns the CSS string representation
  */
 export function consume(instance: unknown, options: StyleframeOptions): string {
 	switch (true) {
-		case Array.isArray(instance):
-			return consumeArray(instance, options);
-		case isVariable(instance):
-			return consumeVariable(instance, options);
-		case isRef(instance):
-			return consumeRef(instance, options);
 		case isSelector(instance):
 			return consumeSelector(instance, options);
 		// case isUtility(instance):
 		// 	return consumeUtility(instance, output);
+		// 	break;
 		// case isAtRule(instance):
 		// 	return consumeAtRule(instance, output);
+		// 	break;
 		// case isTransform(instance):
 		// 	return consumeTransform(instance, output);
+		// 	break;
 		// case isTheme(instance):
 		// 	return consumeTheme(instance, output);
-		// case isCSS(instance):
-		// 	return consumeCSS(instance, output);
+		// 	break;
+		case isVariable(instance):
+			return consumeVariable(instance, options);
+		case isRef(instance):
+			return consumeRef(instance, options);
+		case isCSS(instance):
+			return consumeCSS(instance, options);
 		default:
 			return consumePrimitive(instance, options);
 	}
+}
+
+/**
+ * Consumes a ref instance, equivalent to referencing a CSS variable with optional fallback
+ */
+
+export function consumeRef(
+	instance: Reference,
+	options: StyleframeOptions,
+): string {
+	return `var(${normalizeVariableName(instance.name, options)}${instance.fallback ? `, ${consume(instance.fallback, options)}` : ""})`;
+}
+
+/**
+ * Consumes a CSS value, equivalent to the string body of a selector
+ */
+export function consumeCSS(instance: CSS, options: StyleframeOptions): string {
+	return instance.value.map((part) => consume(part, options)).join("");
+}
+
+/**
+ * Consumes a primitive instance, equivalent to setting a CSS value
+ */
+
+export function consumePrimitive(
+	instance: unknown,
+	_options: StyleframeOptions,
+): string {
+	return instance !== undefined && instance !== null
+		? `${instance as string}`
+		: "";
 }

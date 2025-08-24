@@ -1,10 +1,10 @@
 import type { ContainerChild, Styleframe } from "@styleframe/core";
 import { consume } from "./consume";
-import type { Output, OutputFile } from "./types";
+import type { Output, OutputFile, OutputLine } from "./types";
 
 export function createFile(
 	name: string,
-	content: string[] = [],
+	content: OutputLine[] = [],
 	layer?: string,
 ): OutputFile {
 	return {
@@ -28,11 +28,19 @@ export function transpile(instance: Styleframe, output: Output) {
 	) {
 		const themesIndexFile = createFile(
 			"themes/index.css",
-			[`@import './default.css';`],
+			[
+				{
+					code: `@import './default.css';`,
+					level: 0,
+				},
+			],
 			"theme",
 		);
 		themesIndexFile.content.push(
-			...instance.root.themes.map((theme) => `@import './${theme.name}.css';`),
+			...instance.root.themes.map((theme) => ({
+				code: `@import './${theme.name}.css';`,
+				level: 0,
+			})),
 		);
 		output.files.push(themesIndexFile);
 	}
@@ -41,9 +49,15 @@ export function transpile(instance: Styleframe, output: Output) {
 		const defaultThemeFile = createFile("theme/default.css", [], "component");
 
 		if (instance.root.variables.length > 0) {
-			defaultThemeFile.content.push(":root {");
+			defaultThemeFile.content.push({
+				code: `:root {`,
+				level: 0,
+			});
 			defaultThemeFile.content.push(...instance.root.variables.map(consume));
-			defaultThemeFile.content.push("}");
+			defaultThemeFile.content.push({
+				code: `}`,
+				level: 0,
+			});
 		}
 
 		defaultThemeFile.content.push(...instance.root.children.map(consume));

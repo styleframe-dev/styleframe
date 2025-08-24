@@ -2,11 +2,14 @@
 	"name": "@styleframe/transpiler",
 	"version": "0.0.0",
 	"type": "module",
+	"types": "./dist/transpiler.d.ts",
+	"module": "./dist/transpiler.js",
+	"main": "./dist/transpiler.umd.cjs",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.js"
+			"types": "./dist/transpiler.d.ts",
+			"import": "./dist/transpiler.js",
+			"require": "./dist/transpiler.umd.cjs"
 		}
 	},
 	"scripts": {

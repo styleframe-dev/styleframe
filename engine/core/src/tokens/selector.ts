@@ -9,31 +9,23 @@ export function createSelectorFunction(parent: Container, root: Root) {
 	return function selector(
 		query: string,
 		declarationsOrCallback: DeclarationsBlock | DeclarationsCallback,
-		callback?: DeclarationsCallback,
 	): Selector {
-		const declarationsArgumentIsCallback =
-			typeof declarationsOrCallback === "function";
-		const declarations = declarationsArgumentIsCallback
-			? {}
-			: declarationsOrCallback;
-
 		const instance: Selector = {
 			type: "selector",
 			query,
-			declarations,
+			declarations: {},
 			variables: [],
 			children: [],
 		};
 
 		const callbackContext = createDeclarationsCallbackContext(instance, root);
-
-		if (!declarationsArgumentIsCallback) {
-			parseDeclarationsBlock(declarations, callbackContext);
+		if (typeof declarationsOrCallback === "function") {
+			instance.declarations = declarationsOrCallback(callbackContext) ?? {};
+		} else {
+			instance.declarations = declarationsOrCallback;
 		}
 
-		if (callback) {
-			callback(callbackContext);
-		}
+		parseDeclarationsBlock(instance.declarations, callbackContext);
 
 		parent.children.push(instance);
 

@@ -1,4 +1,5 @@
-import { isRef, isTokenValue } from "../typeGuards";
+/** biome-ignore-all lint/suspicious/noConfusingVoidType: Returning declarations in callback is optional */
+import { isTokenValue } from "../typeGuards";
 import type { Container, DeclarationsBlock, Root } from "../types";
 import { createCssFunction } from "./css";
 import { createKeyframesFunction } from "./keyframes";
@@ -16,7 +17,7 @@ export type DeclarationsCallbackContext = {
 
 export type DeclarationsCallback = (
 	context: DeclarationsCallbackContext,
-) => void;
+) => DeclarationsBlock | void;
 
 export function createDeclarationsCallbackContext(
 	parent: Container,

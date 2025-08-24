@@ -1,1 +1,6 @@
-export type StyleframeOptions = {};
+export type StyleframeOptions = {
+	indent?: string;
+	variables?: {
+		prefix?: string;
+	};
+};

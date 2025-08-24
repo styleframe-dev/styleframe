@@ -1,16 +1,28 @@
+import type { StyleframeOptions } from "@styleframe/core";
 import { DEFAULT_INDENT } from "./constants";
 
-export function normalizeVariableName(name: string): string {
-	const variableName = name.startsWith("--") ? name : `--${name}`;
+export function normalizeVariableName(
+	name: string,
+	options: StyleframeOptions,
+): string {
+	const prefix = options.variables?.prefix ?? "";
+	const prefixedName = `${prefix}${name}`;
+	const variableName = `${prefixedName.startsWith("--") ? prefixedName : `--${prefixedName}`}`;
 	return variableName
 		.replace(/([0-9])\.([0-9])/g, "$1_$2")
 		.replace(/\./g, "--");
 }
 
-export function addDefaultIndentToLine(string: string): string {
-	return `${DEFAULT_INDENT}${string}`;
+export function addIndentToLine(
+	line: string,
+	options: StyleframeOptions,
+): string {
+	return `${options.indent ?? DEFAULT_INDENT}${line}`;
 }
 
-export function indentLines(string: string): string {
-	return string.split("\n").map(addDefaultIndentToLine).join("\n");
+export function indentLines(lines: string, options: StyleframeOptions): string {
+	return lines
+		.split("\n")
+		.map((line) => addIndentToLine(line, options))
+		.join("\n");
 }

@@ -9,7 +9,6 @@ export function createMediaFunction(parent: Container, root: Root) {
 	return function media(
 		query: string,
 		declarationsOrCallback: DeclarationsBlock | DeclarationsCallback,
-		callback?: DeclarationsCallback,
 	): Media {
 		const instance: Media = {
 			type: "media",
@@ -24,16 +23,13 @@ export function createMediaFunction(parent: Container, root: Root) {
 		// Handle overloaded parameters
 		if (typeof declarationsOrCallback === "function") {
 			// media(query, callback)
-			declarationsOrCallback(callbackContext);
+			instance.declarations = declarationsOrCallback(callbackContext) ?? {};
 		} else {
-			// media(query, declarations, callback?)
+			// media(query, declarations)
 			instance.declarations = declarationsOrCallback;
-			parseDeclarationsBlock(declarationsOrCallback, callbackContext);
-
-			if (callback) {
-				callback(callbackContext);
-			}
 		}
+
+		parseDeclarationsBlock(instance.declarations, callbackContext);
 
 		parent.children.push(instance);
 

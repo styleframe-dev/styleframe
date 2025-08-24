@@ -10,7 +10,6 @@ describe("createMediaFunction", () => {
 	let selector: Selector;
 	let media: ReturnType<typeof createMediaFunction>;
 	let variable: ReturnType<typeof createVariableFunction>;
-	let selectorFn: ReturnType<typeof createSelectorFunction>;
 
 	beforeEach(() => {
 		root = createRoot();
@@ -23,7 +22,6 @@ describe("createMediaFunction", () => {
 		};
 		media = createMediaFunction(selector, root);
 		variable = createVariableFunction(root, root);
-		selectorFn = createSelectorFunction(root, root);
 	});
 
 	describe("basic media query creation", () => {
@@ -54,17 +52,15 @@ describe("createMediaFunction", () => {
 		});
 
 		it("should create a media query with declarations and callback", () => {
-			const result = media(
-				"(min-width: 768px)",
-				{
+			const result = media("(min-width: 768px)", ({ selector }) => {
+				selector(".text", {
+					lineHeight: "1.4",
+				});
+
+				return {
 					fontSize: "18px",
-				},
-				({ selector }) => {
-					selector(".text", {
-						lineHeight: "1.4",
-					});
-				},
-			);
+				};
+			});
 
 			expect(result.query).toBe("(min-width: 768px)");
 			expect(result.declarations).toEqual({
@@ -445,17 +441,15 @@ describe("createMediaFunction", () => {
 		});
 
 		it("should handle three-parameter form correctly", () => {
-			const result = media(
-				"(min-width: 768px)",
-				{
+			const result = media("(min-width: 768px)", ({ selector }) => {
+				selector(".three-param-test", {
+					lineHeight: "1.4",
+				});
+
+				return {
 					fontSize: "18px",
-				},
-				({ selector }) => {
-					selector(".three-param-test", {
-						lineHeight: "1.4",
-					});
-				},
-			);
+				};
+			});
 
 			expect(result.declarations).toEqual({ fontSize: "18px" });
 			expect(result.children).toHaveLength(1);

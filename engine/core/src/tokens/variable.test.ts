@@ -1,14 +1,17 @@
 import type { Reference, Root, Selector, Variable } from "../types";
 import { createRoot } from "./root";
+import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
 
 describe("createVariableFunction", () => {
 	let root: Root;
 	let variable: ReturnType<typeof createVariableFunction>;
+	let selector: ReturnType<typeof createSelectorFunction>;
 
 	beforeEach(() => {
 		root = createRoot();
 		variable = createVariableFunction(root, root);
+		selector = createSelectorFunction(root, root);
 	});
 
 	describe("basic variable creation", () => {
@@ -119,13 +122,7 @@ describe("createVariableFunction", () => {
 
 	describe("working with selectors", () => {
 		it("should work when root is a selector", () => {
-			const selectorInstance: Selector = {
-				type: "selector",
-				query: ".test",
-				variables: [],
-				declarations: {},
-				children: [],
-			};
+			const selectorInstance = selector(".test", {});
 
 			const selectorVariable = createVariableFunction(selectorInstance, root);
 			const result = selectorVariable("nested-var", "50px");
@@ -188,57 +185,51 @@ describe("createVariableFunction", () => {
 			expect(spacingVar.name).toBe("spacing-lg");
 		});
 	});
-});
 
-describe("accepting variable instance as name", () => {
-	let root: Root;
-	let variable: ReturnType<typeof createVariableFunction>;
+	describe("accepting variable instance as name", () => {
+		let root: Root;
+		let variable: ReturnType<typeof createVariableFunction>;
 
-	beforeEach(() => {
-		root = createRoot();
-		variable = createVariableFunction(root, root);
-	});
+		beforeEach(() => {
+			root = createRoot();
+			variable = createVariableFunction(root, root);
+		});
 
-	it("should update existing variable when passing variable instance", () => {
-		const first = variable("v", "a");
-		const updated = variable(first, "b");
+		it("should update existing variable when passing variable instance", () => {
+			const first = variable("v", "a");
+			const updated = variable(first, "b");
 
-		expect(updated).toBe(first);
-		expect(updated.value).toBe("b");
-		expect(root.children).toHaveLength(1);
-	});
+			expect(updated).toBe(first);
+			expect(updated.value).toBe("b");
+			expect(root.children).toHaveLength(1);
+		});
 
-	it("should respect default: true when passing variable instance", () => {
-		const first = variable("color", "red");
-		const result = variable(first, "blue", { default: true });
+		it("should respect default: true when passing variable instance", () => {
+			const first = variable("color", "red");
+			const result = variable(first, "blue", { default: true });
 
-		expect(result).toBe(first);
-		expect(first.value).toBe("red");
-		expect(root.children).toHaveLength(1);
-	});
+			expect(result).toBe(first);
+			expect(first.value).toBe("red");
+			expect(root.children).toHaveLength(1);
+		});
 
-	it("should create variable in new container when target from different parent", () => {
-		const base = variable("spacing", "8px");
-		const selectorInstance: Selector = {
-			type: "selector",
-			query: ".x",
-			variables: [],
-			declarations: {},
-			children: [],
-		};
-		const selectorVariable = createVariableFunction(selectorInstance, root);
-		const result = selectorVariable(base, "12px");
+		it("should create variable in new container when target from different parent", () => {
+			const base = variable("spacing", "8px");
+			const selectorInstance = selector(".x", {});
+			const selectorVariable = createVariableFunction(selectorInstance, root);
+			const result = selectorVariable(base, "12px");
 
-		expect(result.name).toBe("spacing");
-		expect(selectorInstance.children).toHaveLength(1);
-		expect(selectorInstance.children[0]).toBe(result);
-	});
+			expect(result.name).toBe("spacing");
+			expect(selectorInstance.variables).toHaveLength(1);
+			expect(selectorInstance.variables[0]).toBe(result);
+		});
 
-	it("should maintain type information when passing variable instance", () => {
-		const base = variable("typed-var", "x");
-		const result = variable(base, "y");
+		it("should maintain type information when passing variable instance", () => {
+			const base = variable("typed-var", "x");
+			const result = variable(base, "y");
 
-		const typedResult: Variable<"typed-var"> = result;
-		expect(typedResult.name).toBe("typed-var");
+			const typedResult: Variable<"typed-var"> = result;
+			expect(typedResult.name).toBe("typed-var");
+		});
 	});
 });

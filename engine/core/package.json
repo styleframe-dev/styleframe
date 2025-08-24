@@ -2,11 +2,14 @@
 	"name": "@styleframe/core",
 	"version": "0.0.0",
 	"type": "module",
+	"types": "./dist/styleframe.d.ts",
+	"module": "./dist/styleframe.js",
+	"main": "./dist/styleframe.umd.cjs",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.js"
+			"types": "./dist/styleframe.d.ts",
+			"import": "./dist/styleframe.js",
+			"require": "./dist/styleframe.umd.cjs"
 		}
 	},
 	"scripts": {

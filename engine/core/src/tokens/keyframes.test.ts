@@ -73,7 +73,7 @@ describe("keyframes", () => {
 		const s = styleframe();
 		const { selector } = s;
 
-		selector(".test", {}, ({ keyframes }) => {
+		selector(".test", ({ keyframes }) => {
 			const fadeIn = keyframes("fade-in", {
 				"0%": { opacity: 0 },
 				"100%": { opacity: 1 },

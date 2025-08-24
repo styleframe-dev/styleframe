@@ -6,14 +6,14 @@ import { configDefaults as vitestConfig } from "vitest/config";
 /**
  * @typedef {import('vite').UserConfig['build']['lib']} UserConfig
  */
-export const createViteConfig = (cwd, options = {}) =>
+export const createViteConfig = (name, cwd, options = {}) =>
 	defineConfig({
 		plugins: [dts({ rollupTypes: true })],
 		build: {
 			lib: {
 				entry: resolve(cwd, "src/index.ts"),
-				name: "styleframe",
-				fileName: "styleframe",
+				name,
+				fileName: name,
 				...options,
 			},
 		},

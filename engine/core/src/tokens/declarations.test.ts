@@ -469,19 +469,17 @@ describe("createDeclarationsCallbackContext", () => {
 		it("should work in complex nested scenarios", () => {
 			const context = createDeclarationsCallbackContext(root, root);
 
-			context.selector(
-				".component",
-				{
-					display: "block",
-				},
-				({ variable, media }) => {
-					const componentSpacing = variable("component-spacing", "1rem");
+			context.selector(".component", ({ variable, media }) => {
+				const componentSpacing = variable("component-spacing", "1rem");
 
-					media("(min-width: 768px)", {
-						padding: componentSpacing.value as string,
-					});
-				},
-			);
+				media("(min-width: 768px)", {
+					padding: componentSpacing.value as string,
+				});
+
+				return {
+					display: "block",
+				};
+			});
 
 			expect(root.children).toHaveLength(1); // main selector
 			const mainSelector = root.children[0] as Selector;
@@ -496,18 +494,16 @@ describe("createDeclarationsCallbackContext", () => {
 			const color = context.variable("color-primary", "#006cff");
 
 			// Create component with responsive behavior
-			context.selector(
-				".card",
-				{
+			context.selector(".card", ({ media }) => {
+				media("(min-width: 768px)", {
+					padding: "1.5rem",
+				});
+
+				return {
 					padding: spacing.value as string,
 					borderColor: color.value as string,
-				},
-				({ media }) => {
-					media("(min-width: 768px)", {
-						padding: "1.5rem",
-					});
-				},
-			);
+				};
+			});
 
 			expect(root.children).toHaveLength(3); // 2 variables + 1 selector
 		});

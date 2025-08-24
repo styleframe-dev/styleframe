@@ -190,13 +190,7 @@ describe("createSelectorFunction", () => {
 		it("should execute callback with proper context", () => {
 			const callback = vi.fn();
 
-			selector(
-				".card",
-				{
-					padding: "1rem",
-				},
-				callback,
-			);
+			selector(".card", callback);
 
 			expect(callback).toHaveBeenCalledTimes(1);
 			expect(callback).toHaveBeenCalledWith({
@@ -209,23 +203,21 @@ describe("createSelectorFunction", () => {
 		});
 
 		it("should create nested selectors via callback", () => {
-			const result = selector(
-				".card",
-				{
+			const result = selector(".card", ({ selector: nestedSelector }) => {
+				nestedSelector(".card-title", {
+					fontSize: "1.5rem",
+					fontWeight: "bold",
+				});
+
+				nestedSelector(".card-content", {
+					marginTop: "0.5rem",
+				});
+
+				return {
 					padding: "1rem",
 					borderRadius: "8px",
-				},
-				({ selector: nestedSelector }) => {
-					nestedSelector(".card-title", {
-						fontSize: "1.5rem",
-						fontWeight: "bold",
-					});
-
-					nestedSelector(".card-content", {
-						marginTop: "0.5rem",
-					});
-				},
-			);
+				};
+			});
 
 			// Should have nested selectors
 			expect(result.children).toHaveLength(2); // 2 nested selectors created via callback
@@ -252,31 +244,27 @@ describe("createSelectorFunction", () => {
 				expect(color.name).toBe("card-color");
 			});
 
-			selector(".card", { padding: "1rem" }, callback);
+			selector(".card", callback);
 
 			expect(callback).toHaveBeenCalled();
 		});
 
 		it("should handle deeply nested selectors", () => {
-			const result = selector(
-				".menu",
-				{
+			const result = selector(".menu", ({ selector: nestedSelector }) => {
+				nestedSelector(".menu-item", ({ selector: deepNestedSelector }) => {
+					deepNestedSelector(".menu-link", {
+						textDecoration: "none",
+					});
+
+					return {
+						padding: "0.5rem",
+					};
+				});
+
+				return {
 					display: "block",
-				},
-				({ selector: nestedSelector }) => {
-					nestedSelector(
-						".menu-item",
-						{
-							padding: "0.5rem",
-						},
-						({ selector: deepNested }) => {
-							deepNested(".menu-link", {
-								textDecoration: "none",
-							});
-						},
-					);
-				},
-			);
+				};
+			});
 
 			// Check that deep nesting is properly handled
 			expect(result.children).toHaveLength(1);
@@ -295,20 +283,18 @@ describe("createSelectorFunction", () => {
 
 	describe("mixed nesting approaches", () => {
 		it("should handle both inline and callback nesting together", () => {
-			const result = selector(
-				".component",
-				{
+			const result = selector(".component", ({ selector: nestedSelector }) => {
+				nestedSelector(".component-header", {
+					fontWeight: "bold",
+				});
+
+				return {
 					display: "flex",
 					"&:hover": {
 						opacity: 0.8,
 					},
-				},
-				({ selector: nestedSelector }) => {
-					nestedSelector(".component-header", {
-						fontWeight: "bold",
-					});
-				},
-			);
+				};
+			});
 
 			expect(result.children).toHaveLength(2); // inline nested + callback nested
 			expect(result.declarations).toEqual({ display: "flex" });
@@ -397,10 +383,20 @@ describe("createSelectorFunction", () => {
 			const s = styleframe();
 
 			// This would need the ref function to be implemented
-			// const primaryColor = s.variable('primary', '#006cff');
-			// const button = s.selector('.button', {
-			//     backgroundColor: s.ref(primaryColor)
-			// });
+			const primaryColor = s.variable("primary", "#006cff");
+			const button = s.selector(".button", {
+				backgroundColor: s.ref(primaryColor),
+			});
+
+			expect(primaryColor.name).toBe("primary");
+			expect(primaryColor.value).toBe("#006cff");
+			expect(button.declarations).toEqual({
+				backgroundColor: {
+					type: "ref",
+					name: "primary",
+					fallback: undefined,
+				},
+			});
 		});
 	});
 
