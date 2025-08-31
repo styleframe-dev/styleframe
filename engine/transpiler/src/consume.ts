@@ -147,13 +147,6 @@ export function consumeSelector(
 // }
 //
 // /**
-//  * Consumes a transform value, equivalent to setting a CSS transform value
-//  */
-// export function consumeTransform(instance: Transform): string {
-// 	return `${instance.__name}(${instance.__value.map(consume).join(', ')})`;
-// }
-//
-// /**
 //  * Consumes variants, equivalent to stringifying an object
 //  */
 // export function consumeVariants(
@@ -203,40 +196,6 @@ export function consumeSelector(
 // 		: themeTemplate(`.${instance.__name}-theme`, variables, selectors, utilities);
 // }
 
-// export function consumeTheme(instance: Theme): string[] {
-// 	return [];
-// }
-
-/**
- * Consumes any token instance and returns the CSS string representation
- */
-export function consume(instance: unknown, options: StyleframeOptions): string {
-	switch (true) {
-		case isSelector(instance):
-			return consumeSelector(instance, options);
-		// case isUtility(instance):
-		// 	return consumeUtility(instance, output);
-		// 	break;
-		// case isAtRule(instance):
-		// 	return consumeAtRule(instance, output);
-		// 	break;
-		// case isTransform(instance):
-		// 	return consumeTransform(instance, output);
-		// 	break;
-		// case isTheme(instance):
-		// 	return consumeTheme(instance, output);
-		// 	break;
-		case isVariable(instance):
-			return consumeVariable(instance, options);
-		case isRef(instance):
-			return consumeRef(instance, options);
-		case isCSS(instance):
-			return consumeCSS(instance, options);
-		default:
-			return consumePrimitive(instance, options);
-	}
-}
-
 /**
  * Consumes a ref instance, equivalent to referencing a CSS variable with optional fallback
  */
@@ -266,4 +225,34 @@ export function consumePrimitive(
 	return instance !== undefined && instance !== null
 		? `${instance as string}`
 		: "";
+}
+
+/**
+ * Consumes any token instance and returns the CSS string representation
+ */
+export function consume(instance: unknown, options: StyleframeOptions): string {
+	switch (true) {
+		case isSelector(instance):
+			return consumeSelector(instance, options);
+		// case isUtility(instance):
+		// 	return consumeUtility(instance, output);
+		// 	break;
+		// case isAtRule(instance):
+		// 	return consumeAtRule(instance, output);
+		// 	break;
+		// case isTransform(instance):
+		// 	return consumeTransform(instance, output);
+		// 	break;
+		// case isTheme(instance):
+		// 	return consumeTheme(instance, output);
+		// 	break;
+		case isVariable(instance):
+			return consumeVariable(instance, options);
+		case isRef(instance):
+			return consumeRef(instance, options);
+		case isCSS(instance):
+			return consumeCSS(instance, options);
+		default:
+			return consumePrimitive(instance, options);
+	}
 }

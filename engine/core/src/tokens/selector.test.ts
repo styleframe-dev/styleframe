@@ -1,5 +1,5 @@
 import { styleframe } from "../styleframe";
-import { isMedia, isSelector } from "../typeGuards";
+import { isAtRule, isSelector } from "../typeGuards";
 import type { Root, Selector } from "../types";
 import { createRoot } from "./root";
 import { createSelectorFunction } from "./selector";
@@ -194,6 +194,7 @@ describe("createSelectorFunction", () => {
 
 			expect(callback).toHaveBeenCalledTimes(1);
 			expect(callback).toHaveBeenCalledWith({
+				atRule: expect.any(Function),
 				variable: expect.any(Function),
 				selector: expect.any(Function),
 				keyframes: expect.any(Function),
@@ -330,8 +331,11 @@ describe("createSelectorFunction", () => {
 			expect(result.children).toHaveLength(1); // 1 media query selector
 
 			const mediaQuerySelector = result.children
-				.filter(isMedia)
-				.find((child) => child.query === "(min-width: 768px)");
+				.filter(isAtRule)
+				.find(
+					(child) =>
+						child.identifier === "media" && child.rule === "(min-width: 768px)",
+				);
 			expect(mediaQuerySelector?.declarations).toEqual({
 				width: "50%",
 			});

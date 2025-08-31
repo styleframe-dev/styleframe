@@ -306,8 +306,9 @@ describe("createUtilityFunction", () => {
 			variables: [],
 			children: [
 				{
-					type: "media",
-					query: "screen and (min-width: 1024px)",
+					type: "at-rule",
+					identifier: "media",
+					rule: "screen and (min-width: 1024px)",
 					declarations: { fontSize: "14px" },
 					variables: [],
 					children: [],
@@ -322,8 +323,9 @@ describe("createUtilityFunction", () => {
 			variables: [],
 			children: [
 				{
-					type: "media",
-					query: "screen and (min-width: 768px)",
+					type: "at-rule",
+					identifier: "media",
+					rule: "screen and (min-width: 768px)",
 					declarations: { fontSize: "14px" },
 					variables: [],
 					children: [],
@@ -338,8 +340,9 @@ describe("createUtilityFunction", () => {
 			variables: [],
 			children: [
 				{
-					type: "media",
-					query: "screen and (min-width: 640px)",
+					type: "at-rule",
+					identifier: "media",
+					rule: "screen and (min-width: 640px)",
 					declarations: { fontSize: "14px" },
 					variables: [],
 					children: [],
@@ -466,8 +469,9 @@ describe("createUtilityFunction", () => {
 			variables: [],
 			children: [
 				{
-					type: "media",
-					query: "(min-width: 768px)",
+					type: "at-rule",
+					identifier: "media",
+					rule: "(min-width: 768px)",
 					declarations: { margin: "1rem" },
 					variables: [],
 					children: [],

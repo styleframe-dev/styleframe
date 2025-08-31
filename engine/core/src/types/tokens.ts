@@ -21,9 +21,10 @@ export type Selector = {
 	children: ContainerChild[];
 };
 
-export type Media = {
-	type: "media";
-	query: string;
+export type AtRule = {
+	type: "at-rule";
+	identifier: string;
+	rule: string;
 	declarations: DeclarationsBlock;
 	variables: Variable[];
 	children: ContainerChild[];
@@ -102,7 +103,7 @@ export type TokenType =
 	| Variable["type"]
 	| Reference["type"]
 	| Selector["type"]
-	| Media["type"]
+	| AtRule["type"]
 	| Keyframes["type"]
 	| CSS["type"]
 	| Utility["type"]
@@ -111,9 +112,9 @@ export type TokenType =
 	| Theme["type"]
 	| Root["type"];
 
-export type Container = Root | Theme | Selector | Media;
+export type Container = Root | Theme | Selector | AtRule;
 
-export type ContainerChild = Variable | Selector | Media | Keyframes;
+export type ContainerChild = Variable | Selector | AtRule | Keyframes;
 
 export type Theme = {
 	type: "theme";

@@ -1,7 +1,7 @@
 import type {
 	CSS,
 	Keyframes,
-	Media,
+	AtRule,
 	Modifier,
 	PrimitiveTokenValue,
 	Reference,
@@ -43,8 +43,8 @@ export function isSelector(value: unknown): value is Selector {
 	return isToken(value, "selector");
 }
 
-export function isMedia(value: unknown): value is Media {
-	return isToken(value, "media");
+export function isAtRule(value: unknown): value is AtRule {
+	return isToken(value, "at-rule");
 }
 
 export function isKeyframes(value: unknown): value is Keyframes {

@@ -1,8 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import type { Media, Root, Selector } from "../types";
-import { createMediaFunction } from "./media";
+import type { AtRule, Root, Selector } from "../types";
+import { createAtRuleFunction, createMediaFunction } from "./atRule";
 import { createRoot } from "./root";
-import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
 
 describe("createMediaFunction", () => {
@@ -33,8 +32,9 @@ describe("createMediaFunction", () => {
 			});
 
 			expect(result).toEqual({
-				type: "media",
-				query: "(min-width: 768px)",
+				type: "at-rule",
+				identifier: "media",
+				rule: "(min-width: 768px)",
 				variables: [],
 				declarations: {},
 				children: [
@@ -62,7 +62,9 @@ describe("createMediaFunction", () => {
 				};
 			});
 
-			expect(result.query).toBe("(min-width: 768px)");
+			expect(result.type).toBe("at-rule");
+			expect(result.identifier).toBe("media");
+			expect(result.rule).toBe("(min-width: 768px)");
 			expect(result.declarations).toEqual({
 				fontSize: "18px",
 			});
@@ -85,8 +87,9 @@ describe("createMediaFunction", () => {
 			});
 
 			expect(result).toEqual({
-				type: "media",
-				query: "(max-width: 767px)",
+				type: "at-rule",
+				identifier: "media",
+				rule: "(max-width: 767px)",
 				variables: [],
 				declarations: {
 					fontSize: "14px",
@@ -107,8 +110,8 @@ describe("createMediaFunction", () => {
 
 			const lastChild = selector.children[
 				selector.children.length - 1
-			] as Media;
-			expect(lastChild.type).toBe("media");
+			] as AtRule;
+			expect(lastChild.type).toBe("at-rule");
 		});
 	});
 
@@ -184,8 +187,9 @@ describe("createMediaFunction", () => {
 			});
 
 			expect(result.children[0]).toEqual({
-				type: "media",
-				query: "(orientation: landscape)",
+				type: "at-rule",
+				identifier: "media",
+				rule: "(orientation: landscape)",
 				variables: [],
 				declarations: {
 					width: "100vw",
@@ -212,7 +216,7 @@ describe("createMediaFunction", () => {
 		it("should handle simple min-width queries", () => {
 			const result = media("(min-width: 768px)", {});
 
-			expect(result.query).toBe("(min-width: 768px)");
+			expect(result.rule).toBe("(min-width: 768px)");
 		});
 
 		it("should handle complex media queries", () => {
@@ -220,7 +224,7 @@ describe("createMediaFunction", () => {
 				"(min-width: 768px) and (max-width: 1023px) and (orientation: landscape)";
 			const result = media(complexQuery, {});
 
-			expect(result.query).toBe(complexQuery);
+			expect(result.rule).toBe(complexQuery);
 		});
 
 		it("should handle feature queries", () => {
@@ -228,7 +232,7 @@ describe("createMediaFunction", () => {
 				backgroundColor: "#1a1a1a",
 			});
 
-			expect(result.query).toBe("(prefers-color-scheme: dark)");
+			expect(result.rule).toBe("(prefers-color-scheme: dark)");
 			expect(result.declarations.backgroundColor).toBe("#1a1a1a");
 		});
 
@@ -240,7 +244,7 @@ describe("createMediaFunction", () => {
 				},
 			);
 
-			expect(result.query).toBe(
+			expect(result.rule).toBe(
 				"(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)",
 			);
 		});
@@ -250,7 +254,7 @@ describe("createMediaFunction", () => {
 				display: "none",
 			});
 
-			expect(result.query).toBe("");
+			expect(result.rule).toBe("");
 		});
 	});
 
@@ -263,8 +267,9 @@ describe("createMediaFunction", () => {
 			});
 
 			expect(result.children[0]).toEqual({
-				type: "media",
-				query: "(orientation: portrait)",
+				type: "at-rule",
+				identifier: "media",
+				rule: "(orientation: portrait)",
 				variables: [],
 				declarations: {
 					width: "100%",
@@ -282,9 +287,10 @@ describe("createMediaFunction", () => {
 				});
 			});
 
-			const nestedMedia = result.children[0] as Media;
-			expect(nestedMedia.type).toBe("media");
-			expect(nestedMedia.query).toBe("(max-width: 1023px)");
+			const nestedMedia = result.children[0] as AtRule;
+			expect(nestedMedia.type).toBe("at-rule");
+			expect(nestedMedia.identifier).toBe("media");
+			expect(nestedMedia.rule).toBe("(max-width: 1023px)");
 			expect(nestedMedia.children[0]).toEqual({
 				type: "selector",
 				query: ".nested-selector",
@@ -407,7 +413,7 @@ describe("createMediaFunction", () => {
 				});
 			});
 
-			expect(result.query).toBe("(prefers-color-scheme: dark)");
+			expect(result.rule).toBe("(prefers-color-scheme: dark)");
 		});
 
 		it("should support reduced motion queries", () => {
@@ -421,7 +427,7 @@ describe("createMediaFunction", () => {
 				},
 			);
 
-			expect(result.query).toBe("(prefers-reduced-motion: reduce)");
+			expect(result.rule).toBe("(prefers-reduced-motion: reduce)");
 		});
 	});
 
@@ -464,7 +470,7 @@ describe("createMediaFunction", () => {
 			const result2 = media("(min-width: 768px)", { height: "100vh" });
 
 			expect(result1).not.toBe(result2);
-			expect(result1.query).toBe(result2.query);
+			expect(result1.rule).toBe(result2.rule);
 			expect(result1.declarations).not.toEqual(result2.declarations);
 		});
 
@@ -474,8 +480,9 @@ describe("createMediaFunction", () => {
 			});
 
 			expect(result).toEqual({
-				type: "media",
-				query: "(min-width: 768px)",
+				type: "at-rule",
+				identifier: "media",
+				rule: "(min-width: 768px)",
 				variables: [],
 				declarations: {},
 				children: [],
@@ -487,7 +494,7 @@ describe("createMediaFunction", () => {
 				"screen and (min-width: 768px) and (max-width: 1023.98px)";
 			const result = media(complexQuery, {});
 
-			expect(result.query).toBe(complexQuery);
+			expect(result.rule).toBe(complexQuery);
 		});
 	});
 

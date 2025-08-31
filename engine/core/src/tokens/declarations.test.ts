@@ -1,9 +1,9 @@
-import type { Container, Media, Root, Selector, Variable } from "../types";
+import type { AtRule, Container, Root, Selector, Variable } from "../types";
+import { createAtRuleFunction } from "./atRule";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
 } from "./declarations";
-import { createMediaFunction } from "./media";
 import { createRoot } from "./root";
 import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
@@ -16,6 +16,7 @@ describe("parseDeclarationsBlock", () => {
 			selector: vi.fn(),
 			variable: vi.fn(),
 			keyframes: vi.fn(),
+			atRule: vi.fn(),
 			media: vi.fn(),
 			css: vi.fn(),
 		};
@@ -132,9 +133,10 @@ describe("parseDeclarationsBlock", () => {
 			parseDeclarationsBlock(declarations, mockContext);
 
 			expect(declarations).not.toHaveProperty("@media (min-width: 768px)");
-			expect(mockContext.media).toHaveBeenCalledTimes(1);
-			expect(mockContext.media).toHaveBeenCalledWith(
-				"@media (min-width: 768px)",
+			expect(mockContext.atRule).toHaveBeenCalledTimes(1);
+			expect(mockContext.atRule).toHaveBeenCalledWith(
+				"media",
+				"(min-width: 768px)",
 				{ width: "50%" },
 			);
 		});
@@ -179,7 +181,7 @@ describe("parseDeclarationsBlock", () => {
 describe("createDeclarationsCallbackContext", () => {
 	let root: Root;
 	let selector: Selector;
-	let media: Media;
+	let media: AtRule;
 
 	beforeEach(() => {
 		root = createRoot();
@@ -191,12 +193,13 @@ describe("createDeclarationsCallbackContext", () => {
 			children: [],
 		};
 		media = {
-			type: "media",
-			query: "(min-width: 768px)",
+			type: "at-rule",
+			identifier: "media",
+			rule: "(min-width: 768px)",
 			variables: [],
 			declarations: {},
 			children: [],
-		};
+		} as unknown as AtRule;
 	});
 
 	describe("basic context creation", () => {
@@ -206,9 +209,11 @@ describe("createDeclarationsCallbackContext", () => {
 			expect(context).toHaveProperty("variable");
 			expect(context).toHaveProperty("selector");
 			expect(context).toHaveProperty("media");
+			expect(context).toHaveProperty("atRule");
 			expect(typeof context.variable).toBe("function");
 			expect(typeof context.selector).toBe("function");
 			expect(typeof context.media).toBe("function");
+			expect(typeof context.atRule).toBe("function");
 		});
 
 		it("should create context with all required functions for selector container", () => {
@@ -217,9 +222,11 @@ describe("createDeclarationsCallbackContext", () => {
 			expect(context).toHaveProperty("variable");
 			expect(context).toHaveProperty("selector");
 			expect(context).toHaveProperty("media");
+			expect(context).toHaveProperty("atRule");
 			expect(typeof context.variable).toBe("function");
 			expect(typeof context.selector).toBe("function");
 			expect(typeof context.media).toBe("function");
+			expect(typeof context.atRule).toBe("function");
 		});
 
 		it("should create context with all required functions for media container", () => {
@@ -228,9 +235,11 @@ describe("createDeclarationsCallbackContext", () => {
 			expect(context).toHaveProperty("variable");
 			expect(context).toHaveProperty("selector");
 			expect(context).toHaveProperty("media");
+			expect(context).toHaveProperty("atRule");
 			expect(typeof context.variable).toBe("function");
 			expect(typeof context.selector).toBe("function");
 			expect(typeof context.media).toBe("function");
+			expect(typeof context.atRule).toBe("function");
 		});
 	});
 
@@ -264,7 +273,9 @@ describe("createDeclarationsCallbackContext", () => {
 				fontSize: "18px",
 			});
 
-			expect(testMedia.query).toBe("(min-width: 768px)");
+			expect(testMedia.type).toBe("at-rule");
+			expect(testMedia.identifier).toBe("media");
+			expect(testMedia.rule).toBe("(min-width: 768px)");
 			expect(testMedia.declarations).toEqual({ fontSize: "18px" });
 			expect(root.children).toContainEqual(testMedia);
 		});
@@ -300,7 +311,9 @@ describe("createDeclarationsCallbackContext", () => {
 				opacity: "0.8",
 			});
 
-			expect(nestedMedia.query).toBe("(hover: hover)");
+			expect(nestedMedia.type).toBe("at-rule");
+			expect(nestedMedia.identifier).toBe("media");
+			expect(nestedMedia.rule).toBe("(hover: hover)");
 			expect(nestedMedia.declarations).toEqual({ opacity: "0.8" });
 			expect(selector.children).toContainEqual(nestedMedia);
 		});
@@ -381,7 +394,7 @@ describe("createDeclarationsCallbackContext", () => {
 
 			expect(testVar).toBeDefined();
 			expect(testSelector).toBeDefined();
-			expect(testMedia).toBeDefined();
+			expect(testMedia.type).toBe("at-rule");
 		});
 
 		it("should handle when parent and root are the same", () => {
@@ -413,7 +426,8 @@ describe("createDeclarationsCallbackContext", () => {
 			const context = createDeclarationsCallbackContext(root, root);
 			const keys = Object.keys(context);
 
-			expect(keys).toHaveLength(5);
+			expect(keys).toHaveLength(6);
+			expect(keys).toContain("atRule");
 			expect(keys).toContain("variable");
 			expect(keys).toContain("selector");
 			expect(keys).toContain("keyframes");
@@ -444,7 +458,7 @@ describe("createDeclarationsCallbackContext", () => {
 			expect(varResult.type).toBe("variable");
 			expect(selectorResult.type).toBe("selector");
 			expect(keyframesResult.type).toBe("keyframes");
-			expect(mediaResult.type).toBe("media");
+			expect(mediaResult.type).toBe("at-rule");
 		});
 	});
 
@@ -554,7 +568,7 @@ describe("createDeclarationsCallbackContext", () => {
 			// All functions should work with the same interfaces they would individually
 			const variableFunction = createVariableFunction(root, root);
 			const selectorFunction = createSelectorFunction(root, root);
-			const mediaFunction = createMediaFunction(root, root);
+			const mediaFunction = createAtRuleFunction(root, root);
 
 			// Context functions should behave identically
 			const contextVar = context.variable("test1", "value1");
