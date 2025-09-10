@@ -438,10 +438,10 @@ describe("createDeclarationsCallbackContext", () => {
 		it("should not have enumerable prototype properties", () => {
 			const context = createDeclarationsCallbackContext(root, root);
 
-			expect(context.hasOwnProperty("variable")).toBe(true);
-			expect(context.hasOwnProperty("selector")).toBe(true);
-			expect(context.hasOwnProperty("keyframes")).toBe(true);
-			expect(context.hasOwnProperty("media")).toBe(true);
+			expect(Object.hasOwn(context, "variable")).toBe(true);
+			expect(Object.hasOwn(context, "selector")).toBe(true);
+			expect(Object.hasOwn(context, "keyframes")).toBe(true);
+			expect(Object.hasOwn(context, "media")).toBe(true);
 		});
 
 		it("should return functions with correct return types", () => {
@@ -457,7 +457,7 @@ describe("createDeclarationsCallbackContext", () => {
 
 			expect(varResult.type).toBe("variable");
 			expect(selectorResult.type).toBe("selector");
-			expect(keyframesResult.type).toBe("keyframes");
+			expect(keyframesResult.type).toBe("at-rule");
 			expect(mediaResult.type).toBe("at-rule");
 		});
 	});
@@ -467,7 +467,7 @@ describe("createDeclarationsCallbackContext", () => {
 			const context = createDeclarationsCallbackContext(root, root);
 
 			const primaryColor = context.variable("primary-color", "#006cff");
-			const button = context.selector(".button", {
+			context.selector(".button", {
 				backgroundColor: primaryColor.value as string,
 			});
 

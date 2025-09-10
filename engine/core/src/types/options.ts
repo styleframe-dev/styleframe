@@ -3,4 +3,7 @@ export type StyleframeOptions = {
 	variables?: {
 		prefix?: string;
 	};
+	theme?: {
+		selector?: string;
+	};
 };

@@ -1,6 +1,5 @@
 export * from "./css";
 export * from "./declarations";
-export * from "./keyframes";
 export * from "./atRule";
 export * from "./modifier";
 export * from "./ref";

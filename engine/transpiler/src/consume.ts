@@ -1,51 +1,27 @@
 import type {
+	AtRule,
 	ContainerChild,
-	// Variant,
-	// ComponentValue,
 	CSS,
 	DeclarationsBlock,
-	Modifier,
-	Recipe,
 	Reference,
-	Root,
 	Selector,
 	StyleframeOptions,
 	Theme,
+	TokenValue,
 	Utility,
-	// Calc,
-	// Color,
-	// AtRule,
-	// Reference,
-	// Selector,
-	// Utility,
-	// Theme,
 	Variable,
 } from "@styleframe/core";
 import {
+	isAtRule,
 	isCSS,
 	isRef,
-	// 	Transform,
-	// 	isTransform,
-	// 	isTokenValue
-	isRoot,
-	// 	resolvePercentagePropertyValue,
-	// 	normalizeTokenName,
-	// 	toCssName,
-	// 	defaultThemeName,
-	// 	isCalc,
-	// 	isColor,
-	// 	isAtRule,
-	// 	isRef,
 	isSelector,
-	// 	isUtility,
-	// 	isTheme,
+	isTheme,
+	isUtility,
 	isVariable,
 } from "@styleframe/core";
-import type { ConsumeOptions, Output, OutputFile, OutputLine } from "./types";
+import { DEFAULT_THEME_SELECTOR } from "./constants";
 import { addIndentToLine, indentLines, normalizeVariableName } from "./utils";
-// import { indentLines } from '@styleframe/utils';
-// import { rootThemeTemplate, themeTemplate } from './templates';
-// import type { VariantProps } from '@styleframe/types';
 
 /**
  * Consumes a variable instance, equivalent to setting a CSS variable
@@ -71,27 +47,36 @@ export function consumeDeclarations(
 }
 
 /**
- * Consumes a selector instance, equivalent to setting a CSS selector
+ * Base function for consuming container-like structures (Selector, AtRule)
  */
-export function consumeSelector(
-	instance: Selector,
+export function consumeContainer(
+	query: string,
+	instance: {
+		variables?: Variable[];
+		declarations?: DeclarationsBlock;
+		children?: ContainerChild[];
+	},
 	options: StyleframeOptions,
 ): string {
-	const variables = instance.variables.map((variable) =>
+	const { variables, declarations, children } = instance;
+
+	const processedVariables = (variables ?? []).map((variable) =>
 		addIndentToLine(consumeVariable(variable, options), options),
 	);
 
-	const declarations = consumeDeclarations(instance.declarations, options).map(
-		(line) => addIndentToLine(line, options),
-	);
+	const processedDeclarations = consumeDeclarations(
+		declarations ?? {},
+		options,
+	).map((line) => addIndentToLine(line, options));
 
-	const children = instance.children.map((child) =>
+	const processedChildren = (children ?? []).map((child) =>
 		indentLines(consume(child, options), options),
 	);
 
-	const hasVariables = variables.length > 0;
-	const hasDeclarations = declarations.length > 0;
-	const hasChildren = children.length > 0;
+	const isRoot = query === ":root";
+	const hasVariables = processedVariables.length > 0;
+	const hasDeclarations = processedDeclarations.length > 0;
+	const hasChildren = processedChildren.length > 0;
 
 	const variablesSpacer =
 		hasVariables && (hasDeclarations || hasChildren) ? "\n\n" : "";
@@ -99,20 +84,60 @@ export function consumeSelector(
 	const bracketSpacer =
 		hasVariables || hasDeclarations || hasChildren ? "\n" : "";
 
-	return `${instance.query} {${bracketSpacer}${variables.join(
+	if (isRoot) {
+		return `${query} {${bracketSpacer}${processedVariables.join(
+			"\n",
+		)}${variablesSpacer}${processedDeclarations.join(
+			"\n",
+		)}${bracketSpacer}}${processedChildren.length ? "\n\n" : ""}${processedChildren.join("\n\n")}`;
+	}
+
+	return `${query} {${bracketSpacer}${processedVariables.join(
 		"\n",
-	)}${variablesSpacer}${declarations.join(
+	)}${variablesSpacer}${processedDeclarations.join(
 		"\n",
-	)}${declarationsSpacer}${children.join("\n\n")}${bracketSpacer}}`;
+	)}${declarationsSpacer}${processedChildren.join("\n\n")}${bracketSpacer}}`;
 }
 
-// /**
-//  * Consumes a utility instance, equivalent to setting a utility CSS selector
-//  */
-// export function consumeUtility(instance: Utility): string {
-// 	return consumeSelector(instance.__value);
-// }
-//
+/**
+ * Consumes a selector instance, equivalent to setting a CSS selector
+ */
+export function consumeSelector(
+	instance: Selector,
+	options: StyleframeOptions,
+): string {
+	return consumeContainer(instance.query, instance, options);
+}
+
+/**
+ * Consumes a generic at-rule instance, equivalent to setting a CSS at-rule
+ * such as @media, @supports, @keyframes, etc.
+ */
+export function consumeAtRule(
+	instance: AtRule,
+	options: StyleframeOptions,
+): string {
+	const query = `@${instance.identifier} ${instance.rule}`;
+
+	const hasDeclarations = Object.keys(instance.declarations).length > 0;
+	const hasVariables = instance.variables.length > 0;
+	const hasChildren = instance.children.length > 0;
+
+	return hasDeclarations || hasVariables || hasChildren
+		? consumeContainer(query, instance, options)
+		: `${query};`;
+}
+
+/**
+ * Consumes a utility instance, equivalent to setting a utility CSS selector
+ */
+export function consumeUtility(instance: Utility): string {
+	// type: "utility";
+	// name: Name;
+	// declarations: (value: TokenValue) => DeclarationsBlock;
+	// values: Record<string, TokenValue>;
+}
+
 // /**
 //  * Consumes a component value, equivalent to the body of a selector
 //  */
@@ -124,26 +149,6 @@ export function consumeSelector(
 // 				: consumeSelectorProperty(propertyName, propertyValue)
 // 		)
 // 		.join('\n');
-// }
-//
-// /**
-//  * Consumes a media instance, equivalent to setting a CSS media query
-//  */
-// export function consumeAtRule(instance: AtRule): string {
-// 	let value: string;
-// 	if (Array.isArray(instance.__value)) {
-// 		value = instance.__value.map(consume).join('\n\n');
-// 	} else if (isSelector(instance.__value)) {
-// 		value = consumeSelector(instance.__value);
-// 	} else if (isTokenValue(instance.__value)) {
-// 		value = consume(instance.__value);
-// 	} else {
-// 		value = consumeComponentValue(instance.__value);
-// 	}
-//
-// 	return `@${instance.__name} ${instance.__identifier} {
-// ${indentLines(value)}
-// }`;
 // }
 //
 // /**
@@ -174,27 +179,13 @@ export function consumeSelector(
 //     variants: ${indentLines(JSON.stringify(variants, null, 4)).trim()}
 // };`;
 // }
-//
-// /**
-//  * Consumes a theme instance, setting all variables and selectors
-//  */
-// export function consumeTheme(instance: Theme) {
-// 	const isDefaultTheme = instance.__name === defaultThemeName;
-// 	const variables = instance.variables
-// 		? Array.from(instance.__keys.variables)
-// 			.reduce<string[]>((acc, key) => {
-// 				acc.push(consumeVariable(instance.variables[key]));
-// 				return acc;
-// 			}, [])
-// 			.join('\n')
-// 		: '';
-// 	const selectors = instance.selectors ? instance.selectors.map(consume).join('\n\n') : '';
-// 	const utilities = instance.utilities ? instance.utilities.map(consume).join('\n\n') : '';
-//
-// 	return isDefaultTheme
-// 		? rootThemeTemplate(variables, selectors, utilities)
-// 		: themeTemplate(`.${instance.__name}-theme`, variables, selectors, utilities);
-// }
+
+export function consumeTheme(instance: Theme, options: StyleframeOptions) {
+	const queryFormat = options.theme?.selector ?? DEFAULT_THEME_SELECTOR;
+	const query = queryFormat.replace("%s", instance.name);
+
+	return consumeContainer(query, instance, options);
+}
 
 /**
  * Consumes a ref instance, equivalent to referencing a CSS variable with optional fallback
@@ -234,18 +225,15 @@ export function consume(instance: unknown, options: StyleframeOptions): string {
 	switch (true) {
 		case isSelector(instance):
 			return consumeSelector(instance, options);
-		// case isUtility(instance):
-		// 	return consumeUtility(instance, output);
+		case isUtility(instance):
+			return consumeUtility(instance, options);
+		case isAtRule(instance):
+			return consumeAtRule(instance, options);
+		// case isRecipe(instance):
+		// 	return consumeRecipe(instance, options);
 		// 	break;
-		// case isAtRule(instance):
-		// 	return consumeAtRule(instance, output);
-		// 	break;
-		// case isTransform(instance):
-		// 	return consumeTransform(instance, output);
-		// 	break;
-		// case isTheme(instance):
-		// 	return consumeTheme(instance, output);
-		// 	break;
+		case isTheme(instance):
+			return consumeTheme(instance, options);
 		case isVariable(instance):
 			return consumeVariable(instance, options);
 		case isRef(instance):

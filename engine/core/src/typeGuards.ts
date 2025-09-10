@@ -1,7 +1,6 @@
 import type {
-	CSS,
-	Keyframes,
 	AtRule,
+	CSS,
 	Modifier,
 	PrimitiveTokenValue,
 	Reference,
@@ -45,10 +44,6 @@ export function isSelector(value: unknown): value is Selector {
 
 export function isAtRule(value: unknown): value is AtRule {
 	return isToken(value, "at-rule");
-}
-
-export function isKeyframes(value: unknown): value is Keyframes {
-	return isToken(value, "keyframes");
 }
 
 export function isUtility<Name extends string = string>(

@@ -30,12 +30,6 @@ export type AtRule = {
 	children: ContainerChild[];
 };
 
-export type Keyframes<Name extends string = string> = {
-	type: "keyframes";
-	name: Name;
-	declarations: Record<string, DeclarationsBlock>;
-};
-
 export type CSS = {
 	type: "css";
 	value: TokenValue[];
@@ -104,7 +98,6 @@ export type TokenType =
 	| Reference["type"]
 	| Selector["type"]
 	| AtRule["type"]
-	| Keyframes["type"]
 	| CSS["type"]
 	| Utility["type"]
 	| Modifier["type"]
@@ -114,7 +107,7 @@ export type TokenType =
 
 export type Container = Root | Theme | Selector | AtRule;
 
-export type ContainerChild = Variable | Selector | AtRule | Keyframes;
+export type ContainerChild = Variable | Selector | AtRule;
 
 export type Theme = {
 	type: "theme";

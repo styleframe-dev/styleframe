@@ -1,10 +1,10 @@
-import type { ContainerChild, Styleframe } from "@styleframe/core";
-import { consume } from "./consume";
-import type { Output, OutputFile, OutputLine } from "./types";
+import type { Styleframe } from "@styleframe/core";
+import { consume, consumeContainer } from "./consume";
+import type { Output, OutputFile } from "./types";
 
 export function createFile(
 	name: string,
-	content: OutputLine[] = [],
+	content: string[] = [],
 	layer?: string,
 ): OutputFile {
 	return {
@@ -16,7 +16,6 @@ export function createFile(
 
 export function transpile(instance: Styleframe, output: Output) {
 	const options = instance.options;
-
 	const indexFile = createFile("index.css", []);
 
 	output.files.push(indexFile);
@@ -28,19 +27,11 @@ export function transpile(instance: Styleframe, output: Output) {
 	) {
 		const themesIndexFile = createFile(
 			"themes/index.css",
-			[
-				{
-					code: `@import './default.css';`,
-					level: 0,
-				},
-			],
+			[`@import './default.css';`],
 			"theme",
 		);
 		themesIndexFile.content.push(
-			...instance.root.themes.map((theme) => ({
-				code: `@import './${theme.name}.css';`,
-				level: 0,
-			})),
+			...instance.root.themes.map((theme) => `@import './${theme.name}.css';`),
 		);
 		output.files.push(themesIndexFile);
 	}
@@ -48,19 +39,16 @@ export function transpile(instance: Styleframe, output: Output) {
 	if (instance.root.children.length > 0 || instance.root.variables.length > 0) {
 		const defaultThemeFile = createFile("theme/default.css", [], "component");
 
-		if (instance.root.variables.length > 0) {
-			defaultThemeFile.content.push({
-				code: `:root {`,
-				level: 0,
-			});
-			defaultThemeFile.content.push(...instance.root.variables.map(consume));
-			defaultThemeFile.content.push({
-				code: `}`,
-				level: 0,
-			});
-		}
-
-		defaultThemeFile.content.push(...instance.root.children.map(consume));
+		defaultThemeFile.content.push(
+			consumeContainer(
+				":root",
+				{
+					variables: instance.root.variables,
+					children: instance.root.children,
+				},
+				options,
+			),
+		);
 
 		output.files.push(defaultThemeFile);
 	}
@@ -68,7 +56,7 @@ export function transpile(instance: Styleframe, output: Output) {
 	for (const theme of instance.root.themes) {
 		const currentThemeFile = createFile(
 			`themes/${theme.name}.css`,
-			[consume(theme)],
+			[consume(theme, options)],
 			"theme",
 		);
 		output.files.push(currentThemeFile);

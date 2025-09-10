@@ -2,6 +2,7 @@ import {
 	createAtRuleFunction,
 	createCssFunction,
 	createKeyframesFunction,
+	createMediaFunction,
 	createModifierFunction,
 	createRecipeFunction,
 	createRefFunction,
@@ -21,8 +22,9 @@ export interface Styleframe {
 	modifier: ReturnType<typeof createModifierFunction>;
 	recipe: ReturnType<typeof createRecipeFunction>;
 	theme: ReturnType<typeof createThemeFunction>;
+	atRule: ReturnType<typeof createAtRuleFunction>;
 	keyframes: ReturnType<typeof createKeyframesFunction>;
-	media: ReturnType<typeof createAtRuleFunction>;
+	media: ReturnType<typeof createMediaFunction>;
 	ref: ReturnType<typeof createRefFunction>;
 	css: ReturnType<typeof createCssFunction>;
 	options: StyleframeOptions;
@@ -39,8 +41,9 @@ export function styleframe(userOptions?: StyleframeOptions): Styleframe {
 	const modifier = createModifierFunction(root, root);
 	const recipe = createRecipeFunction(root, root);
 	const theme = createThemeFunction(root, root);
+	const atRule = createAtRuleFunction(root, root);
 	const keyframes = createKeyframesFunction(root, root);
-	const media = createAtRuleFunction(root, root);
+	const media = createMediaFunction(root, root);
 	const ref = createRefFunction(root, root);
 	const css = createCssFunction(root, root);
 
@@ -52,6 +55,7 @@ export function styleframe(userOptions?: StyleframeOptions): Styleframe {
 		modifier,
 		recipe,
 		theme,
+		atRule,
 		keyframes,
 		media,
 		ref,

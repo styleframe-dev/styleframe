@@ -49,3 +49,14 @@ export function createMediaFunction(parent: Container, root: Root) {
 		return atRule("media", query, declarationsOrCallback);
 	};
 }
+
+export function createKeyframesFunction(parent: Container, root: Root) {
+	const atRule = createAtRuleFunction(parent, root);
+
+	return function keyframes(
+		name: string,
+		declarations: Record<string, DeclarationsBlock>,
+	): AtRule {
+		return atRule("keyframes", name, declarations);
+	};
+}

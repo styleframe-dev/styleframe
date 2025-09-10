@@ -1,9 +1,12 @@
 /** biome-ignore-all lint/suspicious/noConfusingVoidType: Returning declarations in callback is optional */
 import { isTokenValue } from "../typeGuards";
 import type { Container, DeclarationsBlock, Root } from "../types";
-import { createAtRuleFunction, createMediaFunction } from "./atRule";
+import {
+	createAtRuleFunction,
+	createKeyframesFunction,
+	createMediaFunction,
+} from "./atRule";
 import { createCssFunction } from "./css";
-import { createKeyframesFunction } from "./keyframes";
 import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
 

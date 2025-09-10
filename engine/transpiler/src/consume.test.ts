@@ -2,23 +2,24 @@ import type {
 	DeclarationsBlock,
 	Root,
 	StyleframeOptions,
-	Variable,
 } from "@styleframe/core";
 import {
 	createCssFunction,
-	createKeyframesFunction,
 	createRefFunction,
 	createRoot,
 	createSelectorFunction,
+	createThemeFunction,
 	createVariableFunction,
 	isSelector,
 } from "@styleframe/core";
 import {
+	consumeContainer,
 	consumeCSS,
 	consumeDeclarations,
 	consumePrimitive,
 	consumeRef,
 	consumeSelector,
+	consumeTheme,
 	consumeVariable,
 } from "./consume";
 
@@ -134,16 +135,6 @@ describe("consumeRef", () => {
 	it("should handle references with undefined fallback", () => {
 		const undefinedRef = ref("undefined-var", undefined);
 		expect(consumeRef(undefinedRef, options)).toBe("var(--undefined-var)");
-	});
-
-	it("should work with references to keyframes", () => {
-		// Assuming there's a createKeyframesFunction similar to createVariableFunction
-		const keyframes = createKeyframesFunction(root, root);
-		const animation = keyframes("fade", {
-			/* keyframes definition */
-		});
-		const animationRef = ref(animation);
-		expect(consumeRef(animationRef, options)).toBe("var(--fade)");
 	});
 
 	it("should handle references with null fallback value", () => {
@@ -287,9 +278,9 @@ describe("consumeCSS", () => {
 		const spacing = variable("spacing", "8px");
 
 		const complexValue = css`
-      ${ref(spacing)} solid ${ref(primary)},
-      calc(${ref(spacing)} * 2) dashed ${ref(secondary)}
-    `;
+			${ref(spacing)} solid ${ref(primary)},
+			calc(${ref(spacing)} * 2) dashed ${ref(secondary)}
+		`;
 
 		// The function might normalize whitespace
 		const result = consumeCSS(complexValue, options);
@@ -469,7 +460,7 @@ describe("consumeVariable", () => {
 	});
 
 	it("should handle variable with object value by converting to string", () => {
-		// @ts-ignore - Ignoring type to test object handling
+		// @ts-expect-error - Ignoring type to test object handling
 		const objVar = variable("object-var", { key: "value" });
 		const result = consumeVariable(objVar, options);
 
@@ -1117,5 +1108,551 @@ describe("consumeSelector", () => {
 	margin: calc(var(--spacing-base) * 2);
 	width: calc(100% - 2rem);
 }`);
+	});
+});
+
+describe("consumeContainer", () => {
+	let root: Root;
+	let variable: ReturnType<typeof createVariableFunction>;
+	let ref: ReturnType<typeof createRefFunction>;
+	let selector: ReturnType<typeof createSelectorFunction>;
+
+	beforeEach(() => {
+		root = createRoot();
+		variable = createVariableFunction(root, root);
+		ref = createRefFunction(root, root);
+		selector = createSelectorFunction(root, root);
+	});
+
+	it("should handle empty container with only query", () => {
+		const result = consumeContainer(
+			".test",
+			{
+				variables: [],
+				declarations: {},
+				children: [],
+			},
+			options,
+		);
+		expect(result).toBe(".test {}");
+	});
+
+	it("should handle container with only variables", () => {
+		const colorVar = variable("color", "#ff0000");
+		const result = consumeContainer(
+			".test",
+			{
+				variables: [colorVar],
+				declarations: {},
+				children: [],
+			},
+			options,
+		);
+		expect(result).toBe(".test {\n\t--color: #ff0000;\n}");
+	});
+
+	it("should handle container with only declarations", () => {
+		const declarations: DeclarationsBlock = {
+			color: "red",
+			"font-size": "16px",
+		};
+		const result = consumeContainer(
+			".test",
+			{
+				variables: [],
+				declarations,
+				children: [],
+			},
+			options,
+		);
+		expect(result).toBe(".test {\n\tcolor: red;\n\tfont-size: 16px;\n}");
+	});
+
+	it("should handle container with only children", () => {
+		const childSelector = selector("&:hover", {
+			color: "blue",
+		});
+		const result = consumeContainer(
+			".test",
+			{
+				variables: [],
+				declarations: {},
+				children: [childSelector],
+			},
+			options,
+		);
+		expect(result).toBe(".test {\n\t&:hover {\n\t\tcolor: blue;\n\t}\n}");
+	});
+
+	it("should handle container with variables and declarations", () => {
+		const colorVar = variable("primary", "#0066ff");
+		const declarations: DeclarationsBlock = {
+			color: ref(colorVar),
+		};
+		const result = consumeContainer(
+			".button",
+			{
+				variables: [colorVar],
+				declarations,
+				children: [],
+			},
+			options,
+		);
+		expect(result).toBe(
+			".button {\n\t--primary: #0066ff;\n\n\tcolor: var(--primary);\n}",
+		);
+	});
+
+	it("should handle container with variables and children", () => {
+		const colorVar = variable("hover-color", "#ff6b6b");
+		const childSelector = selector("&:hover", {
+			color: ref(colorVar),
+		});
+		const result = consumeContainer(
+			".card",
+			{
+				variables: [colorVar],
+				declarations: {},
+				children: [childSelector],
+			},
+			options,
+		);
+		expect(result).toBe(
+			".card {\n\t--hover-color: #ff6b6b;\n\n\t&:hover {\n\t\tcolor: var(--hover-color);\n\t}\n}",
+		);
+	});
+
+	it("should handle container with declarations and children", () => {
+		const declarations: DeclarationsBlock = {
+			display: "flex",
+			"align-items": "center",
+		};
+		const childSelector = selector("&:focus", {
+			outline: "2px solid blue",
+		});
+		const result = consumeContainer(
+			".component",
+			{
+				variables: [],
+				declarations,
+				children: [childSelector],
+			},
+			options,
+		);
+		expect(result).toBe(
+			".component {\n\tdisplay: flex;\n\talign-items: center;\n\n\t&:focus {\n\t\toutline: 2px solid blue;\n\t}\n}",
+		);
+	});
+
+	it("should handle container with variables, declarations, and children", () => {
+		const sizeVar = variable("size", "1rem");
+		const colorVar = variable("text-color", "#333");
+		const declarations: DeclarationsBlock = {
+			"font-size": ref(sizeVar),
+			color: ref(colorVar),
+		};
+		const hoverSelector = selector("&:hover", {
+			transform: "scale(1.05)",
+		});
+		const focusSelector = selector("&:focus", {
+			outline: "2px solid currentColor",
+		});
+
+		const result = consumeContainer(
+			".interactive",
+			{
+				variables: [sizeVar, colorVar],
+				declarations,
+				children: [hoverSelector, focusSelector],
+			},
+			options,
+		);
+
+		const expected =
+			".interactive {\n\t--size: 1rem;\n\t--text-color: #333;\n\n\tfont-size: var(--size);\n\tcolor: var(--text-color);\n\n\t&:hover {\n\t\ttransform: scale(1.05);\n\t}\n\n\t&:focus {\n\t\toutline: 2px solid currentColor;\n\t}\n}";
+		expect(result).toBe(expected);
+	});
+
+	it("should handle multiple variables of same type", () => {
+		const primaryVar = variable("primary", "#0066ff");
+		const secondaryVar = variable("secondary", "#ff6b6b");
+		const accentVar = variable("accent", "#00cc66");
+
+		const result = consumeContainer(
+			".theme",
+			{
+				variables: [primaryVar, secondaryVar, accentVar],
+				declarations: {},
+				children: [],
+			},
+			options,
+		);
+
+		expect(result).toBe(
+			".theme {\n\t--primary: #0066ff;\n\t--secondary: #ff6b6b;\n\t--accent: #00cc66;\n}",
+		);
+	});
+
+	it("should handle multiple children selectors", () => {
+		const child1 = selector("& > .item", {
+			margin: "0.5rem",
+		});
+		const child2 = selector("& .nested", {
+			padding: "1rem",
+		});
+		const child3 = selector("&::before", {
+			content: '""',
+			position: "absolute",
+		});
+
+		const result = consumeContainer(
+			".container",
+			{
+				variables: [],
+				declarations: {},
+				children: [child1, child2, child3],
+			},
+			options,
+		);
+
+		const expected =
+			'.container {\n\t& > .item {\n\t\tmargin: 0.5rem;\n\t}\n\n\t& .nested {\n\t\tpadding: 1rem;\n\t}\n\n\t&::before {\n\t\tcontent: "";\n\t\tposition: absolute;\n\t}\n}';
+		expect(result).toBe(expected);
+	});
+
+	it("should handle complex query strings", () => {
+		const result = consumeContainer(
+			"@media (min-width: 768px) and (max-width: 1024px)",
+			{
+				variables: [],
+				declarations: { display: "grid" },
+				children: [],
+			},
+			options,
+		);
+		expect(result).toBe(
+			"@media (min-width: 768px) and (max-width: 1024px) {\n\tdisplay: grid;\n}",
+		);
+	});
+
+	it("should handle nested container structures", () => {
+		const parentChild = selector("& .parent", ({ selector }) => {
+			const nestedChild = selector("& .deeply-nested", {
+				"font-weight": "bold",
+			});
+
+			return {
+				position: "relative",
+			};
+		});
+
+		const result = consumeContainer(
+			".root",
+			{
+				variables: [],
+				declarations: {},
+				children: [parentChild],
+			},
+			options,
+		);
+
+		const expected =
+			".root {\n\t& .parent {\n\t\tposition: relative;\n\t\n\t\t& .deeply-nested {\n\t\t\tfont-weight: bold;\n\t\t}\n\t}\n}";
+		expect(result).toBe(expected);
+	});
+
+	it("should handle container with custom options prefix", () => {
+		const prefixOptions: StyleframeOptions = {
+			variables: {
+				prefix: "sf-",
+			},
+		};
+		const colorVar = variable("primary", "#0066ff");
+		const declarations: DeclarationsBlock = {
+			color: ref(colorVar),
+		};
+
+		const result = consumeContainer(
+			".component",
+			{
+				variables: [colorVar],
+				declarations,
+				children: [],
+			},
+			prefixOptions,
+		);
+
+		expect(result).toBe(
+			".component {\n\t--sf-primary: #0066ff;\n\n\tcolor: var(--sf-primary);\n}",
+		);
+	});
+
+	it("should handle container with custom indentation", () => {
+		const customIndentOptions: StyleframeOptions = {
+			indent: "    ", // 4 spaces instead of default 2
+		};
+		const colorVar = variable("color", "red");
+
+		const result = consumeContainer(
+			".test",
+			{
+				variables: [colorVar],
+				declarations: { display: "block" },
+				children: [],
+			},
+			customIndentOptions,
+		);
+
+		expect(result).toBe(".test {\n    --color: red;\n\n    display: block;\n}");
+	});
+
+	it("should handle variables with complex values", () => {
+		const gradientVar = variable(
+			"gradient",
+			"linear-gradient(45deg, #ff0000, #0000ff)",
+		);
+		const shadowVar = variable(
+			"shadow",
+			"0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1)",
+		);
+
+		const result = consumeContainer(
+			".complex",
+			{
+				variables: [gradientVar, shadowVar],
+				declarations: {},
+				children: [],
+			},
+			options,
+		);
+
+		const expected =
+			".complex {\n\t--gradient: linear-gradient(45deg, #ff0000, #0000ff);\n\t--shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);\n}";
+		expect(result).toBe(expected);
+	});
+
+	it("should handle declarations with reference values", () => {
+		const sizeVar = variable("base-size", "16px");
+		const declarations: DeclarationsBlock = {
+			"font-size": ref(sizeVar),
+			"line-height": ref("line-height-normal", "1.5"),
+			padding: ref("spacing", "1rem"),
+		};
+
+		const result = consumeContainer(
+			".text",
+			{
+				variables: [sizeVar],
+				declarations,
+				children: [],
+			},
+			options,
+		);
+
+		const expected =
+			".text {\n\t--base-size: 16px;\n\n\tfont-size: var(--base-size);\n\tline-height: var(--line-height-normal, 1.5);\n\tpadding: var(--spacing, 1rem);\n}";
+		expect(result).toBe(expected);
+	});
+});
+
+describe("consumeTheme", () => {
+	let root: Root;
+	let theme: ReturnType<typeof createThemeFunction>;
+	let variable: ReturnType<typeof createVariableFunction>;
+	let ref: ReturnType<typeof createRefFunction>;
+	let css: ReturnType<typeof createCssFunction>;
+
+	beforeEach(() => {
+		root = createRoot();
+		theme = createThemeFunction(root, root);
+		variable = createVariableFunction(root, root);
+		ref = createRefFunction(root, root);
+		css = createCssFunction(root, root);
+	});
+
+	it("should convert a basic theme to CSS with default selector format", () => {
+		const lightTheme = theme("light", ({ variable: v }) => {
+			v("color-primary", "#0066ff");
+		});
+
+		expect(consumeTheme(lightTheme, options)).toBe(
+			'[data-theme="light"] {\n\t--color-primary: #0066ff;\n}',
+		);
+	});
+
+	it("should handle themes with multiple variables", () => {
+		const darkTheme = theme("dark", ({ variable: v }) => {
+			v("color-primary", "#4d9eff");
+			v("color-secondary", "#ff6b6b");
+			v("background", "#1a1a1a");
+		});
+
+		const result = consumeTheme(darkTheme, options);
+		expect(result).toEqual(
+			'[data-theme="dark"] {\n\t--color-primary: #4d9eff;\n\t--color-secondary: #ff6b6b;\n\t--background: #1a1a1a;\n}',
+		);
+	});
+
+	it("should handle themes with nested selectors", () => {
+		const themeWithSelectors = theme(
+			"colorful",
+			({ variable: v, selector: s }) => {
+				v("primary-color", "#ff0066");
+				s(".button", {
+					color: ref("primary-color"),
+					backgroundColor: "white",
+				});
+			},
+		);
+
+		const result = consumeTheme(themeWithSelectors, options);
+		expect(result).toEqual(`[data-theme="colorful"] {
+\t--primary-color: #ff0066;
+
+\t.button {
+\t\tcolor: var(--primary-color);
+\t\tbackgroundColor: white;
+\t}
+}`);
+	});
+
+	it("should respect custom theme selector format", () => {
+		const customOptions: StyleframeOptions = {
+			theme: {
+				selector: ".theme-%s",
+			},
+		};
+
+		const customTheme = theme("neon", ({ variable: v }) => {
+			v("accent-color", "#00ff88");
+		});
+
+		expect(consumeTheme(customTheme, customOptions)).toBe(
+			".theme-neon {\n\t--accent-color: #00ff88;\n}",
+		);
+	});
+
+	it("should handle themes with variable prefix", () => {
+		const prefixOptions: StyleframeOptions = {
+			variables: {
+				prefix: "app-",
+			},
+		};
+
+		const prefixedTheme = theme("branded", ({ variable: v }) => {
+			v("brand-color", "#123456");
+		});
+
+		expect(consumeTheme(prefixedTheme, prefixOptions)).toBe(
+			'[data-theme="branded"] {\n\t--app-brand-color: #123456;\n}',
+		);
+	});
+
+	it("should handle empty themes", () => {
+		const emptyTheme = theme("empty", () => {});
+
+		expect(consumeTheme(emptyTheme, options)).toBe('[data-theme="empty"] {}');
+	});
+
+	it("should handle themes with only nested children", () => {
+		const childrenOnlyTheme = theme("structure", ({ selector: s }) => {
+			s(".header", {
+				padding: "1rem",
+			});
+
+			s(".footer", {
+				margin: "2rem 0",
+			});
+		});
+
+		const result = consumeTheme(childrenOnlyTheme, options);
+		expect(result).toEqual(
+			`[data-theme="structure"] {
+\t.header {
+\t\tpadding: 1rem;
+\t}
+
+\t.footer {
+\t\tmargin: 2rem 0;
+\t}
+}`,
+		);
+	});
+
+	it("should handle themes with complex nested structures", () => {
+		const complexTheme = theme(
+			"advanced",
+			({ variable: v, selector: s, css }) => {
+				v("spacing-unit", "8px");
+				v("primary-hue", "240");
+
+				s(".card", ({ selector: nested }) => {
+					nested("&:hover", {
+						transform: "translateY(-2px)",
+					});
+
+					nested(".card-header", {
+						backgroundColor: css`hsl(${ref("primary-hue")}, 70%, 90%)`,
+					});
+
+					return {
+						padding: ref("spacing-unit"),
+						borderRadius: "4px",
+					};
+				});
+			},
+		);
+
+		const result = consumeTheme(complexTheme, options);
+		expect(result).toEqual(`[data-theme="advanced"] {
+\t--spacing-unit: 8px;
+\t--primary-hue: 240;
+
+\t.card {
+\t\tpadding: var(--spacing-unit);
+\t\tborderRadius: 4px;
+\t
+\t\t&:hover {
+\t\t\ttransform: translateY(-2px);
+\t\t}
+\t
+\t\t.card-header {
+\t\t\tbackgroundColor: hsl(var(--primary-hue), 70%, 90%);
+\t\t}
+\t}
+}`);
+	});
+
+	it("should handle themes with CSS variable references", () => {
+		const baseVar = variable("base-size", "16px");
+		const refTheme = theme("referenced", ({ variable: v }) => {
+			v("large-size", css`calc(${ref(baseVar)} * 1.5)`);
+			v("small-size", css`calc(${ref(baseVar)} * 0.875)`);
+		});
+
+		const result = consumeTheme(refTheme, options);
+		expect(result).toEqual(`[data-theme="referenced"] {
+\t--large-size: calc(var(--base-size) * 1.5);
+\t--small-size: calc(var(--base-size) * 0.875);
+}`);
+	});
+
+	it("should handle themes with both custom selector and variable prefix", () => {
+		const combinedOptions: StyleframeOptions = {
+			theme: {
+				selector: "#theme-%s",
+			},
+			variables: {
+				prefix: "ui-",
+			},
+		};
+
+		const combinedTheme = theme("custom", ({ variable: v }) => {
+			v("text-color", "#333333");
+		});
+
+		expect(consumeTheme(combinedTheme, combinedOptions)).toBe(
+			"#theme-custom {\n\t--ui-text-color: #333333;\n}",
+		);
 	});
 });

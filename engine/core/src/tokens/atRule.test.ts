@@ -1,8 +1,405 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { AtRule, Root, Selector } from "../types";
-import { createAtRuleFunction, createMediaFunction } from "./atRule";
+import {
+	createAtRuleFunction,
+	createKeyframesFunction,
+	createMediaFunction,
+} from "./atRule";
 import { createRoot } from "./root";
+import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
+
+// ... existing code ...
+
+describe("createAtRuleFunction", () => {
+	let root: Root;
+	let selectorInstance: Selector;
+	let selector: ReturnType<typeof createSelectorFunction>;
+	let atRule: ReturnType<typeof createAtRuleFunction>;
+
+	beforeEach(() => {
+		root = createRoot();
+		selector = createSelectorFunction(root, root);
+		selectorInstance = selector(".test", {});
+		atRule = createAtRuleFunction(selectorInstance, root);
+	});
+
+	describe("basic at-rule creation", () => {
+		it("should create a supports at-rule with callback", () => {
+			const result = atRule("supports", "(display: grid)", ({ selector }) => {
+				selector(".grid-container", {
+					display: "grid",
+					gridTemplateColumns: "1fr 1fr 1fr",
+				});
+			});
+
+			expect(result).toEqual({
+				type: "at-rule",
+				identifier: "supports",
+				rule: "(display: grid)",
+				variables: [],
+				declarations: {},
+				children: [
+					{
+						type: "selector",
+						query: ".grid-container",
+						variables: [],
+						declarations: {
+							display: "grid",
+							gridTemplateColumns: "1fr 1fr 1fr",
+						},
+						children: [],
+					},
+				],
+			});
+		});
+
+		it("should create a font-face at-rule with declarations", () => {
+			const result = atRule("font-face", "", {
+				fontFamily: "'Open Sans'",
+				src: "url('fonts/OpenSans-Regular.woff2') format('woff2')",
+				fontWeight: "normal",
+				fontStyle: "normal",
+			});
+
+			expect(result).toEqual({
+				type: "at-rule",
+				identifier: "font-face",
+				rule: "",
+				variables: [],
+				declarations: {
+					fontFamily: "'Open Sans'",
+					src: "url('fonts/OpenSans-Regular.woff2') format('woff2')",
+					fontWeight: "normal",
+					fontStyle: "normal",
+				},
+				children: [],
+			});
+		});
+
+		it("should create an import at-rule with empty rule", () => {
+			const result = atRule("import", "url('styles.css')", {});
+
+			expect(result).toEqual({
+				type: "at-rule",
+				identifier: "import",
+				rule: "url('styles.css')",
+				variables: [],
+				declarations: {},
+				children: [],
+			});
+		});
+
+		it("should add at-rule to parent children", () => {
+			const initialChildrenLength = selectorInstance.children.length;
+
+			atRule("charset", "UTF-8", {});
+
+			expect(selectorInstance.children).toHaveLength(initialChildrenLength + 1);
+
+			const lastChild = selectorInstance.children[
+				selectorInstance.children.length - 1
+			] as AtRule;
+			expect(lastChild.type).toBe("at-rule");
+			expect(lastChild.identifier).toBe("charset");
+		});
+	});
+
+	describe("supports at-rule tests", () => {
+		it("should create a supports at-rule with feature query", () => {
+			const result = atRule("supports", "(display: flex)", {
+				display: "flex",
+				flexDirection: "column",
+			});
+
+			expect(result.type).toBe("at-rule");
+			expect(result.identifier).toBe("supports");
+			expect(result.rule).toBe("(display: flex)");
+			expect(result.declarations).toEqual({
+				display: "flex",
+				flexDirection: "column",
+			});
+		});
+
+		it("should create a supports at-rule with multiple conditions", () => {
+			const result = atRule(
+				"supports",
+				"(display: grid) and (gap: 1rem)",
+				({ selector }) => {
+					selector(".modern-grid", {
+						display: "grid",
+						gap: "1rem",
+					});
+				},
+			);
+
+			expect(result.identifier).toBe("supports");
+			expect(result.rule).toBe("(display: grid) and (gap: 1rem)");
+			expect(result.children[0]).toEqual({
+				type: "selector",
+				query: ".modern-grid",
+				variables: [],
+				declarations: {
+					display: "grid",
+					gap: "1rem",
+				},
+				children: [],
+			});
+		});
+
+		it("should create a supports at-rule with not operator", () => {
+			const result = atRule("supports", "not (display: grid)", {
+				display: "flex",
+			});
+
+			expect(result.identifier).toBe("supports");
+			expect(result.rule).toBe("not (display: grid)");
+			expect(result.declarations).toEqual({
+				display: "flex",
+			});
+		});
+	});
+
+	describe("font-face at-rule tests", () => {
+		it("should create a font-face at-rule with multiple font formats", () => {
+			const result = atRule("font-face", "", {
+				fontFamily: "'My Custom Font'",
+				src: "url('fonts/custom.woff2') format('woff2'), url('fonts/custom.woff') format('woff')",
+				fontWeight: "700",
+				fontStyle: "normal",
+				fontDisplay: "swap",
+			});
+
+			expect(result.identifier).toBe("font-face");
+			expect(result.rule).toBe("");
+			expect(result.declarations).toEqual({
+				fontFamily: "'My Custom Font'",
+				src: "url('fonts/custom.woff2') format('woff2'), url('fonts/custom.woff') format('woff')",
+				fontWeight: "700",
+				fontStyle: "normal",
+				fontDisplay: "swap",
+			});
+		});
+
+		it("should create a font-face at-rule with unicode-range", () => {
+			const result = atRule("font-face", "", {
+				fontFamily: "'Noto Sans'",
+				src: "url('fonts/NotoSans-Latin.woff2') format('woff2')",
+				unicodeRange: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC",
+			});
+
+			expect(result.identifier).toBe("font-face");
+			expect(result.declarations).toEqual({
+				fontFamily: "'Noto Sans'",
+				src: "url('fonts/NotoSans-Latin.woff2') format('woff2')",
+				unicodeRange: "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC",
+			});
+		});
+	});
+
+	describe("container at-rule tests", () => {
+		it("should create a container at-rule", () => {
+			const result = atRule("container", "", ({ selector }) => {
+				selector(".responsive-element", {
+					maxWidth: "100%",
+				});
+			});
+
+			expect(result.identifier).toBe("container");
+			expect(result.rule).toBe("");
+			expect(result.children[0]).toEqual({
+				type: "selector",
+				query: ".responsive-element",
+				variables: [],
+				declarations: {
+					maxWidth: "100%",
+				},
+				children: [],
+			});
+		});
+
+		it("should create a container at-rule with container name", () => {
+			const result = atRule("container", "sidebar (min-width: 768px)", {
+				padding: "1rem",
+			});
+
+			expect(result.identifier).toBe("container");
+			expect(result.rule).toBe("sidebar (min-width: 768px)");
+			expect(result.declarations).toEqual({
+				padding: "1rem",
+			});
+		});
+	});
+
+	describe("layer at-rule tests", () => {
+		it("should create a layer at-rule with declarations", () => {
+			const result = atRule("layer", "base", ({ selector }) => {
+				selector("body", {
+					margin: "0",
+					padding: "0",
+				});
+			});
+
+			expect(result.identifier).toBe("layer");
+			expect(result.rule).toBe("base");
+			expect(result.children[0]).toEqual({
+				type: "selector",
+				query: "body",
+				variables: [],
+				declarations: {
+					margin: "0",
+					padding: "0",
+				},
+				children: [],
+			});
+		});
+
+		it("should create a layer at-rule for multiple layers", () => {
+			const result = atRule("layer", "utilities, components, base", {});
+
+			expect(result.identifier).toBe("layer");
+			expect(result.rule).toBe("utilities, components, base");
+			expect(result.declarations).toEqual({});
+		});
+	});
+
+	describe("property at-rule tests", () => {
+		it("should create a property at-rule", () => {
+			const result = atRule("property", "--brand-color", {
+				syntax: "<color>",
+				inherits: "true",
+				initialValue: "#1a73e8",
+			});
+
+			expect(result.identifier).toBe("property");
+			expect(result.rule).toBe("--brand-color");
+			expect(result.declarations).toEqual({
+				syntax: "<color>",
+				inherits: "true",
+				initialValue: "#1a73e8",
+			});
+		});
+	});
+
+	describe("page at-rule tests", () => {
+		it("should create a page at-rule", () => {
+			const result = atRule("page", "", {
+				margin: "2cm",
+				size: "A4",
+			});
+
+			expect(result.identifier).toBe("page");
+			expect(result.rule).toBe("");
+			expect(result.declarations).toEqual({
+				margin: "2cm",
+				size: "A4",
+			});
+		});
+
+		it("should create a page at-rule with pseudo-class", () => {
+			const result = atRule("page", ":first", {
+				margin: "3cm",
+				counterIncrement: "page",
+			});
+
+			expect(result.identifier).toBe("page");
+			expect(result.rule).toBe(":first");
+			expect(result.declarations).toEqual({
+				margin: "3cm",
+				counterIncrement: "page",
+			});
+		});
+
+		it("should create a page at-rule with named page", () => {
+			const result = atRule("page", "chapter", ({ atRule }) => {
+				atRule("top-center", "", {
+					content: "string(chapter-title)",
+				});
+			});
+
+			expect(result.identifier).toBe("page");
+			expect(result.rule).toBe("chapter");
+
+			const firstChild = result.children[0] as AtRule;
+
+			expect(firstChild?.type).toBe("at-rule");
+			expect(firstChild?.identifier).toBe("top-center");
+		});
+	});
+
+	describe("complex at-rule nesting", () => {
+		it("should support nesting at-rules", () => {
+			const result = atRule("supports", "(display: grid)", ({ atRule }) => {
+				atRule("media", "(min-width: 768px)", {
+					display: "grid",
+				});
+			});
+
+			expect(result.children[0]).toEqual({
+				type: "at-rule",
+				identifier: "media",
+				rule: "(min-width: 768px)",
+				variables: [],
+				declarations: {
+					display: "grid",
+				},
+				children: [],
+			});
+		});
+
+		it("should support deep nesting with multiple at-rules", () => {
+			const result = atRule(
+				"supports",
+				"(display: grid)",
+				({ atRule, selector }) => {
+					atRule("media", "(min-width: 768px)", ({ atRule }) => {
+						atRule("container", "(min-width: 500px)", {
+							display: "grid",
+						});
+					});
+
+					selector(".fallback", {
+						display: "flex",
+					});
+				},
+			);
+
+			const nestedMedia = result.children[0] as AtRule;
+			expect(nestedMedia.type).toBe("at-rule");
+			expect(nestedMedia.identifier).toBe("media");
+
+			const nestedContainer = nestedMedia.children[0] as AtRule;
+			expect(nestedContainer.type).toBe("at-rule");
+			expect(nestedContainer.identifier).toBe("container");
+			expect(nestedContainer.declarations).toEqual({
+				display: "grid",
+			});
+
+			const fallbackSelector = result.children[1] as Selector;
+			expect(fallbackSelector.type).toBe("selector");
+			expect(fallbackSelector.query).toBe(".fallback");
+		});
+	});
+
+	describe("callback context functions in at-rules", () => {
+		it("should provide variable function in context", () => {
+			const result = atRule("layer", "theme", ({ variable }) => {
+				const color = variable("primary-color", "#0066cc");
+				expect(color.name).toBe("primary-color");
+				expect(color.value).toBe("#0066cc");
+
+				return {
+					backgroundColor: color.value as string,
+				};
+			});
+
+			expect(result.variables).toHaveLength(1);
+			expect(result.declarations).toEqual({
+				backgroundColor: "#0066cc",
+			});
+		});
+	});
+});
 
 describe("createMediaFunction", () => {
 	let root: Root;
@@ -517,6 +914,100 @@ describe("createMediaFunction", () => {
 
 			expect(media1).not.toBe(media2);
 			expect(result1.declarations).not.toEqual(result2.declarations);
+		});
+	});
+});
+
+describe("createKeyframesFunction", () => {
+	let root: Root;
+	let keyframes: ReturnType<typeof createKeyframesFunction>;
+	let selector: ReturnType<typeof createSelectorFunction>;
+
+	beforeEach(() => {
+		root = createRoot();
+		keyframes = createKeyframesFunction(root, root);
+		selector = createSelectorFunction(root, root);
+	});
+
+	it("should create keyframes with the correct structure", () => {
+		const fadeInKeyframes = keyframes("fade-in", {
+			"0%": {
+				opacity: 0,
+				transform: "translateY(20px)",
+			},
+			"100%": {
+				opacity: 1,
+				transform: "translateY(0)",
+			},
+		});
+
+		expect(fadeInKeyframes).toEqual({
+			type: "at-rule",
+			identifier: "keyframes",
+			rule: "fade-in",
+			children: [],
+			variables: [],
+			declarations: {
+				"0%": {
+					opacity: 0,
+					transform: "translateY(20px)",
+				},
+				"100%": {
+					opacity: 1,
+					transform: "translateY(0)",
+				},
+			},
+		});
+
+		expect(root.children).toContain(fadeInKeyframes);
+	});
+
+	it("should support multiple keyframe stops", () => {
+		const bounceKeyframes = keyframes("bounce", {
+			"0%": {
+				transform: "translateY(0)",
+				animationTimingFunction: "ease-out",
+			},
+			"25%": {
+				transform: "translateY(-20px)",
+				animationTimingFunction: "ease-in",
+			},
+			"50%": {
+				transform: "translateY(0)",
+				animationTimingFunction: "ease-out",
+			},
+			"75%": {
+				transform: "translateY(-10px)",
+				animationTimingFunction: "ease-in",
+			},
+			"100%": {
+				transform: "translateY(0)",
+				animationTimingFunction: "ease-out",
+			},
+		});
+
+		expect(Object.keys(bounceKeyframes.declarations)).toHaveLength(5);
+		expect(bounceKeyframes.declarations["0%"]).toBeDefined();
+		expect(bounceKeyframes.declarations["25%"]).toBeDefined();
+		expect(bounceKeyframes.declarations["50%"]).toBeDefined();
+		expect(bounceKeyframes.declarations["75%"]).toBeDefined();
+		expect(bounceKeyframes.declarations["100%"]).toBeDefined();
+	});
+
+	it("should be accessible in the declarations context", () => {
+		selector(".test", ({ keyframes }) => {
+			const fadeIn = keyframes("fade-in", {
+				"0%": { opacity: 0 },
+				"100%": { opacity: 1 },
+			});
+
+			expect(fadeIn.type).toBe("at-rule");
+			expect(fadeIn.identifier).toBe("keyframes");
+			expect(fadeIn.rule).toBe("fade-in");
+			expect(fadeIn.declarations).toEqual({
+				"0%": { opacity: 0 },
+				"100%": { opacity: 1 },
+			});
 		});
 	});
 });
