@@ -49,9 +49,9 @@ describe("createUtilityFunction", () => {
 		// Values should be stored on the utility instance
 		const utilityInstance = root.utilities.find((u) => u.name === "padding");
 		expect(utilityInstance?.values).toEqual({
-			sm: { value: "8px", modifiers: undefined },
-			md: { value: "16px", modifiers: undefined },
-			lg: { value: "24px", modifiers: undefined },
+			sm: { value: "8px", modifiers: [] },
+			md: { value: "16px", modifiers: [] },
+			lg: { value: "24px", modifiers: [] },
 		});
 	});
 
@@ -70,7 +70,7 @@ describe("createUtilityFunction", () => {
 		// Values should be stored on the utility instance
 		const utilityInstance = root.utilities.find((u) => u.name === "hidden");
 		expect(utilityInstance?.values).toEqual({
-			default: { value: true, modifiers: undefined },
+			default: { value: true, modifiers: [] },
 		});
 	});
 
@@ -140,7 +140,10 @@ describe("createUtilityFunction", () => {
 		// Values should be stored with all modifiers
 		const utilityInstance = root.utilities.find((u) => u.name === "background");
 		expect(utilityInstance?.values).toEqual({
-			primary: { value: "#007bff", modifiers: [hoverModifier, focusModifier] },
+			primary: {
+				value: "#007bff",
+				modifiers: [hoverModifier, focusModifier],
+			},
 		});
 	});
 
@@ -212,7 +215,7 @@ describe("createUtilityFunction", () => {
 		// Values should be stored with undefined modifiers
 		const utilityInstance = root.utilities.find((u) => u.name === "height");
 		expect(utilityInstance?.values).toEqual({
-			screen: { value: "100vh", modifiers: undefined },
+			screen: { value: "100vh", modifiers: [] },
 		});
 	});
 
@@ -234,8 +237,8 @@ describe("createUtilityFunction", () => {
 		// Values should be stored on the utility instance
 		const utilityInstance = root.utilities.find((u) => u.name === "flex");
 		expect(utilityInstance?.values).toEqual({
-			row: { value: "row", modifiers: undefined },
-			col: { value: "col", modifiers: undefined },
+			row: { value: "row", modifiers: [] },
+			col: { value: "col", modifiers: [] },
 		});
 	});
 
@@ -283,9 +286,9 @@ describe("createUtilityFunction", () => {
 
 		expect(utilityInstance).toBeDefined();
 		expect(utilityInstance?.values).toEqual({
-			sm: { value: "8px", modifiers: undefined },
-			md: { value: "16px", modifiers: undefined },
-			lg: { value: "24px", modifiers: undefined },
+			sm: { value: "8px", modifiers: [] },
+			md: { value: "16px", modifiers: [] },
+			lg: { value: "24px", modifiers: [] },
 		});
 	});
 
@@ -309,10 +312,10 @@ describe("createUtilityFunction", () => {
 		const utilityInstance = root.utilities.find((u) => u.name === "spacing");
 
 		expect(utilityInstance?.values).toEqual({
-			sm: { value: "8px", modifiers: undefined },
-			md: { value: "16px", modifiers: undefined },
-			lg: { value: "24px", modifiers: undefined },
-			xl: { value: "32px", modifiers: undefined },
+			sm: { value: "8px", modifiers: [] },
+			md: { value: "16px", modifiers: [] },
+			lg: { value: "24px", modifiers: [] },
+			xl: { value: "32px", modifiers: [] },
 		});
 
 		// Should still only have one utility instance
@@ -337,7 +340,7 @@ describe("createUtilityFunction", () => {
 		const utilityInstance = root.utilities.find((u) => u.name === "color");
 
 		expect(utilityInstance?.values).toEqual({
-			primary: { value: "#0056b3", modifiers: undefined },
+			primary: { value: "#0056b3", modifiers: [] },
 		});
 	});
 

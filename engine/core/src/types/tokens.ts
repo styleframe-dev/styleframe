@@ -1,3 +1,7 @@
+import type {
+	DeclarationsCallback,
+	DeclarationsCallbackContext,
+} from "../tokens";
 import type { DeclarationsBlock } from "./declarations";
 
 export type Variable<Name extends string = string> = {
@@ -34,16 +38,14 @@ export type CSS = {
 	value: TokenValue[];
 };
 
-export type UtilityValue = {
-	value: TokenValue;
-	modifiers: Modifier[];
-};
-
 export type Utility<Name extends string = string> = {
 	type: "utility";
 	name: Name;
-	declarations: (value: TokenValue) => DeclarationsBlock;
-	values: Record<string, UtilityValue>;
+	value: string;
+	declarations: DeclarationsBlock;
+	variables: Variable[];
+	children: ContainerChild[];
+	modifiers: Modifier[];
 };
 
 export type UtilityCreatorFn = (
@@ -107,7 +109,7 @@ export type TokenType =
 	| Theme["type"]
 	| Root["type"];
 
-export type Container = Root | Theme | Selector | AtRule;
+export type Container = Root | Theme | Selector | AtRule | Utility;
 
 export type ContainerChild = Variable | Selector | AtRule;
 
