@@ -19,21 +19,16 @@ describe("createUtilityFunction", () => {
 	});
 
 	test("should create utility with proper structure", () => {
-		const declarationsFn = (value: TokenValue) => ({ margin: value });
-		const createMarginUtility = utility("margin", declarationsFn);
+		const createMarginUtility = utility("margin", ({ value }) => ({
+			margin: value,
+		}));
 
 		expect(createMarginUtility).toBeTypeOf("function");
-		expect(root.utilities).toHaveLength(1);
-		expect(root.utilities[0]).toEqual({
-			type: "utility",
-			name: "margin",
-			declarations: declarationsFn,
-			values: {},
-		});
+		expect(root.utilities).toHaveLength(0); // No utilities until we call the creator
 	});
 
-	test("should store utility values without creating selectors", () => {
-		const createPaddingUtility = utility("padding", (value) => ({
+	test("should create utility instances without creating selectors", () => {
+		const createPaddingUtility = utility("padding", ({ value }) => ({
 			padding: value,
 		}));
 
@@ -46,17 +41,50 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Values should be stored on the utility instance
-		const utilityInstance = root.utilities.find((u) => u.name === "padding");
-		expect(utilityInstance?.values).toEqual({
-			sm: { value: "8px", modifiers: [] },
-			md: { value: "16px", modifiers: [] },
-			lg: { value: "24px", modifiers: [] },
+		// Three utility instances should be created
+		expect(root.utilities).toHaveLength(3);
+
+		const smUtility = root.utilities.find(
+			(u) => u.name === "padding" && u.value === "sm",
+		);
+		const mdUtility = root.utilities.find(
+			(u) => u.name === "padding" && u.value === "md",
+		);
+		const lgUtility = root.utilities.find(
+			(u) => u.name === "padding" && u.value === "lg",
+		);
+
+		expect(smUtility).toEqual({
+			type: "utility",
+			name: "padding",
+			value: "sm",
+			declarations: { padding: "8px" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		});
+		expect(mdUtility).toEqual({
+			type: "utility",
+			name: "padding",
+			value: "md",
+			declarations: { padding: "16px" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		});
+		expect(lgUtility).toEqual({
+			type: "utility",
+			name: "padding",
+			value: "lg",
+			declarations: { padding: "24px" },
+			variables: [],
+			children: [],
+			modifiers: [],
 		});
 	});
 
 	test("should handle boolean values correctly", () => {
-		const createHiddenUtility = utility("hidden", (value) => ({
+		const createHiddenUtility = utility("hidden", ({ value }) => ({
 			display: value === true ? "none" : "block",
 		}));
 
@@ -67,14 +95,22 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Values should be stored on the utility instance
-		const utilityInstance = root.utilities.find((u) => u.name === "hidden");
-		expect(utilityInstance?.values).toEqual({
-			default: { value: true, modifiers: [] },
+		// One utility instance should be created
+		expect(root.utilities).toHaveLength(1);
+
+		const hiddenUtility = root.utilities.find((u) => u.name === "hidden");
+		expect(hiddenUtility).toEqual({
+			type: "utility",
+			name: "hidden",
+			value: "default",
+			declarations: { display: "none" },
+			variables: [],
+			children: [],
+			modifiers: [],
 		});
 	});
 
-	test("should store utility values with modifiers", () => {
+	test("should store utility instances with modifiers", () => {
 		const hoverModifier: Modifier = {
 			type: "modifier",
 			key: ["hover"],
@@ -83,7 +119,7 @@ describe("createUtilityFunction", () => {
 			}),
 		};
 
-		const createColorUtility = utility("color", (value) => ({
+		const createColorUtility = utility("color", ({ value }) => ({
 			color: value,
 		}));
 
@@ -98,15 +134,37 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Values should be stored with modifiers
-		const utilityInstance = root.utilities.find((u) => u.name === "color");
-		expect(utilityInstance?.values).toEqual({
-			primary: { value: "#007bff", modifiers: [hoverModifier] },
-			secondary: { value: "#6c757d", modifiers: [hoverModifier] },
+		// Two utility instances should be created with modifiers
+		expect(root.utilities).toHaveLength(2);
+
+		const primaryUtility = root.utilities.find(
+			(u) => u.name === "color" && u.value === "primary",
+		);
+		const secondaryUtility = root.utilities.find(
+			(u) => u.name === "color" && u.value === "secondary",
+		);
+
+		expect(primaryUtility).toEqual({
+			type: "utility",
+			name: "color",
+			value: "primary",
+			declarations: { color: "#007bff" },
+			variables: [],
+			children: [],
+			modifiers: [hoverModifier],
+		});
+		expect(secondaryUtility).toEqual({
+			type: "utility",
+			name: "color",
+			value: "secondary",
+			declarations: { color: "#6c757d" },
+			variables: [],
+			children: [],
+			modifiers: [hoverModifier],
 		});
 	});
 
-	test("should store utility values with multiple modifiers", () => {
+	test("should store utility instances with multiple modifiers", () => {
 		const hoverModifier: Modifier = {
 			type: "modifier",
 			key: ["hover"],
@@ -123,7 +181,7 @@ describe("createUtilityFunction", () => {
 			}),
 		};
 
-		const createBackgroundUtility = utility("background", (value) => ({
+		const createBackgroundUtility = utility("background", ({ value }) => ({
 			background: value,
 		}));
 
@@ -137,13 +195,20 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Values should be stored with all modifiers
-		const utilityInstance = root.utilities.find((u) => u.name === "background");
-		expect(utilityInstance?.values).toEqual({
-			primary: {
-				value: "#007bff",
-				modifiers: [hoverModifier, focusModifier],
-			},
+		// One utility instance should be created with all modifiers
+		expect(root.utilities).toHaveLength(1);
+
+		const backgroundUtility = root.utilities.find(
+			(u) => u.name === "background",
+		);
+		expect(backgroundUtility).toEqual({
+			type: "utility",
+			name: "background",
+			value: "primary",
+			declarations: { background: "#007bff" },
+			variables: [],
+			children: [],
+			modifiers: [hoverModifier, focusModifier],
 		});
 	});
 
@@ -157,7 +222,7 @@ describe("createUtilityFunction", () => {
 			}),
 		};
 
-		const createTextUtility = utility("text", (value) => ({
+		const createTextUtility = utility("text", ({ value }) => ({
 			fontSize: value,
 		}));
 
@@ -171,15 +236,23 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Values should be stored with breakpoint modifier
-		const utilityInstance = root.utilities.find((u) => u.name === "text");
-		expect(utilityInstance?.values).toEqual({
-			base: { value: "14px", modifiers: [breakpointModifier] },
+		// One utility instance should be created with breakpoint modifier
+		expect(root.utilities).toHaveLength(1);
+
+		const textUtility = root.utilities.find((u) => u.name === "text");
+		expect(textUtility).toEqual({
+			type: "utility",
+			name: "text",
+			value: "base",
+			declarations: { fontSize: "14px" },
+			variables: [],
+			children: [],
+			modifiers: [breakpointModifier],
 		});
 	});
 
 	test("should handle empty modifiers array", () => {
-		const createWidthUtility = utility("width", (value) => ({
+		const createWidthUtility = utility("width", ({ value }) => ({
 			width: value,
 		}));
 
@@ -193,15 +266,23 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Values should be stored with empty modifiers array
-		const utilityInstance = root.utilities.find((u) => u.name === "width");
-		expect(utilityInstance?.values).toEqual({
-			full: { value: "100%", modifiers: [] },
+		// One utility instance should be created with empty modifiers array
+		expect(root.utilities).toHaveLength(1);
+
+		const widthUtility = root.utilities.find((u) => u.name === "width");
+		expect(widthUtility).toEqual({
+			type: "utility",
+			name: "width",
+			value: "full",
+			declarations: { width: "100%" },
+			variables: [],
+			children: [],
+			modifiers: [],
 		});
 	});
 
 	test("should handle undefined modifiers", () => {
-		const createHeightUtility = utility("height", (value) => ({
+		const createHeightUtility = utility("height", ({ value }) => ({
 			height: value,
 		}));
 
@@ -212,15 +293,23 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Values should be stored with undefined modifiers
-		const utilityInstance = root.utilities.find((u) => u.name === "height");
-		expect(utilityInstance?.values).toEqual({
-			screen: { value: "100vh", modifiers: [] },
+		// One utility instance should be created with empty modifiers array (default)
+		expect(root.utilities).toHaveLength(1);
+
+		const heightUtility = root.utilities.find((u) => u.name === "height");
+		expect(heightUtility).toEqual({
+			type: "utility",
+			name: "height",
+			value: "screen",
+			declarations: { height: "100vh" },
+			variables: [],
+			children: [],
+			modifiers: [],
 		});
 	});
 
 	test("should handle complex declarations", () => {
-		const createFlexUtility = utility("flex", (value) => ({
+		const createFlexUtility = utility("flex", ({ value }) => ({
 			display: "flex",
 			flexDirection: value === "col" ? "column" : "row",
 			gap: "1rem",
@@ -234,22 +323,56 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Values should be stored on the utility instance
-		const utilityInstance = root.utilities.find((u) => u.name === "flex");
-		expect(utilityInstance?.values).toEqual({
-			row: { value: "row", modifiers: [] },
-			col: { value: "col", modifiers: [] },
+		// Two utility instances should be created
+		expect(root.utilities).toHaveLength(2);
+
+		const rowUtility = root.utilities.find(
+			(u) => u.name === "flex" && u.value === "row",
+		);
+		const colUtility = root.utilities.find(
+			(u) => u.name === "flex" && u.value === "col",
+		);
+
+		expect(rowUtility).toEqual({
+			type: "utility",
+			name: "flex",
+			value: "row",
+			declarations: {
+				display: "flex",
+				flexDirection: "row",
+				gap: "1rem",
+			},
+			variables: [],
+			children: [],
+			modifiers: [],
+		});
+		expect(colUtility).toEqual({
+			type: "utility",
+			name: "flex",
+			value: "col",
+			declarations: {
+				display: "flex",
+				flexDirection: "column",
+				gap: "1rem",
+			},
+			variables: [],
+			children: [],
+			modifiers: [],
 		});
 	});
 
 	test("should preserve utility order in root utilities array", () => {
-		utility("margin", (value) => ({
+		const createMarginUtility = utility("margin", ({ value }) => ({
 			margin: value,
 		}));
 
-		utility("padding", (value) => ({
+		const createPaddingUtility = utility("padding", ({ value }) => ({
 			padding: value,
 		}));
+
+		// Create some utilities
+		createMarginUtility({ sm: "8px" });
+		createPaddingUtility({ md: "16px" });
 
 		expect(root.utilities).toHaveLength(2);
 		expect(root.utilities[0]?.name).toBe("margin");
@@ -257,7 +380,7 @@ describe("createUtilityFunction", () => {
 	});
 
 	test("should handle empty entries object", () => {
-		const createEmptyUtility = utility("empty", (value) => ({
+		const createEmptyUtility = utility("empty", ({ value }) => ({
 			display: value,
 		}));
 
@@ -266,34 +389,51 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Utility should have empty values object
-		const utilityInstance = root.utilities.find((u) => u.name === "empty");
-		expect(utilityInstance?.values).toEqual({});
+		// No utility instances should be created for empty entries
+		expect(root.utilities).toHaveLength(0);
 	});
 
-	test("should store utility values on the instance", () => {
-		const createMarginUtility = utility("margin", (value) => ({
+	test("should create multiple utility instances when called multiple times", () => {
+		const createMarginUtility = utility("margin", ({ value }) => ({
 			margin: value,
 		}));
 
 		createMarginUtility({
 			sm: "8px",
 			md: "16px",
-			lg: "24px",
 		});
 
-		const utilityInstance = root.utilities.find((u) => u.name === "margin");
+		expect(root.utilities).toHaveLength(2);
 
-		expect(utilityInstance).toBeDefined();
-		expect(utilityInstance?.values).toEqual({
-			sm: { value: "8px", modifiers: [] },
-			md: { value: "16px", modifiers: [] },
-			lg: { value: "24px", modifiers: [] },
+		const smUtility = root.utilities.find(
+			(u) => u.name === "margin" && u.value === "sm",
+		);
+		const mdUtility = root.utilities.find(
+			(u) => u.name === "margin" && u.value === "md",
+		);
+
+		expect(smUtility).toEqual({
+			type: "utility",
+			name: "margin",
+			value: "sm",
+			declarations: { margin: "8px" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		});
+		expect(mdUtility).toEqual({
+			type: "utility",
+			name: "margin",
+			value: "md",
+			declarations: { margin: "16px" },
+			variables: [],
+			children: [],
+			modifiers: [],
 		});
 	});
 
-	test("should merge values when utility is called multiple times", () => {
-		const createSpacingUtility = utility("spacing", (value) => ({
+	test("should create additional utilities when utility is called multiple times", () => {
+		const createSpacingUtility = utility("spacing", ({ value }) => ({
 			margin: value,
 		}));
 
@@ -303,27 +443,35 @@ describe("createUtilityFunction", () => {
 			md: "16px",
 		});
 
-		// Second call - should merge with existing values
+		// Second call - should create additional utilities
 		createSpacingUtility({
 			lg: "24px",
 			xl: "32px",
 		});
 
-		const utilityInstance = root.utilities.find((u) => u.name === "spacing");
+		expect(root.utilities).toHaveLength(4);
 
-		expect(utilityInstance?.values).toEqual({
-			sm: { value: "8px", modifiers: [] },
-			md: { value: "16px", modifiers: [] },
-			lg: { value: "24px", modifiers: [] },
-			xl: { value: "32px", modifiers: [] },
-		});
+		const smUtility = root.utilities.find(
+			(u) => u.name === "spacing" && u.value === "sm",
+		);
+		const mdUtility = root.utilities.find(
+			(u) => u.name === "spacing" && u.value === "md",
+		);
+		const lgUtility = root.utilities.find(
+			(u) => u.name === "spacing" && u.value === "lg",
+		);
+		const xlUtility = root.utilities.find(
+			(u) => u.name === "spacing" && u.value === "xl",
+		);
 
-		// Should still only have one utility instance
-		expect(root.utilities).toHaveLength(1);
+		expect(smUtility).toBeDefined();
+		expect(mdUtility).toBeDefined();
+		expect(lgUtility).toBeDefined();
+		expect(xlUtility).toBeDefined();
 	});
 
-	test("should overwrite existing values with same key", () => {
-		const createColorUtility = utility("color", (value) => ({
+	test("should create additional utilities with same key", () => {
+		const createColorUtility = utility("color", ({ value }) => ({
 			color: value,
 		}));
 
@@ -332,16 +480,19 @@ describe("createUtilityFunction", () => {
 			primary: "#007bff",
 		});
 
-		// Second call with same key - should overwrite
+		// Second call with same key - should create another utility instance
 		createColorUtility({
 			primary: "#0056b3",
 		});
 
-		const utilityInstance = root.utilities.find((u) => u.name === "color");
+		expect(root.utilities).toHaveLength(2);
 
-		expect(utilityInstance?.values).toEqual({
-			primary: { value: "#0056b3", modifiers: [] },
-		});
+		const utilities = root.utilities.filter(
+			(u) => u.name === "color" && u.value === "primary",
+		);
+		expect(utilities).toHaveLength(2);
+		expect(utilities[0]?.declarations.color).toBe("#007bff");
+		expect(utilities[1]?.declarations.color).toBe("#0056b3");
 	});
 
 	test("should handle different modifiers on subsequent calls", () => {
@@ -361,7 +512,7 @@ describe("createUtilityFunction", () => {
 			}),
 		};
 
-		const createButtonUtility = utility("button", (value) => ({
+		const createButtonUtility = utility("button", ({ value }) => ({
 			backgroundColor: value,
 		}));
 
@@ -381,11 +532,43 @@ describe("createUtilityFunction", () => {
 			[focusModifier],
 		);
 
-		const utilityInstance = root.utilities.find((u) => u.name === "button");
+		expect(root.utilities).toHaveLength(2);
 
-		expect(utilityInstance?.values).toEqual({
-			primary: { value: "#007bff", modifiers: [hoverModifier] },
-			secondary: { value: "#6c757d", modifiers: [focusModifier] },
+		const primaryUtility = root.utilities.find(
+			(u) => u.name === "button" && u.value === "primary",
+		);
+		const secondaryUtility = root.utilities.find(
+			(u) => u.name === "button" && u.value === "secondary",
+		);
+
+		expect(primaryUtility?.modifiers).toEqual([hoverModifier]);
+		expect(secondaryUtility?.modifiers).toEqual([focusModifier]);
+	});
+
+	test("should support callback context functions", () => {
+		const createAdvancedUtility = utility(
+			"advanced",
+			({ value, variable, selector }) => {
+				const colorVar = variable("color-var", value);
+				selector(".nested", { color: colorVar.value });
+
+				return {
+					backgroundColor: colorVar.value,
+				};
+			},
+		);
+
+		createAdvancedUtility({
+			primary: "#007bff",
 		});
+
+		expect(root.utilities).toHaveLength(1);
+
+		const advancedUtility = root.utilities.find((u) => u.name === "advanced");
+		expect(advancedUtility?.declarations).toEqual({
+			backgroundColor: "#007bff",
+		});
+		expect(advancedUtility?.variables).toHaveLength(1);
+		expect(advancedUtility?.children).toHaveLength(1);
 	});
 });
