@@ -5,6 +5,7 @@
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"scripts": {
 		"build": "turbo run build",
+		"test": "turbo run test",
 		"lint": "oxlint",
 		"format": "biome format --write",
 		"prepare": "husky"

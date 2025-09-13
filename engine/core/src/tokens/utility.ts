@@ -7,69 +7,38 @@ import type {
 	Utility,
 	UtilityCreatorFn,
 } from "../types";
-import { combineKeys } from "./modifier";
-import { createSelectorFunction } from "./selector";
 
-export function createUtilityFunction(parent: Container, root: Root) {
+export function createUtilityFunction(_parent: Container, root: Root) {
 	return function utility<Name extends string>(
 		name: Name,
 		declarations: (value: TokenValue) => DeclarationsBlock,
 	): UtilityCreatorFn {
-		const utilityInstance: Utility<Name> = {
-			type: "utility",
-			name,
-			declarations,
-			values: {},
-		};
-		const selector = createSelectorFunction(parent, root);
+		// Check if the utility with this name already exists
+		let utilityInstance = root.utilities.find(
+			(u): u is Utility<Name> => u.name === name,
+		);
 
-		root.utilities.push(utilityInstance);
+		// Create a new utility instance if it doesn't exist
+		if (!utilityInstance) {
+			utilityInstance = {
+				type: "utility",
+				name,
+				declarations,
+				values: {},
+			};
+			root.utilities.push(utilityInstance);
+		}
 
 		return (
 			entries: Record<string, TokenValue>,
-			options?: {
-				modifiers?: Modifier[];
-			},
+			modifiers: Modifier[] = [],
 		) => {
 			Object.entries(entries).forEach(([key, value]) => {
 				// Store the utility value on the instance
-				utilityInstance.values[key] = value;
-
-				const utilitySelectorPart =
-					value === true || !value ? name : `${name}:${key}`;
-
-				// Create the base utility selector
-				selector(`._${utilitySelectorPart}`, declarations(value));
-
-				if (options?.modifiers && options?.modifiers.length > 0) {
-					const modifierKeys =
-						options.modifiers.map((modifier) => modifier.key) ?? [];
-					const modifierCombinations = combineKeys(modifierKeys);
-
-					modifierCombinations.forEach((combination) => {
-						const modifierSelectorPart = combination.join(":");
-						const modifiedDeclarations = combination.reduce(
-							(acc, modifierKey) => {
-								const modifier = options?.modifiers?.find((modifier) =>
-									modifier.key.includes(modifierKey),
-								);
-
-								return modifier
-									? modifier.transform({
-											key: modifierKey,
-											declarations: acc,
-										})
-									: acc;
-							},
-							declarations(value),
-						);
-
-						selector(
-							`._${modifierSelectorPart}:${utilitySelectorPart}`,
-							modifiedDeclarations,
-						);
-					});
-				}
+				utilityInstance.values[key] = {
+					value,
+					modifiers,
+				};
 			});
 		};
 	};

@@ -1,5 +1,5 @@
 import type { Styleframe } from "@styleframe/core";
-import { consume, consumeContainer } from "./consume";
+import { consume } from "./consume";
 import type { Output, OutputFile } from "./types";
 
 export function createFile(
@@ -39,16 +39,17 @@ export function transpile(instance: Styleframe, output: Output) {
 	if (instance.root.children.length > 0 || instance.root.variables.length > 0) {
 		const defaultThemeFile = createFile("theme/default.css", [], "component");
 
-		defaultThemeFile.content.push(
-			consumeContainer(
-				":root",
-				{
-					variables: instance.root.variables,
-					children: instance.root.children,
-				},
-				options,
-			),
-		);
+		// @TODO Add default theme consumer
+		// defaultThemeFile.content.push(
+		// 	consume(
+		// 		":root",
+		// 		{
+		// 			variables: instance.root.variables,
+		// 			children: instance.root.children,
+		// 		},
+		// 		options,
+		// 	),
+		// );
 
 		output.files.push(defaultThemeFile);
 	}

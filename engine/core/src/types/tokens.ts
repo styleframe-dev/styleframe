@@ -1,5 +1,4 @@
 import type { DeclarationsBlock } from "./declarations";
-import type { StyleframeOptions } from "./options";
 
 export type Variable<Name extends string = string> = {
 	type: "variable";
@@ -35,18 +34,21 @@ export type CSS = {
 	value: TokenValue[];
 };
 
+export type UtilityValue = {
+	value: TokenValue;
+	modifiers: Modifier[];
+};
+
 export type Utility<Name extends string = string> = {
 	type: "utility";
 	name: Name;
 	declarations: (value: TokenValue) => DeclarationsBlock;
-	values: Record<string, TokenValue>;
+	values: Record<string, UtilityValue>;
 };
 
 export type UtilityCreatorFn = (
 	values: Record<string, TokenValue>,
-	options?: {
-		modifiers?: Modifier[];
-	},
+	modifiers?: Modifier[],
 ) => void;
 
 export type Modifier = {

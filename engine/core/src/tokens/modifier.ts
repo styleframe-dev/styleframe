@@ -37,7 +37,7 @@ export function combineKeys(groups: string[][]): string[][] {
 	});
 }
 
-export function createModifierFunction(parent: Container, root: Root) {
+export function createModifierFunction(_parent: Container, root: Root) {
 	return function modifier<Key extends string>(
 		key: Key | Key[],
 		transform: ModifierTransformFn,
