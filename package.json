@@ -4,6 +4,8 @@
 	"description": "Write modern, clean, composable CSS using TypeScript, with a focus on simplicity and performance.",
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"scripts": {
+		"dev": "turbo run dev",
+		"dev:docs": "turbo run dev --filter @styleframe/docs",
 		"build": "turbo run build",
 		"test": "turbo run test",
 		"lint": "oxlint",

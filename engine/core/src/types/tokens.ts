@@ -1,8 +1,8 @@
 import type {
+	DeclarationsBlock,
 	DeclarationsCallback,
 	DeclarationsCallbackContext,
-} from "../tokens";
-import type { DeclarationsBlock } from "./declarations";
+} from "./declarations";
 
 export type Variable<Name extends string = string> = {
 	type: "variable";
@@ -45,18 +45,29 @@ export type Utility<Name extends string = string> = {
 	declarations: DeclarationsBlock;
 	variables: Variable[];
 	children: ContainerChild[];
-	modifiers: Modifier[];
+	modifiers: string[];
 };
+
+export type UtilityCallbackFn = DeclarationsCallback<
+	DeclarationsCallbackContext & {
+		value: TokenValue;
+	}
+>;
 
 export type UtilityCreatorFn = (
 	values: Record<string, TokenValue>,
 	modifiers?: Modifier[],
 ) => void;
 
+export type ModifierCallbackFn = DeclarationsCallback<
+	DeclarationsCallbackContext &
+		Pick<Utility, "declarations" | "variables" | "children">
+>;
+
 export type Modifier = {
 	type: "modifier";
 	key: string[];
-	transform: ModifierTransformFn;
+	factory: ModifierCallbackFn;
 };
 
 export type ModifierTransformFn = (args: {
@@ -108,6 +119,12 @@ export type TokenType =
 	| Recipe["type"]
 	| Theme["type"]
 	| Root["type"];
+
+export type Containerish = {
+	children: ContainerChild[];
+	variables: Variable[];
+	declarations: DeclarationsBlock;
+};
 
 export type Container = Root | Theme | Selector | AtRule | Utility;
 

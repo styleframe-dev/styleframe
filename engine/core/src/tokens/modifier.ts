@@ -1,4 +1,4 @@
-import type { Container, Modifier, ModifierTransformFn, Root } from "../types";
+import type { Container, Modifier, Root } from "../types";
 
 export function combineKeys(groups: string[][]): string[][] {
 	const result: string[][] = [];
@@ -40,12 +40,12 @@ export function combineKeys(groups: string[][]): string[][] {
 export function createModifierFunction(_parent: Container, root: Root) {
 	return function modifier<Key extends string>(
 		key: Key | Key[],
-		transform: ModifierTransformFn,
+		factory: Modifier["factory"],
 	): Modifier {
 		const modifierInstance: Modifier = {
 			type: "modifier",
 			key: Array.isArray(key) ? key : [key],
-			transform,
+			factory,
 		};
 
 		root.modifiers.push(modifierInstance);

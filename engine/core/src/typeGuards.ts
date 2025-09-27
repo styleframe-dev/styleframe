@@ -1,5 +1,6 @@
 import type {
 	AtRule,
+	Containerish,
 	CSS,
 	Modifier,
 	PrimitiveTokenValue,
@@ -13,17 +14,16 @@ import type {
 	Variable,
 } from "./types";
 
+export function isObject(value: unknown): value is object {
+	return typeof value === "object" && value !== null;
+}
+
 /**
  * Tokens
  */
 
 export function isToken<T>(value: unknown, type: TokenType): value is T {
-	return (
-		typeof value === "object" &&
-		value !== null &&
-		"type" in value &&
-		value.type === type
-	);
+	return isObject(value) && "type" in value && value.type === type;
 }
 
 export function isVariable<Name extends string = string>(
@@ -85,5 +85,14 @@ export function isTokenValue(value: unknown): value is TokenValue {
 		isRef(value) ||
 		isCSS(value) ||
 		(Array.isArray(value) && value.every(isTokenValue))
+	);
+}
+
+export function isContainer(value: unknown): value is Containerish {
+	return (
+		isObject(value) &&
+		"children" in value &&
+		"declarations" in value &&
+		"variables" in value
 	);
 }

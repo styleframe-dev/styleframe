@@ -1,6 +1,11 @@
 /** biome-ignore-all lint/suspicious/noConfusingVoidType: Returning declarations in callback is optional */
 import { isTokenValue } from "../typeGuards";
-import type { Container, DeclarationsBlock, Root, TokenValue } from "../types";
+import type {
+	Container,
+	DeclarationsBlock,
+	DeclarationsCallbackContext,
+	Root,
+} from "../types";
 import {
 	createAtRuleFunction,
 	createKeyframesFunction,
@@ -9,19 +14,6 @@ import {
 import { createCssFunction } from "./css";
 import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
-
-export type DeclarationsCallbackContext = {
-	variable: ReturnType<typeof createVariableFunction>;
-	selector: ReturnType<typeof createSelectorFunction>;
-	keyframes: ReturnType<typeof createKeyframesFunction>;
-	atRule: ReturnType<typeof createAtRuleFunction>;
-	media: ReturnType<typeof createMediaFunction>;
-	css: ReturnType<typeof createCssFunction>;
-};
-
-export type DeclarationsCallback<
-	Context extends DeclarationsCallbackContext = DeclarationsCallbackContext,
-> = (context: Context) => DeclarationsBlock | void;
 
 export function createDeclarationsCallbackContext(
 	parent: Container,

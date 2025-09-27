@@ -550,14 +550,14 @@ describe("createDeclarationsCallbackContext", () => {
 				value: "value",
 			};
 
-			selector.variables.push(existingVar as unknown as any);
+			selector.variables.push(existingVar);
 			const initialLength = selector.variables.length;
 
 			const context = createDeclarationsCallbackContext(selector, root);
 			context.variable("new-var", "new-value");
 
 			expect(selector.variables).toHaveLength(initialLength + 1);
-			expect(selector.variables).toContain(existingVar as unknown as any);
+			expect(selector.variables).toContain(existingVar);
 		});
 	});
 
@@ -567,8 +567,8 @@ describe("createDeclarationsCallbackContext", () => {
 
 			// All functions should work with the same interfaces they would individually
 			const variableFunction = createVariableFunction(root, root);
-			const selectorFunction = createSelectorFunction(root, root);
-			const mediaFunction = createAtRuleFunction(root, root);
+			const _selectorFunction = createSelectorFunction(root, root);
+			const _mediaFunction = createAtRuleFunction(root, root);
 
 			// Context functions should behave identically
 			const contextVar = context.variable("test1", "value1");

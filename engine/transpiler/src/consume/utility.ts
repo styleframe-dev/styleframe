@@ -18,58 +18,15 @@ export function createUtilityConsumer(consume: ConsumeFunction) {
 	): string {
 		const result: string[] = [];
 
-		for (const [key, utilityValue] of Object.entries(instance.values)) {
-			const { value, modifiers } = utilityValue;
-			const utilitySelectorPart =
-				value === true || !value ? instance.name : `${instance.name}:${key}`;
+		const utilitySelectorPart =
+			instance.value === "default"
+				? instance.name
+				: `${instance.name}:${instance.value}`;
 
-			const baseDeclarations = instance.declarations(value);
-
-			// Create base utility selector
-			result.push(
-				consumeContainer(
-					`._${utilitySelectorPart}`,
-					{
-						declarations: baseDeclarations,
-					},
-					options,
-				),
-			);
-
-			// Create modified variants for this specific value
-			if (modifiers.length > 0) {
-				const modifierKeys = modifiers.map((modifier) => modifier.key);
-				const modifierCombinations = combineKeys(modifierKeys);
-
-				modifierCombinations.forEach((combination) => {
-					const modifierSelectorPart = combination.join(":");
-					const modifiedDeclarations = combination.reduce(
-						(acc, modifierKey) => {
-							const modifier = modifiers.find((modifier) =>
-								modifier.key.includes(modifierKey),
-							);
-							return modifier
-								? modifier.transform({
-										key: modifierKey,
-										declarations: acc,
-									})
-								: acc;
-						},
-						instance.declarations(value),
-					);
-
-					result.push(
-						consumeContainer(
-							`._${modifierSelectorPart}:${utilitySelectorPart}`,
-							{
-								declarations: modifiedDeclarations,
-							},
-							options,
-						),
-					);
-				});
-			}
-		}
+		// Create base utility selector
+		result.push(
+			consumeContainer(`._${utilitySelectorPart}`, instance, options),
+		);
 
 		return result.join("\n\n");
 	};

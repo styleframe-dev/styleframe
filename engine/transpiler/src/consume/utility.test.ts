@@ -26,7 +26,7 @@ describe("createUtilityConsumer", () => {
 		utility = createUtilityFunction(parent, root);
 
 		// Create a basic utility for testing
-		const createMarginUtility = utility("margin", (value) => ({
+		const createMarginUtility = utility("margin", ({ value }) => ({
 			margin: value,
 		}));
 
@@ -75,7 +75,7 @@ describe("createUtilityConsumer", () => {
 
 	it("should handle boolean values correctly", () => {
 		// Create a utility with boolean value
-		const createDisplayUtility = utility("hidden", (value) => ({
+		const createDisplayUtility = utility("hidden", ({ value }) => ({
 			display: value === true ? "none" : "block",
 		}));
 
@@ -98,7 +98,7 @@ describe("createUtilityConsumer", () => {
 
 	it("should handle undefined values correctly", () => {
 		// Create a utility with undefined value
-		const createVisibilityUtility = utility("visible", (value) => ({
+		const createVisibilityUtility = utility("visible", ({ value }) => ({
 			visibility: value || "visible",
 		}));
 
@@ -197,7 +197,7 @@ describe("createUtilityConsumer", () => {
 
 	it("should handle utility with empty values object", () => {
 		// Create a utility with no values
-		const createEmptyUtility = utility("empty", (value) => ({
+		const createEmptyUtility = utility("empty", ({ value }) => ({
 			display: value || "block",
 		}));
 
@@ -215,7 +215,7 @@ describe("createUtilityConsumer", () => {
 
 	it("should generate proper CSS output for complex declarations", () => {
 		// Create a utility with complex declarations
-		const createFlexUtility = utility("flex", (value) => ({
+		const createFlexUtility = utility("flex", ({ value }) => ({
 			display: "flex",
 			flexDirection: value === "col" ? "column" : "row",
 			gap: "1rem",
@@ -291,7 +291,7 @@ describe("createUtilityConsumer", () => {
 
 	it("should handle true/false values with proper selector names", () => {
 		// Create a utility where true values don't get a key suffix
-		const createHiddenUtility = utility("hidden", (value) => ({
+		const createHiddenUtility = utility("hidden", ({ value }) => ({
 			display: value ? "none" : "block",
 		}));
 
@@ -319,7 +319,7 @@ describe("createUtilityConsumer", () => {
 
 	it("should create utility selectors with proper escaping", () => {
 		// Create a utility with special characters that need escaping
-		const createSpacingUtility = utility("p", (value) => ({
+		const createSpacingUtility = utility("p", ({ value }) => ({
 			padding: value,
 		}));
 

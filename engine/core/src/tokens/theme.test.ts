@@ -1,8 +1,10 @@
-import type { Root, Theme } from "../types";
 import type {
 	DeclarationsCallback,
 	DeclarationsCallbackContext,
-} from "./declarations";
+	Root,
+	Selector,
+	Theme,
+} from "../types";
 import { createRoot } from "./root";
 import { createThemeFunction } from "./theme";
 
@@ -155,6 +157,7 @@ describe("createThemeFunction", () => {
 
 	describe("when callback is not provided", () => {
 		it("should create theme without calling any callback", () => {
+			// biome-ignore lint/suspicious/noExplicitAny: Required for test
 			const result = theme("light", undefined as any);
 
 			expect(result).toEqual({
@@ -168,6 +171,7 @@ describe("createThemeFunction", () => {
 		});
 
 		it("should handle null callback gracefully", () => {
+			// biome-ignore lint/suspicious/noExplicitAny: Required for test
 			const result = theme("light", null as any);
 
 			expect(result).toEqual({
@@ -238,7 +242,7 @@ describe("createThemeFunction", () => {
 		});
 
 		it("should provide working selector function in callback context", () => {
-			let selectorResult: any;
+			let selectorResult: Selector | undefined;
 
 			const callback: DeclarationsCallback = (context) => {
 				selectorResult = context.selector(".test", { color: "red" });
@@ -298,7 +302,11 @@ describe("createThemeFunction", () => {
 				type: "theme",
 				name: "existing",
 				variables: [
-					{ type: "variable", name: "existing-var", value: "existing-value" },
+					{
+						type: "variable",
+						name: "existing-var",
+						value: "existing-value",
+					},
 				],
 				children: [],
 			};
