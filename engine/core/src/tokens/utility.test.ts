@@ -1,7 +1,7 @@
 import type { Container, Modifier, Root, Utility } from "../types";
 import { createRoot } from "./root";
 import { createUtilityFunction } from "./utility";
-import { createApplyModifiersFunction } from "./modifier";
+import { applyModifiers } from "./modifier";
 
 describe("createUtilityFunction", () => {
 	let root: Root;
@@ -661,13 +661,9 @@ describe("createUtilityFunction", () => {
 
 describe("createModifiedUtilityFunction", () => {
 	let root: Root;
-	let parent: Container;
-	let applyModifiers: ReturnType<typeof createApplyModifiersFunction>;
 
 	beforeEach(() => {
 		root = createRoot();
-		parent = root;
-		applyModifiers = createApplyModifiersFunction(parent, root);
 	});
 
 	test("should create a modified utility function", () => {
@@ -693,7 +689,11 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = applyModifiers(baseUtility, [hoverModifier], ["hover"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map(Object.entries({ hover: hoverModifier })),
+		);
 
 		expect(result).not.toBe(baseUtility); // Should be a new instance
 		expect(result.type).toBe("utility");
@@ -721,7 +721,11 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = applyModifiers(baseUtility, [focusModifier], ["focus"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map(Object.entries({ focus: focusModifier })),
+		);
 
 		expect(result.type).toBe("utility");
 		expect(result.name).toBe("margin");
@@ -759,8 +763,11 @@ describe("createModifiedUtilityFunction", () => {
 
 		const result = applyModifiers(
 			baseUtility,
-			[hoverModifier, focusModifier],
-			["hover", "focus"],
+			root,
+			new Map([
+				["hover", hoverModifier],
+				["focus", focusModifier],
+			]),
 		);
 
 		expect(result.modifiers).toEqual(["hover", "focus"]);
@@ -780,7 +787,7 @@ describe("createModifiedUtilityFunction", () => {
 		const variableModifier: Modifier = {
 			type: "modifier",
 			key: ["var"],
-			factory: ({ variable, declarations }) => {
+			factory: ({ variable }) => {
 				const colorVar = variable("bg-color", "#007bff");
 				return {
 					background: colorVar.value,
@@ -788,7 +795,15 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = applyModifiers(baseUtility, [variableModifier], ["var"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map(
+				Object.entries({
+					var: variableModifier,
+				}),
+			),
+		);
 
 		expect(result.variables).toHaveLength(1);
 		expect(result.variables[0]).toEqual({
@@ -819,7 +834,11 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = applyModifiers(baseUtility, [childModifier], ["child"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map(Object.entries({ child: childModifier })),
+		);
 
 		expect(result.children).toHaveLength(1);
 		expect(result.children[0]).toMatchObject({
@@ -841,7 +860,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const result = applyModifiers(baseUtility, [], []);
+		const result = applyModifiers(baseUtility, root, new Map());
 
 		expect(result).not.toBe(baseUtility);
 		expect(result.modifiers).toEqual([]);
@@ -877,8 +896,11 @@ describe("createModifiedUtilityFunction", () => {
 
 		const result = applyModifiers(
 			baseUtility,
-			[hoverModifier, darkModeModifier],
-			["dark", "hover"],
+			root,
+			new Map([
+				["dark", darkModeModifier],
+				["hover", hoverModifier],
+			]),
 		);
 
 		expect(result.modifiers).toEqual(["dark", "hover"]);
@@ -895,7 +917,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		let executionOrder: string[] = [];
+		const executionOrder: string[] = [];
 
 		const firstModifier: Modifier = {
 			type: "modifier",
@@ -919,8 +941,11 @@ describe("createModifiedUtilityFunction", () => {
 
 		const result = applyModifiers(
 			baseUtility,
-			[firstModifier, secondModifier],
-			["first", "second"],
+			root,
+			new Map([
+				["first", firstModifier],
+				["second", secondModifier],
+			]),
 		);
 
 		expect(executionOrder).toEqual(["first", "second"]);
@@ -949,7 +974,11 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = applyModifiers(baseUtility, [widthModifier], ["thick"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map([["thick", widthModifier]]),
+		);
 
 		// The original declarations should be preserved
 		expect(result.declarations).toEqual({ borderStyle: "solid" });
@@ -975,38 +1004,13 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = applyModifiers(baseUtility, [responsiveModifier], ["md"]);
-
-		expect(result.modifiers).toEqual(["md"]);
-	});
-
-	test("should handle combination array with values not matching modifier keys", () => {
-		const baseUtility: Utility = {
-			type: "utility",
-			name: "width",
-			value: "full",
-			declarations: { width: "100%" },
-			variables: [],
-			children: [],
-			modifiers: [],
-		};
-
-		const hoverModifier: Modifier = {
-			type: "modifier",
-			key: ["hover"],
-			factory: ({ declarations }) => ({
-				"&:hover": declarations,
-			}),
-		};
-
-		// Combination includes "focus" but only hover modifier is provided
 		const result = applyModifiers(
 			baseUtility,
-			[hoverModifier],
-			["hover", "focus"],
+			root,
+			new Map([["md", responsiveModifier]]),
 		);
 
-		expect(result.modifiers).toEqual(["hover", "focus"]);
+		expect(result.modifiers).toEqual(["md"]);
 	});
 
 	test("should create independent instances for each modification", () => {
@@ -1029,8 +1033,16 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result1 = applyModifiers(baseUtility, [hoverModifier], ["hover"]);
-		const result2 = applyModifiers(baseUtility, [hoverModifier], ["hover"]);
+		const result1 = applyModifiers(
+			baseUtility,
+			root,
+			new Map(Object.entries({ hover: hoverModifier })),
+		);
+		const result2 = applyModifiers(
+			baseUtility,
+			root,
+			new Map(Object.entries({ hover: hoverModifier })),
+		);
 
 		// The instances themselves should be different
 		expect(result1).not.toBe(result2);
@@ -1054,7 +1066,7 @@ describe("createModifiedUtilityFunction", () => {
 		const complexModifier: Modifier = {
 			type: "modifier",
 			key: ["interactive"],
-			factory: ({ variable, selector, declarations }) => {
+			factory: ({ variable, selector }) => {
 				const bgVar = variable("button-bg", "#007bff");
 				const textVar = variable("button-text", "white");
 
@@ -1080,8 +1092,8 @@ describe("createModifiedUtilityFunction", () => {
 
 		const result = applyModifiers(
 			baseUtility,
-			[complexModifier],
-			["interactive"],
+			root,
+			new Map([["interactive", complexModifier]]),
 		);
 
 		expect(result.variables).toHaveLength(2);
@@ -1128,7 +1140,11 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = applyModifiers(baseUtility, [modifier], ["test"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map([["test", modifier]]),
+		);
 
 		// The declarations object should remain unchanged
 		expect(baseUtility.declarations).toEqual(originalDeclarations);
@@ -1162,7 +1178,11 @@ describe("createModifiedUtilityFunction", () => {
 			factory: () => null as any,
 		};
 
-		const result = applyModifiers(baseUtility, [nullModifier], ["null"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map([["null", nullModifier]]),
+		);
 
 		expect(result.declarations).toEqual({ display: "flex" });
 		expect(result.modifiers).toEqual(["null"]);
@@ -1187,8 +1207,8 @@ describe("createModifiedUtilityFunction", () => {
 
 		const result = applyModifiers(
 			baseUtility,
-			[undefinedModifier],
-			["undefined"],
+			root,
+			new Map([["undefined", undefinedModifier]]),
 		);
 
 		expect(result.declarations).toEqual({ width: "auto" });
@@ -1212,7 +1232,11 @@ describe("createModifiedUtilityFunction", () => {
 			factory: () => ({}),
 		};
 
-		const result = applyModifiers(baseUtility, [emptyModifier], ["empty"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map([["empty", emptyModifier]]),
+		);
 
 		expect(result.declarations).toEqual({ height: "100vh" });
 		expect(result.modifiers).toEqual(["empty"]);
@@ -1229,13 +1253,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const modifier: Modifier = {
-			type: "modifier",
-			key: ["test"],
-			factory: () => ({}),
-		};
-
-		const result = applyModifiers(baseUtility, [modifier], []);
+		const result = applyModifiers(baseUtility, root, new Map());
 
 		expect(result.modifiers).toEqual([]);
 		expect(result.declarations).toEqual({ overflow: "hidden" });
@@ -1256,14 +1274,18 @@ describe("createModifiedUtilityFunction", () => {
 			type: "modifier",
 			key: ["nested"],
 			factory: ({ selector }) => {
-				const child = selector(".card-header", { fontWeight: "bold" });
+				selector(".card-header", { fontWeight: "bold" });
 				selector(".card-body", { padding: "0.5rem" });
 				selector(".card-footer", { borderTop: "1px solid #ccc" });
 				return {};
 			},
 		};
 
-		const result = applyModifiers(baseUtility, [nestedModifier], ["nested"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map([["nested", nestedModifier]]),
+		);
 
 		expect(result.children).toHaveLength(3);
 		expect(result.children[0]).toMatchObject({
@@ -1306,11 +1328,11 @@ describe("createModifiedUtilityFunction", () => {
 		// Duplicate keys in combination
 		const result = applyModifiers(
 			baseUtility,
-			[stateModifier],
-			["hover", "hover"],
+			root,
+			new Map([["hover", stateModifier]]),
 		);
 
-		expect(result.modifiers).toEqual(["hover", "hover"]);
+		expect(result.modifiers).toEqual(["hover"]);
 		expect(result.variables).toHaveLength(1);
 	});
 
@@ -1351,8 +1373,8 @@ describe("createModifiedUtilityFunction", () => {
 
 		const result = applyModifiers(
 			baseUtility,
-			[additionalModifier],
-			["additional"],
+			root,
+			new Map([["additional", additionalModifier]]),
 		);
 
 		expect(result.variables).toHaveLength(2);
@@ -1396,7 +1418,11 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = applyModifiers(baseUtility, [deepModifier], ["deep"]);
+		const result = applyModifiers(
+			baseUtility,
+			root,
+			new Map([["deep", deepModifier]]),
+		);
 
 		expect(result.declarations).toEqual({ display: "grid" });
 		expect(result.children).toHaveLength(2);
@@ -1423,7 +1449,7 @@ describe("createModifiedUtilityFunction", () => {
 		};
 
 		expect(() => {
-			applyModifiers(baseUtility, [errorModifier], ["error"]);
+			applyModifiers(baseUtility, root, new Map([["error", errorModifier]]));
 		}).toThrow("Test error");
 	});
 });

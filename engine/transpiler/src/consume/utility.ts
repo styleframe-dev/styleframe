@@ -1,8 +1,5 @@
-import {
-	combineKeys,
-	type StyleframeOptions,
-	type Utility,
-} from "@styleframe/core";
+import type { StyleframeOptions, Utility } from "@styleframe/core";
+import { defaultUtilitySelectorFn } from "../defaults";
 import type { ConsumeFunction } from "../types";
 import { createContainerConsumer } from "./container";
 
@@ -18,15 +15,16 @@ export function createUtilityConsumer(consume: ConsumeFunction) {
 	): string {
 		const result: string[] = [];
 
-		const utilitySelectorPart =
-			instance.value === "default"
-				? instance.name
-				: `${instance.name}:${instance.value}`;
+		const utilitySelectorFn =
+			options.utilities?.selector ?? defaultUtilitySelectorFn;
+		const utilitySelector = utilitySelectorFn({
+			name: instance.name,
+			value: instance.value,
+			modifiers: instance.modifiers,
+		});
 
 		// Create base utility selector
-		result.push(
-			consumeContainer(`._${utilitySelectorPart}`, instance, options),
-		);
+		result.push(consumeContainer(utilitySelector, instance, options));
 
 		return result.join("\n\n");
 	};

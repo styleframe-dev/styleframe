@@ -41,31 +41,30 @@ export function combineKeys(groups: string[][]): string[][] {
 	});
 }
 
-export function createApplyModifiersFunction(_parent: Container, root: Root) {
-	return function applyModifiers<InstanceType extends Container>(
-		baseInstance: InstanceType,
-		modifiers: Set<Modifier>,
-	): InstanceType {
-		const instance: InstanceType = {
-			...baseInstance,
-			modifiers: [...modifiers.keys()],
-		};
-
-		const callbackContext = createDeclarationsCallbackContext(instance, root);
-
-		for (const modifier of modifiers.values()) {
-			modifier.factory({
-				...callbackContext,
-				declarations: instance.declarations,
-				variables: instance.variables,
-				children: instance.children,
-			});
-
-			parseDeclarationsBlock(instance.declarations, callbackContext);
-		}
-
-		return instance;
+export function applyModifiers<InstanceType extends Container>(
+	baseInstance: InstanceType,
+	root: Root,
+	modifiers: Map<string, Modifier>,
+): InstanceType {
+	const instance: InstanceType = {
+		...baseInstance,
+		modifiers: [...modifiers.keys()],
 	};
+
+	const callbackContext = createDeclarationsCallbackContext(instance, root);
+
+	for (const modifier of modifiers.values()) {
+		modifier.factory({
+			...callbackContext,
+			declarations: instance.declarations,
+			variables: instance.variables,
+			children: instance.children,
+		});
+
+		parseDeclarationsBlock(instance.declarations, callbackContext);
+	}
+
+	return instance;
 }
 
 export function createModifierFunction(_parent: Container, root: Root) {

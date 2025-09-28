@@ -11,28 +11,27 @@ import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
 } from "./declarations";
-import { combineKeys, createApplyModifiersFunction } from "./modifier";
+import { applyModifiers, combineKeys } from "./modifier";
 
 export function createModifiedUtilityInstances(
 	baseInstance: Utility,
 	availableModifiers: Modifier[],
 	root: Root,
 ): Utility[] {
-	const applyModifier = createApplyModifiersFunction(baseInstance, root);
-
 	const modifierKeys = availableModifiers.map((modifier) => modifier.key);
 	const modifierKeyCombinations = combineKeys(modifierKeys);
 
 	return modifierKeyCombinations.map((combination) => {
-		const modifiers = combination
-			.map((modifierKey) =>
-				availableModifiers.find((modifier) =>
-					modifier.key.includes(modifierKey),
-				),
-			)
-			.filter((m) => !!m);
+		const modifiers = new Map<string, Modifier>();
 
-		return applyModifier(baseInstance, modifiers, combination);
+		for (const modifierKey of combination) {
+			const modifier = availableModifiers.find((modifier) =>
+				modifier.key.includes(modifierKey),
+			);
+			if (modifier) modifiers.set(modifierKey, modifier);
+		}
+
+		return applyModifiers(baseInstance, root, modifiers);
 	});
 }
 

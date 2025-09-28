@@ -93,7 +93,7 @@ describe("consume", () => {
 	});
 
 	it("should consume a utility instance", () => {
-		const createMarginUtility = utility("margin", (value) => ({
+		const createMarginUtility = utility("margin", ({ value }) => ({
 			margin: value,
 		}));
 
@@ -105,10 +105,9 @@ describe("consume", () => {
 		const marginUtility = root.utilities.find((u) => u.name === "margin");
 		const result = consume(marginUtility, options);
 
-		expect(result).toContain("._margin\\:sm {");
-		expect(result).toContain("margin: 8px;");
-		expect(result).toContain("._margin\\:md {");
-		expect(result).toContain("margin: 16px;");
+		expect(result).toEqual(
+			`._margin\\:sm { margin: 8px; }\n\n._margin\\:md { margin: 16px; }`,
+		);
 	});
 
 	it("should consume primitive values", () => {
