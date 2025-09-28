@@ -8,6 +8,7 @@
 		"dev:docs": "turbo run dev --filter @styleframe/docs",
 		"build": "turbo run build",
 		"test": "turbo run test",
+		"typecheck": "turbo run typecheck",
 		"lint": "oxlint",
 		"format": "biome format --write",
 		"prepare": "husky"
