@@ -3,24 +3,27 @@ import {
 	isAtRule,
 	isCSS,
 	isRef,
+	isRoot,
 	isSelector,
 	isTheme,
 	isUtility,
 	isVariable,
 } from "@styleframe/core";
 import { createAtRuleConsumer } from "./at-rule";
-import { createSelectorConsumer } from "./selector";
-import { createUtilityConsumer } from "./utility";
-import { createThemeConsumer } from "./theme";
-import { createVariableConsumer } from "./variable";
-import { createRefConsumer } from "./ref";
 import { createCSSConsumer } from "./css";
 import { createPrimitiveConsumer } from "./primitive";
+import { createRefConsumer } from "./ref";
+import { createRootConsumer } from "./root";
+import { createSelectorConsumer } from "./selector";
+import { createThemeConsumer } from "./theme";
+import { createUtilityConsumer } from "./utility";
+import { createVariableConsumer } from "./variable";
 
 /**
  * Consumes any token instance and returns the CSS string representation
  */
 export function consume(instance: unknown, options: StyleframeOptions): string {
+	const consumeRoot = createRootConsumer(consume);
 	const consumeSelector = createSelectorConsumer(consume);
 	const consumeUtility = createUtilityConsumer(consume);
 	const consumeAtRule = createAtRuleConsumer(consume);
@@ -41,6 +44,8 @@ export function consume(instance: unknown, options: StyleframeOptions): string {
 		// case isRecipe(instance):
 		// 	return consumeRecipe(instance, options);
 		// 	break;
+		case isRoot(instance):
+			return consumeRoot(instance, options);
 		case isTheme(instance):
 			return consumeTheme(instance, options);
 		case isVariable(instance):
