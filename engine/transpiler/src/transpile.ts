@@ -40,16 +40,7 @@ export function transpile(instance: Styleframe, output: Output) {
 		const defaultThemeFile = createFile("theme/default.css", [], "component");
 
 		// @TODO Add default theme consumer
-		// defaultThemeFile.content.push(
-		// 	consume(
-		// 		":root",
-		// 		{
-		// 			variables: instance.root.variables,
-		// 			children: instance.root.children,
-		// 		},
-		// 		options,
-		// 	),
-		// );
+		defaultThemeFile.content.push(consume(instance.root, options));
 
 		output.files.push(defaultThemeFile);
 	}

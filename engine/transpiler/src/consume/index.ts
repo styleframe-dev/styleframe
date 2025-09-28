@@ -5,6 +5,7 @@ export * from "./css";
 export * from "./declarations";
 export * from "./primitive";
 export * from "./ref";
+export * from "./root";
 export * from "./selector";
 export * from "./theme";
 export * from "./utility";
