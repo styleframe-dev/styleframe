@@ -23,15 +23,19 @@ export function getGitBranch() {
 		return envName;
 	}
 	try {
-		const branch = execSync("git rev-parse --abbrev-ref HEAD")
+		const branch = execSync("git rev-parse --abbrev-ref HEAD", {
+			stdio: ["ignore", "pipe", "ignore"],
+		})
 			.toString()
 			.trim();
 		if (branch && branch !== "HEAD") {
 			return branch;
 		}
 	} catch {
-		return "main";
+		// Ignore error
 	}
+
+	return "main";
 }
 
 export async function getLocalGitInfo(
@@ -65,7 +69,7 @@ async function getLocalGitRemote(dir: string): Promise<string | undefined> {
 	}
 }
 
-export function getGitEnv(): GitInfo | undefined {
+export function getGitEnv(): GitInfo {
 	// https://github.com/unjs/std-env/issues/59
 	const envInfo = {
 		// Provider

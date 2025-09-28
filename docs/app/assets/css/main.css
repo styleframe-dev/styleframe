@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@nuxt/ui-pro";
+@import "@nuxt/ui";
 
 @source "../../../content/**/*";
 @source "../../app.config.ts";
@@ -21,4 +21,8 @@
 
 :root {
 	--ui-primary: var(--color-teal);
+}
+
+.prose-container {
+	--ui-container: 760px;
 }

@@ -207,67 +207,30 @@ export default defineNuxtSchema({
 		github: group({
 			title: "GitHub",
 			description: "GitHub configuration.",
-			icon: "i-lucide-github",
+			icon: "i-simple-icons-github",
 			fields: {
 				url: field({
 					type: "string",
 					title: "URL",
 					description: "GitHub URL.",
-					icon: "i-lucide-github",
+					icon: "i-simple-icons-github",
+					default: "",
+				}),
+				branch: field({
+					type: "string",
+					title: "Branch",
+					description: "GitHub branch.",
+					icon: "i-lucide-git-branch",
+					default: "main",
+				}),
+				rootDir: field({
+					type: "string",
+					title: "Root Directory",
+					description: "Root directory of the GitHub repository.",
+					icon: "i-lucide-folder",
 					default: "",
 				}),
 			},
 		}),
 	},
 });
-
-declare module "@nuxt/schema" {
-	interface AppConfig {
-		seo: {
-			titleTemplate: string;
-			title: string;
-			description: string;
-		};
-		ui: {
-			colors: {
-				primary: string;
-				neutral: string;
-			};
-			icons: {
-				search: string;
-				dark: string;
-				light: string;
-				external: string;
-				chevron: string;
-				hash: string;
-			} & Record<string, string>;
-		};
-		header: {
-			title: string;
-			logo: {
-				light: string;
-				dark: string;
-				alt: string;
-			};
-		};
-		socials: Record<string, string>;
-		toc: {
-			title: string;
-			bottom: {
-				title: string;
-				links: {
-					icon: string;
-					label: string;
-					to: string;
-					target: string;
-				}[];
-			};
-		};
-		github: {
-			owner: string;
-			name: string;
-			url: string;
-			branch: string;
-		};
-	}
-}

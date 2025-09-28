@@ -1,8 +1,6 @@
 ---
-seo:
-    title: Type-safe Composable CSS
-    description: Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
-layout: default
+title: Type-safe Composable CSS
+description: Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
 ---
 
 <!--
@@ -423,4 +421,3 @@ A collection of premium design system themes, composables, component styles, and
     ---
     ::
 ::
-

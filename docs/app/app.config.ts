@@ -23,6 +23,7 @@ export default defineAppConfig({
 	 */
 	socials: {
 		x: "https://x.com/styleframe_dev",
+		discord: "https://discord.com/invite/KCVwuGz44M",
 	},
 	/**
 	 * @docs https://www.docus.dev/concepts/configuration#github-integration
@@ -65,26 +66,36 @@ export default defineAppConfig({
 			primary: "teal",
 			neutral: "zinc",
 		},
-	},
-	uiPro: {
+		commandPalette: {
+			slots: {
+				input: "[&_.iconify]:size-4 [&_.iconify]:mx-0.5",
+				itemLeadingIcon: "size-4 mx-0.5",
+			},
+		},
 		contentNavigation: {
 			slots: {
 				linkLeadingIcon: "size-4 mr-1",
-				listWithChildren: "border-(--ui-bg-elevated)",
 				linkTrailing: "hidden",
 			},
-			variants: {
-				active: {
-					false: {
-						link: "text-toned hover:after:bg-accented",
-					},
-				},
+			defaultVariants: {
+				variant: "link",
 			},
 		},
 		pageLinks: {
 			slots: {
 				linkLeadingIcon: "size-4",
 				linkLabelExternalIcon: "size-2.5",
+			},
+		},
+		pageCard: {
+			slots: {
+				root: "rounded-xl",
+			},
+		},
+		pricingTable: {
+			slots: {
+				tierTitle:
+					"text-highlighted text-2xl sm:text-3xl text-pretty font-semibold",
 			},
 		},
 	},

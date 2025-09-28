@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Collections } from "@nuxt/content";
 import { kebabCase } from "scule";
 
 definePageMeta({
@@ -6,11 +7,18 @@ definePageMeta({
 });
 
 const route = useRoute();
+const { locale, isEnabled } = useDocusI18n();
 
-const { data: page } = await useAsyncData(kebabCase(route.path), () =>
-	queryCollection("landing").path(route.path).first(),
+// Dynamic collection name based on i18n status
+const collectionName = computed(() =>
+	isEnabled.value ? `landing_${locale.value}` : "landing",
 );
 
+const { data: page } = await useAsyncData(kebabCase(route.path), () =>
+	queryCollection(collectionName.value as keyof Collections)
+		.path(route.path)
+		.first(),
+);
 if (!page.value) {
 	throw createError({
 		statusCode: 404,
@@ -19,11 +27,6 @@ if (!page.value) {
 	});
 }
 
-// Add the page path to the prerender list
-addPrerenderPath(`/raw${route.path}.md`);
-
-// Reconsider it once this is implemented: https://github.com/nuxt/content/issues/3419
-const prose = page.value.meta.prose;
 const title = page.value.seo?.title || page.value.title;
 const description = page.value.seo?.description || page.value.description;
 
@@ -48,9 +51,5 @@ if (page.value?.seo?.ogImage) {
 </script>
 
 <template>
-  <ContentRenderer
-    v-if="page"
-    :value="page"
-    :prose="prose || false"
-  />
+	<ContentRenderer v-if="page" :value="page" />
 </template>
