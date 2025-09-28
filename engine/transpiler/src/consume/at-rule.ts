@@ -1,6 +1,7 @@
 import type { AtRule, StyleframeOptions } from "@styleframe/core";
 import type { ConsumeFunction } from "../types";
 import { createContainerConsumer } from "./container";
+import { STATEMENT_AT_RULES, STATEMENT_OR_BLOCK_AT_RULES } from "../constants";
 
 /**
  * Consumes a generic at-rule instance, equivalent to setting a CSS at-rule
@@ -13,14 +14,20 @@ export function createAtRuleConsumer(consume: ConsumeFunction) {
 		instance: AtRule,
 		options: StyleframeOptions,
 	): string {
-		const query = `@${instance.identifier} ${instance.rule}`;
+		const isStatement = STATEMENT_AT_RULES.includes(instance.identifier);
+		const isStatementOrBlock = STATEMENT_OR_BLOCK_AT_RULES.includes(
+			instance.identifier,
+		);
 
 		const hasDeclarations = Object.keys(instance.declarations).length > 0;
 		const hasVariables = instance.variables.length > 0;
 		const hasChildren = instance.children.length > 0;
 
-		return hasDeclarations || hasVariables || hasChildren
-			? consumeContainer(query, instance, options)
-			: `${query};`;
+		const query = `@${instance.identifier} ${instance.rule}`;
+
+		return isStatement ||
+			(isStatementOrBlock && !(hasDeclarations || hasVariables || hasChildren))
+			? `${query};`
+			: consumeContainer(query, instance, options);
 	};
 }

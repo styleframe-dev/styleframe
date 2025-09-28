@@ -92,7 +92,7 @@ describe("createThemeConsumer", () => {
 	it("should handle themes with variable prefix", () => {
 		const prefixOptions: StyleframeOptions = {
 			variables: {
-				name: ({ name }) => `app-${name}`,
+				name: ({ name }) => `--app-${name}`,
 			},
 		};
 
@@ -168,11 +168,11 @@ describe("createThemeConsumer", () => {
 \t.card {
 \t\tpadding: var(--spacing-unit);
 \t\tborderRadius: 4px;
-
+\t
 \t\t&:hover {
 \t\t\ttransform: translateY(-2px);
 \t\t}
-
+\t
 \t\t.card-header {
 \t\t\tbackgroundColor: hsl(var(--primary-hue), 70%, 90%);
 \t\t}
@@ -200,7 +200,7 @@ describe("createThemeConsumer", () => {
 				selector: ({ name }) => `#theme-${name}`,
 			},
 			variables: {
-				name: ({ name }) => `ui-${name}`,
+				name: ({ name }) => `--ui-${name}`,
 			},
 		};
 

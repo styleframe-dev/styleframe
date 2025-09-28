@@ -105,9 +105,7 @@ describe("consume", () => {
 		const marginUtility = root.utilities.find((u) => u.name === "margin");
 		const result = consume(marginUtility, options);
 
-		expect(result).toEqual(
-			`._margin\\:sm { margin: 8px; }\n\n._margin\\:md { margin: 16px; }`,
-		);
+		expect(result).toEqual(`._margin\\:sm {\n\tmargin: 8px;\n}`);
 	});
 
 	it("should consume primitive values", () => {

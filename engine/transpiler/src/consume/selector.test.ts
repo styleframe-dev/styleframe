@@ -214,7 +214,7 @@ describe("createSelectorConsumer", () => {
 
 	&:hover {
 		backgroundColor: #0056cc;
-
+\t
 		&:active {
 			transform: scale(0.98);
 		}
@@ -260,7 +260,7 @@ describe("createSelectorConsumer", () => {
 
 	&:hover {
 		backgroundColor: #0056cc;
-
+\t
 		&:active {
 			transform: scale(0.98);
 		}

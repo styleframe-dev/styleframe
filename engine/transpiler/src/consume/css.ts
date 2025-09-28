@@ -9,6 +9,9 @@ export function createCSSConsumer(consume: ConsumeFunction) {
 		instance: CSS,
 		options: StyleframeOptions,
 	): string {
-		return instance.value.map((part) => consume(part, options)).join("");
+		return instance.value
+			.map((part) => consume(part, options))
+			.join("")
+			.trim();
 	};
 }

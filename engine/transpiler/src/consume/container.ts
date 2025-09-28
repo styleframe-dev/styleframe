@@ -26,6 +26,7 @@ export function createContainerConsumer(consume: ConsumeFunction) {
 		options: StyleframeOptions,
 	): string {
 		const { variables, declarations, children } = instance;
+		const isRoot = query === ":root";
 
 		const processedVariables = (variables ?? []).map((variable) =>
 			addIndentToLine(consumeVariable(variable, options), options),
@@ -36,11 +37,11 @@ export function createContainerConsumer(consume: ConsumeFunction) {
 			options,
 		).map((line) => addIndentToLine(line, options));
 
-		const processedChildren = (children ?? []).map((child) =>
-			indentLines(consume(child, options), options),
-		);
+		const processedChildren = (children ?? []).map((child) => {
+			const processedChild = consume(child, options);
+			return isRoot ? processedChild : indentLines(processedChild, options);
+		});
 
-		const isRoot = query === ":root";
 		const hasVariables = processedVariables.length > 0;
 		const hasDeclarations = processedDeclarations.length > 0;
 		const hasChildren = processedChildren.length > 0;

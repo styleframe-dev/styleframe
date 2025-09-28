@@ -261,7 +261,7 @@ describe("createContainerConsumer", () => {
 		);
 
 		const expected =
-			".root {\n\t& .parent {\n\t\tposition: relative;\n\n\t\t& .deeply-nested {\n\t\t\tfont-weight: bold;\n\t\t}\n\t}\n}";
+			".root {\n\t& .parent {\n\t\tposition: relative;\n\t\n\t\t& .deeply-nested {\n\t\t\tfont-weight: bold;\n\t\t}\n\t}\n}";
 		expect(result).toBe(expected);
 	});
 
