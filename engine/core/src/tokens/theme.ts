@@ -1,5 +1,4 @@
-import type { Container, Root, Theme } from "../types";
-import type { DeclarationsCallback } from "./declarations";
+import type { Container, DeclarationsCallback, Root, Theme } from "../types";
 import { createDeclarationsCallbackContext } from "./declarations";
 
 export function createThemeFunction(_parent: Container, root: Root) {
@@ -8,6 +7,7 @@ export function createThemeFunction(_parent: Container, root: Root) {
 		const instance: Theme = existingTheme ?? {
 			type: "theme",
 			name,
+			declarations: {},
 			variables: [],
 			children: [],
 		};

@@ -120,25 +120,25 @@ export type TokenType =
 	| Theme["type"]
 	| Root["type"];
 
-export type Containerish = {
+export type Container = {
 	children: ContainerChild[];
 	variables: Variable[];
 	declarations: DeclarationsBlock;
 };
-
-export type Container = Root | Theme | Selector | AtRule | Utility;
 
 export type ContainerChild = Variable | Selector | AtRule;
 
 export type Theme = {
 	type: "theme";
 	name: string;
+	declarations: DeclarationsBlock;
 	variables: Variable[];
 	children: ContainerChild[];
 };
 
 export type Root = {
 	type: "root";
+	declarations: DeclarationsBlock;
 	utilities: Utility[];
 	modifiers: Modifier[];
 	recipes: Recipe[];

@@ -1,6 +1,6 @@
 import type {
 	AtRule,
-	Containerish,
+	Container,
 	CSS,
 	Modifier,
 	PrimitiveTokenValue,
@@ -88,7 +88,7 @@ export function isTokenValue(value: unknown): value is TokenValue {
 	);
 }
 
-export function isContainer(value: unknown): value is Containerish {
+export function isContainer(value: unknown): value is Container {
 	return (
 		isObject(value) &&
 		"children" in value &&

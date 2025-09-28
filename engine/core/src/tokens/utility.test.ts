@@ -1,9 +1,7 @@
 import type { Container, Modifier, Root, Utility } from "../types";
 import { createRoot } from "./root";
-import {
-	createUtilityFunction,
-	createModifiedUtilityFunction,
-} from "./utility";
+import { createUtilityFunction } from "./utility";
+import { createApplyModifiersFunction } from "./modifier";
 
 describe("createUtilityFunction", () => {
 	let root: Root;
@@ -664,16 +662,16 @@ describe("createUtilityFunction", () => {
 describe("createModifiedUtilityFunction", () => {
 	let root: Root;
 	let parent: Container;
-	let modifiedUtility: ReturnType<typeof createModifiedUtilityFunction>;
+	let applyModifiers: ReturnType<typeof createApplyModifiersFunction>;
 
 	beforeEach(() => {
 		root = createRoot();
 		parent = root;
-		modifiedUtility = createModifiedUtilityFunction(parent, root);
+		applyModifiers = createApplyModifiersFunction(parent, root);
 	});
 
 	test("should create a modified utility function", () => {
-		expect(modifiedUtility).toBeTypeOf("function");
+		expect(applyModifiers).toBeTypeOf("function");
 	});
 
 	test("should return a new utility instance with modified modifiers", () => {
@@ -695,7 +693,7 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = modifiedUtility(baseUtility, [hoverModifier], ["hover"]);
+		const result = applyModifiers(baseUtility, [hoverModifier], ["hover"]);
 
 		expect(result).not.toBe(baseUtility); // Should be a new instance
 		expect(result.type).toBe("utility");
@@ -723,7 +721,7 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = modifiedUtility(baseUtility, [focusModifier], ["focus"]);
+		const result = applyModifiers(baseUtility, [focusModifier], ["focus"]);
 
 		expect(result.type).toBe("utility");
 		expect(result.name).toBe("margin");
@@ -759,7 +757,7 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = modifiedUtility(
+		const result = applyModifiers(
 			baseUtility,
 			[hoverModifier, focusModifier],
 			["hover", "focus"],
@@ -790,7 +788,7 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = modifiedUtility(baseUtility, [variableModifier], ["var"]);
+		const result = applyModifiers(baseUtility, [variableModifier], ["var"]);
 
 		expect(result.variables).toHaveLength(1);
 		expect(result.variables[0]).toEqual({
@@ -821,7 +819,7 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = modifiedUtility(baseUtility, [childModifier], ["child"]);
+		const result = applyModifiers(baseUtility, [childModifier], ["child"]);
 
 		expect(result.children).toHaveLength(1);
 		expect(result.children[0]).toMatchObject({
@@ -843,7 +841,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const result = modifiedUtility(baseUtility, [], []);
+		const result = applyModifiers(baseUtility, [], []);
 
 		expect(result).not.toBe(baseUtility);
 		expect(result.modifiers).toEqual([]);
@@ -877,7 +875,7 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = modifiedUtility(
+		const result = applyModifiers(
 			baseUtility,
 			[hoverModifier, darkModeModifier],
 			["dark", "hover"],
@@ -919,7 +917,7 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = modifiedUtility(
+		const result = applyModifiers(
 			baseUtility,
 			[firstModifier, secondModifier],
 			["first", "second"],
@@ -951,7 +949,7 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = modifiedUtility(baseUtility, [widthModifier], ["thick"]);
+		const result = applyModifiers(baseUtility, [widthModifier], ["thick"]);
 
 		// The original declarations should be preserved
 		expect(result.declarations).toEqual({ borderStyle: "solid" });
@@ -977,7 +975,7 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const result = modifiedUtility(baseUtility, [responsiveModifier], ["md"]);
+		const result = applyModifiers(baseUtility, [responsiveModifier], ["md"]);
 
 		expect(result.modifiers).toEqual(["md"]);
 	});
@@ -1002,7 +1000,7 @@ describe("createModifiedUtilityFunction", () => {
 		};
 
 		// Combination includes "focus" but only hover modifier is provided
-		const result = modifiedUtility(
+		const result = applyModifiers(
 			baseUtility,
 			[hoverModifier],
 			["hover", "focus"],
@@ -1031,8 +1029,8 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result1 = modifiedUtility(baseUtility, [hoverModifier], ["hover"]);
-		const result2 = modifiedUtility(baseUtility, [hoverModifier], ["hover"]);
+		const result1 = applyModifiers(baseUtility, [hoverModifier], ["hover"]);
+		const result2 = applyModifiers(baseUtility, [hoverModifier], ["hover"]);
 
 		// The instances themselves should be different
 		expect(result1).not.toBe(result2);
@@ -1080,7 +1078,7 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = modifiedUtility(
+		const result = applyModifiers(
 			baseUtility,
 			[complexModifier],
 			["interactive"],
@@ -1130,7 +1128,7 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = modifiedUtility(baseUtility, [modifier], ["test"]);
+		const result = applyModifiers(baseUtility, [modifier], ["test"]);
 
 		// The declarations object should remain unchanged
 		expect(baseUtility.declarations).toEqual(originalDeclarations);
@@ -1164,7 +1162,7 @@ describe("createModifiedUtilityFunction", () => {
 			factory: () => null as any,
 		};
 
-		const result = modifiedUtility(baseUtility, [nullModifier], ["null"]);
+		const result = applyModifiers(baseUtility, [nullModifier], ["null"]);
 
 		expect(result.declarations).toEqual({ display: "flex" });
 		expect(result.modifiers).toEqual(["null"]);
@@ -1187,7 +1185,7 @@ describe("createModifiedUtilityFunction", () => {
 			factory: () => undefined as any,
 		};
 
-		const result = modifiedUtility(
+		const result = applyModifiers(
 			baseUtility,
 			[undefinedModifier],
 			["undefined"],
@@ -1214,7 +1212,7 @@ describe("createModifiedUtilityFunction", () => {
 			factory: () => ({}),
 		};
 
-		const result = modifiedUtility(baseUtility, [emptyModifier], ["empty"]);
+		const result = applyModifiers(baseUtility, [emptyModifier], ["empty"]);
 
 		expect(result.declarations).toEqual({ height: "100vh" });
 		expect(result.modifiers).toEqual(["empty"]);
@@ -1237,7 +1235,7 @@ describe("createModifiedUtilityFunction", () => {
 			factory: () => ({}),
 		};
 
-		const result = modifiedUtility(baseUtility, [modifier], []);
+		const result = applyModifiers(baseUtility, [modifier], []);
 
 		expect(result.modifiers).toEqual([]);
 		expect(result.declarations).toEqual({ overflow: "hidden" });
@@ -1265,7 +1263,7 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = modifiedUtility(baseUtility, [nestedModifier], ["nested"]);
+		const result = applyModifiers(baseUtility, [nestedModifier], ["nested"]);
 
 		expect(result.children).toHaveLength(3);
 		expect(result.children[0]).toMatchObject({
@@ -1306,7 +1304,7 @@ describe("createModifiedUtilityFunction", () => {
 		};
 
 		// Duplicate keys in combination
-		const result = modifiedUtility(
+		const result = applyModifiers(
 			baseUtility,
 			[stateModifier],
 			["hover", "hover"],
@@ -1351,7 +1349,7 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = modifiedUtility(
+		const result = applyModifiers(
 			baseUtility,
 			[additionalModifier],
 			["additional"],
@@ -1398,7 +1396,7 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const result = modifiedUtility(baseUtility, [deepModifier], ["deep"]);
+		const result = applyModifiers(baseUtility, [deepModifier], ["deep"]);
 
 		expect(result.declarations).toEqual({ display: "grid" });
 		expect(result.children).toHaveLength(2);
@@ -1425,7 +1423,7 @@ describe("createModifiedUtilityFunction", () => {
 		};
 
 		expect(() => {
-			modifiedUtility(baseUtility, [errorModifier], ["error"]);
+			applyModifiers(baseUtility, [errorModifier], ["error"]);
 		}).toThrow("Test error");
 	});
 });

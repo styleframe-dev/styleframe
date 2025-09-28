@@ -29,6 +29,7 @@ describe("createThemeFunction", () => {
 			expect(result).toEqual({
 				type: "theme",
 				name: "dark",
+				declarations: {},
 				variables: [],
 				children: [],
 			});
@@ -44,6 +45,7 @@ describe("createThemeFunction", () => {
 			expect(root.themes[0]).toEqual({
 				type: "theme",
 				name: "dark",
+				declarations: {},
 				variables: [],
 				children: [],
 			});
@@ -102,6 +104,7 @@ describe("createThemeFunction", () => {
 			const existingTheme: Theme = {
 				type: "theme",
 				name: "dark",
+				declarations: {},
 				variables: [],
 				children: [],
 			};
@@ -119,6 +122,7 @@ describe("createThemeFunction", () => {
 			const existingTheme: Theme = {
 				type: "theme",
 				name: "dark",
+				declarations: {},
 				variables: [],
 				children: [],
 			};
@@ -136,6 +140,7 @@ describe("createThemeFunction", () => {
 			const existingTheme: Theme = {
 				type: "theme",
 				name: "dark",
+				declarations: {},
 				variables: [],
 				children: [],
 			};
@@ -163,6 +168,7 @@ describe("createThemeFunction", () => {
 			expect(result).toEqual({
 				type: "theme",
 				name: "light",
+				declarations: {},
 				variables: [],
 				children: [],
 			});
@@ -177,6 +183,7 @@ describe("createThemeFunction", () => {
 			expect(result).toEqual({
 				type: "theme",
 				name: "light",
+				declarations: {},
 				variables: [],
 				children: [],
 			});
@@ -208,6 +215,7 @@ describe("createThemeFunction", () => {
 			const existingTheme: Theme = {
 				type: "theme",
 				name: "existing",
+				declarations: {},
 				variables: [],
 				children: [],
 			};
@@ -301,6 +309,7 @@ describe("createThemeFunction", () => {
 			const existingTheme: Theme = {
 				type: "theme",
 				name: "existing",
+				declarations: {},
 				variables: [
 					{
 						type: "variable",

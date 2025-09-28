@@ -1,12 +1,11 @@
 import { isContainer } from "../typeGuards";
 import type {
 	Container,
-	Containerish,
 	DeclarationsBlock,
+	DeclarationsCallback,
 	Root,
 	Selector,
 } from "../types";
-import type { DeclarationsCallback } from "../types";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
@@ -17,7 +16,7 @@ export function createSelectorFunction(parent: Container, root: Root) {
 		query: string,
 		declarationsOrCallback:
 			| DeclarationsBlock
-			| Containerish
+			| Container
 			| DeclarationsCallback,
 	): Selector {
 		const instance: Selector = {

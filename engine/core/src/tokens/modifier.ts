@@ -1,4 +1,8 @@
 import type { Container, Modifier, Root } from "../types";
+import {
+	createDeclarationsCallbackContext,
+	parseDeclarationsBlock,
+} from "./declarations";
 
 export function combineKeys(groups: string[][]): string[][] {
 	const result: string[][] = [];
@@ -35,6 +39,33 @@ export function combineKeys(groups: string[][]): string[][] {
 		if (a.length !== b.length) return a.length - b.length;
 		return a.join(",").localeCompare(b.join(","));
 	});
+}
+
+export function createApplyModifiersFunction(_parent: Container, root: Root) {
+	return function applyModifiers<InstanceType extends Container>(
+		baseInstance: InstanceType,
+		modifiers: Set<Modifier>,
+	): InstanceType {
+		const instance: InstanceType = {
+			...baseInstance,
+			modifiers: [...modifiers.keys()],
+		};
+
+		const callbackContext = createDeclarationsCallbackContext(instance, root);
+
+		for (const modifier of modifiers.values()) {
+			modifier.factory({
+				...callbackContext,
+				declarations: instance.declarations,
+				variables: instance.variables,
+				children: instance.children,
+			});
+
+			parseDeclarationsBlock(instance.declarations, callbackContext);
+		}
+
+		return instance;
+	};
 }
 
 export function createModifierFunction(_parent: Container, root: Root) {

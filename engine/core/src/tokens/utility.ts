@@ -11,42 +11,14 @@ import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
 } from "./declarations";
-import { combineKeys } from "./modifier";
-
-export function createModifiedUtilityFunction(_parent: Container, root: Root) {
-	return function modifiedUtility<Name extends string>(
-		baseInstance: Utility<Name>,
-		modifiers: Modifier[],
-		combination: string[],
-	): Utility<Name> {
-		const instance: Utility<Name> = {
-			...baseInstance,
-			modifiers: combination,
-		};
-
-		const callbackContext = createDeclarationsCallbackContext(instance, root);
-
-		for (const modifier of modifiers) {
-			modifier.factory({
-				...callbackContext,
-				declarations: instance.declarations,
-				variables: instance.variables,
-				children: instance.children,
-			});
-
-			parseDeclarationsBlock(instance.declarations, callbackContext);
-		}
-
-		return instance;
-	};
-}
+import { combineKeys, createApplyModifiersFunction } from "./modifier";
 
 export function createModifiedUtilityInstances(
 	baseInstance: Utility,
 	availableModifiers: Modifier[],
 	root: Root,
 ): Utility[] {
-	const modifiedUtility = createModifiedUtilityFunction(baseInstance, root);
+	const applyModifier = createApplyModifiersFunction(baseInstance, root);
 
 	const modifierKeys = availableModifiers.map((modifier) => modifier.key);
 	const modifierKeyCombinations = combineKeys(modifierKeys);
@@ -60,7 +32,7 @@ export function createModifiedUtilityInstances(
 			)
 			.filter((m) => !!m);
 
-		return modifiedUtility(baseInstance, modifiers, combination);
+		return applyModifier(baseInstance, modifiers, combination);
 	});
 }
 

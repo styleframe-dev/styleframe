@@ -1,5 +1,10 @@
-import type { AtRule, Container, DeclarationsBlock, Root } from "../types";
-import type { DeclarationsCallback } from "./declarations";
+import type {
+	AtRule,
+	Container,
+	DeclarationsBlock,
+	DeclarationsCallback,
+	Root,
+} from "../types";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
