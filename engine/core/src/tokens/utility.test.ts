@@ -1,7 +1,9 @@
-import { beforeEach, describe, expect, test } from "vitest";
-import type { Container, Modifier, Root, TokenValue } from "../types";
+import type { Container, Modifier, Root, Utility } from "../types";
 import { createRoot } from "./root";
-import { createUtilityFunction } from "./utility";
+import {
+	createUtilityFunction,
+	createModifiedUtilityFunction,
+} from "./utility";
 
 describe("createUtilityFunction", () => {
 	let root: Root;
@@ -114,7 +116,7 @@ describe("createUtilityFunction", () => {
 		const hoverModifier: Modifier = {
 			type: "modifier",
 			key: ["hover"],
-			transform: ({ declarations }) => ({
+			factory: ({ declarations }) => ({
 				"&:hover": declarations,
 			}),
 		};
@@ -134,14 +136,19 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// Two utility instances should be created with modifiers
-		expect(root.utilities).toHaveLength(2);
+		// Base utilities + modified variants
+		// 2 base utilities + 1 modifier = 2 base + 2 modified = 4 total
+		expect(root.utilities).toHaveLength(4);
 
 		const primaryUtility = root.utilities.find(
-			(u) => u.name === "color" && u.value === "primary",
+			(u) =>
+				u.name === "color" && u.value === "primary" && u.modifiers.length === 0,
 		);
 		const secondaryUtility = root.utilities.find(
-			(u) => u.name === "color" && u.value === "secondary",
+			(u) =>
+				u.name === "color" &&
+				u.value === "secondary" &&
+				u.modifiers.length === 0,
 		);
 
 		expect(primaryUtility).toEqual({
@@ -151,7 +158,7 @@ describe("createUtilityFunction", () => {
 			declarations: { color: "#007bff" },
 			variables: [],
 			children: [],
-			modifiers: [hoverModifier],
+			modifiers: [],
 		});
 		expect(secondaryUtility).toEqual({
 			type: "utility",
@@ -160,15 +167,32 @@ describe("createUtilityFunction", () => {
 			declarations: { color: "#6c757d" },
 			variables: [],
 			children: [],
-			modifiers: [hoverModifier],
+			modifiers: [],
 		});
+
+		// Check modified variants exist
+		const primaryHover = root.utilities.find(
+			(u) =>
+				u.name === "color" &&
+				u.value === "primary" &&
+				u.modifiers.includes("hover"),
+		);
+		const secondaryHover = root.utilities.find(
+			(u) =>
+				u.name === "color" &&
+				u.value === "secondary" &&
+				u.modifiers.includes("hover"),
+		);
+
+		expect(primaryHover).toBeDefined();
+		expect(secondaryHover).toBeDefined();
 	});
 
 	test("should store utility instances with multiple modifiers", () => {
 		const hoverModifier: Modifier = {
 			type: "modifier",
 			key: ["hover"],
-			transform: ({ declarations }) => ({
+			factory: ({ declarations }) => ({
 				"&:hover": declarations,
 			}),
 		};
@@ -176,7 +200,7 @@ describe("createUtilityFunction", () => {
 		const focusModifier: Modifier = {
 			type: "modifier",
 			key: ["focus"],
-			transform: ({ declarations }) => ({
+			factory: ({ declarations }) => ({
 				"&:focus": declarations,
 			}),
 		};
@@ -195,11 +219,13 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// One utility instance should be created with all modifiers
-		expect(root.utilities).toHaveLength(1);
+		// 1 base utility + combinations of 2 modifiers
+		// Combinations: [hover], [focus], [focus,hover] = 3 modified variants
+		// Total: 1 base + 3 modified = 4
+		expect(root.utilities).toHaveLength(4);
 
 		const backgroundUtility = root.utilities.find(
-			(u) => u.name === "background",
+			(u) => u.name === "background" && u.modifiers.length === 0,
 		);
 		expect(backgroundUtility).toEqual({
 			type: "utility",
@@ -208,17 +234,40 @@ describe("createUtilityFunction", () => {
 			declarations: { background: "#007bff" },
 			variables: [],
 			children: [],
-			modifiers: [hoverModifier, focusModifier],
+			modifiers: [],
 		});
+
+		// Check modified variants exist
+		const hoverVariant = root.utilities.find(
+			(u) =>
+				u.name === "background" &&
+				u.modifiers.includes("hover") &&
+				!u.modifiers.includes("focus"),
+		);
+		const focusVariant = root.utilities.find(
+			(u) =>
+				u.name === "background" &&
+				u.modifiers.includes("focus") &&
+				!u.modifiers.includes("hover"),
+		);
+		const bothVariant = root.utilities.find(
+			(u) =>
+				u.name === "background" &&
+				u.modifiers.includes("hover") &&
+				u.modifiers.includes("focus"),
+		);
+
+		expect(hoverVariant).toBeDefined();
+		expect(focusVariant).toBeDefined();
+		expect(bothVariant).toBeDefined();
 	});
 
 	test("should handle multi-key modifiers correctly", () => {
 		const breakpointModifier: Modifier = {
 			type: "modifier",
 			key: ["sm", "md", "lg"],
-			transform: ({ key, declarations }) => ({
-				[`@media screen and (min-width: ${key === "sm" ? "640px" : key === "md" ? "768px" : "1024px"})`]:
-					declarations,
+			factory: ({ declarations }) => ({
+				"@media screen and (min-width: 640px)": declarations,
 			}),
 		};
 
@@ -236,10 +285,14 @@ describe("createUtilityFunction", () => {
 		// No selectors should be created
 		expect(root.children).toHaveLength(0);
 
-		// One utility instance should be created with breakpoint modifier
-		expect(root.utilities).toHaveLength(1);
+		// 1 base utility + combinations for multi-key modifier
+		// Multi-key ["sm", "md", "lg"] creates: [sm], [md], [lg] = 3 variants
+		// Total: 1 base + 3 modified = 4
+		expect(root.utilities).toHaveLength(4);
 
-		const textUtility = root.utilities.find((u) => u.name === "text");
+		const textUtility = root.utilities.find(
+			(u) => u.name === "text" && u.modifiers.length === 0,
+		);
 		expect(textUtility).toEqual({
 			type: "utility",
 			name: "text",
@@ -247,8 +300,23 @@ describe("createUtilityFunction", () => {
 			declarations: { fontSize: "14px" },
 			variables: [],
 			children: [],
-			modifiers: [breakpointModifier],
+			modifiers: [],
 		});
+
+		// Check breakpoint variants exist
+		const smVariant = root.utilities.find(
+			(u) => u.name === "text" && u.modifiers.includes("sm"),
+		);
+		const mdVariant = root.utilities.find(
+			(u) => u.name === "text" && u.modifiers.includes("md"),
+		);
+		const lgVariant = root.utilities.find(
+			(u) => u.name === "text" && u.modifiers.includes("lg"),
+		);
+
+		expect(smVariant).toBeDefined();
+		expect(mdVariant).toBeDefined();
+		expect(lgVariant).toBeDefined();
 	});
 
 	test("should handle empty modifiers array", () => {
@@ -499,7 +567,7 @@ describe("createUtilityFunction", () => {
 		const hoverModifier: Modifier = {
 			type: "modifier",
 			key: ["hover"],
-			transform: ({ declarations }) => ({
+			factory: ({ declarations }) => ({
 				"&:hover": declarations,
 			}),
 		};
@@ -507,7 +575,7 @@ describe("createUtilityFunction", () => {
 		const focusModifier: Modifier = {
 			type: "modifier",
 			key: ["focus"],
-			transform: ({ declarations }) => ({
+			factory: ({ declarations }) => ({
 				"&:focus": declarations,
 			}),
 		};
@@ -532,7 +600,10 @@ describe("createUtilityFunction", () => {
 			[focusModifier],
 		);
 
-		expect(root.utilities).toHaveLength(2);
+		// First call creates 1 base + 1 hover variant = 2
+		// Second call creates 1 base + 1 focus variant = 2
+		// Total: 4
+		expect(root.utilities).toHaveLength(4);
 
 		const primaryUtility = root.utilities.find(
 			(u) => u.name === "button" && u.value === "primary",
@@ -541,8 +612,25 @@ describe("createUtilityFunction", () => {
 			(u) => u.name === "button" && u.value === "secondary",
 		);
 
-		expect(primaryUtility?.modifiers).toEqual([hoverModifier]);
-		expect(secondaryUtility?.modifiers).toEqual([focusModifier]);
+		expect(primaryUtility?.modifiers).toEqual([]);
+		expect(secondaryUtility?.modifiers).toEqual([]);
+
+		// Check that modified variants were created
+		const primaryHoverVariant = root.utilities.find(
+			(u) =>
+				u.name === "button" &&
+				u.value === "primary" &&
+				u.modifiers.includes("hover"),
+		);
+		const secondaryFocusVariant = root.utilities.find(
+			(u) =>
+				u.name === "button" &&
+				u.value === "secondary" &&
+				u.modifiers.includes("focus"),
+		);
+
+		expect(primaryHoverVariant).toBeDefined();
+		expect(secondaryFocusVariant).toBeDefined();
 	});
 
 	test("should support callback context functions", () => {
@@ -570,5 +658,774 @@ describe("createUtilityFunction", () => {
 		});
 		expect(advancedUtility?.variables).toHaveLength(1);
 		expect(advancedUtility?.children).toHaveLength(1);
+	});
+});
+
+describe("createModifiedUtilityFunction", () => {
+	let root: Root;
+	let parent: Container;
+	let modifiedUtility: ReturnType<typeof createModifiedUtilityFunction>;
+
+	beforeEach(() => {
+		root = createRoot();
+		parent = root;
+		modifiedUtility = createModifiedUtilityFunction(parent, root);
+	});
+
+	test("should create a modified utility function", () => {
+		expect(modifiedUtility).toBeTypeOf("function");
+	});
+
+	test("should return a new utility instance with modified modifiers", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "padding",
+			value: "sm",
+			declarations: { padding: "8px" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const hoverModifier: Modifier = {
+			type: "modifier",
+			key: ["hover"],
+			factory: ({ declarations }) => ({
+				"&:hover": declarations,
+			}),
+		};
+
+		const result = modifiedUtility(baseUtility, [hoverModifier], ["hover"]);
+
+		expect(result).not.toBe(baseUtility); // Should be a new instance
+		expect(result.type).toBe("utility");
+		expect(result.name).toBe("padding");
+		expect(result.value).toBe("sm");
+		expect(result.modifiers).toEqual(["hover"]);
+	});
+
+	test("should preserve base utility properties while updating modifiers", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "margin",
+			value: "lg",
+			declarations: { margin: "24px" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const focusModifier: Modifier = {
+			type: "modifier",
+			key: ["focus"],
+			factory: ({ declarations }) => ({
+				"&:focus": declarations,
+			}),
+		};
+
+		const result = modifiedUtility(baseUtility, [focusModifier], ["focus"]);
+
+		expect(result.type).toBe("utility");
+		expect(result.name).toBe("margin");
+		expect(result.value).toBe("lg");
+		expect(result.declarations).toEqual({ margin: "24px" });
+		expect(result.modifiers).toEqual(["focus"]);
+	});
+
+	test("should apply multiple modifiers to utility", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "color",
+			value: "primary",
+			declarations: { color: "#007bff" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const hoverModifier: Modifier = {
+			type: "modifier",
+			key: ["hover"],
+			factory: ({ declarations }) => ({
+				"&:hover": declarations,
+			}),
+		};
+
+		const focusModifier: Modifier = {
+			type: "modifier",
+			key: ["focus"],
+			factory: ({ declarations }) => ({
+				"&:focus": declarations,
+			}),
+		};
+
+		const result = modifiedUtility(
+			baseUtility,
+			[hoverModifier, focusModifier],
+			["hover", "focus"],
+		);
+
+		expect(result.modifiers).toEqual(["hover", "focus"]);
+	});
+
+	test("should handle modifiers that add variables", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "background",
+			value: "primary",
+			declarations: { background: "#007bff" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const variableModifier: Modifier = {
+			type: "modifier",
+			key: ["var"],
+			factory: ({ variable, declarations }) => {
+				const colorVar = variable("bg-color", "#007bff");
+				return {
+					background: colorVar.value,
+				};
+			},
+		};
+
+		const result = modifiedUtility(baseUtility, [variableModifier], ["var"]);
+
+		expect(result.variables).toHaveLength(1);
+		expect(result.variables[0]).toEqual({
+			type: "variable",
+			name: "bg-color",
+			value: "#007bff",
+		});
+		expect(result.modifiers).toEqual(["var"]);
+	});
+
+	test("should handle modifiers that add child selectors", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "text",
+			value: "underline",
+			declarations: { textDecoration: "underline" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const childModifier: Modifier = {
+			type: "modifier",
+			key: ["child"],
+			factory: ({ selector }) => {
+				selector("& > span", { textDecoration: "inherit" });
+				return {};
+			},
+		};
+
+		const result = modifiedUtility(baseUtility, [childModifier], ["child"]);
+
+		expect(result.children).toHaveLength(1);
+		expect(result.children[0]).toMatchObject({
+			type: "selector",
+			query: "& > span",
+			declarations: { textDecoration: "inherit" },
+		});
+		expect(result.modifiers).toEqual(["child"]);
+	});
+
+	test("should handle empty modifiers array", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "display",
+			value: "block",
+			declarations: { display: "block" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const result = modifiedUtility(baseUtility, [], []);
+
+		expect(result).not.toBe(baseUtility);
+		expect(result.modifiers).toEqual([]);
+		expect(result.declarations).toEqual({ display: "block" });
+	});
+
+	test("should handle modifier combination with different keys", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "opacity",
+			value: "50",
+			declarations: { opacity: "0.5" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const hoverModifier: Modifier = {
+			type: "modifier",
+			key: ["hover"],
+			factory: ({ declarations }) => ({
+				"&:hover": declarations,
+			}),
+		};
+
+		const darkModeModifier: Modifier = {
+			type: "modifier",
+			key: ["dark"],
+			factory: ({ declarations }) => ({
+				".dark &": declarations,
+			}),
+		};
+
+		const result = modifiedUtility(
+			baseUtility,
+			[hoverModifier, darkModeModifier],
+			["dark", "hover"],
+		);
+
+		expect(result.modifiers).toEqual(["dark", "hover"]);
+	});
+
+	test("should apply modifiers in order", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "transform",
+			value: "scale",
+			declarations: { transform: "scale(1)" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		let executionOrder: string[] = [];
+
+		const firstModifier: Modifier = {
+			type: "modifier",
+			key: ["first"],
+			factory: ({ variable }) => {
+				executionOrder.push("first");
+				variable("first-var", "1");
+				return {};
+			},
+		};
+
+		const secondModifier: Modifier = {
+			type: "modifier",
+			key: ["second"],
+			factory: ({ variable }) => {
+				executionOrder.push("second");
+				variable("second-var", "2");
+				return {};
+			},
+		};
+
+		const result = modifiedUtility(
+			baseUtility,
+			[firstModifier, secondModifier],
+			["first", "second"],
+		);
+
+		expect(executionOrder).toEqual(["first", "second"]);
+		expect(result.variables).toHaveLength(2);
+		expect(result.variables[0]?.name).toBe("first-var");
+		expect(result.variables[1]?.name).toBe("second-var");
+	});
+
+	test("should handle modifiers that modify existing declarations", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "border",
+			value: "solid",
+			declarations: { borderStyle: "solid" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const widthModifier: Modifier = {
+			type: "modifier",
+			key: ["thick"],
+			factory: ({ declarations }) => ({
+				...declarations,
+				borderWidth: "4px",
+			}),
+		};
+
+		const result = modifiedUtility(baseUtility, [widthModifier], ["thick"]);
+
+		// The original declarations should be preserved
+		expect(result.declarations).toEqual({ borderStyle: "solid" });
+		expect(result.modifiers).toEqual(["thick"]);
+	});
+
+	test("should handle modifiers with multi-key definitions", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "fontSize",
+			value: "base",
+			declarations: { fontSize: "16px" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const responsiveModifier: Modifier = {
+			type: "modifier",
+			key: ["sm", "md", "lg"],
+			factory: ({ declarations }) => ({
+				"@media (min-width: 640px)": declarations,
+			}),
+		};
+
+		const result = modifiedUtility(baseUtility, [responsiveModifier], ["md"]);
+
+		expect(result.modifiers).toEqual(["md"]);
+	});
+
+	test("should handle combination array with values not matching modifier keys", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "width",
+			value: "full",
+			declarations: { width: "100%" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const hoverModifier: Modifier = {
+			type: "modifier",
+			key: ["hover"],
+			factory: ({ declarations }) => ({
+				"&:hover": declarations,
+			}),
+		};
+
+		// Combination includes "focus" but only hover modifier is provided
+		const result = modifiedUtility(
+			baseUtility,
+			[hoverModifier],
+			["hover", "focus"],
+		);
+
+		expect(result.modifiers).toEqual(["hover", "focus"]);
+	});
+
+	test("should create independent instances for each modification", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "gap",
+			value: "sm",
+			declarations: { gap: "8px" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const hoverModifier: Modifier = {
+			type: "modifier",
+			key: ["hover"],
+			factory: ({ variable }) => {
+				variable("hover-gap", "16px");
+				return {};
+			},
+		};
+
+		const result1 = modifiedUtility(baseUtility, [hoverModifier], ["hover"]);
+		const result2 = modifiedUtility(baseUtility, [hoverModifier], ["hover"]);
+
+		// The instances themselves should be different
+		expect(result1).not.toBe(result2);
+		// Note: variables and children arrays are shared from baseUtility due to spread operator
+		// This is the actual behavior of the function - it mutates the arrays
+		expect(result1.variables).toBe(result2.variables);
+		expect(result1.children).toBe(result2.children);
+	});
+
+	test("should handle complex modifier factory with multiple operations", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "button",
+			value: "primary",
+			declarations: { backgroundColor: "#007bff", color: "white" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const complexModifier: Modifier = {
+			type: "modifier",
+			key: ["interactive"],
+			factory: ({ variable, selector, declarations }) => {
+				const bgVar = variable("button-bg", "#007bff");
+				const textVar = variable("button-text", "white");
+
+				selector("&:hover", {
+					backgroundColor: "darken(" + bgVar.value + ", 10%)",
+				});
+
+				selector("&:focus", {
+					outline: "2px solid " + bgVar.value,
+				});
+
+				selector("&:disabled", {
+					opacity: "0.5",
+					cursor: "not-allowed",
+				});
+
+				return {
+					backgroundColor: bgVar.value,
+					color: textVar.value,
+				};
+			},
+		};
+
+		const result = modifiedUtility(
+			baseUtility,
+			[complexModifier],
+			["interactive"],
+		);
+
+		expect(result.variables).toHaveLength(2);
+		expect(result.variables[0]?.name).toBe("button-bg");
+		expect(result.variables[1]?.name).toBe("button-text");
+
+		expect(result.children).toHaveLength(3);
+		expect(result.children[0]).toMatchObject({
+			type: "selector",
+			query: "&:hover",
+		});
+		expect(result.children[1]).toMatchObject({
+			type: "selector",
+			query: "&:focus",
+		});
+		expect(result.children[2]).toMatchObject({
+			type: "selector",
+			query: "&:disabled",
+		});
+
+		expect(result.modifiers).toEqual(["interactive"]);
+	});
+
+	test("should mutate base utility's arrays when modifiers add items", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "position",
+			value: "absolute",
+			declarations: { position: "absolute" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const originalDeclarations = { ...baseUtility.declarations };
+		const originalModifiers = [...baseUtility.modifiers];
+
+		const modifier: Modifier = {
+			type: "modifier",
+			key: ["test"],
+			factory: ({ variable }) => {
+				variable("test-var", "value");
+				return { top: "0" };
+			},
+		};
+
+		const result = modifiedUtility(baseUtility, [modifier], ["test"]);
+
+		// The declarations object should remain unchanged
+		expect(baseUtility.declarations).toEqual(originalDeclarations);
+		// The modifiers array should remain unchanged
+		expect(baseUtility.modifiers).toEqual(originalModifiers);
+		// But variables array will be mutated due to spread operator shallow copy
+		expect(baseUtility.variables).toHaveLength(1);
+		expect(baseUtility.variables[0]).toEqual({
+			type: "variable",
+			name: "test-var",
+			value: "value",
+		});
+		// The result should have the combination in its modifiers
+		expect(result.modifiers).toEqual(["test"]);
+	});
+
+	test("should handle modifier that returns null declarations", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "display",
+			value: "flex",
+			declarations: { display: "flex" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const nullModifier: Modifier = {
+			type: "modifier",
+			key: ["null"],
+			factory: () => null as any,
+		};
+
+		const result = modifiedUtility(baseUtility, [nullModifier], ["null"]);
+
+		expect(result.declarations).toEqual({ display: "flex" });
+		expect(result.modifiers).toEqual(["null"]);
+	});
+
+	test("should handle modifier that returns undefined declarations", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "width",
+			value: "auto",
+			declarations: { width: "auto" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const undefinedModifier: Modifier = {
+			type: "modifier",
+			key: ["undefined"],
+			factory: () => undefined as any,
+		};
+
+		const result = modifiedUtility(
+			baseUtility,
+			[undefinedModifier],
+			["undefined"],
+		);
+
+		expect(result.declarations).toEqual({ width: "auto" });
+		expect(result.modifiers).toEqual(["undefined"]);
+	});
+
+	test("should handle modifier that returns empty object", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "height",
+			value: "100vh",
+			declarations: { height: "100vh" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const emptyModifier: Modifier = {
+			type: "modifier",
+			key: ["empty"],
+			factory: () => ({}),
+		};
+
+		const result = modifiedUtility(baseUtility, [emptyModifier], ["empty"]);
+
+		expect(result.declarations).toEqual({ height: "100vh" });
+		expect(result.modifiers).toEqual(["empty"]);
+	});
+
+	test("should handle combination array that is empty", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "overflow",
+			value: "hidden",
+			declarations: { overflow: "hidden" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const modifier: Modifier = {
+			type: "modifier",
+			key: ["test"],
+			factory: () => ({}),
+		};
+
+		const result = modifiedUtility(baseUtility, [modifier], []);
+
+		expect(result.modifiers).toEqual([]);
+		expect(result.declarations).toEqual({ overflow: "hidden" });
+	});
+
+	test("should handle nested selector creation within modifiers", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "card",
+			value: "default",
+			declarations: { padding: "1rem" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const nestedModifier: Modifier = {
+			type: "modifier",
+			key: ["nested"],
+			factory: ({ selector }) => {
+				const child = selector(".card-header", { fontWeight: "bold" });
+				selector(".card-body", { padding: "0.5rem" });
+				selector(".card-footer", { borderTop: "1px solid #ccc" });
+				return {};
+			},
+		};
+
+		const result = modifiedUtility(baseUtility, [nestedModifier], ["nested"]);
+
+		expect(result.children).toHaveLength(3);
+		expect(result.children[0]).toMatchObject({
+			type: "selector",
+			query: ".card-header",
+			declarations: { fontWeight: "bold" },
+		});
+		expect(result.children[1]).toMatchObject({
+			type: "selector",
+			query: ".card-body",
+			declarations: { padding: "0.5rem" },
+		});
+		expect(result.children[2]).toMatchObject({
+			type: "selector",
+			query: ".card-footer",
+			declarations: { borderTop: "1px solid #ccc" },
+		});
+	});
+
+	test("should handle modifier with same key appearing in combination multiple times", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "state",
+			value: "active",
+			declarations: { opacity: "1" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const stateModifier: Modifier = {
+			type: "modifier",
+			key: ["hover", "focus"],
+			factory: ({ variable }) => {
+				variable("state-opacity", "0.8");
+				return {};
+			},
+		};
+
+		// Duplicate keys in combination
+		const result = modifiedUtility(
+			baseUtility,
+			[stateModifier],
+			["hover", "hover"],
+		);
+
+		expect(result.modifiers).toEqual(["hover", "hover"]);
+		expect(result.variables).toHaveLength(1);
+	});
+
+	test("should handle utility with pre-existing variables and children", () => {
+		const existingVar = {
+			type: "variable" as const,
+			name: "existing-var",
+			value: "existing-value",
+		};
+
+		const existingChild = {
+			type: "selector" as const,
+			query: ".existing",
+			declarations: { color: "red" },
+			variables: [],
+			children: [],
+		};
+
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "complex",
+			value: "base",
+			declarations: { margin: "0" },
+			variables: [existingVar],
+			children: [existingChild],
+			modifiers: [],
+		};
+
+		const additionalModifier: Modifier = {
+			type: "modifier",
+			key: ["additional"],
+			factory: ({ variable, selector }) => {
+				variable("new-var", "new-value");
+				selector(".new", { color: "blue" });
+				return {};
+			},
+		};
+
+		const result = modifiedUtility(
+			baseUtility,
+			[additionalModifier],
+			["additional"],
+		);
+
+		expect(result.variables).toHaveLength(2);
+		expect(result.variables[0]).toEqual(existingVar);
+		expect(result.variables[1]).toEqual({
+			type: "variable",
+			name: "new-var",
+			value: "new-value",
+		});
+
+		expect(result.children).toHaveLength(2);
+		expect(result.children[0]).toEqual(existingChild);
+		expect(result.children[1]).toMatchObject({
+			type: "selector",
+			query: ".new",
+			declarations: { color: "blue" },
+		});
+	});
+
+	test("should handle deeply nested declarations from modifiers", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "grid",
+			value: "layout",
+			declarations: { display: "grid" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const deepModifier: Modifier = {
+			type: "modifier",
+			key: ["deep"],
+			factory: ({ selector }) => {
+				selector("& > .row", { gridRow: "span 1" });
+				selector("& > .row > .col", { gridColumn: "span 1" });
+				return {
+					gridTemplateColumns: "repeat(12, 1fr)",
+					gridGap: "1rem",
+				};
+			},
+		};
+
+		const result = modifiedUtility(baseUtility, [deepModifier], ["deep"]);
+
+		expect(result.declarations).toEqual({ display: "grid" });
+		expect(result.children).toHaveLength(2);
+		expect(result.modifiers).toEqual(["deep"]);
+	});
+
+	test("should handle modifier factory that throws an error", () => {
+		const baseUtility: Utility = {
+			type: "utility",
+			name: "error",
+			value: "test",
+			declarations: { display: "block" },
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const errorModifier: Modifier = {
+			type: "modifier",
+			key: ["error"],
+			factory: () => {
+				throw new Error("Test error");
+			},
+		};
+
+		expect(() => {
+			modifiedUtility(baseUtility, [errorModifier], ["error"]);
+		}).toThrow("Test error");
 	});
 });

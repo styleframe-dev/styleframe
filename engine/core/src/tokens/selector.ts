@@ -6,7 +6,7 @@ import type {
 	Root,
 	Selector,
 } from "../types";
-import type { DeclarationsCallback } from "./declarations";
+import type { DeclarationsCallback } from "../types";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
