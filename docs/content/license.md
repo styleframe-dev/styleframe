@@ -106,6 +106,7 @@ Installing and using _Styleframe Pro_ on personal or company computers for devel
 Team Members may use Styleframe Pro in the development and commercial distribution of websites, web applications, and software applications, provided that such distribution is compliant with the terms of this license agreement.
 
 **License Requirement for End Users**: Before distributing a _Project_ that includes _Styleframe Pro_, _the Customer_ must ensure that either:
+- _The Customer_ purchases a special _Styleframe Pro_ _Builder License_ for commercial distribution, paid annually.
 - _The Customer_ maintains a valid _Styleframe Pro_ _License_ covering the use of _Styleframe Pro_ within the project being sold, or
 - _The end customer_ purchasing the _Project_ acquires their own valid _Styleframe Pro_ _License_ prior to or upon purchase.
 

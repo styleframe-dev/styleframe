@@ -41,7 +41,8 @@
 		"posthog-js": "^1.257.2",
 		"typescript": "^5.6.3",
 		"vue": "^3.5.17",
-		"vue-router": "^4.5.1"
+		"vue-router": "^4.5.1",
+		"zod": "^4.1.11"
 	},
 	"devDependencies": {
 		"@nuxt/kit": "^4.0.1",

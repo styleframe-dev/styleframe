@@ -14,7 +14,7 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-	(success: void): void;
+	success: [];
 }>();
 
 const toast = useToast();
@@ -96,14 +96,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 </script>
 
 <template>
-	<UForm class="w-full space-y-4 flex flex-col" :schema="schema" :state="state" @submit="onSubmit">
+	<UForm
+		class="w-full space-y-4 flex flex-col"
+		:schema="schema"
+		:state="state"
+		@submit="onSubmit"
+	>
 		<UFormField label="Email" name="email" class="w-full">
-			<UInput placeholder="you@example.com" class="w-full" v-model="state.email" />
+			<UInput
+				v-model="state.email"
+				placeholder="you@example.com"
+				class="w-full"
+			/>
 		</UFormField>
 
-		<UButton class="ml-auto" type="submit">
-			Join Waitlist
-		</UButton>
+		<UButton class="ml-auto" type="submit"> Join Waitlist </UButton>
 	</UForm>
 </template>
-

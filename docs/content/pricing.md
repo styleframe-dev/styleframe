@@ -62,6 +62,53 @@ If you can't find what you're looking for, email our support team and someone wi
 ::::
 
 :::
+:::card
+### License
+
+::::accordion
+  :::::accordion-item{label="Do I need a license for each project I work on?" icon="i-lucide-circle-help"}
+  One license, unlimited projects. With Styleframe Pro, you can build as many sites as you want without purchasing additional licenses.
+  
+  Use it for all your client work, personal projects, and SaaS applications — as long as they comply with our license terms. No per-project fees, no hidden costs.
+  
+  [Read our license](/license) for full details and examples.
+  :::::
+  :::::accordion-item{label="Can I use styleframe Pro for client projects?" icon="i-lucide-circle-help"}
+  Yes! Styleframe Pro is perfect for client work:
+  
+  - **Single client projects**: Use your license to build custom websites
+  - **Multi-client templates**: Each client needs their own license
+  
+  Build with confidence knowing you're properly licensed.
+  
+  [Read our license](/license) for full details and examples.
+  :::::
+  :::::accordion-item{label="Can I use styleframe Pro for my own commercial projects?" icon="i-lucide-circle-help"}
+  Absolutely! Your license covers unlimited projects — from public websites to paid SaaS applications.
+  
+  The only restriction: you can't create website builders or tools that let users generate their own sites using Styleframe Pro components. Please contact [support@styleframe.com](mailto:support@styleframe.com) for more information about a Builder License. Everything else is fair game.
+  
+  [Read our license](/license) for full details and examples.
+  :::::
+  :::::accordion-item{label="Can I use styleframe Pro for Open Source projects?" icon="i-lucide-circle-help"}
+  Yes, you can use styleframe Pro for your open source projects as well as your commercial projects as long as you don't sell styleframe Pro as a product and you don't share your license key.
+  
+  [Read our license](/license) for full details and examples.
+  :::::
+  :::::accordion-item{label="Can I sell templates/themes I build with styleframe Pro?" icon="i-lucide-circle-help"}
+  Yes, you can use styleframe Pro to create derivative products like themes, UI kits, page builders, or anything else where you would be repackaging and redistributing our components or templates for someone else to use to build their own sites, but this will require a special Builder License. Contact [support@styleframe.com](mailto:support@styleframe.com) for more information.
+  
+  [Read our license](/license) for full details and examples.
+  :::::
+  :::::accordion-item{label="Can I purchase an organization license that includes more than 20 developers?" icon="i-lucide-circle-help"}
+  For organizations needing more than 20 seats, we offer two approaches:
+  
+  **Multiple teams?** Purchase separate team licenses for each division. For example, one for your storefront team, another for marketing, and another for data science.
+  
+  **Single large team or organization?** If you're an agency or unified organization without clear divisions, contact us at [support@styleframe.com](mailto:support@styleframe.com) for enterprise pricing.
+  :::::
+::::
+:::
 
 :::card
 ### Contents
@@ -76,25 +123,6 @@ If you can't find what you're looking for, email our support team and someone wi
   We focus exclusively on delivering production-ready code components and templates. This allows us to provide more features, better documentation, and faster updates where it matters most — in your actual codebase.
   :::::
 ::::
-
-:::
-
-:::card
-### License
-
-::::accordion
-  :::::accordion-item{label="Do I need a license for each project I work on?" icon="i-lucide-circle-help"}
-  One license, unlimited projects. With Styleframe Pro, you can build as many sites as you want without purchasing additional licenses.
-  
-  Use it for all your client work, personal projects, and SaaS applications — as long as they comply with our license terms. No per-project fees, no hidden costs.
-  
-  [Read our license](/license) for full details and examples.
-  :::::
-  :::::accordion-item{label="Can I use styleframe Pro for Open Source projects?" icon="i-lucide-circle-help"}
-  Yes, you can use styleframe Pro for your open source projects as well as your commercial projects as long as you don't sell styleframe Pro as a product and you don't share your license key.
-  :::::
-::::
-
 :::
 
 :::card
@@ -110,6 +138,5 @@ If you can't find what you're looking for, email our support team and someone wi
   If you are not satisfied with styleframe Pro, let us know within **14 days** of your purchase at [support@styleframe.dev](mailto:support@styleframe.dev) and we'll refund your money.
   :::::
 ::::
-
 :::
 ::
