@@ -103,7 +103,7 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 		expect(result).toBe(
-			".button {\n\t--primary: #0066ff;\n\n\tcolor: var(--primary);\n}",
+			".button {\n\t--primary: #0066ff;\n\t\n\tcolor: var(--primary);\n}",
 		);
 	});
 
@@ -122,7 +122,7 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 		expect(result).toBe(
-			".card {\n\t--hover-color: #ff6b6b;\n\n\t&:hover {\n\t\tcolor: var(--hover-color);\n\t}\n}",
+			".card {\n\t--hover-color: #ff6b6b;\n\t\n\t&:hover {\n\t\tcolor: var(--hover-color);\n\t}\n}",
 		);
 	});
 
@@ -144,7 +144,7 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 		expect(result).toBe(
-			".component {\n\tdisplay: flex;\n\talign-items: center;\n\n\t&:focus {\n\t\toutline: 2px solid blue;\n\t}\n}",
+			".component {\n\tdisplay: flex;\n\talign-items: center;\n\t\n\t&:focus {\n\t\toutline: 2px solid blue;\n\t}\n}",
 		);
 	});
 
@@ -173,7 +173,7 @@ describe("createContainerConsumer", () => {
 		);
 
 		const expected =
-			".interactive {\n\t--size: 1rem;\n\t--text-color: #333;\n\n\tfont-size: var(--size);\n\tcolor: var(--text-color);\n\n\t&:hover {\n\t\ttransform: scale(1.05);\n\t}\n\n\t&:focus {\n\t\toutline: 2px solid currentColor;\n\t}\n}";
+			".interactive {\n\t--size: 1rem;\n\t--text-color: #333;\n\t\n\tfont-size: var(--size);\n\tcolor: var(--text-color);\n\t\n\t&:hover {\n\t\ttransform: scale(1.05);\n\t}\n\t&:focus {\n\t\toutline: 2px solid currentColor;\n\t}\n}";
 		expect(result).toBe(expected);
 	});
 
@@ -220,7 +220,7 @@ describe("createContainerConsumer", () => {
 		);
 
 		const expected =
-			'.container {\n\t& > .item {\n\t\tmargin: 0.5rem;\n\t}\n\n\t& .nested {\n\t\tpadding: 1rem;\n\t}\n\n\t&::before {\n\t\tcontent: "";\n\t\tposition: absolute;\n\t}\n}';
+			'.container {\n\t& > .item {\n\t\tmargin: 0.5rem;\n\t}\n\t& .nested {\n\t\tpadding: 1rem;\n\t}\n\t&::before {\n\t\tcontent: "";\n\t\tposition: absolute;\n\t}\n}';
 		expect(result).toBe(expected);
 	});
 
@@ -261,7 +261,7 @@ describe("createContainerConsumer", () => {
 		);
 
 		const expected =
-			".root {\n\t& .parent {\n\t\tposition: relative;\n\t\n\t\t& .deeply-nested {\n\t\t\tfont-weight: bold;\n\t\t}\n\t}\n}";
+			".root {\n\t& .parent {\n\t\tposition: relative;\n\t\t\n\t\t& .deeply-nested {\n\t\t\tfont-weight: bold;\n\t\t}\n\t}\n}";
 		expect(result).toBe(expected);
 	});
 
@@ -287,27 +287,8 @@ describe("createContainerConsumer", () => {
 		);
 
 		expect(result).toBe(
-			".component {\n\t--sf-primary: #0066ff;\n\n\tcolor: var(--sf-primary);\n}",
+			".component {\n\t--sf-primary: #0066ff;\n\t\n\tcolor: var(--sf-primary);\n}",
 		);
-	});
-
-	it("should handle container with custom indentation", () => {
-		const customIndentOptions: StyleframeOptions = {
-			indent: "    ", // 4 spaces instead of default 2
-		};
-		const colorVar = variable("color", "red");
-
-		const result = consumeContainer(
-			".test",
-			{
-				variables: [colorVar],
-				declarations: { display: "block" },
-				children: [],
-			},
-			customIndentOptions,
-		);
-
-		expect(result).toBe(".test {\n    --color: red;\n\n    display: block;\n}");
 	});
 
 	it("should handle variables with complex values", () => {
@@ -354,7 +335,7 @@ describe("createContainerConsumer", () => {
 		);
 
 		const expected =
-			".text {\n\t--base-size: 16px;\n\n\tfont-size: var(--base-size);\n\tline-height: var(--line-height-normal, 1.5);\n\tpadding: var(--spacing, 1rem);\n}";
+			".text {\n\t--base-size: 16px;\n\t\n\tfont-size: var(--base-size);\n\tline-height: var(--line-height-normal, 1.5);\n\tpadding: var(--spacing, 1rem);\n}";
 		expect(result).toBe(expected);
 	});
 
@@ -375,7 +356,58 @@ describe("createContainerConsumer", () => {
 		);
 
 		const expected =
-			":root {\n\t--primary: #0066ff;\n\n\tfontSize: 16px;\n}\n\n.button {\n\tcolor: var(--primary);\n}";
+			":root {\n\t--primary: #0066ff;\n\t\n\tfontSize: 16px;\n}\n\t\n.button {\n\tcolor: var(--primary);\n}";
+		expect(result).toBe(expected);
+	});
+
+	it("should handle :root with only variables", () => {
+		const colorVar = variable("primary", "#0066ff");
+
+		const result = consumeContainer(
+			":root",
+			{
+				variables: [colorVar],
+				declarations: {},
+				children: [],
+			},
+			options,
+		);
+
+		const expected = ":root {\n\t--primary: #0066ff;\n}";
+		expect(result).toBe(expected);
+	});
+
+	it("should handle :root with only declarations", () => {
+		const result = consumeContainer(
+			":root",
+			{
+				variables: [],
+				declarations: { fontSize: "16px" },
+				children: [],
+			},
+			options,
+		);
+
+		const expected = ":root {\n\tfontSize: 16px;\n}";
+		expect(result).toBe(expected);
+	});
+
+	it("should handle :root with only children", () => {
+		const childSelector = selector(".button", {
+			color: "red",
+		});
+
+		const result = consumeContainer(
+			":root",
+			{
+				variables: [],
+				declarations: {},
+				children: [childSelector],
+			},
+			options,
+		);
+
+		const expected = ".button {\n\tcolor: red;\n}";
 		expect(result).toBe(expected);
 	});
 

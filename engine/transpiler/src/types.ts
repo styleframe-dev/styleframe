@@ -3,7 +3,6 @@ import type { StyleframeOptions } from "@styleframe/core";
 export type OutputFile = {
 	name: string;
 	content: string[];
-	layer?: string;
 };
 
 export type Output = {

@@ -3,13 +3,13 @@ import type { Container, Reference, Root, Variable } from "../types";
 
 export function createRefFunction(_parent: Container, _root: Root) {
 	return function ref<Name extends string>(
-		variableOrKeyframes: Variable<Name> | Name,
+		variable: Variable<Name> | Name,
 		fallback?: string,
 	): Reference<Name> {
-		if (isVariable(variableOrKeyframes)) {
+		if (isVariable(variable)) {
 			return {
 				type: "reference",
-				name: variableOrKeyframes.name,
+				name: variable.name,
 				fallback,
 			};
 		}
@@ -17,7 +17,7 @@ export function createRefFunction(_parent: Container, _root: Root) {
 		// If a string name is passed, use it directly
 		return {
 			type: "reference",
-			name: variableOrKeyframes,
+			name: variable,
 			fallback,
 		};
 	};

@@ -9,8 +9,8 @@ The documentation references CLI commands that don't exist yet:
 - `styleframe build` - Build theme files from configuration
 
 ## Tasks
-- [ ] Create new package `@styleframe/cli` 
-- [ ] Implement `init` command that:
+- [x] Create new package `@styleframe/cli` 
+- [x] Implement `init` command that:
   - Creates `styleframe.config.ts` file
   - Creates `src/styleframe.theme.ts` file  
   - Installs styleframe as dev dependency

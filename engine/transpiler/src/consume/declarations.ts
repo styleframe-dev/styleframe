@@ -1,4 +1,5 @@
 import type { DeclarationsBlock, StyleframeOptions } from "@styleframe/core";
+import { genDeclaration } from "../generator";
 import type { ConsumeFunction } from "../types";
 
 /**
@@ -10,7 +11,7 @@ export function createDeclarationsConsumer(consume: ConsumeFunction) {
 		options: StyleframeOptions,
 	): string[] {
 		return Object.entries(instance).map(([propertyName, propertyValue]) => {
-			return `${propertyName}: ${consume(propertyValue, options)};`;
+			return genDeclaration(propertyName, consume(propertyValue, options));
 		});
 	};
 }

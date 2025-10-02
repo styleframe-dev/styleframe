@@ -8,6 +8,7 @@ import type { ConsumeFunction } from "../types";
 import { addIndentToLine, indentLines } from "../utils";
 import { createDeclarationsConsumer } from "./declarations";
 import { createVariableConsumer } from "./variable";
+import { genSelector } from "../generator";
 
 /**
  * Base function for consuming container-like structures (Selector, AtRule)
@@ -28,42 +29,43 @@ export function createContainerConsumer(consume: ConsumeFunction) {
 		const { variables, declarations, children } = instance;
 		const isRoot = query === ":root";
 
-		const processedVariables = (variables ?? []).map((variable) =>
-			addIndentToLine(consumeVariable(variable, options), options),
+		const consumedVariables = (variables ?? []).map((variable) =>
+			consumeVariable(variable, options),
 		);
 
-		const processedDeclarations = consumeDeclarations(
+		const consumedDeclarations = consumeDeclarations(
 			declarations ?? {},
 			options,
-		).map((line) => addIndentToLine(line, options));
+		);
 
-		const processedChildren = (children ?? []).map((child) => {
-			const processedChild = consume(child, options);
-			return isRoot ? processedChild : indentLines(processedChild, options);
-		});
+		const consumedChildren = (children ?? []).map((child) =>
+			consume(child, options),
+		);
 
-		const hasVariables = processedVariables.length > 0;
-		const hasDeclarations = processedDeclarations.length > 0;
-		const hasChildren = processedChildren.length > 0;
-
-		const variablesSpacer =
-			hasVariables && (hasDeclarations || hasChildren) ? "\n\n" : "";
-		const declarationsSpacer = hasDeclarations && hasChildren ? "\n\n" : "";
-		const bracketSpacer =
-			hasVariables || hasDeclarations || hasChildren ? "\n" : "";
+		const hasVariables = consumedVariables.length > 0;
+		const hasDeclarations = consumedDeclarations.length > 0;
+		const hasChildren = consumedChildren.length > 0;
 
 		if (isRoot) {
-			return `${query} {${bracketSpacer}${processedVariables.join(
-				"\n",
-			)}${variablesSpacer}${processedDeclarations.join(
-				"\n",
-			)}${bracketSpacer}}${processedChildren.length ? "\n\n" : ""}${processedChildren.join("\n\n")}`;
+			return `${
+				hasVariables || hasDeclarations
+					? genSelector(query, [
+							...consumedVariables,
+							...(hasVariables && (hasChildren || hasDeclarations) ? [""] : []),
+							...consumedDeclarations,
+						])
+					: ""
+			}${
+				hasChildren && (hasVariables || hasDeclarations) ? "\n\t\n" : ""
+			}${consumedChildren.join("\n\t")}`;
 		}
 
-		return `${query} {${bracketSpacer}${processedVariables.join(
-			"\n",
-		)}${variablesSpacer}${processedDeclarations.join(
-			"\n",
-		)}${declarationsSpacer}${processedChildren.join("\n\n")}${bracketSpacer}}`;
+		return genSelector(query, [
+			...consumedVariables,
+			...(hasVariables && (hasChildren || hasDeclarations) ? [""] : []),
+			...consumedDeclarations,
+			...(hasDeclarations && hasChildren ? [""] : []),
+			...consumedChildren,
+		]);
 	};
 }

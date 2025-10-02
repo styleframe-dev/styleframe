@@ -126,7 +126,7 @@ export type Container = {
 	declarations: DeclarationsBlock;
 };
 
-export type ContainerChild = Variable | Selector | AtRule;
+export type ContainerChild = Variable | Selector | AtRule | Utility;
 
 export type Theme = {
 	type: "theme";

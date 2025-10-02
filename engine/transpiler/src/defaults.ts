@@ -17,5 +17,5 @@ export const defaultUtilitySelectorFn: UtilitySelectorFn = ({
 };
 
 export const defaultVariableNameFn: VariableNameFn = ({ name }) => {
-	return name.startsWith("--") ? name : `--${name}`;
+	return name;
 };

@@ -1,0 +1,39 @@
+{
+	"name": "@styleframe/loader",
+	"version": "0.0.0",
+	"type": "module",
+	"types": "./dist/loader.d.ts",
+	"module": "./dist/loader.js",
+	"main": "./dist/loader.umd.cjs",
+	"exports": {
+		".": {
+			"types": "./dist/loader.d.ts",
+			"import": "./dist/loader.js",
+			"require": "./dist/loader.umd.cjs"
+		}
+	},
+	"scripts": {
+		"dev": "vite",
+		"build": "pnpm typecheck && vite build",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:dev": "vitest --watch",
+		"playground:build": "tsx src/playground/build.ts",
+		"playground:load": "tsx src/playground/load.ts",
+		"playground:watch": "tsx src/playground/watch.ts"
+	},
+	"dependencies": {
+		"@styleframe/core": "workspace:^",
+		"@styleframe/transpiler": "workspace:^",
+		"c12": "^3.1.0"
+	},
+	"devDependencies": {
+		"@styleframe/config-typescript": "workspace:^",
+		"@styleframe/config-vite": "workspace:^",
+		"tsx": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vite-plugin-dts": "catalog:",
+		"vitest": "catalog:"
+	}
+}

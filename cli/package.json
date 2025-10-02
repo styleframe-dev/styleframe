@@ -1,0 +1,42 @@
+{
+	"name": "@styleframe/cli",
+	"version": "1.0.0",
+	"description": "A command-line interface for styleframe.",
+	"type": "module",
+	"bin": {
+		"styleframe": "./dist/cli.umd.cjs"
+	},
+	"types": "./dist/cli.d.ts",
+	"module": "./dist/cli.js",
+	"main": "./dist/cli.umd.cjs",
+	"exports": {
+		".": {
+			"types": "./dist/cli.d.ts",
+			"import": "./dist/cli.js",
+			"require": "./dist/cli.umd.cjs"
+		}
+	},
+	"scripts": {
+		"dev": "vite",
+		"prebuild": "tsx ./scripts/prebuild.ts",
+		"build": "pnpm run prebuild && pnpm typecheck && vite build",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:dev": "vitest --watch"
+	},
+	"dependencies": {
+		"@styleframe/transpiler": "workspace:^",
+		"c12": "^3.1.0",
+		"citty": "^0.1.6",
+		"consola": "^3.0.0-2"
+	},
+	"devDependencies": {
+		"@styleframe/config-typescript": "workspace:^",
+		"@styleframe/config-vite": "workspace:^",
+		"tsx": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vite-plugin-dts": "catalog:",
+		"vitest": "catalog:"
+	}
+}

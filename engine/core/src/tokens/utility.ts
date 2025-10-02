@@ -35,7 +35,7 @@ export function createModifiedUtilityInstances(
 	});
 }
 
-export function createUtilityFunction(_parent: Container, root: Root) {
+export function createUtilityFunction(parent: Container, root: Root) {
 	return function utility<Name extends string>(
 		name: Name,
 		factory: UtilityCallbackFn,
@@ -69,11 +69,11 @@ export function createUtilityFunction(_parent: Container, root: Root) {
 				parseDeclarationsBlock(instance.declarations, callbackContext);
 
 				// Store the utility value on the instance
-				root.utilities.push(instance);
+				parent.children.push(instance);
 
 				// Create modified variants for this specific value
 				if (modifiers.length > 0) {
-					root.utilities.push(
+					parent.children.push(
 						...createModifiedUtilityInstances(instance, modifiers, root),
 					);
 				}

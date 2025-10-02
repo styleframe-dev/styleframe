@@ -1,4 +1,5 @@
 import type { Container, Modifier, Root } from "../types";
+import { deepClone } from "../utils";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
@@ -56,9 +57,9 @@ export function applyModifiers<InstanceType extends Container>(
 	for (const modifier of modifiers.values()) {
 		modifier.factory({
 			...callbackContext,
-			declarations: instance.declarations,
-			variables: instance.variables,
-			children: instance.children,
+			declarations: deepClone(instance.declarations),
+			variables: deepClone(instance.variables),
+			children: deepClone(instance.children),
 		});
 
 		parseDeclarationsBlock(instance.declarations, callbackContext);

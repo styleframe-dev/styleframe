@@ -1,7 +1,8 @@
 import type { AtRule, StyleframeOptions } from "@styleframe/core";
+import { STATEMENT_AT_RULES, STATEMENT_OR_BLOCK_AT_RULES } from "../constants";
+import { genAtRuleQuery } from "../generator";
 import type { ConsumeFunction } from "../types";
 import { createContainerConsumer } from "./container";
-import { STATEMENT_AT_RULES, STATEMENT_OR_BLOCK_AT_RULES } from "../constants";
 
 /**
  * Consumes a generic at-rule instance, equivalent to setting a CSS at-rule
@@ -23,7 +24,7 @@ export function createAtRuleConsumer(consume: ConsumeFunction) {
 		const hasVariables = instance.variables.length > 0;
 		const hasChildren = instance.children.length > 0;
 
-		const query = `@${instance.identifier} ${instance.rule}`;
+		const query = genAtRuleQuery(instance.identifier, instance.rule);
 
 		return isStatement ||
 			(isStatementOrBlock && !(hasDeclarations || hasVariables || hasChildren))

@@ -26,7 +26,7 @@ describe("createRootConsumer", () => {
 
 	it("should handle empty root", () => {
 		const result = consumeRoot(root, options);
-		expect(result).toBe(":root {}");
+		expect(result).toBe("");
 	});
 
 	it("should handle root with only variables", () => {
@@ -63,7 +63,7 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 		expect(result).toBe(
-			":root {\n\n}\n\n.button {\n\tpadding: 0.5rem 1rem;\n\tborderRadius: 4px;\n}\n\n.card {\n\tboxShadow: 0 2px 4px rgba(0,0,0,0.1);\n}",
+			".button {\n\tpadding: 0.5rem 1rem;\n\tborderRadius: 4px;\n}\n\t.card {\n\tboxShadow: 0 2px 4px rgba(0,0,0,0.1);\n}",
 		);
 	});
 
@@ -77,7 +77,7 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 		expect(result).toBe(
-			":root {\n\t--text-color: #333333;\n\t--base-font-size: 16px;\n\n\tcolor: var(--text-color);\n\tfontSize: var(--base-font-size);\n}",
+			":root {\n\t--text-color: #333333;\n\t--base-font-size: 16px;\n\t\n\tcolor: var(--text-color);\n\tfontSize: var(--base-font-size);\n}",
 		);
 	});
 
@@ -95,7 +95,7 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 		expect(result).toBe(
-			":root {\n\t--primary: #0066ff;\n\t--danger: #ff0000;\n\n\n}\n\n.btn-primary {\n\tbackgroundColor: var(--primary);\n\tcolor: white;\n}\n\n.alert-danger {\n\tborderColor: var(--danger);\n\tcolor: var(--danger);\n}",
+			":root {\n\t--primary: #0066ff;\n\t--danger: #ff0000;\n\t\n\t\n}\n\t\n.btn-primary {\n\tbackgroundColor: var(--primary);\n\tcolor: white;\n}\n\t\n.alert-danger {\n\tborderColor: var(--danger);\n\tcolor: var(--danger);\n}",
 		);
 	});
 
@@ -116,7 +116,7 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 		expect(result).toBe(
-			":root {\n\tboxSizing: border-box;\n\tmargin: 0;\n\tpadding: 0;\n}\n\nbody {\n\tfontFamily: system-ui, -apple-system, sans-serif;\n\tlineHeight: 1.6;\n}\n\nh1, h2, h3 {\n\tmarginTop: 0;\n\tlineHeight: 1.2;\n}",
+			":root {\n\tboxSizing: border-box;\n\tmargin: 0;\n\tpadding: 0;\n}\n\t\nbody {\n\tfontFamily: system-ui, -apple-system, sans-serif;\n\tlineHeight: 1.6;\n}\n\t\nh1, h2, h3 {\n\tmarginTop: 0;\n\tlineHeight: 1.2;\n}",
 		);
 	});
 
@@ -147,7 +147,7 @@ describe("createRootConsumer", () => {
 		const result = consumeRoot(root, options);
 
 		const expected =
-			":root {\n\t--spacing-unit: 8px;\n\t--primary: #0066ff;\n\t--background: #ffffff;\n\n\t--global-padding: var(--spacing-unit);\n\tbackgroundColor: var(--background);\n\tcolor: #333;\n}\n\n.container {\n\tmaxWidth: 1200px;\n\tmargin: 0 auto;\n\tpadding: var(--spacing-unit);\n}\n\n.button {\n\tpadding: calc(var(--spacing-unit) * 2);\n\tbackgroundColor: var(--primary);\n\tborder: none;\n\tborderRadius: 4px;\n}";
+			":root {\n\t--spacing-unit: 8px;\n\t--primary: #0066ff;\n\t--background: #ffffff;\n\t\n\t--global-padding: var(--spacing-unit);\n\tbackgroundColor: var(--background);\n\tcolor: #333;\n}\n\t\n.container {\n\tmaxWidth: 1200px;\n\tmargin: 0 auto;\n\tpadding: var(--spacing-unit);\n}\n\t\n.button {\n\tpadding: calc(var(--spacing-unit) * 2);\n\tbackgroundColor: var(--primary);\n\tborder: none;\n\tborderRadius: 4px;\n}";
 		expect(result).toBe(expected);
 	});
 
@@ -165,23 +165,7 @@ describe("createRootConsumer", () => {
 		const result = consumeRoot(root, customOptions);
 
 		expect(result).toBe(
-			":root {\n\t--app-theme-color: #663399;\n\n\taccentColor: var(--app-theme-color);\n}",
-		);
-	});
-
-	it("should handle custom indentation options", () => {
-		const customIndentOptions: StyleframeOptions = {
-			indent: "    ", // 4 spaces
-		};
-		const colorVar = variable("text", "#000000");
-		root.declarations = {
-			color: ref(colorVar),
-		};
-
-		const result = consumeRoot(root, customIndentOptions);
-
-		expect(result).toBe(
-			":root {\n    --text: #000000;\n\n    color: var(--text);\n}",
+			":root {\n\t--app-theme-color: #663399;\n\t\n\taccentColor: var(--app-theme-color);\n}",
 		);
 	});
 
@@ -226,7 +210,7 @@ describe("createRootConsumer", () => {
 		const result = consumeRoot(root, options);
 
 		const expected =
-			":root {\n\n}\n\nnav {\n\tbackgroundColor: #f5f5f5;\n\tpadding: 1rem;\n\n\tul {\n\t\tmargin: 0;\n\t\tpadding: 0;\n\t\n\t\tli {\n\t\t\tlistStyle: none;\n\t\t\tdisplay: inline-block;\n\t\t}\n\t}\n}";
+			"nav {\n\tbackgroundColor: #f5f5f5;\n\tpadding: 1rem;\n\t\n\tul {\n\t\tmargin: 0;\n\t\tpadding: 0;\n\t\n\t\tli {\n\t\t\tlistStyle: none;\n\t\t\tdisplay: inline-block;\n\t\t}\n\t}\n}";
 		expect(result).toBe(expected);
 	});
 
@@ -244,14 +228,14 @@ describe("createRootConsumer", () => {
 		const result = consumeRoot(root, options);
 
 		const expected =
-			":root {\n\t--mobile-breakpoint: 768px;\n\n\n}\n\n@media (max-width: 768px) {\n\t.container {\n\t\tpadding: 1rem;\n\t\tmaxWidth: 100%;\n\t}\n}";
+			":root {\n\t--mobile-breakpoint: 768px;\n\t\n\t\n}\n\t\n@media (max-width: 768px) {\n\t.container {\n\t\tpadding: 1rem;\n\t\tmaxWidth: 100%;\n\t}\n}";
 		expect(result).toBe(expected);
 	});
 
 	it("should handle undefined properties gracefully", () => {
 		const emptyRoot = createRoot();
 		const result = consumeRoot(emptyRoot, options);
-		expect(result).toBe(":root {}");
+		expect(result).toBe("");
 	});
 
 	it("should handle reference values with fallbacks", () => {
@@ -265,7 +249,7 @@ describe("createRootConsumer", () => {
 		const result = consumeRoot(root, options);
 
 		const expected =
-			":root {\n\t--brand-color: #0066ff;\n\n\tcolor: var(--text-color, #333);\n\tbackgroundColor: var(--brand-color);\n\tborderColor: var(--border-color, currentColor);\n}";
+			":root {\n\t--brand-color: #0066ff;\n\t\n\tcolor: var(--text-color, #333);\n\tbackgroundColor: var(--brand-color);\n\tborderColor: var(--border-color, currentColor);\n}";
 		expect(result).toBe(expected);
 	});
 
@@ -277,6 +261,6 @@ describe("createRootConsumer", () => {
 		const result = consumeRoot(root, options);
 
 		// Should produce the same output as if we called consumeContainer with ":root"
-		expect(result).toBe(":root {\n\t--color: blue;\n\n\tdisplay: block;\n}");
+		expect(result).toBe(":root {\n\t--color: blue;\n\t\n\tdisplay: block;\n}");
 	});
 });

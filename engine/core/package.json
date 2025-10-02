@@ -13,7 +13,7 @@
 		}
 	},
 	"scripts": {
-		"dev": "vite",
+		"dev": "vite build --watch",
 		"build": "pnpm typecheck && vite build",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run",
