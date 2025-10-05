@@ -21,7 +21,7 @@
 ## ✨ Features
 
 - **🛡️ Type-safe CSS API** - Catch style bugs at compile time with full TypeScript support
-- **🧩 Composable & Modular** - Build design systems from reusable, focused functions
+- **🧩 Composable & Modular** - Build design systems from reusable, composable functions
 - **🎨 Built-in Theming** - Create light/dark modes and custom themes effortlessly
 - **⚡ Framework Agnostic** - Works with React, Vue, Svelte, Solid, Astro, and more
 - **🔥 First-class DX** - IDE auto-complete, in-editor docs, and static analysis
