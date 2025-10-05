@@ -3,9 +3,6 @@
 	"version": "1.0.0",
 	"description": "A command-line interface for styleframe.",
 	"type": "module",
-	"bin": {
-		"styleframe": "./dist/index.umd.cjs"
-	},
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.js",
 	"main": "./dist/index.umd.cjs",
@@ -34,11 +31,21 @@
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^",
 		"@styleframe/config-vite": "workspace:^",
+		"@styleframe/core": "workspace:^",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vite-plugin-dts": "catalog:",
 		"vite-plugin-node": "catalog:",
 		"vitest": "catalog:"
-	}
+	},
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
+	"bugs": {
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
+	},
+	"author": "Alex Grozav <alex@styleframe.dev>"
 }

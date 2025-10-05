@@ -29,5 +29,14 @@
 		"vite": "catalog:",
 		"vitest": "catalog:",
 		"vite-plugin-dts": "catalog:"
-	}
+	},
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
+	"bugs": {
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
+	},
+	"author": "Alex Grozav <alex@styleframe.dev>"
 }

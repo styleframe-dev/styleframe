@@ -1,0 +1,72 @@
+{
+	"name": "styleframe",
+	"version": "1.0.0",
+	"bin": {
+		"styleframe": "./dist/cli.cjs"
+	},
+	"description": "A command-line interface for styleframe.",
+	"type": "module",
+	"license": "MIT",
+	"files": [
+		"dist"
+	],
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./cli": {
+			"types": "./dist/cli.d.ts",
+			"import": "./dist/cli.js",
+			"require": "./dist/cli.cjs"
+		},
+		"./loader": {
+			"types": "./dist/loader.d.ts",
+			"import": "./dist/loader.js",
+			"require": "./dist/loader.cjs"
+		},
+		"./transpiler": {
+			"types": "./dist/transpiler.d.ts",
+			"import": "./dist/transpiler.js",
+			"require": "./dist/transpiler.cjs"
+		},
+		"./package.json": "./package.json"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsdown --watch",
+		"test": "vitest",
+		"typecheck": "tsc --noEmit",
+		"release": "bumpp && npm publish"
+	},
+	"dependencies": {
+		"@styleframe/cli": "workspace:^",
+		"@styleframe/core": "workspace:^",
+		"@styleframe/loader": "workspace:^",
+		"@styleframe/transpiler": "workspace:^"
+	},
+	"devDependencies": {
+		"@styleframe/config-typescript": "workspace:^",
+		"@types/node": "^22.15.17",
+		"bumpp": "^10.1.0",
+		"tsdown": "^0.11.9",
+		"typescript": "^5.8.3",
+		"vitest": "^3.1.3"
+	},
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
+	"bugs": {
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
+	},
+	"author": "Alex Grozav <alex@styleframe.dev>"
+}

@@ -1,5 +1,5 @@
 import { defineCommand, runMain } from "citty";
-import { version, description } from "./package";
+import { description, version } from "./package";
 
 const main = defineCommand({
 	meta: {
@@ -13,4 +13,6 @@ const main = defineCommand({
 	},
 });
 
-runMain(main);
+export default function run() {
+	runMain(main);
+}
