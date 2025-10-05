@@ -12,6 +12,7 @@ import {
 	createMediaFunction,
 } from "./atRule";
 import { createCssFunction } from "./css";
+import { createRefFunction } from "./ref";
 import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
 
@@ -21,9 +22,10 @@ export function createDeclarationsCallbackContext(
 ): DeclarationsCallbackContext {
 	const variable = createVariableFunction(parent, root);
 	const selector = createSelectorFunction(parent, root);
-	const keyframes = createKeyframesFunction(parent, root);
 	const atRule = createAtRuleFunction(parent, root);
+	const keyframes = createKeyframesFunction(root, root);
 	const media = createMediaFunction(parent, root);
+	const ref = createRefFunction(root, root);
 	const css = createCssFunction(root, root);
 
 	return {
@@ -32,6 +34,7 @@ export function createDeclarationsCallbackContext(
 		keyframes,
 		atRule,
 		media,
+		ref,
 		css,
 	};
 }

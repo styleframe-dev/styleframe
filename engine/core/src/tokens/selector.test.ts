@@ -200,6 +200,7 @@ describe("createSelectorFunction", () => {
 				keyframes: expect.any(Function),
 				media: expect.any(Function),
 				css: expect.any(Function),
+				ref: expect.any(Function),
 			});
 		});
 
@@ -308,7 +309,9 @@ describe("createSelectorFunction", () => {
 				.find((child) => child.query === ".component-header");
 
 			expect(hoverSelector?.declarations).toEqual({ opacity: 0.8 });
-			expect(headerSelector?.declarations).toEqual({ fontWeight: "bold" });
+			expect(headerSelector?.declarations).toEqual({
+				fontWeight: "bold",
+			});
 		});
 	});
 

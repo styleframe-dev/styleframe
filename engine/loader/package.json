@@ -34,7 +34,7 @@
 		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vite-plugin-dts": "catalog:",
-		"vite-plugin-node": "^7.0.0",
+		"vite-plugin-node": "catalog:",
 		"vitest": "catalog:"
 	}
 }

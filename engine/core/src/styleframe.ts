@@ -1,16 +1,19 @@
-import {
+import type {
 	createAtRuleFunction,
 	createCssFunction,
 	createKeyframesFunction,
 	createMediaFunction,
+	createRefFunction,
+	createSelectorFunction,
+	createVariableFunction,
+} from "./tokens";
+import {
+	createDeclarationsCallbackContext,
 	createModifierFunction,
 	createRecipeFunction,
-	createRefFunction,
 	createRoot,
-	createSelectorFunction,
 	createThemeFunction,
 	createUtilityFunction,
-	createVariableFunction,
 } from "./tokens";
 import type { Root, StyleframeOptions } from "./types";
 
@@ -35,17 +38,13 @@ export function styleframe(userOptions?: StyleframeOptions): Styleframe {
 
 	const options = { ...userOptions };
 
-	const variable = createVariableFunction(root, root);
-	const selector = createSelectorFunction(root, root);
 	const utility = createUtilityFunction(root, root);
 	const modifier = createModifierFunction(root, root);
 	const recipe = createRecipeFunction(root, root);
 	const theme = createThemeFunction(root, root);
-	const atRule = createAtRuleFunction(root, root);
-	const keyframes = createKeyframesFunction(root, root);
-	const media = createMediaFunction(root, root);
-	const ref = createRefFunction(root, root);
-	const css = createCssFunction(root, root);
+
+	const { variable, selector, atRule, keyframes, media, ref, css } =
+		createDeclarationsCallbackContext(root, root);
 
 	return {
 		root,
