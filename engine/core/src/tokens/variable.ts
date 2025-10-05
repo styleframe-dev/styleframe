@@ -2,7 +2,7 @@ import type { Container, Root, TokenValue, Variable } from "../types";
 
 export function createVariableFunction(parent: Container, _root: Root) {
 	return function variable<Name extends string>(
-		target: Name | Variable<Name>,
+		nameOrInstance: Name | Variable<Name>,
 		value: TokenValue,
 		options: {
 			default: boolean;
@@ -10,7 +10,9 @@ export function createVariableFunction(parent: Container, _root: Root) {
 			default: false,
 		},
 	): Variable<Name> {
-		const name = (typeof target === "string" ? target : target.name) as Name;
+		const name = (
+			typeof nameOrInstance === "string" ? nameOrInstance : nameOrInstance.name
+		) as Name;
 
 		const existingVariable = parent.variables.find(
 			(child) => child.name === name,

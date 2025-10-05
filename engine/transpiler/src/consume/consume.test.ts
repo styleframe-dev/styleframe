@@ -126,7 +126,10 @@ describe("consume", () => {
 	});
 
 	it("should consume complex nested structures", () => {
-		const complexSelector = selector(".card", ({ variable, selector }) => {
+		variable("card-bg", "#ffffff");
+		variable("card-shadow", "0 2px 4px rgba(0,0,0,0.1)");
+
+		selector(".card", ({ variable, selector }) => {
 			const colorVar = variable("card-bg", "#ffffff");
 			const shadowVar = variable("card-shadow", "0 2px 4px rgba(0,0,0,0.1)");
 
@@ -142,9 +145,31 @@ describe("consume", () => {
 			};
 		});
 
-		const result = consume(complexSelector, options);
+		theme("dark", ({ variable, selector }) => {
+			const colorVar = variable("card-bg", "#333");
+			variable("card-shadow", "0 2px 4px rgba(0,0,0,0.2)");
 
-		expect(result).toEqual(`.card {
+			selector(".card", ({ variable, selector }) => {
+				variable("shadow", ref(colorVar));
+
+				selector("&:hover", {
+					transform: "translateY(-6px)",
+				});
+
+				return {
+					boxShadow: ref("shadow"),
+					border: "1px solid #ccc",
+				};
+			});
+		});
+
+		const result = consume(root, options);
+		const expected = `:root {
+\t--card-bg: #ffffff;
+\t--card-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card {
 \t--card-bg: #ffffff;
 \t--card-shadow: 0 2px 4px rgba(0,0,0,0.1);
 \t
@@ -156,7 +181,25 @@ describe("consume", () => {
 \t\ttransform: translateY(-2px);
 \t\tbox-shadow: var(--card-shadow);
 \t}
-}`);
+}
+
+[data-theme="dark"] {
+\t--card-bg: #333;
+\t--card-shadow: 0 2px 4px rgba(0,0,0,0.2);
+\t
+\t.card {
+\t\t--shadow: var(--card-bg);
+\t\t
+\t\tbox-shadow: var(--shadow);
+\t\tborder: 1px solid #ccc;
+\t\t
+\t\t&:hover {
+\t\t\ttransform: translateY(-6px);
+\t\t}
+\t}
+}`;
+
+		expect(result).toEqual(expected);
 	});
 
 	it("should preserve variable references across different instance types", () => {

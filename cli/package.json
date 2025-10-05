@@ -17,7 +17,7 @@
 		}
 	},
 	"scripts": {
-		"dev": "vite",
+		"dev": "vite build --watch",
 		"prebuild": "tsx ./scripts/prebuild.ts",
 		"build": "pnpm run prebuild && pnpm typecheck && vite build",
 		"typecheck": "tsc --noEmit",

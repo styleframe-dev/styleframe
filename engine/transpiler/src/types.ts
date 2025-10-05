@@ -2,7 +2,7 @@ import type { StyleframeOptions } from "@styleframe/core";
 
 export type OutputFile = {
 	name: string;
-	content: string[];
+	content: string;
 };
 
 export type Output = {

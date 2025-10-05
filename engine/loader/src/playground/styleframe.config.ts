@@ -17,6 +17,10 @@ selector(".card", {
 theme("dark", (ctx) => {
 	ctx.variable(cardBackground, "#18181b");
 	ctx.variable(cardColor, "#ffffff");
+
+	ctx.selector(".card", {
+		border: ctx.css`1px solid ${ctx.ref(cardBackground)}`,
+	});
 });
 
 theme("sepia", (ctx) => {
