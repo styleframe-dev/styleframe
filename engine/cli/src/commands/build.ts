@@ -1,5 +1,6 @@
-import consola from "consola";
+import { build, loadConfiguration } from "@styleframe/loader";
 import { defineCommand } from "citty";
+import consola from "consola";
 
 export default defineCommand({
 	meta: {
@@ -13,14 +14,23 @@ export default defineCommand({
 			default: "styleframe.config.ts",
 			valueHint: "path",
 		},
-
-		outDir: {
+		outputDir: {
 			type: "string",
 			description: "Output directory for built files",
-			default: "dist",
+			default: "styleframe",
 			alias: ["o", "out"],
 			valueHint: "path",
 		},
 	},
-	async run({ args }) {},
+	async run({ args }) {
+		consola.info("Building styleframe...");
+
+		const config = await loadConfiguration({ cwd: process.cwd() });
+
+		await build(config, {
+			outputDir: args.outputDir,
+		});
+
+		consola.success("Styleframe built successfully!");
+	},
 });
