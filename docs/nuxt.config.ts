@@ -97,4 +97,9 @@ export default defineNuxtConfig({
 		domain: "https://styleframe.dev",
 		title: "Styleframe",
 	},
+	routeRules: {
+		"/docs": {
+			redirect: "/docs/getting-started/introduction",
+		},
+	},
 });

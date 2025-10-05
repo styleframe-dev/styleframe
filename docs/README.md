@@ -47,10 +47,25 @@ bun add styleframe
 ### Initialization
 
 ```bash
+# npm
 npx styleframe init
+
+# pnpm
+pnpx styleframe init
+
+# yarn
+yarn styleframe init
+
+# bun
+bunx styleframe init
 ```
 
-This creates a `styleframe.config.ts` file in your project.
+Using the CLI command above, it will:
+
+- Install `styleframe` as a development dependency to your project
+- Add the `styleframe` plugin to Vite, if possible
+- Create a new `styleframe.config.ts` file
+
 
 ## 💡 Usage
 
