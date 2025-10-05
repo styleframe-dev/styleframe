@@ -1,8 +1,8 @@
-import { writeFile, mkdir, rm } from "fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
+import path from "node:path";
 import type { Styleframe } from "@styleframe/core";
 import { transpile } from "@styleframe/transpiler";
 import { directoryExists } from "./utils";
-import path from "path";
 
 export type BuildOptions = {
 	clean?: boolean;
@@ -15,7 +15,8 @@ export async function build(
 ) {
 	const output = transpile(instance);
 
-	if (clean) {
+	const outputDirExists = await directoryExists(outputDir);
+	if (clean && outputDirExists) {
 		await rm(outputDir, { recursive: true });
 	}
 
@@ -23,7 +24,8 @@ export async function build(
 		const filePath = path.join(outputDir, file.name);
 
 		const fileOutputDirPath = path.dirname(filePath);
-		if (fileOutputDirPath && !(await directoryExists(fileOutputDirPath))) {
+		const fileOutputDirExists = await directoryExists(fileOutputDirPath);
+		if (!fileOutputDirExists) {
 			await mkdir(fileOutputDirPath, { recursive: true });
 		}
 

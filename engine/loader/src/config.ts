@@ -4,12 +4,14 @@ import { loadConfig, watchConfig } from "c12";
 
 export async function loadConfiguration({
 	cwd = process.cwd(),
+	name = "styleframe",
 }: {
 	cwd?: string;
+	name?: string;
 } = {}) {
 	const { config } = await loadConfig<Styleframe>({
 		cwd,
-		name: "styleframe",
+		name,
 		defaults: styleframe(),
 	});
 

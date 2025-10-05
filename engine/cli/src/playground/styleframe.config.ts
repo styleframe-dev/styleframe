@@ -1,4 +1,4 @@
-import { styleframe } from "styleframe";
+import { styleframe } from "@styleframe/core";
 
 const s = styleframe();
 
