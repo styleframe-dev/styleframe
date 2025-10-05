@@ -27,6 +27,6 @@ export async function build(
 			await mkdir(fileOutputDirPath, { recursive: true });
 		}
 
-		await writeFile(filePath, file.content.join("\n"));
+		await writeFile(filePath, file.content);
 	}
 }
