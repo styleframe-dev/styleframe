@@ -109,7 +109,9 @@ This generates optimized CSS from your configuration.
 
 ## 📚 Documentation
 
-Read the documentation at [https://styleframe.dev](https://styleframe.dev).
+Styleframe is extremely powerful and flexible. The code preview above is just a small example of what you can achieve with styleframe. 
+
+Read the full documentation at [https://styleframe.dev](https://styleframe.dev).
 
 ## 🎯 Why styleframe?
 
