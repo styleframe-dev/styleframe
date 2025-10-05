@@ -2,7 +2,7 @@ import type {
 	AtRule,
 	Container,
 	CSS,
-	Modifier,
+	ModifierFactory,
 	PrimitiveTokenValue,
 	Reference,
 	Root,
@@ -46,13 +46,13 @@ export function isAtRule(value: unknown): value is AtRule {
 	return isToken(value, "at-rule");
 }
 
-export function isUtility<Name extends string = string>(
+export function isUtilityInstance<Name extends string = string>(
 	value: unknown,
 ): value is Utility<Name> {
 	return isToken(value, "utility");
 }
 
-export function isModifier(value: unknown): value is Modifier {
+export function isModifier(value: unknown): value is ModifierFactory {
 	return isToken(value, "modifier");
 }
 

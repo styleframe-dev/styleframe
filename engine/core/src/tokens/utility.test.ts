@@ -1,4 +1,4 @@
-import type { Container, Modifier, Root, Utility } from "../types";
+import type { Container, ModifierFactory, Root, Utility } from "../types";
 import { createRoot } from "./root";
 import { createUtilityFunction } from "./utility";
 import { applyModifiers } from "./modifier";
@@ -111,7 +111,7 @@ describe("createUtilityFunction", () => {
 	});
 
 	test("should store utility instances with modifiers", () => {
-		const hoverModifier: Modifier = {
+		const hoverModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["hover"],
 			factory: ({ declarations }) => ({
@@ -187,7 +187,7 @@ describe("createUtilityFunction", () => {
 	});
 
 	test("should store utility instances with multiple modifiers", () => {
-		const hoverModifier: Modifier = {
+		const hoverModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["hover"],
 			factory: ({ declarations }) => ({
@@ -195,7 +195,7 @@ describe("createUtilityFunction", () => {
 			}),
 		};
 
-		const focusModifier: Modifier = {
+		const focusModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["focus"],
 			factory: ({ declarations }) => ({
@@ -261,7 +261,7 @@ describe("createUtilityFunction", () => {
 	});
 
 	test("should handle multi-key modifiers correctly", () => {
-		const breakpointModifier: Modifier = {
+		const breakpointModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["sm", "md", "lg"],
 			factory: ({ declarations }) => ({
@@ -562,7 +562,7 @@ describe("createUtilityFunction", () => {
 	});
 
 	test("should handle different modifiers on subsequent calls", () => {
-		const hoverModifier: Modifier = {
+		const hoverModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["hover"],
 			factory: ({ declarations }) => ({
@@ -570,7 +570,7 @@ describe("createUtilityFunction", () => {
 			}),
 		};
 
-		const focusModifier: Modifier = {
+		const focusModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["focus"],
 			factory: ({ declarations }) => ({
@@ -681,7 +681,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const hoverModifier: Modifier = {
+		const hoverModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["hover"],
 			factory: ({ declarations }) => ({
@@ -713,7 +713,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const focusModifier: Modifier = {
+		const focusModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["focus"],
 			factory: ({ declarations }) => ({
@@ -745,7 +745,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const hoverModifier: Modifier = {
+		const hoverModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["hover"],
 			factory: ({ declarations }) => ({
@@ -753,7 +753,7 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const focusModifier: Modifier = {
+		const focusModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["focus"],
 			factory: ({ declarations }) => ({
@@ -784,7 +784,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const variableModifier: Modifier = {
+		const variableModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["var"],
 			factory: ({ variable }) => {
@@ -825,7 +825,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const childModifier: Modifier = {
+		const childModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["child"],
 			factory: ({ selector }) => {
@@ -878,7 +878,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const hoverModifier: Modifier = {
+		const hoverModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["hover"],
 			factory: ({ declarations }) => ({
@@ -886,7 +886,7 @@ describe("createModifiedUtilityFunction", () => {
 			}),
 		};
 
-		const darkModeModifier: Modifier = {
+		const darkModeModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["dark"],
 			factory: ({ declarations }) => ({
@@ -919,7 +919,7 @@ describe("createModifiedUtilityFunction", () => {
 
 		const executionOrder: string[] = [];
 
-		const firstModifier: Modifier = {
+		const firstModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["first"],
 			factory: ({ variable }) => {
@@ -929,7 +929,7 @@ describe("createModifiedUtilityFunction", () => {
 			},
 		};
 
-		const secondModifier: Modifier = {
+		const secondModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["second"],
 			factory: ({ variable }) => {
@@ -965,7 +965,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const widthModifier: Modifier = {
+		const widthModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["thick"],
 			factory: ({ declarations }) => ({
@@ -996,7 +996,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const responsiveModifier: Modifier = {
+		const responsiveModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["sm", "md", "lg"],
 			factory: ({ declarations }) => ({
@@ -1024,7 +1024,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const hoverModifier: Modifier = {
+		const hoverModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["hover"],
 			factory: ({ variable }) => {
@@ -1063,7 +1063,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const complexModifier: Modifier = {
+		const complexModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["interactive"],
 			factory: ({ variable, selector }) => {
@@ -1131,7 +1131,7 @@ describe("createModifiedUtilityFunction", () => {
 		const originalDeclarations = { ...baseUtility.declarations };
 		const originalModifiers = [...baseUtility.modifiers];
 
-		const modifier: Modifier = {
+		const modifier: ModifierFactory = {
 			type: "modifier",
 			key: ["test"],
 			factory: ({ variable }) => {
@@ -1172,7 +1172,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const nullModifier: Modifier = {
+		const nullModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["null"],
 			factory: () => null as any,
@@ -1199,7 +1199,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const undefinedModifier: Modifier = {
+		const undefinedModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["undefined"],
 			factory: () => undefined as any,
@@ -1226,7 +1226,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const emptyModifier: Modifier = {
+		const emptyModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["empty"],
 			factory: () => ({}),
@@ -1270,7 +1270,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const nestedModifier: Modifier = {
+		const nestedModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["nested"],
 			factory: ({ selector }) => {
@@ -1316,7 +1316,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const stateModifier: Modifier = {
+		const stateModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["hover", "focus"],
 			factory: ({ variable }) => {
@@ -1361,7 +1361,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const additionalModifier: Modifier = {
+		const additionalModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["additional"],
 			factory: ({ variable, selector }) => {
@@ -1405,7 +1405,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const deepModifier: Modifier = {
+		const deepModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["deep"],
 			factory: ({ selector }) => {
@@ -1440,7 +1440,7 @@ describe("createModifiedUtilityFunction", () => {
 			modifiers: [],
 		};
 
-		const errorModifier: Modifier = {
+		const errorModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["error"],
 			factory: () => {

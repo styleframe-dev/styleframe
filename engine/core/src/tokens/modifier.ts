@@ -1,4 +1,4 @@
-import type { Container, Modifier, Root } from "../types";
+import type { Container, ModifierFactory, Root } from "../types";
 import { deepClone } from "../utils";
 import {
 	createDeclarationsCallbackContext,
@@ -45,7 +45,7 @@ export function combineKeys(groups: string[][]): string[][] {
 export function applyModifiers<InstanceType extends Container>(
 	baseInstance: InstanceType,
 	root: Root,
-	modifiers: Map<string, Modifier>,
+	modifiers: Map<string, ModifierFactory>,
 ): InstanceType {
 	const instance: InstanceType = {
 		...baseInstance,
@@ -71,9 +71,9 @@ export function applyModifiers<InstanceType extends Container>(
 export function createModifierFunction(_parent: Container, root: Root) {
 	return function modifier<Key extends string>(
 		key: Key | Key[],
-		factory: Modifier["factory"],
-	): Modifier {
-		const modifierInstance: Modifier = {
+		factory: ModifierFactory["factory"],
+	): ModifierFactory {
+		const modifierInstance: ModifierFactory = {
 			type: "modifier",
 			key: Array.isArray(key) ? key : [key],
 			factory,

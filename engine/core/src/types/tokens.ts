@@ -38,6 +38,12 @@ export type CSS = {
 	value: TokenValue[];
 };
 
+export type UtilityFactory<Name extends string = string> = {
+	type: "utility";
+	name: Name;
+	factory: UtilityCallbackFn;
+};
+
 export type Utility<Name extends string = string> = {
 	type: "utility";
 	name: Name;
@@ -56,7 +62,7 @@ export type UtilityCallbackFn = DeclarationsCallback<
 
 export type UtilityCreatorFn = (
 	values: Record<string, TokenValue>,
-	modifiers?: Modifier[],
+	modifiers?: ModifierFactory[],
 ) => void;
 
 export type ModifierCallbackFn = DeclarationsCallback<
@@ -64,16 +70,11 @@ export type ModifierCallbackFn = DeclarationsCallback<
 		Pick<Utility, "declarations" | "variables" | "children">
 >;
 
-export type Modifier = {
+export type ModifierFactory = {
 	type: "modifier";
 	key: string[];
 	factory: ModifierCallbackFn;
 };
-
-export type ModifierTransformFn = (args: {
-	declarations: DeclarationsBlock;
-	key?: string;
-}) => DeclarationsBlock;
 
 export type VariantDeclarationsBlock = Record<string, string | true>;
 
@@ -115,7 +116,7 @@ export type TokenType =
 	| AtRule["type"]
 	| CSS["type"]
 	| Utility["type"]
-	| Modifier["type"]
+	| ModifierFactory["type"]
 	| Recipe["type"]
 	| Theme["type"]
 	| Root["type"];
@@ -139,8 +140,8 @@ export type Theme = {
 export type Root = {
 	type: "root";
 	declarations: DeclarationsBlock;
-	utilities: Utility[];
-	modifiers: Modifier[];
+	utilities: UtilityFactory[];
+	modifiers: ModifierFactory[];
 	recipes: Recipe[];
 	variables: Variable[];
 	children: ContainerChild[];

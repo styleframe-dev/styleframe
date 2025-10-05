@@ -1,11 +1,12 @@
 import type {
 	Container,
-	Modifier,
+	ModifierFactory,
 	Root,
 	TokenValue,
 	Utility,
 	UtilityCallbackFn,
 	UtilityCreatorFn,
+	UtilityFactory,
 } from "../types";
 import {
 	createDeclarationsCallbackContext,
@@ -15,14 +16,14 @@ import { applyModifiers, combineKeys } from "./modifier";
 
 export function createModifiedUtilityInstances(
 	baseInstance: Utility,
-	availableModifiers: Modifier[],
+	availableModifiers: ModifierFactory[],
 	root: Root,
 ): Utility[] {
 	const modifierKeys = availableModifiers.map((modifier) => modifier.key);
 	const modifierKeyCombinations = combineKeys(modifierKeys);
 
 	return modifierKeyCombinations.map((combination) => {
-		const modifiers = new Map<string, Modifier>();
+		const modifiers = new Map<string, ModifierFactory>();
 
 		for (const modifierKey of combination) {
 			const modifier = availableModifiers.find((modifier) =>
@@ -40,9 +41,17 @@ export function createUtilityFunction(parent: Container, root: Root) {
 		name: Name,
 		factory: UtilityCallbackFn,
 	): UtilityCreatorFn {
+		const factoryInstance: UtilityFactory<Name> = {
+			type: "utility",
+			name,
+			factory,
+		};
+
+		root.utilities.push(factoryInstance);
+
 		return (
 			entries: Record<string, TokenValue>,
-			modifiers: Modifier[] = [],
+			modifiers: ModifierFactory[] = [],
 		) => {
 			for (const [key, value] of Object.entries(entries)) {
 				const instance: Utility<Name> = {
