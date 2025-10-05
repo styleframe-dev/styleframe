@@ -1,75 +1,160 @@
-# Nuxt Minimal Starter
+<div align="center">
+  <img src="https://styleframe.dev/assets/logo.svg" alt="Styleframe" width="120" height="120">
+  
+  # styleframe
+  
+  **Type-safe, Composable CSS in TypeScript**
+  
+  Write type-safe, composable, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
+  
+  [![npm version](https://img.shields.io/npm/v/styleframe.svg)](https://www.npmjs.com/package/styleframe)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE)
+  [![Discord](https://img.shields.io/discord/YOUR_DISCORD_ID?label=Discord&logo=discord)](https://discord.gg/KCVwuGz44M)
+  
+  [Documentation](https://styleframe.dev/docs) · [Examples](https://styleframe.dev/docs/resources/guides) · [Discord](https://discord.gg/KCVwuGz44M)
+</div>
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+---
 
-## Setup
+## ✨ Features
 
-Make sure to install dependencies:
+- **🛡️ Type-safe CSS API** - Catch style bugs at compile time with full TypeScript support
+- **🧩 Composable & Modular** - Build design systems from reusable, focused functions
+- **🎨 Built-in Theming** - Create light/dark modes and custom themes effortlessly
+- **⚡ Framework Agnostic** - Works with React, Vue, Svelte, Solid, Astro, and more
+- **🔥 First-class DX** - IDE auto-complete, in-editor docs, and static analysis
+
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
 # npm
-npm install
+npm install styleframe
 
 # pnpm
+pnpm add styleframe
+
+# yarn
+yarn add styleframe
+
+# bun
+bun add styleframe
+```
+
+### Initialization
+
+```bash
+npx styleframe init
+```
+
+This creates a `styleframe.config.ts` file in your project.
+
+## 💡 Usage
+
+```typescript
+import { styleframe } from 'styleframe';
+
+const s = styleframe();
+const { variable, ref, selector, theme } = s;
+
+// Define design tokens
+const colorPrimary = variable('color--primary', '#006cff');
+const spacing = variable('spacing--md', '1rem');
+
+// Create styles
+selector('.button', {
+    backgroundColor: ref(colorPrimary),
+    padding: ref(spacing),
+    borderRadius: '4px',
+    color: 'white',
+    
+    '&:hover': {
+        opacity: 0.9,
+    },
+});
+
+// Add dark theme
+theme('dark', (ctx) => {
+    ctx.variable(colorPrimary, '#60a5fa');
+});
+
+export default s;
+```
+
+### Build
+
+```bash
+npx styleframe build
+```
+
+This generates optimized CSS from your configuration.
+
+## 📚 Documentation
+
+Read the documentation at [https://styleframe.dev](https://styleframe.dev).
+
+## 🎯 Why styleframe?
+
+
+
+## 🔗 Framework Integration
+
+Styleframe works seamlessly with any framework:
+
+- **Vite** - Native plugin support
+- **React** - Perfect for component libraries
+- **Vue** - Full SFC compatibility  
+- **Svelte** - Works out of the box
+- **Astro** - Static site ready
+- **Solid** - Reactive styling
+
+See the [installation guide](https://styleframe.dev/docs/getting-started/installation/vite) for framework-specific setup.
+
+## 📖 Documentation
+
+- **[Getting Started](https://styleframe.dev/docs/getting-started/introduction)** - Learn the basics
+- **[API Reference](https://styleframe.dev/docs/api/variables)** - Complete API documentation
+- **[Guides](https://styleframe.dev/docs/resources/guides)** - Step-by-step tutorials
+- **[Examples](https://github.com/styleframe-dev/examples)** - Real-world examples
+
+## 🤝 Community
+
+- **[Discord](https://discord.gg/KCVwuGz44M)** - Chat with the community
+- **[GitHub Issues](https://github.com/styleframe-dev/styleframe/issues)** - Report bugs or request features
+- **[Discussions](https://github.com/styleframe-dev/styleframe/discussions)** - Ask questions and share ideas
+
+## 🛠️ Development
+
+```bash
+# Clone the repository
+git clone https://github.com/styleframe-dev/styleframe.git
+
+# Install dependencies
 pnpm install
 
-# yarn
-yarn install
+# Run tests
+pnpm test
 
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
+# Build
 pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
-Locally preview production build:
+## 📝 License
 
-```bash
-# npm
-npm run preview
+Styleframe is [MIT licensed](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE).
 
-# pnpm
-pnpm preview
+## 💎 Styleframe Pro
 
-# yarn
-yarn preview
+Looking for advanced features? Check out [Styleframe Pro](https://styleframe.dev/pricing) for:
 
-# bun
-bun run preview
-```
+- Premium composables and design tokens
+- Advanced theming capabilities
+- Priority support
+- Commercial licenses
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+---
+
+<div align="center">
+  <sub>Built with ❤️ by <a href="https://github.com/styleframe-dev">Styleframe</a></sub>
+</div>
