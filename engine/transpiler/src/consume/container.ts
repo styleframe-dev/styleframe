@@ -51,13 +51,13 @@ export function createContainerConsumer(consume: ConsumeFunction) {
 				hasVariables || hasDeclarations
 					? genSelector(query, [
 							...consumedVariables,
-							...(hasVariables && (hasChildren || hasDeclarations) ? [""] : []),
+							...(hasVariables && hasDeclarations ? [""] : []),
 							...consumedDeclarations,
 						])
 					: ""
 			}${
-				hasChildren && (hasVariables || hasDeclarations) ? "\n\t\n" : ""
-			}${consumedChildren.join("\n\t")}`;
+				hasChildren && (hasVariables || hasDeclarations) ? "\n\n" : ""
+			}${consumedChildren.join("\n\n")}`;
 		}
 
 		return genSelector(query, [
@@ -65,7 +65,9 @@ export function createContainerConsumer(consume: ConsumeFunction) {
 			...(hasVariables && (hasChildren || hasDeclarations) ? [""] : []),
 			...consumedDeclarations,
 			...(hasDeclarations && hasChildren ? [""] : []),
-			...consumedChildren,
+			...consumedChildren.flatMap((child, index) =>
+				index === consumedChildren.length - 1 ? [child] : [child, ""],
+			),
 		]);
 	};
 }

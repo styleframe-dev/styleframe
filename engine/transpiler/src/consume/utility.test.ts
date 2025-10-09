@@ -1,17 +1,17 @@
 import type {
 	Container,
-	Modifier,
 	Root,
 	StyleframeOptions,
 	Utility,
 } from "@styleframe/core";
 import {
+	createModifierFunction,
 	createRoot,
 	createUtilityFunction,
-	createModifierFunction,
+	isUtility,
 } from "@styleframe/core";
-import { createUtilityConsumer } from "./utility";
 import { consume } from "./consume";
+import { createUtilityConsumer } from "./utility";
 
 describe("createUtilityConsumer", () => {
 	let root: Root;
@@ -175,6 +175,7 @@ describe("createUtilityConsumer", () => {
 		// Find the modified utility instance
 		const hoverMarginUtility = root.children.find(
 			(u): u is Utility =>
+				isUtility(u) &&
 				u.name === "margin" &&
 				u.value === "sm" &&
 				u.modifiers.includes("hover"),
@@ -221,6 +222,7 @@ describe("createUtilityConsumer", () => {
 		// Find the utility with both modifiers
 		const hoverFocusMarginUtility = root.children.find(
 			(u): u is Utility =>
+				isUtility(u) &&
 				u.name === "margin" &&
 				u.value === "sm" &&
 				u.modifiers.includes("hover") &&
@@ -251,7 +253,10 @@ describe("createUtilityConsumer", () => {
 
 		const marginUtility = root.children.find(
 			(u): u is Utility =>
-				u.name === "margin" && u.value === "sm" && u.modifiers.length === 0,
+				isUtility(u) &&
+				u.name === "margin" &&
+				u.value === "sm" &&
+				u.modifiers.length === 0,
 		);
 		if (!marginUtility) {
 			throw new Error("Margin utility not found");
@@ -289,9 +294,9 @@ describe("createUtilityConsumer", () => {
 
 		const rowResult = consumeUtility(flexRowUtility, options);
 		const expectedRow = `._flex\\:row {
-	display: flex;
-	flexDirection: row;
-	gap: 1rem;
+\tdisplay: flex;
+\tflex-direction: row;
+\tgap: 1rem;
 }`;
 		expect(rowResult).toBe(expectedRow);
 
@@ -305,9 +310,9 @@ describe("createUtilityConsumer", () => {
 
 		const colResult = consumeUtility(flexColUtility, options);
 		const expectedCol = `._flex\\:col {
-	display: flex;
-	flexDirection: column;
-	gap: 1rem;
+\tdisplay: flex;
+\tflex-direction: column;
+\tgap: 1rem;
 }`;
 		expect(colResult).toBe(expectedCol);
 	});
@@ -334,7 +339,7 @@ describe("createUtilityConsumer", () => {
 		const result = consumeUtility(hiddenUtility, options);
 
 		const expected = `._hidden {
-	display: none;
+\tdisplay: none;
 }`;
 
 		expect(result).toBe(expected);
@@ -361,7 +366,7 @@ describe("createUtilityConsumer", () => {
 
 		const halfResult = consumeUtility(halfUtility, options);
 		const expectedHalf = `._p\\:1/2 {
-	padding: 0.125rem;
+\tpadding: 0.125rem;
 }`;
 		expect(halfResult).toBe(expectedHalf);
 
@@ -375,7 +380,7 @@ describe("createUtilityConsumer", () => {
 
 		const decimalResult = consumeUtility(decimalUtility, options);
 		const expectedDecimal = `._p\\:2.5 {
-	padding: 0.625rem;
+\tpadding: 0.625rem;
 }`;
 		expect(decimalResult).toBe(expectedDecimal);
 	});
@@ -402,6 +407,7 @@ describe("createUtilityConsumer", () => {
 
 		const groupHoverMarginUtility = root.children.find(
 			(u): u is Utility =>
+				isUtility(u) &&
 				u.name === "margin" &&
 				u.value === "sm" &&
 				u.modifiers.includes("group-hover"),
@@ -413,7 +419,7 @@ describe("createUtilityConsumer", () => {
 		const result = consumeUtility(groupHoverMarginUtility, options);
 
 		const expected = `._group-hover\\:margin\\:sm {
-	margin: 8px;
+\tmargin: 8px;
 }`;
 
 		expect(result).toBe(expected);
@@ -447,12 +453,15 @@ describe("createUtilityConsumer", () => {
 		// Find utilities for each breakpoint key
 		const smMarginUtility = root.children.find(
 			(u): u is Utility =>
-				u.name === "margin" && u.value === "base" && u.modifiers.includes("sm"),
+				isUtility(u) &&
+				u.name === "margin" &&
+				u.value === "base" &&
+				u.modifiers.includes("sm"),
 		);
 		if (smMarginUtility) {
 			const result = consumeUtility(smMarginUtility, options);
 			const expected = `._sm\\:margin\\:base {
-	margin: 8px;
+\tmargin: 8px;
 }`;
 			expect(result).toBe(expected);
 		}
@@ -487,6 +496,7 @@ describe("createUtilityConsumer", () => {
 		// Find the utility with both modifiers
 		const combinedUtility = root.children.find(
 			(u): u is Utility =>
+				isUtility(u) &&
 				u.name === "margin" &&
 				u.value === "sm" &&
 				u.modifiers.includes("hover") &&
@@ -499,7 +509,7 @@ describe("createUtilityConsumer", () => {
 		const result = consumeUtility(combinedUtility, options);
 
 		const expected = `._hover\\:responsive\\:margin\\:sm {
-	margin: 8px;
+\tmargin: 8px;
 }`;
 
 		expect(result).toBe(expected);
@@ -533,8 +543,18 @@ describe("createUtilityConsumer", () => {
 
 		const result = consumeUtility(smButtonUtility, options);
 
-		const expected =
-			"._btn\\:sm {\n\tdisplay: inline-block;\n\tpadding: 0.5rem 1rem;\n\t\n\t&:hover {\n\t\topacity: 0.8;\n\t}\n\t&:focus {\n\t\toutline: 2px solid blue;\n\t}\n}";
+		const expected = `._btn\\:sm {
+\tdisplay: inline-block;
+\tpadding: 0.5rem 1rem;
+\t
+\t&:hover {
+\t\topacity: 0.8;
+\t}
+\t
+\t&:focus {
+\t\toutline: 2px solid blue;
+\t}
+}`;
 
 		expect(result).toBe(expected);
 	});
@@ -562,8 +582,8 @@ describe("createUtilityConsumer", () => {
 		const result = consumeUtility(primaryTextUtility, options);
 
 		const expected = `._text\\:primary {
-	color: var(--color-primary);
-	--text-opacity: 1;
+\tcolor: var(--color-primary);
+\t--text-opacity: 1;
 }`;
 
 		expect(result).toBe(expected);
@@ -635,12 +655,16 @@ describe("createUtilityConsumer", () => {
 		// Check that all combinations are created
 		const baseUtility = root.children.find(
 			(u): u is Utility =>
-				u.name === "margin" && u.value === "sm" && u.modifiers.length === 0,
+				isUtility(u) &&
+				u.name === "margin" &&
+				u.value === "sm" &&
+				u.modifiers.length === 0,
 		);
 		expect(baseUtility).toBeDefined();
 
 		const hoverOnlyUtility = root.children.find(
 			(u): u is Utility =>
+				isUtility(u) &&
 				u.name === "margin" &&
 				u.value === "sm" &&
 				u.modifiers.length === 1 &&
@@ -650,6 +674,7 @@ describe("createUtilityConsumer", () => {
 
 		const focusOnlyUtility = root.children.find(
 			(u): u is Utility =>
+				isUtility(u) &&
 				u.name === "margin" &&
 				u.value === "sm" &&
 				u.modifiers.length === 1 &&
@@ -659,6 +684,7 @@ describe("createUtilityConsumer", () => {
 
 		const bothModifiersUtility = root.children.find(
 			(u): u is Utility =>
+				isUtility(u) &&
 				u.name === "margin" &&
 				u.value === "sm" &&
 				u.modifiers.length === 2 &&

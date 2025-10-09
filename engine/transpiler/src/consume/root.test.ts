@@ -34,9 +34,10 @@ describe("createRootConsumer", () => {
 		variable("secondary", "#ff6b6b");
 
 		const result = consumeRoot(root, options);
-		expect(result).toBe(
-			":root {\n\t--primary: #0066ff;\n\t--secondary: #ff6b6b;\n}",
-		);
+		expect(result).toBe(`:root {
+\t--primary: #0066ff;
+\t--secondary: #ff6b6b;
+}`);
 	});
 
 	it("should handle root with only declarations", () => {
@@ -47,9 +48,11 @@ describe("createRootConsumer", () => {
 		};
 
 		const result = consumeRoot(root, options);
-		expect(result).toBe(
-			":root {\n\tfontSize: 16px;\n\tlineHeight: 1.5;\n\tfontFamily: system-ui, sans-serif;\n}",
-		);
+		expect(result).toBe(`:root {
+\tfont-size: 16px;
+\tline-height: 1.5;
+\tfont-family: system-ui, sans-serif;
+}`);
 	});
 
 	it("should handle root with only children", () => {
@@ -62,9 +65,14 @@ describe("createRootConsumer", () => {
 		});
 
 		const result = consumeRoot(root, options);
-		expect(result).toBe(
-			".button {\n\tpadding: 0.5rem 1rem;\n\tborderRadius: 4px;\n}\n\t.card {\n\tboxShadow: 0 2px 4px rgba(0,0,0,0.1);\n}",
-		);
+		expect(result).toBe(`.button {
+\tpadding: 0.5rem 1rem;
+\tborder-radius: 4px;
+}
+
+.card {
+\tbox-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}`);
 	});
 
 	it("should handle root with variables and declarations", () => {
@@ -76,9 +84,13 @@ describe("createRootConsumer", () => {
 		};
 
 		const result = consumeRoot(root, options);
-		expect(result).toBe(
-			":root {\n\t--text-color: #333333;\n\t--base-font-size: 16px;\n\t\n\tcolor: var(--text-color);\n\tfontSize: var(--base-font-size);\n}",
-		);
+		expect(result).toBe(`:root {
+\t--text-color: #333333;
+\t--base-font-size: 16px;
+\t
+\tcolor: var(--text-color);
+\tfont-size: var(--base-font-size);
+}`);
 	});
 
 	it("should handle root with variables and children", () => {
@@ -94,9 +106,20 @@ describe("createRootConsumer", () => {
 		});
 
 		const result = consumeRoot(root, options);
-		expect(result).toBe(
-			":root {\n\t--primary: #0066ff;\n\t--danger: #ff0000;\n\t\n\t\n}\n\t\n.btn-primary {\n\tbackgroundColor: var(--primary);\n\tcolor: white;\n}\n\t\n.alert-danger {\n\tborderColor: var(--danger);\n\tcolor: var(--danger);\n}",
-		);
+		expect(result).toBe(`:root {
+\t--primary: #0066ff;
+\t--danger: #ff0000;
+}
+
+.btn-primary {
+\tbackground-color: var(--primary);
+\tcolor: white;
+}
+
+.alert-danger {
+\tborder-color: var(--danger);
+\tcolor: var(--danger);
+}`);
 	});
 
 	it("should handle root with declarations and children", () => {
@@ -115,9 +138,21 @@ describe("createRootConsumer", () => {
 		});
 
 		const result = consumeRoot(root, options);
-		expect(result).toBe(
-			":root {\n\tboxSizing: border-box;\n\tmargin: 0;\n\tpadding: 0;\n}\n\t\nbody {\n\tfontFamily: system-ui, -apple-system, sans-serif;\n\tlineHeight: 1.6;\n}\n\t\nh1, h2, h3 {\n\tmarginTop: 0;\n\tlineHeight: 1.2;\n}",
-		);
+		expect(result).toBe(`:root {
+\tbox-sizing: border-box;
+\tmargin: 0;
+\tpadding: 0;
+}
+
+body {
+\tfont-family: system-ui, -apple-system, sans-serif;
+\tline-height: 1.6;
+}
+
+h1, h2, h3 {
+\tmargin-top: 0;
+\tline-height: 1.2;
+}`);
 	});
 
 	it("should handle root with variables, declarations, and children", () => {
@@ -146,9 +181,28 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 
-		const expected =
-			":root {\n\t--spacing-unit: 8px;\n\t--primary: #0066ff;\n\t--background: #ffffff;\n\t\n\t--global-padding: var(--spacing-unit);\n\tbackgroundColor: var(--background);\n\tcolor: #333;\n}\n\t\n.container {\n\tmaxWidth: 1200px;\n\tmargin: 0 auto;\n\tpadding: var(--spacing-unit);\n}\n\t\n.button {\n\tpadding: calc(var(--spacing-unit) * 2);\n\tbackgroundColor: var(--primary);\n\tborder: none;\n\tborderRadius: 4px;\n}";
-		expect(result).toBe(expected);
+		expect(result).toBe(`:root {
+\t--spacing-unit: 8px;
+\t--primary: #0066ff;
+\t--background: #ffffff;
+\t
+\t--global-padding: var(--spacing-unit);
+\tbackground-color: var(--background);
+\tcolor: #333;
+}
+
+.container {
+\tmax-width: 1200px;
+\tmargin: 0 auto;
+\tpadding: var(--spacing-unit);
+}
+
+.button {
+\tpadding: calc(var(--spacing-unit) * 2);
+\tbackground-color: var(--primary);
+\tborder: none;
+\tborder-radius: 4px;
+}`);
 	});
 
 	it("should handle custom options with variable prefix", () => {
@@ -165,7 +219,11 @@ describe("createRootConsumer", () => {
 		const result = consumeRoot(root, customOptions);
 
 		expect(result).toBe(
-			":root {\n\t--app-theme-color: #663399;\n\t\n\taccentColor: var(--app-theme-color);\n}",
+			`:root {
+\t--app-theme-color: #663399;
+\t
+\taccent-color: var(--app-theme-color);
+}`,
 		);
 	});
 
@@ -182,8 +240,11 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 
-		const expected =
-			':root {\n\t--elevation-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);\n\t--transition-default: all 0.3s cubic-bezier(.25,.8,.25,1);\n\t--font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;\n}';
+		const expected = `:root {
+\t--elevation-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+\t--transition-default: all 0.3s cubic-bezier(.25,.8,.25,1);
+\t--font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}`;
 		expect(result).toBe(expected);
 	});
 
@@ -209,9 +270,20 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 
-		const expected =
-			"nav {\n\tbackgroundColor: #f5f5f5;\n\tpadding: 1rem;\n\t\n\tul {\n\t\tmargin: 0;\n\t\tpadding: 0;\n\t\n\t\tli {\n\t\t\tlistStyle: none;\n\t\t\tdisplay: inline-block;\n\t\t}\n\t}\n}";
-		expect(result).toBe(expected);
+		expect(result).toBe(`nav {
+\tbackground-color: #f5f5f5;
+\tpadding: 1rem;
+\t
+\tul {
+\t\tmargin: 0;
+\t\tpadding: 0;
+\t\t
+\t\tli {
+\t\t\tlist-style: none;
+\t\t\tdisplay: inline-block;
+\t\t}
+\t}
+}`);
 	});
 
 	it("should handle media queries as children", () => {
@@ -227,9 +299,16 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 
-		const expected =
-			":root {\n\t--mobile-breakpoint: 768px;\n\t\n\t\n}\n\t\n@media (max-width: 768px) {\n\t.container {\n\t\tpadding: 1rem;\n\t\tmaxWidth: 100%;\n\t}\n}";
-		expect(result).toBe(expected);
+		expect(result).toBe(`:root {
+\t--mobile-breakpoint: 768px;
+}
+
+@media (max-width: 768px) {
+\t.container {
+\t\tpadding: 1rem;
+\t\tmax-width: 100%;
+\t}
+}`);
 	});
 
 	it("should handle undefined properties gracefully", () => {
@@ -248,9 +327,13 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 
-		const expected =
-			":root {\n\t--brand-color: #0066ff;\n\t\n\tcolor: var(--text-color, #333);\n\tbackgroundColor: var(--brand-color);\n\tborderColor: var(--border-color, currentColor);\n}";
-		expect(result).toBe(expected);
+		expect(result).toBe(`:root {
+\t--brand-color: #0066ff;
+\t
+\tcolor: var(--text-color, #333);
+\tbackground-color: var(--brand-color);
+\tborder-color: var(--border-color, currentColor);
+}`);
 	});
 
 	it("should properly delegate to container consumer", () => {
@@ -261,6 +344,10 @@ describe("createRootConsumer", () => {
 		const result = consumeRoot(root, options);
 
 		// Should produce the same output as if we called consumeContainer with ":root"
-		expect(result).toBe(":root {\n\t--color: blue;\n\t\n\tdisplay: block;\n}");
+		expect(result).toBe(`:root {
+\t--color: blue;
+\t
+\tdisplay: block;
+}`);
 	});
 });

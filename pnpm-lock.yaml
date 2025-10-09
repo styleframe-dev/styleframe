@@ -33,6 +33,9 @@ catalogs:
     vite-plugin-dts:
       specifier: ^4.5.4
       version: 4.5.4
+    vite-plugin-node:
+      specifier: ^7.0.0
+      version: 7.0.0
     vitest:
       specifier: ^3.2.4
       version: 3.2.4
@@ -96,6 +99,9 @@ importers:
       vite-plugin-dts:
         specifier: 'catalog:'
         version: 4.5.4(@types/node@22.15.32)(rollup@4.45.1)(typescript@5.8.3)(vite@7.0.6(@types/node@22.15.32)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.0))
+      vite-plugin-node:
+        specifier: 'catalog:'
+        version: 7.0.0(vite@7.0.6(@types/node@22.15.32)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.0))
       vitest:
         specifier: 'catalog:'
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.32)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.0)
@@ -300,6 +306,9 @@ importers:
       vite-plugin-dts:
         specifier: 'catalog:'
         version: 4.5.4(@types/node@22.15.32)(rollup@4.45.1)(typescript@5.8.3)(vite@7.0.6(@types/node@22.15.32)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.0))
+      vite-plugin-node:
+        specifier: ^7.0.0
+        version: 7.0.0(vite@7.0.6(@types/node@22.15.32)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.0))
       vitest:
         specifier: 'catalog:'
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.32)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.0)
@@ -309,6 +318,9 @@ importers:
       '@styleframe/core':
         specifier: workspace:^
         version: link:../core
+      scule:
+        specifier: ^1.3.0
+        version: 1.3.0
     devDependencies:
       '@styleframe/config-typescript':
         specifier: workspace:^
@@ -2207,6 +2219,10 @@ packages:
       rollup:
         optional: true
 
+  '@rollup/pluginutils@4.2.1':
+    resolution: {integrity: sha512-iKnFXr7NkdZAIHiIWE+BX5ULi/ucVFYWD6TbAV+rZctiRTY2PL6tsIKhoIOaoskiWAkgu+VsbXgUVDNLHf+InQ==}
+    engines: {node: '>= 8.0.0'}
+
   '@rollup/pluginutils@5.2.0':
     resolution: {integrity: sha512-qWJ2ZTbmumwiLFomfzTyt5Kng4hwPi9rwCYN4SHb6eaRU1KNO4ccxINHr/VhH4GgPlt1XfSTLX2LBTme8ne4Zw==}
     engines: {node: '>=14.0.0'}
@@ -3683,6 +3699,10 @@ packages:
 
   de-indent@1.0.2:
     resolution: {integrity: sha512-e/1zu3xH5MQryN2zdVaF0OrdNLUbvWxzMbi+iNA6Bky7l1RoP8a2fIbRocyHclXt/arDrrR6lL3TqFD9pMQTsg==}
+
+  debounce@2.2.0:
+    resolution: {integrity: sha512-Xks6RUDLZFdz8LIdR6q0MTH44k7FikOmnh5xkSjMig6ch45afc8sjTjRQf3P6ax8dMgcQrYO/AR2RGWURrruqw==}
+    engines: {node: '>=18'}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -7156,6 +7176,15 @@ packages:
       '@nuxt/kit':
         optional: true
 
+  vite-plugin-node@7.0.0:
+    resolution: {integrity: sha512-FZqTHvCXUu+U8i6qMtlZCrEvlelUioEf6J4S77XHpZk73frveqKVot60W0hpbffv5OMECXYwP/LAiTGAOLN4/g==}
+    peerDependencies:
+      '@swc/core': ^1.7.26
+      vite: ^7.0.0
+    peerDependenciesMeta:
+      '@swc/core':
+        optional: true
+
   vite-plugin-vue-tracer@1.0.0:
     resolution: {integrity: sha512-a+UB9IwGx5uwS4uG/a9kM6fCMnxONDkOTbgCUbhFpiGhqfxrrC1+9BibV7sWwUnwj1Dg6MnRxG0trLgUZslDXA==}
     peerDependencies:
@@ -9711,6 +9740,11 @@ snapshots:
     optionalDependencies:
       rollup: 4.45.1
 
+  '@rollup/pluginutils@4.2.1':
+    dependencies:
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+
   '@rollup/pluginutils@5.2.0(rollup@4.45.1)':
     dependencies:
       '@types/estree': 1.0.8
@@ -11293,6 +11327,8 @@ snapshots:
       better-sqlite3: 11.10.0
 
   de-indent@1.0.2: {}
+
+  debounce@2.2.0: {}
 
   debug@2.6.9:
     dependencies:
@@ -15653,6 +15689,16 @@ snapshots:
       vite-dev-rpc: 1.1.0(vite@7.0.6(@types/node@22.15.32)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.0))
     optionalDependencies:
       '@nuxt/kit': 3.17.7(magicast@0.3.5)
+    transitivePeerDependencies:
+      - supports-color
+
+  vite-plugin-node@7.0.0(vite@7.0.6(@types/node@22.15.32)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.0)):
+    dependencies:
+      '@rollup/pluginutils': 4.2.1
+      chalk: 4.1.2
+      debounce: 2.2.0
+      debug: 4.4.3
+      vite: 7.0.6(@types/node@22.15.32)(jiti@2.6.0)(lightningcss@1.30.1)(terser@5.43.1)(tsx@4.20.6)(yaml@2.8.0)
     transitivePeerDependencies:
       - supports-color
 

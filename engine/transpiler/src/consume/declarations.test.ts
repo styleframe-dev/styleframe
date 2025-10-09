@@ -35,7 +35,7 @@ describe("createDeclarationsConsumer", () => {
 
 		expect(result).toEqual([
 			"color: #ff0000;",
-			"fontSize: 16px;",
+			"font-size: 16px;",
 			"margin: 10px;",
 		]);
 	});
@@ -61,7 +61,7 @@ describe("createDeclarationsConsumer", () => {
 
 		expect(result).toEqual([
 			"color: var(--color-primary);",
-			"fontSize: var(--font-size);",
+			"font-size: var(--font-size);",
 		]);
 	});
 
@@ -75,7 +75,7 @@ describe("createDeclarationsConsumer", () => {
 
 		expect(result).toEqual([
 			"color: var(--color-primary);",
-			"fontSize: var(--font-size);",
+			"font-size: var(--font-size);",
 		]);
 	});
 
@@ -89,7 +89,7 @@ describe("createDeclarationsConsumer", () => {
 
 		expect(result).toEqual([
 			"color: var(--color-primary, #006cff);",
-			"fontSize: var(--font-size, 16px);",
+			"font-size: var(--font-size, 16px);",
 		]);
 	});
 
@@ -102,7 +102,7 @@ describe("createDeclarationsConsumer", () => {
 		const result = consumeDeclarations(declarations, options);
 
 		expect(result).toEqual([
-			"boxShadow: 0 2px 4px rgba(0, 0, 0, 0.1);",
+			"box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);",
 			"transform: translate(10px, 20px);",
 		]);
 	});
@@ -135,7 +135,7 @@ describe("createDeclarationsConsumer", () => {
 
 		const result = consumeDeclarations(declarations, options);
 
-		expect(result).toEqual(["color: ;", "fontSize: ;"]);
+		expect(result).toEqual(["color: ;", "font-size: ;"]);
 	});
 
 	it("should handle declarations with numeric values", () => {
@@ -147,7 +147,7 @@ describe("createDeclarationsConsumer", () => {
 
 		const result = consumeDeclarations(declarations, options);
 
-		expect(result).toEqual(["zIndex: 100;", "opacity: 0.5;", "flex: 1;"]);
+		expect(result).toEqual(["z-index: 100;", "opacity: 0.5;", "flex: 1;"]);
 	});
 
 	it("should respect variable prefix in options if provided", () => {
@@ -168,7 +168,7 @@ describe("createDeclarationsConsumer", () => {
 
 		expect(result).toEqual([
 			"color: var(--sf-color-primary);",
-			"backgroundColor: var(--sf-color-secondary);",
+			"background-color: var(--sf-color-secondary);",
 		]);
 	});
 
@@ -191,19 +191,19 @@ describe("createDeclarationsConsumer", () => {
 
 		const result = consumeDeclarations(declarations, options);
 
-		expect(result).toEqual(["fontFamily: Helvetica,Arial,sans-serif;"]);
+		expect(result).toEqual(["font-family: Helvetica,Arial,sans-serif;"]);
 	});
 
 	it("should handle custom property names", () => {
 		const declarations: DeclarationsBlock = {
-			"--custom-property": "value",
+			"--customProperty": "value",
 			"--another-custom": 42,
 		};
 
 		const result = consumeDeclarations(declarations, options);
 
 		expect(result).toEqual([
-			"--custom-property: value;",
+			"--customProperty: value;",
 			"--another-custom: 42;",
 		]);
 	});

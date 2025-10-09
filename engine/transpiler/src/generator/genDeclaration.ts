@@ -1,3 +1,9 @@
+import { genSafePropertyName } from "./genSafePropertyName";
+
 export function genDeclaration(property: string, value: string): string {
-	return `${property}: ${value};`;
+	const normalizedProperty = property.startsWith("--")
+		? property
+		: genSafePropertyName(property);
+
+	return `${normalizedProperty}: ${value};`;
 }

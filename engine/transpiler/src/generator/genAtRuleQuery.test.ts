@@ -67,7 +67,7 @@ describe("genAtRuleQuery", () => {
 
 	it("should handle font-face (even though typically used without a rule)", () => {
 		const result = genAtRuleQuery("font-face", "");
-		expect(result).toBe("@font-face ");
+		expect(result).toBe("@font-face");
 	});
 
 	it("should handle keyframes", () => {
@@ -92,7 +92,7 @@ describe("genAtRuleQuery", () => {
 
 	it("should handle empty rule string", () => {
 		const result = genAtRuleQuery("media", "");
-		expect(result).toBe("@media ");
+		expect(result).toBe("@media");
 	});
 
 	it("should handle whitespace in rule string", () => {

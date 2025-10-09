@@ -38,9 +38,9 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	padding: 0.5rem 1rem;
-	backgroundColor: #006cff;
-	color: white;
+\tpadding: 0.5rem 1rem;
+\tbackground-color: #006cff;
+\tcolor: white;
 }`);
 	});
 
@@ -56,9 +56,9 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	--button-color: #006cff;
-
-	padding: 0.5rem 1rem;
+\t--button-color: #006cff;
+\t
+\tpadding: 0.5rem 1rem;
 }`);
 	});
 
@@ -77,12 +77,12 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	padding: 0.5rem 1rem;
-	backgroundColor: #006cff;
-
-	&:hover {
-		backgroundColor: #0056cc;
-	}
+\tpadding: 0.5rem 1rem;
+\tbackground-color: #006cff;
+\t
+\t&:hover {
+\t\tbackground-color: #0056cc;
+\t}
 }`);
 	});
 
@@ -104,15 +104,15 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	--button-color: #006cff;
-	--button-hover-color: #0056cc;
-
-	padding: 0.5rem 1rem;
-	backgroundColor: var(--button-color);
-
-	&:hover {
-		backgroundColor: var(--button-hover-color);
-	}
+\t--button-color: #006cff;
+\t--button-hover-color: #0056cc;
+\t
+\tpadding: 0.5rem 1rem;
+\tbackground-color: var(--button-color);
+\t
+\t&:hover {
+\t\tbackground-color: var(--button-hover-color);
+\t}
 }`);
 	});
 
@@ -126,9 +126,9 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	&:hover {
-		backgroundColor: #0056cc;
-	}
+\t&:hover {
+\t\tbackground-color: #0056cc;
+\t}
 }`);
 	});
 
@@ -140,7 +140,7 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	padding: 0.5rem 1rem;
+\tpadding: 0.5rem 1rem;
 }`);
 	});
 
@@ -156,9 +156,9 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	--button-color: #006cff;
-
-	padding: 0.5rem 1rem;
+\t--button-color: #006cff;
+\t
+\tpadding: 0.5rem 1rem;
 }`);
 	});
 
@@ -183,8 +183,8 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, customOptions);
 
 		expect(result).toBe(`.button {
-    padding: 0.5rem 1rem;
-    backgroundColor: #006cff;
+\tpadding: 0.5rem 1rem;
+\tbackground-color: #006cff;
 }`);
 	});
 
@@ -209,16 +209,16 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	padding: 0.5rem 1rem;
-	backgroundColor: #006cff;
-
-	&:hover {
-		backgroundColor: #0056cc;
+\tpadding: 0.5rem 1rem;
+\tbackground-color: #006cff;
 \t
-		&:active {
-			transform: scale(0.98);
-		}
-	}
+\t&:hover {
+\t\tbackground-color: #0056cc;
+\t\t
+\t\t&:active {
+\t\t\ttransform: scale(0.98);
+\t\t}
+\t}
 }`);
 	});
 
@@ -251,24 +251,24 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	--button-color: #006cff;
-
-	padding: 0.5rem 1rem;
-	backgroundColor: var(--button-color);
-	display: flex;
-	alignItems: center;
-
-	&:hover {
-		backgroundColor: #0056cc;
+\t--button-color: #006cff;
 \t
-		&:active {
-			transform: scale(0.98);
-		}
-	}
-
-	& > .icon {
-		marginRight: 0.5rem;
-	}
+\tpadding: 0.5rem 1rem;
+\tbackground-color: var(--button-color);
+\tdisplay: flex;
+\talign-items: center;
+\t
+\t&:hover {
+\t\tbackground-color: #0056cc;
+\t\t
+\t\t&:active {
+\t\t\ttransform: scale(0.98);
+\t\t}
+\t}
+\t
+\t& > .icon {
+\t\tmargin-right: 0.5rem;
+\t}
 }`);
 	});
 
@@ -299,17 +299,17 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(cardSelector, options);
 
 		expect(result).toBe(`.card {
-	padding: 1rem;
-	borderRadius: 8px;
-
-	.card-title {
-		fontSize: 1.5rem;
-		fontWeight: bold;
-	}
-
-	.card-content {
-		marginTop: 0.5rem;
-	}
+\tpadding: 1rem;
+\tborder-radius: 8px;
+\t
+\t.card-title {
+\t\tfont-size: 1.5rem;
+\t\tfont-weight: bold;
+\t}
+\t
+\t.card-content {
+\t\tmargin-top: 0.5rem;
+\t}
 }`);
 	});
 
@@ -338,24 +338,24 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	padding: 0.5rem 1rem;
-	backgroundColor: #006cff;
-	color: white;
-	transition: background-color 0.2s;
-
-	&:hover {
-		backgroundColor: #0056cc;
-	}
-
-	&:active {
-		backgroundColor: #004099;
-	}
-
-	&::before {
-		content: "";
-		display: inline-block;
-		marginRight: 0.5rem;
-	}
+\tpadding: 0.5rem 1rem;
+\tbackground-color: #006cff;
+\tcolor: white;
+\ttransition: background-color 0.2s;
+\t
+\t&:hover {
+\t\tbackground-color: #0056cc;
+\t}
+\t
+\t&:active {
+\t\tbackground-color: #004099;
+\t}
+\t
+\t&::before {
+\t\tcontent: "";
+\t\tdisplay: inline-block;
+\t\tmargin-right: 0.5rem;
+\t}
 }`);
 	});
 
@@ -381,19 +381,19 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(buttonSelector, options);
 
 		expect(result).toBe(`.button {
-	--border-radius-sm: 4px;
-	--color-primary: #006cff;
-	--color-primary-dark: #0056cc;
-	--spacing-md: 1rem;
-
-	backgroundColor: var(--color-primary);
-	borderRadius: var(--border-radius-sm);
-	color: white;
-	padding: var(--spacing-md);
-
-	&:hover {
-		backgroundColor: var(--color-primary-dark);
-	}
+\t--border-radius-sm: 4px;
+\t--color-primary: #006cff;
+\t--color-primary-dark: #0056cc;
+\t--spacing-md: 1rem;
+\t
+\tbackground-color: var(--color-primary);
+\tborder-radius: var(--border-radius-sm);
+\tcolor: white;
+\tpadding: var(--spacing-md);
+\t
+\t&:hover {
+\t\tbackground-color: var(--color-primary-dark);
+\t}
 }`);
 	});
 
@@ -411,13 +411,13 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(cardSelector, options);
 
 		expect(result).toBe(`.card {
-	width: 100%;
-	padding: 1rem;
-
-	@media (min-width: 768px) {
-		width: 50%;
-		padding: 2rem;
-	}
+\twidth: 100%;
+\tpadding: 1rem;
+\t
+\t@media (min-width: 768px) {
+\t\twidth: 50%;
+\t\tpadding: 2rem;
+\t}
 }`);
 	});
 
@@ -433,9 +433,9 @@ describe("createSelectorConsumer", () => {
 		const result = consumeSelector(containerSelector, options);
 
 		expect(result).toBe(`.container {
-	padding: calc(2 * 1rem);
-	margin: calc(var(--spacing-base) * 2);
-	width: calc(100% - 2rem);
+\tpadding: calc(2 * 1rem);
+\tmargin: calc(var(--spacing-base) * 2);
+\twidth: calc(100% - 2rem);
 }`);
 	});
 });

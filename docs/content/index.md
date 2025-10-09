@@ -7,24 +7,26 @@ description: Write composable, type-safe, future-proof Design Systems code using
 Hero Section ----------------------------------------------------------------------------------------------
 -->
 
-## ::gradient-page-hero
+::gradient-page-hero
+---
+orientation: horizontal
+---
 
-## orientation: horizontal
-
-## ::browser-frame
-
-## title: styleframe.config.ts
+::browser-frame
+---
+title: styleframe.config.ts
+---
 
 ```ts
-import { styleframe } from "styleframe";
+import { styleframe } from 'styleframe';
 
 const s = styleframe();
 const { variable, ref, selector } = s;
 const { colorBlue } = useColors(s);
 
-const colorPrimary = variable("color-primary", ref(colorBlue));
+const colorPrimary = variable('color-primary', ref(colorBlue));
 
-selector(".button", {
+selector('.button', {
     backgroundColor: ref(colorPrimary),
 });
 
@@ -34,25 +36,21 @@ export default s;
 ::
 
 #title
-Type-safe Composable CSS
+Type-safe Composable CSS 
 
 #description
 Write type-safe, composable, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
 
 #links
-:::u-button
-
----
-
-color: primary
-size: xl
-to: /docs/getting-started/introduction
-trailing-icon: i-lucide-arrow-right
-
----
-
-Get started
-:::
+    :::u-button
+    ---
+    color: primary
+    size: xl
+    to: /docs/getting-started/introduction
+    trailing-icon: i-lucide-arrow-right
+    ---
+    Get started
+    :::
 
     :::u-button
     ---
@@ -65,7 +63,6 @@ Get started
     ---
     Star on GitHub
     :::
-
 ::
 
 <!--
@@ -77,19 +74,15 @@ Features Section ---------------------------------------------------------------
 Built for Excellent Developer Experience
 
 #features
-:::u-page-feature
-
----
-
-icon: i-lucide-shield-check
-target: \_blank
-to: /
-
----
-
-#title
-[Type-safe]{.text-primary} CSS API
-
+    :::u-page-feature
+    ---
+    icon: i-lucide-shield-check
+    target: _blank
+    to: /
+    ---
+    #title
+    [Type-safe]{.text-primary} CSS API
+    
     #description
     All styles are validated at compile time, eliminating typos and runtime errors.
     :::
@@ -102,7 +95,7 @@ to: /
     ---
     #title
     Easily [Composable]{.text-primary}
-
+    
     #description
     Compose and reuse styles using functions, variables, arrays, or objects. Mix and match easily.
     :::
@@ -115,7 +108,7 @@ to: /
     ---
     #title
     Built-in [Theming]{.text-primary} Support
-
+    
     #description
     Easily create and manage light and dark themes for your design system.
     :::
@@ -128,7 +121,7 @@ to: /
     ---
     #title
     Framework [Agnostic]{.text-primary}
-
+    
     #description
     Works with any frontend stack (React, Vue, Solid, Svelte, Astro) and integrates seamlessly with Vite.
     :::
@@ -141,7 +134,7 @@ to: /
     ---
     #title
     Fully [Configurable]{.text-primary}
-
+    
     #description
     Build themes using composables, variables, selectors, variants, and utilities naturally.
     :::
@@ -154,47 +147,35 @@ to: /
     ---
     #title
     Intuitive [Developer Experience]{.text-primary}
-
+    
     #description
     Get auto-complete, in-editor documentation, and powerful static analysis for your CSS.
     :::
+:: 
 
-::
-
-<!--
+<!-- 
 Composability Section ----------------------------------------------------------------------------------------------
 -->
 
-## ::u-page-section
-
+::u-page-section
+---
 orientation: horizontal
 links:
-
-- label: Explore the default theme
-  color: neutral
-  variant: outline
-  to: /
-  icon: i-lucide-palette
-
+-   label: Explore the default theme
+    color: neutral
+    variant: outline
+    to: /
+    icon: i-lucide-palette
 ---
 
-## ::browser-frame
-
-## title: styleframe.config.ts
+::browser-frame
+---
+title: styleframe.config.ts
+---
 
 ```ts
-import { styleframe } from "styleframe";
-import {
-    useReset,
-    useBorder,
-    useBorderRadius,
-    useBoxShadow,
-    useColors,
-    useGrid,
-    useScale,
-    useSpacing,
-    useTypography,
-} from "@styleframe/theme-default";
+import { styleframe } from 'styleframe';
+import { useReset, useBorder, useBorderRadius, useBoxShadow, useColors, useGrid, useScale, useSpacing, useTypography } from '@styleframe/theme-default';
 
 const s = styleframe();
 
@@ -220,18 +201,14 @@ Compose Design Systems in Minutes
 Use styleframe's native composability to construct your Design System out of existing parts. Plug and play composables, variables, selectors, variants, and utilities.
 
 #features
-:::u-page-feature
-
----
-
-icon: i-lucide-infinity
-target: \_blank
-to: /
-
----
-
-#title
-Infinitely [Customizable]{.text-primary}
+    :::u-page-feature
+    ---
+    icon: i-lucide-infinity
+    target: _blank
+    to: /
+    ---
+    #title
+    Infinitely [Customizable]{.text-primary}
 
     #description
     Make your Design System your own. Use the default theme as a starting point and customize it to fit your needs.
@@ -249,41 +226,38 @@ Infinitely [Customizable]{.text-primary}
     #description
     Colors from one theme, typography from another. Styleframe lets you combine different themes seamlessly.
     :::
-
 ::
 
-<!--
+<!-- 
 Theming Section ----------------------------------------------------------------------------------------------
 -->
 
-## ::u-page-section
-
+::u-page-section
+---
 orientation: horizontal
 reverse: true
 links:
-
-- label: Explore the default theme
-  color: neutral
-  variant: outline
-  to: /
-  icon: i-lucide-palette
-
+-   label: Explore the default theme
+    color: neutral
+    variant: outline
+    to: /
+    icon: i-lucide-palette
 ---
+
 
 ::tabs
-:::tabs-item{.my-5 icon="i-lucide-settings" label="Configuration"}
-::::browser-frame
-
----
-
-## title: styleframe.config.ts
+    :::tabs-item{.my-5 icon="i-lucide-settings" label="Configuration"}
+        ::::browser-frame
+        ---
+        title: styleframe.config.ts
+        ---
 
              ```ts
             import { merge } from 'styleframe';
 
             import lightTheme from './light.theme';
             import darkTheme from './dark.theme';
-
+            
             export default merge(lightTheme, darkTheme);
 
         ::::
@@ -293,17 +267,17 @@ links:
         ---
         title: light.theme.ts
         ---
-
+    
             ```ts
             import { styleframe } from 'styleframe';
-
+            
             const s = styleframe();
             const { variable } = s;
 
             export const colorPrimary = variable('color-primary', '#007bff');
 
             export default s;
-
+        
         ::::
     :::
     :::tabs-item{.my-5 icon="i-lucide-moon" label="Dark Theme"}
@@ -311,24 +285,24 @@ links:
         ---
         title: dark.theme.ts
         ---
-
+    
             ```ts
             import { styleframe } from 'styleframe';
             import { colorPrimary } from './light.theme';
-
+            
             const s = styleframe();
             const { theme } = s;
 
             theme('dark', ({ variable }) => {
                 variable(colorPrimary, '#0056b3');
             });
-
+            
             export default s;
-
+        
         ::::
     :::
-
 ::
+
 
 #title
 Dark and Light Themes
@@ -337,18 +311,14 @@ Dark and Light Themes
 Easily create and manage themes for your design system using styleframe's native theming capabilities.
 
 #features
-:::u-page-feature
-
----
-
-icon: i-lucide-square-code
-target: \_blank
-to: /
-
----
-
-#title
-[Intuitive]{.text-primary} API
+    :::u-page-feature
+    ---
+    icon: i-lucide-square-code
+    target: _blank
+    to: /
+    ---
+    #title
+    [Intuitive]{.text-primary} API
 
     #description
     Writing CSS for different themes is as easy as defining a variable. No need to remember complex syntax or class names.
@@ -366,29 +336,26 @@ to: /
     #description
     Colors from one theme, typography from another. Styleframe lets you combine different themes seamlessly.
     :::
-
 ::
 
-<!--
+<!-- 
 AI Section ----------------------------------------------------------------------------------------------
 -->
 
-## ::u-page-section{class="border-t border-b border-default"}
-
+::u-page-section{class="border-t border-b border-default"}
+---
 headline: Coming Soon
 orientation: horizontal
-
 ---
 
-## ::video{ class="rounded" }
 
+::video{ class="rounded" }
+---
 autoplay: true
 loop: true
 poster: /assets/images/styleframe-ai.webp
 src: /assets/video/styleframe-ai.mp4
-
 ---
-
 ::
 
 #title
@@ -398,23 +365,19 @@ AI that Writes Type-safe Composable CSS
 Use styleframe for Agents. Choose from a variety of AI agents and start delegating work, from code generation to other technical tasks.
 
 #features
-:::u-page-feature
-
----
-
-icon: i-lucide-image-up
-target: \_blank
-to: /
-
----
-
-#title
-Styleframe [MCP]{.text-primary}
+    :::u-page-feature
+    ---
+    icon: i-lucide-image-up
+    target: _blank
+    to: /
+    ---
+    #title
+    Styleframe [MCP]{.text-primary}
 
     #description
     Connect styleframe to your favorite tools including Cursor, Claude, ChatGPT, and more.
     :::
-
+    
     :::u-page-feature
     ---
     icon: i-lucide-bot
@@ -429,24 +392,20 @@ Styleframe [MCP]{.text-primary}
     :::
 
 #links
-::subscribe-modal
-
----
-
-cta: Join waitlist for styleframe AI
-title: Join waitlist for styleframe AI
-group: ai
-
----
-
-::
+    ::subscribe-modal
+    ---
+    cta: Join waitlist for styleframe AI
+    title: Join waitlist for styleframe AI
+    group: ai
+    ---
+    ::
 ::
 
-## ::u-page-section{class="border-t border-b border-default"}
 
+::u-page-section{class="border-t border-b border-default"}
+---
 headline: Coming Soon
 variant: primary
-
 ---
 
 #title
@@ -456,15 +415,11 @@ Build faster with styleframe [Pro]{.text-primary}.
 A collection of premium design system themes, composables, component styles, and utils built on top of styleframe.
 
 #links
-::subscribe-modal
-
----
-
-cta: Join waitlist for styleframe Pro
-title: Join waitlist for styleframe Pro
-group: pro
-
----
-
-::
+    ::subscribe-modal
+    ---
+    cta: Join waitlist for styleframe Pro
+    title: Join waitlist for styleframe Pro
+    group: pro
+    ---
+    ::
 ::

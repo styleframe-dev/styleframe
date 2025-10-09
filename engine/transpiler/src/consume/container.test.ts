@@ -52,7 +52,9 @@ describe("createContainerConsumer", () => {
 			},
 			options,
 		);
-		expect(result).toBe(".test {\n\t--color: #ff0000;\n}");
+		expect(result).toBe(`.test {
+\t--color: #ff0000;
+}`);
 	});
 
 	it("should handle container with only declarations", () => {
@@ -69,7 +71,10 @@ describe("createContainerConsumer", () => {
 			},
 			options,
 		);
-		expect(result).toBe(".test {\n\tcolor: red;\n\tfont-size: 16px;\n}");
+		expect(result).toBe(`.test {
+\tcolor: red;
+\tfont-size: 16px;
+}`);
 	});
 
 	it("should handle container with only children", () => {
@@ -85,7 +90,11 @@ describe("createContainerConsumer", () => {
 			},
 			options,
 		);
-		expect(result).toBe(".test {\n\t&:hover {\n\t\tcolor: blue;\n\t}\n}");
+		expect(result).toBe(`.test {
+\t&:hover {
+\t\tcolor: blue;
+\t}
+}`);
 	});
 
 	it("should handle container with variables and declarations", () => {
@@ -102,9 +111,11 @@ describe("createContainerConsumer", () => {
 			},
 			options,
 		);
-		expect(result).toBe(
-			".button {\n\t--primary: #0066ff;\n\t\n\tcolor: var(--primary);\n}",
-		);
+		expect(result).toBe(`.button {
+\t--primary: #0066ff;
+\t
+\tcolor: var(--primary);
+}`);
 	});
 
 	it("should handle container with variables and children", () => {
@@ -121,9 +132,13 @@ describe("createContainerConsumer", () => {
 			},
 			options,
 		);
-		expect(result).toBe(
-			".card {\n\t--hover-color: #ff6b6b;\n\t\n\t&:hover {\n\t\tcolor: var(--hover-color);\n\t}\n}",
-		);
+		expect(result).toBe(`.card {
+\t--hover-color: #ff6b6b;
+\t
+\t&:hover {
+\t\tcolor: var(--hover-color);
+\t}
+}`);
 	});
 
 	it("should handle container with declarations and children", () => {
@@ -143,9 +158,14 @@ describe("createContainerConsumer", () => {
 			},
 			options,
 		);
-		expect(result).toBe(
-			".component {\n\tdisplay: flex;\n\talign-items: center;\n\t\n\t&:focus {\n\t\toutline: 2px solid blue;\n\t}\n}",
-		);
+		expect(result).toBe(`.component {
+\tdisplay: flex;
+\talign-items: center;
+\t
+\t&:focus {
+\t\toutline: 2px solid blue;
+\t}
+}`);
 	});
 
 	it("should handle container with variables, declarations, and children", () => {
@@ -172,8 +192,21 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		const expected =
-			".interactive {\n\t--size: 1rem;\n\t--text-color: #333;\n\t\n\tfont-size: var(--size);\n\tcolor: var(--text-color);\n\t\n\t&:hover {\n\t\ttransform: scale(1.05);\n\t}\n\t&:focus {\n\t\toutline: 2px solid currentColor;\n\t}\n}";
+		const expected = `.interactive {
+\t--size: 1rem;
+\t--text-color: #333;
+\t
+\tfont-size: var(--size);
+\tcolor: var(--text-color);
+\t
+\t&:hover {
+\t\ttransform: scale(1.05);
+\t}
+\t
+\t&:focus {
+\t\toutline: 2px solid currentColor;
+\t}
+}`;
 		expect(result).toBe(expected);
 	});
 
@@ -192,9 +225,12 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		expect(result).toBe(
-			".theme {\n\t--primary: #0066ff;\n\t--secondary: #ff6b6b;\n\t--accent: #00cc66;\n}",
-		);
+		const expected = `.theme {
+\t--primary: #0066ff;
+\t--secondary: #ff6b6b;
+\t--accent: #00cc66;
+}`;
+		expect(result).toBe(expected);
 	});
 
 	it("should handle multiple children selectors", () => {
@@ -219,8 +255,20 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		const expected =
-			'.container {\n\t& > .item {\n\t\tmargin: 0.5rem;\n\t}\n\t& .nested {\n\t\tpadding: 1rem;\n\t}\n\t&::before {\n\t\tcontent: "";\n\t\tposition: absolute;\n\t}\n}';
+		const expected = `.container {
+\t& > .item {
+\t\tmargin: 0.5rem;
+\t}
+\t
+\t& .nested {
+\t\tpadding: 1rem;
+\t}
+\t
+\t&::before {
+\t\tcontent: "";
+\t\tposition: absolute;
+\t}
+}`;
 		expect(result).toBe(expected);
 	});
 
@@ -234,9 +282,9 @@ describe("createContainerConsumer", () => {
 			},
 			options,
 		);
-		expect(result).toBe(
-			"@media (min-width: 768px) and (max-width: 1024px) {\n\tdisplay: grid;\n}",
-		);
+		expect(result).toBe(`@media (min-width: 768px) and (max-width: 1024px) {
+\tdisplay: grid;
+}`);
 	});
 
 	it("should handle nested container structures", () => {
@@ -260,8 +308,15 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		const expected =
-			".root {\n\t& .parent {\n\t\tposition: relative;\n\t\t\n\t\t& .deeply-nested {\n\t\t\tfont-weight: bold;\n\t\t}\n\t}\n}";
+		const expected = `.root {
+\t& .parent {
+\t\tposition: relative;
+\t\t
+\t\t& .deeply-nested {
+\t\t\tfont-weight: bold;
+\t\t}
+\t}
+}`;
 		expect(result).toBe(expected);
 	});
 
@@ -286,9 +341,11 @@ describe("createContainerConsumer", () => {
 			prefixOptions,
 		);
 
-		expect(result).toBe(
-			".component {\n\t--sf-primary: #0066ff;\n\t\n\tcolor: var(--sf-primary);\n}",
-		);
+		expect(result).toBe(`.component {
+\t--sf-primary: #0066ff;
+\t
+\tcolor: var(--sf-primary);
+}`);
 	});
 
 	it("should handle variables with complex values", () => {
@@ -311,8 +368,10 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		const expected =
-			".complex {\n\t--gradient: linear-gradient(45deg, #ff0000, #0000ff);\n\t--shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);\n}";
+		const expected = `.complex {
+\t--gradient: linear-gradient(45deg, #ff0000, #0000ff);
+\t--shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+}`;
 		expect(result).toBe(expected);
 	});
 
@@ -334,8 +393,13 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		const expected =
-			".text {\n\t--base-size: 16px;\n\t\n\tfont-size: var(--base-size);\n\tline-height: var(--line-height-normal, 1.5);\n\tpadding: var(--spacing, 1rem);\n}";
+		const expected = `.text {
+\t--base-size: 16px;
+\t
+\tfont-size: var(--base-size);
+\tline-height: var(--line-height-normal, 1.5);
+\tpadding: var(--spacing, 1rem);
+}`;
 		expect(result).toBe(expected);
 	});
 
@@ -355,8 +419,15 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		const expected =
-			":root {\n\t--primary: #0066ff;\n\t\n\tfontSize: 16px;\n}\n\t\n.button {\n\tcolor: var(--primary);\n}";
+		const expected = `:root {
+\t--primary: #0066ff;
+\t
+\tfont-size: 16px;
+}
+
+.button {
+\tcolor: var(--primary);
+}`;
 		expect(result).toBe(expected);
 	});
 
@@ -373,7 +444,9 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		const expected = ":root {\n\t--primary: #0066ff;\n}";
+		const expected = `:root {
+\t--primary: #0066ff;
+}`;
 		expect(result).toBe(expected);
 	});
 
@@ -388,7 +461,9 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		const expected = ":root {\n\tfontSize: 16px;\n}";
+		const expected = `:root {
+\tfont-size: 16px;
+}`;
 		expect(result).toBe(expected);
 	});
 
@@ -407,7 +482,9 @@ describe("createContainerConsumer", () => {
 			options,
 		);
 
-		const expected = ".button {\n\tcolor: red;\n}";
+		const expected = `.button {
+\tcolor: red;
+}`;
 		expect(result).toBe(expected);
 	});
 

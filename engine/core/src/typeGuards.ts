@@ -46,7 +46,7 @@ export function isAtRule(value: unknown): value is AtRule {
 	return isToken(value, "at-rule");
 }
 
-export function isUtilityInstance<Name extends string = string>(
+export function isUtility<Name extends string = string>(
 	value: unknown,
 ): value is Utility<Name> {
 	return isToken(value, "utility");

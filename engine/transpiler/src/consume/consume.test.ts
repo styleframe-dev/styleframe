@@ -8,6 +8,7 @@ import {
 	createThemeFunction,
 	createUtilityFunction,
 	createVariableFunction,
+	isUtility,
 } from "@styleframe/core";
 import { consume } from "./consume";
 
@@ -63,9 +64,10 @@ describe("consume", () => {
 
 		const result = consume(buttonSelector, options);
 
-		expect(result).toContain(".button {");
-		expect(result).toContain("padding: 0.5rem 1rem;");
-		expect(result).toContain("backgroundColor: #006cff;");
+		expect(result).toEqual(`.button {
+\tpadding: 0.5rem 1rem;
+\tbackground-color: #006cff;
+}`);
 	});
 
 	it("should consume a theme instance", () => {
@@ -76,9 +78,10 @@ describe("consume", () => {
 
 		const result = consume(lightTheme, options);
 
-		expect(result).toContain('[data-theme="light"] {');
-		expect(result).toContain("--background-color: #ffffff;");
-		expect(result).toContain("--text-color: #000000;");
+		expect(result).toEqual(`[data-theme="light"] {
+\t--background-color: #ffffff;
+\t--text-color: #000000;
+}`);
 	});
 
 	it("should consume an at-rule instance", () => {
@@ -88,8 +91,9 @@ describe("consume", () => {
 
 		const result = consume(mediaRule, options);
 
-		expect(result).toContain("@media (min-width: 768px) {");
-		expect(result).toContain("fontSize: 18px;");
+		expect(result).toEqual(`@media (min-width: 768px) {
+\tfont-size: 18px;
+}`);
 	});
 
 	it("should consume a utility instance", () => {
@@ -102,10 +106,14 @@ describe("consume", () => {
 			md: "16px",
 		});
 
-		const marginUtility = root.utilities.find((u) => u.name === "margin");
+		const marginUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "margin",
+		);
 		const result = consume(marginUtility, options);
 
-		expect(result).toEqual(`._margin\\:sm {\n\tmargin: 8px;\n}`);
+		expect(result).toEqual(`._margin\\:sm {
+\tmargin: 8px;
+}`);
 	});
 
 	it("should consume primitive values", () => {
@@ -136,13 +144,19 @@ describe("consume", () => {
 
 		const result = consume(complexSelector, options);
 
-		expect(result).toContain(".card {");
-		expect(result).toContain("--card-bg: #ffffff;");
-		expect(result).toContain("--card-shadow: 0 2px 4px rgba(0,0,0,0.1);");
-		expect(result).toContain("backgroundColor: var(--card-bg);");
-		expect(result).toContain("&:hover {");
-		expect(result).toContain("transform: translateY(-2px);");
-		expect(result).toContain("boxShadow: var(--card-shadow);");
+		expect(result).toEqual(`.card {
+\t--card-bg: #ffffff;
+\t--card-shadow: 0 2px 4px rgba(0,0,0,0.1);
+\t
+\tbackground-color: var(--card-bg);
+\tborder-radius: 8px;
+\tpadding: 1rem;
+\t
+\t&:hover {
+\t\ttransform: translateY(-2px);
+\t\tbox-shadow: var(--card-shadow);
+\t}
+}`);
 	});
 
 	it("should preserve variable references across different instance types", () => {
@@ -167,7 +181,9 @@ describe("consume", () => {
 		const cssResult = consume(borderStyle, options);
 		const themeResult = consume(brandTheme, options);
 
-		expect(selectorResult).toContain("backgroundColor: var(--brand-color);");
+		expect(selectorResult).toEqual(`.button {
+\tbackground-color: var(--brand-color);
+}`);
 		expect(cssResult).toBe("2px solid var(--brand-color)");
 		expect(themeResult).toContain("color: var(--brand-color);");
 	});
@@ -192,7 +208,9 @@ describe("consume", () => {
 
 		expect(varResult).toBe("--app-primary: #006cff;");
 		expect(refResult).toBe("var(--app-secondary)");
-		expect(selectorResult).toContain("backgroundColor: var(--app-primary);");
-		expect(selectorResult).toContain("color: var(--app-secondary);");
+		expect(selectorResult).toEqual(`.button {
+\tbackground-color: var(--app-primary);
+\tcolor: var(--app-secondary);
+}`);
 	});
 });

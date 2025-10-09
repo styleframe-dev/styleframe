@@ -65,10 +65,10 @@ describe("createThemeConsumer", () => {
 		const result = consumeTheme(themeWithSelectors, options);
 		expect(result).toEqual(`[data-theme="colorful"] {
 \t--primary-color: #ff0066;
-
+\t
 \t.button {
 \t\tcolor: var(--primary-color);
-\t\tbackgroundColor: white;
+\t\tbackground-color: white;
 \t}
 }`);
 	});
@@ -128,7 +128,7 @@ describe("createThemeConsumer", () => {
 \t.header {
 \t\tpadding: 1rem;
 \t}
-
+\t
 \t.footer {
 \t\tmargin: 2rem 0;
 \t}
@@ -164,17 +164,17 @@ describe("createThemeConsumer", () => {
 		expect(result).toEqual(`[data-theme="advanced"] {
 \t--spacing-unit: 8px;
 \t--primary-hue: 240;
-
+\t
 \t.card {
 \t\tpadding: var(--spacing-unit);
-\t\tborderRadius: 4px;
-\t
+\t\tborder-radius: 4px;
+\t\t
 \t\t&:hover {
 \t\t\ttransform: translateY(-2px);
 \t\t}
-\t
+\t\t
 \t\t.card-header {
-\t\t\tbackgroundColor: hsl(var(--primary-hue), 70%, 90%);
+\t\t\tbackground-color: hsl(var(--primary-hue), 70%, 90%);
 \t\t}
 \t}
 }`);

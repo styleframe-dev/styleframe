@@ -95,5 +95,6 @@ export default defineNuxtConfig({
 	},
 	llms: {
 		domain: "https://styleframe.dev",
+		title: "Styleframe",
 	},
 });

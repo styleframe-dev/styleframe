@@ -2,6 +2,7 @@ import type { Container, ModifierFactory, Root, Utility } from "../types";
 import { createRoot } from "./root";
 import { createUtilityFunction } from "./utility";
 import { applyModifiers } from "./modifier";
+import { isUtility } from "../typeGuards";
 
 describe("createUtilityFunction", () => {
 	let root: Root;
@@ -24,7 +25,11 @@ describe("createUtilityFunction", () => {
 		}));
 
 		expect(createMarginUtility).toBeTypeOf("function");
-		expect(root.utilities).toHaveLength(0); // No utilities until we call the creator
+		expect(root.utilities).toHaveLength(1); // Factory is registered immediately
+		expect(root.utilities[0]).toMatchObject({
+			type: "utility",
+			name: "margin",
+		});
 	});
 
 	test("should create utility instances without creating selectors", () => {
@@ -38,20 +43,17 @@ describe("createUtilityFunction", () => {
 			lg: "24px",
 		});
 
-		// No selectors should be created
-		expect(root.children).toHaveLength(0);
+		// Three utility instances should be created in children
+		expect(root.children).toHaveLength(3);
 
-		// Three utility instances should be created
-		expect(root.utilities).toHaveLength(3);
-
-		const smUtility = root.utilities.find(
-			(u) => u.name === "padding" && u.value === "sm",
+		const smUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "padding" && u.value === "sm",
 		);
-		const mdUtility = root.utilities.find(
-			(u) => u.name === "padding" && u.value === "md",
+		const mdUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "padding" && u.value === "md",
 		);
-		const lgUtility = root.utilities.find(
-			(u) => u.name === "padding" && u.value === "lg",
+		const lgUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "padding" && u.value === "lg",
 		);
 
 		expect(smUtility).toEqual({
@@ -92,13 +94,12 @@ describe("createUtilityFunction", () => {
 			default: true,
 		});
 
-		// No selectors should be created
-		expect(root.children).toHaveLength(0);
+		// One utility instance should be created in children
+		expect(root.children).toHaveLength(1);
 
-		// One utility instance should be created
-		expect(root.utilities).toHaveLength(1);
-
-		const hiddenUtility = root.utilities.find((u) => u.name === "hidden");
+		const hiddenUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "hidden",
+		);
 		expect(hiddenUtility).toEqual({
 			type: "utility",
 			name: "hidden",
@@ -131,19 +132,20 @@ describe("createUtilityFunction", () => {
 			[hoverModifier],
 		);
 
-		// No selectors should be created
-		expect(root.children).toHaveLength(0);
+		// Base utilities + modified variants in children
+		// 2 base utilities + 2 modified = 4 total
+		expect(root.children).toHaveLength(4);
 
-		// Base utilities + modified variants
-		// 2 base utilities + 1 modifier = 2 base + 2 modified = 4 total
-		expect(root.utilities).toHaveLength(4);
-
-		const primaryUtility = root.utilities.find(
+		const primaryUtility = root.children.find(
 			(u) =>
-				u.name === "color" && u.value === "primary" && u.modifiers.length === 0,
+				isUtility(u) &&
+				u.name === "color" &&
+				u.value === "primary" &&
+				u.modifiers.length === 0,
 		);
-		const secondaryUtility = root.utilities.find(
+		const secondaryUtility = root.children.find(
 			(u) =>
+				isUtility(u) &&
 				u.name === "color" &&
 				u.value === "secondary" &&
 				u.modifiers.length === 0,
@@ -169,14 +171,16 @@ describe("createUtilityFunction", () => {
 		});
 
 		// Check modified variants exist
-		const primaryHover = root.utilities.find(
+		const primaryHover = root.children.find(
 			(u) =>
+				isUtility(u) &&
 				u.name === "color" &&
 				u.value === "primary" &&
 				u.modifiers.includes("hover"),
 		);
-		const secondaryHover = root.utilities.find(
+		const secondaryHover = root.children.find(
 			(u) =>
+				isUtility(u) &&
 				u.name === "color" &&
 				u.value === "secondary" &&
 				u.modifiers.includes("hover"),
@@ -214,16 +218,14 @@ describe("createUtilityFunction", () => {
 			[hoverModifier, focusModifier],
 		);
 
-		// No selectors should be created
-		expect(root.children).toHaveLength(0);
-
 		// 1 base utility + combinations of 2 modifiers
 		// Combinations: [hover], [focus], [focus,hover] = 3 modified variants
 		// Total: 1 base + 3 modified = 4
-		expect(root.utilities).toHaveLength(4);
+		expect(root.children).toHaveLength(4);
 
-		const backgroundUtility = root.utilities.find(
-			(u) => u.name === "background" && u.modifiers.length === 0,
+		const backgroundUtility = root.children.find(
+			(u) =>
+				isUtility(u) && u.name === "background" && u.modifiers.length === 0,
 		);
 		expect(backgroundUtility).toEqual({
 			type: "utility",
@@ -236,20 +238,23 @@ describe("createUtilityFunction", () => {
 		});
 
 		// Check modified variants exist
-		const hoverVariant = root.utilities.find(
+		const hoverVariant = root.children.find(
 			(u) =>
+				isUtility(u) &&
 				u.name === "background" &&
 				u.modifiers.includes("hover") &&
 				!u.modifiers.includes("focus"),
 		);
-		const focusVariant = root.utilities.find(
+		const focusVariant = root.children.find(
 			(u) =>
+				isUtility(u) &&
 				u.name === "background" &&
 				u.modifiers.includes("focus") &&
 				!u.modifiers.includes("hover"),
 		);
-		const bothVariant = root.utilities.find(
+		const bothVariant = root.children.find(
 			(u) =>
+				isUtility(u) &&
 				u.name === "background" &&
 				u.modifiers.includes("hover") &&
 				u.modifiers.includes("focus"),
@@ -280,16 +285,13 @@ describe("createUtilityFunction", () => {
 			[breakpointModifier],
 		);
 
-		// No selectors should be created
-		expect(root.children).toHaveLength(0);
-
 		// 1 base utility + combinations for multi-key modifier
 		// Multi-key ["sm", "md", "lg"] creates: [sm], [md], [lg] = 3 variants
 		// Total: 1 base + 3 modified = 4
-		expect(root.utilities).toHaveLength(4);
+		expect(root.children).toHaveLength(4);
 
-		const textUtility = root.utilities.find(
-			(u) => u.name === "text" && u.modifiers.length === 0,
+		const textUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "text" && u.modifiers.length === 0,
 		);
 		expect(textUtility).toEqual({
 			type: "utility",
@@ -302,14 +304,14 @@ describe("createUtilityFunction", () => {
 		});
 
 		// Check breakpoint variants exist
-		const smVariant = root.utilities.find(
-			(u) => u.name === "text" && u.modifiers.includes("sm"),
+		const smVariant = root.children.find(
+			(u) => isUtility(u) && u.name === "text" && u.modifiers.includes("sm"),
 		);
-		const mdVariant = root.utilities.find(
-			(u) => u.name === "text" && u.modifiers.includes("md"),
+		const mdVariant = root.children.find(
+			(u) => isUtility(u) && u.name === "text" && u.modifiers.includes("md"),
 		);
-		const lgVariant = root.utilities.find(
-			(u) => u.name === "text" && u.modifiers.includes("lg"),
+		const lgVariant = root.children.find(
+			(u) => isUtility(u) && u.name === "text" && u.modifiers.includes("lg"),
 		);
 
 		expect(smVariant).toBeDefined();
@@ -329,13 +331,12 @@ describe("createUtilityFunction", () => {
 			[],
 		);
 
-		// No selectors should be created
-		expect(root.children).toHaveLength(0);
-
 		// One utility instance should be created with empty modifiers array
-		expect(root.utilities).toHaveLength(1);
+		expect(root.children).toHaveLength(1);
 
-		const widthUtility = root.utilities.find((u) => u.name === "width");
+		const widthUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "width",
+		);
 		expect(widthUtility).toEqual({
 			type: "utility",
 			name: "width",
@@ -356,13 +357,12 @@ describe("createUtilityFunction", () => {
 			screen: "100vh",
 		});
 
-		// No selectors should be created
-		expect(root.children).toHaveLength(0);
-
 		// One utility instance should be created with empty modifiers array (default)
-		expect(root.utilities).toHaveLength(1);
+		expect(root.children).toHaveLength(1);
 
-		const heightUtility = root.utilities.find((u) => u.name === "height");
+		const heightUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "height",
+		);
 		expect(heightUtility).toEqual({
 			type: "utility",
 			name: "height",
@@ -386,17 +386,14 @@ describe("createUtilityFunction", () => {
 			col: "col",
 		});
 
-		// No selectors should be created
-		expect(root.children).toHaveLength(0);
-
 		// Two utility instances should be created
-		expect(root.utilities).toHaveLength(2);
+		expect(root.children).toHaveLength(2);
 
-		const rowUtility = root.utilities.find(
-			(u) => u.name === "flex" && u.value === "row",
+		const rowUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "flex" && u.value === "row",
 		);
-		const colUtility = root.utilities.find(
-			(u) => u.name === "flex" && u.value === "col",
+		const colUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "flex" && u.value === "col",
 		);
 
 		expect(rowUtility).toEqual({
@@ -452,11 +449,8 @@ describe("createUtilityFunction", () => {
 
 		createEmptyUtility({});
 
-		// No selectors should be created
-		expect(root.children).toHaveLength(0);
-
 		// No utility instances should be created for empty entries
-		expect(root.utilities).toHaveLength(0);
+		expect(root.children).toHaveLength(0);
 	});
 
 	test("should create multiple utility instances when called multiple times", () => {
@@ -469,13 +463,13 @@ describe("createUtilityFunction", () => {
 			md: "16px",
 		});
 
-		expect(root.utilities).toHaveLength(2);
+		expect(root.children).toHaveLength(2);
 
-		const smUtility = root.utilities.find(
-			(u) => u.name === "margin" && u.value === "sm",
+		const smUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "margin" && u.value === "sm",
 		);
-		const mdUtility = root.utilities.find(
-			(u) => u.name === "margin" && u.value === "md",
+		const mdUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "margin" && u.value === "md",
 		);
 
 		expect(smUtility).toEqual({
@@ -515,19 +509,19 @@ describe("createUtilityFunction", () => {
 			xl: "32px",
 		});
 
-		expect(root.utilities).toHaveLength(4);
+		expect(root.children).toHaveLength(4);
 
-		const smUtility = root.utilities.find(
-			(u) => u.name === "spacing" && u.value === "sm",
+		const smUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "spacing" && u.value === "sm",
 		);
-		const mdUtility = root.utilities.find(
-			(u) => u.name === "spacing" && u.value === "md",
+		const mdUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "spacing" && u.value === "md",
 		);
-		const lgUtility = root.utilities.find(
-			(u) => u.name === "spacing" && u.value === "lg",
+		const lgUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "spacing" && u.value === "lg",
 		);
-		const xlUtility = root.utilities.find(
-			(u) => u.name === "spacing" && u.value === "xl",
+		const xlUtility = root.children.find(
+			(u) => isUtility(u) && u.name === "spacing" && u.value === "xl",
 		);
 
 		expect(smUtility).toBeDefined();
@@ -551,14 +545,15 @@ describe("createUtilityFunction", () => {
 			primary: "#0056b3",
 		});
 
-		expect(root.utilities).toHaveLength(2);
+		expect(root.children).toHaveLength(2);
 
-		const utilities = root.utilities.filter(
-			(u) => u.name === "color" && u.value === "primary",
+		const utilities = root.children.filter(
+			(u): u is Utility =>
+				isUtility(u) && u.name === "color" && u.value === "primary",
 		);
 		expect(utilities).toHaveLength(2);
-		expect(utilities[0]?.declarations.color).toBe("#007bff");
-		expect(utilities[1]?.declarations.color).toBe("#0056b3");
+		expect(utilities[0]?.declarations?.color).toBe("#007bff");
+		expect(utilities[1]?.declarations?.color).toBe("#0056b3");
 	});
 
 	test("should handle different modifiers on subsequent calls", () => {
@@ -601,27 +596,31 @@ describe("createUtilityFunction", () => {
 		// First call creates 1 base + 1 hover variant = 2
 		// Second call creates 1 base + 1 focus variant = 2
 		// Total: 4
-		expect(root.utilities).toHaveLength(4);
+		expect(root.children).toHaveLength(4);
 
-		const primaryUtility = root.utilities.find(
-			(u) => u.name === "button" && u.value === "primary",
+		const primaryUtility = root.children.find(
+			(u): u is Utility =>
+				isUtility(u) && u.name === "button" && u.value === "primary",
 		);
-		const secondaryUtility = root.utilities.find(
-			(u) => u.name === "button" && u.value === "secondary",
+		const secondaryUtility = root.children.find(
+			(u): u is Utility =>
+				isUtility(u) && u.name === "button" && u.value === "secondary",
 		);
 
 		expect(primaryUtility?.modifiers).toEqual([]);
 		expect(secondaryUtility?.modifiers).toEqual([]);
 
 		// Check that modified variants were created
-		const primaryHoverVariant = root.utilities.find(
+		const primaryHoverVariant = root.children.find(
 			(u) =>
+				isUtility(u) &&
 				u.name === "button" &&
 				u.value === "primary" &&
 				u.modifiers.includes("hover"),
 		);
-		const secondaryFocusVariant = root.utilities.find(
-			(u) =>
+		const secondaryFocusVariant = root.children.find(
+			(u): u is Utility =>
+				isUtility(u) &&
 				u.name === "button" &&
 				u.value === "secondary" &&
 				u.modifiers.includes("focus"),
@@ -648,9 +647,11 @@ describe("createUtilityFunction", () => {
 			primary: "#007bff",
 		});
 
-		expect(root.utilities).toHaveLength(1);
+		expect(root.children).toHaveLength(1);
 
-		const advancedUtility = root.utilities.find((u) => u.name === "advanced");
+		const advancedUtility = root.children.find(
+			(u): u is Utility => isUtility(u) && u.name === "advanced",
+		);
 		expect(advancedUtility?.declarations).toEqual({
 			backgroundColor: "#007bff",
 		});
@@ -1175,7 +1176,7 @@ describe("createModifiedUtilityFunction", () => {
 		const nullModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["null"],
-			factory: () => null as any,
+			factory: () => ({}),
 		};
 
 		const result = applyModifiers(
@@ -1202,7 +1203,7 @@ describe("createModifiedUtilityFunction", () => {
 		const undefinedModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["undefined"],
-			factory: () => undefined as any,
+			factory: () => undefined,
 		};
 
 		const result = applyModifiers(

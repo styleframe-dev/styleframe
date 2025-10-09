@@ -123,7 +123,7 @@ describe("genInlineAtRule", () => {
 
 	it("should handle empty rule string", () => {
 		const result = genInlineAtRule("import", "");
-		expect(result).toBe("@import ;");
+		expect(result).toBe("@import;");
 	});
 
 	it("should handle whitespace in rule string", () => {

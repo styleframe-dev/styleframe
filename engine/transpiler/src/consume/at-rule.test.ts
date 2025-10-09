@@ -39,7 +39,7 @@ describe("createAtRuleConsumer", () => {
 
 		expect(result).toBe(`@media (min-width: 768px) {
 	padding: 2rem;
-	fontSize: 18px;
+	font-size: 18px;
 }`);
 	});
 
@@ -55,9 +55,9 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(mediaRule, options);
 
 		expect(result).toBe(`@media (min-width: 768px) {
-	--breakpoint-padding: 2rem;
-
-	padding: var(--breakpoint-padding);
+\t--breakpoint-padding: 2rem;
+\t
+\tpadding: var(--breakpoint-padding);
 }`);
 	});
 
@@ -76,14 +76,14 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(mediaRule, options);
 
 		expect(result).toBe(`@media (min-width: 768px) {
-	.card {
-		width: 50%;
-		margin: 0 auto;
-	}
-
-	.button {
-		padding: 1rem 2rem;
-	}
+\t.card {
+\t\twidth: 50%;
+\t\tmargin: 0 auto;
+\t}
+\t
+\t.button {
+\t\tpadding: 1rem 2rem;
+\t}
 }`);
 	});
 
@@ -108,14 +108,14 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(mediaRule, options);
 
 		expect(result).toBe(`@media (min-width: 1024px) {
-	--large-spacing: 3rem;
-
-	fontSize: 20px;
-
-	.container {
-		maxWidth: 1200px;
-		padding: var(--large-spacing);
-	}
+\t--large-spacing: 3rem;
+\t
+\tfont-size: 20px;
+\t
+\t.container {
+\t\tmax-width: 1200px;
+\t\tpadding: var(--large-spacing);
+\t}
 }`);
 	});
 
@@ -135,15 +135,15 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(keyframesRule, options);
 
 		expect(result).toBe(`@keyframes fadeIn {
-	0% {
-		opacity: 0;
-		transform: translateY(20px);
-	}
-
-	100% {
-		opacity: 1;
-		transform: translateY(0);
-	}
+\t0% {
+\t\topacity: 0;
+\t\ttransform: translateY(20px);
+\t}
+\t
+\t100% {
+\t\topacity: 1;
+\t\ttransform: translateY(0);
+\t}
 }`);
 	});
 
@@ -163,11 +163,11 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(supportsRule, options);
 
 		expect(result).toBe(`@supports (display: grid) {
-	.layout {
-		display: grid;
-		gridTemplateColumns: repeat(3, 1fr);
-		gap: 1rem;
-	}
+\t.layout {
+\t\tdisplay: grid;
+\t\tgrid-template-columns: repeat(3, 1fr);
+\t\tgap: 1rem;
+\t}
 }`);
 	});
 
@@ -186,10 +186,10 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(containerRule, options);
 
 		expect(result).toBe(`@container (min-width: 400px) {
-	.card-content {
-		fontSize: 1.2rem;
-		padding: 1.5rem;
-	}
+\t.card-content {
+\t\tfont-size: 1.2rem;
+\t\tpadding: 1.5rem;
+\t}
 }`);
 	});
 
@@ -206,12 +206,12 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(mediaRule, options);
 
 		expect(result).toBe(`@media (min-width: 768px) {
-	@supports (display: flex) {
-		.flex-container {
-			display: flex;
-			alignItems: center;
-		}
-	}
+\t@supports (display: flex) {
+\t\t.flex-container {
+\t\t\tdisplay: flex;
+\t\t\talign-items: center;
+\t\t}
+\t}
 }`);
 	});
 
@@ -236,7 +236,7 @@ describe("createAtRuleConsumer", () => {
 
 		expect(result).toBe(
 			`@media screen and (min-width: 768px) and (max-width: 1024px) {
-	fontSize: 16px;
+\tfont-size: 16px;
 }`,
 		);
 	});
@@ -259,9 +259,9 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(mediaRule, prefixOptions);
 
 		expect(result).toBe(`@media (min-width: 768px) {
-	--sf-responsive-padding: 2rem;
-
-	padding: var(--sf-responsive-padding);
+\t--sf-responsive-padding: 2rem;
+\t
+\tpadding: var(--sf-responsive-padding);
 }`);
 	});
 
@@ -278,8 +278,8 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(mediaRule, customOptions);
 
 		expect(result).toBe(`@media (min-width: 768px) {
-    padding: 2rem;
-    fontSize: 18px;
+\tpadding: 2rem;
+\tfont-size: 18px;
 }`);
 	});
 
@@ -291,7 +291,7 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(pageRule, options);
 
 		expect(result).toBe(`@page :first {
-	marginTop: 50mm;
+\tmargin-top: 50mm;
 }`);
 	});
 
@@ -305,11 +305,11 @@ describe("createAtRuleConsumer", () => {
 
 		const result = consumeAtRule(fontFaceRule, options);
 
-		expect(result).toBe(`@font-face  {
-	fontFamily: "MyFont";
-	src: url("myfont.woff2") format("woff2");
-	fontWeight: normal;
-	fontStyle: normal;
+		expect(result).toBe(`@font-face {
+\tfont-family: "MyFont";
+\tsrc: url("myfont.woff2") format("woff2");
+\tfont-weight: normal;
+\tfont-style: normal;
 }`);
 	});
 
@@ -327,13 +327,13 @@ describe("createAtRuleConsumer", () => {
 		const result = consumeAtRule(layerRule, options);
 
 		expect(result).toBe(`@layer utilities {
-	.text-center {
-		textAlign: center;
-	}
-
-	.hidden {
-		display: none;
-	}
+\t.text-center {
+\t\ttext-align: center;
+\t}
+\t
+\t.hidden {
+\t\tdisplay: none;
+\t}
 }`);
 	});
 });

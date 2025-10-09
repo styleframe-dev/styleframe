@@ -4,17 +4,19 @@ import dts from "vite-plugin-dts";
 import { configDefaults as vitestConfig } from "vitest/config";
 
 /**
- * @typedef {import('vite').UserConfig['build']['lib']} UserConfig
+ * @typedef {import('vite').UserConfig} UserConfig
  */
 export const createViteConfig = (name, cwd, options = {}) =>
 	defineConfig({
-		plugins: [dts({ rollupTypes: true })],
+		...options,
+		plugins: [dts({ rollupTypes: true }), ...(options.plugins ?? [])],
 		build: {
+			...options.build,
 			lib: {
 				entry: resolve(cwd, "src/index.ts"),
 				name,
 				fileName: name,
-				...options,
+				...options.build?.lib,
 			},
 		},
 		test: {
