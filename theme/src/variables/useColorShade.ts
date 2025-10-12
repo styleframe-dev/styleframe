@@ -1,22 +1,6 @@
 import type { Styleframe, Variable } from "@styleframe/core";
-import type { CamelCase } from "scule";
-import { camelCase } from "scule";
-
-/**
- * Transforms color keys into a set of relative color shade (darker) levels
- *
- * @example <"color--primary", { 50: 5, 100: 10, 200: 20 }> -> {
- * 		colorPrimaryShade50: Variable<'color--primary-shade-50'>,
- * 		colorPrimaryShade100: Variable<'color--primary-shade-100'>,
- * 		colorPrimaryShade200: Variable<'color--primary-shade-200'>
- * }
- */
-type ColorShadeLevelsExportKeys<
-	Name extends string,
-	T extends Record<string | number, number>,
-> = {
-	[K in keyof T as CamelCase<`${Name}-shade-${(string | number) & K}`>]: Variable<`${Name}-shade-${(string | number) & K}`>;
-};
+import type { ExportKeys } from "../types";
+import { createUseVariable } from "../utils";
 
 /**
  * Create a set of relative color shade (darker) levels
@@ -46,21 +30,16 @@ export function useColorShade<
 	s: Styleframe,
 	color: Variable<Name>,
 	levels: T,
-): ColorShadeLevelsExportKeys<Name, T> {
-	const result: Record<string, Variable<string>> = {};
+): ExportKeys<`${Name}-shade`, T, "-"> {
+	return createUseVariable(
+		`${color.name}-shade`,
+		(value) => {
+			if (typeof value !== "number") {
+				return 0;
+			}
 
-	for (const [level, value] of Object.entries(levels)) {
-		const variableName = `${color.name}-shade-${level}` as const;
-		const exportName = camelCase(variableName);
-
-		result[exportName] = s.variable(
-			variableName,
-			s.css`oklch(from ${s.ref(color)} calc(l - ${value / 100}) c h / a)`,
-			{
-				default: true,
-			},
-		);
-	}
-
-	return result as ColorShadeLevelsExportKeys<Name, T>;
+			return s.css`oklch(from ${s.ref(color)} calc(l - ${value / 100}) c h / a)`;
+		},
+		"-" as const,
+	)(s, levels);
 }
