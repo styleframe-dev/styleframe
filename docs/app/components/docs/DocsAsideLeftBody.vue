@@ -5,5 +5,10 @@ const navigation = inject<Ref<ContentNavigationItem[]>>("navigation");
 </script>
 
 <template>
-	<UContentNavigation highlight :navigation="navigation" />
+	<UContentNavigation highlight :navigation="navigation">
+		<template #link-title="{ link }">
+			{{ link.title }}
+			<ProIcon v-if="link.pro" />
+		</template>
+	</UContentNavigation>
 </template>

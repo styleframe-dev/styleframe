@@ -33,6 +33,7 @@ export async function addPackageJsonDependencies(cwd: string) {
 
 		if (!packageJson.dependencies) packageJson.dependencies = {};
 		packageJson.dependencies["styleframe"] = "^1.0.0";
+		packageJson.dependencies["@styleframe/theme"] = "^1.0.0";
 
 		if (!packageJson.devDependencies) packageJson.devDependencies = {};
 		packageJson.devDependencies["@styleframe/cli"] = "^1.0.0";
