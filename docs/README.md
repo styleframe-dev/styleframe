@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="https://styleframe.dev/assets/logo.svg" alt="Styleframe" width="120" height="120">
+  <img src="https://www.styleframe.dev/_vercel/image?url=%2Flogotype-light.svg&w=1536&q=100" alt="Styleframe" width="320" height="120">
   
-  # styleframe
+
   
   **Type-safe, Composable CSS in TypeScript**
   
@@ -9,13 +9,15 @@
   
   [![npm version](https://img.shields.io/npm/v/styleframe.svg)](https://www.npmjs.com/package/styleframe)
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE)
-  [![Discord](https://img.shields.io/discord/YOUR_DISCORD_ID?label=Discord&logo=discord)](https://discord.gg/KCVwuGz44M)
+  [![Discord](https://img.shields.io/discord/1395724958919032943?label=Discord&logo=discord)](https://discord.gg/KCVwuGz44M)
   
-  [Documentation](https://styleframe.dev/docs) · [Examples](https://styleframe.dev/docs/resources/guides) · [Discord](https://discord.gg/KCVwuGz44M)
+  [Homepage](https://styleframe.dev) · [Documentation](https://styleframe.dev/docs)
 </div>
 
 ---
 
+# styleframe
+  
 ## ✨ Features
 
 - **🛡️ Type-safe CSS API** - Catch style bugs at compile time with full TypeScript support
