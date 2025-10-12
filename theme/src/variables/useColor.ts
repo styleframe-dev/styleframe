@@ -1,8 +1,4 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
 import { oklch } from "culori";
-import type { CamelCase } from "scule";
-import { camelCase } from "scule";
-import type { ExportKeys } from "../types";
 import { createUseVariable } from "../utils";
 
 /**

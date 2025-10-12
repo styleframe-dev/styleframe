@@ -2,7 +2,7 @@ import { styleframe } from "@styleframe/core";
 import { consume } from "@styleframe/transpiler";
 import { useScale } from "./src/variables/useScale.js";
 import { useScalePowers } from "./src/variables/useScalePowers.js";
-import { defaultScalePowers } from "./src/constants/scale.js";
+import { defaultScalePowerValues } from "./src/constants/scale.js";
 
 const s = styleframe();
 const { scaleGolden } = useScale(s);

@@ -15,7 +15,7 @@ import type { ExportKeys } from "../types";
  * const { scale } = useScale(s);
  * const { fontSize } = useFontSize(s);
  *
- * const scalePowers = useScalePowers(s, scale, defaultScalePowers);
+ * const scalePowers = useScalePowers(s, scale, defaultScalePowerValues);
  *
  * const {
  *   fontSizeXs, // Variable<'font-size--xs'>

@@ -592,6 +592,7 @@ describe("useMultiplier", () => {
 			const s = styleframe();
 			const baseVar = s.variable("size", "1rem");
 			const golden = 1.618;
+
 			useMultiplier(s, baseVar, {
 				"-1": Math.pow(golden, -1),
 				"1": golden,
@@ -687,7 +688,7 @@ describe("useMultiplier", () => {
 			const { scale } = useScale(s);
 			const scales = useScalePowers(s, scale);
 
-			const sizes = useMultiplier(s, base, {
+			useMultiplier(s, base, {
 				xs: scales[-2],
 				sm: scales[-1],
 				md: scales[0],
@@ -709,8 +710,8 @@ describe("useMultiplier", () => {
 	--scale--perfect-fifth: 1.5;
 	--scale--golden: 1.618;
 	--scale: var(--scale--minor-third);
-	--size--xs: calc(var(--size) * var(--scale) / var(--scale));
-	--size--sm: calc(var(--size) * var(--scale));
+	--size--xs: calc(var(--size) * 1 / var(--scale) / var(--scale));
+	--size--sm: calc(var(--size) * 1 / var(--scale));
 	--size--md: calc(var(--size) * 1);
 	--size--lg: calc(var(--size) * var(--scale));
 	--size--xl: calc(var(--size) * var(--scale) * var(--scale));

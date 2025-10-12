@@ -1,7 +1,7 @@
 import type { TokenValue } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consume } from "@styleframe/transpiler";
-import { defaultScalePowers } from "../constants/scale";
+import { defaultScalePowerValues } from "../constants/scale";
 import { useScale } from "./useScale";
 import { useScalePowers } from "./useScalePowers";
 
@@ -9,7 +9,7 @@ describe("useScalePowers", () => {
 	it("should create scale powers with default powers array", () => {
 		const s = styleframe();
 		const { scaleGolden } = useScale(s);
-		const powers = useScalePowers(s, scaleGolden, defaultScalePowers);
+		const powers = useScalePowers(s, scaleGolden, defaultScalePowerValues);
 
 		// Keys are in insertion order
 		expect(Object.keys(powers).length).toBe(8);
@@ -119,10 +119,10 @@ describe("useScalePowers", () => {
 
 		const baseSize = s.variable("base", "1rem");
 		s.selector(".scale-neg-1", ({ variable }) => {
-			variable("font-size", s.css`calc(${s.ref(baseSize)} / ${powers[-1]})`);
+			variable("font-size", s.css`calc(${s.ref(baseSize)} * ${powers[-1]})`);
 		});
 		s.selector(".scale-neg-2", ({ variable }) => {
-			variable("font-size", s.css`calc(${s.ref(baseSize)} / (${powers[-2]}))`);
+			variable("font-size", s.css`calc(${s.ref(baseSize)} * ${powers[-2]})`);
 		});
 
 		const css = consume(s.root, s.options);
@@ -141,11 +141,11 @@ describe("useScalePowers", () => {
 }
 
 .scale-neg-1 {
-	--font-size: calc(var(--base) / var(--scale--golden));
+	--font-size: calc(var(--base) * 1 / var(--scale--golden));
 }
 
 .scale-neg-2 {
-	--font-size: calc(var(--base) / (var(--scale--golden) / var(--scale--golden)));
+	--font-size: calc(var(--base) * 1 / var(--scale--golden) / var(--scale--golden));
 }`);
 	});
 
@@ -187,32 +187,32 @@ describe("useScalePowers", () => {
 	describe("practical usage", () => {
 		it("should create modular typography scale", () => {
 			const s = styleframe();
-			const { scaleMajorThird } = useScale(s);
-			const powers = useScalePowers(s, scaleMajorThird, [
-				-2, -1, 1, 2, 3,
-			] as const);
+			const { scale } = useScale(s);
 
-			const baseSize = s.variable("font-size-base", "1rem");
+			const powers = useScalePowers(s, scale, [-2, -1, 1, 2, 3] as const);
+
+			const fontSize = s.variable("font-size", "1rem");
+
 			s.variable(
 				"font-size-xs",
-				s.css`calc(${s.ref(baseSize)} / (${powers[-2]}))`,
+				s.css`calc(${s.ref(fontSize)} * ${powers[-2]})`,
 			);
 			s.variable(
 				"font-size-sm",
-				s.css`calc(${s.ref(baseSize)} / ${powers[-1]})`,
+				s.css`calc(${s.ref(fontSize)} * ${powers[-1]})`,
 			);
-			s.variable("font-size-md", s.ref(baseSize));
+			s.variable("font-size-md", s.ref(fontSize));
 			s.variable(
 				"font-size-lg",
-				s.css`calc(${s.ref(baseSize)} * ${powers[1]})`,
+				s.css`calc(${s.ref(fontSize)} * ${powers[1]})`,
 			);
 			s.variable(
 				"font-size-xl",
-				s.css`calc(${s.ref(baseSize)} * (${powers[2]}))`,
+				s.css`calc(${s.ref(fontSize)} * ${powers[2]})`,
 			);
 			s.variable(
 				"font-size-2xl",
-				s.css`calc(${s.ref(baseSize)} * (${powers[3]}))`,
+				s.css`calc(${s.ref(fontSize)} * ${powers[3]})`,
 			);
 
 			const css = consume(s.root, s.options);
@@ -227,13 +227,13 @@ describe("useScalePowers", () => {
 	--scale--perfect-fifth: 1.5;
 	--scale--golden: 1.618;
 	--scale: var(--scale--minor-third);
-	--font-size-base: 1rem;
-	--font-size-xs: calc(var(--font-size-base) / (var(--scale--major-third) / var(--scale--major-third)));
-	--font-size-sm: calc(var(--font-size-base) / var(--scale--major-third));
-	--font-size-md: var(--font-size-base);
-	--font-size-lg: calc(var(--font-size-base) * var(--scale--major-third));
-	--font-size-xl: calc(var(--font-size-base) * (var(--scale--major-third) * var(--scale--major-third)));
-	--font-size-2xl: calc(var(--font-size-base) * (var(--scale--major-third) * var(--scale--major-third) * var(--scale--major-third)));
+	--font-size: 1rem;
+	--font-size-xs: calc(var(--font-size) * 1 / var(--scale) / var(--scale));
+	--font-size-sm: calc(var(--font-size) * 1 / var(--scale));
+	--font-size-md: var(--font-size);
+	--font-size-lg: calc(var(--font-size) * var(--scale));
+	--font-size-xl: calc(var(--font-size) * var(--scale) * var(--scale));
+	--font-size-2xl: calc(var(--font-size) * var(--scale) * var(--scale) * var(--scale));
 }`);
 		});
 
@@ -273,7 +273,7 @@ describe("useScalePowers", () => {
 	--scale--golden: 1.618;
 	--scale: var(--scale--minor-third);
 	--spacing-base: 1rem;
-	--spacing-sm: calc(var(--spacing-base) * var(--scale--golden));
+	--spacing-sm: calc(var(--spacing-base) * 1 / var(--scale--golden));
 	--spacing-md: calc(var(--spacing-base) * 1);
 	--spacing-lg: calc(var(--spacing-base) * var(--scale--golden));
 	--spacing-xl: calc(var(--spacing-base) * var(--scale--golden) * var(--scale--golden));
@@ -283,10 +283,14 @@ describe("useScalePowers", () => {
 		it("should work with default scale powers constant", () => {
 			const s = styleframe();
 			const { scaleMajorSecond } = useScale(s);
-			const powers = useScalePowers(s, scaleMajorSecond, defaultScalePowers);
+			const powers = useScalePowers(
+				s,
+				scaleMajorSecond,
+				defaultScalePowerValues,
+			);
 
-			// defaultScalePowers = [-2, -1, 1, 2, 3, 4, 5]
-			expect(Object.keys(powers).length).toBe(defaultScalePowers.length);
+			// defaultScalePowerValues = [-2, -1, 1, 2, 3, 4, 5]
+			expect(Object.keys(powers).length).toBe(defaultScalePowerValues.length);
 			expect(powers[-2]).toBeDefined();
 			expect(powers[-1]).toBeDefined();
 			expect(powers[1]).toBeDefined();
@@ -308,14 +312,14 @@ describe("useScalePowers", () => {
 			s.selector(".mobile", ({ variable }) => {
 				variable(
 					"font-size",
-					s.css`calc(${s.ref(baseSize)} * (${mobilePowers[2]}))`,
+					s.css`calc(${s.ref(baseSize)} * ${mobilePowers[2]})`,
 				);
 			});
 
 			s.selector(".desktop", ({ variable }) => {
 				variable(
 					"font-size",
-					s.css`calc(${s.ref(baseSize)} * (${desktopPowers[2]}))`,
+					s.css`calc(${s.ref(baseSize)} * ${desktopPowers[2]})`,
 				);
 			});
 
@@ -335,11 +339,11 @@ describe("useScalePowers", () => {
 }
 
 .mobile {
-	--font-size: calc(var(--size-base) * (var(--scale--major-second) * var(--scale--major-second)));
+	--font-size: calc(var(--size-base) * var(--scale--major-second) * var(--scale--major-second));
 }
 
 .desktop {
-	--font-size: calc(var(--size-base) * (var(--scale--golden) * var(--scale--golden)));
+	--font-size: calc(var(--size-base) * var(--scale--golden) * var(--scale--golden));
 }`);
 		});
 	});

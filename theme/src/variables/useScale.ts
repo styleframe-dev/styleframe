@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noApproximativeNumericConstant: Scale ratios are magic numbers */
 import type { Styleframe } from "@styleframe/core";
 
 export function useScale(s: Styleframe, defaultScale = "minor-third") {
