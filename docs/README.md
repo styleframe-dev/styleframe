@@ -99,14 +99,6 @@ theme('dark', (ctx) => {
 export default s;
 ```
 
-### Build
-
-```bash
-npx styleframe build
-```
-
-This generates optimized CSS from your configuration.
-
 ## 📚 Documentation
 
 Styleframe is extremely powerful and flexible. The code preview above is just a small example of what you can achieve with styleframe. 
@@ -115,7 +107,9 @@ Read the full documentation at [https://styleframe.dev](https://styleframe.dev).
 
 ## 🎯 Why styleframe?
 
+After over 10 years of working on Design Systems for successful companies, we've learned a lot about what makes a great Design System. Styleframe is built on these learnings and is designed to help you easily build your own.
 
+[Read more](https://styleframe.dev/docs) about styleframe's philosophy and design principles.
 
 ## 🔗 Framework Integration
 
