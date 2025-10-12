@@ -36,7 +36,9 @@ export function useMultiplier<
 	Name extends string,
 	T extends Record<string | number, TokenValue>,
 >(s: Styleframe, variable: Variable<Name>, values: T): ExportKeys<Name, T> {
-	return createUseVariable(variable.name, (value) => {
-		return s.css`calc(${s.ref(variable)} * ${value})`;
+	return createUseVariable(variable.name, {
+		transform: (value) => {
+			return s.css`calc(${s.ref(variable)} * ${value})`;
+		},
 	})(s, values);
 }

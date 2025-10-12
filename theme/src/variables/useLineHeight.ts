@@ -1,36 +1,41 @@
-import type { Styleframe } from "@styleframe/core";
+import { createUseVariable } from "../utils";
 
-export function useLineHeight(s: Styleframe, defaultLineHeight = "normal") {
-	const lineHeightTight = s.variable("line-height--tight", 1.2, {
-		default: true,
-	});
-	const lineHeightSnug = s.variable("line-height--snug", 1.35, {
-		default: true,
-	});
-	const lineHeightNormal = s.variable("line-height--normal", 1.5, {
-		default: true,
-	});
-	const lineHeightRelaxed = s.variable("line-height--relaxed", 1.65, {
-		default: true,
-	});
-	const lineHeightLoose = s.variable("line-height--loose", 1.9, {
-		default: true,
-	});
+export const defaultLineHeightValues = {
+	default: "@normal",
+	tight: 1.2,
+	snug: 1.35,
+	normal: 1.5,
+	relaxed: 1.65,
+	loose: 1.9,
+};
 
-	const lineHeight = s.variable(
-		"line-height",
-		s.ref(`line-height--${defaultLineHeight}`),
-		{
-			default: true,
-		},
-	);
-
-	return {
-		lineHeightTight,
-		lineHeightSnug,
-		lineHeightNormal,
-		lineHeightRelaxed,
-		lineHeightLoose,
-		lineHeight,
-	};
-}
+/**
+ * Create a set of line-height variables for use in a Styleframe instance.
+ *
+ * @usage
+ * ```typescript
+ * import { styleframe } from "styleframe";
+ * import { useLineHeight } from "styleframe/theme";
+ *
+ * const s = styleframe();
+ *
+ * const {
+ *   lineHeightTight,
+ *   lineHeightSnug,
+ *   lineHeightNormal,
+ *   lineHeightRelaxed,
+ *   lineHeightLoose,
+ *   lineHeight,
+ * } = useLineHeight(s, {
+ *   default: "normal",
+ *   tight: 1.2,
+ *   snug: 1.35,
+ *   normal: 1.5,
+ *   relaxed: 1.65,
+ *   loose: 1.9,
+ * });
+ * ```
+ */
+export const useLineHeight = createUseVariable("line-height", {
+	defaults: defaultLineHeightValues,
+});

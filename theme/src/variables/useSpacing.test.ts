@@ -39,16 +39,10 @@ describe("useSpacing", () => {
 	it("should create multiple spacing variables", () => {
 		const s = styleframe();
 		const { spacing, spacingSm, spacingMd, spacingLg } = useSpacing(s, {
-			default: "1rem",
+			default: "@md",
 			sm: "0.5rem",
 			md: "1rem",
 			lg: "2rem",
-		});
-
-		expect(spacing).toEqual({
-			type: "variable",
-			name: "spacing",
-			value: "1rem",
 		});
 
 		expect(spacingSm).toEqual({
@@ -67,6 +61,16 @@ describe("useSpacing", () => {
 			type: "variable",
 			name: "spacing--lg",
 			value: "2rem",
+		});
+
+		expect(spacing).toEqual({
+			type: "variable",
+			name: "spacing",
+			value: {
+				type: "reference",
+				name: "spacing--md",
+				fallback: undefined,
+			},
 		});
 	});
 
@@ -216,7 +220,7 @@ describe("useSpacing", () => {
 	it("should compile to correct CSS output using consume", () => {
 		const s = styleframe();
 		useSpacing(s, {
-			default: "1rem",
+			default: "@md",
 			xs: "0.25rem",
 			sm: "0.5rem",
 			md: "1rem",
@@ -226,11 +230,11 @@ describe("useSpacing", () => {
 		const css = consume(s.root, s.options);
 
 		expect(css).toBe(`:root {
-	--spacing: 1rem;
 	--spacing--xs: 0.25rem;
 	--spacing--sm: 0.5rem;
 	--spacing--md: 1rem;
 	--spacing--lg: 2rem;
+	--spacing: var(--spacing--md);
 }`);
 	});
 
@@ -240,7 +244,7 @@ describe("useSpacing", () => {
 			"0": "0",
 			xs: "0.25rem",
 			sm: "0.5rem",
-			default: "1rem",
+			default: "@md",
 			md: "1rem",
 			lg: "1.5rem",
 			xl: "2rem",
@@ -251,7 +255,11 @@ describe("useSpacing", () => {
 		expect(spaces.spacing0.value).toBe("0");
 		expect(spaces.spacingXs.value).toBe("0.25rem");
 		expect(spaces.spacingSm.value).toBe("0.5rem");
-		expect(spaces.spacing.value).toBe("1rem");
+		expect(spaces.spacing.value).toEqual({
+			type: "reference",
+			name: "spacing--md",
+			fallback: undefined,
+		});
 		expect(spaces.spacingMd.value).toBe("1rem");
 		expect(spaces.spacingLg.value).toBe("1.5rem");
 		expect(spaces.spacingXl.value).toBe("2rem");

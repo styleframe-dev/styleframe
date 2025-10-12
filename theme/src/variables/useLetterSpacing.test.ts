@@ -1,7 +1,10 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consume } from "@styleframe/transpiler";
-import { useLetterSpacing } from "./useLetterSpacing";
+import {
+	defaultLetterSpacingValues,
+	useLetterSpacing,
+} from "./useLetterSpacing";
 
 describe("useLetterSpacing", () => {
 	it("should create all letter spacing variables with correct names and values", () => {
@@ -230,7 +233,10 @@ describe("useLetterSpacing", () => {
 
 		it("should allow customizing the default letter spacing", () => {
 			const s = styleframe();
-			const { letterSpacing } = useLetterSpacing(s, "wide");
+			const { letterSpacing } = useLetterSpacing(s, {
+				...defaultLetterSpacingValues,
+				default: "@wide",
+			});
 
 			expect(letterSpacing.value).toEqual({
 				type: "reference",
@@ -241,7 +247,10 @@ describe("useLetterSpacing", () => {
 
 		it("should compile default letter spacing to CSS correctly", () => {
 			const s = styleframe();
-			useLetterSpacing(s, "wider");
+			useLetterSpacing(s, {
+				...defaultLetterSpacingValues,
+				default: "@wider",
+			});
 
 			const css = consume(s.root, s.options);
 
@@ -260,7 +269,10 @@ describe("useLetterSpacing", () => {
 
 			for (const letterSpacingName of letterSpacings) {
 				const s = styleframe();
-				const { letterSpacing } = useLetterSpacing(s, letterSpacingName);
+				const { letterSpacing } = useLetterSpacing(s, {
+					...defaultLetterSpacingValues,
+					default: `@${letterSpacingName}`,
+				});
 
 				expect(letterSpacing.value).toEqual({
 					type: "reference",

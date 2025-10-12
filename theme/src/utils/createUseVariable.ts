@@ -3,6 +3,10 @@ import type { CamelCase } from "scule";
 import { camelCase } from "scule";
 import type { ExportKeys } from "../types";
 
+export function isKeyReferenceValue(value: unknown): value is string {
+	return typeof value === "string" && value.startsWith("@");
+}
+
 /**
  * Creates a generic composable function for a CSS property.
  *
@@ -43,23 +47,51 @@ import type { ExportKeys } from "../types";
 export function createUseVariable<
 	PropertyName extends string,
 	Delimiter extends string = "--",
+	DefaultValues extends Record<string, TokenValue> = Record<string, TokenValue>,
 >(
 	propertyName: PropertyName,
-	propertyValueFn: (value: TokenValue) => TokenValue = (value) => value,
-	delimiter: Delimiter = "--" as Delimiter,
+	{
+		defaults,
+		mergeDefaults = false,
+		transform = (value) => value,
+		delimiter = "--" as Delimiter,
+	}: {
+		defaults?: DefaultValues;
+		mergeDefaults?: boolean;
+		transform?: (value: TokenValue) => TokenValue;
+		delimiter?: Delimiter;
+	} = {},
 ) {
-	return function useVariable<T extends Record<string, TokenValue>>(
-		s: Styleframe,
-		tokens: T,
-	): ExportKeys<PropertyName, T, Delimiter> {
+	return function useVariable<
+		T extends Record<string, TokenValue> = DefaultValues,
+	>(s: Styleframe, tokens?: T): ExportKeys<PropertyName, T, Delimiter> {
 		const result: Record<string, Variable<string>> = {};
 
-		for (const [key, value] of Object.entries(tokens)) {
-			const variableName =
-				`${propertyName}${key === "default" ? "" : `${delimiter}${key}`}` as const;
+		const resolvedTokens = mergeDefaults
+			? ({ ...defaults, ...tokens } as T)
+			: ((tokens ?? defaults ?? {}) as T);
+		const pairs = Object.entries(resolvedTokens);
+
+		const hasDefaultKey = "default" in resolvedTokens;
+		if (hasDefaultKey) {
+			pairs.sort(([_aKey, aValue], [_bKey, bValue]) => {
+				if (isKeyReferenceValue(aValue)) return 1;
+				if (isKeyReferenceValue(bValue)) return -1;
+				return 0;
+			});
+		}
+
+		const createVariableName = (key: string) =>
+			`${propertyName}${key === "default" ? "" : `${delimiter}${key}`}` as const;
+
+		for (const [key, value] of pairs) {
+			const variableName = createVariableName(key);
 			const exportName: CamelCase<typeof variableName> =
 				camelCase(variableName);
-			const variableValue = propertyValueFn(value);
+
+			const variableValue = isKeyReferenceValue(value)
+				? s.ref(createVariableName(value.substring(1)))
+				: transform(value);
 
 			result[exportName] = s.variable(variableName, variableValue, {
 				default: true,

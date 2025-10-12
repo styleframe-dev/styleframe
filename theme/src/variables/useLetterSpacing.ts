@@ -1,43 +1,41 @@
-import type { Styleframe } from "@styleframe/core";
+import { createUseVariable } from "../utils";
 
-export function useLetterSpacing(
-	s: Styleframe,
-	defaultLetterSpacing = "normal",
-) {
-	const letterSpacingTighter = s.variable(
-		"letter-spacing--tighter",
-		"-0.05em",
-		{
-			default: true,
-		},
-	);
-	const letterSpacingTight = s.variable("letter-spacing--tight", "-0.025em", {
-		default: true,
-	});
-	const letterSpacingNormal = s.variable("letter-spacing--normal", "normal", {
-		default: true,
-	});
-	const letterSpacingWide = s.variable("letter-spacing--wide", "0.05em", {
-		default: true,
-	});
-	const letterSpacingWider = s.variable("letter-spacing--wider", "0.1em", {
-		default: true,
-	});
+export const defaultLetterSpacingValues = {
+	default: "@normal",
+	tighter: "-0.05em",
+	tight: "-0.025em",
+	normal: "normal",
+	wide: "0.05em",
+	wider: "0.1em",
+};
 
-	const letterSpacing = s.variable(
-		"letter-spacing",
-		s.ref(`letter-spacing--${defaultLetterSpacing}`),
-		{
-			default: true,
-		},
-	);
-
-	return {
-		letterSpacingTighter,
-		letterSpacingTight,
-		letterSpacingNormal,
-		letterSpacingWide,
-		letterSpacingWider,
-		letterSpacing,
-	};
-}
+/**
+ * Create a set of letter-spacing variables for use in a Styleframe instance.
+ *
+ * @usage
+ * ```typescript
+ * import { styleframe } from "styleframe";
+ * import { useLetterSpacing } from "styleframe/theme";
+ *
+ * const s = styleframe();
+ *
+ * const {
+ *   letterSpacingTighter,
+ *   letterSpacingTight,
+ *   letterSpacingNormal,
+ *   letterSpacingWide,
+ *   letterSpacingWider,
+ *   letterSpacing,
+ * } = useLetterSpacing(s, {
+ *   default: "normal",
+ *   tighter: "-0.05em",
+ *   tight: "-0.025em",
+ *   normal: "normal",
+ *   wide: "0.05em",
+ *   wider: "0.1em",
+ * });
+ * ```
+ */
+export const useLetterSpacing = createUseVariable("letter-spacing", {
+	defaults: defaultLetterSpacingValues,
+});

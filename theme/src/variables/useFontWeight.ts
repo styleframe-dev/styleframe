@@ -1,52 +1,55 @@
-import type { Styleframe } from "@styleframe/core";
+import { createUseVariable } from "../utils";
 
-export function useFontWeight(s: Styleframe, defaultFontWeight = "normal") {
-	const fontWeightExtralight = s.variable("font-weight--extralight", 200, {
-		default: true,
-	});
-	const fontWeightLight = s.variable("font-weight--light", 300, {
-		default: true,
-	});
-	const fontWeightNormal = s.variable("font-weight--normal", "normal", {
-		default: true,
-	});
-	const fontWeightMedium = s.variable("font-weight--medium", 500, {
-		default: true,
-	});
-	const fontWeightSemibold = s.variable("font-weight--semibold", 600, {
-		default: true,
-	});
-	const fontWeightBold = s.variable("font-weight--bold", "bold", {
-		default: true,
-	});
-	const fontWeightBlack = s.variable("font-weight--black", 900, {
-		default: true,
-	});
-	const fontWeightLighter = s.variable("font-weight--lighter", "lighter", {
-		default: true,
-	});
-	const fontWeightBolder = s.variable("font-weight--bolder", "bolder", {
-		default: true,
-	});
+export const defaultFontWeightValues = {
+	default: "@normal",
+	extralight: 200,
+	light: 300,
+	normal: "normal",
+	medium: 500,
+	semibold: 600,
+	bold: "bold",
+	black: 900,
+	lighter: "lighter",
+	bolder: "bolder",
+	inherit: "inherit",
+};
 
-	const fontWeight = s.variable(
-		"font-weight",
-		s.ref(`font-weight--${defaultFontWeight}`),
-		{
-			default: true,
-		},
-	);
-
-	return {
-		fontWeightExtralight,
-		fontWeightLight,
-		fontWeightNormal,
-		fontWeightMedium,
-		fontWeightSemibold,
-		fontWeightBold,
-		fontWeightBlack,
-		fontWeightLighter,
-		fontWeightBolder,
-		fontWeight,
-	};
-}
+/**
+ * Create a set of font-weight variables for use in a Styleframe instance.
+ *
+ * @usage
+ * ```typescript
+ * import { styleframe } from "styleframe";
+ * import { useFontWeight } from "styleframe/theme";
+ *
+ * const s = styleframe();
+ *
+ * const {
+ *   fontWeightExtralight,
+ *   fontWeightLight,
+ *   fontWeightNormal,
+ *   fontWeightMedium,
+ *   fontWeightSemibold,
+ *   fontWeightBold,
+ *   fontWeightBlack,
+ *   fontWeightLighter,
+ *   fontWeightBolder,
+ *   fontWeight,
+ * } = useFontWeight(s, {
+ *   default: "normal",
+ *   extralight: 200,
+ *   light: 300,
+ *   normal: "normal",
+ *   medium: 500,
+ *   semibold: 600,
+ *   bold: 700,
+ *   black: 900,
+ *   lighter: "lighter",
+ *   bolder: "bolder",
+ *   inherit: "inherit",
+ * });
+ * ```
+ */
+export const useFontWeight = createUseVariable("font-weight", {
+	defaults: defaultFontWeightValues,
+});

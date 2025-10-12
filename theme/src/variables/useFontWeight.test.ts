@@ -1,7 +1,7 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consume } from "@styleframe/transpiler";
-import { useFontWeight } from "./useFontWeight";
+import { defaultFontWeightValues, useFontWeight } from "./useFontWeight";
 
 describe("useFontWeight", () => {
 	it("should create all font weight variables with correct names and values", () => {
@@ -88,7 +88,7 @@ describe("useFontWeight", () => {
 		const s = styleframe();
 		useFontWeight(s);
 
-		expect(s.root.variables).toHaveLength(10);
+		expect(s.root.variables).toHaveLength(11);
 		expect(s.root.variables[0]?.name).toBe("font-weight--extralight");
 		expect(s.root.variables[1]?.name).toBe("font-weight--light");
 		expect(s.root.variables[2]?.name).toBe("font-weight--normal");
@@ -98,7 +98,8 @@ describe("useFontWeight", () => {
 		expect(s.root.variables[6]?.name).toBe("font-weight--black");
 		expect(s.root.variables[7]?.name).toBe("font-weight--lighter");
 		expect(s.root.variables[8]?.name).toBe("font-weight--bolder");
-		expect(s.root.variables[9]?.name).toBe("font-weight");
+		expect(s.root.variables[9]?.name).toBe("font-weight--inherit");
+		expect(s.root.variables[10]?.name).toBe("font-weight");
 	});
 
 	it("should return all font weight variables in an object", () => {
@@ -115,6 +116,7 @@ describe("useFontWeight", () => {
 			"fontWeightBlack",
 			"fontWeightLighter",
 			"fontWeightBolder",
+			"fontWeightInherit",
 			"fontWeight",
 		]);
 	});
@@ -135,6 +137,7 @@ describe("useFontWeight", () => {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--normal);
 }`);
 	});
@@ -158,7 +161,7 @@ describe("useFontWeight", () => {
 			fontWeights2.fontWeightExtralight,
 		);
 		expect(fontWeights1.fontWeight).toBe(fontWeights2.fontWeight);
-		expect(s.root.variables).toHaveLength(10);
+		expect(s.root.variables).toHaveLength(11);
 	});
 
 	it("should allow font weight variables to be used as references", () => {
@@ -187,6 +190,7 @@ describe("useFontWeight", () => {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--normal);
 	--custom-font-weight: var(--font-weight--bold);
 }`);
@@ -212,6 +216,7 @@ describe("useFontWeight", () => {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--normal);
 }
 
@@ -290,7 +295,10 @@ describe("useFontWeight", () => {
 
 		it("should allow customizing the default font weight", () => {
 			const s = styleframe();
-			const { fontWeight } = useFontWeight(s, "bold");
+			const { fontWeight } = useFontWeight(s, {
+				...defaultFontWeightValues,
+				default: "@bold",
+			});
 
 			expect(fontWeight.value).toEqual({
 				type: "reference",
@@ -301,7 +309,10 @@ describe("useFontWeight", () => {
 
 		it("should compile default font weight to CSS correctly", () => {
 			const s = styleframe();
-			useFontWeight(s, "semibold");
+			useFontWeight(s, {
+				...defaultFontWeightValues,
+				default: "@semibold",
+			});
 
 			const css = consume(s.root, s.options);
 
@@ -315,6 +326,7 @@ describe("useFontWeight", () => {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--semibold);
 }`);
 		});
@@ -334,7 +346,10 @@ describe("useFontWeight", () => {
 
 			for (const fontWeightName of fontWeights) {
 				const s = styleframe();
-				const { fontWeight } = useFontWeight(s, fontWeightName);
+				const { fontWeight } = useFontWeight(s, {
+					...defaultFontWeightValues,
+					default: `@${fontWeightName}`,
+				});
 
 				expect(fontWeight.value).toEqual({
 					type: "reference",
@@ -440,6 +455,7 @@ describe("useFontWeight", () => {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--normal);
 }
 
@@ -480,6 +496,7 @@ strong, b {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--normal);
 }
 
@@ -515,6 +532,7 @@ h3, h4, h5, h6 {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--normal);
 }
 
@@ -546,6 +564,7 @@ h3, h4, h5, h6 {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--normal);
 }
 
@@ -582,6 +601,7 @@ h3, h4, h5, h6 {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--normal);
 	--body-font-weight: var(--font-weight--normal);
 }
@@ -614,6 +634,7 @@ h3, h4, h5, h6 {
 	--font-weight--black: 900;
 	--font-weight--lighter: lighter;
 	--font-weight--bolder: bolder;
+	--font-weight--inherit: inherit;
 	--font-weight: var(--font-weight--normal);
 }
 

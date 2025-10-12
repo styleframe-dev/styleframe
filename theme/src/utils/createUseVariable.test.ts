@@ -248,7 +248,9 @@ describe("createUseVariable", () => {
 
 	describe("propertyValueFn", () => {
 		it("should transform values using propertyValueFn", () => {
-			const useSize = createUseVariable("size", (value) => `${value}px`);
+			const useSize = createUseVariable("size", {
+				transform: (value) => `${value}px`,
+			});
 			const s = styleframe();
 			const { size, sizeLarge } = useSize(s, {
 				default: "16",
@@ -260,9 +262,9 @@ describe("createUseVariable", () => {
 		});
 
 		it("should transform string values to uppercase", () => {
-			const useFont = createUseVariable("font", (value) =>
-				String(value).toUpperCase(),
-			);
+			const useFont = createUseVariable("font", {
+				transform: (value) => String(value).toUpperCase(),
+			});
 			const s = styleframe();
 			const { font, fontBold } = useFont(s, {
 				default: "arial",
@@ -274,9 +276,9 @@ describe("createUseVariable", () => {
 		});
 
 		it("should transform numeric values", () => {
-			const useOpacity = createUseVariable("opacity", (value) =>
-				typeof value === "number" ? value / 100 : value,
-			);
+			const useOpacity = createUseVariable("opacity", {
+				transform: (value) => (typeof value === "number" ? value / 100 : value),
+			});
 			const s = styleframe();
 			const { opacity, opacityHalf } = useOpacity(s, {
 				default: 100,
@@ -288,10 +290,9 @@ describe("createUseVariable", () => {
 		});
 
 		it("should wrap values in calc()", () => {
-			const useSpacing = createUseVariable(
-				"spacing",
-				(value) => `calc(${value} * var(--scale))`,
-			);
+			const useSpacing = createUseVariable("spacing", {
+				transform: (value) => `calc(${value} * var(--scale))`,
+			});
 			const s = styleframe();
 			const { spacing, spacingDouble } = useSpacing(s, {
 				default: "1rem",
@@ -303,11 +304,13 @@ describe("createUseVariable", () => {
 		});
 
 		it("should add units to unitless values", () => {
-			const usePadding = createUseVariable("padding", (value) => {
-				if (typeof value === "number" || /^\d+$/.test(String(value))) {
-					return `${value}px`;
-				}
-				return value;
+			const usePadding = createUseVariable("padding", {
+				transform: (value) => {
+					if (typeof value === "number" || /^\d+$/.test(String(value))) {
+						return `${value}px`;
+					}
+					return value;
+				},
 			});
 			const s = styleframe();
 			const { padding, paddingSmall } = usePadding(s, {
@@ -320,11 +323,13 @@ describe("createUseVariable", () => {
 		});
 
 		it("should handle variable references in transformer", () => {
-			const useColor = createUseVariable("color", (value) => {
-				if (typeof value === "object" && value !== null && "type" in value) {
-					return value; // Pass through variable references
-				}
-				return `rgb(${value})`;
+			const useColor = createUseVariable("color", {
+				transform: (value) => {
+					if (typeof value === "object" && value !== null && "type" in value) {
+						return value; // Pass through variable references
+					}
+					return `rgb(${value})`;
+				},
 			});
 			const s = styleframe();
 			const baseColor = s.variable("base-color", "255, 0, 0");
@@ -342,11 +347,13 @@ describe("createUseVariable", () => {
 		});
 
 		it("should preserve complex values through transformer", () => {
-			const useShadow = createUseVariable("shadow", (value) => {
-				if (String(value).includes("rgba")) {
-					return value;
-				}
-				return `0 2px 4px ${value}`;
+			const useShadow = createUseVariable("shadow", {
+				transform: (value) => {
+					if (String(value).includes("rgba")) {
+						return value;
+					}
+					return `0 2px 4px ${value}`;
+				},
 			});
 			const s = styleframe();
 			const { shadow, shadowCustom } = useShadow(s, {
@@ -359,7 +366,9 @@ describe("createUseVariable", () => {
 		});
 
 		it("should compile transformed values to CSS correctly", () => {
-			const useMargin = createUseVariable("margin", (value) => `${value}rem`);
+			const useMargin = createUseVariable("margin", {
+				transform: (value) => `${value}rem`,
+			});
 			const s = styleframe();
 			useMargin(s, {
 				default: "1",
@@ -385,9 +394,9 @@ describe("createUseVariable", () => {
 		});
 
 		it("should transform all tokens consistently", () => {
-			const useRounded = createUseVariable("border-radius", (value) =>
-				value === "full" ? "9999px" : value,
-			);
+			const useRounded = createUseVariable("border-radius", {
+				transform: (value) => (value === "full" ? "9999px" : value),
+			});
 			const s = styleframe();
 			const {
 				borderRadius,

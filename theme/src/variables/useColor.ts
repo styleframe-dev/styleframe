@@ -21,13 +21,15 @@ import { createUseVariable } from "../utils";
  * ```
  */
 
-export const useColor = createUseVariable("color", (value) => {
-	let transformedValue = value;
+export const useColor = createUseVariable("color", {
+	transform: (value) => {
+		let transformedValue = value;
 
-	if (typeof value === "string") {
-		const { l, c, h, alpha = 1 } = oklch(value);
-		transformedValue = `oklch(${l} ${c} ${h} / ${alpha})`;
-	}
+		if (typeof value === "string") {
+			const { l, c, h, alpha = 1 } = oklch(value);
+			transformedValue = `oklch(${l} ${c} ${h} / ${alpha})`;
+		}
 
-	return transformedValue;
+		return transformedValue;
+	},
 });

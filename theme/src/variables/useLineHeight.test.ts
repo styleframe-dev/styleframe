@@ -1,7 +1,7 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consume } from "@styleframe/transpiler";
-import { useLineHeight } from "./useLineHeight";
+import { defaultLineHeightValues, useLineHeight } from "./useLineHeight";
 
 describe("useLineHeight", () => {
 	it("should create all line height variables with correct names and values", () => {
@@ -224,7 +224,9 @@ describe("useLineHeight", () => {
 
 		it("should allow customizing the default line height", () => {
 			const s = styleframe();
-			const { lineHeight } = useLineHeight(s, "relaxed");
+			const { lineHeight } = useLineHeight(s, {
+				default: "@relaxed",
+			});
 
 			expect(lineHeight.value).toEqual({
 				type: "reference",
@@ -235,7 +237,10 @@ describe("useLineHeight", () => {
 
 		it("should compile default line height to CSS correctly", () => {
 			const s = styleframe();
-			useLineHeight(s, "loose");
+			useLineHeight(s, {
+				...defaultLineHeightValues,
+				default: "@loose",
+			});
 
 			const css = consume(s.root, s.options);
 
@@ -254,7 +259,10 @@ describe("useLineHeight", () => {
 
 			for (const lineHeightName of lineHeights) {
 				const s = styleframe();
-				const { lineHeight } = useLineHeight(s, lineHeightName);
+				const { lineHeight } = useLineHeight(s, {
+					...defaultLineHeightValues,
+					default: `@${lineHeightName}`,
+				});
 
 				expect(lineHeight.value).toEqual({
 					type: "reference",

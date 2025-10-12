@@ -1,29 +1,38 @@
-import type { Styleframe } from "@styleframe/core";
+import { createUseVariable } from "../utils";
 
-export function useBorderWidth(s: Styleframe, defaultBorderWidth = "thin") {
-	const borderWidthNone = s.variable("border-width--none", 0, {
-		default: true,
-	});
-	const borderWidthThin = s.variable("border-width--thin", "thin", {
-		default: true,
-	});
-	const borderWidthMedium = s.variable("border-width--medium", "medium", {
-		default: true,
-	});
-	const borderWidthThick = s.variable("border-width--thick", "thick", {
-		default: true,
-	});
-	const borderWidth = s.variable(
-		"border-width",
-		s.ref(`border-width--${defaultBorderWidth}`),
-		{ default: true },
-	);
+export const defaultBorderWidthValues = {
+	default: "@thin",
+	none: 0,
+	thin: "thin",
+	medium: "medium",
+	thick: "thick",
+};
 
-	return {
-		borderWidthNone,
-		borderWidthThin,
-		borderWidthMedium,
-		borderWidthThick,
-		borderWidth,
-	};
-}
+/**
+ * Create a set of border-width variables for use in a Styleframe instance.
+ *
+ * @usage
+ * ```typescript
+ * import { styleframe } from "styleframe";
+ * import { useBorderWidth } from "styleframe/theme";
+ *
+ * const s = styleframe();
+ *
+ * const {
+ *   borderWidthNone,
+ *   borderWidthThin,
+ *   borderWidthMedium,
+ *   borderWidthThick,
+ *   borderWidth,
+ * } = useBorderWidth(s, {
+ *   default: "thin",
+ *   none: 0,
+ *   thin: "thin",
+ *   medium: "medium",
+ *   thick: "thick",
+ * });
+ * ```
+ */
+export const useBorderWidth = createUseVariable("border-width", {
+	defaults: defaultBorderWidthValues,
+});

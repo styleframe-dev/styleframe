@@ -1,7 +1,7 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consume } from "@styleframe/transpiler";
-import { useBorderStyle } from "./useBorderStyle";
+import { useBorderStyle, defaultBorderStyleValues } from "./useBorderStyle";
 
 describe("useBorderStyle", () => {
 	it("should create all border style variables with correct names and values", () => {
@@ -274,7 +274,10 @@ describe("useBorderStyle", () => {
 
 		it("should allow customizing the default border style", () => {
 			const s = styleframe();
-			const { borderStyle } = useBorderStyle(s, "dashed");
+			const { borderStyle } = useBorderStyle(s, {
+				...defaultBorderStyleValues,
+				default: "@dashed",
+			});
 
 			expect(borderStyle.value).toEqual({
 				type: "reference",
@@ -285,7 +288,10 @@ describe("useBorderStyle", () => {
 
 		it("should compile default border style to CSS correctly", () => {
 			const s = styleframe();
-			useBorderStyle(s, "dotted");
+			useBorderStyle(s, {
+				...defaultBorderStyleValues,
+				default: "@dotted",
+			});
 
 			const css = consume(s.root, s.options);
 
@@ -316,7 +322,10 @@ describe("useBorderStyle", () => {
 
 			for (const borderStyleName of borderStyleNames) {
 				const s = styleframe();
-				const { borderStyle } = useBorderStyle(s, borderStyleName);
+				const { borderStyle } = useBorderStyle(s, {
+					...defaultBorderStyleValues,
+					default: `@${borderStyleName}`,
+				});
 
 				expect(borderStyle.value).toEqual({
 					type: "reference",

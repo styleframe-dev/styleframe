@@ -1,7 +1,7 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consume } from "@styleframe/transpiler";
-import { useBorderWidth } from "./useBorderWidth";
+import { defaultBorderWidthValues, useBorderWidth } from "./useBorderWidth";
 
 describe("useBorderWidth", () => {
 	it("should create all border width variables with correct names and values", () => {
@@ -209,7 +209,10 @@ describe("useBorderWidth", () => {
 
 		it("should allow customizing the default border width", () => {
 			const s = styleframe();
-			const { borderWidth } = useBorderWidth(s, "medium");
+			const { borderWidth } = useBorderWidth(s, {
+				...defaultBorderWidthValues,
+				default: "@medium",
+			});
 
 			expect(borderWidth.value).toEqual({
 				type: "reference",
@@ -220,7 +223,10 @@ describe("useBorderWidth", () => {
 
 		it("should compile default border width to CSS correctly", () => {
 			const s = styleframe();
-			useBorderWidth(s, "thick");
+			useBorderWidth(s, {
+				...defaultBorderWidthValues,
+				default: "@thick",
+			});
 
 			const css = consume(s.root, s.options);
 
@@ -238,7 +244,10 @@ describe("useBorderWidth", () => {
 
 			for (const borderWidthName of borderWidthNames) {
 				const s = styleframe();
-				const { borderWidth } = useBorderWidth(s, borderWidthName);
+				const { borderWidth } = useBorderWidth(s, {
+					...defaultBorderWidthValues,
+					default: `@${borderWidthName}`,
+				});
 
 				expect(borderWidth.value).toEqual({
 					type: "reference",

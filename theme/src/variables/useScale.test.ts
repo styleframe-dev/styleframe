@@ -247,7 +247,9 @@ describe("useScale", () => {
 
 		it("should allow customizing the default scale", () => {
 			const s = styleframe();
-			const { scale } = useScale(s, "perfect-fourth");
+			const { scale } = useScale(s, {
+				default: "@perfect-fourth",
+			});
 
 			expect(scale.value).toEqual({
 				type: "reference",
@@ -258,7 +260,9 @@ describe("useScale", () => {
 
 		it("should compile default scale to CSS correctly", () => {
 			const s = styleframe();
-			useScale(s, "golden");
+			useScale(s, {
+				default: "@golden",
+			});
 
 			const css = consume(s.root, s.options);
 
@@ -279,7 +283,7 @@ describe("useScale", () => {
 
 			for (const scaleName of scales) {
 				const s = styleframe();
-				const { scale } = useScale(s, scaleName);
+				const { scale } = useScale(s, { default: `@${scaleName}` });
 
 				expect(scale.value).toEqual({
 					type: "reference",
