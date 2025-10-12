@@ -47,24 +47,28 @@ export function isKeyReferenceValue(value: unknown): value is string {
 export function createUseVariable<
 	PropertyName extends string,
 	Delimiter extends string = "--",
-	DefaultValues extends Record<string, TokenValue> = Record<string, TokenValue>,
+	Defaults extends Record<string, TokenValue> = Record<string, TokenValue>,
+	MergeDefaults extends boolean = false,
 >(
 	propertyName: PropertyName,
 	{
 		defaults,
-		mergeDefaults = false,
+		mergeDefaults = false as MergeDefaults,
 		transform = (value) => value,
 		delimiter = "--" as Delimiter,
 	}: {
-		defaults?: DefaultValues;
-		mergeDefaults?: boolean;
+		defaults?: Defaults;
+		mergeDefaults?: MergeDefaults;
 		transform?: (value: TokenValue) => TokenValue;
 		delimiter?: Delimiter;
 	} = {},
 ) {
-	return function useVariable<
-		T extends Record<string, TokenValue> = DefaultValues,
-	>(s: Styleframe, tokens?: T): ExportKeys<PropertyName, T, Delimiter> {
+	type WithDefaults<T> = MergeDefaults extends true ? Defaults & T : T;
+
+	return function useVariable<T extends Record<string, TokenValue> = Defaults>(
+		s: Styleframe,
+		tokens?: T,
+	): ExportKeys<PropertyName, WithDefaults<T>, Delimiter> {
 		const result: Record<string, Variable<string>> = {};
 
 		const resolvedTokens = mergeDefaults
@@ -98,6 +102,6 @@ export function createUseVariable<
 			});
 		}
 
-		return result as ExportKeys<PropertyName, T, Delimiter>;
+		return result as ExportKeys<PropertyName, WithDefaults<T>, Delimiter>;
 	};
 }

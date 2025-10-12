@@ -417,6 +417,354 @@ describe("createUseVariable", () => {
 		});
 	});
 
+	describe("defaults option", () => {
+		it("should use defaults when no tokens are provided", () => {
+			const useColor = createUseVariable("color", {
+				defaults: {
+					default: "#000000",
+					primary: "#3b82f6",
+					secondary: "#8b5cf6",
+				},
+			});
+			const s = styleframe();
+			const { color, colorPrimary, colorSecondary } = useColor(s);
+
+			expect(color.value).toBe("#000000");
+			expect(colorPrimary.value).toBe("#3b82f6");
+			expect(colorSecondary.value).toBe("#8b5cf6");
+		});
+
+		it("should override defaults when tokens are provided", () => {
+			const useColor = createUseVariable("color", {
+				defaults: {
+					default: "#000000",
+					primary: "#3b82f6",
+				},
+			});
+			const s = styleframe();
+			const { color, colorPrimary } = useColor(s, {
+				default: "#ffffff",
+				primary: "#ef4444",
+			});
+
+			expect(color.value).toBe("#ffffff");
+			expect(colorPrimary.value).toBe("#ef4444");
+		});
+
+		it("should work with transform function", () => {
+			const useSize = createUseVariable("size", {
+				defaults: {
+					default: "16",
+					large: "32",
+				},
+				transform: (value) => `${value}px`,
+			});
+			const s = styleframe();
+			const { size, sizeLarge } = useSize(s);
+
+			expect(size.value).toBe("16px");
+			expect(sizeLarge.value).toBe("32px");
+		});
+	});
+
+	describe("mergeDefaults option", () => {
+		it("should merge defaults with tokens when mergeDefaults is true", () => {
+			const useColor = createUseVariable("color", {
+				defaults: {
+					default: "#000000",
+					primary: "#3b82f6",
+					secondary: "#8b5cf6",
+				},
+				mergeDefaults: true,
+			});
+			const s = styleframe();
+			const { color, colorPrimary, colorSecondary, colorTertiary } = useColor(
+				s,
+				{
+					primary: "#ef4444",
+					tertiary: "#f59e0b",
+				},
+			);
+
+			expect(color.value).toBe("#000000"); // from defaults
+			expect(colorPrimary.value).toBe("#ef4444"); // overridden
+			expect(colorSecondary.value).toBe("#8b5cf6"); // from defaults
+			expect(colorTertiary.value).toBe("#f59e0b"); // new token
+		});
+
+		it("should not merge when mergeDefaults is false", () => {
+			const useColor = createUseVariable("color", {
+				defaults: {
+					default: "#000000",
+					primary: "#3b82f6",
+				},
+				mergeDefaults: false,
+			});
+			const s = styleframe();
+			const result = useColor(s, {
+				custom: "#ff0000",
+			});
+
+			expect(result.colorCustom?.value).toBe("#ff0000");
+
+			// @ts-expect-error color key should not be present
+			expect(result.color).toBeUndefined();
+			// @ts-expect-error colorPrimary key should not be present
+			expect(result.colorPrimary).toBeUndefined();
+		});
+
+		it("should merge with empty tokens object", () => {
+			const useSpacing = createUseVariable("spacing", {
+				defaults: {
+					default: "16px",
+					small: "8px",
+				},
+				mergeDefaults: true,
+			});
+			const s = styleframe();
+			const { spacing, spacingSmall } = useSpacing(s, {});
+
+			expect(spacing.value).toBe("16px");
+			expect(spacingSmall.value).toBe("8px");
+		});
+
+		it("should merge and apply transform function", () => {
+			const useSize = createUseVariable("size", {
+				defaults: {
+					small: "8",
+					medium: "16",
+				},
+				mergeDefaults: true,
+				transform: (value) => `${value}px`,
+			});
+			const s = styleframe();
+			const { sizeSmall, sizeMedium, sizeLarge } = useSize(s, {
+				large: "32",
+			});
+
+			expect(sizeSmall.value).toBe("8px");
+			expect(sizeMedium.value).toBe("16px");
+			expect(sizeLarge.value).toBe("32px");
+		});
+	});
+
+	describe("key reference values (@)", () => {
+		it("should resolve key references with @ syntax", () => {
+			const useColor = createUseVariable("color");
+			const s = styleframe();
+			const { color, colorPrimary, colorHover } = useColor(s, {
+				default: "#3b82f6",
+				primary: "@default",
+				hover: "@primary",
+			});
+
+			expect(color.value).toBe("#3b82f6");
+			expect(colorPrimary.value).toEqual({
+				type: "reference",
+				name: "color",
+				fallback: undefined,
+			});
+			expect(colorHover.value).toEqual({
+				type: "reference",
+				name: "color--primary",
+				fallback: undefined,
+			});
+		});
+
+		it("should resolve nested key references", () => {
+			const useSize = createUseVariable("size");
+			const s = styleframe();
+			const { size, sizeMedium, sizeLarge } = useSize(s, {
+				default: "16px",
+				medium: "@default",
+				large: "@medium",
+			});
+
+			expect(size.value).toBe("16px");
+			expect(sizeMedium.value).toEqual({
+				type: "reference",
+				name: "size",
+				fallback: undefined,
+			});
+			expect(sizeLarge.value).toEqual({
+				type: "reference",
+				name: "size--medium",
+				fallback: undefined,
+			});
+		});
+
+		it("should compile key references to CSS correctly", () => {
+			const useSpacing = createUseVariable("spacing");
+			const s = styleframe();
+			useSpacing(s, {
+				default: "16px",
+				small: "8px",
+				medium: "@default",
+			});
+
+			const css = consume(s.root, s.options);
+
+			expect(css).toBe(`:root {
+	--spacing: 16px;
+	--spacing--small: 8px;
+	--spacing--medium: var(--spacing);
+}`);
+		});
+
+		it("should handle key references with transform function", () => {
+			const useSize = createUseVariable("size", {
+				transform: (value) => {
+					if (typeof value === "object" && value !== null && "type" in value) {
+						return value; // Pass through references
+					}
+					return `${value}px`;
+				},
+			});
+			const s = styleframe();
+			const { size, sizeLarge } = useSize(s, {
+				default: "16",
+				large: "@default",
+			});
+
+			expect(size.value).toBe("16px");
+			expect(sizeLarge.value).toEqual({
+				type: "reference",
+				name: "size",
+				fallback: undefined,
+			});
+		});
+
+		it("should sort key references to be processed last when default key exists", () => {
+			const useColor = createUseVariable("color");
+			const s = styleframe();
+			useColor(s, {
+				primary: "@default",
+				default: "#3b82f6",
+				secondary: "@primary",
+				tertiary: "#8b5cf6",
+			});
+
+			// Verify all variables were created
+			expect(s.root.variables).toHaveLength(4);
+
+			// Verify the default variable exists first
+			const defaultVar = s.root.variables.find((v) => v.name === "color");
+			expect(defaultVar?.value).toBe("#3b82f6");
+
+			// Verify references point to correct variables
+			const primaryVar = s.root.variables.find(
+				(v) => v.name === "color--primary",
+			);
+			expect(primaryVar?.value).toEqual({
+				type: "reference",
+				name: "color",
+				fallback: undefined,
+			});
+		});
+
+		it("should work with key references in defaults", () => {
+			const useColor = createUseVariable("color", {
+				defaults: {
+					default: "#3b82f6",
+					primary: "@default",
+					hover: "@primary",
+				},
+			});
+			const s = styleframe();
+			const { color, colorPrimary, colorHover } = useColor(s);
+
+			expect(color.value).toBe("#3b82f6");
+			expect(colorPrimary.value).toEqual({
+				type: "reference",
+				name: "color",
+				fallback: undefined,
+			});
+			expect(colorHover.value).toEqual({
+				type: "reference",
+				name: "color--primary",
+				fallback: undefined,
+			});
+		});
+
+		it("should merge defaults and tokens with key references", () => {
+			const useColor = createUseVariable("color", {
+				defaults: {
+					default: "#3b82f6",
+					primary: "@default",
+				},
+				mergeDefaults: true,
+			});
+			const s = styleframe();
+			const { color, colorPrimary, colorSecondary } = useColor(s, {
+				secondary: "@primary",
+			});
+
+			expect(color.value).toBe("#3b82f6");
+			expect(colorPrimary.value).toEqual({
+				type: "reference",
+				name: "color",
+				fallback: undefined,
+			});
+			expect(colorSecondary.value).toEqual({
+				type: "reference",
+				name: "color--primary",
+				fallback: undefined,
+			});
+		});
+
+		it("should reference non-default keys", () => {
+			const useColor = createUseVariable("color");
+			const s = styleframe();
+			const { colorPrimary, colorSecondary, colorAccent } = useColor(s, {
+				primary: "#3b82f6",
+				secondary: "#8b5cf6",
+				accent: "@secondary",
+			});
+
+			expect(colorPrimary.value).toBe("#3b82f6");
+			expect(colorSecondary.value).toBe("#8b5cf6");
+			expect(colorAccent.value).toEqual({
+				type: "reference",
+				name: "color--secondary",
+				fallback: undefined,
+			});
+		});
+	});
+
+	describe("delimiter option", () => {
+		it("should use custom delimiter", () => {
+			const useColor = createUseVariable("color", {
+				delimiter: "_",
+			});
+			const s = styleframe();
+			const { color, colorPrimary } = useColor(s, {
+				default: "#000000",
+				primary: "#3b82f6",
+			});
+
+			expect(color.name).toBe("color");
+			expect(colorPrimary.name).toBe("color_primary");
+		});
+
+		it("should compile with custom delimiter", () => {
+			const useSpacing = createUseVariable("spacing", {
+				delimiter: ".",
+			});
+			const s = styleframe();
+			useSpacing(s, {
+				default: "16px",
+				small: "8px",
+			});
+
+			const css = consume(s.root, s.options);
+
+			expect(css).toBe(`:root {
+	--spacing: 16px;
+	--spacing-small: 8px;
+}`);
+		});
+	});
+
 	describe("real-world use cases", () => {
 		it("should replicate useFontFamily behavior", () => {
 			const useFontFamily = createUseVariable("font-family");
@@ -448,6 +796,9 @@ describe("createUseVariable", () => {
 
 			expect(spacing.value).toBe("16px");
 			expect(spacingXs.value).toBe("4px");
+			expect(spacingSm.value).toBe("8px");
+			expect(spacingMd.value).toBe("16px");
+			expect(spacingLg.value).toBe("24px");
 			expect(spacingXl.value).toBe("32px");
 		});
 
@@ -463,6 +814,115 @@ describe("createUseVariable", () => {
 			expect(zIndexDropdown.name).toBe("z-index--dropdown");
 			expect(zIndexModal.name).toBe("z-index--modal");
 			expect(zIndexTooltip.name).toBe("z-index--tooltip");
+		});
+
+		it("should create semantic color system with references", () => {
+			const useColor = createUseVariable("color", {
+				defaults: {
+					blue: "#3b82f6",
+					red: "#ef4444",
+					primary: "@blue",
+					danger: "@red",
+					link: "@primary",
+					error: "@danger",
+				},
+			});
+			const s = styleframe();
+			const {
+				colorBlue,
+				colorRed,
+				colorPrimary,
+				colorDanger,
+				colorLink,
+				colorError,
+			} = useColor(s);
+
+			expect(colorBlue.value).toBe("#3b82f6");
+			expect(colorRed.value).toBe("#ef4444");
+			expect(colorPrimary.value).toEqual({
+				type: "reference",
+				name: "color--blue",
+				fallback: undefined,
+			});
+			expect(colorDanger.value).toEqual({
+				type: "reference",
+				name: "color--red",
+				fallback: undefined,
+			});
+			expect(colorLink.value).toEqual({
+				type: "reference",
+				name: "color--primary",
+				fallback: undefined,
+			});
+			expect(colorError.value).toEqual({
+				type: "reference",
+				name: "color--danger",
+				fallback: undefined,
+			});
+		});
+
+		it("should create a design system with defaults and overrides", () => {
+			const useSpacing = createUseVariable("spacing", {
+				defaults: {
+					xs: "4px",
+					sm: "8px",
+					md: "16px",
+					lg: "24px",
+					xl: "32px",
+					default: "@md",
+				},
+				mergeDefaults: true,
+			});
+			const s = styleframe();
+			const { spacing, spacingXs, spacingSm, spacingMd, spacingCustom } =
+				useSpacing(s, {
+					custom: "20px",
+				});
+
+			// All defaults should be present
+			expect(spacingXs.value).toBe("4px");
+			expect(spacingSm.value).toBe("8px");
+			expect(spacingMd.value).toBe("16px");
+
+			// Default should reference md
+			expect(spacing.value).toEqual({
+				type: "reference",
+				name: "spacing--md",
+				fallback: undefined,
+			});
+
+			// Custom should be added
+			expect(spacingCustom.value).toBe("20px");
+		});
+
+		it("should work with transform and key references together", () => {
+			const useDuration = createUseVariable("duration", {
+				defaults: {
+					fast: "150",
+					normal: "300",
+					slow: "500",
+					default: "@normal",
+				},
+				transform: (value) => {
+					// Don't transform references
+					if (typeof value === "object" && value !== null && "type" in value) {
+						return value;
+					}
+					return `${value}ms`;
+				},
+			});
+			const s = styleframe();
+			const { duration, durationFast, durationNormal, durationSlow } =
+				useDuration(s);
+
+			expect(durationFast.value).toBe("150ms");
+			expect(durationNormal.value).toBe("300ms");
+			expect(durationSlow.value).toBe("500ms");
+			expect(duration.value).toEqual({
+				type: "reference",
+				name: "duration--normal",
+				fallback: undefined,
+			});
 		});
 	});
 });
