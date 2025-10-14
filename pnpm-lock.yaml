@@ -380,6 +380,9 @@ importers:
 
   theme:
     dependencies:
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
       scule:
         specifier: ^1.3.0
         version: 1.3.0
@@ -393,6 +396,9 @@ importers:
       '@styleframe/core':
         specifier: workspace:^
         version: link:../engine/core
+      '@styleframe/transpiler':
+        specifier: workspace:^
+        version: link:../engine/transpiler
       typescript:
         specifier: 'catalog:'
         version: 5.8.3
@@ -3656,6 +3662,10 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  culori@4.0.2:
+    resolution: {integrity: sha512-1+BhOB8ahCn4O0cep0Sh2l9KCOfOdY+BXJnKMHFFzDEouSr/el18QwXEMRlOj9UY5nCeA8UN3a/82rUWRBeyBw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   data-uri-to-buffer@4.0.1:
     resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
@@ -10988,6 +10998,8 @@ snapshots:
       css-tree: 2.2.1
 
   csstype@3.1.3: {}
+
+  culori@4.0.2: {}
 
   data-uri-to-buffer@4.0.1:
     optional: true

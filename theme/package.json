@@ -42,6 +42,7 @@
 	},
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"dependencies": {
+		"culori": "^4.0.2",
 		"scule": "^1.3.0"
 	}
 }

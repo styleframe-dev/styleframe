@@ -1,4 +1,4 @@
-export const defaultColorLightnessLevels = {
+export const defaultColorLightnessValues = {
 	50: 5,
 	100: 10,
 	200: 20,
@@ -12,13 +12,13 @@ export const defaultColorLightnessLevels = {
 	950: 95,
 } as const;
 
-export const defaultColorShadeLevels = {
+export const defaultColorShadeValues = {
 	50: 5,
 	100: 10,
 	150: 15,
 } as const;
 
-export const defaultColorTintLevels = {
+export const defaultColorTintValues = {
 	50: 5,
 	100: 10,
 	150: 15,
