@@ -1,8 +1,10 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consume } from "@styleframe/transpiler";
-import { defaultColorLightnessValues } from "../constants";
-import { useColorLightness } from "./useColorLightness";
+import {
+	useColorLightness,
+	defaultColorLightnessValues,
+} from "./useColorLightness";
 
 describe("useColorLightness", () => {
 	it("should create lightness levels with default values", () => {

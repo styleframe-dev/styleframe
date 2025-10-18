@@ -8,7 +8,9 @@ type ExportKeyVariableName<
 	Prefix extends string,
 	K,
 	Separator extends string = "--",
-> = K extends "default" ? Prefix : `${Prefix}${Separator}${string & K}`;
+> = K extends "default"
+	? Prefix
+	: `${Prefix}${Separator}${K & (string | number)}`;
 
 /**
  * Generic type that transforms keys to their export names with a given prefix

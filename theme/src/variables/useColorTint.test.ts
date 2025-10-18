@@ -1,8 +1,7 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consume } from "@styleframe/transpiler";
-import { defaultColorTintValues } from "../constants";
-import { useColorTint } from "./useColorTint";
+import { useColorTint, defaultColorTintValues } from "./useColorTint";
 
 describe("useColorTint", () => {
 	it("should create tint levels with default values", () => {
