@@ -7,8 +7,9 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"dev:docs": "turbo run dev --filter @styleframe/docs",
-		"release": "pnpm publish -r",
-		"prerelease": "turbo run build --filter '!@styleframe/docs'",
+		"ci:release": "pnpm publish -r",
+		"ci:version": "changeset version",
+		"ci:prerelease": "turbo run build --filter '!@styleframe/docs'",
 		"build": "turbo run build",
 		"test": "turbo run test",
 		"typecheck": "turbo run typecheck",

@@ -9,8 +9,11 @@
 	"commit": false,
 	"fixed": [],
 	"linked": [],
-	"access": "restricted",
+	"access": "public",
 	"baseBranch": "main",
 	"updateInternalDependencies": "patch",
-	"ignore": []
+	"snapshot": {
+		"useCalculatedVersion": true
+	},
+	"ignore": ["@styleframe/docs"]
 }
