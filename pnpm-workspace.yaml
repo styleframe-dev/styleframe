@@ -1,3 +1,4 @@
+gitChecks: false
 packages:
     - config/**
     - devtools/**

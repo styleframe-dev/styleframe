@@ -3,7 +3,12 @@
 	"tasks": {
 		"build": {
 			"cache": true,
-			"inputs": ["src/**", "vite.config.ts", "package.json"],
+			"inputs": [
+				"src/**",
+				"vite.config.ts",
+				"tsdown.config.ts",
+				"package.json"
+			],
 			"outputs": ["theme/**", "dist/**", ".output/**"],
 			"dependsOn": ["^build"]
 		},
