@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/loader",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.js",
