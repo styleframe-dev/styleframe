@@ -11,6 +11,9 @@
 			"require": "./tsconfig.json"
 		}
 	},
+	"files": [
+		"tsconfig.json"
+	],
 	"homepage": "https://styleframe.dev",
 	"repository": {
 		"type": "git",
