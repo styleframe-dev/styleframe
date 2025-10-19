@@ -1,13 +1,14 @@
 {
 	"name": "@styleframe/monorepo",
-	"version": "0.0.1",
+	"version": "1.0.0",
+	"private": true,
 	"description": "Write modern, clean, composable CSS using TypeScript, with a focus on simplicity and performance.",
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"scripts": {
 		"dev": "turbo run dev",
 		"dev:docs": "turbo run dev --filter @styleframe/docs",
-		"release": "pnpm publish -r",
-		"prerelease": "turbo run build --filter=!@styleframe/docs",
+		"release": "pnpm publish -r --filter '!@styleframe/monorepo'",
+		"prerelease": "turbo run build --filter '!@styleframe/docs'",
 		"build": "turbo run build",
 		"test": "turbo run test",
 		"typecheck": "turbo run typecheck",
