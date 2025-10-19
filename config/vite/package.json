@@ -3,7 +3,6 @@
 	"version": "0.0.0",
 	"description": "TypeScript configuration for styleframe projects.",
 	"author": "Alex Grozav <alex@styleframe.dev>",
-	"private": true,
 	"type": "module",
 	"types": "vite.config.d.ts",
 	"main": "vite.config.js",

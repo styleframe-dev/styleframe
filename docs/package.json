@@ -1,6 +1,5 @@
 {
 	"name": "@styleframe/docs",
-	"private": true,
 	"type": "module",
 	"scripts": {
 		"build": "nuxt build",
