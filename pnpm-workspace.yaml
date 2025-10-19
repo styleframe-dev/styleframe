@@ -4,6 +4,7 @@ packages:
     - docs
     - engine/**
     - theme
+    - pro
 catalog:
     "@types/node": ^22.14.0
     lint-staged: ^16.1.2
