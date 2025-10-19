@@ -19,7 +19,7 @@
 					Unlock advanced capabilities with styleframe Pro. This
 					feature requires a Pro license to access.
 				</ProseP>
-				<UButton class="mt-2" color="neutral" size="sm">
+				<UButton class="mt-2" color="neutral" size="sm" to="/pricing">
 					Upgrade to Pro
 				</UButton>
 			</div>

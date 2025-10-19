@@ -65,8 +65,8 @@ const sections = [
 				tiers: { solo: true, startup: true, organization: true },
 			},
 			{
-				id: "access",
-				title: "Access to the Pro GitHub repository",
+				id: "discord",
+				title: "Access to private Discord channels",
 				tiers: { solo: true, startup: true, organization: true },
 			},
 			{
