@@ -1,23 +1,22 @@
 <div align="center">
   <img src="https://www.styleframe.dev/_vercel/image?url=%2Flogotype-light.svg&w=1536&q=100" alt="Styleframe" width="320" height="120">
-  
 
-  
-  **Type-safe, Composable CSS in TypeScript**
-  
-  Write type-safe, composable, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
-  
-  [![npm version](https://img.shields.io/npm/v/styleframe.svg)](https://www.npmjs.com/package/styleframe)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE)
-  [![Discord](https://img.shields.io/discord/1395724958919032943?label=Discord&logo=discord)](https://discord.gg/KCVwuGz44M)
-  
-  [Homepage](https://styleframe.dev) · [Documentation](https://styleframe.dev/docs)
+**Type-safe, Composable CSS in TypeScript**
+
+Write type-safe, composable, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
+
+[![npm version](https://img.shields.io/npm/v/styleframe.svg)](https://www.npmjs.com/package/styleframe)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE)
+[![Discord](https://img.shields.io/discord/1395724958919032943?label=Discord&logo=discord)](https://discord.gg/KCVwuGz44M)
+
+[Homepage](https://styleframe.dev) · [Documentation](https://styleframe.dev/docs)
+
 </div>
 
 ---
 
 # styleframe
-  
+
 ## ✨ Features
 
 - **🛡️ Type-safe CSS API** - Catch style bugs at compile time with full TypeScript support
@@ -66,34 +65,33 @@ Using the CLI command above, it will:
 - Add the `styleframe` plugin to Vite, if possible
 - Create a new `styleframe.config.ts` file
 
-
 ## 💡 Usage
 
 ```typescript
-import { styleframe } from 'styleframe';
+import { styleframe } from "styleframe";
 
 const s = styleframe();
 const { variable, ref, selector, theme } = s;
 
 // Define design tokens
-const colorPrimary = variable('color--primary', '#006cff');
-const spacing = variable('spacing--md', '1rem');
+const colorPrimary = variable("color--primary", "#006cff");
+const spacing = variable("spacing--md", "1rem");
 
 // Create styles
-selector('.button', {
+selector(".button", {
     backgroundColor: ref(colorPrimary),
     padding: ref(spacing),
-    borderRadius: '4px',
-    color: 'white',
-    
-    '&:hover': {
+    borderRadius: "4px",
+    color: "white",
+
+    "&:hover": {
         opacity: 0.9,
     },
 });
 
 // Add dark theme
-theme('dark', (ctx) => {
-    ctx.variable(colorPrimary, '#60a5fa');
+theme("dark", (ctx) => {
+    ctx.variable(colorPrimary, "#60a5fa");
 });
 
 export default s;
@@ -101,7 +99,7 @@ export default s;
 
 ## 📚 Documentation
 
-Styleframe is extremely powerful and flexible. The code preview above is just a small example of what you can achieve with styleframe. 
+Styleframe is extremely powerful and flexible. The code preview above is just a small example of what you can achieve with styleframe.
 
 Read the full documentation at [https://styleframe.dev](https://styleframe.dev).
 
@@ -117,7 +115,7 @@ Styleframe works seamlessly with any framework:
 
 - **Vite** - Native plugin support
 - **React** - Perfect for component libraries
-- **Vue** - Full SFC compatibility  
+- **Vue** - Full SFC compatibility
 - **Svelte** - Works out of the box
 - **Astro** - Static site ready
 - **Solid** - Reactive styling

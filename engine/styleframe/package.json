@@ -1,6 +1,6 @@
 {
 	"name": "styleframe",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"bin": {
 		"styleframe": "./dist/cli.cjs"
 	},
@@ -8,6 +8,7 @@
 	"type": "module",
 	"license": "MIT",
 	"files": [
+		"README.md",
 		"dist"
 	],
 	"main": "./dist/index.js",

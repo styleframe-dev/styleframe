@@ -6,6 +6,10 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"dev:docs": "turbo run dev --filter @styleframe/docs",
+		"release:step-1": "turbo run build --filter=!@styleframe/docs && cp README.md engine/styleframe",
+		"release:step-2": "changeset",
+		"release:step-3": "changeset version",
+		"release:step-4": "pnpm publish -r",
 		"build": "turbo run build",
 		"test": "turbo run test",
 		"typecheck": "turbo run typecheck",

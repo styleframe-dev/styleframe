@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/build",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "TypeScript configuration for styleframe projects.",
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"type": "module",

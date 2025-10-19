@@ -1,5 +1,13 @@
 # @styleframe/theme
 
+## 1.0.1
+
+### Patch Changes
+
+- Update README.md
+- Updated dependencies
+  - @styleframe/core@1.0.1
+
 ## 1.0.0
 
 ### Major Changes

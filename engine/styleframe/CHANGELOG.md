@@ -1,5 +1,16 @@
 # styleframe
 
+## 1.0.1
+
+### Patch Changes
+
+- Update README.md
+- Updated dependencies
+  - @styleframe/cli@1.0.1
+  - @styleframe/core@1.0.1
+  - @styleframe/loader@1.0.1
+  - @styleframe/transpiler@1.0.1
+
 ## 1.0.0
 
 ### Major Changes
