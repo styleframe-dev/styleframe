@@ -24,5 +24,8 @@ export const createViteConfig = (name, cwd, options = {}) =>
 			include: [resolve(cwd, "src/**/*.test.{ts,tsx}")],
 			exclude: vitestConfig.exclude,
 			reporters: ["verbose"],
+			coverage: {
+				provider: "v8",
+			},
 		},
 	});
