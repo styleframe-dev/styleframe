@@ -18,7 +18,7 @@
 		"prebuild": "tsx ./scripts/prebuild.ts",
 		"build": "pnpm run prebuild && pnpm typecheck && vite build",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest run",
+		"test": "vitest run --passWithNoTests",
 		"test:dev": "vitest --watch",
 		"playground:init": "tsx src/playground/init.ts",
 		"playground:build": "tsx src/playground/build.ts"

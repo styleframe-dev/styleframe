@@ -163,10 +163,6 @@ jobs:
         name: Test
         runs-on: ubuntu-latest
         needs: build
-        strategy:
-            fail-fast: false
-            matrix:
-                shard: [1, 2]
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -191,8 +187,8 @@ jobs:
                   name: build-artifacts
                   path: .
 
-            - name: Run tests (${{ matrix.shard }}/2)
-              run: pnpm test -- --shard=${{ matrix.shard }}/2
+            - name: Run tests
+              run: pnpm test
               env:
                   NODE_ENV: test
 
@@ -201,6 +197,6 @@ jobs:
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
                   files: ./engine/*/coverage/lcov.info,./theme/*/coverage/lcov.info
-                  flags: unittests-shard-${{ matrix.shard }}
-                  name: codecov-shard-${{ matrix.shard }}
+                  flags: unittests
+                  name: codecov
                   fail_ci_if_error: false
