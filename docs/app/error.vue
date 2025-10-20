@@ -10,12 +10,10 @@ const props = defineProps<{
 const { locale, locales, isEnabled, t, switchLocalePath } = useDocusI18n();
 
 const lang = computed(
-	() =>
-		nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.code || "en",
+	() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.code || "en",
 );
 const dir = computed(
-	() =>
-		nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.dir || "ltr",
+	() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.dir || "ltr",
 );
 useHead({
 	htmlAttrs: {
@@ -54,19 +52,15 @@ const collectionName = computed(() =>
 const { data: navigation } = await useAsyncData(
 	`navigation_${collectionName.value}`,
 	() =>
-		queryCollectionNavigation(
-			collectionName.value as keyof PageCollections,
-		),
+		queryCollectionNavigation(collectionName.value as keyof PageCollections),
 	{
 		transform: (data) => {
 			const rootResult =
-				data.find((item) => item.path === "/docs")?.children ||
-				data ||
-				[];
+				data.find((item) => item.path === "/docs")?.children || data || [];
 
 			return (
-				rootResult.find((item) => item.path === `/${locale.value}`)
-					?.children || rootResult
+				rootResult.find((item) => item.path === `/${locale.value}`)?.children ||
+				rootResult
 			);
 		},
 		watch: [locale],
