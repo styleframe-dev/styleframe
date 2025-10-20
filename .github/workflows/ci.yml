@@ -19,7 +19,6 @@ env:
     TURBO_REMOTE_ONLY: true
     # Node configuration
     NODE_VERSION: 22
-    PNPM_VERSION: 10.7.1
 
 jobs:
     # Lint job - runs oxlint and biome format check
@@ -34,8 +33,6 @@ jobs:
 
             - name: Setup pnpm
               uses: pnpm/action-setup@v4
-              with:
-                  version: ${{ env.PNPM_VERSION }}
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
@@ -64,8 +61,6 @@ jobs:
 
             - name: Setup pnpm
               uses: pnpm/action-setup@v4
-              with:
-                  version: ${{ env.PNPM_VERSION }}
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
@@ -91,8 +86,6 @@ jobs:
 
             - name: Setup pnpm
               uses: pnpm/action-setup@v4
-              with:
-                  version: ${{ env.PNPM_VERSION }}
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
@@ -130,8 +123,6 @@ jobs:
 
             - name: Setup pnpm
               uses: pnpm/action-setup@v4
-              with:
-                  version: ${{ env.PNPM_VERSION }}
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
