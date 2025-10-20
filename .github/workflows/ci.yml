@@ -191,7 +191,7 @@ jobs:
                   name: build-artifacts
                   path: .
 
-            - name: Run tests (shard ${{ matrix.shard }})
+            - name: Run tests (${{ matrix.shard }}/2)
               run: pnpm test -- --shard=${{ matrix.shard }}/2
               env:
                   NODE_ENV: test
