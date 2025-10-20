@@ -14,9 +14,9 @@ concurrency:
 
 env:
     # Turbo configuration
-    TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-    TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-    TURBO_REMOTE_ONLY: true
+    TURBO_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    TURBO_TEAM: ${{ vars.VERCEL_TEAM }}
+    TURBO_CACHE: remote:rw
     # Node configuration
     NODE_VERSION: 22
 
