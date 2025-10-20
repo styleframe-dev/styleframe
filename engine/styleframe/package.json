@@ -43,7 +43,7 @@
 	"scripts": {
 		"build": "tsdown",
 		"dev": "tsdown --watch",
-		"test": "vitest",
+		"test": "vitest run --passWithNoTests",
 		"typecheck": "tsc --noEmit",
 		"release": "bumpp && npm publish"
 	},
