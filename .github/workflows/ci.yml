@@ -47,7 +47,7 @@ jobs:
               run: pnpm lint
 
             - name: Check formatting with Biome
-              run: pnpm exec biome format . --check
+              run: pnpm run format:check
 
     # Type checking job
     typecheck:
@@ -76,7 +76,7 @@ jobs:
 
     # Test job with matrix for multiple Node versions
     test:
-        name: Test (Node ${{ matrix.node }})
+        name: Test
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
