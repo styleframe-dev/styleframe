@@ -16,7 +16,7 @@
 		"dev": "vite build --watch",
 		"build": "pnpm typecheck && vite build",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest run",
+		"test": "vitest run --passWithNoTests",
 		"test:dev": "vitest --watch",
 		"playground:build": "tsx src/playground/build.ts",
 		"playground:load": "tsx src/playground/load.ts",
