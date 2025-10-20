@@ -1,0 +1,40 @@
+# CODEOWNERS file for Styleframe repository
+# This file defines code ownership and review responsibilities
+# More info: https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
+
+# Global ownership - Alex Grozav is the primary maintainer
+* @alexgrozav
+
+# Core engine packages
+/engine/ @alexgrozav
+
+# Documentation
+/docs/ @alexgrozav
+README.md @alexgrozav
+*.md @alexgrozav
+
+# Configuration files
+/config/ @alexgrozav
+/.github/ @alexgrozav
+*.json @alexgrozav
+*.yaml @alexgrozav
+*.yml @alexgrozav
+tsconfig.json @alexgrozav
+turbo.json @alexgrozav
+biome.json @alexgrozav
+
+# Package management
+package.json @alexgrozav
+pnpm-*.yaml @alexgrozav
+pnpm-lock.yaml @alexgrozav
+
+# Theme package
+/theme/ @alexgrozav
+
+# Development tools
+/devtools/ @alexgrozav
+
+# CI/CD and automation
+/.github/workflows/ @alexgrozav
+/.changeset/ @alexgrozav
+.husky/ @alexgrozav
