@@ -48,11 +48,6 @@ jobs:
               env:
                   NODE_ENV: production
 
-            - name: Build docs
-              run: pnpm build --filter '@styleframe/docs'
-              env:
-                  NODE_ENV: production
-
             - name: Upload build artifacts
               uses: actions/upload-artifact@v4
               with:
@@ -60,7 +55,6 @@ jobs:
                   path: |
                       engine/*/dist
                       theme/*/dist
-                      apps/docs/.nuxt
                   retention-days: 7
 
             - name: Upload node_modules for downstream jobs
@@ -71,7 +65,6 @@ jobs:
                       node_modules
                       engine/*/node_modules
                       theme/*/node_modules
-                      apps/*/node_modules
                   retention-days: 1
 
     # Lint job - runs oxlint and biome format check
