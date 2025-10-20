@@ -21,100 +21,10 @@ env:
     NODE_VERSION: 22
 
 jobs:
-    # Lint job - runs oxlint and biome format check
-    lint:
-        name: Lint
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: ${{ env.NODE_VERSION }}
-                  cache: "pnpm"
-
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
-
-            - name: Run oxlint
-              run: pnpm lint
-
-            - name: Check formatting with Biome
-              run: pnpm run format:check
-
-    # Type checking job
-    typecheck:
-        name: Type Check
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: ${{ env.NODE_VERSION }}
-                  cache: "pnpm"
-
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
-
-            - name: Run type checking
-              run: pnpm typecheck
-
-    # Test job with matrix for multiple Node versions
-    test:
-        name: Test
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
-
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: ${{ matrix.node }}
-                  cache: "pnpm"
-
-            - name: Install dependencies
-              run: pnpm install --frozen-lockfile
-
-            - name: Run tests
-              run: pnpm test
-              env:
-                  NODE_ENV: test
-
-            - name: Upload coverage reports
-              uses: codecov/codecov-action@v4
-              with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  files: ./engine/*/coverage/lcov.info,./theme/*/coverage/lcov.info
-                  flags: unittests
-                  name: codecov-umbrella
-                  fail_ci_if_error: false
-
-    # Build job
+    # Build job runs first to generate artifacts
     build:
         name: Build
         runs-on: ubuntu-latest
-        needs: [lint, typecheck, test]
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -148,6 +58,133 @@ jobs:
               with:
                   name: build-artifacts
                   path: |
-                      packages/*/dist
-                      apps/docs/.next
+                      engine/*/dist
+                      theme/*/dist
+                      apps/docs/.nuxt
                   retention-days: 7
+
+            - name: Upload node_modules for downstream jobs
+              uses: actions/upload-artifact@v4
+              with:
+                  name: node-modules
+                  path: |
+                      node_modules
+                      engine/*/node_modules
+                      theme/*/node_modules
+                      apps/*/node_modules
+                  retention-days: 1
+
+    # Lint job - runs oxlint and biome format check
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: "pnpm"
+
+            - name: Download node_modules
+              uses: actions/download-artifact@v4
+              with:
+                  name: node-modules
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-artifacts
+
+            - name: Run oxlint
+              run: pnpm lint
+
+            - name: Check formatting with Biome
+              run: pnpm run format:check
+
+    # Type checking job
+    typecheck:
+        name: Type Check
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: "pnpm"
+
+            - name: Download node_modules
+              uses: actions/download-artifact@v4
+              with:
+                  name: node-modules
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-artifacts
+
+            - name: Run type checking
+              run: pnpm typecheck
+
+    # Test job
+    test:
+        name: Test
+        runs-on: ubuntu-latest
+        needs: build
+        strategy:
+            fail-fast: false
+            matrix:
+                shard: [1, 2]
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: "pnpm"
+
+            - name: Download node_modules
+              uses: actions/download-artifact@v4
+              with:
+                  name: node-modules
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                  name: build-artifacts
+
+            - name: Run tests (shard ${{ matrix.shard }})
+              run: pnpm test -- --shard=${{ matrix.shard }}/2
+              env:
+                  NODE_ENV: test
+
+            - name: Upload coverage reports
+              uses: codecov/codecov-action@v4
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  files: ./engine/*/coverage/lcov.info,./theme/*/coverage/lcov.info
+                  flags: unittests-shard-${{ matrix.shard }}
+                  name: codecov-shard-${{ matrix.shard }}
+                  fail_ci_if_error: false
