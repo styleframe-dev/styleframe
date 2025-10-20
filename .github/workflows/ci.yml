@@ -188,7 +188,7 @@ jobs:
                   path: .
 
             - name: Run tests
-              run: pnpm test
+              run: pnpm test -- --coverage
               env:
                   NODE_ENV: test
 
@@ -197,6 +197,4 @@ jobs:
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
                   files: ./engine/*/coverage/lcov.info,./theme/*/coverage/lcov.info
-                  flags: unittests
-                  name: codecov
-                  fail_ci_if_error: false
+                  slug: styleframe-dev/styleframe

@@ -13,3 +13,5 @@ yarn-error.log*
 .tsbuildinfo
 
 .DS_Store
+
+coverage
