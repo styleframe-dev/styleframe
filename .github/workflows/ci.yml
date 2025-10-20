@@ -188,7 +188,7 @@ jobs:
                   path: .
 
             - name: Run tests
-              run: pnpm test
+              run: pnpm test -- --coverage
               env:
                   NODE_ENV: test
 
