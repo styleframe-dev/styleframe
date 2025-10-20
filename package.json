@@ -14,6 +14,7 @@
 		"test": "turbo run test",
 		"typecheck": "turbo run typecheck",
 		"lint": "oxlint",
+		"format:check": "biome format",
 		"format": "biome format --write",
 		"prepare": "husky"
 	},

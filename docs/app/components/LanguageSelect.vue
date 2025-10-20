@@ -32,8 +32,7 @@ function getEmojiFlag(locale: string): string {
 
 	const baseLanguage = locale.split("-")[0]?.toLowerCase() || locale;
 	const countryCode =
-		languageToCountry[baseLanguage] ||
-		locale.replace(/^.*-/, "").slice(0, 2);
+		languageToCountry[baseLanguage] || locale.replace(/^.*-/, "").slice(0, 2);
 
 	return countryCode
 		.toUpperCase()

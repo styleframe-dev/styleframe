@@ -4,8 +4,7 @@ import type { ContentNavigationItem } from "@nuxt/content";
 const route = useRoute();
 const docsNavigation = inject<Ref<ContentNavigationItem[]>>("navigation");
 const docsLink = computed(
-	() =>
-		docsNavigation?.value.flatMap((item) => item.children || [item]) || [],
+	() => docsNavigation?.value.flatMap((item) => item.children || [item]) || [],
 );
 const isDocs = computed(
 	() => docsLink.value.findIndex((item) => item.path === route.path) !== -1,

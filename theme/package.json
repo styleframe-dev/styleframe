@@ -24,6 +24,7 @@
 		"@styleframe/config-vite": "workspace:^",
 		"@styleframe/core": "workspace:^",
 		"@styleframe/transpiler": "workspace:^",
+		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vite-plugin-dts": "catalog:",

@@ -66,8 +66,7 @@ watch(
 	() => navigation?.value,
 	() => {
 		headline.value =
-			findPageHeadline(navigation?.value, page.value?.path) ||
-			headline.value;
+			findPageHeadline(navigation?.value, page.value?.path) || headline.value;
 	},
 );
 

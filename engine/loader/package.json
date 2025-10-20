@@ -16,7 +16,7 @@
 		"dev": "vite build --watch",
 		"build": "pnpm typecheck && vite build",
 		"typecheck": "tsc --noEmit",
-		"test": "vitest run",
+		"test": "vitest run --passWithNoTests",
 		"test:dev": "vitest --watch",
 		"playground:build": "tsx src/playground/build.ts",
 		"playground:load": "tsx src/playground/load.ts",
@@ -30,6 +30,7 @@
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^",
 		"@styleframe/config-vite": "workspace:^",
+		"@vitest/coverage-v8": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",

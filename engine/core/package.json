@@ -25,6 +25,7 @@
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^",
 		"@styleframe/config-vite": "workspace:^",
+		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vitest": "catalog:",
