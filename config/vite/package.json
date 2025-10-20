@@ -13,6 +13,10 @@
 			"require": "./vite.config.js"
 		}
 	},
+	"files": [
+		"vite.config.js",
+		"vite.config.d.ts"
+	],
 	"homepage": "https://styleframe.dev",
 	"repository": {
 		"type": "git",

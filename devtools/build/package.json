@@ -44,5 +44,8 @@
 	"engines": {
 		"node": ">=7.6.0"
 	},
-	"license": "MIT"
+	"license": "MIT",
+	"overrides": {
+		"vite": "npm:rolldown-vite@latest"
+	}
 }
