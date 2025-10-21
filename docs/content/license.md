@@ -57,6 +57,18 @@ In exchange for the license fee _the Customer_ owes under _Payment_, _Styleframe
 
 The _License_ granted under this agreement is in addition to, and separate from, _Styleframe_'s public licenses for _Styleframe Community_. This _License_ agreement and the public licenses for _Styleframe Community_ will be read separately, as independent legal documents.
 
+### 3.3. Development Mode Exception
+
+Notwithstanding the license fee requirements in Section 3.1, _Styleframe_ grants a limited, non-exclusive, non-transferable license to use _Styleframe Pro_ in **development environments only**, free of charge, subject to the following conditions:
+
+- **Development Only**: This free license applies exclusively to local development, testing, and staging environments. "Development environment" means any environment not accessible to end users or the general public.
+
+- **Production Requires License**: Deploying, hosting, or making _Styleframe Pro_ accessible in production environments, or any environment accessible to end users or the general public, requires a valid paid _License_ as described in Section 3.1.
+
+- **No Distribution**: The development mode exception does not grant any rights to distribute, sublicense, or share _Styleframe Pro_ with non-_Team Members_.
+
+- **Watermark/Warnings**: _Styleframe Pro_ may display development mode indicators, watermarks, or console warnings when used without a valid production license key.
+
 ## 4. Rights and Obligations
 
 ### 4.1. What _the Customer_ May Do
