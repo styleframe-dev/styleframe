@@ -55,6 +55,7 @@ jobs:
                   path: |
                       engine/*/dist
                       theme/*/dist
+                      tooling/*/dist
                   retention-days: 7
 
     # Build docs separately
