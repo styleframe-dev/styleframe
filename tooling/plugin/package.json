@@ -91,6 +91,7 @@
 	},
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^",
+		"@vitest/coverage-v8": "catalog:",
 		"@nuxt/kit": "^3.17.4",
 		"@nuxt/schema": "^3.17.4",
 		"@types/node": "^22.15.21",
