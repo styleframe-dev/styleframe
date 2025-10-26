@@ -3,6 +3,7 @@ packages:
     - docs
     - engine/**
     - theme
+    - testing/**
     - tooling/**
 catalog:
     "@types/node": ^22.14.0
@@ -10,6 +11,7 @@ catalog:
     lint-staged: ^16.1.2
     husky: ^9.1.7
     nuxt: ^3.17.5
+    npm-run-all2: ^8.0.4
     oxlint: ^1.2.0
     typescript: ^5.8.3
     turbo: ^2.5.4
