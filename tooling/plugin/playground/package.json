@@ -1,4 +1,5 @@
 {
+	"name": "@styleframe/plugin-playground",
 	"type": "module",
 	"private": true,
 	"scripts": {

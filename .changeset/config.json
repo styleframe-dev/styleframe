@@ -15,5 +15,5 @@
 	"snapshot": {
 		"useCalculatedVersion": true
 	},
-	"ignore": ["@styleframe/docs"]
+	"ignore": ["@styleframe/docs", "@styleframe/plugin-playground"]
 }
