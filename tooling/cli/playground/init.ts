@@ -10,6 +10,11 @@ const __dirname = new URL(".", import.meta.url).pathname;
 		path.join(__dirname, "package.json"),
 	);
 
+	await copyFile(
+		path.join(__dirname, "vite.config.template.ts"),
+		path.join(__dirname, "vite.config.ts"),
+	);
+
 	// biome-ignore lint/suspicious/noExplicitAny: No need for explicit type
 	await init.run?.({ args: { cwd: __dirname } } as any);
 })();

@@ -25,3 +25,4 @@ dist-ssr
 
 playground/styleframe
 playground/package.json
+playground/vite.config.ts

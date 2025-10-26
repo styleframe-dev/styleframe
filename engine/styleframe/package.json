@@ -11,6 +11,7 @@
 		"README.md",
 		"dist"
 	],
+	"sideEffects": false,
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -35,6 +36,46 @@
 			"import": "./dist/transpiler.js",
 			"require": "./dist/transpiler.cjs"
 		},
+		"./plugin/astro": {
+			"types": "./dist/plugin/astro.d.ts",
+			"import": "./dist/plugin/astro.js",
+			"require": "./dist/plugin/astro.cjs"
+		},
+		"./plugin/esbuild": {
+			"types": "./dist/plugin/esbuild.d.ts",
+			"import": "./dist/plugin/esbuild.js",
+			"require": "./dist/plugin/esbuild.cjs"
+		},
+		"./plugin/farm": {
+			"types": "./dist/plugin/farm.d.ts",
+			"import": "./dist/plugin/farm.js",
+			"require": "./dist/plugin/farm.cjs"
+		},
+		"./plugin/nuxt": {
+			"types": "./dist/plugin/nuxt.d.ts",
+			"import": "./dist/plugin/nuxt.js",
+			"require": "./dist/plugin/nuxt.cjs"
+		},
+		"./plugin/rollup": {
+			"types": "./dist/plugin/rollup.d.ts",
+			"import": "./dist/plugin/rollup.js",
+			"require": "./dist/plugin/rollup.cjs"
+		},
+		"./plugin/rspack": {
+			"types": "./dist/plugin/rspack.d.ts",
+			"import": "./dist/plugin/rspack.js",
+			"require": "./dist/plugin/rspack.cjs"
+		},
+		"./plugin/vite": {
+			"types": "./dist/plugin/vite.d.ts",
+			"import": "./dist/plugin/vite.js",
+			"require": "./dist/plugin/vite.cjs"
+		},
+		"./plugin/webpack": {
+			"types": "./dist/plugin/webpack.d.ts",
+			"import": "./dist/plugin/webpack.js",
+			"require": "./dist/plugin/webpack.cjs"
+		},
 		"./package.json": "./package.json"
 	},
 	"publishConfig": {
@@ -49,6 +90,7 @@
 	},
 	"dependencies": {
 		"@styleframe/cli": "workspace:^",
+		"@styleframe/plugin": "workspace:^",
 		"@styleframe/core": "workspace:^",
 		"@styleframe/loader": "workspace:^",
 		"@styleframe/transpiler": "workspace:^"

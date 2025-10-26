@@ -3,6 +3,9 @@ import { defineCommand } from "citty";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
 import { fileExists } from "../utils";
+import { initializeViteFrameworkFile } from "./init/vite";
+import { initializeNuxtFrameworkFile } from "./init/nuxt";
+import { DOCS_INSTALLATION_CUSTOM_URL } from "../constants";
 
 const styleframeConfigTemplate = `import { styleframe } from "styleframe";
 
@@ -31,13 +34,9 @@ export async function addPackageJsonDependencies(cwd: string) {
 	if (await fileExists(packageJsonPath)) {
 		const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
 
-		if (!packageJson.dependencies) packageJson.dependencies = {};
-		packageJson.dependencies["styleframe"] = "^1.0.0";
-		packageJson.dependencies["@styleframe/theme"] = "^1.0.0";
-
 		if (!packageJson.devDependencies) packageJson.devDependencies = {};
-		packageJson.devDependencies["@styleframe/cli"] = "^1.0.0";
-		packageJson.devDependencies["@styleframe/plugin"] = "^1.0.0";
+		packageJson.devDependencies["styleframe"] = "^1.0.0";
+		packageJson.devDependencies["@styleframe/theme"] = "^1.0.0";
 
 		await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
@@ -45,6 +44,19 @@ export async function addPackageJsonDependencies(cwd: string) {
 	} else {
 		consola.warn(
 			`Skipped adding styleframe to dependencies because package.json could not be found.`,
+		);
+	}
+}
+
+export async function initializeFrameworkFile(cwd: string) {
+	if (await fileExists(path.join(cwd, "vite.config.ts"))) {
+		await initializeViteFrameworkFile(cwd);
+	} else if (await fileExists(path.join(cwd, "nuxt.config.ts"))) {
+		await initializeNuxtFrameworkFile(cwd);
+	} else {
+		consola.warn(
+			"No framework file detected. Read more about setting up styleframe manually.",
+			DOCS_INSTALLATION_CUSTOM_URL,
 		);
 	}
 }
@@ -71,5 +83,6 @@ export default defineCommand({
 
 		await initializeConfigFile(cwd);
 		await addPackageJsonDependencies(cwd);
+		await initializeFrameworkFile(cwd);
 	},
 });
