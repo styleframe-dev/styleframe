@@ -30,13 +30,14 @@ const packageToTarballMap = createPackageTarballs(workspaceDir, {
  * 3. Create starter vite package
  */
 
+const viteStyleframeCLITarget = "tmp/vite-styleframe-cli";
 const viteStyleframeCLIOutputDir = path.resolve(
 	packageDir,
 	"tmp/vite-styleframe-cli",
 );
 
 createStarterVitePackage(packageDir, {
-	outputDir: viteStyleframeCLIOutputDir,
+	outputDir: viteStyleframeCLITarget,
 });
 
 /**

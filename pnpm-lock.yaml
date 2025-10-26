@@ -352,9 +352,6 @@ importers:
 
   testing/integration:
     dependencies:
-      '@styleframe/core':
-        specifier: workspace:^
-        version: link:../../engine/core
       culori:
         specifier: ^4.0.2
         version: 4.0.2
@@ -365,9 +362,6 @@ importers:
         specifier: link:..
         version: link:..
     devDependencies:
-      '@styleframe/cli':
-        specifier: file:/Users/alexgrozav/Workspace/styleframe/dist/styleframe-cli-1.0.2.tgz
-        version: file:dist/styleframe-cli-1.0.2.tgz
       '@styleframe/config-typescript':
         specifier: workspace:^
         version: link:../../config/typescript
@@ -399,12 +393,36 @@ importers:
         specifier: 'catalog:'
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
 
+  testing/integration/Users/alexgrozav/Workspace/styleframe/testing/integration/tmp/vite-styleframe-cli:
+    devDependencies:
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^7.1.7
+        version: 7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+
   testing/integration/tmp/vite:
     dependencies:
       styleframe:
         specifier: ^1.0.2
         version: 1.0.2(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.3.5))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.3.5)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11))
     devDependencies:
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^7.1.7
+        version: 7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+
+  testing/integration/tmp/vite-styleframe-cli:
+    devDependencies:
+      '@styleframe/cli':
+        specifier: file:/Users/alexgrozav/Workspace/styleframe/dist/styleframe-cli-1.0.2.tgz
+        version: file:dist/styleframe-cli-1.0.2.tgz
+      styleframe:
+        specifier: file:/Users/alexgrozav/Workspace/styleframe/dist/styleframe-1.0.2.tgz
+        version: file:dist/styleframe-1.0.2.tgz(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.5.0))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.5.0)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11))
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
@@ -7845,6 +7863,11 @@ packages:
     resolution: {integrity: sha512-XDU1gQ/BAPFaGyM64ieI7nQNwRio6NMvSfk+4caamg1+GxB3Xx8V3YThwgwAPH6a+Sd+wLU9mQir6Na+mhyhwg==}
     hasBin: true
 
+  styleframe@file:dist/styleframe-1.0.2.tgz:
+    resolution: {integrity: sha512-taKmUbeQw+oqUvC7VWZsvclZncxpaJXSpZMWdXYe1AXSK9fZxt0GBQUvQ7IG88iygy7Y8VojbxaS/gmBVfZujg==, tarball: file:dist/styleframe-1.0.2.tgz}
+    version: 1.0.2
+    hasBin: true
+
   stylehacks@7.0.6:
     resolution: {integrity: sha512-iitguKivmsueOmTO0wmxURXBP8uqOO+zikLGZ7Mm9e/94R4w5T999Js2taS/KBOnQ/wdC3jN3vNSrkGDrlnqQg==}
     engines: {node: ^18.12.0 || ^20.9.0 || >=22.0}
@@ -10548,6 +10571,35 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
+  '@nuxt/kit@3.19.3(magicast@0.5.0)':
+    dependencies:
+      c12: 3.3.0(magicast@0.5.0)
+      consola: 3.4.2
+      defu: 6.1.4
+      destr: 2.0.5
+      errx: 0.1.0
+      exsolve: 1.0.7
+      ignore: 7.0.5
+      jiti: 2.6.1
+      klona: 2.0.6
+      knitwork: 1.2.0
+      mlly: 1.8.0
+      ohash: 2.0.11
+      pathe: 2.0.3
+      pkg-types: 2.3.0
+      rc9: 2.1.2
+      scule: 1.3.0
+      semver: 7.7.3
+      std-env: 3.9.0
+      tinyglobby: 0.2.15
+      ufo: 1.6.1
+      unctx: 2.4.1
+      unimport: 5.4.1
+      untyped: 2.0.0
+    transitivePeerDependencies:
+      - magicast
+    optional: true
+
   '@nuxt/kit@4.1.3(magicast@0.3.5)':
     dependencies:
       c12: 3.3.0(magicast@0.3.5)
@@ -11820,6 +11872,22 @@ snapshots:
     optionalDependencies:
       '@farmfe/core': 1.7.11(@types/node@24.7.0)
       '@nuxt/kit': 3.19.3(magicast@0.3.5)
+      '@nuxt/schema': 3.19.3
+      esbuild: 0.25.11
+      vite: 7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+      webpack: 5.102.1(esbuild@0.25.11)
+    transitivePeerDependencies:
+      - magicast
+
+  '@styleframe/plugin@1.0.0(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.5.0))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.5.0)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11))':
+    dependencies:
+      '@styleframe/loader': 1.0.2(magicast@0.5.0)
+      '@styleframe/transpiler': 1.0.2
+      consola: 3.4.2
+      unplugin: 2.3.10
+    optionalDependencies:
+      '@farmfe/core': 1.7.11(@types/node@24.7.0)
+      '@nuxt/kit': 3.19.3(magicast@0.5.0)
       '@nuxt/schema': 3.19.3
       esbuild: 0.25.11
       vite: 7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
@@ -17636,6 +17704,23 @@ snapshots:
       '@styleframe/core': 1.0.1
       '@styleframe/loader': 1.0.2(magicast@0.3.5)
       '@styleframe/plugin': 1.0.0(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.3.5))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.3.5)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11))
+      '@styleframe/transpiler': 1.0.2
+    transitivePeerDependencies:
+      - '@farmfe/core'
+      - '@nuxt/kit'
+      - '@nuxt/schema'
+      - esbuild
+      - magicast
+      - rollup
+      - vite
+      - webpack
+
+  styleframe@file:dist/styleframe-1.0.2.tgz(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.5.0))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.5.0)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11)):
+    dependencies:
+      '@styleframe/cli': 1.0.2
+      '@styleframe/core': 1.0.1
+      '@styleframe/loader': 1.0.2(magicast@0.5.0)
+      '@styleframe/plugin': 1.0.0(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.5.0))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.5.0)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11))
       '@styleframe/transpiler': 1.0.2
     transitivePeerDependencies:
       - '@farmfe/core'

@@ -70,7 +70,9 @@ export function installStyleframeUsingCLI(
 	cwd: string,
 	packageToTarballMap: Record<string, string>,
 ) {
-	shell.exec(`pnpm install -D ${packageToTarballMap["@styleframe/cli"]}`, cwd);
+	shell.exec(`pnpm install -D ${packageToTarballMap["styleframe"]}`, {
+		cwd,
+	});
 
-	shell.exec("styleframe init", { cwd });
+	shell.exec(`pnpx styleframe init --cwd ${cwd}`, { cwd });
 }
