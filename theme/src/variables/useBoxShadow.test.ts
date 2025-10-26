@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useBoxShadow } from "./useBoxShadow";
 
 describe("useBoxShadow", () => {
@@ -16,7 +16,7 @@ describe("useBoxShadow", () => {
 			value: "0 2px 4px rgba(0, 0, 0, 0.1)",
 		});
 
-		const css = consume(boxShadow, s.options);
+		const css = consumeCSS(boxShadow, s.options);
 		expect(css).toBe(`--box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);`);
 	});
 
@@ -32,7 +32,7 @@ describe("useBoxShadow", () => {
 			value: "0 1px 2px rgba(0, 0, 0, 0.05)",
 		});
 
-		const css = consume(boxShadowSm, s.options);
+		const css = consumeCSS(boxShadowSm, s.options);
 		expect(css).toBe(`--box-shadow--sm: 0 1px 2px rgba(0, 0, 0, 0.05);`);
 	});
 
@@ -231,7 +231,7 @@ describe("useBoxShadow", () => {
 		});
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useBoxShadow(s, {
 			default: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -241,7 +241,7 @@ describe("useBoxShadow", () => {
 			lg: "0 8px 16px rgba(0, 0, 0, 0.15)",
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

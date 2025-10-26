@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { defaultFontWeightValues, useFontWeight } from "./useFontWeight";
 
 describe("useFontWeight", () => {
@@ -121,11 +121,11 @@ describe("useFontWeight", () => {
 		]);
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useFontWeight(s);
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--font-weight--extralight: 200;
@@ -146,7 +146,7 @@ describe("useFontWeight", () => {
 		const s = styleframe();
 		const { fontWeightSemibold } = useFontWeight(s);
 
-		const css = consume(fontWeightSemibold, s.options);
+		const css = consumeCSS(fontWeightSemibold, s.options);
 
 		expect(css).toBe("--font-weight--semibold: 600;");
 	});
@@ -179,7 +179,7 @@ describe("useFontWeight", () => {
 			fallback: undefined,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 		expect(css).toEqual(`:root {
 	--font-weight--extralight: 200;
 	--font-weight--light: 300;
@@ -204,7 +204,7 @@ describe("useFontWeight", () => {
 			variable(fontWeightNormal, 450);
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toEqual(`:root {
 	--font-weight--extralight: 200;
@@ -314,7 +314,7 @@ describe("useFontWeight", () => {
 				default: "@semibold",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--font-weight--extralight: 200;
@@ -444,7 +444,7 @@ describe("useFontWeight", () => {
 				variable("font-weight", s.ref(fontWeightBold));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-weight--extralight: 200;
 	--font-weight--light: 300;
@@ -485,7 +485,7 @@ strong, b {
 				variable("font-weight", s.ref(fontWeightSemibold));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-weight--extralight: 200;
 	--font-weight--light: 300;
@@ -521,7 +521,7 @@ h3, h4, h5, h6 {
 				variable(fontWeightNormal, s.ref(fontWeightMedium));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-weight--extralight: 200;
 	--font-weight--light: 300;
@@ -553,7 +553,7 @@ h3, h4, h5, h6 {
 				variable("font-weight", s.ref(fontWeightBolder));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-weight--extralight: 200;
 	--font-weight--light: 300;
@@ -590,7 +590,7 @@ h3, h4, h5, h6 {
 				variable(bodyFontWeight, s.ref(fontWeightMedium));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-weight--extralight: 200;
 	--font-weight--light: 300;
@@ -623,7 +623,7 @@ h3, h4, h5, h6 {
 				variable("font-weight", s.ref(fontWeightExtralight));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-weight--extralight: 200;
 	--font-weight--light: 300;

@@ -1,6 +1,6 @@
 import type { TokenValue } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { defaultScalePowerValues } from "../constants/scale";
 import { useScale } from "./useScale";
 import { useScalePowers } from "./useScalePowers";
@@ -88,7 +88,7 @@ describe("useScalePowers", () => {
 			variable("font-size", s.css`calc(${s.ref(baseSize)} * (${powers[2]}))`);
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toEqual(`:root {
 	--scale--minor-second: 1.067;
@@ -125,7 +125,7 @@ describe("useScalePowers", () => {
 			variable("font-size", s.css`calc(${s.ref(baseSize)} * ${powers[-2]})`);
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toEqual(`:root {
 	--scale--minor-second: 1.067;
@@ -215,7 +215,7 @@ describe("useScalePowers", () => {
 				s.css`calc(${s.ref(fontSize)} * ${powers[3]})`,
 			);
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--scale--minor-second: 1.067;
@@ -260,7 +260,7 @@ describe("useScalePowers", () => {
 				s.css`calc(${s.ref(baseSpacing)} * ${powers[2]})`,
 			);
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--scale--minor-second: 1.067;
@@ -323,7 +323,7 @@ describe("useScalePowers", () => {
 				);
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--scale--minor-second: 1.067;

@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useColorTint, defaultColorTintValues } from "./useColorTint";
 
 describe("useColorTint", () => {
@@ -25,7 +25,7 @@ describe("useColorTint", () => {
 			value: expect.objectContaining({ type: "css" }),
 		});
 
-		const css = consume(tints.colorPrimaryTint100, s.options);
+		const css = consumeCSS(tints.colorPrimaryTint100, s.options);
 		expect(css).toBe(
 			`--color--primary-tint-100: oklch(from var(--color--primary) calc(l + 0.1) c h / a);`,
 		);
@@ -63,7 +63,7 @@ describe("useColorTint", () => {
 		});
 	});
 
-	it("should compile tint levels to correct CSS output using consume", () => {
+	it("should compile tint levels to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		useColorTint(s, colorPrimary, {
@@ -71,7 +71,7 @@ describe("useColorTint", () => {
 			100: 10,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--color--primary: #007bff;
@@ -125,7 +125,7 @@ describe("useColorTint", () => {
 			value: expect.objectContaining({ type: "css" }),
 		});
 
-		const css = consume(tints.customColorTint100, s.options);
+		const css = consumeCSS(tints.customColorTint100, s.options);
 		expect(css).toBe(
 			`--custom-color-tint-100: oklch(from var(--custom-color) calc(l + 0.1) c h / a);`,
 		);

@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { defaultLineHeightValues, useLineHeight } from "./useLineHeight";
 
 describe("useLineHeight", () => {
@@ -83,11 +83,11 @@ describe("useLineHeight", () => {
 		]);
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useLineHeight(s);
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--line-height--tight: 1.2;
@@ -103,7 +103,7 @@ describe("useLineHeight", () => {
 		const s = styleframe();
 		const { lineHeightRelaxed } = useLineHeight(s);
 
-		const css = consume(lineHeightRelaxed, s.options);
+		const css = consumeCSS(lineHeightRelaxed, s.options);
 
 		expect(css).toBe("--line-height--relaxed: 1.65;");
 	});
@@ -134,7 +134,7 @@ describe("useLineHeight", () => {
 			fallback: undefined,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 		expect(css).toEqual(`:root {
 	--line-height--tight: 1.2;
 	--line-height--snug: 1.35;
@@ -154,7 +154,7 @@ describe("useLineHeight", () => {
 			variable(lineHeightNormal, 1.8);
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toEqual(`:root {
 	--line-height--tight: 1.2;
@@ -242,7 +242,7 @@ describe("useLineHeight", () => {
 				default: "@loose",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--line-height--tight: 1.2;
@@ -336,7 +336,7 @@ describe("useLineHeight", () => {
 				variable("line-height", s.ref(lineHeightRelaxed));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--line-height--tight: 1.2;
 	--line-height--snug: 1.35;
@@ -368,7 +368,7 @@ p, li {
 				variable(bodyLineHeight, s.ref(lineHeightRelaxed));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--line-height--tight: 1.2;
 	--line-height--snug: 1.35;
@@ -392,7 +392,7 @@ p, li {
 				variable(lineHeightNormal, s.ref(lineHeightLoose));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--line-height--tight: 1.2;
 	--line-height--snug: 1.35;

@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useColorShade, defaultColorShadeValues } from "./useColorShade";
 
 describe("useColorShade", () => {
@@ -25,7 +25,7 @@ describe("useColorShade", () => {
 			value: expect.objectContaining({ type: "css" }),
 		});
 
-		const css = consume(shades.colorPrimaryShade100, s.options);
+		const css = consumeCSS(shades.colorPrimaryShade100, s.options);
 		expect(css).toBe(
 			`--color--primary-shade-100: oklch(from var(--color--primary) calc(l - 0.1) c h / a);`,
 		);
@@ -63,7 +63,7 @@ describe("useColorShade", () => {
 		});
 	});
 
-	it("should compile shade levels to correct CSS output using consume", () => {
+	it("should compile shade levels to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 
@@ -72,7 +72,7 @@ describe("useColorShade", () => {
 			100: 10,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--color--primary: #007bff;
@@ -127,7 +127,7 @@ describe("useColorShade", () => {
 			value: expect.objectContaining({ type: "css" }),
 		});
 
-		const css = consume(shades.customColorShade100, s.options);
+		const css = consumeCSS(shades.customColorShade100, s.options);
 		expect(css).toBe(
 			`--custom-color-shade-100: oklch(from var(--custom-color) calc(l - 0.1) c h / a);`,
 		);

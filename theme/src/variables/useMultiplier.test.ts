@@ -1,6 +1,6 @@
 import type { CSS, Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useMultiplier } from "./useMultiplier";
 import { useScale } from "./useScale";
 import { useScalePowers } from "./useScalePowers";
@@ -17,7 +17,7 @@ describe("useMultiplier", () => {
 		expect(fontSize.name).toBe("font-size");
 		expect(fontSize.value).toBe("1rem");
 
-		const css = consume(fontSize, s.options);
+		const css = consumeCSS(fontSize, s.options);
 		expect(css).toBe(`--font-size: 1rem;`);
 	});
 
@@ -32,7 +32,7 @@ describe("useMultiplier", () => {
 		expect(fontSizeSm.name).toBe("font-size--sm");
 		expect((fontSizeSm.value as CSS)?.type).toBe("css");
 
-		const css = consume(fontSizeSm, s.options);
+		const css = consumeCSS(fontSizeSm, s.options);
 		expect(css).toBe(`--font-size--sm: calc(var(--font-size) * 0.875);`);
 	});
 
@@ -178,7 +178,7 @@ describe("useMultiplier", () => {
 		expect((fontSizeLg.value as CSS)?.type).toBe("css");
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		const baseVar = s.variable("font-size", "1rem");
 		useMultiplier(s, baseVar, {
@@ -187,7 +187,7 @@ describe("useMultiplier", () => {
 			lg: 1.25,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--font-size: 1rem;
@@ -431,7 +431,7 @@ describe("useMultiplier", () => {
 				lg: 1.5,
 			});
 
-			const css = consume(fontSizeLg, s.options);
+			const css = consumeCSS(fontSizeLg, s.options);
 			expect(css).toBe(`--font-size--lg: calc(var(--font-size) * 1.5);`);
 		});
 
@@ -446,7 +446,7 @@ describe("useMultiplier", () => {
 				xl: 2,
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--spacing: 1rem;
 	--spacing--xs: calc(var(--spacing) * 0.5);
@@ -464,7 +464,7 @@ describe("useMultiplier", () => {
 				reverse: -1,
 			});
 
-			const css = consume(offsetReverse, s.options);
+			const css = consumeCSS(offsetReverse, s.options);
 			expect(css).toBe(`--offset--reverse: calc(var(--offset) * -1);`);
 		});
 
@@ -476,7 +476,7 @@ describe("useMultiplier", () => {
 				sm: 0.875,
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--font-size: 1rem;
 	--font-size--xs: calc(var(--font-size) * 0.75);
@@ -492,7 +492,7 @@ describe("useMultiplier", () => {
 				lg: s.ref(scaleVar),
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--font-size: 1rem;
 	--scale: 1.333;
@@ -511,7 +511,7 @@ describe("useMultiplier", () => {
 				"extra-loose": 1.2,
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--line-height: 1.5;
 	--line-height--extra-tight: calc(var(--line-height) * 0.8);
@@ -533,7 +533,7 @@ describe("useMultiplier", () => {
 				"8": 8,
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--spacing: 0.25rem;
 	--spacing--0: calc(var(--spacing) * 0);
@@ -557,7 +557,7 @@ describe("useMultiplier", () => {
 				"3xl": 1.875,
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--font-size: 1rem;
 	--font-size--xs: calc(var(--font-size) * 0.75);
@@ -579,7 +579,7 @@ describe("useMultiplier", () => {
 				lg: 1.25,
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--base-size: 16px;
 	--font-size: var(--base-size);
@@ -599,7 +599,7 @@ describe("useMultiplier", () => {
 				"2": Math.pow(golden, 2),
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain(`--size: 1rem;`);
 			expect(css).toContain(
 				`--size---1: calc(var(--size) * ${Math.pow(golden, -1)});`,
@@ -619,7 +619,7 @@ describe("useMultiplier", () => {
 				lg: 1.5,
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--component-button-padding: 0.5rem;
 	--component-button-padding--sm: calc(var(--component-button-padding) * 0.75);
@@ -635,7 +635,7 @@ describe("useMultiplier", () => {
 				none: 0,
 			});
 
-			const css = consume(marginNone, s.options);
+			const css = consumeCSS(marginNone, s.options);
 			expect(css).toBe(`--margin--none: calc(var(--margin) * 0);`);
 		});
 
@@ -647,7 +647,7 @@ describe("useMultiplier", () => {
 				lg: "2",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--scale: 1rem;
 	--scale--md: calc(var(--scale) * 1.5);
@@ -670,7 +670,7 @@ describe("useMultiplier", () => {
 				lg: 2,
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toBe(`:root {
 	--font-size: 1rem;
 	--spacing: 0.5rem;
@@ -697,7 +697,7 @@ describe("useMultiplier", () => {
 				xxl: scales[3],
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--size: 1rem;

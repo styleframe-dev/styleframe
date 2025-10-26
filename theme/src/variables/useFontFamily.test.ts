@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useFontFamily } from "./useFontFamily";
 
 describe("useFontFamily", () => {
@@ -16,7 +16,7 @@ describe("useFontFamily", () => {
 			value: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto",
 		});
 
-		const css = consume(fontFamily, s.options);
+		const css = consumeCSS(fontFamily, s.options);
 		expect(css).toBe(
 			`--font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto;`,
 		);
@@ -34,7 +34,7 @@ describe("useFontFamily", () => {
 			value: "'SFMono-Regular', Menlo, Monaco, Consolas",
 		});
 
-		const css = consume(fontFamilyMono, s.options);
+		const css = consumeCSS(fontFamilyMono, s.options);
 		expect(css).toBe(
 			`--font-family--mono: 'SFMono-Regular', Menlo, Monaco, Consolas;`,
 		);
@@ -168,7 +168,7 @@ describe("useFontFamily", () => {
 		});
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useFontFamily(s, {
 			default: "Arial, sans-serif",
@@ -176,7 +176,7 @@ describe("useFontFamily", () => {
 			display: "'Playfair Display', Georgia, serif",
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--font-family: Arial, sans-serif;

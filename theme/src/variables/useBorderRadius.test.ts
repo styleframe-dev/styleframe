@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useBorderRadius } from "./useBorderRadius";
 
 describe("useBorderRadius", () => {
@@ -16,7 +16,7 @@ describe("useBorderRadius", () => {
 			value: "0.25rem",
 		});
 
-		const css = consume(borderRadius, s.options);
+		const css = consumeCSS(borderRadius, s.options);
 		expect(css).toBe(`--border-radius: 0.25rem;`);
 	});
 
@@ -32,7 +32,7 @@ describe("useBorderRadius", () => {
 			value: "0.125rem",
 		});
 
-		const css = consume(borderRadiusSm, s.options);
+		const css = consumeCSS(borderRadiusSm, s.options);
 		expect(css).toBe(`--border-radius--sm: 0.125rem;`);
 	});
 
@@ -243,7 +243,7 @@ describe("useBorderRadius", () => {
 		});
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useBorderRadius(s, {
 			default: "0.25rem",
@@ -253,7 +253,7 @@ describe("useBorderRadius", () => {
 			lg: "0.5rem",
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--border-radius: 0.25rem;

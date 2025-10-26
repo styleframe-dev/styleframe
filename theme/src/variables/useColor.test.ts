@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { oklch } from "culori";
 import { useColor } from "./useColor";
 import { useColorLightness } from "./useColorLightness";
@@ -28,7 +28,7 @@ describe("useColor", () => {
 			value: toOklch("#007bff"),
 		});
 
-		const css = consume(colorPrimary, s.options);
+		const css = consumeCSS(colorPrimary, s.options);
 		expect(css).toBe(`--color--primary: ${toOklch("#007bff")};`);
 	});
 
@@ -171,7 +171,7 @@ describe("useColor", () => {
 		});
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useColor(s, {
 			primary: "#007bff",
@@ -179,7 +179,7 @@ describe("useColor", () => {
 			tertiary: "#28a745",
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--color--primary: ${toOklch("#007bff")};
@@ -322,7 +322,7 @@ describe("integration", () => {
 		});
 	});
 
-	it("should compile complete color system to correct CSS output using consume", () => {
+	it("should compile complete color system to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 
 		const { colorPrimary } = useColor(s, {
@@ -342,7 +342,7 @@ describe("integration", () => {
 			50: 5,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--color--primary: ${toOklch("#007bff")};

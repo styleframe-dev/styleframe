@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useSpacing } from "./useSpacing";
 
 describe("useSpacing", () => {
@@ -16,7 +16,7 @@ describe("useSpacing", () => {
 			value: "1rem",
 		});
 
-		const css = consume(spacing, s.options);
+		const css = consumeCSS(spacing, s.options);
 		expect(css).toBe(`--spacing: 1rem;`);
 	});
 
@@ -32,7 +32,7 @@ describe("useSpacing", () => {
 			value: "0.5rem",
 		});
 
-		const css = consume(spacingSm, s.options);
+		const css = consumeCSS(spacingSm, s.options);
 		expect(css).toBe(`--spacing--sm: 0.5rem;`);
 	});
 
@@ -217,7 +217,7 @@ describe("useSpacing", () => {
 		});
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useSpacing(s, {
 			default: "@md",
@@ -227,7 +227,7 @@ describe("useSpacing", () => {
 			lg: "2rem",
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--spacing--xs: 0.25rem;
