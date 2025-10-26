@@ -13,6 +13,12 @@
 			"require": "./dist/index.cjs"
 		}
 	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"CHANGELOG.md",
+		"README.md"
+	],
 	"scripts": {
 		"dev": "vite build --watch",
 		"prebuild": "tsx ./scripts/prebuild.ts",

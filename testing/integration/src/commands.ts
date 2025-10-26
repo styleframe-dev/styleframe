@@ -1,8 +1,14 @@
 import shell from "shelljs";
-import path from "path";
+import path from "node:path";
+import fs from "node:fs";
 
 export function buildPackages(cwd: string) {
 	shell.exec("pnpm run build:nodocs", { cwd });
+
+	if (shell.error()) {
+		console.error("Build failed");
+		process.exit(1);
+	}
 }
 
 function mapTarballsToPackages(
@@ -35,7 +41,7 @@ export function createPackageTarballs(
 	{
 		filter = [],
 		outputDir = "dist",
-	}: { filter: string[]; outputDir?: string } = {},
+	}: { filter?: string[]; outputDir?: string } = {},
 ) {
 	shell.exec(
 		`pnpm pack --recursive --pack-destination ${outputDir} ${filter.map((f) => `--filter '${f}'`).join(" ")}`,
@@ -56,23 +62,59 @@ export function createPackageTarballs(
 export function createStarterVitePackage(
 	cwd: string,
 	{
-		template = "vanilla-ts",
 		outputDir = "tmp/vite",
+		template = "vanilla-ts",
 	}: {
-		template?: string;
 		outputDir?: string;
+		template?: string;
 	} = {},
 ) {
-	shell.exec(`pnpm create vite --template ${template} ${outputDir}`, { cwd });
+	shell.exec(`pnpm create vite@latest --template ${template} ${outputDir}`, {
+		cwd,
+	});
+
+	return path.join(cwd, outputDir);
 }
 
 export function installStyleframeUsingCLI(
 	cwd: string,
 	packageToTarballMap: Record<string, string>,
 ) {
-	shell.exec(`pnpm install -D ${packageToTarballMap["styleframe"]}`, {
+	shell.exec(`npm install -D ${packageToTarballMap["styleframe"]}`, {
 		cwd,
 	});
 
-	shell.exec(`pnpx styleframe init --cwd ${cwd}`, { cwd });
+	const packageJSONRaw = fs.readFileSync(`${cwd}/package.json`, "utf8");
+
+	const packageJSON = JSON.parse(packageJSONRaw);
+	packageJSON.overrides ||= {};
+
+	for (const key in packageToTarballMap) {
+		if (key.startsWith("@styleframe")) {
+			packageJSON.overrides[key] = `file:${packageToTarballMap[key]}`;
+		}
+	}
+
+	fs.writeFileSync(`${cwd}/package.json`, JSON.stringify(packageJSON, null, 2));
+
+	console.log(JSON.stringify(packageJSON, null, 2));
+
+	shell.exec(`npm install`, {
+		cwd,
+	});
+
+	fs.writeFileSync(
+		`${cwd}/vite.config.ts`,
+		`import { defineConfig } from 'vite';
+
+export default defineConfig({});`,
+	);
+
+	shell.exec(`npx styleframe init --cwd ${cwd}`, { cwd });
+}
+
+export function cleanup(dirs: string[]) {
+	dirs.forEach((dir) => {
+		shell.exec(`rm -rf ${dir}`);
+	});
 }

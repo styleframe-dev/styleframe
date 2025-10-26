@@ -28,7 +28,7 @@ export default defineConfig([
 	{
 		entry: ["./src/plugin/*.ts"],
 		outDir: "./dist/plugin",
-		platform: "neutral",
+		platform: "node",
 		dts: true,
 		format: ["esm", "cjs"],
 	},

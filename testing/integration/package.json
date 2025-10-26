@@ -23,6 +23,7 @@
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^",
 		"@styleframe/config-vite": "workspace:^",
+		"@types/shelljs": "^0.8.17",
 		"@vitest/coverage-v8": "catalog:",
 		"playwright": "^1.56.1",
 		"shelljs": "^0.10.0",

@@ -1,10 +1,12 @@
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import os from "node:os";
 import {
 	buildPackages,
 	createPackageTarballs,
 	createStarterVitePackage,
 	installStyleframeUsingCLI,
+	cleanup,
 } from "./commands";
 
 const __dirname = fileURLToPath(import.meta.url);
@@ -23,25 +25,24 @@ buildPackages(workspaceDir);
  */
 
 const packageToTarballMap = createPackageTarballs(workspaceDir, {
-	filter: ["./engine", "./tooling", "./theme"],
+	filter: ["./engine/*", "./tooling/*", "./theme"],
 });
 
 /**
  * 3. Create starter vite package
  */
 
-const viteStyleframeCLITarget = "tmp/vite-styleframe-cli";
-const viteStyleframeCLIOutputDir = path.resolve(
-	packageDir,
-	"tmp/vite-styleframe-cli",
-);
+const viteStyleframeCLIOutputDir = createStarterVitePackage(os.tmpdir());
 
-createStarterVitePackage(packageDir, {
-	outputDir: viteStyleframeCLITarget,
-});
+console.log("Starter Vite package created at:", viteStyleframeCLIOutputDir);
 
 /**
  * 4. Install styleframe using the CLI
  */
 
 installStyleframeUsingCLI(viteStyleframeCLIOutputDir, packageToTarballMap);
+
+/**
+ * Cleanup
+ */
+cleanup([viteStyleframeCLIOutputDir]);
