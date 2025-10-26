@@ -1,23 +1,18 @@
 {
-	"name": "unplugin-starter",
+	"name": "@styleframe/plugin",
 	"type": "module",
 	"version": "0.1.0",
-	"packageManager": "pnpm@10.11.0",
-	"description": "",
+	"description": "Unplugin for Styleframe. Use it with Vite, Webpack, Astro, Nuxt, Rollup, Rspack, and more.",
 	"license": "MIT",
-	"homepage": "https://github.com/antfu/unplugin-starter#readme",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/antfu/unplugin-starter.git"
-	},
-	"bugs": {
-		"url": "https://github.com/antfu/unplugin-starter/issues"
-	},
 	"keywords": [
+		"styleframe",
 		"unplugin",
+		"astro",
+		"nuxt",
 		"vite",
 		"webpack",
 		"rollup",
+		"rspack",
 		"transform"
 	],
 	"exports": {
@@ -107,5 +102,14 @@
 		"vite": "^6.3.5",
 		"vitest": "^3.1.4",
 		"webpack": "^5.99.9"
-	}
+	},
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
+	"bugs": {
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
+	},
+	"author": "Alex Grozav <alex@styleframe.dev>"
 }

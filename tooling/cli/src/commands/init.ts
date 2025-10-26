@@ -37,6 +37,7 @@ export async function addPackageJsonDependencies(cwd: string) {
 
 		if (!packageJson.devDependencies) packageJson.devDependencies = {};
 		packageJson.devDependencies["@styleframe/cli"] = "^1.0.0";
+		packageJson.devDependencies["@styleframe/plugin"] = "^1.0.0";
 
 		await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
