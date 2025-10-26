@@ -78,7 +78,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-shield-check
     target: _blank
-    to: /
+    to: /docs/api/overview
     ---
     #title
     [Type-safe]{.text-primary} CSS API
@@ -91,7 +91,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-boxes
     target: _blank
-    to: /
+    to: /docs/api/composables
     ---
     #title
     Easily [Composable]{.text-primary}
@@ -104,7 +104,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-palette
     target: _blank
-    to: /
+    to: /docs/api/themes
     ---
     #title
     Built-in [Theming]{.text-primary} Support
@@ -117,7 +117,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-heart-handshake
     target: _blank
-    to: /
+    to: /docs/getting-started/installation/vite
     ---
     #title
     Framework [Agnostic]{.text-primary}
@@ -130,7 +130,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-settings
     target: _blank
-    to: /
+    to: /docs/getting-started/configuration
     ---
     #title
     Fully [Configurable]{.text-primary}
@@ -143,7 +143,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-square-terminal
     target: _blank
-    to: /
+    to: /docs/resources/guides
     ---
     #title
     Intuitive [Developer Experience]{.text-primary}
@@ -240,7 +240,7 @@ links:
 -   label: Explore the default theme
     color: neutral
     variant: outline
-    to: /
+    to: /docs/design-tokens/overview
     icon: i-lucide-palette
 ---
 

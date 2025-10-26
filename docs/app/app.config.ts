@@ -52,9 +52,9 @@ export default defineAppConfig({
 					target: "_blank",
 				},
 				{
-					icon: "i-simple-icons-nuxtdotjs",
+					icon: "i-material-symbols:award-star",
 					label: "Purchase a license",
-					to: "https://www.styleframe.dev/pro/purchase",
+					to: "https://www.styleframe.dev/pricing",
 					target: "_blank",
 				},
 			],
