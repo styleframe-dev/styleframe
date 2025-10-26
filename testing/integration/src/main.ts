@@ -7,6 +7,8 @@ import {
 	createStarterVitePackage,
 	installStyleframeUsingCLI,
 	cleanup,
+	addStyleframeConfig,
+	buildVite,
 } from "./commands";
 
 const __dirname = fileURLToPath(import.meta.url);
@@ -41,6 +43,18 @@ console.log("Starter Vite package created at:", viteStyleframeCLIOutputDir);
  */
 
 installStyleframeUsingCLI(viteStyleframeCLIOutputDir, packageToTarballMap);
+
+/**
+ * 5. Add styleframe config
+ */
+
+addStyleframeConfig(viteStyleframeCLIOutputDir);
+
+/**
+ * 6. Build application
+ */
+
+buildVite(viteStyleframeCLIOutputDir);
 
 /**
  * Cleanup

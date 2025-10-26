@@ -1,6 +1,9 @@
 import shell from "shelljs";
 import path from "node:path";
 import fs from "node:fs";
+import assert from "node:assert";
+
+import { DEFAULT_STYLEFRAME_CONFIG, DEFAULT_VITE_CONFIG } from "./constants";
 
 export function buildPackages(cwd: string) {
 	shell.exec("pnpm run build:nodocs", { cwd });
@@ -103,14 +106,32 @@ export function installStyleframeUsingCLI(
 		cwd,
 	});
 
-	fs.writeFileSync(
-		`${cwd}/vite.config.ts`,
-		`import { defineConfig } from 'vite';
-
-export default defineConfig({});`,
-	);
+	fs.writeFileSync(`${cwd}/vite.config.ts`, DEFAULT_VITE_CONFIG);
 
 	shell.exec(`npx styleframe init --cwd ${cwd}`, { cwd });
+
+	const viteConfigFile = path.join(cwd, "vite.config.ts");
+	const viteConfigContent = fs.readFileSync(viteConfigFile, "utf8");
+
+	assert.equal(
+		viteConfigContent,
+		`import styleframe from 'styleframe/plugin/vite';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [styleframe()],
+});`,
+	);
+}
+
+export function addStyleframeConfig(cwd: string) {
+	fs.writeFileSync(`${cwd}/styleframe.config.ts`, DEFAULT_STYLEFRAME_CONFIG);
+}
+
+export function buildVite(cwd: string) {
+	shell.exec(`npm run build`, {
+		cwd,
+	});
 }
 
 export function cleanup(dirs: string[]) {
