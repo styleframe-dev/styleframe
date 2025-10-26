@@ -10,7 +10,7 @@ import {
 	createUtilityFunction,
 	isUtility,
 } from "@styleframe/core";
-import { consume } from "./consume";
+import { consumeCSS } from "./consume";
 import { createUtilityConsumer } from "./utility";
 
 describe("createUtilityConsumer", () => {
@@ -19,7 +19,7 @@ describe("createUtilityConsumer", () => {
 	let utility: ReturnType<typeof createUtilityFunction>;
 	let modifier: ReturnType<typeof createModifierFunction>;
 
-	const consumeUtility = createUtilityConsumer(consume);
+	const consumeUtility = createUtilityConsumer(consumeCSS);
 	const options: StyleframeOptions = {};
 
 	beforeEach(() => {

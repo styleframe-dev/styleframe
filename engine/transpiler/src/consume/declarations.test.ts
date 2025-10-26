@@ -5,7 +5,7 @@ import {
 	createRoot,
 	createVariableFunction,
 } from "@styleframe/core";
-import { consume } from "./consume";
+import { consumeCSS } from "./consume";
 import { createDeclarationsConsumer } from "./declarations";
 
 describe("createDeclarationsConsumer", () => {
@@ -14,7 +14,7 @@ describe("createDeclarationsConsumer", () => {
 	let variable: ReturnType<typeof createVariableFunction>;
 	let css: ReturnType<typeof createCssFunction>;
 
-	const consumeDeclarations = createDeclarationsConsumer(consume);
+	const consumeDeclarations = createDeclarationsConsumer(consumeCSS);
 	const options: StyleframeOptions = {};
 
 	beforeEach(() => {

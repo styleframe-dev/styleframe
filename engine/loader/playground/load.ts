@@ -1,4 +1,4 @@
-import { loadConfiguration } from "../config";
+import { loadConfiguration } from "../src/config";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 

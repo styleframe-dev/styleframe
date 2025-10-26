@@ -2,18 +2,20 @@ import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { Styleframe } from "@styleframe/core";
 import { transpile } from "@styleframe/transpiler";
+import type { TranspileOptions } from "@styleframe/transpiler";
 import { directoryExists } from "./utils";
 
 export type BuildOptions = {
 	clean?: boolean;
 	outputDir?: string;
+	transpiler?: TranspileOptions;
 };
 
 export async function build(
 	instance: Styleframe,
-	{ clean = true, outputDir = "./styleframe" }: BuildOptions = {},
+	{ clean = true, outputDir = "./styleframe", transpiler }: BuildOptions = {},
 ) {
-	const output = transpile(instance);
+	const output = transpile(instance, transpiler);
 
 	const outputDirExists = await directoryExists(outputDir);
 	if (clean && outputDirExists) {

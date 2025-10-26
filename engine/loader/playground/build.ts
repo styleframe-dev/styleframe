@@ -1,6 +1,6 @@
 import path from "path";
-import { loadConfiguration } from "../config";
-import { build } from "../build";
+import { loadConfiguration } from "../src/config";
+import { build } from "../src/build";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 

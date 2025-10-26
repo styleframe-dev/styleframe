@@ -5,7 +5,7 @@ import {
 	createSelectorFunction,
 	createVariableFunction,
 } from "@styleframe/core";
-import { consume } from "./consume";
+import { consumeCSS } from "./consume";
 import { createRootConsumer } from "./root";
 
 describe("createRootConsumer", () => {
@@ -14,7 +14,7 @@ describe("createRootConsumer", () => {
 	let ref: ReturnType<typeof createRefFunction>;
 	let selector: ReturnType<typeof createSelectorFunction>;
 
-	const consumeRoot = createRootConsumer(consume);
+	const consumeRoot = createRootConsumer(consumeCSS);
 	const options: StyleframeOptions = {};
 
 	beforeEach(() => {

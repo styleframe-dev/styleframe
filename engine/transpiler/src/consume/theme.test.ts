@@ -6,7 +6,7 @@ import {
 	createThemeFunction,
 	createVariableFunction,
 } from "@styleframe/core";
-import { consume } from "./consume";
+import { consumeCSS } from "./consume";
 import { createThemeConsumer } from "./theme";
 
 describe("createThemeConsumer", () => {
@@ -16,7 +16,7 @@ describe("createThemeConsumer", () => {
 	let ref: ReturnType<typeof createRefFunction>;
 	let css: ReturnType<typeof createCssFunction>;
 
-	const consumeTheme = createThemeConsumer(consume);
+	const consumeTheme = createThemeConsumer(consumeCSS);
 	const options: StyleframeOptions = {};
 
 	beforeEach(() => {

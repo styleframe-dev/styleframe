@@ -5,14 +5,14 @@ import {
 	createRoot,
 } from "@styleframe/core";
 import { createAtRuleConsumer } from "./at-rule";
-import { consume } from "./consume";
+import { consumeCSS } from "./consume";
 
 describe("createAtRuleConsumer", () => {
 	let root: Root;
 	let atRule: ReturnType<typeof createAtRuleFunction>;
 	let ref: ReturnType<typeof createRefFunction>;
 
-	const consumeAtRule = createAtRuleConsumer(consume);
+	const consumeAtRule = createAtRuleConsumer(consumeCSS);
 	const options: StyleframeOptions = {};
 
 	beforeEach(() => {
