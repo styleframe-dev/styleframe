@@ -1,0 +1,111 @@
+{
+	"name": "unplugin-starter",
+	"type": "module",
+	"version": "0.1.0",
+	"packageManager": "pnpm@10.11.0",
+	"description": "",
+	"license": "MIT",
+	"homepage": "https://github.com/antfu/unplugin-starter#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/antfu/unplugin-starter.git"
+	},
+	"bugs": {
+		"url": "https://github.com/antfu/unplugin-starter/issues"
+	},
+	"keywords": [
+		"unplugin",
+		"vite",
+		"webpack",
+		"rollup",
+		"transform"
+	],
+	"exports": {
+		".": "./dist/index.js",
+		"./astro": "./dist/astro.js",
+		"./esbuild": "./dist/esbuild.js",
+		"./farm": "./dist/farm.js",
+		"./nuxt": "./dist/nuxt.js",
+		"./rollup": "./dist/rollup.js",
+		"./rspack": "./dist/rspack.js",
+		"./types": "./dist/types.js",
+		"./vite": "./dist/vite.js",
+		"./webpack": "./dist/webpack.js",
+		"./package.json": "./package.json"
+	},
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"*": [
+				"./dist/*",
+				"./*"
+			]
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsdown -w",
+		"start": "tsx src/index.ts",
+		"playground:build": "cd playground && pnpm run build",
+		"playground:start": "cd playground && pnpm run start",
+		"playground:dev": "cd playground && pnpm run dev",
+		"test": "vitest"
+	},
+	"peerDependencies": {
+		"@farmfe/core": ">=1",
+		"@nuxt/kit": "^3",
+		"@nuxt/schema": "^3",
+		"esbuild": "*",
+		"rollup": "^3",
+		"vite": ">=3",
+		"webpack": "^4 || ^5"
+	},
+	"peerDependenciesMeta": {
+		"@farmfe/core": {
+			"optional": true
+		},
+		"@nuxt/kit": {
+			"optional": true
+		},
+		"@nuxt/schema": {
+			"optional": true
+		},
+		"esbuild": {
+			"optional": true
+		},
+		"rollup": {
+			"optional": true
+		},
+		"vite": {
+			"optional": true
+		},
+		"webpack": {
+			"optional": true
+		}
+	},
+	"dependencies": {
+		"@styleframe/loader": "workspace:^",
+		"@styleframe/transpiler": "workspace:^",
+		"consola": "^3.4.2",
+		"unplugin": "^2.3.4"
+	},
+	"devDependencies": {
+		"@styleframe/config-typescript": "workspace:^",
+		"@nuxt/kit": "^3.17.4",
+		"@nuxt/schema": "^3.17.4",
+		"@types/node": "^22.15.21",
+		"nodemon": "^3.1.10",
+		"rollup": "^4.41.0",
+		"tsdown": "^0.12.0",
+		"tsx": "^4.19.4",
+		"typescript": "^5.8.3",
+		"vite": "^6.3.5",
+		"vitest": "^3.1.4",
+		"webpack": "^5.99.9"
+	}
+}

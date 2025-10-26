@@ -1,0 +1,12 @@
+{
+	"extends": "@styleframe/config-typescript",
+	"compilerOptions": {
+		"tsBuildInfoFile": ".tsbuildinfo"
+	},
+	"include": [
+		"src/**/*.ts",
+		"playground/**/*.ts",
+		"tsdown.config.ts",
+		"vite.config.ts"
+	]
+}
