@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@types/node':
+      specifier: ^22.15.32
+      version: 22.15.32
     '@vitest/coverage-v8':
       specifier: ^3.2.4
       version: 3.2.4
@@ -127,7 +130,7 @@ importers:
         version: 0.11.13(@netlify/blobs@9.1.2)(@unhead/vue@2.0.19(vue@3.5.22(typescript@5.9.3)))(db0@0.3.4(better-sqlite3@11.10.0))(ioredis@5.8.1)(magicast@0.3.5)(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3))
       '@nuxt/test-utils':
         specifier: ^3.19.2
-        version: 3.19.2(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
+        version: 3.19.2(@playwright/test@1.56.1)(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
       '@nuxt/ui':
         specifier: ^4.0.1
         version: 4.0.1(@babel/parser@7.28.5)(@netlify/blobs@9.1.2)(change-case@5.4.4)(db0@0.3.4(better-sqlite3@11.10.0))(embla-carousel@8.6.0)(ioredis@5.8.1)(jwt-decode@4.0.0)(magicast@0.3.5)(typescript@5.9.3)(valibot@1.1.0(typescript@5.9.3))(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vue-router@4.5.1(vue@3.5.22(typescript@5.9.3)))(vue@3.5.22(typescript@5.9.3))(zod@4.1.12)
@@ -280,10 +283,13 @@ importers:
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
 
   engine/styleframe:
-    dependencies:
+    devDependencies:
       '@styleframe/cli':
         specifier: workspace:^
         version: link:../../tooling/cli
+      '@styleframe/config-typescript':
+        specifier: workspace:^
+        version: link:../../config/typescript
       '@styleframe/core':
         specifier: workspace:^
         version: link:../core
@@ -296,10 +302,6 @@ importers:
       '@styleframe/transpiler':
         specifier: workspace:^
         version: link:../transpiler
-    devDependencies:
-      '@styleframe/config-typescript':
-        specifier: workspace:^
-        version: link:../../config/typescript
       '@types/node':
         specifier: ^22.15.17
         version: 22.15.32
@@ -362,18 +364,24 @@ importers:
         specifier: link:..
         version: link:..
     devDependencies:
+      '@playwright/test':
+        specifier: ^1.56.1
+        version: 1.56.1
       '@styleframe/config-typescript':
         specifier: workspace:^
         version: link:../../config/typescript
       '@styleframe/config-vite':
         specifier: workspace:^
         version: link:../../config/vite
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.15.32
       '@types/shelljs':
         specifier: ^0.8.17
         version: 0.8.17
       '@vitest/coverage-v8':
         specifier: 'catalog:'
-        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
+        version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.15.32)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
       playwright:
         specifier: ^1.56.1
         version: 1.56.1
@@ -388,29 +396,13 @@ importers:
         version: 5.8.3
       vite:
         specifier: 'catalog:'
-        version: 7.0.6(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+        version: 7.0.6(@types/node@22.15.32)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
       vite-plugin-dts:
         specifier: 'catalog:'
-        version: 4.5.4(@types/node@24.7.0)(rollup@4.52.5)(typescript@5.8.3)(vite@7.0.6(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
+        version: 4.5.4(@types/node@22.15.32)(rollup@4.52.5)(typescript@5.8.3)(vite@7.0.6(@types/node@22.15.32)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
       vitest:
         specifier: 'catalog:'
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
-
-  testing/integration/tmp/vite:
-    dependencies:
-      '@styleframe/cli':
-        specifier: file:/Users/alexgrozav/Workspace/styleframe/dist/styleframe-cli-1.0.2.tgz
-        version: file:dist/styleframe-cli-1.0.2.tgz
-    devDependencies:
-      styleframe:
-        specifier: file:/Users/alexgrozav/Workspace/styleframe/dist/styleframe-1.0.2.tgz
-        version: file:dist/styleframe-1.0.2.tgz(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.3.5))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.3.5)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11))
-      typescript:
-        specifier: ~5.9.3
-        version: 5.9.3
-      vite:
-        specifier: ^7.1.7
-        version: 7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.15.32)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
 
   theme:
     dependencies:
@@ -2423,6 +2415,11 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
+  '@playwright/test@1.56.1':
+    resolution: {integrity: sha512-vSMYtL/zOcFpvJCW71Q/OEGQb7KYBPAdKh35WNSkaZA75JlAO8ED8UN6GUNTm3drWomcbcqRPFqQbLae8yBTdg==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
 
@@ -3064,48 +3061,6 @@ packages:
 
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
-
-  '@styleframe/cli@1.0.2':
-    resolution: {integrity: sha512-MUzW4H1vwi5b9gPZYfHIzPX9Zs7ojG9yZLPT4mUGEeFKPxskxV2qLe3J1dGT21mLW6nkmAAJJAHtp23WcAsDkw==}
-
-  '@styleframe/cli@file:dist/styleframe-cli-1.0.2.tgz':
-    resolution: {integrity: sha512-4zh2Upo+zZt0J1SyixiCwf/VXu2wOerReDTQvSWmNKj4Mse1BhWl/KwF0FHHJSHie9VSL6PtvFXxOFPw1jy3BQ==, tarball: file:dist/styleframe-cli-1.0.2.tgz}
-    version: 1.0.2
-
-  '@styleframe/core@1.0.1':
-    resolution: {integrity: sha512-NmXTxfgSVWy/s6X9UqXt1CNhoyD3o45N9BpXpRDEl6yqBc5CSQEd2VdB1Ch3d0K+NnBD6XgJiFcObDTTJdjScA==}
-
-  '@styleframe/loader@1.0.2':
-    resolution: {integrity: sha512-ZKt79+WmUbhiUvqT+KpvD3IS+BuqFvx7O4EuScvQx06qwitjmx/Td9LAsK+k4rsAZ5QW5EbhYoq4t+gcEpoHRA==}
-
-  '@styleframe/plugin@1.0.0':
-    resolution: {integrity: sha512-m4JunsUSsY88ZIz+832zeTuVqT93auO2RyZJyTfuDgZTZbxkNWCd128zqM742kikfebAIBbmaGPktpE8F0xabg==}
-    peerDependencies:
-      '@farmfe/core': '>=1'
-      '@nuxt/kit': ^3
-      '@nuxt/schema': ^3
-      esbuild: '*'
-      rollup: ^3
-      vite: '>=3'
-      webpack: ^4 || ^5
-    peerDependenciesMeta:
-      '@farmfe/core':
-        optional: true
-      '@nuxt/kit':
-        optional: true
-      '@nuxt/schema':
-        optional: true
-      esbuild:
-        optional: true
-      rollup:
-        optional: true
-      vite:
-        optional: true
-      webpack:
-        optional: true
-
-  '@styleframe/transpiler@1.0.2':
-    resolution: {integrity: sha512-6Zveuo1uQnDNvAT9CCYs6npOZBAylPjZDBsJ4x4vmvqF/JavfVFjVzOZy4HFsmazHDUZyeI6KEU4d8DElVer1Q==}
 
   '@stylistic/eslint-plugin@5.4.0':
     resolution: {integrity: sha512-UG8hdElzuBDzIbjG1QDwnYH0MQ73YLXDFHgZzB4Zh/YJfnw8XNsloVtytqzx0I2Qky9THSdpTmi8Vjn/pf/Lew==}
@@ -7855,11 +7810,6 @@ packages:
   structured-clone-es@1.0.0:
     resolution: {integrity: sha512-FL8EeKFFyNQv5cMnXI31CIMCsFarSVI2bF0U0ImeNE3g/F1IvJQyqzOXxPBRXiwQfyBTlbNe88jh1jFW0O/jiQ==}
 
-  styleframe@file:dist/styleframe-1.0.2.tgz:
-    resolution: {integrity: sha512-Gou0omSu6TmaI6NmiFV+tXy/teFcnsI7jCkiHdOagjqMzMZdaEeBeaJReTfl1cOagGgTinzkSneRpy2jByF0Hw==, tarball: file:dist/styleframe-1.0.2.tgz}
-    version: 1.0.2
-    hasBin: true
-
   stylehacks@7.0.6:
     resolution: {integrity: sha512-iitguKivmsueOmTO0wmxURXBP8uqOO+zikLGZ7Mm9e/94R4w5T999Js2taS/KBOnQ/wdC3jN3vNSrkGDrlnqQg==}
     engines: {node: ^18.12.0 || ^20.9.0 || >=22.0}
@@ -9777,52 +9727,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@farmfe/core@1.7.11(@types/node@24.7.0)':
-    dependencies:
-      '@farmfe/runtime': 0.12.10
-      '@farmfe/runtime-plugin-hmr': 3.5.10
-      '@farmfe/runtime-plugin-import-meta': 0.2.3
-      '@farmfe/utils': 0.1.0
-      '@koa/cors': 5.0.0
-      '@swc/helpers': 0.5.17
-      chokidar: 3.6.0
-      deepmerge: 4.3.1
-      dotenv: 16.6.1
-      dotenv-expand: 11.0.7
-      execa: 7.2.0
-      farm-browserslist-generator: 1.0.5
-      farm-plugin-replace-dirname: 0.2.1(@types/node@24.7.0)
-      fast-glob: 3.3.3
-      fs-extra: 11.3.2
-      http-proxy-middleware: 3.0.5
-      is-plain-object: 5.0.0
-      koa: 2.16.3
-      koa-compress: 5.1.1
-      koa-connect: 2.1.0
-      koa-static: 5.0.0
-      lodash.debounce: 4.0.8
-      loglevel: 1.9.2
-      open: 9.1.0
-      ws: 8.18.3
-      zod: 3.25.76
-      zod-validation-error: 1.5.0(zod@3.25.76)
-    optionalDependencies:
-      '@farmfe/core-darwin-arm64': 1.7.11
-      '@farmfe/core-darwin-x64': 1.7.11
-      '@farmfe/core-linux-arm64-gnu': 1.7.11
-      '@farmfe/core-linux-arm64-musl': 1.7.11
-      '@farmfe/core-linux-x64-gnu': 1.7.11
-      '@farmfe/core-linux-x64-musl': 1.7.11
-      '@farmfe/core-win32-arm64-msvc': 1.7.11
-      '@farmfe/core-win32-ia32-msvc': 1.7.11
-      '@farmfe/core-win32-x64-msvc': 1.7.11
-    transitivePeerDependencies:
-      - '@types/node'
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-    optional: true
-
   '@farmfe/runtime-plugin-hmr@3.5.10':
     dependencies:
       core-js: 3.45.1
@@ -10101,11 +10005,37 @@ snapshots:
 
   '@mdn/browser-compat-data@5.7.6': {}
 
+  '@microsoft/api-extractor-model@7.31.3(@types/node@22.15.32)':
+    dependencies:
+      '@microsoft/tsdoc': 0.15.1
+      '@microsoft/tsdoc-config': 0.17.1
+      '@rushstack/node-core-library': 5.18.0(@types/node@22.15.32)
+    transitivePeerDependencies:
+      - '@types/node'
+
   '@microsoft/api-extractor-model@7.31.3(@types/node@24.7.0)':
     dependencies:
       '@microsoft/tsdoc': 0.15.1
       '@microsoft/tsdoc-config': 0.17.1
       '@rushstack/node-core-library': 5.18.0(@types/node@24.7.0)
+    transitivePeerDependencies:
+      - '@types/node'
+
+  '@microsoft/api-extractor@7.53.3(@types/node@22.15.32)':
+    dependencies:
+      '@microsoft/api-extractor-model': 7.31.3(@types/node@22.15.32)
+      '@microsoft/tsdoc': 0.15.1
+      '@microsoft/tsdoc-config': 0.17.1
+      '@rushstack/node-core-library': 5.18.0(@types/node@22.15.32)
+      '@rushstack/rig-package': 0.6.0
+      '@rushstack/terminal': 0.19.3(@types/node@22.15.32)
+      '@rushstack/ts-command-line': 5.1.3(@types/node@22.15.32)
+      lodash: 4.17.21
+      minimatch: 10.0.3
+      resolve: 1.22.11
+      semver: 7.5.4
+      source-map: 0.6.1
+      typescript: 5.8.2
     transitivePeerDependencies:
       - '@types/node'
 
@@ -10670,7 +10600,7 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  '@nuxt/test-utils@3.19.2(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))':
+  '@nuxt/test-utils@3.19.2(@playwright/test@1.56.1)(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
       '@nuxt/kit': 3.19.3(magicast@0.3.5)
       c12: 3.3.0(magicast@0.3.5)
@@ -10694,9 +10624,10 @@ snapshots:
       tinyexec: 1.0.1
       ufo: 1.6.1
       unplugin: 2.3.10
-      vitest-environment-nuxt: 1.0.1(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
+      vitest-environment-nuxt: 1.0.1(@playwright/test@1.56.1)(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
       vue: 3.5.22(typescript@5.9.3)
     optionalDependencies:
+      '@playwright/test': 1.56.1
       playwright-core: 1.56.1
       vitest: 3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
     transitivePeerDependencies:
@@ -11325,6 +11256,10 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
+  '@playwright/test@1.56.1':
+    dependencies:
+      playwright: 1.56.1
+
   '@polka/url@1.0.0-next.29': {}
 
   '@poppinss/colors@4.1.5':
@@ -11694,6 +11629,19 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.52.5':
     optional: true
 
+  '@rushstack/node-core-library@5.18.0(@types/node@22.15.32)':
+    dependencies:
+      ajv: 8.13.0
+      ajv-draft-04: 1.0.0(ajv@8.13.0)
+      ajv-formats: 3.0.1(ajv@8.13.0)
+      fs-extra: 11.3.2
+      import-lazy: 4.0.0
+      jju: 1.4.0
+      resolve: 1.22.11
+      semver: 7.5.4
+    optionalDependencies:
+      '@types/node': 22.15.32
+
   '@rushstack/node-core-library@5.18.0(@types/node@24.7.0)':
     dependencies:
       ajv: 8.13.0
@@ -11707,6 +11655,10 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.7.0
 
+  '@rushstack/problem-matcher@0.1.1(@types/node@22.15.32)':
+    optionalDependencies:
+      '@types/node': 22.15.32
+
   '@rushstack/problem-matcher@0.1.1(@types/node@24.7.0)':
     optionalDependencies:
       '@types/node': 24.7.0
@@ -11716,6 +11668,14 @@ snapshots:
       resolve: 1.22.11
       strip-json-comments: 3.1.1
 
+  '@rushstack/terminal@0.19.3(@types/node@22.15.32)':
+    dependencies:
+      '@rushstack/node-core-library': 5.18.0(@types/node@22.15.32)
+      '@rushstack/problem-matcher': 0.1.1(@types/node@22.15.32)
+      supports-color: 8.1.1
+    optionalDependencies:
+      '@types/node': 22.15.32
+
   '@rushstack/terminal@0.19.3(@types/node@24.7.0)':
     dependencies:
       '@rushstack/node-core-library': 5.18.0(@types/node@24.7.0)
@@ -11723,6 +11683,15 @@ snapshots:
       supports-color: 8.1.1
     optionalDependencies:
       '@types/node': 24.7.0
+
+  '@rushstack/ts-command-line@5.1.3(@types/node@22.15.32)':
+    dependencies:
+      '@rushstack/terminal': 0.19.3(@types/node@22.15.32)
+      '@types/argparse': 1.0.38
+      argparse: 1.0.10
+      string-argv: 0.3.2
+    transitivePeerDependencies:
+      - '@types/node'
 
   '@rushstack/ts-command-line@5.1.3(@types/node@24.7.0)':
     dependencies:
@@ -11791,61 +11760,6 @@ snapshots:
   '@sqlite.org/sqlite-wasm@3.50.4-build1': {}
 
   '@standard-schema/spec@1.0.0': {}
-
-  '@styleframe/cli@1.0.2':
-    dependencies:
-      '@styleframe/loader': 1.0.2(magicast@0.5.0)
-      citty: 0.1.6
-      consola: 3.4.2
-      magicast: 0.5.0
-
-  '@styleframe/cli@file:dist/styleframe-cli-1.0.2.tgz':
-    dependencies:
-      '@styleframe/loader': 1.0.2(magicast@0.5.0)
-      citty: 0.1.6
-      consola: 3.4.2
-      magicast: 0.5.0
-
-  '@styleframe/core@1.0.1':
-    dependencies:
-      csstype: 3.1.3
-
-  '@styleframe/loader@1.0.2(magicast@0.3.5)':
-    dependencies:
-      '@styleframe/core': 1.0.1
-      '@styleframe/transpiler': 1.0.2
-      c12: 3.3.0(magicast@0.3.5)
-    transitivePeerDependencies:
-      - magicast
-
-  '@styleframe/loader@1.0.2(magicast@0.5.0)':
-    dependencies:
-      '@styleframe/core': 1.0.1
-      '@styleframe/transpiler': 1.0.2
-      c12: 3.3.0(magicast@0.5.0)
-    transitivePeerDependencies:
-      - magicast
-
-  '@styleframe/plugin@1.0.0(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.3.5))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.3.5)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11))':
-    dependencies:
-      '@styleframe/loader': 1.0.2(magicast@0.3.5)
-      '@styleframe/transpiler': 1.0.2
-      consola: 3.4.2
-      unplugin: 2.3.10
-    optionalDependencies:
-      '@farmfe/core': 1.7.11(@types/node@24.7.0)
-      '@nuxt/kit': 3.19.3(magicast@0.3.5)
-      '@nuxt/schema': 3.19.3
-      esbuild: 0.25.11
-      vite: 7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
-      webpack: 5.102.1(esbuild@0.25.11)
-    transitivePeerDependencies:
-      - magicast
-
-  '@styleframe/transpiler@1.0.2':
-    dependencies:
-      '@styleframe/core': 1.0.1
-      scule: 1.3.0
 
   '@stylistic/eslint-plugin@5.4.0(eslint@9.37.0(jiti@2.6.1))':
     dependencies:
@@ -13101,23 +13015,6 @@ snapshots:
     optionalDependencies:
       magicast: 0.3.5
 
-  c12@3.3.0(magicast@0.5.0):
-    dependencies:
-      chokidar: 4.0.3
-      confbox: 0.2.2
-      defu: 6.1.4
-      dotenv: 17.2.3
-      exsolve: 1.0.7
-      giget: 2.0.0
-      jiti: 2.6.1
-      ohash: 2.0.11
-      pathe: 2.0.3
-      perfect-debounce: 2.0.0
-      pkg-types: 2.3.0
-      rc9: 2.1.2
-    optionalDependencies:
-      magicast: 0.5.0
-
   cac@6.7.14: {}
 
   cache-content-type@1.0.1:
@@ -14183,25 +14080,6 @@ snapshots:
       farm-plugin-replace-dirname-win32-x64-msvc: 0.2.1
     transitivePeerDependencies:
       - '@types/node'
-
-  farm-plugin-replace-dirname@0.2.1(@types/node@24.7.0):
-    dependencies:
-      '@changesets/cli': 2.29.7(@types/node@24.7.0)
-      '@farmfe/utils': 0.0.1
-      cac: 6.7.14
-    optionalDependencies:
-      farm-plugin-replace-dirname-darwin-arm64: 0.2.1
-      farm-plugin-replace-dirname-darwin-x64: 0.2.1
-      farm-plugin-replace-dirname-linux-arm64-gnu: 0.2.1
-      farm-plugin-replace-dirname-linux-arm64-musl: 0.2.1
-      farm-plugin-replace-dirname-linux-x64-gnu: 0.2.1
-      farm-plugin-replace-dirname-linux-x64-musl: 0.2.1
-      farm-plugin-replace-dirname-win32-arm64-msvc: 0.2.1
-      farm-plugin-replace-dirname-win32-ia32-msvc: 0.2.1
-      farm-plugin-replace-dirname-win32-x64-msvc: 0.2.1
-    transitivePeerDependencies:
-      - '@types/node'
-    optional: true
 
   fast-deep-equal@3.1.3: {}
 
@@ -17658,23 +17536,6 @@ snapshots:
 
   structured-clone-es@1.0.0: {}
 
-  styleframe@file:dist/styleframe-1.0.2.tgz(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.3.5))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.3.5)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11)):
-    dependencies:
-      '@styleframe/cli': 1.0.2
-      '@styleframe/core': 1.0.1
-      '@styleframe/loader': 1.0.2(magicast@0.3.5)
-      '@styleframe/plugin': 1.0.0(@farmfe/core@1.7.11(@types/node@24.7.0))(@nuxt/kit@3.19.3(magicast@0.3.5))(@nuxt/schema@3.19.3)(esbuild@0.25.11)(magicast@0.3.5)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(webpack@5.102.1(esbuild@0.25.11))
-      '@styleframe/transpiler': 1.0.2
-    transitivePeerDependencies:
-      - '@farmfe/core'
-      - '@nuxt/kit'
-      - '@nuxt/schema'
-      - esbuild
-      - magicast
-      - rollup
-      - vite
-      - webpack
-
   stylehacks@7.0.6(postcss@8.5.6):
     dependencies:
       browserslist: 4.26.3
@@ -17799,18 +17660,6 @@ snapshots:
       webpack: 5.102.1(esbuild@0.25.10)
     optionalDependencies:
       esbuild: 0.25.10
-
-  terser-webpack-plugin@5.3.14(esbuild@0.25.11)(webpack@5.102.1(esbuild@0.25.11)):
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.31
-      jest-worker: 27.5.1
-      schema-utils: 4.3.3
-      serialize-javascript: 6.0.2
-      terser: 5.44.0
-      webpack: 5.102.1(esbuild@0.25.11)
-    optionalDependencies:
-      esbuild: 0.25.11
-    optional: true
 
   terser@5.44.0:
     dependencies:
@@ -18405,6 +18254,25 @@ snapshots:
       oxlint: 1.2.0
       typescript: 5.9.3
 
+  vite-plugin-dts@4.5.4(@types/node@22.15.32)(rollup@4.52.5)(typescript@5.8.3)(vite@7.0.6(@types/node@22.15.32)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)):
+    dependencies:
+      '@microsoft/api-extractor': 7.53.3(@types/node@22.15.32)
+      '@rollup/pluginutils': 5.3.0(rollup@4.52.5)
+      '@volar/typescript': 2.4.23
+      '@vue/language-core': 2.2.0(typescript@5.8.3)
+      compare-versions: 6.1.1
+      debug: 4.4.3(supports-color@5.5.0)
+      kolorist: 1.8.0
+      local-pkg: 1.1.2
+      magic-string: 0.30.21
+      typescript: 5.8.3
+    optionalDependencies:
+      vite: 7.0.6(@types/node@22.15.32)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+    transitivePeerDependencies:
+      - '@types/node'
+      - rollup
+      - supports-color
+
   vite-plugin-dts@4.5.4(@types/node@24.7.0)(rollup@4.52.5)(typescript@5.8.3)(vite@7.0.6(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)):
     dependencies:
       '@microsoft/api-extractor': 7.53.3(@types/node@24.7.0)
@@ -18510,6 +18378,23 @@ snapshots:
       tsx: 4.20.6
       yaml: 2.8.1
 
+  vite@7.0.6(@types/node@22.15.32)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1):
+    dependencies:
+      esbuild: 0.25.11
+      fdir: 6.5.0(picomatch@4.0.3)
+      picomatch: 4.0.3
+      postcss: 8.5.6
+      rollup: 4.52.5
+      tinyglobby: 0.2.15
+    optionalDependencies:
+      '@types/node': 22.15.32
+      fsevents: 2.3.3
+      jiti: 2.6.1
+      lightningcss: 1.30.1
+      terser: 5.44.0
+      tsx: 4.20.6
+      yaml: 2.8.1
+
   vite@7.0.6(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1):
     dependencies:
       esbuild: 0.25.11
@@ -18561,9 +18446,9 @@ snapshots:
       tsx: 4.20.6
       yaml: 2.8.1
 
-  vitest-environment-nuxt@1.0.1(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)):
+  vitest-environment-nuxt@1.0.1(@playwright/test@1.56.1)(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)):
     dependencies:
-      '@nuxt/test-utils': 3.19.2(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
+      '@nuxt/test-utils': 3.19.2(@playwright/test@1.56.1)(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@jest/globals'
@@ -18767,39 +18652,6 @@ snapshots:
       - '@swc/core'
       - esbuild
       - uglify-js
-
-  webpack@5.102.1(esbuild@0.25.11):
-    dependencies:
-      '@types/eslint-scope': 3.7.7
-      '@types/estree': 1.0.8
-      '@types/json-schema': 7.0.15
-      '@webassemblyjs/ast': 1.14.1
-      '@webassemblyjs/wasm-edit': 1.14.1
-      '@webassemblyjs/wasm-parser': 1.14.1
-      acorn: 8.15.0
-      acorn-import-phases: 1.0.4(acorn@8.15.0)
-      browserslist: 4.26.3
-      chrome-trace-event: 1.0.4
-      enhanced-resolve: 5.18.3
-      es-module-lexer: 1.7.0
-      eslint-scope: 5.1.1
-      events: 3.3.0
-      glob-to-regexp: 0.4.1
-      graceful-fs: 4.2.11
-      json-parse-even-better-errors: 2.3.1
-      loader-runner: 4.3.1
-      mime-types: 2.1.35
-      neo-async: 2.6.2
-      schema-utils: 4.3.3
-      tapable: 2.3.0
-      terser-webpack-plugin: 5.3.14(esbuild@0.25.11)(webpack@5.102.1(esbuild@0.25.11))
-      watchpack: 2.4.4
-      webpack-sources: 3.3.3
-    transitivePeerDependencies:
-      - '@swc/core'
-      - esbuild
-      - uglify-js
-    optional: true
 
   whatwg-url@5.0.0:
     dependencies:

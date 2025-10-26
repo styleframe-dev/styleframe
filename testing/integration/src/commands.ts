@@ -3,7 +3,7 @@ import path from "node:path";
 import fs from "node:fs";
 import assert from "node:assert";
 
-import { DEFAULT_STYLEFRAME_CONFIG, DEFAULT_VITE_CONFIG } from "./constants";
+import { DEFAULT_VITE_CONFIG } from "./constants";
 
 export function buildPackages(cwd: string) {
 	shell.exec("pnpm run build:nodocs", { cwd });
@@ -72,11 +72,15 @@ export function createStarterVitePackage(
 		template?: string;
 	} = {},
 ) {
+	const targetDir = path.join(cwd, outputDir);
+
 	shell.exec(`pnpm create vite@latest --template ${template} ${outputDir}`, {
 		cwd,
 	});
 
-	return path.join(cwd, outputDir);
+	shell.exec("rm src/*", { cwd: targetDir });
+
+	return targetDir;
 }
 
 export function installStyleframeUsingCLI(
@@ -98,6 +102,9 @@ export function installStyleframeUsingCLI(
 		}
 	}
 
+	packageJSON.scripts ||= {};
+	packageJSON.scripts.init = `npx styleframe init --cwd ${cwd}`;
+
 	fs.writeFileSync(`${cwd}/package.json`, JSON.stringify(packageJSON, null, 2));
 
 	console.log(JSON.stringify(packageJSON, null, 2));
@@ -108,29 +115,47 @@ export function installStyleframeUsingCLI(
 
 	fs.writeFileSync(`${cwd}/vite.config.ts`, DEFAULT_VITE_CONFIG);
 
-	shell.exec(`npx styleframe init --cwd ${cwd}`, { cwd });
+	shell.exec(`npm run init`, { cwd });
 
 	const viteConfigFile = path.join(cwd, "vite.config.ts");
 	const viteConfigContent = fs.readFileSync(viteConfigFile, "utf8");
 
 	assert.equal(
 		viteConfigContent,
-		`import styleframe from 'styleframe/plugin/vite';
-import { defineConfig } from 'vite';
+		`import styleframe from "styleframe/plugin/vite";
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [styleframe()],
+  plugins: [styleframe()]
 });`,
 	);
 }
 
-export function addStyleframeConfig(cwd: string) {
-	fs.writeFileSync(`${cwd}/styleframe.config.ts`, DEFAULT_STYLEFRAME_CONFIG);
+export function addStyleframeConfig(cwd: string, projectDir: string) {
+	const fixturesDir = path.join(cwd, "src/fixtures");
+
+	fs.copyFileSync(
+		`${fixturesDir}/styleframe.config.ts`,
+		`${projectDir}/styleframe.config.ts`,
+	);
+
+	fs.copyFileSync(`${fixturesDir}/main.ts`, `${projectDir}/src/main.ts`);
 }
 
 export function buildVite(cwd: string) {
 	shell.exec(`npm run build`, {
 		cwd,
+	});
+}
+
+export function runPlaywright(cwd: string, projectDir: string) {
+	shell.exec(`pnpm exec playwright test`, {
+		cwd,
+		env: {
+			...process.env,
+			PROJECT_DIR: projectDir,
+			CI: "true",
+		},
 	});
 }
 

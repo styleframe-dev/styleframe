@@ -1,6 +1,7 @@
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import os from "node:os";
+import fs from "node:fs";
 import {
 	buildPackages,
 	createPackageTarballs,
@@ -9,6 +10,7 @@ import {
 	cleanup,
 	addStyleframeConfig,
 	buildVite,
+	runPlaywright,
 } from "./commands";
 
 const __dirname = fileURLToPath(import.meta.url);
@@ -34,7 +36,8 @@ const packageToTarballMap = createPackageTarballs(workspaceDir, {
  * 3. Create starter vite package
  */
 
-const viteStyleframeCLIOutputDir = createStarterVitePackage(os.tmpdir());
+const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "styleframe-"));
+const viteStyleframeCLIOutputDir = createStarterVitePackage(tempDir);
 
 console.log("Starter Vite package created at:", viteStyleframeCLIOutputDir);
 
@@ -48,13 +51,19 @@ installStyleframeUsingCLI(viteStyleframeCLIOutputDir, packageToTarballMap);
  * 5. Add styleframe config
  */
 
-addStyleframeConfig(viteStyleframeCLIOutputDir);
+addStyleframeConfig(packageDir, viteStyleframeCLIOutputDir);
 
 /**
  * 6. Build application
  */
 
 buildVite(viteStyleframeCLIOutputDir);
+
+/**
+ * 7. Run playwright tests
+ */
+
+runPlaywright(packageDir, viteStyleframeCLIOutputDir);
 
 /**
  * Cleanup
