@@ -21,6 +21,8 @@
 
 :root {
 	--ui-primary: var(--color-teal);
+	--ui-header-height: 64px;
+	--ui-footer-height: 80px;
 }
 
 .prose-container {

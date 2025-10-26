@@ -4,7 +4,7 @@
 	"version": "1.0.0",
 	"scripts": {
 		"build": "nuxt build",
-		"dev": "nuxt dev",
+		"dev": "nuxt dev --dotenv .env.local",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
 		"postinstall": "nuxt prepare"
@@ -23,6 +23,8 @@
 		"@nuxtjs/i18n": "^10.1.0",
 		"@nuxtjs/mdc": "^0.17.4",
 		"@nuxtjs/robots": "^5.5.5",
+		"@nuxtjs/supabase": "2.0.1",
+		"@supabase/supabase-js": "^2.78.0",
 		"@unhead/vue": "^2.0.19",
 		"@vueuse/core": "^13.9.0",
 		"defu": "^6.1.4",

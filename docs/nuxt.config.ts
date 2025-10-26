@@ -1,4 +1,4 @@
-import { extendViteConfig, createResolver, useNuxt } from "@nuxt/kit";
+import { createResolver, useNuxt } from "@nuxt/kit";
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -17,20 +17,31 @@ export default defineNuxtConfig({
 		"@nuxt/test-utils",
 		"@nuxt/content",
 		"@nuxtjs/robots",
+		"@nuxtjs/supabase",
 		"nuxt-og-image",
 		"nuxt-llms",
-		() => {
-			// Update @nuxt/content optimizeDeps options
-			extendViteConfig((config) => {
-				config.optimizeDeps ||= {};
-				config.optimizeDeps.include ||= [];
-				config.optimizeDeps.include.push("@nuxt/content > slugify");
-				config.optimizeDeps.include = config.optimizeDeps.include.map((id) =>
-					id.replace(/^@nuxt\/content > /, "docus > @nuxt/content > "),
-				);
-			});
-		},
+		resolve("./modules/optimizeDeps"),
 	],
+	supabase: {
+		redirectOptions: {
+			login: "/login",
+			callback: "/confirm",
+			include: undefined,
+			exclude: [
+				"/",
+				"/about",
+				"/contact",
+				"/cookies",
+				"/docs/**",
+				"/license",
+				"/pricing",
+				"/privacy",
+				"/signup",
+				"/terms",
+			],
+			saveRedirectToCookie: true,
+		},
+	},
 	content: {
 		build: {
 			markdown: {
