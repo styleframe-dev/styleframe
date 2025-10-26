@@ -2,7 +2,6 @@ import { loadConfigurationFromPath } from "@styleframe/loader";
 import type { TranspileOptions } from "@styleframe/transpiler";
 import { transpile } from "@styleframe/transpiler";
 import { consola } from "consola";
-import fs from "node:fs";
 import path from "node:path";
 import type { UnpluginFactory } from "unplugin";
 import { createUnplugin } from "unplugin";
