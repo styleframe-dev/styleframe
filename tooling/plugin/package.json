@@ -49,7 +49,7 @@
 		"playground:build": "cd playground && pnpm run build",
 		"playground:start": "cd playground && pnpm run start",
 		"playground:dev": "cd playground && pnpm run dev",
-		"test": "vitest"
+		"test": "vitest run"
 	},
 	"peerDependencies": {
 		"@farmfe/core": ">=1",

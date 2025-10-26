@@ -62,9 +62,11 @@ describe("transpile", () => {
 		it("should transpile an empty Styleframe instance", () => {
 			const output = transpile(instance);
 
-			expect(output.files).toHaveLength(1);
+			expect(output.files).toHaveLength(2);
 			expect(output.files[0]!.name).toBe("index.css");
 			expect(output.files[0]!.content).toEqual("");
+			expect(output.files[1]!.name).toBe("index.ts");
+			expect(output.files[1]!.content).toEqual("");
 		});
 
 		it("should transpile a simple variable", () => {
@@ -72,11 +74,13 @@ describe("transpile", () => {
 
 			const output = transpile(instance);
 
-			expect(output.files).toHaveLength(1);
+			expect(output.files).toHaveLength(2);
 			expect(output.files[0]!.name).toBe("index.css");
 			expect(output.files[0]!.content).toEqual(`:root {
 \t--primary-color: #006cff;
 }`);
+			expect(output.files[1]!.name).toBe("index.ts");
+			expect(output.files[1]!.content).toEqual("");
 		});
 
 		it("should transpile multiple variables", () => {
@@ -522,7 +526,7 @@ describe("transpile", () => {
 			// Transpile the complex scenario
 			const output = transpile(instance);
 
-			expect(output.files).toHaveLength(1);
+			expect(output.files).toHaveLength(2);
 			expect(output.files[0]!.name).toBe("index.css");
 
 			const content = output.files[0]!.content;
