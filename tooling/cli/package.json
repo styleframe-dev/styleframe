@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/cli",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "A command-line interface for styleframe.",
 	"type": "module",
 	"types": "./dist/index.d.ts",
