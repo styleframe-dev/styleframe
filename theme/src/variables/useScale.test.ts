@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/suspicious/noApproximativeNumericConstant: scales are magic numbers */
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useScale } from "./useScale";
 
 describe("useScale", () => {
@@ -111,11 +111,11 @@ describe("useScale", () => {
 		]);
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useScale(s);
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--scale--minor-second: 1.067;
@@ -134,7 +134,7 @@ describe("useScale", () => {
 		const s = styleframe();
 		const { scaleGolden } = useScale(s);
 
-		const css = consume(scaleGolden, s.options);
+		const css = consumeCSS(scaleGolden, s.options);
 
 		expect(css).toBe("--scale--golden: 1.618;");
 	});
@@ -162,7 +162,7 @@ describe("useScale", () => {
 			fallback: undefined,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("--custom-scale: var(--scale--golden);");
 	});
 
@@ -174,7 +174,7 @@ describe("useScale", () => {
 			variable(scaleMajorThird, 1.5);
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toContain("--scale--major-third: 1.25;");
 		expect(css).toContain(".custom-scale");
@@ -264,7 +264,7 @@ describe("useScale", () => {
 				default: "@golden",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toContain("--scale: var(--scale--golden);");
 		});
@@ -382,7 +382,7 @@ describe("useScale", () => {
 				s.css`calc(${s.ref(spacingBase)} * ${s.ref(scaleGolden)})`,
 			);
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("--spacing-base: 1rem;");
 			expect(css).toContain("--scale--golden: 1.618;");
 			expect(css).toContain(

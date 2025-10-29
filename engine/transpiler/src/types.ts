@@ -13,3 +13,11 @@ export type ConsumeFunction = (
 	instance: unknown,
 	options: StyleframeOptions,
 ) => string;
+
+export type TranspileOptions = {
+	type?: "css" | "ts" | "all";
+	consumers?: {
+		css: ConsumeFunction;
+		ts: ConsumeFunction;
+	};
+};

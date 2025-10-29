@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useBreakpoint } from "./useBreakpoint";
 
 describe("useBreakpoint", () => {
@@ -16,7 +16,7 @@ describe("useBreakpoint", () => {
 			value: 768,
 		});
 
-		const css = consume(breakpoint, s.options);
+		const css = consumeCSS(breakpoint, s.options);
 		expect(css).toBe(`--breakpoint: 768;`);
 	});
 
@@ -32,7 +32,7 @@ describe("useBreakpoint", () => {
 			value: 576,
 		});
 
-		const css = consume(breakpointSm, s.options);
+		const css = consumeCSS(breakpointSm, s.options);
 		expect(css).toBe(`--breakpoint--sm: 576;`);
 	});
 
@@ -227,7 +227,7 @@ describe("useBreakpoint", () => {
 		});
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useBreakpoint(s, {
 			xs: 0,
@@ -237,7 +237,7 @@ describe("useBreakpoint", () => {
 			xl: 1200,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--breakpoint--xs: 0;
@@ -403,7 +403,7 @@ describe("useBreakpoint", () => {
 				},
 			);
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("--breakpoint--md: 768;");
 			expect(css).toContain("--breakpoint--lg: 992;");
 			expect(css).toContain("@media (min-width: 768px)");

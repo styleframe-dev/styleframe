@@ -1,6 +1,6 @@
 import type { Styleframe } from "@styleframe/core";
-import { consume } from "./consume";
-import type { Output, OutputFile } from "./types";
+import { consumeCSS, consumeTS } from "./consume";
+import type { Output, OutputFile, TranspileOptions } from "./types";
 
 export function createFile(name: string, content: string = ""): OutputFile {
 	return {
@@ -9,13 +9,26 @@ export function createFile(name: string, content: string = ""): OutputFile {
 	};
 }
 
-export function transpile(instance: Styleframe): Output {
+export function transpile(
+	instance: Styleframe,
+	{
+		type = "all",
+		consumers = { css: consumeCSS, ts: consumeTS },
+	}: TranspileOptions = {},
+): Output {
 	const output: Output = { files: [] };
 	const options = instance.options;
+	const { recipes, ...root } = instance.root;
 
-	const indexFile = createFile("index.css", consume(instance.root, options));
+	if (type === "all" || type === "css") {
+		const indexFile = createFile("index.css", consumers.css(root, options));
+		output.files.push(indexFile);
+	}
 
-	output.files.push(indexFile);
+	if (type === "all" || type === "ts") {
+		const indexFile = createFile("index.ts", consumers.ts([], options));
+		output.files.push(indexFile);
+	}
 
 	return output;
 }

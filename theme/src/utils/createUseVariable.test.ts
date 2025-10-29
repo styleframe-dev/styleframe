@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { createUseVariable } from "./createUseVariable";
 
 describe("createUseVariable", () => {
@@ -176,7 +176,7 @@ describe("createUseVariable", () => {
 			large: "32px",
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--padding: 16px;
@@ -375,7 +375,7 @@ describe("createUseVariable", () => {
 				large: "2",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toBe(`:root {
 	--margin: 1rem;
@@ -602,7 +602,7 @@ describe("createUseVariable", () => {
 				medium: "@default",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toBe(`:root {
 	--spacing: 16px;
@@ -756,7 +756,7 @@ describe("createUseVariable", () => {
 				small: "8px",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toBe(`:root {
 	--spacing: 16px;

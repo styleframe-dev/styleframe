@@ -4,7 +4,7 @@ import type { ConsumeFunction } from "../types";
 /**
  * Consumes a CSS value, equivalent to the string body of a selector
  */
-export function createCSSConsumer(consume: ConsumeFunction) {
+export function createCSSTemplateLiteralConsumer(consume: ConsumeFunction) {
 	return function consumeCSS(
 		instance: CSS,
 		options: StyleframeOptions,

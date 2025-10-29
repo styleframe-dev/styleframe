@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import {
 	useColorLightness,
 	defaultColorLightnessValues,
@@ -33,13 +33,13 @@ describe("useColorLightness", () => {
 			value: expect.objectContaining({ type: "css" }),
 		});
 
-		const css = consume(levels.colorPrimary100, s.options);
+		const css = consumeCSS(levels.colorPrimary100, s.options);
 		expect(css).toBe(
 			`--color--primary-100: oklch(from var(--color--primary) 0.1 c h / a);`,
 		);
 	});
 
-	it("should compile lightness levels to correct CSS output using consume", () => {
+	it("should compile lightness levels to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		useColorLightness(s, colorPrimary, {
@@ -48,7 +48,7 @@ describe("useColorLightness", () => {
 			300: 30,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--color--primary: #007bff;
@@ -83,7 +83,7 @@ describe("useColorLightness", () => {
 			value: expect.objectContaining({ type: "css" }),
 		});
 
-		const css = consume(levels.colorPrimary200, s.options);
+		const css = consumeCSS(levels.colorPrimary200, s.options);
 		expect(css).toBe(
 			"--color--primary-200: oklch(from var(--color--primary) 0.2 c h / a);",
 		);
@@ -132,7 +132,7 @@ describe("useColorLightness", () => {
 			value: expect.objectContaining({ type: "css" }),
 		});
 
-		const css = consume(levels.customColor500, s.options);
+		const css = consumeCSS(levels.customColor500, s.options);
 		expect(css).toBe(
 			`--custom-color-500: oklch(from var(--custom-color) 0.5 c h / a);`,
 		);

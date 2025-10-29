@@ -18,9 +18,9 @@
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run --passWithNoTests",
 		"test:dev": "vitest --watch",
-		"playground:build": "tsx src/playground/build.ts",
-		"playground:load": "tsx src/playground/load.ts",
-		"playground:watch": "tsx src/playground/watch.ts"
+		"playground:build": "tsx playground/build.ts",
+		"playground:load": "tsx playground/load.ts",
+		"playground:watch": "tsx playground/watch.ts"
 	},
 	"dependencies": {
 		"@styleframe/core": "workspace:^",

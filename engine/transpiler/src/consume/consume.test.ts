@@ -10,7 +10,7 @@ import {
 	createVariableFunction,
 	isUtility,
 } from "@styleframe/core";
-import { consume } from "./consume";
+import { consumeCSS } from "./consume";
 
 describe("consume", () => {
 	let root: Root;
@@ -37,21 +37,21 @@ describe("consume", () => {
 
 	it("should consume a variable instance", () => {
 		const colorVar = variable("primary-color", "#006cff");
-		const result = consume(colorVar, options);
+		const result = consumeCSS(colorVar, options);
 
 		expect(result).toBe("--primary-color: #006cff;");
 	});
 
 	it("should consume a reference instance", () => {
 		const colorRef = ref("primary-color");
-		const result = consume(colorRef, options);
+		const result = consumeCSS(colorRef, options);
 
 		expect(result).toBe("var(--primary-color)");
 	});
 
 	it("should consume a CSS instance", () => {
 		const cssValue = css`16px solid #000`;
-		const result = consume(cssValue, options);
+		const result = consumeCSS(cssValue, options);
 
 		expect(result).toBe("16px solid #000");
 	});
@@ -62,7 +62,7 @@ describe("consume", () => {
 			backgroundColor: "#006cff",
 		});
 
-		const result = consume(buttonSelector, options);
+		const result = consumeCSS(buttonSelector, options);
 
 		expect(result).toEqual(`.button {
 \tpadding: 0.5rem 1rem;
@@ -76,7 +76,7 @@ describe("consume", () => {
 			v("text-color", "#000000");
 		});
 
-		const result = consume(lightTheme, options);
+		const result = consumeCSS(lightTheme, options);
 
 		expect(result).toEqual(`[data-theme="light"] {
 \t--background-color: #ffffff;
@@ -89,7 +89,7 @@ describe("consume", () => {
 			fontSize: "18px",
 		});
 
-		const result = consume(mediaRule, options);
+		const result = consumeCSS(mediaRule, options);
 
 		expect(result).toEqual(`@media (min-width: 768px) {
 \tfont-size: 18px;
@@ -109,7 +109,7 @@ describe("consume", () => {
 		const marginUtility = root.children.find(
 			(u) => isUtility(u) && u.name === "margin",
 		);
-		const result = consume(marginUtility, options);
+		const result = consumeCSS(marginUtility, options);
 
 		expect(result).toEqual(`._margin\\:sm {
 \tmargin: 8px;
@@ -117,12 +117,12 @@ describe("consume", () => {
 	});
 
 	it("should consume primitive values", () => {
-		expect(consume("test string", options)).toBe("test string");
-		expect(consume(42, options)).toBe("42");
-		expect(consume(true, options)).toBe("true");
-		expect(consume(false, options)).toBe("false");
-		expect(consume(null, options)).toBe("");
-		expect(consume(undefined, options)).toBe("");
+		expect(consumeCSS("test string", options)).toBe("test string");
+		expect(consumeCSS(42, options)).toBe("42");
+		expect(consumeCSS(true, options)).toBe("true");
+		expect(consumeCSS(false, options)).toBe("false");
+		expect(consumeCSS(null, options)).toBe("");
+		expect(consumeCSS(undefined, options)).toBe("");
 	});
 
 	it("should consume complex nested structures", () => {
@@ -163,7 +163,7 @@ describe("consume", () => {
 			});
 		});
 
-		const result = consume(root, options);
+		const result = consumeCSS(root, options);
 		const expected = `:root {
 \t--card-bg: #ffffff;
 \t--card-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -220,9 +220,9 @@ describe("consume", () => {
 			});
 		});
 
-		const selectorResult = consume(buttonSelector, options);
-		const cssResult = consume(borderStyle, options);
-		const themeResult = consume(brandTheme, options);
+		const selectorResult = consumeCSS(buttonSelector, options);
+		const cssResult = consumeCSS(borderStyle, options);
+		const themeResult = consumeCSS(brandTheme, options);
 
 		expect(selectorResult).toEqual(`.button {
 \tbackground-color: var(--brand-color);
@@ -245,9 +245,9 @@ describe("consume", () => {
 			color: colorRef,
 		});
 
-		const varResult = consume(colorVar, prefixOptions);
-		const refResult = consume(colorRef, prefixOptions);
-		const selectorResult = consume(buttonSelector, prefixOptions);
+		const varResult = consumeCSS(colorVar, prefixOptions);
+		const refResult = consumeCSS(colorRef, prefixOptions);
+		const selectorResult = consumeCSS(buttonSelector, prefixOptions);
 
 		expect(varResult).toBe("--app-primary: #006cff;");
 		expect(refResult).toBe("var(--app-secondary)");

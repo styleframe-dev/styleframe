@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useFontSize } from "./useFontSize";
 
 describe("useFontSize", () => {
@@ -16,7 +16,7 @@ describe("useFontSize", () => {
 			value: "1rem",
 		});
 
-		const css = consume(fontSize, s.options);
+		const css = consumeCSS(fontSize, s.options);
 		expect(css).toBe(`--font-size: 1rem;`);
 	});
 
@@ -32,7 +32,7 @@ describe("useFontSize", () => {
 			value: "0.875rem",
 		});
 
-		const css = consume(fontSizeSm, s.options);
+		const css = consumeCSS(fontSizeSm, s.options);
 		expect(css).toBe(`--font-size--sm: 0.875rem;`);
 	});
 
@@ -213,7 +213,7 @@ describe("useFontSize", () => {
 		});
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useFontSize(s, {
 			default: "1rem",
@@ -223,7 +223,7 @@ describe("useFontSize", () => {
 			xl: "1.5rem",
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--font-size: 1rem;

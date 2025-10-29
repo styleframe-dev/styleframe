@@ -5,8 +5,8 @@ import {
 	createRoot,
 	createVariableFunction,
 } from "@styleframe/core";
-import { createCSSConsumer } from "./css";
-import { consume } from "./consume";
+import { createCSSTemplateLiteralConsumer } from "./css";
+import { consumeCSS } from "./consume";
 
 describe("createCSSConsumer", () => {
 	let root: Root;
@@ -14,7 +14,8 @@ describe("createCSSConsumer", () => {
 	let variable: ReturnType<typeof createVariableFunction>;
 	let ref: ReturnType<typeof createRefFunction>;
 
-	const consumeCSS = createCSSConsumer(consume);
+	const consumeCSSTemplateLiteral =
+		createCSSTemplateLiteralConsumer(consumeCSS);
 	const options: StyleframeOptions = {};
 
 	beforeEach(() => {
@@ -26,7 +27,7 @@ describe("createCSSConsumer", () => {
 
 	it("should process a simple CSS value", () => {
 		const cssValue = css`16px`;
-		expect(consumeCSS(cssValue, options)).toBe("16px");
+		expect(consumeCSSTemplateLiteral(cssValue, options)).toBe("16px");
 	});
 
 	it("should handle CSS values with variable references", () => {
@@ -35,14 +36,14 @@ describe("createCSSConsumer", () => {
 			${ref(spacingVar)} calc(${ref(spacingVar)} * 2)
 		`;
 
-		expect(consumeCSS(paddingValue, options)).toBe(
+		expect(consumeCSSTemplateLiteral(paddingValue, options)).toBe(
 			"var(--spacing-md) calc(var(--spacing-md) * 2)",
 		);
 	});
 
 	it("should handle empty CSS values", () => {
 		const emptyCss = css``;
-		expect(consumeCSS(emptyCss, options)).toBe("");
+		expect(consumeCSSTemplateLiteral(emptyCss, options)).toBe("");
 	});
 
 	it("should respect prefix in options if provided", () => {
@@ -57,7 +58,7 @@ describe("createCSSConsumer", () => {
 			${ref(colorVar)}
 		`;
 
-		expect(consumeCSS(colorValue, prefixOptions)).toBe(
+		expect(consumeCSSTemplateLiteral(colorValue, prefixOptions)).toBe(
 			"var(--sf-color-primary)",
 		);
 	});
@@ -68,7 +69,7 @@ describe("createCSSConsumer", () => {
 			${zIndex}
 		`;
 
-		expect(consumeCSS(zIndexValue, options)).toBe("100");
+		expect(consumeCSSTemplateLiteral(zIndexValue, options)).toBe("100");
 	});
 
 	it("should handle CSS values with string interpolations", () => {
@@ -79,14 +80,16 @@ describe("createCSSConsumer", () => {
 			${borderWidth} ${borderStyle} ${borderColor}
 		`;
 
-		expect(consumeCSS(borderValue, options)).toBe("2px solid #000");
+		expect(consumeCSSTemplateLiteral(borderValue, options)).toBe(
+			"2px solid #000",
+		);
 	});
 
 	it("should handle CSS values with array interpolations", () => {
 		const gridAreas = ["header", "main", "footer"];
 		const gridTemplateValue = css`"${gridAreas[0]}" "${gridAreas[1]}" "${gridAreas[2]}"`;
 
-		expect(consumeCSS(gridTemplateValue, options)).toBe(
+		expect(consumeCSSTemplateLiteral(gridTemplateValue, options)).toBe(
 			'"header" "main" "footer"',
 		);
 	});
@@ -100,7 +103,7 @@ describe("createCSSConsumer", () => {
 			${ref(fontSize)}/${ref(lineHeight)} ${ref(fontFamily)}
 		`;
 
-		expect(consumeCSS(fontValue, options)).toBe(
+		expect(consumeCSSTemplateLiteral(fontValue, options)).toBe(
 			"var(--font-size-base)/var(--line-height-normal) var(--font-family-sans)",
 		);
 	});
@@ -109,7 +112,7 @@ describe("createCSSConsumer", () => {
 		const spacing = variable("spacing", "8px");
 		const calcValue = css`calc(100% - ${ref(spacing)} * 2)`;
 
-		expect(consumeCSS(calcValue, options)).toBe(
+		expect(consumeCSSTemplateLiteral(calcValue, options)).toBe(
 			"calc(100% - var(--spacing) * 2)",
 		);
 	});
@@ -118,7 +121,7 @@ describe("createCSSConsumer", () => {
 		const primaryColor = variable("color-primary", "#006cff");
 		const colorValue = css`rgba(${ref(primaryColor)}, 0.5)`;
 
-		expect(consumeCSS(colorValue, options)).toBe(
+		expect(consumeCSSTemplateLiteral(colorValue, options)).toBe(
 			"rgba(var(--color-primary), 0.5)",
 		);
 	});
@@ -129,7 +132,7 @@ describe("createCSSConsumer", () => {
 
 		const gradientValue = css`linear-gradient(135deg, ${ref(primaryColor)} 0%, ${ref(secondaryColor)} 100%)`;
 
-		expect(consumeCSS(gradientValue, options)).toBe(
+		expect(consumeCSSTemplateLiteral(gradientValue, options)).toBe(
 			"linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)",
 		);
 	});
@@ -140,7 +143,7 @@ describe("createCSSConsumer", () => {
 			${isLarge ? "2rem" : "1rem"}
 		`;
 
-		expect(consumeCSS(conditionalValue, options)).toBe("2rem");
+		expect(consumeCSSTemplateLiteral(conditionalValue, options)).toBe("2rem");
 	});
 
 	it("should handle CSS values with fallback references", () => {
@@ -148,7 +151,7 @@ describe("createCSSConsumer", () => {
 			${ref("custom-spacing", "16px")}
 		`;
 
-		expect(consumeCSS(spacingValue, options)).toBe(
+		expect(consumeCSSTemplateLiteral(spacingValue, options)).toBe(
 			"var(--custom-spacing, 16px)",
 		);
 	});
@@ -164,7 +167,7 @@ describe("createCSSConsumer", () => {
 		`;
 
 		// The function might normalize whitespace
-		const result = consumeCSS(complexValue, options);
+		const result = consumeCSSTemplateLiteral(complexValue, options);
 		expect(result).toContain("var(--spacing) solid var(--color-primary)");
 		expect(result).toContain(
 			"calc(var(--spacing) * 2) dashed var(--color-secondary)",
@@ -177,7 +180,7 @@ describe("createCSSConsumer", () => {
 
 		const nestedValue = css`calc(${ref(baseSize)} * ${multiplier})`;
 
-		expect(consumeCSS(nestedValue, options)).toBe(
+		expect(consumeCSSTemplateLiteral(nestedValue, options)).toBe(
 			"calc(var(--size-base) * 1.5)",
 		);
 	});

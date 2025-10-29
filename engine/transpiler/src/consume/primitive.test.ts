@@ -1,9 +1,9 @@
 import type { StyleframeOptions } from "@styleframe/core";
 import { createPrimitiveConsumer } from "./primitive";
-import { consume } from "./consume";
+import { consumeCSS } from "./consume";
 
 describe("createPrimitiveConsumer", () => {
-	const consumePrimitive = createPrimitiveConsumer(consume);
+	const consumePrimitive = createPrimitiveConsumer(consumeCSS);
 	const options: StyleframeOptions = {};
 
 	it("should return a string representation of a number", () => {

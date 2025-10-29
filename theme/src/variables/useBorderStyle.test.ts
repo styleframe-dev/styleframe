@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { useBorderStyle, defaultBorderStyleValues } from "./useBorderStyle";
 
 describe("useBorderStyle", () => {
@@ -110,11 +110,11 @@ describe("useBorderStyle", () => {
 		]);
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useBorderStyle(s);
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--border-style--none: none;
@@ -133,7 +133,7 @@ describe("useBorderStyle", () => {
 		const s = styleframe();
 		const { borderStyleDashed } = useBorderStyle(s);
 
-		const css = consume(borderStyleDashed, s.options);
+		const css = consumeCSS(borderStyleDashed, s.options);
 
 		expect(css).toBe("--border-style--dashed: dashed;");
 	});
@@ -164,7 +164,7 @@ describe("useBorderStyle", () => {
 			fallback: undefined,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 		expect(css).toEqual(`:root {
 	--border-style--none: none;
 	--border-style--solid: solid;
@@ -187,7 +187,7 @@ describe("useBorderStyle", () => {
 			variable(borderStyleSolid, "dashed");
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toEqual(`:root {
 	--border-style--none: none;
@@ -293,7 +293,7 @@ describe("useBorderStyle", () => {
 				default: "@dotted",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--border-style--none: none;
@@ -402,7 +402,7 @@ describe("useBorderStyle", () => {
 				variable("border-style", s.ref(borderStyleDashed));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-style--none: none;
 	--border-style--solid: solid;
@@ -437,7 +437,7 @@ describe("useBorderStyle", () => {
 				variable(buttonBorderStyle, s.ref(borderStyleDashed));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-style--none: none;
 	--border-style--solid: solid;
@@ -464,7 +464,7 @@ describe("useBorderStyle", () => {
 				variable(borderStyleSolid, s.ref(borderStyleDotted));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-style--none: none;
 	--border-style--solid: solid;
@@ -499,7 +499,7 @@ describe("useBorderStyle", () => {
 				variable("border-style", s.ref(borderStyleNone));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-style--none: none;
 	--border-style--solid: solid;
@@ -541,7 +541,7 @@ describe("useBorderStyle", () => {
 				variable(borderWidth, "3px");
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-style--none: none;
 	--border-style--solid: solid;

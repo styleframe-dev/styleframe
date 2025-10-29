@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { defaultFontStyleValues, useFontStyle } from "./useFontStyle";
 
 describe("useFontStyle", () => {
@@ -74,11 +74,11 @@ describe("useFontStyle", () => {
 		]);
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useFontStyle(s);
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--font-style--italic: italic;
@@ -93,7 +93,7 @@ describe("useFontStyle", () => {
 		const s = styleframe();
 		const { fontStyleItalic } = useFontStyle(s);
 
-		const css = consume(fontStyleItalic, s.options);
+		const css = consumeCSS(fontStyleItalic, s.options);
 
 		expect(css).toBe("--font-style--italic: italic;");
 	});
@@ -124,7 +124,7 @@ describe("useFontStyle", () => {
 			fallback: undefined,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 		expect(css).toEqual(`:root {
 	--font-style--italic: italic;
 	--font-style--oblique: oblique;
@@ -143,7 +143,7 @@ describe("useFontStyle", () => {
 			variable(fontStyleNormal, "italic");
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toEqual(`:root {
 	--font-style--italic: italic;
@@ -228,7 +228,7 @@ describe("useFontStyle", () => {
 				default: "@oblique",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--font-style--italic: italic;
@@ -302,7 +302,7 @@ describe("useFontStyle", () => {
 				variable("font-style", s.ref(fontStyleItalic));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-style--italic: italic;
 	--font-style--oblique: oblique;
@@ -328,7 +328,7 @@ em, i {
 				variable("font-style", s.ref(fontStyleItalic));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-style--italic: italic;
 	--font-style--oblique: oblique;
@@ -350,7 +350,7 @@ em, cite, dfn, var {
 				variable("font-style", s.ref(fontStyleNormal));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-style--italic: italic;
 	--font-style--oblique: oblique;
@@ -372,7 +372,7 @@ em.not-italic, i.not-italic {
 				variable("font-style", s.ref(fontStyleOblique));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-style--italic: italic;
 	--font-style--oblique: oblique;
@@ -398,7 +398,7 @@ em.not-italic, i.not-italic {
 				variable(fontStyleItalic, s.ref(fontStyleNormal));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-style--italic: italic;
 	--font-style--oblique: oblique;
@@ -424,7 +424,7 @@ blockquote {
 				variable("font-style", s.ref(fontStyleInherit));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-style--italic: italic;
 	--font-style--oblique: oblique;
@@ -454,7 +454,7 @@ blockquote {
 				variable("font-style", s.ref(fontStyleItalic));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-style--italic: italic;
 	--font-style--oblique: oblique;
@@ -491,7 +491,7 @@ article blockquote {
 				variable("font-style", s.ref(fontStyleSlanted));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--font-style--normal: normal;
 	--font-style--italic: italic;

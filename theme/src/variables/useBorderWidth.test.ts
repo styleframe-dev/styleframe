@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import { defaultBorderWidthValues, useBorderWidth } from "./useBorderWidth";
 
 describe("useBorderWidth", () => {
@@ -74,11 +74,11 @@ describe("useBorderWidth", () => {
 		]);
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useBorderWidth(s);
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--border-width--none: 0;
@@ -93,7 +93,7 @@ describe("useBorderWidth", () => {
 		const s = styleframe();
 		const { borderWidthMedium } = useBorderWidth(s);
 
-		const css = consume(borderWidthMedium, s.options);
+		const css = consumeCSS(borderWidthMedium, s.options);
 
 		expect(css).toBe("--border-width--medium: medium;");
 	});
@@ -124,7 +124,7 @@ describe("useBorderWidth", () => {
 			fallback: undefined,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 		expect(css).toEqual(`:root {
 	--border-width--none: 0;
 	--border-width--thin: thin;
@@ -143,7 +143,7 @@ describe("useBorderWidth", () => {
 			variable(borderWidthThin, "2px");
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toEqual(`:root {
 	--border-width--none: 0;
@@ -228,7 +228,7 @@ describe("useBorderWidth", () => {
 				default: "@thick",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--border-width--none: 0;
@@ -311,7 +311,7 @@ describe("useBorderWidth", () => {
 				variable("border-width", s.ref(borderWidthThick));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-width--none: 0;
 	--border-width--thin: thin;
@@ -342,7 +342,7 @@ describe("useBorderWidth", () => {
 				variable(buttonBorderWidth, s.ref(borderWidthMedium));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-width--none: 0;
 	--border-width--thin: thin;
@@ -365,7 +365,7 @@ describe("useBorderWidth", () => {
 				variable(borderWidthThin, s.ref(borderWidthThick));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-width--none: 0;
 	--border-width--thin: thin;
@@ -396,7 +396,7 @@ describe("useBorderWidth", () => {
 				variable("border-width", s.ref(borderWidthNone));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-width--none: 0;
 	--border-width--thin: thin;
@@ -434,7 +434,7 @@ describe("useBorderWidth", () => {
 				variable(borderStyle, "double");
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-width--none: 0;
 	--border-width--thin: thin;
@@ -467,7 +467,7 @@ describe("useBorderWidth", () => {
 				variable(borderWidthThin, "3px");
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-width--none: 0;
 	--border-width--thin: thin;
@@ -493,7 +493,7 @@ describe("useBorderWidth", () => {
 				variable("border-width", s.ref(borderWidthNone));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--border-width--none: 0;
 	--border-width--thin: thin;

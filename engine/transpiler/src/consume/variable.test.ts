@@ -5,14 +5,14 @@ import {
 	createVariableFunction,
 } from "@styleframe/core";
 import { createVariableConsumer } from "./variable";
-import { consume } from "./consume";
+import { consumeCSS } from "./consume";
 
 describe("createVariableConsumer", () => {
 	let root: Root;
 	let variable: ReturnType<typeof createVariableFunction>;
 	let ref: ReturnType<typeof createRefFunction>;
 
-	const consumeVariable = createVariableConsumer(consume);
+	const consumeVariable = createVariableConsumer(consumeCSS);
 	const options: StyleframeOptions = {};
 
 	beforeEach(() => {

@@ -1,6 +1,6 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { consume } from "@styleframe/transpiler";
+import { consumeCSS } from "@styleframe/transpiler";
 import {
 	defaultLetterSpacingValues,
 	useLetterSpacing,
@@ -86,11 +86,11 @@ describe("useLetterSpacing", () => {
 		]);
 	});
 
-	it("should compile to correct CSS output using consume", () => {
+	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useLetterSpacing(s);
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toBe(`:root {
 	--letter-spacing--tighter: -0.05em;
@@ -106,7 +106,7 @@ describe("useLetterSpacing", () => {
 		const s = styleframe();
 		const { letterSpacingWide } = useLetterSpacing(s);
 
-		const css = consume(letterSpacingWide, s.options);
+		const css = consumeCSS(letterSpacingWide, s.options);
 
 		expect(css).toBe("--letter-spacing--wide: 0.05em;");
 	});
@@ -139,7 +139,7 @@ describe("useLetterSpacing", () => {
 			fallback: undefined,
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 		expect(css).toEqual(`:root {
 	--letter-spacing--tighter: -0.05em;
 	--letter-spacing--tight: -0.025em;
@@ -159,7 +159,7 @@ describe("useLetterSpacing", () => {
 			variable(letterSpacingNormal, "0.01em");
 		});
 
-		const css = consume(s.root, s.options);
+		const css = consumeCSS(s.root, s.options);
 
 		expect(css).toEqual(`:root {
 	--letter-spacing--tighter: -0.05em;
@@ -252,7 +252,7 @@ describe("useLetterSpacing", () => {
 				default: "@wider",
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toEqual(`:root {
 	--letter-spacing--tighter: -0.05em;
@@ -335,7 +335,7 @@ describe("useLetterSpacing", () => {
 				variable("letter-spacing", s.ref(letterSpacingWide));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--letter-spacing--tighter: -0.05em;
 	--letter-spacing--tight: -0.025em;
@@ -367,7 +367,7 @@ p, li {
 				variable(bodyLetterSpacing, s.ref(letterSpacingWide));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--letter-spacing--tighter: -0.05em;
 	--letter-spacing--tight: -0.025em;
@@ -391,7 +391,7 @@ p, li {
 				variable(letterSpacingNormal, s.ref(letterSpacingWider));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--letter-spacing--tighter: -0.05em;
 	--letter-spacing--tight: -0.025em;
@@ -414,7 +414,7 @@ p, li {
 				variable("letter-spacing", s.ref(letterSpacingWider));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--letter-spacing--tighter: -0.05em;
 	--letter-spacing--tight: -0.025em;
@@ -437,7 +437,7 @@ p, li {
 				variable("letter-spacing", s.ref(letterSpacingTighter));
 			});
 
-			const css = consume(s.root, s.options);
+			const css = consumeCSS(s.root, s.options);
 			expect(css).toEqual(`:root {
 	--letter-spacing--tighter: -0.05em;
 	--letter-spacing--tight: -0.025em;
