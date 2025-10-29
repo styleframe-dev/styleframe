@@ -1,5 +1,14 @@
 # @styleframe/cli
 
+## 1.0.2
+
+### Patch Changes
+
+- [#30](https://github.com/styleframe-dev/styleframe/pull/30) [`68cd004`](https://github.com/styleframe-dev/styleframe/commit/68cd004b04395797876b5e805c0b910d6b665f35) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: Add support for modifying Vite and Nuxt configuration files
+  feat: Add fallback installation guide links
+- Updated dependencies [[`68cd004`](https://github.com/styleframe-dev/styleframe/commit/68cd004b04395797876b5e805c0b910d6b665f35)]:
+  - @styleframe/loader@1.0.2
+
 ## 1.0.1
 
 ### Patch Changes
