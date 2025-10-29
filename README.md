@@ -167,5 +167,5 @@ Looking for advanced features? Check out [Styleframe Pro](https://styleframe.dev
 ---
 
 <div align="center">
-  <sub>Built with ❤️ by <a href="https://github.com/styleframe-dev">Styleframe</a></sub>
+  <sub>Built with ❤️ by <a href="https://github.com/styleframe-dev">styleframe</a></sub>
 </div>
