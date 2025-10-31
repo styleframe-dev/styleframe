@@ -1,5 +1,5 @@
 ---
-"@styleframe/docs": patch
+"@styleframe/docs": major
 ---
 
 docs: Overhaul installation documentation
