@@ -15,9 +15,5 @@
 	"snapshot": {
 		"useCalculatedVersion": true
 	},
-	"ignore": [
-		"@styleframe/docs",
-		"@styleframe/plugin-playground",
-		"@styleframe/testing-integration"
-	]
+	"ignore": ["@styleframe/plugin-playground", "@styleframe/testing-integration"]
 }

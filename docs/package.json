@@ -55,5 +55,10 @@
 		"tailwindcss": "^4.1.10",
 		"ufo": "^1.6.1",
 		"unist-util-visit": "^5.0.0"
-	}
+	},
+	"files": [
+		"LICENSE",
+		"utils",
+		"app"
+	]
 }
