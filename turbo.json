@@ -31,6 +31,10 @@
 		},
 		"clean": {
 			"cache": false
+		},
+		"start": {
+			"cache": false,
+			"persistent": false
 		}
 	}
 }
