@@ -8,8 +8,10 @@
 	"type": "module",
 	"license": "MIT",
 	"files": [
-		"README.md",
-		"dist"
+		"dist",
+		"LICENSE",
+		"CHANGELOG.md",
+		"README.md"
 	],
 	"sideEffects": false,
 	"main": "./dist/index.js",
@@ -88,7 +90,7 @@
 		"typecheck": "tsc --noEmit",
 		"release": "bumpp && npm publish"
 	},
-	"dependencies": {
+	"peerDependencies": {
 		"@styleframe/cli": "workspace:^",
 		"@styleframe/plugin": "workspace:^",
 		"@styleframe/core": "workspace:^",
@@ -97,6 +99,11 @@
 	},
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^",
+		"@styleframe/cli": "workspace:^",
+		"@styleframe/plugin": "workspace:^",
+		"@styleframe/core": "workspace:^",
+		"@styleframe/loader": "workspace:^",
+		"@styleframe/transpiler": "workspace:^",
 		"@types/node": "^22.15.17",
 		"@vitest/coverage-v8": "catalog:",
 		"bumpp": "^10.1.0",

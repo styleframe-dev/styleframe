@@ -12,6 +12,12 @@
 			"require": "./dist/styleframe.umd.cjs"
 		}
 	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"CHANGELOG.md",
+		"README.md"
+	],
 	"scripts": {
 		"dev": "vite build --watch",
 		"build": "pnpm typecheck && vite build",

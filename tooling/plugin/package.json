@@ -40,11 +40,15 @@
 		}
 	},
 	"files": [
-		"dist"
+		"dist",
+		"LICENSE",
+		"CHANGELOG.md",
+		"README.md"
 	],
 	"scripts": {
 		"build": "tsdown",
 		"dev": "tsdown -w",
+		"typecheck": "tsc --noEmit",
 		"start": "tsx src/index.ts",
 		"playground:build": "cd playground && pnpm run build",
 		"playground:start": "cd playground && pnpm run start",
@@ -90,6 +94,7 @@
 		"unplugin": "^2.3.4"
 	},
 	"devDependencies": {
+		"@farmfe/core": "^1.7.11",
 		"@styleframe/config-typescript": "workspace:^",
 		"@vitest/coverage-v8": "catalog:",
 		"@nuxt/kit": "^3.17.4",

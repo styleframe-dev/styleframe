@@ -20,11 +20,17 @@ env:
     # Node configuration
     NODE_VERSION: 22
 
+permissions:
+    contents: read
+    pull-requests: write
+    checks: write
+
 jobs:
     # Build job runs first to generate artifacts (excluding docs)
     build:
         name: Build Packages
         runs-on: ubuntu-latest
+        timeout-minutes: 15
         steps:
             - name: Checkout
               uses: actions/checkout@v4
@@ -54,8 +60,9 @@ jobs:
                   name: build-artifacts
                   path: |
                       engine/*/dist
-                      theme/*/dist
+                      theme/dist
                       tooling/*/dist
+                      testing/*/dist
                   retention-days: 7
 
     # Build docs separately
@@ -89,7 +96,9 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: docs-build
-                  path: docs/.nuxt
+                  path: |
+                      docs/.nuxt
+                      docs/.output
                   retention-days: 7
 
     # Lint job - runs oxlint and biome format check
@@ -160,8 +169,8 @@ jobs:
               run: pnpm typecheck
 
     # Test job
-    test:
-        name: Test
+    unit-tests:
+        name: Unit Tests
         runs-on: ubuntu-latest
         needs: build
         steps:
@@ -199,3 +208,57 @@ jobs:
                   token: ${{ secrets.CODECOV_TOKEN }}
                   files: ./engine/*/coverage/lcov.info,./theme/*/coverage/lcov.info
                   slug: styleframe-dev/styleframe
+                  fail_ci_if_error: false
+
+    integration-tests:
+        name: Integration Tests
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: "pnpm"
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v5
+              with:
+                  name: build-artifacts
+                  path: .
+
+            - name: Install Playwright Browsers
+              run: pnpm exec playwright install --with-deps
+              working-directory: testing/integration
+
+            - name: Run Integration tests
+              run: pnpm test:integration
+
+            - name: Upload Playwright report
+              if: always()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: testing/integration/playwright-report
+                  retention-days: 30
+    ci-success:
+        name: CI Success
+        runs-on: ubuntu-latest
+        needs:
+            [build, build-docs, lint, typecheck, unit-tests, integration-tests]
+        if: always()
+        steps:
+            - name: Check job status
+              run: |
+                  if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+                      exit 1
+                  fi

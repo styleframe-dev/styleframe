@@ -1,50 +1,40 @@
 {
-	"name": "@styleframe/cli",
-	"version": "1.0.2",
-	"description": "A command-line interface for styleframe.",
+	"name": "@styleframe/testing-integration",
+	"version": "0.0.1",
 	"type": "module",
-	"types": "./dist/index.d.ts",
-	"module": "./dist/index.js",
-	"main": "./dist/index.cjs",
+	"types": "./dist/theme.d.ts",
+	"module": "./dist/theme.js",
+	"main": "./dist/theme.umd.cjs",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
+			"types": "./dist/theme.d.ts",
+			"import": "./dist/theme.js",
+			"require": "./dist/theme.umd.cjs"
 		}
 	},
-	"files": [
-		"dist",
-		"LICENSE",
-		"CHANGELOG.md",
-		"README.md"
-	],
 	"scripts": {
+		"start": "tsx src/main.ts",
 		"dev": "vite build --watch",
-		"prebuild": "tsx ./scripts/prebuild.ts",
-		"build": "pnpm run prebuild && pnpm typecheck && vite build",
+		"build": "pnpm typecheck && vite build",
 		"typecheck": "tsc --noEmit",
 		"test": "vitest run --passWithNoTests",
 		"test:dev": "vitest --watch",
-		"playground:init": "tsx playground/init.ts",
-		"playground:build": "tsx playground/build.ts"
-	},
-	"dependencies": {
-		"@styleframe/loader": "workspace:^",
-		"citty": "^0.1.6",
-		"consola": "^3.0.0-2",
-		"magicast": "^0.5.0"
+		"test:e2e": "pnpm exec playwright test"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.56.1",
 		"@styleframe/config-typescript": "workspace:^",
 		"@styleframe/config-vite": "workspace:^",
-		"@styleframe/core": "workspace:^",
+		"@types/node": "catalog:",
+		"@types/shelljs": "^0.8.17",
 		"@vitest/coverage-v8": "catalog:",
+		"playwright": "^1.56.1",
+		"shelljs": "^0.10.0",
+		"styleframe": "workspace:^",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vite-plugin-dts": "catalog:",
-		"vite-plugin-node": "catalog:",
 		"vitest": "catalog:"
 	},
 	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
@@ -56,6 +46,10 @@
 		"url": "git+https://github.com/styleframe-dev/styleframe.git"
 	},
 	"author": "Alex Grozav <alex@styleframe.dev>",
+	"dependencies": {
+		"culori": "^4.0.2",
+		"scule": "^1.3.0"
+	},
 	"overrides": {
 		"vite": "npm:rolldown-vite@latest"
 	}

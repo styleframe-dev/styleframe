@@ -7,11 +7,14 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"dev:docs": "turbo run dev --filter @styleframe/docs",
-		"ci:release": "pnpm publish -r",
+		"ci:publish": "changeset publish",
 		"ci:version": "changeset version",
-		"ci:prerelease": "turbo run build --filter '!@styleframe/docs'",
+		"ci:prerelease": "pnpm build:nodocs",
 		"build": "turbo run build",
+		"build:nodocs": "turbo run build --filter './engine/*' --filter './tooling/*' --filter './theme'",
+		"build:docs": "turbo run build --filter './docs'",
 		"test": "turbo run test",
+		"test:integration": "turbo run start --filter './testing/integration'",
 		"typecheck": "turbo run typecheck",
 		"lint": "oxlint",
 		"format:check": "biome format",
@@ -38,11 +41,12 @@
 		"@styleframe/config-typescript": "workspace:*",
 		"husky": "catalog:",
 		"lint-staged": "catalog:",
+		"npm-run-all2": "catalog:",
 		"oxlint": "catalog:",
 		"turbo": "catalog:",
 		"typescript": "catalog:"
 	},
-	"packageManager": "pnpm@10.7.1+sha512.2d92c86b7928dc8284f53494fb4201f983da65f0fb4f0d40baafa5cf628fa31dae3e5968f12466f17df7e97310e30f343a648baea1b9b350685dafafffdf5808",
+	"packageManager": "pnpm@10.20.0+sha512.cf9998222162dd85864d0a8102e7892e7ba4ceadebbf5a31f9c2fce48dfce317a9c53b9f6464d1ef9042cba2e02ae02a9f7c143a2b438cd93c91840f0192b9dd",
 	"engines": {
 		"node": ">=22.0.0",
 		"pnpm": ">=10.7.1"
