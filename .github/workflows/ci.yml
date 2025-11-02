@@ -94,11 +94,11 @@ jobs:
 
             - name: Upload docs build
               uses: actions/upload-artifact@v4
-              with:
+              with: 
                   name: docs-build
                   path: |
-                      docs/.nuxt
-                      docs/.output
+                      apps/docs/.nuxt
+                      apps/docs/.output
                   retention-days: 7
 
     # Lint job - runs oxlint and biome format check
