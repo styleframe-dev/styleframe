@@ -19,17 +19,7 @@ export default defineNuxtConfig({
 		"@nuxtjs/robots",
 		"nuxt-og-image",
 		"nuxt-llms",
-		() => {
-			// Update @nuxt/content optimizeDeps options
-			extendViteConfig((config) => {
-				config.optimizeDeps ||= {};
-				config.optimizeDeps.include ||= [];
-				config.optimizeDeps.include.push("@nuxt/content > slugify");
-				config.optimizeDeps.include = config.optimizeDeps.include.map((id) =>
-					id.replace(/^@nuxt\/content > /, "docus > @nuxt/content > "),
-				);
-			});
-		},
+		resolve("./modules/optimizeDeps"),
 	],
 	content: {
 		build: {
