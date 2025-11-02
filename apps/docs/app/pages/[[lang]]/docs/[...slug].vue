@@ -9,7 +9,7 @@ import { findPageHeadline } from "@nuxt/content/utils";
 import { addPrerenderPath } from "../../../../utils/prerender";
 
 definePageMeta({
-	layout: "docs",
+	layout: "default",
 });
 
 const route = useRoute();
