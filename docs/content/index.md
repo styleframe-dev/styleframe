@@ -1,6 +1,7 @@
 ---
 title: Type-safe Composable CSS
 description: Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
+layout: default
 ---
 
 <!--
