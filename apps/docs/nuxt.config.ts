@@ -1,4 +1,5 @@
-import { extendViteConfig, createResolver, useNuxt } from "@nuxt/kit";
+import type { NuxtI18nOptions } from "@nuxtjs/i18n";
+import { createResolver, extendViteConfig, useNuxt } from "@nuxt/kit";
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -11,7 +12,6 @@ export default defineNuxtConfig({
 		resolve("./modules/routing"),
 		resolve("./modules/css"),
 		"@nuxt/ui",
-		"@nuxt/eslint",
 		"@nuxt/image",
 		"@nuxt/scripts",
 		"@nuxt/test-utils",
@@ -72,7 +72,7 @@ export default defineNuxtConfig({
 		"nitro:config"(nitroConfig) {
 			const nuxt = useNuxt();
 
-			const i18nOptions = nuxt.options.i18n;
+			const i18nOptions = nuxt.options.i18n as NuxtI18nOptions;
 
 			const routes: string[] = [];
 			if (!i18nOptions) {
