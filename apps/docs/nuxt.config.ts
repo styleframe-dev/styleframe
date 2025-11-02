@@ -10,7 +10,6 @@ export default defineNuxtConfig({
 	modules: [
 		resolve("./modules/config"),
 		resolve("./modules/routing"),
-		resolve("./modules/css"),
 		"@nuxt/ui",
 		"@nuxt/image",
 		"@nuxt/scripts",
