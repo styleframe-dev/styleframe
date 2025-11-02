@@ -1,4 +1,4 @@
-import type { Reference, Root, Selector, Variable } from "../types";
+import type { Reference, Root, Variable } from "../types";
 import { createRoot } from "./root";
 import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
@@ -36,8 +36,12 @@ describe("createVariableFunction", () => {
 	describe("default behavior", () => {
 		describe("when false", () => {
 			it("should update existing variable value when default is false", () => {
-				const first = variable("border-width", "1px", { default: true });
-				const second = variable("border-width", "2px", { default: false });
+				const first = variable("border-width", "1px", {
+					default: true,
+				});
+				const second = variable("border-width", "2px", {
+					default: false,
+				});
 
 				expect(second).toBe(first); // Same instance
 				expect(second.value).toBe("2px"); // Updated value
@@ -45,7 +49,9 @@ describe("createVariableFunction", () => {
 			});
 
 			it("should create new variable if none exists with default: false", () => {
-				const result = variable("line-height", "1.5", { default: false });
+				const result = variable("line-height", "1.5", {
+					default: false,
+				});
 
 				expect(result.value).toBe("1.5");
 				expect(root.variables).toHaveLength(1);
@@ -93,12 +99,14 @@ describe("createVariableFunction", () => {
 		});
 
 		it("should find correct existing variable among multiple", () => {
-			const color = variable("color", "red");
 			const spacing = variable("spacing", "10px");
-			const fontSize = variable("font-size", "16px");
+			variable("color", "red");
+			variable("font-size", "16px");
 
 			// Try to override the middle variable
-			const updatedSpacing = variable("spacing", "20px", { default: false });
+			const updatedSpacing = variable("spacing", "20px", {
+				default: false,
+			});
 
 			expect(updatedSpacing).toBe(spacing);
 			expect(updatedSpacing.value).toBe("20px");

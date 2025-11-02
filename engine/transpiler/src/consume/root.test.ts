@@ -338,7 +338,7 @@ h1, h2, h3 {
 
 	it("should properly delegate to container consumer", () => {
 		// This test verifies that createRootConsumer correctly uses createContainerConsumer
-		const colorVar = variable("color", "blue");
+		variable("color", "blue");
 		root.declarations = { display: "block" };
 
 		const result = consumeRoot(root, options);

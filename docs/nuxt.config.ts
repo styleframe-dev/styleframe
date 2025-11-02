@@ -107,6 +107,7 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		public: {
 			baseUrl: "http://localhost:3000",
+			posthogPublicKey: process.env.POSTHOG_PUBLIC_KEY,
 		},
 	},
 });

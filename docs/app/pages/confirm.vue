@@ -4,8 +4,7 @@ const redirectInfo = useSupabaseCookieRedirect();
 
 useSeoMeta({
 	title: "Signin Confirmation",
-	description:
-		"Confirm your authentication to access all styleframe features",
+	description: "Confirm your authentication to access all styleframe features",
 });
 
 definePageMeta({

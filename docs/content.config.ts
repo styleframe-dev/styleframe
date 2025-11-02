@@ -1,10 +1,8 @@
 import type { DefinedCollection } from "@nuxt/content";
 import { defineContentConfig, defineCollection, z } from "@nuxt/content";
 import { useNuxt } from "@nuxt/kit";
-import { joinURL } from "ufo";
 
 const { options } = useNuxt();
-const cwd = joinURL(options.rootDir, "content");
 const locales = options.i18n?.locales;
 
 const createDocsSchema = () =>
