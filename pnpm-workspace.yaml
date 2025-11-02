@@ -1,14 +1,14 @@
 packages:
   - config/**
-  - docs
+  - apps/**
   - engine/**
   - theme
   - testing/**
   - tooling/**
 
 catalog:
-  '@types/node': ^22.15.32
-  '@vitest/coverage-v8': ^3.2.4
+  "@types/node": ^22.15.32
+  "@vitest/coverage-v8": ^3.2.4
   husky: ^9.1.7
   lint-staged: ^16.1.2
   npm-run-all2: ^8.0.4
@@ -22,9 +22,25 @@ catalog:
   vite-plugin-node: ^7.0.0
   vitest: ^3.2.4
 
+catalogs:
+  nuxt:
+    "@nuxt/content": 3.7.1
+    "@nuxt/eslint": 1.9.0
+    "@nuxt/image": 1.11.0
+    "@nuxt/kit": 4.1.3
+    "@nuxt/scripts": 0.11.13
+    "@nuxt/test-utils": 3.19.2
+    "@nuxt/ui": 4.0.1
+    "@nuxtjs/i18n": 10.1.0
+    "@nuxtjs/mdc": 0.17.4
+    "@nuxtjs/robots": 5.5.5
+    nuxt: 4.1.3
+    nuxt-llms: 0.1.3
+    nuxt-og-image: 5.1.11
+
 onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - '@tailwindcss/oxide'
+  - "@parcel/watcher"
+  - "@tailwindcss/oxide"
   - better-sqlite3
   - core-js
   - esbuild
