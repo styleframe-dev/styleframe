@@ -4,6 +4,7 @@ const { resolve } = createResolver(import.meta.url);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+	extends: ["./layers/application"],
 	compatibilityDate: "2025-07-22",
 	devtools: { enabled: true },
 	modules: [
@@ -22,14 +23,6 @@ export default defineNuxtConfig({
 		"nuxt-llms",
 		resolve("./modules/optimizeDeps"),
 	],
-	supabase: {
-		redirectOptions: {
-			login: "/login",
-			callback: "/confirm",
-			include: ["/app/**"],
-			saveRedirectToCookie: true,
-		},
-	},
 	content: {
 		build: {
 			markdown: {
