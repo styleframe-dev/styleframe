@@ -1,0 +1,56 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+	"agent": {
+		"default_model": {
+			"provider": "anthropic",
+			"model": "claude-sonnet-4-5-latest"
+		},
+		"default_profile": "write"
+	},
+	"features": {
+		"edit_prediction_provider": "copilot"
+	},
+	"language_servers": ["!eslint", "..."],
+	"format_on_save": "off",
+	"autosave": {
+		"after_delay": {
+			"milliseconds": 1000
+		}
+	},
+	"inlay_hints": {
+		"enabled": true,
+		"show_value_hints": true,
+		"show_type_hints": false,
+		"show_parameter_hints": true,
+		"show_other_hints": true,
+		"show_background": false,
+		"edit_debounce_ms": 700,
+		"scroll_debounce_ms": 50,
+		"toggle_on_modifiers_press": {
+			"control": false,
+			"alt": false,
+			"shift": false,
+			"platform": false,
+			"function": false
+		}
+	},
+	"buffer_font_features": {
+		"calt": 1
+	},
+	"telemetry": {
+		"metrics": false
+	},
+	"languages": {
+		"Markdown": {
+			"formatter": null,
+			"format_on_save": "off"
+		}
+	}
+}
