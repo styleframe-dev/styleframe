@@ -9,32 +9,32 @@ const mouseY = ref(0);
 let animationId: number | null = null;
 
 const interactiveBubbleStyle = computed(() => {
-  return {
-    transform: `translate(${Math.round(currentX.value)}px, ${Math.round(
-      currentY.value
-    )}px)`,
-  };
+	return {
+		transform: `translate(${Math.round(currentX.value)}px, ${Math.round(
+			currentY.value,
+		)}px)`,
+	};
 });
 
 function move() {
-  currentX.value += (mouseX.value - currentX.value) / 20;
-  currentY.value += (mouseY.value - currentY.value) / 20;
-  animationId = requestAnimationFrame(move);
+	currentX.value += (mouseX.value - currentX.value) / 20;
+	currentY.value += (mouseY.value - currentY.value) / 20;
+	animationId = requestAnimationFrame(move);
 }
 
 function handleMouseMove(event: MouseEvent) {
-  mouseX.value = event.clientX;
-  mouseY.value = event.clientY;
+	mouseX.value = event.clientX;
+	mouseY.value = event.clientY;
 }
 
 onMounted(() => {
-  move();
+	move();
 });
 
 onBeforeUnmount(() => {
-  if (animationId) {
-    cancelAnimationFrame(animationId);
-  }
+	if (animationId) {
+		cancelAnimationFrame(animationId);
+	}
 });
 </script>
 
