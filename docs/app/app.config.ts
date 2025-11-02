@@ -3,7 +3,8 @@ export default defineAppConfig({
 	 * @docs https://www.docus.dev/concepts/configuration#global-configuration
 	 */
 	seo: {
-		title: "styleframe",
+		title: "Styleframe",
+		titleTemplate: "%s - styleframe",
 		description:
 			"Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.",
 	},
@@ -80,6 +81,9 @@ export default defineAppConfig({
 			defaultVariants: {
 				variant: "link",
 			},
+		},
+		main: {
+			base: "min-h-[calc(100vh-var(--ui-header-height)-var(--ui-footer-height))]",
 		},
 		pageLinks: {
 			slots: {

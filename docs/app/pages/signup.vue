@@ -1,10 +1,20 @@
 <script setup lang="ts">
 import { useSupabaseClient, useSupabaseUser } from "#imports";
+import type { AuthFormField } from "@nuxt/ui";
 
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
-
+const runtimeConfig = useRuntimeConfig();
 const toast = useToast();
+
+definePageMeta({
+	layout: "auth",
+});
+
+useSeoMeta({
+	title: "Sign Up",
+	description: "Create an account to access all styleframe features",
+});
 
 watchEffect(() => {
 	if (user.value) {
@@ -12,7 +22,7 @@ watchEffect(() => {
 	}
 });
 
-const fields = [
+const fields: AuthFormField[] = [
 	{
 		name: "email",
 		type: "text" as const,
@@ -30,14 +40,13 @@ const fields = [
 
 const providers = [
 	{
-		label: "GitHub",
+		label: "Sign up with GitHub",
 		icon: "i-simple-icons-github",
 		onClick: async () => {
 			const { error } = await supabase.auth.signInWithOAuth({
 				provider: "github",
 				options: {
-					redirectTo:
-						"https://supabase-demo-gamma.vercel.app/confirm",
+					redirectTo: `${runtimeConfig.public.baseUrl}/confirm`,
 				},
 			});
 			if (error) displayError(error);
@@ -89,10 +98,9 @@ const displayError = (error: Error) => {
 </script>
 
 <template>
-	<UPageCard class="max-w-sm w-full">
+	<UPageCard class="max-w-sm w-full h-full mx-auto my-auto">
 		<UAuthForm
-			title="Sign up"
-			icon="i-lucide-user"
+			title="Sign up to styleframe"
 			:fields="fields"
 			:providers="providers"
 			@submit="onSubmit"

@@ -2,6 +2,16 @@
 const user = useSupabaseUser();
 const redirectInfo = useSupabaseCookieRedirect();
 
+useSeoMeta({
+	title: "Signin Confirmation",
+	description:
+		"Confirm your authentication to access all styleframe features",
+});
+
+definePageMeta({
+	layout: "auth",
+});
+
 watch(
 	user,
 	() => {

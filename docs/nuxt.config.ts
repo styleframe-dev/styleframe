@@ -101,4 +101,12 @@ export default defineNuxtConfig({
 			redirect: "/docs/getting-started/introduction",
 		},
 	},
+	/**
+	 * @docs https://nuxt.com/docs/4.x/guide/going-further/runtime-config
+	 */
+	runtimeConfig: {
+		public: {
+			baseUrl: "http://localhost:3000",
+		},
+	},
 });

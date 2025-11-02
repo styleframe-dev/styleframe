@@ -1,13 +1,19 @@
 <script setup lang="ts">
 import { useSupabaseClient, useSupabaseUser } from "#imports";
+import type { AuthFormField } from "@nuxt/ui";
 
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
-
+const runtimeConfig = useRuntimeConfig();
 const toast = useToast();
 
+useSeoMeta({
+	title: "Log In",
+	description: "Log in to access all styleframe features",
+});
+
 definePageMeta({
-	layout: "default",
+	layout: "auth",
 });
 
 watchEffect(() => {
@@ -16,7 +22,7 @@ watchEffect(() => {
 	}
 });
 
-const fields = [
+const fields: AuthFormField[] = [
 	{
 		name: "email",
 		type: "text" as const,
@@ -34,14 +40,13 @@ const fields = [
 
 const providers = [
 	{
-		label: "GitHub",
+		label: "Log in with GitHub",
 		icon: "i-simple-icons-github",
 		onClick: async () => {
 			const { error } = await supabase.auth.signInWithOAuth({
 				provider: "github",
 				options: {
-					redirectTo:
-						"https://supabase-demo-gamma.vercel.app/confirm",
+					redirectTo: `${runtimeConfig.public.baseUrl}/confirm`,
 				},
 			});
 			if (error) displayError(error);
@@ -77,24 +82,26 @@ const displayError = (error: Error) => {
 </script>
 
 <template>
-	<UContainer
-		class="h-[calc(100vh-var(--ui-header-height)-var(--ui-footer-height))] flex items-center justify-center px-4"
-	>
-		<UPageCard class="max-w-sm w-full">
-			<UAuthForm
-				title="Log in to styleframe"
-				icon="i-lucide-user"
-				:fields="fields"
-				:providers="providers"
-				@submit="onSubmit"
-			>
-				<template #footer>
+	<UPageCard class="max-w-sm w-full h-full mx-auto my-auto">
+		<UAuthForm
+			title="Log in to styleframe"
+			:fields="fields"
+			:providers="providers"
+			@submit="onSubmit"
+		>
+			<template #footer>
+				<p class="mb-4">
+					<UButton variant="link" class="p-0" to="/forgot-password">
+						Forgot your password?
+					</UButton>
+				</p>
+				<p>
 					Don't have an account?
 					<UButton variant="link" class="p-0" to="/signup">
 						Sign up </UButton
 					>.
-				</template>
-			</UAuthForm>
-		</UPageCard>
-	</UContainer>
+				</p>
+			</template>
+		</UAuthForm>
+	</UPageCard>
 </template>

@@ -41,12 +41,16 @@ onBeforeUnmount(() => {
 		<svg xmlns="http://www.w3.org/2000/svg">
 			<defs>
 				<filter id="goo">
-					<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+					<feGaussianBlur
+						in="SourceGraphic"
+						stdDeviation="10"
+						result="blur"
+					/>
 					<feBlend in="SourceGraphic" in2="goo" />
 				</filter>
 			</defs>
 		</svg>
-		<div class="gradients-container absolute w-full h-full top-0 left-0 overflow-hidden">
+		<div class="gradients-container">
 			<div class="g1"></div>
 			<div class="g2"></div>
 			<div class="g3"></div>
@@ -95,7 +99,6 @@ onBeforeUnmount(() => {
 	}
 }
 
-
 .morphing-gradient-background {
 	--color-bg1: var(--ui-bg);
 	--color-bg2: var(--ui-bg);
@@ -109,26 +112,41 @@ onBeforeUnmount(() => {
 	--blending: hard-light;
 	--intensity: 0.2;
 
+	position: relative;
 	background: linear-gradient(40deg, var(--color-bg1), var(--color-bg2));
+	overflow: hidden;
+	min-height: 100%;
+	width: 100%;
+
+	.gradients-container {
+		filter: url(#goo) blur(40px);
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		overflow: hidden;
+		pointer-events: none;
+	}
 
 	svg {
-		position: fixed;
-		top:0;
-		left:0;
+		position: absolute;
+		top: 0;
+		left: 0;
 		width: 0;
 		height: 0;
 	}
 
-
-	.gradients-container {
-		filter: url(#goo) blur(40px) ;
-		width: 100%;
-		height: 100%;
-	}
-
 	.g1 {
 		position: absolute;
-		background: radial-gradient(circle at center, rgba(var(--color1), var(--intensity)) 0, rgba(var(--color1), 0) 50%) no-repeat;
+		background: radial-gradient(
+				circle at center,
+				rgba(var(--color1), var(--intensity)) 0,
+				rgba(var(--color1), 0) 50%
+			)
+			no-repeat;
 		mix-blend-mode: var(--blending);
 
 		width: var(--circle-size);
@@ -144,7 +162,12 @@ onBeforeUnmount(() => {
 
 	.g2 {
 		position: absolute;
-		background: radial-gradient(circle at center, rgba(var(--color2), var(--intensity)) 0, rgba(var(--color2), 0) 50%) no-repeat;
+		background: radial-gradient(
+				circle at center,
+				rgba(var(--color2), var(--intensity)) 0,
+				rgba(var(--color2), 0) 50%
+			)
+			no-repeat;
 		mix-blend-mode: var(--blending);
 
 		width: var(--circle-size);
@@ -160,7 +183,12 @@ onBeforeUnmount(() => {
 
 	.g3 {
 		position: absolute;
-		background: radial-gradient(circle at center, rgba(var(--color3), var(--intensity)) 0, rgba(var(--color3), 0) 50%) no-repeat;
+		background: radial-gradient(
+				circle at center,
+				rgba(var(--color3), var(--intensity)) 0,
+				rgba(var(--color3), 0) 50%
+			)
+			no-repeat;
 		mix-blend-mode: var(--blending);
 
 		width: var(--circle-size);
@@ -176,7 +204,12 @@ onBeforeUnmount(() => {
 
 	.g4 {
 		position: absolute;
-		background: radial-gradient(circle at center, rgba(var(--color4), var(--intensity)) 0, rgba(var(--color4), 0) 50%) no-repeat;
+		background: radial-gradient(
+				circle at center,
+				rgba(var(--color4), var(--intensity)) 0,
+				rgba(var(--color4), 0) 50%
+			)
+			no-repeat;
 		mix-blend-mode: var(--blending);
 
 		width: var(--circle-size);
@@ -192,7 +225,12 @@ onBeforeUnmount(() => {
 
 	.g5 {
 		position: absolute;
-		background: radial-gradient(circle at center, rgba(var(--color5), var(--intensity)) 0, rgba(var(--color5), 0) 50%) no-repeat;
+		background: radial-gradient(
+				circle at center,
+				rgba(var(--color5), var(--intensity)) 0,
+				rgba(var(--color5), 0) 50%
+			)
+			no-repeat;
 		mix-blend-mode: var(--blending);
 
 		width: calc(var(--circle-size) * 2);
@@ -208,7 +246,12 @@ onBeforeUnmount(() => {
 
 	.interactive {
 		position: absolute;
-		background: radial-gradient(circle at center, rgba(var(--color-interactive), var(--intensity)) 0, rgba(var(--color-interactive), 0) 50%) no-repeat;
+		background: radial-gradient(
+				circle at center,
+				rgba(var(--color-interactive), var(--intensity)) 0,
+				rgba(var(--color-interactive), 0) 50%
+			)
+			no-repeat;
 		mix-blend-mode: var(--blending);
 
 		width: 100%;
