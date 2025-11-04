@@ -1,0 +1,60 @@
+{
+	"name": "@styleframe/docs",
+	"type": "module",
+	"version": "1.0.0",
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev --port 3000",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare"
+	},
+	"dependencies": {
+		"@iconify-json/lucide": "^1.2.72",
+		"@iconify-json/simple-icons": "^1.2.57",
+		"@iconify-json/vscode-icons": "^1.2.33",
+		"@nuxt/content": "catalog:nuxt",
+		"@nuxt/eslint": "catalog:nuxt",
+		"@nuxt/image": "catalog:nuxt",
+		"@nuxt/kit": "catalog:nuxt",
+		"@nuxt/scripts": "catalog:nuxt",
+		"@nuxt/test-utils": "catalog:nuxt",
+		"@nuxt/ui": "catalog:nuxt",
+		"@nuxtjs/i18n": "catalog:nuxt",
+		"@nuxtjs/mdc": "catalog:nuxt",
+		"@nuxtjs/robots": "catalog:nuxt",
+		"@unhead/vue": "catalog:nuxt",
+		"@vueuse/core": "catalog:nuxt",
+		"defu": "^6.1.4",
+		"eslint": "catalog:",
+		"exsolve": "^1.0.7",
+		"git-url-parse": "^16.1.0",
+		"minimark": "^0.2.0",
+		"motion-v": "^1.7.4",
+		"nuxt": "catalog:nuxt",
+		"nuxt-llms": "catalog:nuxt",
+		"nuxt-og-image": "catalog:nuxt",
+		"pkg-types": "^2.3.0",
+		"posthog-js": "^1.285.1",
+		"scule": "^1.3.0",
+		"typescript": "catalog:",
+		"ufo": "^1.6.1",
+		"vue": "catalog:nuxt",
+		"vue-router": "catalog:nuxt",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"c12": "^3.3.1",
+		"eslint-flat-config-utils": "^2.1.4",
+		"minimark": "^0.2.0",
+		"motion-v": "^1.7.0",
+		"tailwindcss": "catalog:nuxt",
+		"ufo": "^1.6.1",
+		"unist-util-visit": "^5.0.0"
+	},
+	"files": [
+		"LICENSE",
+		"utils",
+		"app"
+	]
+}

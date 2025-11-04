@@ -1,0 +1,30 @@
+{
+	"name": "@styleframe/app",
+	"type": "module",
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev --port 4000",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare"
+	},
+	"dependencies": {
+		"@nuxt/eslint": "catalog:nuxt",
+		"@nuxt/image": "catalog:nuxt",
+		"@nuxt/scripts": "catalog:nuxt",
+		"@nuxt/test-utils": "catalog:nuxt",
+		"@nuxt/ui": "catalog:nuxt",
+		"@nuxtjs/supabase": "catalog:nuxt",
+		"@unhead/vue": "catalog:nuxt",
+		"@supabase/supabase-js": "catalog:nuxt",
+		"nuxt": "catalog:nuxt",
+		"typescript": "catalog:",
+		"vue": "catalog:nuxt",
+		"vue-router": "catalog:nuxt"
+	},
+	"devDependencies": {
+		"@nuxt/kit": "catalog:nuxt",
+		"eslint": "catalog:",
+		"tailwindcss": "catalog:nuxt"
+	}
+}
