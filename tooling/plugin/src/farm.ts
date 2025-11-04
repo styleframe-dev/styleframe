@@ -1,3 +1,4 @@
+/* oxlint-disable no-unused-vars */
 // biome-ignore:lint/correctness/noUnusedImports
 import type { CompilationContext, JsPlugin } from "@farmfe/core";
 import { createFarmPlugin } from "unplugin";

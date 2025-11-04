@@ -18,10 +18,12 @@ export function transpile(
 ): Output {
 	const output: Output = { files: [] };
 	const options = instance.options;
-	const { recipes, ...root } = instance.root;
 
 	if (type === "all" || type === "css") {
-		const indexFile = createFile("index.css", consumers.css(root, options));
+		const indexFile = createFile(
+			"index.css",
+			consumers.css(instance.root, options),
+		);
 		output.files.push(indexFile);
 	}
 

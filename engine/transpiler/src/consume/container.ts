@@ -4,11 +4,10 @@ import type {
 	StyleframeOptions,
 	Variable,
 } from "@styleframe/core";
+import { genSelector } from "../generator";
 import type { ConsumeFunction } from "../types";
-import { addIndentToLine, indentLines } from "../utils";
 import { createDeclarationsConsumer } from "./declarations";
 import { createVariableConsumer } from "./variable";
-import { genSelector } from "../generator";
 
 /**
  * Base function for consuming container-like structures (Selector, AtRule)
