@@ -1,0 +1,52 @@
+{
+	"name": "@styleframe/license",
+	"version": "0.0.1",
+	"type": "module",
+	"types": "./dist/styleframe.d.ts",
+	"module": "./dist/styleframe.js",
+	"main": "./dist/styleframe.umd.cjs",
+	"exports": {
+		".": {
+			"types": "./dist/styleframe.d.ts",
+			"import": "./dist/styleframe.js",
+			"require": "./dist/styleframe.umd.cjs"
+		}
+	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"CHANGELOG.md",
+		"README.md"
+	],
+	"scripts": {
+		"dev": "vite build --watch",
+		"build": "pnpm typecheck && vite build",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:dev": "vitest --watch"
+	},
+	"dependencies": {
+		"csstype": "^3.1.3"
+	},
+	"devDependencies": {
+		"@styleframe/config-typescript": "workspace:^",
+		"@styleframe/config-vite": "workspace:^",
+		"@vitest/coverage-v8": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vitest": "catalog:",
+		"vite-plugin-dts": "catalog:"
+	},
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
+	"bugs": {
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
+	},
+	"author": "Alex Grozav <alex@styleframe.dev>",
+	"overrides": {
+		"vite": "npm:rolldown-vite@latest"
+	}
+}
