@@ -1,5 +1,11 @@
 # @styleframe/theme
 
+## 1.0.3
+
+### Patch Changes
+
+- [#43](https://github.com/styleframe-dev/styleframe/pull/43) [`7e3d008`](https://github.com/styleframe-dev/styleframe/commit/7e3d00849067618802334d5e6823fc31f3aa2612) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add support for generic records in createUseVariable
+
 ## 1.0.2
 
 ### Patch Changes
