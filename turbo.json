@@ -1,5 +1,6 @@
 {
 	"$schema": "https://turbo.build/schema.json",
+	"globalEnv": ["SUPABASE_KEY", "SUPABASE_URL"],
 	"tasks": {
 		"build": {
 			"cache": true,
