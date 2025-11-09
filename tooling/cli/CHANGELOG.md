@@ -1,5 +1,11 @@
 # @styleframe/cli
 
+## 1.0.4
+
+### Patch Changes
+
+- [#40](https://github.com/styleframe-dev/styleframe/pull/40) [`1787ee2`](https://github.com/styleframe-dev/styleframe/commit/1787ee2b19740e077431b5196a3676ba8543838b) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add @styleframe/pro to dependencies
+
 ## 1.0.3
 
 ### Patch Changes
