@@ -1,7 +1,0 @@
-{
-	"extends": "@styleframe/config-typescript",
-	"compilerOptions": {
-		"tsBuildInfoFile": ".tsbuildinfo"
-	},
-	"include": ["src/**/*.ts", "tsdown.config.ts", "vite.config.ts"]
-}
