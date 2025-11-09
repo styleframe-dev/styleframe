@@ -19,6 +19,10 @@ const items = computed<NavigationMenuItem[]>(() => [
 		target: "_blank",
 		to: "https://github.com/styleframe-dev/styleframe/releases",
 	},
+	{
+		label: "Log in",
+		to: "https://app.styleframe.dev",
+	},
 ]);
 </script>
 
