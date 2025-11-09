@@ -9,7 +9,7 @@ const button: PricingPlanProps["button"] = {
 	to: "/docs/getting-started/introduction",
 };
 
-const variant = "none" as PricingPlanProps["variant"];
+const variant = "soft" as PricingPlanProps["variant"];
 </script>
 
 <template>
