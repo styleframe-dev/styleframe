@@ -1,4 +1,4 @@
-import type { TokenValue, Variable } from "@styleframe/core";
+import type { Variable } from "@styleframe/core";
 import type { CamelCase } from "scule";
 
 /**
@@ -23,7 +23,7 @@ type ExportKeyVariableName<
  */
 export type ExportKeys<
 	Prefix extends string,
-	T extends Record<string, TokenValue>,
+	T extends Record<string, unknown>,
 	Separator extends string = "--",
 > = {
 	[K in keyof T as CamelCase<

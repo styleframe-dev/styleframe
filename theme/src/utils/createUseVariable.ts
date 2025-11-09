@@ -46,8 +46,9 @@ export function isKeyReferenceValue(value: unknown): value is string {
  */
 export function createUseVariable<
 	PropertyName extends string,
+	PropertyType extends TokenValue,
 	Delimiter extends string = "--",
-	Defaults extends Record<string, TokenValue> = Record<string, TokenValue>,
+	Defaults extends Record<string, PropertyType> = Record<string, PropertyType>,
 	MergeDefaults extends boolean = false,
 >(
 	propertyName: PropertyName,
@@ -59,13 +60,15 @@ export function createUseVariable<
 	}: {
 		defaults?: Defaults;
 		mergeDefaults?: MergeDefaults;
-		transform?: (value: TokenValue) => TokenValue;
+		transform?: (value: PropertyType) => PropertyType;
 		delimiter?: Delimiter;
 	} = {},
 ) {
 	type WithDefaults<T> = MergeDefaults extends true ? Defaults & T : T;
 
-	return function useVariable<T extends Record<string, TokenValue> = Defaults>(
+	return function useVariable<
+		T extends Record<string, PropertyType> = Defaults,
+	>(
 		s: Styleframe,
 		tokens?: T,
 	): ExportKeys<PropertyName, WithDefaults<T>, Delimiter> {
