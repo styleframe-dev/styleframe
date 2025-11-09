@@ -1,5 +1,11 @@
 # @styleframe/theme
 
+## 1.0.2
+
+### Patch Changes
+
+- [`173a814`](https://github.com/styleframe-dev/styleframe/commit/173a814b09e24e4c14dff77651a9845bd101b625) Thanks [@alexgrozav](https://github.com/alexgrozav)! - fix: update release folders
+
 ## 1.0.1
 
 ### Patch Changes
