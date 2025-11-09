@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/loader",
-	"version": "1.0.3",
+	"version": "1.1.0",
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.js",
@@ -30,6 +30,7 @@
 	},
 	"dependencies": {
 		"@styleframe/core": "workspace:^",
+		"@styleframe/license": "catalog:",
 		"@styleframe/transpiler": "workspace:^",
 		"c12": "^3.1.0"
 	},
