@@ -1,9 +1,16 @@
-import type { CSS, Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	CSS,
+	Reference,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
+import { isRef } from "@styleframe/core";
 import { defaultScalePowerValues } from "../constants";
 
 export function useScalePowers<T extends readonly number[]>(
 	s: Styleframe,
-	scale: Variable,
+	scale: Variable | Reference,
 	powers: T = defaultScalePowerValues as T,
 ): Record<number, TokenValue> {
 	const results: Record<number, CSS> = {};
@@ -22,7 +29,7 @@ export function useScalePowers<T extends readonly number[]>(
 			if (i > 0 || power < 0) {
 				value.push(operator);
 			}
-			value.push(s.ref(scale));
+			value.push(isRef(scale) ? scale : s.ref(scale));
 		}
 
 		results[power] = {
