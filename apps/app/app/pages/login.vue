@@ -43,13 +43,31 @@ const providers = [
 		label: "Log in with GitHub",
 		icon: "i-simple-icons-github",
 		onClick: async () => {
+			// Determine the correct redirect URL
+			const redirectUrl = runtimeConfig.public.baseUrl
+				? `${runtimeConfig.public.baseUrl}/confirm`
+				: `${window.location.origin}/confirm`;
+
+			// Debug: Check runtime config and redirect URL
+			console.log("OAuth Debug:", {
+				baseUrl: runtimeConfig.public.baseUrl,
+				windowOrigin: window.location.origin,
+				redirectUrl: redirectUrl,
+				supabaseUrl: runtimeConfig.public.supabase.url,
+			});
+
 			const { error } = await supabase.auth.signInWithOAuth({
 				provider: "github",
 				options: {
-					redirectTo: `${runtimeConfig.public.baseUrl}/confirm`,
+					redirectTo: redirectUrl,
+					skipBrowserRedirect: false,
 				},
 			});
-			if (error) displayError(error);
+
+			if (error) {
+				console.error("OAuth Error:", error);
+				displayError(error);
+			}
 		},
 	},
 ];
