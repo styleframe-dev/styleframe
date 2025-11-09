@@ -38,8 +38,7 @@ async function onSubmit(payload: { data: { label: string; key: string } }) {
 			success.value = true;
 			toast.add({
 				title: "Success",
-				description:
-					result.message || "License activated successfully!",
+				description: result.message || "License activated successfully!",
 				icon: "i-lucide-check-circle",
 				color: "success",
 			});
@@ -55,9 +54,7 @@ async function onSubmit(payload: { data: { label: string; key: string } }) {
 		toast.add({
 			title: "Error",
 			description:
-				error instanceof Error
-					? error.message
-					: "An unexpected error occurred",
+				error instanceof Error ? error.message : "An unexpected error occurred",
 			icon: "i-lucide-alert-circle",
 			color: "error",
 		});
