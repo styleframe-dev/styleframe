@@ -17,6 +17,7 @@ export default defineNuxtConfig({
 				"/login",
 				"/signup",
 				"/confirm",
+				"/debug",
 				"/forgot-password",
 				"/reset-password",
 			],
