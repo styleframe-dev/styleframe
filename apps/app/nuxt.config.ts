@@ -42,13 +42,16 @@ export default defineNuxtConfig({
 		},
 	},
 	runtimeConfig: {
-		supabase: {},
 		public: {
 			baseUrl: "",
 			posthog: {
 				host: "",
 				key: "",
 				defaults: "",
+			},
+			supabase: {
+				url: "",
+				key: "",
 			},
 		},
 	},
