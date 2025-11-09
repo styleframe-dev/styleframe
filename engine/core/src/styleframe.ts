@@ -16,8 +16,10 @@ import {
 	createUtilityFunction,
 } from "./tokens";
 import type { Root, StyleframeOptions } from "./types";
+import { generateRandomId } from "./utils";
 
 export interface Styleframe {
+	id: string;
 	root: Root;
 	variable: ReturnType<typeof createVariableFunction>;
 	selector: ReturnType<typeof createSelectorFunction>;
@@ -34,6 +36,7 @@ export interface Styleframe {
 }
 
 export function styleframe(userOptions?: StyleframeOptions): Styleframe {
+	const id = generateRandomId("sf-");
 	const root = createRoot();
 
 	const options = { ...userOptions };
@@ -47,6 +50,7 @@ export function styleframe(userOptions?: StyleframeOptions): Styleframe {
 		createDeclarationsCallbackContext(root, root);
 
 	return {
+		id,
 		root,
 		variable,
 		selector,

@@ -59,8 +59,8 @@ describe("transpile", () => {
 	});
 
 	describe("transpile", () => {
-		it("should transpile an empty Styleframe instance", () => {
-			const output = transpile(instance);
+		it("should transpile an empty Styleframe instance", async () => {
+			const output = await transpile(instance);
 
 			expect(output.files).toHaveLength(2);
 			expect(output.files[0]!.name).toBe("index.css");
@@ -69,10 +69,10 @@ describe("transpile", () => {
 			expect(output.files[1]!.content).toEqual("");
 		});
 
-		it("should transpile a simple variable", () => {
+		it("should transpile a simple variable", async () => {
 			variable("primary-color", "#006cff");
 
-			const output = transpile(instance);
+			const output = await transpile(instance);
 
 			expect(output.files).toHaveLength(2);
 			expect(output.files[0]!.name).toBe("index.css");
@@ -83,12 +83,12 @@ describe("transpile", () => {
 			expect(output.files[1]!.content).toEqual("");
 		});
 
-		it("should transpile multiple variables", () => {
+		it("should transpile multiple variables", async () => {
 			variable("primary-color", "#006cff");
 			variable("secondary-color", "#ff6c00");
 			variable("font-size", "16px");
 
-			const output = transpile(instance);
+			const output = await transpile(instance);
 			const content = output.files[0]!.content;
 
 			expect(content).toEqual(`:root {
@@ -98,14 +98,14 @@ describe("transpile", () => {
 }`);
 		});
 
-		it("should transpile selectors", () => {
+		it("should transpile selectors", async () => {
 			selector(".button", {
 				padding: "0.5rem 1rem",
 				backgroundColor: "#006cff",
 				color: "#ffffff",
 			});
 
-			const output = transpile(instance);
+			const output = await transpile(instance);
 			const content = output.files[0]!.content;
 
 			expect(content).toEqual(`.button {
@@ -115,7 +115,7 @@ describe("transpile", () => {
 }`);
 		});
 
-		it("should transpile themes", () => {
+		it("should transpile themes", async () => {
 			theme("light", ({ variable: v }) => {
 				v("background-color", "#ffffff");
 				v("text-color", "#000000");
@@ -126,7 +126,7 @@ describe("transpile", () => {
 				v("text-color", "#ffffff");
 			});
 
-			const output = transpile(instance);
+			const output = await transpile(instance);
 			const content = output.files[0]!.content;
 
 			expect(content).toEqual(`
@@ -142,7 +142,7 @@ describe("transpile", () => {
 }`);
 		});
 
-		it("should transpile at-rules", () => {
+		it("should transpile at-rules", async () => {
 			atRule("media", "(min-width: 768px)", ({ selector: s }) => {
 				s(".container", {
 					maxWidth: "1200px",
@@ -150,7 +150,7 @@ describe("transpile", () => {
 				});
 			});
 
-			const output = transpile(instance);
+			const output = await transpile(instance);
 			const content = output.files[0]!.content;
 
 			expect(content).toEqual(`@media (min-width: 768px) {
@@ -161,7 +161,7 @@ describe("transpile", () => {
 }`);
 		});
 
-		it("should transpile utilities", () => {
+		it("should transpile utilities", async () => {
 			const createMarginUtility = utility("margin", ({ value }) => ({
 				margin: value,
 			}));
@@ -172,7 +172,7 @@ describe("transpile", () => {
 				lg: "24px",
 			});
 
-			const output = transpile(instance);
+			const output = await transpile(instance);
 			const content = output.files[0]!.content;
 
 			expect(content).toEqual(`._margin\\:sm {
@@ -188,7 +188,7 @@ describe("transpile", () => {
 }`);
 		});
 
-		it("should transpile with custom options", () => {
+		it("should transpile with custom options", async () => {
 			const customOptions: StyleframeOptions = {
 				variables: {
 					name: ({ name }) => `--app-${name}`,
@@ -202,7 +202,7 @@ describe("transpile", () => {
 			customVariable("primary", "#006cff");
 			customVariable("secondary", "#ff6c00");
 
-			const output = transpile(customInstance);
+			const output = await transpile(customInstance);
 			const content = output.files[0]!.content;
 
 			expect(content).toEqual(`:root {
@@ -211,7 +211,7 @@ describe("transpile", () => {
 }`);
 		});
 
-		it("should handle variable references", () => {
+		it("should handle variable references", async () => {
 			const primaryColor = variable("primary-color", "#006cff");
 
 			selector(".button", {
@@ -219,7 +219,7 @@ describe("transpile", () => {
 				border: css`2px solid ${ref(primaryColor)}`,
 			});
 
-			const output = transpile(instance);
+			const output = await transpile(instance);
 			const content = output.files[0]!.content;
 
 			expect(content).toEqual(`:root {
@@ -232,7 +232,7 @@ describe("transpile", () => {
 }`);
 		});
 
-		it("should handle nested selectors", () => {
+		it("should handle nested selectors", async () => {
 			selector(".card", ({ selector: s }) => {
 				s(".title", {
 					fontSize: "1.5rem",
@@ -250,7 +250,7 @@ describe("transpile", () => {
 				};
 			});
 
-			const output = transpile(instance);
+			const output = await transpile(instance);
 			const content = output.files[0]!.content;
 
 			expect(content).toEqual(`.card {
@@ -269,7 +269,7 @@ describe("transpile", () => {
 }`);
 		});
 
-		it("should transpile a complex scenario with utilities, modifiers, themes, and nested structures", () => {
+		it("should transpile a complex scenario with utilities, modifiers, themes, and nested structures", async () => {
 			// Define global variables
 			const primaryColor = variable("primary-color", "#006cff");
 			const secondaryColor = variable("secondary-color", "#ff6c00");
@@ -524,7 +524,7 @@ describe("transpile", () => {
 			});
 
 			// Transpile the complex scenario
-			const output = transpile(instance);
+			const output = await transpile(instance);
 
 			expect(output.files).toHaveLength(2);
 			expect(output.files[0]!.name).toBe("index.css");
@@ -765,11 +765,11 @@ body {
 }`);
 		});
 
-		it("should maintain output file structure", () => {
+		it("should maintain output file structure", async () => {
 			variable("test", "value");
 			selector(".test", { color: "red" });
 
-			const output = transpile(instance);
+			const output = await transpile(instance);
 
 			expect(output).toHaveProperty("files");
 			expect(Array.isArray(output.files)).toBe(true);
@@ -787,7 +787,7 @@ body {
 }`);
 		});
 
-		it("should pass options to consume function", () => {
+		it("should pass options to consume function", async () => {
 			const customOptions: StyleframeOptions = {
 				variables: {
 					name: ({ name }) => `--custom-${name}`,
@@ -810,7 +810,7 @@ body {
 				large: "16px",
 			});
 
-			const output = transpile(customInstance);
+			const output = await transpile(customInstance);
 			const content = output.files[0]!.content;
 
 			expect(content).toEqual(`:root {
