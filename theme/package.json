@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/theme",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"type": "module",
 	"types": "./dist/theme.d.ts",
 	"module": "./dist/theme.js",
