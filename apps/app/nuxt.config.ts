@@ -21,7 +21,6 @@ export default defineNuxtConfig({
 				"/forgot-password",
 				"/reset-password",
 			],
-			saveRedirectToCookie: true,
 		},
 		clientOptions: {
 			auth: {

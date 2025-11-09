@@ -10,7 +10,7 @@
 				"tsdown.config.ts",
 				"package.json"
 			],
-			"outputs": ["theme/**", "dist/**", ".output/**"],
+			"outputs": ["theme/**", "dist/**", ".output/**", ".nuxt/**"],
 			"dependsOn": ["^build"]
 		},
 		"lint": {
