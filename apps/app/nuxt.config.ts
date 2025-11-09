@@ -45,6 +45,11 @@ export default defineNuxtConfig({
 		supabase: {},
 		public: {
 			baseUrl: "",
+			posthog: {
+				host: "",
+				key: "",
+				defaults: "",
+			},
 		},
 	},
 });

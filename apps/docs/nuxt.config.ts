@@ -76,4 +76,14 @@ export default defineNuxtConfig({
 			redirect: "/docs/getting-started/introduction",
 		},
 	},
+	runtimeConfig: {
+		public: {
+			baseUrl: "",
+			posthog: {
+				host: "",
+				key: "",
+				defaults: "",
+			},
+		},
+	},
 });
