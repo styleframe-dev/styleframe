@@ -45,6 +45,9 @@ catalogs:
     vitest:
       specifier: ^3.2.4
       version: 3.2.4
+    zod:
+      specifier: ^4.1.12
+      version: 4.1.12
   nuxt:
     '@nuxt/content':
       specifier: 3.7.1
@@ -73,6 +76,9 @@ catalogs:
     '@nuxtjs/robots':
       specifier: 5.5.5
       version: 5.5.5
+    defu:
+      specifier: 6.1.4
+      version: 6.1.4
     nuxt:
       specifier: 4.1.3
       version: 4.1.3
@@ -82,6 +88,9 @@ catalogs:
     nuxt-og-image:
       specifier: 5.1.11
       version: 5.1.11
+    tailwindcss:
+      specifier: 4.1.17
+      version: 4.1.17
 
 importers:
 
@@ -148,7 +157,7 @@ importers:
         specifier: 13.9.0
         version: 13.9.0(vue@3.5.22(typescript@5.9.3))
       defu:
-        specifier: 6.1.4
+        specifier: catalog:nuxt
         version: 6.1.4
       motion-v:
         specifier: 1.7.2
@@ -178,7 +187,7 @@ importers:
         specifier: 4.5.1
         version: 4.5.1(vue@3.5.22(typescript@5.9.3))
       zod:
-        specifier: 4.1.12
+        specifier: 'catalog:'
         version: 4.1.12
     devDependencies:
       '@iconify-json/lucide':
@@ -220,6 +229,64 @@ importers:
       unist-util-visit:
         specifier: 5.0.0
         version: 5.0.0
+
+  apps/shared:
+    dependencies:
+      '@nuxt/content':
+        specifier: catalog:nuxt
+        version: 3.7.1(better-sqlite3@11.10.0)(magicast@0.3.5)(valibot@1.1.0(typescript@5.9.3))
+      '@nuxt/image':
+        specifier: catalog:nuxt
+        version: 1.11.0(@netlify/blobs@9.1.2)(db0@0.3.4(better-sqlite3@11.10.0))(ioredis@5.8.1)(magicast@0.3.5)
+      '@nuxt/scripts':
+        specifier: catalog:nuxt
+        version: 0.11.13(@netlify/blobs@9.1.2)(@unhead/vue@2.0.19(vue@3.5.22(typescript@5.9.3)))(db0@0.3.4(better-sqlite3@11.10.0))(ioredis@5.8.1)(magicast@0.3.5)(typescript@5.9.3)(vue@3.5.22(typescript@5.9.3))
+      '@nuxt/ui':
+        specifier: catalog:nuxt
+        version: 4.0.1(@babel/parser@7.28.5)(@netlify/blobs@9.1.2)(change-case@5.4.4)(db0@0.3.4(better-sqlite3@11.10.0))(embla-carousel@8.6.0)(ioredis@5.8.1)(jwt-decode@4.0.0)(magicast@0.3.5)(typescript@5.9.3)(valibot@1.1.0(typescript@5.9.3))(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vue-router@4.5.1(vue@3.5.22(typescript@5.9.3)))(vue@3.5.22(typescript@5.9.3))(zod@4.1.12)
+      '@nuxtjs/i18n':
+        specifier: catalog:nuxt
+        version: 10.1.0(@netlify/blobs@9.1.2)(@vue/compiler-dom@3.5.22)(db0@0.3.4(better-sqlite3@11.10.0))(eslint@9.37.0(jiti@2.6.1))(ioredis@5.8.1)(magicast@0.3.5)(rollup@4.52.5)(vue@3.5.22(typescript@5.9.3))
+      '@nuxtjs/mdc':
+        specifier: catalog:nuxt
+        version: 0.17.4(magicast@0.3.5)
+      '@nuxtjs/robots':
+        specifier: catalog:nuxt
+        version: 5.5.5(h3@1.15.4)(magicast@0.3.5)(vue@3.5.22(typescript@5.9.3))
+      defu:
+        specifier: catalog:nuxt
+        version: 6.1.4
+      nuxt:
+        specifier: catalog:nuxt
+        version: 4.1.3(@biomejs/biome@2.2.2)(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@24.7.0)(@vue/compiler-sfc@3.5.22)(better-sqlite3@11.10.0)(db0@0.3.4(better-sqlite3@11.10.0))(eslint@9.37.0(jiti@2.6.1))(ioredis@5.8.1)(lightningcss@1.30.1)(magicast@0.3.5)(optionator@0.9.4)(oxlint@1.2.0)(rolldown@1.0.0-beta.42)(rollup@4.52.5)(terser@5.44.0)(tsx@4.20.6)(typescript@5.9.3)(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(yaml@2.8.1)
+      nuxt-llms:
+        specifier: catalog:nuxt
+        version: 0.1.3(magicast@0.3.5)
+      nuxt-og-image:
+        specifier: catalog:nuxt
+        version: 5.1.11(@unhead/vue@2.0.19(vue@3.5.22(typescript@5.9.3)))(h3@1.15.4)(magicast@0.3.5)(unstorage@1.17.1(@netlify/blobs@9.1.2)(db0@0.3.4(better-sqlite3@11.10.0))(ioredis@5.8.1))(vite@7.1.12(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vue@3.5.22(typescript@5.9.3))
+      tailwindcss:
+        specifier: catalog:nuxt
+        version: 4.1.17
+      zod:
+        specifier: 'catalog:'
+        version: 4.1.12
+    devDependencies:
+      '@iconify-json/lucide':
+        specifier: 1.2.69
+        version: 1.2.69
+      '@iconify-json/simple-icons':
+        specifier: 1.2.54
+        version: 1.2.54
+      '@iconify-json/vscode-icons':
+        specifier: 1.2.31
+        version: 1.2.31
+      '@nuxt/kit':
+        specifier: catalog:nuxt
+        version: 4.1.3(magicast@0.3.5)
+      '@nuxt/test-utils':
+        specifier: catalog:nuxt
+        version: 3.19.2(@playwright/test@1.56.1)(magicast@0.3.5)(playwright-core@1.56.1)(typescript@5.9.3)(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.7.0)(jiti@2.6.1)(lightningcss@1.30.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
 
   config/typescript:
     devDependencies:
@@ -7464,6 +7531,9 @@ packages:
 
   tailwindcss@4.1.14:
     resolution: {integrity: sha512-b7pCxjGO98LnxVkKjaZSDeNuljC4ueKUddjENJOADtubtdo8llTaJy7HwBMeLNSSo2N5QIAgklslK1+Ir8r6CA==}
+
+  tailwindcss@4.1.17:
+    resolution: {integrity: sha512-j9Ee2YjuQqYT9bbRTfTZht9W/ytp5H+jJpZKiYdP/bpnXARAuELt9ofP0lPnmHjbga7SNQIxdTAXCmtKVYjN+Q==}
 
   tapable@2.3.0:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
@@ -16644,6 +16714,8 @@ snapshots:
       tailwind-merge: 3.3.1
 
   tailwindcss@4.1.14: {}
+
+  tailwindcss@4.1.17: {}
 
   tapable@2.3.0: {}
 
