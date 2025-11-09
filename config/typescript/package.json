@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/config-typescript",
-	"version": "1.1.0",
+	"version": "2.0.0",
 	"description": "TypeScript configuration for styleframe projects.",
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"type": "module",
