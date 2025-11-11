@@ -1,2 +1,1 @@
-export const SUPABASE_URL = "";
-export const SUPABASE_KEY = "";
+export const LICENSE_PROPERTY_NAME = "__licenseRequired";

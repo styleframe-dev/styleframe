@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: License field is not supposed to be accessible */
 import { describe, expect, it, beforeEach } from "vitest";
 import { styleframe } from "../styleframe";
 import type { Styleframe } from "../styleframe";
@@ -11,6 +12,10 @@ import type { Container, Root } from "../types";
 import { createRoot } from "../tokens/root";
 import { createVariableFunction } from "../tokens/variable";
 import { createThemeFunction } from "../tokens/theme";
+import {
+	LICENSE_PROPERTY_NAME,
+	markLicenseRequired,
+} from "@styleframe/license";
 
 describe("mergeVariablesArray", () => {
 	let root: Root;
@@ -973,6 +978,102 @@ describe("merge", () => {
 			expect(result.root.variables[1]).toMatchObject({
 				value: "#64748b",
 			});
+		});
+	});
+
+	describe("license", () => {
+		it("should preserve license status when merging as base", () => {
+			const base = styleframe();
+			const extension = styleframe();
+
+			markLicenseRequired(base);
+
+			const result = merge(base, extension);
+
+			expect((result as any)[LICENSE_PROPERTY_NAME]).toBe(true);
+		});
+
+		it("should preserve license status when merging as extension", () => {
+			const base = styleframe();
+			const extension = styleframe();
+
+			markLicenseRequired(extension);
+
+			const result = merge(base, extension);
+
+			// The merge function returns a new object with spread operator,
+			// which should copy the non-enumerable property descriptor
+			// if the extension is the last one merged
+			expect((result as any)[LICENSE_PROPERTY_NAME]).toBe(true);
+		});
+
+		it("should preserve license status when merging multiple instances", () => {
+			const s1 = styleframe();
+			const s2 = styleframe();
+			const s3 = styleframe();
+
+			markLicenseRequired(s1);
+
+			const result = merge(s1, s2, s3);
+
+			expect((result as any)[LICENSE_PROPERTY_NAME]).toBe(true);
+		});
+
+		it("should preserve license status from base even with multiple unmarked extensions", () => {
+			const base = styleframe();
+			const ext1 = styleframe();
+			const ext2 = styleframe();
+			const ext3 = styleframe();
+
+			markLicenseRequired(base);
+
+			const result = merge(base, ext1, ext2, ext3);
+
+			expect((result as any)[LICENSE_PROPERTY_NAME]).toBe(true);
+		});
+
+		it("should handle merge with both instances marked", () => {
+			const s1 = styleframe();
+			const s2 = styleframe();
+
+			markLicenseRequired(s1);
+			markLicenseRequired(s2);
+
+			const result = merge(s1, s2);
+
+			expect((result as any)[LICENSE_PROPERTY_NAME]).toBe(true);
+		});
+
+		it("should keep license status after merging with content", () => {
+			const base = styleframe();
+			base.variable("color-primary", "#3b82f6");
+
+			const extension = styleframe();
+			extension.variable("color-secondary", "#64748b");
+
+			markLicenseRequired(base);
+
+			const result = merge(base, extension);
+
+			expect((result as any)[LICENSE_PROPERTY_NAME]).toBe(true);
+			expect(result.root.variables.length).toBe(2);
+		});
+
+		it("should preserve immutability after merge", () => {
+			const base = styleframe();
+			const extension = styleframe();
+
+			markLicenseRequired(base);
+
+			const result = merge(base, extension);
+
+			// Attempt to overwrite
+			expect(() => {
+				(result as any)[LICENSE_PROPERTY_NAME] = false;
+			}).toThrow();
+
+			// Should still be true due to non-writable descriptor
+			expect((result as any)[LICENSE_PROPERTY_NAME]).toBe(true);
 		});
 	});
 });

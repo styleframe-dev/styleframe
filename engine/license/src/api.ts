@@ -3,7 +3,7 @@ export function getLicenseKeyFromEnv(): string | undefined {
 }
 
 export async function fetchLicenseKey(value: string) {
-	return {};
+	return value;
 }
 
 /**
