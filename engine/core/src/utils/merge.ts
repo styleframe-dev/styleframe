@@ -1,3 +1,4 @@
+import { LICENSE_PROPERTY_NAME } from "../constants";
 import type { Styleframe } from "../styleframe";
 import { isRoot } from "../typeGuards";
 import type { Container, Theme, Variable } from "../types";
@@ -65,9 +66,21 @@ export function mergeContainers<T extends Container>(a: T, b: T) {
 
 export function merge(base: Styleframe, ...instances: Styleframe[]) {
 	return instances.reduce((prev, curr) => {
-		return {
+		const result = {
 			...prev,
 			root: mergeContainers(prev.root, curr.root),
 		};
+
+		if (Object.prototype.hasOwnProperty.call(prev, LICENSE_PROPERTY_NAME)) {
+			const descriptor = Object.getOwnPropertyDescriptor(
+				prev,
+				LICENSE_PROPERTY_NAME,
+			);
+			if (descriptor) {
+				Object.defineProperty(result, LICENSE_PROPERTY_NAME, descriptor);
+			}
+		}
+
+		return result;
 	}, base);
 }
