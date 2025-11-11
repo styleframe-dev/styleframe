@@ -1,1 +1,1 @@
-export const LICENSE_PROPERTY_NAME = "__licenseRequired";
+export const LICENSE_PROPERTY_NAME = Symbol.for("__licenseRequired");

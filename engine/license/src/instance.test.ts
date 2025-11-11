@@ -15,7 +15,7 @@ describe("markLicenseRequired", () => {
 			expect((s as any)[LICENSE_PROPERTY_NAME]).toBe(true);
 		});
 
-		it("should mark the property as non-enumerable", () => {
+		it("should not appear in Object.keys (symbols are never enumerable via Object.keys)", () => {
 			const s = styleframe();
 			markLicenseRequired(s);
 
@@ -23,15 +23,15 @@ describe("markLicenseRequired", () => {
 			expect(keys).not.toContain(LICENSE_PROPERTY_NAME);
 		});
 
-		it("should not appear in Object.keys", () => {
+		it("should be preserved when spreading", () => {
 			const s = styleframe();
 			markLicenseRequired(s);
 
-			const keys = Object.keys(s);
-			expect(keys.includes(LICENSE_PROPERTY_NAME)).toBe(false);
+			const spread = { ...s };
+			expect((spread as any)[LICENSE_PROPERTY_NAME]).toBe(true);
 		});
 
-		it("should not appear in for...in loop", () => {
+		it("should not appear in for...in loop (symbols never appear in for...in)", () => {
 			const s = styleframe();
 			markLicenseRequired(s);
 
@@ -42,12 +42,12 @@ describe("markLicenseRequired", () => {
 			expect(keys).not.toContain(LICENSE_PROPERTY_NAME);
 		});
 
-		it("should appear in Object.getOwnPropertyNames", () => {
+		it("should appear in Object.getOwnPropertySymbols", () => {
 			const s = styleframe();
 			markLicenseRequired(s);
 
-			const propertyNames = Object.getOwnPropertyNames(s);
-			expect(propertyNames).toContain(LICENSE_PROPERTY_NAME);
+			const symbols = Object.getOwnPropertySymbols(s);
+			expect(symbols).toContain(LICENSE_PROPERTY_NAME);
 		});
 
 		it("should be accessible via direct property access", () => {
@@ -126,7 +126,7 @@ describe("markLicenseRequired", () => {
 			expect(descriptor?.value).toBe(true);
 			expect(descriptor?.writable).toBe(false);
 			expect(descriptor?.configurable).toBe(false);
-			expect(descriptor?.enumerable).toBe(false);
+			expect(descriptor?.enumerable).toBe(true);
 		});
 	});
 
