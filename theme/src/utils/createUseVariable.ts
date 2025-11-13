@@ -3,7 +3,7 @@ import type { CamelCase } from "scule";
 import { camelCase } from "scule";
 import type { ExportKeys } from "../types";
 
-export function isKeyReferenceValue(value: unknown): value is string {
+export function isKeyReferenceValue(value: unknown): value is `@${string}` {
 	return typeof value === "string" && value.startsWith("@");
 }
 
@@ -46,26 +46,29 @@ export function isKeyReferenceValue(value: unknown): value is string {
  */
 export function createUseVariable<
 	PropertyName extends string,
+	PropertyType = TokenValue,
 	Delimiter extends string = "--",
-	Defaults extends Record<string, TokenValue> = Record<string, TokenValue>,
+	Defaults extends Record<string, PropertyType> = Record<string, PropertyType>,
 	MergeDefaults extends boolean = false,
 >(
 	propertyName: PropertyName,
 	{
 		defaults,
 		mergeDefaults = false as MergeDefaults,
-		transform = (value) => value,
+		transform = (value) => value as TokenValue,
 		delimiter = "--" as Delimiter,
 	}: {
 		defaults?: Defaults;
 		mergeDefaults?: MergeDefaults;
-		transform?: (value: TokenValue) => TokenValue;
+		transform?: (value: PropertyType) => TokenValue;
 		delimiter?: Delimiter;
 	} = {},
 ) {
 	type WithDefaults<T> = MergeDefaults extends true ? Defaults & T : T;
 
-	return function useVariable<T extends Record<string, TokenValue> = Defaults>(
+	return function useVariable<
+		T extends Record<string, PropertyType> = Defaults,
+	>(
 		s: Styleframe,
 		tokens?: T,
 	): ExportKeys<PropertyName, WithDefaults<T>, Delimiter> {

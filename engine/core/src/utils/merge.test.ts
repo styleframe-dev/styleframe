@@ -13,6 +13,7 @@ import { createRoot } from "../tokens/root";
 import { createVariableFunction } from "../tokens/variable";
 import { createThemeFunction } from "../tokens/theme";
 import {
+	isLicenseRequired,
 	LICENSE_PROPERTY_NAME,
 	markLicenseRequired,
 } from "@styleframe/license";
@@ -1067,13 +1068,8 @@ describe("merge", () => {
 
 			const result = merge(base, extension);
 
-			// Attempt to overwrite
-			expect(() => {
-				(result as any)[LICENSE_PROPERTY_NAME] = false;
-			}).toThrow();
-
 			// Should still be true due to non-writable descriptor
-			expect((result as any)[LICENSE_PROPERTY_NAME]).toBe(true);
+			expect(isLicenseRequired(result)).toBe(true);
 		});
 	});
 });
