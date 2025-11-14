@@ -1,5 +1,14 @@
 # styleframe
 
+## 1.0.5
+
+### Patch Changes
+
+- [#45](https://github.com/styleframe-dev/styleframe/pull/45) [`6700e6f`](https://github.com/styleframe-dev/styleframe/commit/6700e6fa835183ac50808c05d44154c25e85e9e1) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add license package for license interactions
+
+- Updated dependencies []:
+  - @styleframe/core@1.0.3
+
 ## 1.0.4
 
 ### Patch Changes

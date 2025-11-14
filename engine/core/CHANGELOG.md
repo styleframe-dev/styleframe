@@ -1,5 +1,12 @@
 # @styleframe/core
 
+## 1.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`6700e6f`](https://github.com/styleframe-dev/styleframe/commit/6700e6fa835183ac50808c05d44154c25e85e9e1)]:
+  - @styleframe/license@1.0.0
+
 ## 1.0.2
 
 ### Patch Changes
