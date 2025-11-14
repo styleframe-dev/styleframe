@@ -1,4 +1,4 @@
-import { LICENSE_PROPERTY_NAME } from "../constants";
+import { isLicenseRequired, markLicenseRequired } from "@styleframe/license";
 import type { Styleframe } from "../styleframe";
 import { isRoot } from "../typeGuards";
 import type { Container, Theme, Variable } from "../types";
@@ -71,14 +71,8 @@ export function merge(base: Styleframe, ...instances: Styleframe[]) {
 			root: mergeContainers(prev.root, curr.root),
 		};
 
-		if (Object.prototype.hasOwnProperty.call(prev, LICENSE_PROPERTY_NAME)) {
-			const descriptor = Object.getOwnPropertyDescriptor(
-				prev,
-				LICENSE_PROPERTY_NAME,
-			);
-			if (descriptor) {
-				Object.defineProperty(result, LICENSE_PROPERTY_NAME, descriptor);
-			}
+		if (isLicenseRequired(prev) || isLicenseRequired(curr)) {
+			markLicenseRequired(result);
 		}
 
 		return result;
