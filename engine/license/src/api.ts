@@ -1,21 +1,45 @@
+import { SUPABASE_URL } from "./constants";
+import type {
+	ActivateLicenseRequest,
+	ActivateLicenseResponse,
+	ValidateLicenseRequest,
+	ValidateLicenseResponse,
+} from "./types";
+
 export function getLicenseKeyFromEnv(): string | undefined {
 	return process.env.STYLEFRAME_KEY || import.meta.env.STYLEFRAME_KEY;
 }
 
-export async function fetchLicenseKey(value: string) {
-	return value;
+/**
+ * Activate a license key
+ */
+export async function activateLicenseKey(
+	request: ActivateLicenseRequest,
+): Promise<ActivateLicenseResponse> {
+	const response = await fetch(
+		`${SUPABASE_URL}/functions/v1/activate-license`,
+		{
+			method: "POST",
+			body: JSON.stringify(request),
+		},
+	);
+
+	return await response.json();
 }
 
 /**
- * License key validation takes the following steps:
- * 1. Retrieve license key from Supabase
- * 2. If license key does not exist, return
+ * Validate a license key
  */
-export async function validateLicenseKey(value: string): Promise<boolean> {
-	const licenseKey = await fetchLicenseKey(value);
-	if (!licenseKey) {
-		return false;
-	}
+export async function validateLicenseKey(
+	request: ValidateLicenseRequest,
+): Promise<ValidateLicenseResponse> {
+	const response = await fetch(
+		`${SUPABASE_URL}/functions/v1/validate-license`,
+		{
+			method: "POST",
+			body: JSON.stringify(request),
+		},
+	);
 
-	return true;
+	return await response.json();
 }
