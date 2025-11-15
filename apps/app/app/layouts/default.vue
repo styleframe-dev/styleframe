@@ -20,14 +20,19 @@ const items = ref<NavigationMenuItem[][]>([
 			to: "https://polar.sh/styleframe/portal",
 			target: "_blank",
 		},
+		{
+			label: "Log Out",
+			icon: "i-lucide-log-out",
+			to: "/logout",
+		},
 	],
 ]);
 </script>
 
 <template>
-	<UMain>
-		<AppHeader />
-		<UContainer>
+	<AppHeader />
+	<UMain class="flex flex-col">
+		<UContainer class="flex-1">
 			<UPage>
 				<template #left>
 					<UPageAside>
