@@ -17,6 +17,7 @@
 		"nuxt-llms": "catalog:nuxt",
 		"nuxt-og-image": "catalog:nuxt",
 		"defu": "catalog:nuxt",
+		"posthog-js": "catalog:nuxt",
 		"tailwindcss": "catalog:nuxt",
 		"zod": "catalog:"
 	},
