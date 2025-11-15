@@ -31,14 +31,12 @@ const tiers = [
 	{
 		id: "organization",
 		title: "Organization",
-		price: "$999",
-		billingPeriod: "one-time payment",
-		billingCycle: "plus local taxes",
+		price: "Custom",
 		description: "For growing teams and large organizations.",
 		button: {
-			label: "Buy now",
+			label: "Contact sales",
 			variant: "subtle" as const,
-			to: "https://buy.polar.sh/polar_cl_7fMDcYiwaF2MA2CiXXJILg7tiltaMHPIF8BaN2OCIDQ",
+			to: "mailto:hello@styleframe.com?subject=Enterprise License Inquiry",
 			target: "_blank",
 		},
 	},
@@ -52,7 +50,7 @@ const sections = [
 			{
 				id: "developers",
 				title: "Number of developers",
-				tiers: { solo: "1", startup: "5", organization: "20" },
+				tiers: { solo: "1", startup: "5", organization: "Unlimited" },
 			},
 			{
 				id: "projects",

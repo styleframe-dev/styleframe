@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import MorphingGradientBackground from "~/components/other/MorphingGradientBackground.vue";
-
 defineOptions({
 	inheritAttrs: false,
 });
@@ -17,4 +15,3 @@ defineOptions({
 		</UPageHero>
 	</MorphingGradientBackground>
 </template>
-

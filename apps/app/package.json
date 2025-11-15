@@ -1,13 +1,14 @@
 {
-	"name": "@styleframe/docs",
+	"name": "@styleframe/app",
 	"type": "module",
-	"version": "1.0.0",
+	"version": "0.0.1",
 	"scripts": {
 		"build": "nuxt build",
-		"dev": "nuxt dev",
+		"dev": "nuxt dev --port 4000",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
-		"postinstall": "nuxt prepare"
+		"postinstall": "nuxt prepare",
+		"generate:db:types": "supabase gen types --lang=typescript --project-id zkbxuglymolesrtagncn > types/database.types.ts"
 	},
 	"dependencies": {
 		"@nuxt/content": "catalog:nuxt",
@@ -17,8 +18,10 @@
 		"@nuxtjs/i18n": "catalog:nuxt",
 		"@nuxtjs/mdc": "catalog:nuxt",
 		"@nuxtjs/robots": "catalog:nuxt",
+		"@nuxtjs/supabase": "catalog:nuxt",
 		"@unhead/vue": "2.0.19",
 		"@vueuse/core": "13.9.0",
+		"@supabase/supabase-js": "catalog:nuxt",
 		"defu": "catalog:nuxt",
 		"motion-v": "1.7.2",
 		"nuxt": "catalog:nuxt",
@@ -42,8 +45,8 @@
 		"git-url-parse": "16.1.0",
 		"minimark": "0.2.0",
 		"pkg-types": "2.3.0",
-		"tailwindcss": "catalog:nuxt",
-		"typescript": "catalog:",
+		"tailwindcss": "4.1.14",
+		"typescript": "5.9.3",
 		"unist-util-visit": "5.0.0"
 	},
 	"files": [

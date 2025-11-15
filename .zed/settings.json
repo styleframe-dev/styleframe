@@ -14,11 +14,8 @@
 		},
 		"default_profile": "write"
 	},
-	"features": {
-		"edit_prediction_provider": "copilot"
-	},
 	"language_servers": ["!eslint", "..."],
-	"format_on_save": "off",
+	"format_on_save": "on",
 	"autosave": {
 		"after_delay": {
 			"milliseconds": 1000

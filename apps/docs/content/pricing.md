@@ -11,18 +11,18 @@ Start using styleframe for [free]{.text-primary}
 On top of all the core features and open source composables from styleframe, **styleframe Pro** gives you access to premium composables to create beautiful & responsive Design Systems in minutes. 
 
 #default
-::u-card
+:::u-card
 
-:::community-pricing-plan{.mb-8}
+::::community-pricing-plan{.mb-8}
+::::
+
+::::pro-pricing-plans
+::::
+
+::::pro-free-in-development{.mt-8}
+::::
+
 :::
-
-:::pro-pricing-plans
-:::
-
-:::pro-free-in-development{.p-0.lg:p-0.xl:p-0.mt-8}
-:::
-
-::
 ::
 
 ::u-page-section
@@ -49,7 +49,7 @@ If you can't find what you're looking for, email our support team and someone wi
   :::::
 
   :::::accordion-item{label="What does &quot;Lifetime access&quot; mean exactly?" icon="i-lucide-circle-help"}
-  Buying a styleframe Pro license is a **one-time purchase, with no recurring subscription**. When you purchase a styleframe Pro license, you get access to everything in styleframe Pro forever.
+  Buying a styleframe Pro license is a **one-time purchase, with no recurring subscription**. When you purchase a styleframe Pro license, you get access to everything in the current major version of styleframe Pro forever.
   :::::
 
   :::::accordion-item{label="Do you have a free trial?" icon="i-lucide-circle-help"}
