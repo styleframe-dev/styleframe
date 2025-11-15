@@ -10,12 +10,10 @@ const props = defineProps<{
 const { locale, locales, isEnabled, t, switchLocalePath } = useAppI18n();
 
 const lang = computed(
-	() =>
-		nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.code || "en",
+	() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.code || "en",
 );
 const dir = computed(
-	() =>
-		nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.dir || "ltr",
+	() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.dir || "ltr",
 );
 useHead({
 	htmlAttrs: {

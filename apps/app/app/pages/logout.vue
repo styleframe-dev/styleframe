@@ -26,9 +26,7 @@ onMounted(async () => {
 		}
 	} catch (err) {
 		error.value =
-			err instanceof Error
-				? err.message
-				: "An error occurred during sign out";
+			err instanceof Error ? err.message : "An error occurred during sign out";
 	}
 });
 </script>

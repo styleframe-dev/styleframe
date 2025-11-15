@@ -8,8 +8,7 @@ const error = ref<string | null>(null);
 
 useSeoMeta({
 	title: "Signin Confirmation",
-	description:
-		"Confirm your authentication to access all styleframe features",
+	description: "Confirm your authentication to access all styleframe features",
 });
 
 definePageMeta({
@@ -19,9 +18,7 @@ definePageMeta({
 // Handle OAuth callback on mount
 onMounted(async () => {
 	const errorCode = route.query.error as string | undefined;
-	const errorDescription = route.query.error_description as
-		| string
-		| undefined;
+	const errorDescription = route.query.error_description as string | undefined;
 
 	// Handle OAuth errors
 	if (errorCode) {

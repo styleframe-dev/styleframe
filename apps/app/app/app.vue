@@ -6,18 +6,14 @@ const site = useSiteConfig();
 const { locale, locales, isEnabled, switchLocalePath } = useAppI18n();
 
 const lang = computed(
-	() =>
-		nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.code || "en",
+	() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.code || "en",
 );
 const dir = computed(
-	() =>
-		nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.dir || "ltr",
+	() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.dir || "ltr",
 );
 
 useHead({
-	meta: [
-		{ name: "viewport", content: "width=device-width, initial-scale=1" },
-	],
+	meta: [{ name: "viewport", content: "width=device-width, initial-scale=1" }],
 	link: [{ rel: "icon", href: "/favicon.ico" }],
 	htmlAttrs: {
 		lang,
