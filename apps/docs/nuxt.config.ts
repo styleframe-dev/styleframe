@@ -1,25 +1,13 @@
 import type { NuxtI18nOptions } from "@nuxtjs/i18n";
-import { createResolver, extendViteConfig, useNuxt } from "@nuxt/kit";
+import { createResolver, useNuxt } from "@nuxt/kit";
 
 const { resolve } = createResolver(import.meta.url);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+	extends: ["../shared"],
 	compatibilityDate: "2025-07-22",
-	devtools: { enabled: true },
-	modules: [
-		resolve("./modules/config"),
-		resolve("./modules/routing"),
-		"@nuxt/ui",
-		"@nuxt/image",
-		"@nuxt/scripts",
-		"@nuxt/test-utils",
-		"@nuxt/content",
-		"@nuxtjs/robots",
-		"nuxt-og-image",
-		"nuxt-llms",
-		resolve("./modules/optimizeDeps"),
-	],
+	modules: [resolve("./modules/optimizeDeps"), "@nuxt/content"],
 	content: {
 		build: {
 			markdown: {
@@ -49,7 +37,7 @@ export default defineNuxtConfig({
 			},
 		},
 	},
-	css: ["~/assets/css/main.css"],
+	css: ["../shared/app/assets/css/main.css"],
 	nitro: {
 		prerender: {
 			crawlLinks: true,
@@ -78,9 +66,6 @@ export default defineNuxtConfig({
 			nitroConfig.prerender.routes = nitroConfig.prerender.routes || [];
 			nitroConfig.prerender.routes.push(...(routes || []));
 		},
-	},
-	icon: {
-		provider: "iconify",
 	},
 	llms: {
 		domain: "https://styleframe.dev",

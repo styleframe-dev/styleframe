@@ -1,0 +1,50 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+	extends: ["../shared"],
+	compatibilityDate: "2025-07-22",
+	modules: ["@nuxtjs/supabase"],
+	css: ["../shared/app/assets/css/main.css"],
+	llms: {
+		domain: "https://app.styleframe.dev",
+		title: "Styleframe",
+	},
+	supabase: {
+		redirect: true,
+		redirectOptions: {
+			login: "/login",
+			callback: "/confirm",
+			exclude: [
+				"/login",
+				"/signup",
+				"/confirm",
+				"/forgot-password",
+				"/reset-password",
+			],
+			saveRedirectToCookie: true,
+		},
+		clientOptions: {
+			auth: {
+				flowType: "implicit",
+				detectSessionInUrl: true,
+				persistSession: true,
+			},
+		},
+	},
+	routeRules: {
+		"/privacy": {
+			redirect: "https://www.styleframe.dev/privacy",
+		},
+		"/terms": {
+			redirect: "https://www.styleframe.dev/terms",
+		},
+		"/license": {
+			redirect: "https://www.styleframe.dev/license",
+		},
+	},
+	runtimeConfig: {
+		supabase: {},
+		public: {
+			baseUrl: "",
+		},
+	},
+});
