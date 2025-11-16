@@ -37,6 +37,7 @@
 		"@iconify-json/vscode-icons": "1.2.31",
 		"@nuxt/kit": "catalog:nuxt",
 		"@nuxt/test-utils": "catalog:nuxt",
+		"better-sqlite3": "catalog:nuxt",
 		"c12": "3.3.0",
 		"exsolve": "1.0.7",
 		"git-url-parse": "16.1.0",

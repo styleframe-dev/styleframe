@@ -41,6 +41,8 @@
 		"@styleframe/config-typescript": "workspace:*",
 		"@styleframe/config-vite": "workspace:*",
 		"@styleframe/core": "workspace:*",
+		"@styleframe/license": "catalog:",
+		"@styleframe/theme": "workspace:*",
 		"@styleframe/loader": "workspace:*",
 		"@vitest/coverage-v8": "catalog:",
 		"tsx": "catalog:",
