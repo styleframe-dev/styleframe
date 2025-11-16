@@ -7,7 +7,7 @@ const items = computed<NavigationMenuItem[]>(() => [
 	{
 		label: "Docs",
 		to: "/docs/getting-started/introduction",
-		active: route.path.startsWith("/getting-started"),
+		active: route.path.startsWith("/docs/getting-started"),
 	},
 	{
 		label: "Pricing",
@@ -27,5 +27,5 @@ const items = computed<NavigationMenuItem[]>(() => [
 </script>
 
 <template>
-	<UNavigationMenu class="max-sm:hidden" :items="items" />
+	<UNavigationMenu :items="items" />
 </template>

@@ -33,7 +33,7 @@ const links = computed(() =>
 		</template>
 
 		<template #right>
-			<AppHeaderCTA />
+			<AppHeaderCTA class="max-sm:hidden" />
 
 			<template v-if="isEnabled && locales.length > 1">
 				<ClientOnly>
