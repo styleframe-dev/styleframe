@@ -623,7 +623,7 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
       styleframe:
-        specifier: workspace:^2.1.0
+        specifier: workspace:^2.1.1
         version: link:../../engine/styleframe
       tsx:
         specifier: 'catalog:'
@@ -797,7 +797,7 @@ importers:
   tooling/plugin/playground:
     devDependencies:
       styleframe:
-        specifier: workspace:^2.1.0
+        specifier: workspace:^2.1.1
         version: link:../../../engine/styleframe
       vite:
         specifier: ^6.3.5
