@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const screenWidth = ref(992);
 
 // Fluid viewport configuration
