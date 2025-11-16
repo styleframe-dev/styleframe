@@ -39,7 +39,7 @@
 		"@biomejs/biome": "^2.2.2",
 		"@changesets/cli": "^2.29.7",
 		"@changesets/changelog-github": "^0.5.1",
-		"@styleframe/config-typescript": "workspace:^1",
+		"@styleframe/config-typescript": "workspace:^2",
 		"husky": "catalog:",
 		"lint-staged": "catalog:",
 		"npm-run-all2": "catalog:",

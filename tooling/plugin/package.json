@@ -89,14 +89,14 @@
 	},
 	"dependencies": {
 		"@styleframe/license": "catalog:",
-		"@styleframe/loader": "workspace:^1",
-		"@styleframe/transpiler": "workspace:^1",
+		"@styleframe/loader": "workspace:^2",
+		"@styleframe/transpiler": "workspace:^2",
 		"consola": "^3.4.2",
 		"unplugin": "^2.3.4"
 	},
 	"devDependencies": {
 		"@farmfe/core": "^1.7.11",
-		"@styleframe/config-typescript": "workspace:^1",
+		"@styleframe/config-typescript": "workspace:^2",
 		"@vitest/coverage-v8": "catalog:",
 		"@nuxt/kit": "^3.17.4",
 		"@nuxt/schema": "^3.17.4",

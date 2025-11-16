@@ -91,19 +91,19 @@
 		"release": "bumpp && npm publish"
 	},
 	"peerDependencies": {
-		"@styleframe/cli": "workspace:^1",
-		"@styleframe/plugin": "workspace:^1",
-		"@styleframe/core": "workspace:^1",
-		"@styleframe/loader": "workspace:^1",
-		"@styleframe/transpiler": "workspace:^1"
+		"@styleframe/cli": "workspace:^2",
+		"@styleframe/plugin": "workspace:^2",
+		"@styleframe/core": "workspace:^2",
+		"@styleframe/loader": "workspace:^2",
+		"@styleframe/transpiler": "workspace:^2"
 	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:^1",
-		"@styleframe/cli": "workspace:^1",
-		"@styleframe/plugin": "workspace:^1",
-		"@styleframe/core": "workspace:^1",
-		"@styleframe/loader": "workspace:^1",
-		"@styleframe/transpiler": "workspace:^1",
+		"@styleframe/config-typescript": "workspace:^2",
+		"@styleframe/cli": "workspace:^2",
+		"@styleframe/plugin": "workspace:^2",
+		"@styleframe/core": "workspace:^2",
+		"@styleframe/loader": "workspace:^2",
+		"@styleframe/transpiler": "workspace:^2",
 		"@types/node": "^22.15.17",
 		"@vitest/coverage-v8": "catalog:",
 		"bumpp": "^10.1.0",

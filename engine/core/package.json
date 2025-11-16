@@ -32,8 +32,8 @@
 		"@styleframe/license": "catalog:"
 	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:^1",
-		"@styleframe/config-vite": "workspace:^1",
+		"@styleframe/config-typescript": "workspace:^2",
+		"@styleframe/config-vite": "workspace:^2",
 		"@styleframe/license": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
