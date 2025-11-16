@@ -31,32 +31,16 @@ Write type-safe, composable, future-proof Design Systems code using styleframe's
 
 ```bash
 # npm
-npm install styleframe
+npx styleframe init && npm install
 
 # pnpm
-pnpm add styleframe
+pnpx styleframe init && pnpm install
 
 # yarn
-yarn add styleframe
+yarn styleframe init && yarn install
 
 # bun
-bun add styleframe
-```
-
-### Initialization
-
-```bash
-# npm
-npx styleframe init
-
-# pnpm
-pnpx styleframe init
-
-# yarn
-yarn styleframe init
-
-# bun
-bunx styleframe init
+bunx styleframe init && bun install
 ```
 
 Using the CLI command above, it will:
@@ -167,5 +151,5 @@ Looking for advanced features? Check out [Styleframe Pro](https://styleframe.dev
 ---
 
 <div align="center">
-  <sub>Built with ❤️ by <a href="https://github.com/styleframe-dev">Styleframe</a></sub>
+  <sub>Built with ❤️ by <a href="https://github.com/styleframe-dev">styleframe</a></sub>
 </div>
