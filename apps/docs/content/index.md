@@ -402,7 +402,7 @@ Use styleframe for Agents. Choose from a variety of AI agents and start delegati
 ::
 
 
-::u-page-section{class="border-t border-b border-default"}
+::u-page-section{class="border-t border-default"}
 ---
 headline: Now Available
 variant: primary
@@ -425,4 +425,7 @@ Build faster with styleframe [Pro]{.text-primary}.
 #description
 A collection of premium design system themes, composables, component styles, and utils built on top of styleframe.
 
+::
+
+::FluidResponsiveDesignDemo
 ::
