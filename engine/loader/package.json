@@ -32,16 +32,16 @@
 		"c12": "^3.1.0"
 	},
 	"peerDependencies": {
-		"@styleframe/core": "workspace:*",
+		"@styleframe/core": "workspace:^1",
 		"@styleframe/license": "catalog:",
-		"@styleframe/transpiler": "workspace:*"
+		"@styleframe/transpiler": "workspace:^1"
 	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:*",
-		"@styleframe/config-vite": "workspace:*",
-		"@styleframe/core": "workspace:*",
+		"@styleframe/config-typescript": "workspace:^1",
+		"@styleframe/config-vite": "workspace:^1",
+		"@styleframe/core": "workspace:^1",
 		"@styleframe/license": "catalog:",
-		"@styleframe/transpiler": "workspace:*",
+		"@styleframe/transpiler": "workspace:^1",
 		"@vitest/coverage-v8": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",

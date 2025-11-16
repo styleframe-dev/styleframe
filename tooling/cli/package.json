@@ -35,15 +35,15 @@
 		"magicast": "^0.5.0"
 	},
 	"peerDependencies": {
-		"@styleframe/loader": "workspace:*"
+		"@styleframe/loader": "workspace:^1"
 	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:*",
-		"@styleframe/config-vite": "workspace:*",
-		"@styleframe/core": "workspace:*",
+		"@styleframe/config-typescript": "workspace:^1",
+		"@styleframe/config-vite": "workspace:^1",
+		"@styleframe/core": "workspace:^1",
 		"@styleframe/license": "catalog:",
-		"@styleframe/theme": "workspace:*",
-		"@styleframe/loader": "workspace:*",
+		"@styleframe/theme": "workspace:^1",
+		"@styleframe/loader": "workspace:^1",
 		"@vitest/coverage-v8": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
