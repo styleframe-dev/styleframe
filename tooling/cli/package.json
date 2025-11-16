@@ -30,15 +30,18 @@
 		"playground:build": "tsx playground/build.ts"
 	},
 	"dependencies": {
-		"@styleframe/loader": "workspace:*",
 		"citty": "^0.1.6",
 		"consola": "^3.0.0-2",
 		"magicast": "^0.5.0"
+	},
+	"peerDependencies": {
+		"@styleframe/loader": "workspace:*"
 	},
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:*",
 		"@styleframe/config-vite": "workspace:*",
 		"@styleframe/core": "workspace:*",
+		"@styleframe/loader": "workspace:*",
 		"@vitest/coverage-v8": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
