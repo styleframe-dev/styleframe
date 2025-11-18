@@ -35,9 +35,9 @@ export async function addPackageJsonDependencies(cwd: string) {
 		const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
 
 		if (!packageJson.devDependencies) packageJson.devDependencies = {};
-		packageJson.devDependencies["styleframe"] = "^1.0.0";
-		packageJson.devDependencies["@styleframe/theme"] = "^1.0.0";
-		packageJson.devDependencies["@styleframe/pro"] = "^1.0.0";
+		packageJson.devDependencies["styleframe"] = "^2.0.0";
+		packageJson.devDependencies["@styleframe/theme"] = "^2.0.0";
+		packageJson.devDependencies["@styleframe/pro"] = "^2.0.0";
 
 		await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
