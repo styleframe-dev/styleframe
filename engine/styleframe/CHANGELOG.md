@@ -1,5 +1,18 @@
 # styleframe
 
+## 2.0.1
+
+### Patch Changes
+
+- [#52](https://github.com/styleframe-dev/styleframe/pull/52) [`d3039fc`](https://github.com/styleframe-dev/styleframe/commit/d3039fc548972d01a5db6bd1b65ff7495047b5ae) Thanks [@alexgrozav](https://github.com/alexgrozav)! - fix(cli): update install version
+
+- Updated dependencies [[`d3039fc`](https://github.com/styleframe-dev/styleframe/commit/d3039fc548972d01a5db6bd1b65ff7495047b5ae)]:
+  - @styleframe/cli@2.0.1
+  - @styleframe/core@2.0.1
+  - @styleframe/loader@2.0.1
+  - @styleframe/transpiler@2.0.1
+  - @styleframe/plugin@2.0.1
+
 ## 2.0.0
 
 ### Minor Changes
