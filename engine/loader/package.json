@@ -30,6 +30,7 @@
 	},
 	"dependencies": {
 		"@styleframe/core": "workspace:^",
+		"@styleframe/license": "catalog:",
 		"@styleframe/transpiler": "workspace:^",
 		"c12": "^3.1.0"
 	},

@@ -1,9 +1,13 @@
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { Styleframe } from "@styleframe/core";
-import { transpile } from "@styleframe/transpiler";
 import type { TranspileOptions } from "@styleframe/transpiler";
+import { transpile } from "@styleframe/transpiler";
 import { directoryExists } from "./utils";
+import {
+	getLicenseKeyFromEnv,
+	validateInstanceLicense,
+} from "@styleframe/license";
 
 export type BuildOptions = {
 	clean?: boolean;
@@ -15,7 +19,13 @@ export async function build(
 	instance: Styleframe,
 	{ clean = true, outputDir = "./styleframe", transpiler }: BuildOptions = {},
 ) {
-	const output = transpile(instance, transpiler);
+	await validateInstanceLicense(instance, {
+		licenseKey: getLicenseKeyFromEnv() || "",
+		environment: process.env.NODE_ENV || "development",
+		isBuild: true,
+	});
+
+	const output = await transpile(instance, transpiler);
 
 	const outputDirExists = await directoryExists(outputDir);
 	if (clean && outputDirExists) {

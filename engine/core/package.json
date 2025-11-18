@@ -26,7 +26,7 @@
 		"test:dev": "vitest --watch"
 	},
 	"dependencies": {
-		"@styleframe/license": "workspace:^",
+		"@styleframe/license": "catalog:",
 		"csstype": "^3.1.3"
 	},
 	"devDependencies": {

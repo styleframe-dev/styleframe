@@ -1,4 +1,7 @@
-import { isLicenseRequired, markLicenseRequired } from "@styleframe/license";
+import {
+	isInstanceLicenseRequired,
+	markInstanceLicenseRequired,
+} from "@styleframe/license";
 import type { Styleframe } from "../styleframe";
 import { isRoot } from "../typeGuards";
 import type { Container, Theme, Variable } from "../types";
@@ -71,8 +74,8 @@ export function merge(base: Styleframe, ...instances: Styleframe[]) {
 			root: mergeContainers(prev.root, curr.root),
 		};
 
-		if (isLicenseRequired(prev) || isLicenseRequired(curr)) {
-			markLicenseRequired(result);
+		if (isInstanceLicenseRequired(prev) || isInstanceLicenseRequired(curr)) {
+			markInstanceLicenseRequired(result);
 		}
 
 		return result;

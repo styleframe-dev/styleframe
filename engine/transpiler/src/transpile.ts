@@ -1,5 +1,10 @@
 import type { Styleframe } from "@styleframe/core";
+import {
+	isInstanceLicenseRequired,
+	getInstanceLicenseValidationInfo,
+} from "@styleframe/license";
 import { consumeCSS, consumeTS } from "./consume";
+import { addLicenseWatermark } from "./license";
 import type { Output, OutputFile, TranspileOptions } from "./types";
 
 export function createFile(name: string, content: string = ""): OutputFile {
@@ -9,15 +14,23 @@ export function createFile(name: string, content: string = ""): OutputFile {
 	};
 }
 
-export function transpile(
+export async function transpile(
 	instance: Styleframe,
 	{
 		type = "all",
 		consumers = { css: consumeCSS, ts: consumeTS },
 	}: TranspileOptions = {},
-): Output {
+): Promise<Output> {
 	const output: Output = { files: [] };
 	const options = instance.options;
+
+	if (isInstanceLicenseRequired(instance)) {
+		const validationInfo = await getInstanceLicenseValidationInfo(instance);
+		if (!validationInfo.valid || validationInfo.instanceId !== instance.id) {
+			addLicenseWatermark(instance);
+		}
+	}
+
 	const { recipes, ...root } = instance.root;
 
 	if (type === "all" || type === "css") {
@@ -29,6 +42,8 @@ export function transpile(
 		const indexFile = createFile("index.ts", consumers.ts([], options));
 		output.files.push(indexFile);
 	}
+
+	console.log(output.files);
 
 	return output;
 }

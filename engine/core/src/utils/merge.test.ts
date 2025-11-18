@@ -13,9 +13,9 @@ import { createRoot } from "../tokens/root";
 import { createVariableFunction } from "../tokens/variable";
 import { createThemeFunction } from "../tokens/theme";
 import {
-	isLicenseRequired,
+	isInstanceLicenseRequired,
 	LICENSE_PROPERTY_NAME,
-	markLicenseRequired,
+	markInstanceLicenseRequired,
 } from "@styleframe/license";
 
 describe("mergeVariablesArray", () => {
@@ -987,7 +987,7 @@ describe("merge", () => {
 			const base = styleframe();
 			const extension = styleframe();
 
-			markLicenseRequired(base);
+			markInstanceLicenseRequired(base);
 
 			const result = merge(base, extension);
 
@@ -998,7 +998,7 @@ describe("merge", () => {
 			const base = styleframe();
 			const extension = styleframe();
 
-			markLicenseRequired(extension);
+			markInstanceLicenseRequired(extension);
 
 			const result = merge(base, extension);
 
@@ -1013,7 +1013,7 @@ describe("merge", () => {
 			const s2 = styleframe();
 			const s3 = styleframe();
 
-			markLicenseRequired(s1);
+			markInstanceLicenseRequired(s1);
 
 			const result = merge(s1, s2, s3);
 
@@ -1026,7 +1026,7 @@ describe("merge", () => {
 			const ext2 = styleframe();
 			const ext3 = styleframe();
 
-			markLicenseRequired(base);
+			markInstanceLicenseRequired(base);
 
 			const result = merge(base, ext1, ext2, ext3);
 
@@ -1037,8 +1037,8 @@ describe("merge", () => {
 			const s1 = styleframe();
 			const s2 = styleframe();
 
-			markLicenseRequired(s1);
-			markLicenseRequired(s2);
+			markInstanceLicenseRequired(s1);
+			markInstanceLicenseRequired(s2);
 
 			const result = merge(s1, s2);
 
@@ -1052,7 +1052,7 @@ describe("merge", () => {
 			const extension = styleframe();
 			extension.variable("color-secondary", "#64748b");
 
-			markLicenseRequired(base);
+			markInstanceLicenseRequired(base);
 
 			const result = merge(base, extension);
 
@@ -1064,12 +1064,12 @@ describe("merge", () => {
 			const base = styleframe();
 			const extension = styleframe();
 
-			markLicenseRequired(base);
+			markInstanceLicenseRequired(base);
 
 			const result = merge(base, extension);
 
 			// Should still be true due to non-writable descriptor
-			expect(isLicenseRequired(result)).toBe(true);
+			expect(isInstanceLicenseRequired(result)).toBe(true);
 		});
 	});
 });

@@ -27,6 +27,7 @@
 	},
 	"dependencies": {
 		"@styleframe/core": "workspace:^",
+		"@styleframe/license": "catalog:",
 		"scule": "^1.3.0"
 	},
 	"devDependencies": {

@@ -1,8 +1,12 @@
+import path from "node:path";
+import {
+	getLicenseKeyFromEnv,
+	validateInstanceLicense,
+} from "@styleframe/license";
 import { loadConfigurationFromPath } from "@styleframe/loader";
 import type { TranspileOptions } from "@styleframe/transpiler";
 import { transpile } from "@styleframe/transpiler";
 import { consola } from "consola";
-import path from "node:path";
 import type { UnpluginFactory } from "unplugin";
 import { createUnplugin } from "unplugin";
 import {
@@ -16,8 +20,18 @@ import {
 } from "./constants";
 import type { Options } from "./types";
 
-async function loadAndBuildEntry(entry: string, options: TranspileOptions) {
+async function loadAndBuildEntry(
+	entry: string,
+	options: TranspileOptions,
+	isBuild: boolean,
+) {
 	const instance = await loadConfigurationFromPath(entry);
+
+	await validateInstanceLicense(instance, {
+		licenseKey: getLicenseKeyFromEnv() || "",
+		environment: process.env.NODE_ENV || "development",
+		isBuild,
+	});
 
 	return transpile(instance, options);
 }
@@ -30,6 +44,8 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 		typeof rawEntry === "string" ? [rawEntry] : rawEntry
 	).map((p) => (path.isAbsolute(p) ? p : path.resolve(process.cwd(), p)));
 
+	let isBuildCommand = false;
+
 	return {
 		name: PLUGIN_NAME,
 		enforce: "pre",
@@ -39,6 +55,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 			} else if (id === VIRTUAL_TS_MODULE_ID) {
 				return RESOLVED_VIRTUAL_TS_MODULE_ID;
 			}
+		},
+		buildStart() {
+			isBuildCommand = process.argv.includes("build");
 		},
 		async load(id) {
 			if (
@@ -58,7 +77,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					this.addWatchFile(entry);
 
 					try {
-						results.push(await loadAndBuildEntry(entry, { type }));
+						results.push(
+							await loadAndBuildEntry(entry, { type }, isBuildCommand),
+						);
 					} catch (error) {
 						hasError = true;
 						consola.error(`[styleframe] Failed to build: ${entry}`, error);
