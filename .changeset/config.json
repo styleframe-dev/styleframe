@@ -19,6 +19,7 @@
 		"@styleframe/plugin-playground",
 		"@styleframe/testing-integration",
 		"@styleframe/docs",
-		"@styleframe/app"
+		"@styleframe/app",
+		"styleframe-playground"
 	]
 }
