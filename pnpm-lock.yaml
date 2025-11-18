@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@styleframe/license':
-      specifier: ^1.1.0
-      version: 1.1.0
+      specifier: ^2.0.0
+      version: 2.0.0
     '@types/node':
       specifier: ^22.15.32
       version: 22.15.32
@@ -437,7 +437,7 @@ importers:
     dependencies:
       '@styleframe/license':
         specifier: 'catalog:'
-        version: 1.1.0
+        version: 2.0.0
       csstype:
         specifier: ^3.1.3
         version: 3.1.3
@@ -471,7 +471,7 @@ importers:
         version: link:../core
       '@styleframe/license':
         specifier: 'catalog:'
-        version: 1.1.0
+        version: 2.0.0
       '@styleframe/transpiler':
         specifier: workspace:*
         version: link:../transpiler
@@ -553,7 +553,7 @@ importers:
         version: link:../core
       '@styleframe/license':
         specifier: 'catalog:'
-        version: 1.1.0
+        version: 2.0.0
       scule:
         specifier: ^1.3.0
         version: 1.3.0
@@ -719,7 +719,7 @@ importers:
     devDependencies:
       '@styleframe/pro':
         specifier: ^2.0.0
-        version: 2.0.0(@styleframe/license@1.1.0)(@styleframe/theme@2.0.1)
+        version: 2.0.0(@styleframe/license@2.0.0)(@styleframe/theme@2.0.1)
       '@styleframe/theme':
         specifier: ^2.0.0
         version: 2.0.1
@@ -731,7 +731,7 @@ importers:
     dependencies:
       '@styleframe/license':
         specifier: 'catalog:'
-        version: 1.1.0
+        version: 2.0.0
       '@styleframe/loader':
         specifier: workspace:*
         version: link:../../engine/loader
@@ -3239,6 +3239,9 @@ packages:
 
   '@styleframe/license@1.1.0':
     resolution: {integrity: sha512-bAkdC1r6HCvqOj7+3r0H9gli1tIienZUvQl0stLt0xBYK3DNDgV/qKbnjcKLOEnzSraXeGtfTc5OAJQGcE3l6g==}
+
+  '@styleframe/license@2.0.0':
+    resolution: {integrity: sha512-NeKLfFjImqP0w+UKeI+94y69rrBjpB73amwermLEDMj+FaLLYJ3t6gmRsQXFiPtRPOo0FyvWeb+WDtjDlmwGoQ==}
 
   '@styleframe/loader@2.0.1':
     resolution: {integrity: sha512-Hx6JGbBaoL32vHMLuWrVhRtZuQtl4YXDoebI61DrtQ1+3Ti7djWxXQIdpWbLoz2hhXsXZG842kfT60CjFDYo4g==}
@@ -12047,6 +12050,8 @@ snapshots:
 
   '@styleframe/license@1.1.0': {}
 
+  '@styleframe/license@2.0.0': {}
+
   '@styleframe/loader@2.0.1(magicast@0.3.5)':
     dependencies:
       '@styleframe/core': 2.0.1
@@ -12082,9 +12087,9 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  '@styleframe/pro@2.0.0(@styleframe/license@1.1.0)(@styleframe/theme@2.0.1)':
+  '@styleframe/pro@2.0.0(@styleframe/license@2.0.0)(@styleframe/theme@2.0.1)':
     dependencies:
-      '@styleframe/license': 1.1.0
+      '@styleframe/license': 2.0.0
       '@styleframe/theme': 2.0.1
       culori: 4.0.2
       scule: 1.3.0
