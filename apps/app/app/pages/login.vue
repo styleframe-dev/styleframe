@@ -48,14 +48,6 @@ const providers = [
 				? `${runtimeConfig.public.baseUrl}/confirm`
 				: `${window.location.origin}/confirm`;
 
-			// Debug: Check runtime config and redirect URL
-			console.log("OAuth Debug:", {
-				baseUrl: runtimeConfig.public.baseUrl,
-				windowOrigin: window.location.origin,
-				redirectUrl: redirectUrl,
-				supabaseUrl: runtimeConfig.public.supabase.url,
-			});
-
 			const { error } = await supabase.auth.signInWithOAuth({
 				provider: "github",
 				options: {

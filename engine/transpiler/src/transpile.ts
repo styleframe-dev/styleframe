@@ -43,7 +43,5 @@ export async function transpile(
 		output.files.push(indexFile);
 	}
 
-	console.log(output.files);
-
 	return output;
 }
