@@ -26,13 +26,13 @@
 		"test:dev": "vitest --watch"
 	},
 	"dependencies": {
-		"@styleframe/core": "workspace:^",
+		"@styleframe/core": "workspace:*",
 		"@styleframe/license": "catalog:",
 		"scule": "^1.3.0"
 	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:^",
-		"@styleframe/config-vite": "workspace:^",
+		"@styleframe/config-typescript": "workspace:*",
+		"@styleframe/config-vite": "workspace:*",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",

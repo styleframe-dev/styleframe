@@ -29,14 +29,14 @@
 		"playground:watch": "tsx playground/watch.ts"
 	},
 	"dependencies": {
-		"@styleframe/core": "workspace:^",
+		"@styleframe/core": "workspace:*",
 		"@styleframe/license": "catalog:",
-		"@styleframe/transpiler": "workspace:^",
+		"@styleframe/transpiler": "workspace:*",
 		"c12": "^3.1.0"
 	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:^",
-		"@styleframe/config-vite": "workspace:^",
+		"@styleframe/config-typescript": "workspace:*",
+		"@styleframe/config-vite": "workspace:*",
 		"@vitest/coverage-v8": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",

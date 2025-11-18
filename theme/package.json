@@ -26,10 +26,10 @@
 		"test:dev": "vitest --watch"
 	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:^",
-		"@styleframe/config-vite": "workspace:^",
-		"@styleframe/core": "workspace:^",
-		"@styleframe/transpiler": "workspace:^",
+		"@styleframe/config-typescript": "workspace:*",
+		"@styleframe/config-vite": "workspace:*",
+		"@styleframe/core": "workspace:*",
+		"@styleframe/transpiler": "workspace:*",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
@@ -37,7 +37,7 @@
 		"vitest": "catalog:"
 	},
 	"peerDependencies": {
-		"@styleframe/core": "workspace:^"
+		"@styleframe/core": "workspace:*"
 	},
 	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
 	"bugs": {
