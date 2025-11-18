@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/core",
-	"version": "2.0.1",
+	"version": "2.0.2",
 	"type": "module",
 	"types": "./dist/styleframe.d.ts",
 	"module": "./dist/styleframe.js",
