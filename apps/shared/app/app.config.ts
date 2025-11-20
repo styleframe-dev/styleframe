@@ -4,6 +4,7 @@ export default defineAppConfig({
 	 */
 	seo: {
 		title: "styleframe",
+		titleTemplate: "%s - styleframe",
 		description:
 			"Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.",
 	},
