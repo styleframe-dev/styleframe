@@ -144,13 +144,13 @@ title: styleframe.config.ts
 
 ```ts
 import { styleframe } from 'styleframe';
-import { useFluid, useFluidClamp } from '@styleframe/pro';
+import { useFluidViewport, useFluidClamp } from '@styleframe/pro';
 import { useSpacing } from '@styleframe/theme';
 
 const s = styleframe();
 
 // Set up fluid viewport range
-useFluid(s, { 
+useFluidViewport(s, {
     minWidth: 320,  // Mobile
     maxWidth: 1440  // Desktop
 });
