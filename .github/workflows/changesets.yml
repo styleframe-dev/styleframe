@@ -48,7 +48,7 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Build packages for release
-              run: pnpm run ci:prerelease
+              run: pnpm run ci:prepublish
 
             - name: Create and publish versions
               id: changesets
