@@ -26,12 +26,15 @@
 		"test:dev": "vitest --watch"
 	},
 	"dependencies": {
-		"@styleframe/license": "catalog:",
 		"csstype": "^3.1.3"
+	},
+	"peerDependencies": {
+		"@styleframe/license": "catalog:"
 	},
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:*",
 		"@styleframe/config-vite": "workspace:*",
+		"@styleframe/license": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
