@@ -1,5 +1,13 @@
 # @styleframe/plugin
 
+## 2.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`1fd348e`](https://github.com/styleframe-dev/styleframe/commit/1fd348e5f379318f76d68055efacd370618f00d6)]:
+  - @styleframe/transpiler@3.0.0
+  - @styleframe/loader@3.0.0
+
 ## 2.0.2
 
 ### Patch Changes
