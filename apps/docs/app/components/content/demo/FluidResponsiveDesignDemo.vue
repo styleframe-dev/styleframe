@@ -170,6 +170,7 @@ const viewportLabel = computed(() => {
 					:min="minViewport"
 					:max="maxViewport"
 					v-model="screenWidth"
+					aria-label="Adjust viewport width"
 				/>
 
 				<div
