@@ -8,7 +8,7 @@
 		"start": "vite"
 	},
 	"devDependencies": {
-		"styleframe": "workspace:^2.1.0",
+		"styleframe": "workspace:^2.1.1",
 		"vite": "^6.3.5",
 		"vite-plugin-inspect": "^11.1.0"
 	}
