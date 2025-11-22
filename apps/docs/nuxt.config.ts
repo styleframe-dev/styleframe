@@ -7,7 +7,11 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	extends: ["../shared"],
 	compatibilityDate: "2025-07-22",
-	modules: [resolve("./modules/optimizeDeps"), "@nuxt/content"],
+	modules: [
+		resolve("./modules/optimizeDeps"),
+		"@nuxtjs/sitemap",
+		"@nuxt/content",
+	],
 	content: {
 		build: {
 			markdown: {
@@ -85,5 +89,14 @@ export default defineNuxtConfig({
 				defaults: "",
 			},
 		},
+	},
+	/**
+	 * @docs https://nuxt.com/modules/sitemap
+	 */
+	sitemap: {
+		enabled: true,
+		discoverImages: true,
+		discoverVideos: true,
+		autoI18n: true,
 	},
 });
