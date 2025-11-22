@@ -82,7 +82,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-shield-check
     target: _blank
-    to: /docs/api/overview
+    to: /docs/api
     ---
     #title
     [Type-safe]{.text-primary} CSS API
@@ -244,7 +244,7 @@ links:
 -   label: Explore the default theme
     color: neutral
     variant: outline
-    to: /docs/design-tokens/overview
+    to: /docs/design-tokens
     icon: i-lucide-palette
 ---
 
