@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/theme",
-	"version": "2.0.3",
+	"version": "2.1.0",
 	"type": "module",
 	"types": "./dist/theme.d.ts",
 	"module": "./dist/theme.js",
@@ -28,8 +28,8 @@
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^2",
 		"@styleframe/config-vite": "workspace:^2",
-		"@styleframe/core": "workspace:^2",
-		"@styleframe/transpiler": "workspace:^2",
+		"@styleframe/core": "workspace:^2.2.0",
+		"@styleframe/transpiler": "workspace:^2.2.0",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
@@ -37,7 +37,7 @@
 		"vitest": "catalog:"
 	},
 	"peerDependencies": {
-		"@styleframe/core": "workspace:^2"
+		"@styleframe/core": "workspace:^2.2.0"
 	},
 	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
 	"bugs": {

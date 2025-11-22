@@ -1,5 +1,11 @@
 # @styleframe/core
 
+## 2.2.0
+
+### Minor Changes
+
+- [`628e650`](https://github.com/styleframe-dev/styleframe/commit/628e65039bae5e21ab9a66e16037e7e2791f8c8b) Thanks [@alexgrozav](https://github.com/alexgrozav)! - chore: update dependencies
+
 ## 2.1.0
 
 ### Minor Changes
