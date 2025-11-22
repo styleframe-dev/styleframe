@@ -72,27 +72,6 @@ const viewportLabel = computed(() => {
 });
 
 // Calculate actual font sizes for display
-const actualSizes = computed(() => {
-	const baseFontSize = calculateFluidSize(baseFontSizeMin, baseFontSizeMax);
-
-	const h1Min = baseFontSizeMin * getScalePower(2, true);
-	const h1Max = baseFontSizeMax * getScalePower(2, false);
-	const h1Size = calculateFluidSize(h1Min, h1Max);
-
-	const pMin = baseFontSizeMin * getScalePower(0, true);
-	const pMax = baseFontSizeMax * getScalePower(0, false);
-	const pSize = calculateFluidSize(pMin, pMax);
-
-	const cardMin = baseFontSizeMin * getScalePower(-1, true);
-	const cardMax = baseFontSizeMax * getScalePower(-1, false);
-	const cardSize = calculateFluidSize(cardMin, cardMax);
-
-	return {
-		h1: h1Size.toFixed(2),
-		p: pSize.toFixed(2),
-		card: cardSize.toFixed(2),
-	};
-});
 </script>
 
 <template>
