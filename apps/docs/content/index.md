@@ -168,7 +168,7 @@ links:
 -   label: Explore the default theme
     color: neutral
     variant: outline
-    to: /
+    to: /docs/design-tokens
     icon: i-lucide-palette
 ---
 
@@ -179,19 +179,24 @@ title: styleframe.config.ts
 
 ```ts
 import { styleframe } from 'styleframe';
-import { useReset, useBorder, useBorderRadius, useBoxShadow, useColors, useGrid, useScale, useSpacing, useTypography } from '@styleframe/theme-default';
+import { useColor, useSpacing, useFontSize, useFontFamily } from '@styleframe/theme';
 
 const s = styleframe();
+const { ref, selector } = s;
 
-useReset(s);
-useBorder(s);
-useBorderRadius(s);
-useBoxShadow(s);
-useColors(s);
-useGrid(s);
-useScale(s);
-useSpacing(s);
-useTypography(s);
+// Define base design tokens
+const { colorPrimary } = useColor(s, { primary: '#006cff' } as const);
+const { spacing } = useSpacing(s, { default: '1rem' } as const);
+const { fontSize } = useFontSize(s, { default: '1rem' } as const);
+const { fontFamily } = useFontFamily(s);
+
+// Use in your styles
+selector('.button', {
+    backgroundColor: ref(colorPrimary),
+    padding: ref(spacing),
+    fontSize: ref(fontSize),
+    fontFamily: ref(fontFamily),
+});
 
 export default s;
 ```
