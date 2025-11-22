@@ -17,6 +17,7 @@
 		"@nuxtjs/i18n": "catalog:nuxt",
 		"@nuxtjs/mdc": "catalog:nuxt",
 		"@nuxtjs/robots": "catalog:nuxt",
+		"@nuxtjs/sitemap": "catalog:nuxt",
 		"@unhead/vue": "2.0.19",
 		"@vueuse/core": "13.9.0",
 		"defu": "catalog:nuxt",
