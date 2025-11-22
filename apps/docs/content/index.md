@@ -179,24 +179,15 @@ title: styleframe.config.ts
 
 ```ts
 import { styleframe } from 'styleframe';
-import { useColor, useSpacing, useFontSize, useFontFamily } from '@styleframe/theme';
+import { useReset, useVariables, useGlobals, useComponents, useUtilities } from './my-theme';
 
 const s = styleframe();
-const { ref, selector } = s;
 
-// Define base design tokens
-const { colorPrimary } = useColor(s, { primary: '#006cff' } as const);
-const { spacing } = useSpacing(s, { default: '1rem' } as const);
-const { fontSize } = useFontSize(s, { default: '1rem' } as const);
-const { fontFamily } = useFontFamily(s);
-
-// Use in your styles
-selector('.button', {
-    backgroundColor: ref(colorPrimary),
-    padding: ref(spacing),
-    fontSize: ref(fontSize),
-    fontFamily: ref(fontFamily),
-});
+useReset(s);
+useVariables(s);
+useGlobals(s);
+useComponents(s);
+useUtilities(s);
 
 export default s;
 ```
