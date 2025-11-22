@@ -1,5 +1,11 @@
 # styleframe
 
+## 2.1.1
+
+### Patch Changes
+
+- [`ff9d806`](https://github.com/styleframe-dev/styleframe/commit/ff9d806a8f815f94225851db000f6428b07cd305) Thanks [@alexgrozav](https://github.com/alexgrozav)! - docs: update readme
+
 ## 2.1.0
 
 ### Minor Changes
