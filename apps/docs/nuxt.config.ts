@@ -71,6 +71,10 @@ export default defineNuxtConfig({
 			nitroConfig.prerender.routes.push(...(routes || []));
 		},
 	},
+	site: {
+		url: "https://www.styleframe.dev",
+		name: "Styleframe - Type-safe, Composable CSS in TypeScript",
+	},
 	llms: {
 		domain: "https://styleframe.dev",
 		title: "Styleframe",
