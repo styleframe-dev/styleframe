@@ -22,9 +22,8 @@ import { styleframe } from 'styleframe';
 
 const s = styleframe();
 const { variable, ref, selector } = s;
-const { colorBlue } = useColors(s);
 
-const colorPrimary = variable('color-primary', ref(colorBlue));
+const colorPrimary = variable('color--primary', '#318fa0');
 
 selector('.button', {
     backgroundColor: ref(colorPrimary),
