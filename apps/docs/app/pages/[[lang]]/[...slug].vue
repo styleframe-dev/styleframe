@@ -43,7 +43,8 @@ if (page.value?.seo?.ogImage) {
 		twitterImage: page.value.seo.ogImage,
 	});
 } else {
-	defineOgImageComponent("Landing", {
+	defineOgImageComponent("Docs", {
+		headline: "styleframe",
 		title,
 		description,
 	});
@@ -51,5 +52,5 @@ if (page.value?.seo?.ogImage) {
 </script>
 
 <template>
-	<ContentRenderer v-if="page" :value="page" />
+  <ContentRenderer v-if="page" :value="page" />
 </template>
