@@ -1,5 +1,20 @@
 # styleframe
 
+## 2.1.0
+
+### Minor Changes
+
+- [`628e650`](https://github.com/styleframe-dev/styleframe/commit/628e65039bae5e21ab9a66e16037e7e2791f8c8b) Thanks [@alexgrozav](https://github.com/alexgrozav)! - chore: update dependencies
+
+### Patch Changes
+
+- Updated dependencies [[`628e650`](https://github.com/styleframe-dev/styleframe/commit/628e65039bae5e21ab9a66e16037e7e2791f8c8b), [`48ea659`](https://github.com/styleframe-dev/styleframe/commit/48ea659789c9cdaf64a86bad7b05f38562d987c9)]:
+  - @styleframe/transpiler@2.2.0
+  - @styleframe/plugin@2.1.0
+  - @styleframe/loader@2.2.0
+  - @styleframe/core@2.2.0
+  - @styleframe/cli@2.2.0
+
 ## 2.0.2
 
 ### Patch Changes
