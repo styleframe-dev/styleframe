@@ -125,6 +125,10 @@ What's included in styleframe Pro?
 Starting with fluid responsive design — the foundation of modern, scalable design systems — with many more premium composables on the way. Build layouts and typography that adapt seamlessly using mathematical precision.
 ::
 
+::FluidResponsiveDesignDemo
+::
+
+
 ::u-page-section
 ---
 orientation: horizontal
