@@ -36,24 +36,18 @@ const getScalePower = (power: number, isMin: boolean) => {
 	return Math.pow(scale, power);
 };
 
+// Helper to calculate fluid font size for a given scale power
+const getFluidFontSize = (scalePower: number) => {
+	const min = baseFontSizeMin * getScalePower(scalePower, true);
+	const max = baseFontSizeMax * getScalePower(scalePower, false);
+	return calculateFluidSize(min, max);
+};
+
 // Generate fluid font sizes for different text elements
 const fluidFontSizes = computed(() => {
-	// Calculate base font size
-	const baseFontSize = calculateFluidSize(baseFontSizeMin, baseFontSizeMax);
-
-	// Calculate each size using scale powers
-	const h1Min = baseFontSizeMin * getScalePower(4, true);
-	const h1Max = baseFontSizeMax * getScalePower(4, false);
-	const h1Size = calculateFluidSize(h1Min, h1Max);
-
-	const pMin = baseFontSizeMin * getScalePower(0, true);
-	const pMax = baseFontSizeMax * getScalePower(0, false);
-	const pSize = calculateFluidSize(pMin, pMax);
-
-	const cardMin = baseFontSizeMin * getScalePower(-1, true);
-	const cardMax = baseFontSizeMax * getScalePower(-1, false);
-	const cardSize = calculateFluidSize(cardMin, cardMax);
-
+	const h1Size = getFluidFontSize(4);
+	const pSize = getFluidFontSize(0);
+	const cardSize = getFluidFontSize(-1);
 	return {
 		"--fluid-h1-size": `${h1Size}px`,
 		"--fluid-p-size": `${pSize}px`,
