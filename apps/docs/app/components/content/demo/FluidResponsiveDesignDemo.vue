@@ -186,10 +186,6 @@ const actualSizes = computed(() => {
 					class="flex justify-between mb-2 text-sm text-gray-600 dark:text-gray-400"
 				>
 					<span>{{ minViewport }}px</span>
-					<span
-						class="font-semibold text-primary-600 dark:text-primary-400"
-					>
-					</span>
 					<span>{{ maxViewport }}px</span>
 				</div>
 				<USlider
