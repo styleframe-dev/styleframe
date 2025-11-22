@@ -19,14 +19,19 @@ title: styleframe.config.ts
 
 ```ts
 import { styleframe } from 'styleframe';
+import { useColor } from '@styleframe/theme';
 
 const s = styleframe();
 const { variable, ref, selector } = s;
 
-const colorPrimary = variable('color--primary', '#318fa0');
+const spacing = variable('spacing', '1rem');
+const { colorPrimary } = useColor(s, {
+    primary: '#318fa0',
+});
 
 selector('.button', {
     backgroundColor: ref(colorPrimary),
+    padding: ref(spacing),
 });
 
 export default s;
