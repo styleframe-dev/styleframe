@@ -76,10 +76,10 @@ const viewportLabel = computed(() => {
 			class="mb-6 max-w-full bg-gradient-to-br from-slate-300/80 via-slate-300/50 to-slate-300/10 dark:from-slate-800/10 dark:via-slate-800/40 dark:to-slate-800/10"
 		>
 			<main
-				class="h-[420px] pt-8 flex flex-col gap-8"
+				class="h-[420px] pt-8 flex flex-col gap-8 max-sm:p-0"
 				:class="{
-					'px-0': screenWidth < 640,
-					'px-8': screenWidth >= 640,
+					'px-0': screenWidth < 576,
+					'px-8': screenWidth >= 576,
 				}"
 				:style="fluidFontSizes"
 			>
@@ -98,7 +98,7 @@ const viewportLabel = computed(() => {
 					and spacing using mathematical precision.
 				</p>
 				<div
-					class="cards flex gap-4"
+					class="cards flex gap-4 max-sm:flex-col"
 					:class="screenWidth < 768 ? 'flex-col' : 'flex-row'"
 				>
 					<div
@@ -137,10 +137,10 @@ const viewportLabel = computed(() => {
 			</main>
 		</BrowserFrame>
 
-		<UCard class="w-[560px] max-w-full mt-[-100px]">
+		<UCard class="w-[560px] max-w-full mt-[-100px] z-1">
 			<template #header>
 				<div class="flex justify-between items-center">
-					<h3 class="u-h3">Fluid Responsive Design Demo</h3>
+					<h3 class="u-h3 font-bold">Interactive Controls</h3>
 					<div class="flex gap-2">
 						<UBadge color="primary" variant="subtle">
 							{{ screenWidth }}px
