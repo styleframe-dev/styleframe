@@ -1,6 +1,6 @@
 ---
 title: Type-safe Composable CSS
-description: Write composable, type-safe, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
+description: From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.
 ---
 
 <!--
@@ -43,7 +43,7 @@ export default s;
 Type-safe Composable CSS 
 
 #description
-Write type-safe, composable, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
+From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.
 
 #links
     :::u-button

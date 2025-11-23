@@ -4,7 +4,7 @@
 	"bin": {
 		"styleframe": "./dist/cli.cjs"
 	},
-	"description": "A command-line interface for styleframe.",
+	"description": "From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.",
 	"type": "module",
 	"license": "MIT",
 	"files": [

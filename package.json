@@ -2,7 +2,7 @@
 	"name": "@styleframe/monorepo",
 	"version": "1.0.0",
 	"private": true,
-	"description": "Write modern, clean, composable CSS using TypeScript, with a focus on simplicity and performance.",
+	"description": "From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.",
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"scripts": {
 		"dev": "turbo run dev",

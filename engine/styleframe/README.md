@@ -3,7 +3,7 @@
 
 **Type-safe, Composable CSS in TypeScript**
 
-Write type-safe, composable, future-proof Design Systems code using styleframe's powerful TypeScript CSS API.
+From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.
 
 [![npm version](https://img.shields.io/npm/v/styleframe.svg)](https://www.npmjs.com/package/styleframe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE)
