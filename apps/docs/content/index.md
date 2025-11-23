@@ -260,15 +260,24 @@ title: styleframe.config.ts
 
 ```ts
 import { styleframe } from 'styleframe';
-import { useReset, useVariables, useGlobals, useComponents, useUtilities } from './my-theme';
+import { useColor } from '@styleframe/theme';
+import { useSpacing, useTypography } from '@orgname/theme-minimal';
+import { useComponents } from './my-components';
 
 const s = styleframe();
 
-useReset(s);
-useVariables(s);
-useGlobals(s);
+// Colors from the default theme
+const { colorPrimary, colorSecondary } = useColor(s, {
+    primary: '#318fa0',
+    secondary: '#ff6b6b'
+});
+
+// Typography and spacing from another theme
+useTypography(s);
+useSpacing(s);
+
+// Plus your custom components
 useComponents(s);
-useUtilities(s);
 
 export default s;
 ```
