@@ -45,6 +45,7 @@ export function createUtilityFunction(parent: Container, root: Root) {
 			type: "utility",
 			name,
 			factory,
+			values: {},
 		};
 
 		root.utilities.push(factoryInstance);
@@ -54,6 +55,8 @@ export function createUtilityFunction(parent: Container, root: Root) {
 			modifiers: ModifierFactory[] = [],
 		) => {
 			for (const [key, value] of Object.entries(entries)) {
+				factoryInstance.values[key] = value;
+
 				const instance: Utility<Name> = {
 					type: "utility",
 					name,

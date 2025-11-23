@@ -42,6 +42,7 @@ export type UtilityFactory<Name extends string = string> = {
 	type: "utility";
 	name: Name;
 	factory: UtilityCallbackFn;
+	values: Record<string, TokenValue>;
 };
 
 export type Utility<Name extends string = string> = {
@@ -87,8 +88,8 @@ export type Recipe<
 > = {
 	type: "recipe";
 	name: Name;
-	base: VariantDeclarationsBlock;
-	variants: Variants;
+	base?: VariantDeclarationsBlock;
+	variants?: Variants;
 	defaultVariants?: {
 		[K in keyof Variants]?: keyof Variants[K] & string;
 	};

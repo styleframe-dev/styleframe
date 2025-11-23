@@ -94,7 +94,7 @@ describe("createRecipeFunction", () => {
 					variant: "filled",
 					size: "sm",
 				},
-				declarations: { background: "primary", color: "white" },
+				css: { background: "primary", color: "white" },
 			},
 		]);
 	});
