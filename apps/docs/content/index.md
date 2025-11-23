@@ -204,8 +204,6 @@ Use styleframe's native composability to construct your Design System out of exi
     :::u-page-feature
     ---
     icon: i-lucide-infinity
-    target: _blank
-    to: /
     ---
     #title
     Infinitely [Customizable]{.text-primary}
@@ -217,8 +215,6 @@ Use styleframe's native composability to construct your Design System out of exi
     :::u-page-feature
     ---
     icon: i-lucide-blend
-    target: _blank
-    to: /
     ---
     #title
     [Mix and Match]{.text-primary} Composables
@@ -237,11 +233,11 @@ Theming Section ----------------------------------------------------------------
 orientation: horizontal
 reverse: true
 links:
--   label: Explore the default theme
+-   label: Learn about themes
     color: neutral
     variant: outline
-    to: /docs/design-tokens
-    icon: i-lucide-palette
+    to: /docs/api/themes
+    icon: i-lucide-sun-moon
 ---
 
 
