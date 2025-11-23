@@ -42,6 +42,7 @@ export async function addPackageJsonDependencies(cwd: string) {
 		packageJson.devDependencies["@styleframe/loader"] = "^2.0.0";
 		packageJson.devDependencies["@styleframe/plugin"] = "^2.0.0";
 		packageJson.devDependencies["@styleframe/pro"] = "^2.0.0";
+		packageJson.devDependencies["@styleframe/runtime"] = "^2.0.0";
 		packageJson.devDependencies["@styleframe/theme"] = "^2.0.0";
 		packageJson.devDependencies["@styleframe/transpiler"] = "^2.0.0";
 

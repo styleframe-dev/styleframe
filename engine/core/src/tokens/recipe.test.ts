@@ -75,8 +75,10 @@ describe("createRecipeFunction", () => {
 				defaultVariants: { variant: "filled", size: "sm" },
 				compoundVariants: [
 					{
-						variant: "filled",
-						size: "sm",
+						match: {
+							variant: "filled",
+							size: "sm",
+						},
 						declarations: { background: "primary", color: "white" },
 					},
 				],
@@ -90,8 +92,10 @@ describe("createRecipeFunction", () => {
 		expect(instance.compoundVariants?.length).toBe(1);
 		expect(instance.compoundVariants).toEqual([
 			{
-				variant: "filled",
-				size: "sm",
+				match: {
+					variant: "filled",
+					size: "sm",
+				},
 				declarations: { background: "primary", color: "white" },
 			},
 		]);

@@ -1,0 +1,53 @@
+{
+	"name": "@styleframe/runtime",
+	"version": "1.0.0",
+	"type": "module",
+	"types": "./dist/runtime.d.ts",
+	"module": "./dist/runtime.js",
+	"main": "./dist/runtime.umd.cjs",
+	"exports": {
+		".": {
+			"types": "./dist/runtime.d.ts",
+			"import": "./dist/runtime.js",
+			"require": "./dist/runtime.umd.cjs"
+		}
+	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"CHANGELOG.md",
+		"README.md"
+	],
+	"scripts": {
+		"dev": "vite build --watch",
+		"build": "pnpm typecheck && vite build",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"test:dev": "vitest --watch"
+	},
+	"devDependencies": {
+		"@styleframe/config-typescript": "workspace:^2",
+		"@styleframe/config-vite": "workspace:^2",
+		"@styleframe/core": "workspace:^2",
+		"@vitest/coverage-v8": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:",
+		"vitest": "catalog:",
+		"vite-plugin-dts": "catalog:"
+	},
+	"peerDependencies": {
+		"@styleframe/core": "workspace:^2"
+	},
+	"homepage": "https://github.com/runtime-dev/runtime#readme",
+	"bugs": {
+		"url": "https://github.com/runtime-dev/runtime/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/runtime-dev/runtime.git"
+	},
+	"author": "Alex Grozav <alex@runtime.dev>",
+	"overrides": {
+		"vite": "npm:rolldown-vite@latest"
+	}
+}

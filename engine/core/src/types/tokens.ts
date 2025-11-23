@@ -92,13 +92,12 @@ export type Recipe<
 	defaultVariants?: {
 		[K in keyof Variants]?: keyof Variants[K] & string;
 	};
-	compoundVariants?: Array<
-		{
+	compoundVariants?: Array<{
+		match: {
 			[K in keyof Variants]?: keyof Variants[K] & string;
-		} & {
-			declarations: VariantDeclarationsBlock;
-		}
-	>;
+		};
+		declarations: VariantDeclarationsBlock;
+	}>;
 };
 
 export type PrimitiveTokenValue = number | string | boolean | null | undefined;
