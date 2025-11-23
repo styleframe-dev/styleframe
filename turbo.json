@@ -6,6 +6,7 @@
 			"cache": true,
 			"inputs": [
 				"src/**",
+				"content/**",
 				"vite.config.ts",
 				"tsdown.config.ts",
 				"package.json"

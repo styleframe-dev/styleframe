@@ -13,7 +13,7 @@
 		"ci:prepublish": "pnpm build:nodocs",
 		"build": "turbo run build",
 		"build:nodocs": "turbo run build --filter './engine/*' --filter './tooling/*' --filter './theme'",
-		"build:docs": "turbo run build --filter './docs'",
+		"build:docs": "turbo run build --filter './apps/docs'",
 		"test": "turbo run test",
 		"test:integration": "turbo run start --filter './testing/integration'",
 		"typecheck": "turbo run typecheck",
