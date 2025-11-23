@@ -38,15 +38,15 @@
 	"peerDependencies": {
 		"@styleframe/core": "workspace:^2"
 	},
-	"homepage": "https://github.com/runtime-dev/runtime#readme",
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
 	"bugs": {
-		"url": "https://github.com/runtime-dev/runtime/issues"
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/runtime-dev/runtime.git"
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
 	},
-	"author": "Alex Grozav <alex@runtime.dev>",
+	"author": "Alex Grozav <alex@styleframe.dev>",
 	"overrides": {
 		"vite": "npm:rolldown-vite@latest"
 	}

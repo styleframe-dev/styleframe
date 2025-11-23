@@ -4,7 +4,7 @@ import type { ConsumeFunction } from "../../types";
 import { isUppercase, toCamelCase } from "../../utils";
 
 /**
- * Consumes a ref instance, equivalent to referencing a CSS variable with optional fallback
+ * Consumes a recipe instance and generates TypeScript code for it.
  */
 export function createRecipeConsumer(_consume: ConsumeFunction) {
 	return function consumeRecipe(
