@@ -1,3 +1,5 @@
+import type { TokenValue } from "./tokens";
+
 export type VariableNameFn = (options: { name: string }) => string;
 
 export type UtilitySelectorFn = (options: {
@@ -8,6 +10,11 @@ export type UtilitySelectorFn = (options: {
 
 export type ThemeSelectorFn = (options: { name: string }) => string;
 
+export type RecipeAutogenerateFn = (options: {
+	utilityName: string;
+	value: TokenValue;
+}) => string;
+
 export type StyleframeOptions = {
 	indent?: string;
 	variables?: {
@@ -16,7 +23,10 @@ export type StyleframeOptions = {
 	utilities?: {
 		selector?: UtilitySelectorFn;
 	};
-	theme?: {
+	themes?: {
 		selector?: ThemeSelectorFn;
+	};
+	recipes: {
+		autogenerate?: RecipeAutogenerateFn;
 	};
 };

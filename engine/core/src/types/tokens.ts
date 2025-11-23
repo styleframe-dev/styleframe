@@ -87,7 +87,7 @@ export type Recipe<
 > = {
 	type: "recipe";
 	name: Name;
-	defaults: VariantDeclarationsBlock;
+	base: VariantDeclarationsBlock;
 	variants: Variants;
 	defaultVariants?: {
 		[K in keyof Variants]?: keyof Variants[K] & string;
@@ -96,7 +96,7 @@ export type Recipe<
 		match: {
 			[K in keyof Variants]?: keyof Variants[K] & string;
 		};
-		declarations: VariantDeclarationsBlock;
+		css: VariantDeclarationsBlock;
 	}>;
 };
 

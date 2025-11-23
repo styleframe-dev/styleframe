@@ -17,10 +17,10 @@ describe("createRecipeFunction", () => {
 	});
 
 	test("should register recipe in root.recipes only", () => {
-		const instance = recipe(
-			"button",
-			{ borderWidth: "thin", borderStyle: "solid" },
-			{
+		const instance = recipe({
+			name: "button",
+			base: { borderWidth: "thin", borderStyle: "solid" },
+			variants: {
 				color: {
 					primary: { background: "primary", color: "white" },
 					secondary: { background: "secondary", color: "white" },
@@ -31,12 +31,12 @@ describe("createRecipeFunction", () => {
 					lg: { padding: "lg" },
 				},
 			},
-		);
+		});
 
 		expect(instance).toEqual({
 			type: "recipe",
 			name: "button",
-			defaults: { borderWidth: "thin", borderStyle: "solid" },
+			base: { borderWidth: "thin", borderStyle: "solid" },
 			variants: {
 				color: {
 					primary: { background: "primary", color: "white" },
@@ -58,10 +58,10 @@ describe("createRecipeFunction", () => {
 	});
 
 	test("should support options: defaultVariants and compoundVariants", () => {
-		const instance = recipe(
-			"chip",
-			{ borderWidth: "thin" },
-			{
+		const instance = recipe({
+			name: "chip",
+			base: { borderWidth: "thin" },
+			variants: {
 				variant: {
 					filled: { background: "primary", color: "white" },
 					outline: { background: "transparent", color: "primary" },
@@ -71,19 +71,17 @@ describe("createRecipeFunction", () => {
 					md: { padding: "md" },
 				},
 			},
-			{
-				defaultVariants: { variant: "filled", size: "sm" },
-				compoundVariants: [
-					{
-						match: {
-							variant: "filled",
-							size: "sm",
-						},
-						declarations: { background: "primary", color: "white" },
+			defaultVariants: { variant: "filled", size: "sm" },
+			compoundVariants: [
+				{
+					match: {
+						variant: "filled",
+						size: "sm",
 					},
-				],
-			},
-		);
+					css: { background: "primary", color: "white" },
+				},
+			],
+		});
 
 		expect(instance.defaultVariants).toEqual({
 			variant: "filled",
@@ -102,7 +100,7 @@ describe("createRecipeFunction", () => {
 	});
 
 	test("should maintain type information for recipe name", () => {
-		const instance = recipe("typed-recipe", {}, {});
+		const instance = recipe({ name: "typed-recipe", base: {}, variants: {} });
 		const name: "typed-recipe" = instance.name;
 		expect(name).toBe("typed-recipe");
 	});
