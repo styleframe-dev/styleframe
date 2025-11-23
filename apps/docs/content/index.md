@@ -43,7 +43,7 @@ export default s;
 Type-safe Composable CSS 
 
 #description
-From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.
+From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API.
 
 #links
     :::u-button
@@ -158,12 +158,93 @@ Built for Excellent Developer Experience
 :: 
 
 <!-- 
+Architecture Section ----------------------------------------------------------------------------------------------
+-->
+
+::u-page-section{class="border-t border-default"}
+---
+orientation: horizontal
+---
+
+::browser-frame
+---
+title: Output
+---
+
+```css
+/* Static CSS generated at build time */
+.button {
+    background-color: var(--color-primary);
+    padding: var(--spacing);
+}
+```
+
+```ts
+/* Optional runtime generated for Recipes */
+export const button = recipe('button', {
+    background: "primary",
+}, {
+    size: {
+        sm: { padding: 'sm' },
+        md: { padding: 'md' },
+        lg: { padding: 'lg' }
+    }
+});
+```
+
+::
+
+#title
+Zero-Runtime by Default, Dynamic When You Need It
+
+#description
+Styleframe generates CSS at build time for maximum performance. When you need prop-based styling, an optional runtime handles Recipes.
+
+#features
+    :::u-page-feature
+    ---
+    icon: i-lucide-zap
+    ---
+    #title
+    [Static]{.text-primary} Generation
+
+    #description
+    CSS is generated at build time, resulting in zero runtime overhead for your base styles.
+    :::
+
+    :::u-page-feature
+    ---
+    icon: i-lucide-between-horizontal-start
+    to: /docs/getting-started/configuration
+    ---
+    #title
+    [Dual Output]{.text-primary} 
+
+    #description
+    The transpiler outputs both CSS and TypeScript. Configure output on a per-token basis to control exactly what gets generated.
+    :::
+
+    :::u-page-feature
+    ---
+    icon: i-lucide-play
+    to: /docs/api/recipes
+    ---
+    #title
+    [Optional Runtime]{.text-primary}
+
+    #description
+    Need prop-based class generation? Use Recipes for dynamic component variants without sacrificing the static benefits.
+    :::
+::
+
+<!-- 
 Composability Section ----------------------------------------------------------------------------------------------
 -->
 
 ::u-page-section
 ---
 orientation: horizontal
+reverse: true
 links:
 -   label: Explore the default theme
     color: neutral
@@ -231,7 +312,6 @@ Theming Section ----------------------------------------------------------------
 ::u-page-section
 ---
 orientation: horizontal
-reverse: true
 links:
 -   label: Learn about themes
     color: neutral
