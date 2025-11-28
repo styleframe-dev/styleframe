@@ -773,26 +773,24 @@ describe("merge", () => {
 
 	describe("recipes concatenation", () => {
 		it("should concatenate recipes from both instances", () => {
-			base.recipe(
-				"button",
-				{},
-				{
+			base.recipe({
+				name: "button",
+				variants: {
 					size: {
 						sm: { fontSize: "0.875rem" },
 						lg: { fontSize: "1.125rem" },
 					},
 				},
-			);
-			extension.recipe(
-				"card",
-				{},
-				{
+			});
+			extension.recipe({
+				name: "card",
+				variants: {
 					elevation: {
 						low: { boxShadow: "0 1px 2px rgba(0,0,0,0.1)" },
 						high: { boxShadow: "0 4px 6px rgba(0,0,0,0.1)" },
 					},
 				},
-			);
+			});
 
 			const result = merge(base, extension);
 

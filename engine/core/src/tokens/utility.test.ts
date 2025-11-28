@@ -29,6 +29,82 @@ describe("createUtilityFunction", () => {
 		expect(root.utilities[0]).toMatchObject({
 			type: "utility",
 			name: "margin",
+			values: {},
+		});
+	});
+
+	test("should store values on factoryInstance when utility is used", () => {
+		const createPaddingUtility = utility("padding", ({ value }) => ({
+			padding: value,
+		}));
+
+		createPaddingUtility({
+			sm: "8px",
+			md: "16px",
+			lg: "24px",
+		});
+
+		expect(root.utilities[0]?.values).toEqual({
+			sm: "8px",
+			md: "16px",
+			lg: "24px",
+		});
+	});
+
+	test("should accumulate values when utility is called multiple times", () => {
+		const createSpacingUtility = utility("spacing", ({ value }) => ({
+			margin: value,
+		}));
+
+		createSpacingUtility({
+			sm: "4px",
+			md: "8px",
+		});
+
+		createSpacingUtility({
+			lg: "16px",
+			xl: "32px",
+		});
+
+		expect(root.utilities[0]?.values).toEqual({
+			sm: "4px",
+			md: "8px",
+			lg: "16px",
+			xl: "32px",
+		});
+	});
+
+	test("should overwrite values with same key on subsequent calls", () => {
+		const createColorUtility = utility("color", ({ value }) => ({
+			color: value,
+		}));
+
+		createColorUtility({
+			primary: "blue",
+		});
+
+		createColorUtility({
+			primary: "red",
+		});
+
+		expect(root.utilities[0]?.values).toEqual({
+			primary: "red",
+		});
+	});
+
+	test("should store boolean values correctly", () => {
+		const createHiddenUtility = utility("hidden", ({ value }) => ({
+			display: value ? "none" : "block",
+		}));
+
+		createHiddenUtility({
+			default: true,
+			visible: false,
+		});
+
+		expect(root.utilities[0]?.values).toEqual({
+			default: true,
+			visible: false,
 		});
 	});
 

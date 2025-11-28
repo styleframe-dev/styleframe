@@ -4,6 +4,7 @@ import type {
 	CSS,
 	ModifierFactory,
 	PrimitiveTokenValue,
+	Recipe,
 	Reference,
 	Root,
 	Selector,
@@ -66,6 +67,10 @@ export function isTheme(value: unknown): value is Theme {
 
 export function isRoot(value: unknown): value is Root {
 	return isToken(value, "root");
+}
+
+export function isRecipe(value: unknown): value is Recipe {
+	return isToken(value, "recipe");
 }
 
 export function isPrimitiveTokenValue(

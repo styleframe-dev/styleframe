@@ -42,6 +42,7 @@ export type UtilityFactory<Name extends string = string> = {
 	type: "utility";
 	name: Name;
 	factory: UtilityCallbackFn;
+	values: Record<string, TokenValue>;
 };
 
 export type Utility<Name extends string = string> = {
@@ -87,18 +88,17 @@ export type Recipe<
 > = {
 	type: "recipe";
 	name: Name;
-	defaults: VariantDeclarationsBlock;
-	variants: Variants;
+	base?: VariantDeclarationsBlock;
+	variants?: Variants;
 	defaultVariants?: {
 		[K in keyof Variants]?: keyof Variants[K] & string;
 	};
-	compoundVariants?: Array<
-		{
+	compoundVariants?: Array<{
+		match: {
 			[K in keyof Variants]?: keyof Variants[K] & string;
-		} & {
-			declarations: VariantDeclarationsBlock;
-		}
-	>;
+		};
+		css: VariantDeclarationsBlock;
+	}>;
 };
 
 export type PrimitiveTokenValue = number | string | boolean | null | undefined;
