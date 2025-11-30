@@ -15,12 +15,12 @@ export const defaultColorTintValues = {
  * @usage
  * const s = styleframe();
  *
- * const colorPrimary = s.variable("color--primary", "#007bff");
+ * const { colorPrimary } = useColor(s, { primary: "#007bff" });
  *
  * const {
- *   colorPrimaryTint50, // Variable<'color--primary-tint-50'>
- *   colorPrimaryTint100, // Variable<'color--primary-tint-100'>
- *   colorPrimaryTint150, // Variable<'color--primary-tint-150'>
+ *   colorPrimaryTint50, // Variable<'color.primary-tint-50'>
+ *   colorPrimaryTint100, // Variable<'color.primary-tint-100'>
+ *   colorPrimaryTint150, // Variable<'color.primary-tint-150'>
  *   ...
  * } = useColorTintLevels(s, colorPrimary, {
  *   50: 5,

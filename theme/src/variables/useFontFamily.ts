@@ -19,8 +19,8 @@ export const defaultFontFamilyValues = {
  *
  * const {
  *   fontFamily, // Variable<'font-family'>
- *   fontFamilyPrint, // Variable<'font-family--print'>
- *   fontFamilyMono, // Variable<'font-family--mono'>
+ *   fontFamilyPrint, // Variable<'font-family.print'>
+ *   fontFamilyMono, // Variable<'font-family.mono'>
  * } = useFontFamily(s, {
  *   default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif",
  *   print: "'Georgia', 'Times New Roman', 'Times', serif",

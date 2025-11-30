@@ -43,7 +43,7 @@ export default s;
 Type-safe Composable CSS 
 
 #description
-From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.
+From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API.
 
 #links
     :::u-button
@@ -134,7 +134,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-settings
     target: _blank
-    to: /docs/getting-started/configuration
+    to: /docs/api/instance#configuration-options
     ---
     #title
     Fully [Configurable]{.text-primary}
@@ -158,12 +158,93 @@ Built for Excellent Developer Experience
 :: 
 
 <!-- 
+Architecture Section ----------------------------------------------------------------------------------------------
+-->
+
+::u-page-section{class="border-t border-default"}
+---
+orientation: horizontal
+---
+
+::browser-frame
+---
+title: Output
+---
+
+```css
+/* Static CSS generated at build time */
+.button {
+    background-color: var(--color-primary);
+    padding: var(--spacing);
+}
+```
+
+```ts
+/* Optional runtime generated for Recipes */
+export const button = recipe('button', {
+    background: "primary",
+}, {
+    size: {
+        sm: { padding: 'sm' },
+        md: { padding: 'md' },
+        lg: { padding: 'lg' }
+    }
+});
+```
+
+::
+
+#title
+Zero-Runtime by Default, Dynamic When You Need It
+
+#description
+Styleframe generates CSS at build time for maximum performance. When you need prop-based styling, an optional runtime handles [Recipes](/docs/api/recipes).
+
+#features
+    :::u-page-feature
+    ---
+    icon: i-lucide-zap
+    ---
+    #title
+    [Static]{.text-primary} Generation
+
+    #description
+    CSS is generated at build time, resulting in zero runtime overhead for your base styles.
+    :::
+
+    :::u-page-feature
+    ---
+    icon: i-lucide-between-horizontal-start
+    to: /docs/api/instance#configuration-options
+    ---
+    #title
+    [Dual Output]{.text-primary} 
+
+    #description
+    The transpiler outputs both CSS and TypeScript. Configure output on a per-token basis to control exactly what gets generated.
+    :::
+
+    :::u-page-feature
+    ---
+    icon: i-lucide-play
+    to: /docs/api/recipes
+    ---
+    #title
+    [Optional Runtime]{.text-primary}
+
+    #description
+    Need prop-based class generation? Use Recipes for dynamic component variants without sacrificing the static benefits.
+    :::
+::
+
+<!-- 
 Composability Section ----------------------------------------------------------------------------------------------
 -->
 
 ::u-page-section
 ---
 orientation: horizontal
+reverse: true
 links:
 -   label: Explore the default theme
     color: neutral
@@ -179,15 +260,24 @@ title: styleframe.config.ts
 
 ```ts
 import { styleframe } from 'styleframe';
-import { useReset, useVariables, useGlobals, useComponents, useUtilities } from './my-theme';
+import { useColor } from '@styleframe/theme';
+import { useSpacing, useTypography } from '@orgname/theme-minimal';
+import { useComponents } from './my-components';
 
 const s = styleframe();
 
-useReset(s);
-useVariables(s);
-useGlobals(s);
+// Colors from the default theme
+const { colorPrimary, colorSecondary } = useColor(s, {
+    primary: '#318fa0',
+    secondary: '#ff6b6b'
+});
+
+// Typography and spacing from another theme
+useTypography(s);
+useSpacing(s);
+
+// Plus your custom components
 useComponents(s);
-useUtilities(s);
 
 export default s;
 ```
@@ -231,7 +321,6 @@ Theming Section ----------------------------------------------------------------
 ::u-page-section
 ---
 orientation: horizontal
-reverse: true
 links:
 -   label: Learn about themes
     color: neutral

@@ -28,7 +28,7 @@ describe("useBreakpoint", () => {
 
 		expect(breakpointSm).toEqual({
 			type: "variable",
-			name: "breakpoint--sm",
+			name: "breakpoint.sm",
 			value: 576,
 		});
 
@@ -48,25 +48,25 @@ describe("useBreakpoint", () => {
 
 		expect(breakpointXs).toEqual({
 			type: "variable",
-			name: "breakpoint--xs",
+			name: "breakpoint.xs",
 			value: 0,
 		});
 
 		expect(breakpointSm).toEqual({
 			type: "variable",
-			name: "breakpoint--sm",
+			name: "breakpoint.sm",
 			value: 576,
 		});
 
 		expect(breakpointMd).toEqual({
 			type: "variable",
-			name: "breakpoint--md",
+			name: "breakpoint.md",
 			value: 768,
 		});
 
 		expect(breakpointLg).toEqual({
 			type: "variable",
-			name: "breakpoint--lg",
+			name: "breakpoint.lg",
 			value: 992,
 		});
 	});
@@ -79,8 +79,8 @@ describe("useBreakpoint", () => {
 		});
 
 		expect(s.root.variables).toHaveLength(2);
-		expect(s.root.variables[0]?.name).toBe("breakpoint--sm");
-		expect(s.root.variables[1]?.name).toBe("breakpoint--md");
+		expect(s.root.variables[0]?.name).toBe("breakpoint.sm");
+		expect(s.root.variables[1]?.name).toBe("breakpoint.md");
 	});
 
 	it("should handle kebab-case breakpoint names", () => {
@@ -91,7 +91,7 @@ describe("useBreakpoint", () => {
 
 		expect(breakpointExtraLarge).toEqual({
 			type: "variable",
-			name: "breakpoint--extra-large",
+			name: "breakpoint.extra-large",
 			value: 1440,
 		});
 	});
@@ -104,7 +104,7 @@ describe("useBreakpoint", () => {
 
 		expect(breakpointTabletPortrait).toEqual({
 			type: "variable",
-			name: "breakpoint--tablet_portrait",
+			name: "breakpoint.tablet_portrait",
 			value: 768,
 		});
 	});
@@ -117,7 +117,7 @@ describe("useBreakpoint", () => {
 
 		expect(breakpoint1024).toEqual({
 			type: "variable",
-			name: "breakpoint--1024",
+			name: "breakpoint.1024",
 			value: 1024,
 		});
 	});
@@ -130,7 +130,7 @@ describe("useBreakpoint", () => {
 
 		expect(breakpointMd).toEqual({
 			type: "variable",
-			name: "breakpoint--md",
+			name: "breakpoint.md",
 			value: 768,
 		});
 	});
@@ -143,7 +143,7 @@ describe("useBreakpoint", () => {
 
 		expect(breakpointLg).toEqual({
 			type: "variable",
-			name: "breakpoint--lg",
+			name: "breakpoint.lg",
 			value: "992px",
 		});
 	});
@@ -156,7 +156,7 @@ describe("useBreakpoint", () => {
 
 		expect(breakpointBase).toEqual({
 			type: "variable",
-			name: "breakpoint--base",
+			name: "breakpoint.base",
 			value: "48em",
 		});
 	});
@@ -169,7 +169,7 @@ describe("useBreakpoint", () => {
 
 		expect(breakpointFluid).toEqual({
 			type: "variable",
-			name: "breakpoint--fluid",
+			name: "breakpoint.fluid",
 			value: "60rem",
 		});
 	});
@@ -182,7 +182,7 @@ describe("useBreakpoint", () => {
 
 		expect(breakpointXs).toEqual({
 			type: "variable",
-			name: "breakpoint--xs",
+			name: "breakpoint.xs",
 			value: 0,
 		});
 	});
@@ -346,11 +346,11 @@ describe("useBreakpoint", () => {
 			});
 
 			// Type assertions to verify the generic types are preserved
-			const smBreakpoint: Variable<"breakpoint--sm"> = breakpoints.breakpointSm;
-			const mdBreakpoint: Variable<"breakpoint--md"> = breakpoints.breakpointMd;
+			const smBreakpoint: Variable<"breakpoint.sm"> = breakpoints.breakpointSm;
+			const mdBreakpoint: Variable<"breakpoint.md"> = breakpoints.breakpointMd;
 
-			expect(smBreakpoint.name).toBe("breakpoint--sm");
-			expect(mdBreakpoint.name).toBe("breakpoint--md");
+			expect(smBreakpoint.name).toBe("breakpoint.sm");
+			expect(mdBreakpoint.name).toBe("breakpoint.md");
 		});
 
 		it("should maintain type information for kebab-case names", () => {
@@ -359,8 +359,8 @@ describe("useBreakpoint", () => {
 				"extra-large": 1440,
 			});
 
-			const typed: Variable<"breakpoint--extra-large"> = breakpointExtraLarge;
-			expect(typed.name).toBe("breakpoint--extra-large");
+			const typed: Variable<"breakpoint.extra-large"> = breakpointExtraLarge;
+			expect(typed.name).toBe("breakpoint.extra-large");
 		});
 
 		it("should work with const assertion", () => {
@@ -372,8 +372,8 @@ describe("useBreakpoint", () => {
 
 			const breakpoints = useBreakpoint(s, breakpointConfig);
 
-			expect(breakpoints.breakpointSm.name).toBe("breakpoint--sm");
-			expect(breakpoints.breakpointMd.name).toBe("breakpoint--md");
+			expect(breakpoints.breakpointSm.name).toBe("breakpoint.sm");
+			expect(breakpoints.breakpointMd.name).toBe("breakpoint.md");
 		});
 	});
 
@@ -417,7 +417,7 @@ describe("useBreakpoint", () => {
 			});
 
 			expect(breakpointSm.value).toBe(576);
-			expect(breakpointSm.name).toBe("breakpoint--sm");
+			expect(breakpointSm.name).toBe("breakpoint.sm");
 		});
 
 		it("should handle ascending breakpoint order", () => {

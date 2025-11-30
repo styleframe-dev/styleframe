@@ -118,7 +118,7 @@ describe("createUtilityConsumer", () => {
 
 		const result = consumeUtility(hiddenUtility, options);
 
-		const expected = `._hidden\\:default {
+		const expected = `._hidden {
 	display: none;
 }`;
 
@@ -145,7 +145,7 @@ describe("createUtilityConsumer", () => {
 
 		const result = consumeUtility(visibilityUtility, options);
 
-		const expected = `._visible\\:default {
+		const expected = `._visible {
 	visibility: visible;
 }`;
 

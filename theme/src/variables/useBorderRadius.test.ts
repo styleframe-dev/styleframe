@@ -28,7 +28,7 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusSm).toEqual({
 			type: "variable",
-			name: "border-radius--sm",
+			name: "border-radius.sm",
 			value: "0.125rem",
 		});
 
@@ -54,19 +54,19 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusSm).toEqual({
 			type: "variable",
-			name: "border-radius--sm",
+			name: "border-radius.sm",
 			value: "0.125rem",
 		});
 
 		expect(borderRadiusMd).toEqual({
 			type: "variable",
-			name: "border-radius--md",
+			name: "border-radius.md",
 			value: "0.25rem",
 		});
 
 		expect(borderRadiusLg).toEqual({
 			type: "variable",
-			name: "border-radius--lg",
+			name: "border-radius.lg",
 			value: "0.5rem",
 		});
 	});
@@ -80,7 +80,7 @@ describe("useBorderRadius", () => {
 
 		expect(s.root.variables).toHaveLength(2);
 		expect(s.root.variables[0]?.name).toBe("border-radius");
-		expect(s.root.variables[1]?.name).toBe("border-radius--sm");
+		expect(s.root.variables[1]?.name).toBe("border-radius.sm");
 	});
 
 	it("should handle kebab-case border-radius names", () => {
@@ -91,7 +91,7 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusExtraLarge).toEqual({
 			type: "variable",
-			name: "border-radius--extra-large",
+			name: "border-radius.extra-large",
 			value: "1rem",
 		});
 	});
@@ -104,7 +104,7 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusCardCorner).toEqual({
 			type: "variable",
-			name: "border-radius--card_corner",
+			name: "border-radius.card_corner",
 			value: "0.375rem",
 		});
 	});
@@ -117,7 +117,7 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadius100).toEqual({
 			type: "variable",
-			name: "border-radius--100",
+			name: "border-radius.100",
 			value: "0.25rem",
 		});
 	});
@@ -143,7 +143,7 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusBase).toEqual({
 			type: "variable",
-			name: "border-radius--base",
+			name: "border-radius.base",
 			value: "0.5em",
 		});
 	});
@@ -156,7 +156,7 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusCircle).toEqual({
 			type: "variable",
-			name: "border-radius--circle",
+			name: "border-radius.circle",
 			value: "50%",
 		});
 	});
@@ -169,7 +169,7 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusFluid).toEqual({
 			type: "variable",
-			name: "border-radius--fluid",
+			name: "border-radius.fluid",
 			value: "1vw",
 		});
 	});
@@ -301,11 +301,10 @@ describe("useBorderRadius", () => {
 
 			// Type assertions to verify the generic types are preserved
 			const defaultBorderRadius: Variable<"border-radius"> = radii.borderRadius;
-			const smBorderRadius: Variable<"border-radius--sm"> =
-				radii.borderRadiusSm;
+			const smBorderRadius: Variable<"border-radius.sm"> = radii.borderRadiusSm;
 
 			expect(defaultBorderRadius.name).toBe("border-radius");
-			expect(smBorderRadius.name).toBe("border-radius--sm");
+			expect(smBorderRadius.name).toBe("border-radius.sm");
 		});
 
 		it("should maintain type information for kebab-case names", () => {
@@ -314,9 +313,9 @@ describe("useBorderRadius", () => {
 				"extra-large": "1rem",
 			});
 
-			const typed: Variable<"border-radius--extra-large"> =
+			const typed: Variable<"border-radius.extra-large"> =
 				borderRadiusExtraLarge;
-			expect(typed.name).toBe("border-radius--extra-large");
+			expect(typed.name).toBe("border-radius.extra-large");
 		});
 
 		it("should work with const assertion", () => {
@@ -329,7 +328,7 @@ describe("useBorderRadius", () => {
 			const radii = useBorderRadius(s, borderRadiusConfig);
 
 			expect(radii.borderRadius.name).toBe("border-radius");
-			expect(radii.borderRadiusSm.name).toBe("border-radius--sm");
+			expect(radii.borderRadiusSm.name).toBe("border-radius.sm");
 		});
 	});
 });

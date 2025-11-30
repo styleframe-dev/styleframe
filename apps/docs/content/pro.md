@@ -90,7 +90,7 @@ Premium Features for Professional Design Systems
     ---
     icon: i-lucide-zap
     target: _blank
-    to: /docs/design-tokens/fluid-design/clamp
+    to: /docs/design-tokens/fluid-design/viewport
     ---
     #title
     [Performance]{.text-primary} Optimized

@@ -81,4 +81,49 @@ describe("createRefConsumer", () => {
 		const nullRef = ref("null-var", null);
 		expect(consumeRef(nullRef, options)).toBe("var(--null-var)");
 	});
+
+	it("should convert dot notation to double dashes in reference names", () => {
+		const colorRef = ref("color.primary");
+		expect(consumeRef(colorRef, options)).toBe("var(--color--primary)");
+	});
+
+	it("should handle multiple dots in reference names (nested paths)", () => {
+		const colorRef = ref("color.primary.500");
+		expect(consumeRef(colorRef, options)).toBe("var(--color--primary--500)");
+	});
+
+	it("should handle dot notation with fallback value", () => {
+		const colorRef = ref("color.primary", "#006cff");
+		expect(consumeRef(colorRef, options)).toBe(
+			"var(--color--primary, #006cff)",
+		);
+	});
+
+	it("should handle dot notation when referencing variables with dots", () => {
+		const colorVar = variable("color.primary", "#006cff");
+		const colorRef = ref(colorVar);
+		expect(consumeRef(colorRef, options)).toBe("var(--color--primary)");
+	});
+
+	it("should handle mixed dot and dash notation in references", () => {
+		const colorRef = ref("color.primary-500");
+		expect(consumeRef(colorRef, options)).toBe("var(--color--primary-500)");
+	});
+
+	it("should apply custom variable name function with dot notation in references", () => {
+		const prefixOptions: StyleframeOptions = {
+			variables: {
+				name: ({ name }) => `--sf-${name.replaceAll(".", "-")}`,
+			},
+		};
+		const colorRef = ref("color.primary");
+		expect(consumeRef(colorRef, prefixOptions)).toBe("var(--sf-color-primary)");
+	});
+
+	it("should handle dot notation with complex fallback values", () => {
+		const spacingRef = ref("spacing.md", "calc(1rem + 4px)");
+		expect(consumeRef(spacingRef, options)).toBe(
+			"var(--spacing--md, calc(1rem + 4px))",
+		);
+	});
 });

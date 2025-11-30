@@ -1,5 +1,17 @@
 # styleframe
 
+## 2.2.0
+
+### Minor Changes
+
+- [#68](https://github.com/styleframe-dev/styleframe/pull/68) [`653d1fc`](https://github.com/styleframe-dev/styleframe/commit/653d1fc4e8fb80f8c3371e728ffc962cf1fb1cec) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add support for dot notation in variable names
+
+### Patch Changes
+
+- Updated dependencies [[`7d32059`](https://github.com/styleframe-dev/styleframe/commit/7d320590a311ace8882a5a29db3a911c24b53710), [`653d1fc`](https://github.com/styleframe-dev/styleframe/commit/653d1fc4e8fb80f8c3371e728ffc962cf1fb1cec)]:
+  - @styleframe/transpiler@2.3.0
+  - @styleframe/core@2.3.0
+
 ## 2.1.1
 
 ### Patch Changes

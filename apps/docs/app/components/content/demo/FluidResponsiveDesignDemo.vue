@@ -71,7 +71,7 @@ const viewportLabel = computed(() => {
     class="fluid-responsive-design-demo relative flex flex-col items-center mx-2"
   >
     <BrowserFrame
-      title="Fluid Responsive Design - smnyttyleframe Pro"
+      title="Fluid Responsive Design - styleframe Pro"
       :style="{ width: `${screenWidth}px` }"
       class="mb-6 max-w-full bg-gradient-to-br from-slate-300/80 via-slate-300/50 to-slate-300/10 dark:from-slate-800/10 dark:via-slate-800/40 dark:to-slate-800/10"
     >

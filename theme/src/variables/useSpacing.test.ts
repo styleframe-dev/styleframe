@@ -28,7 +28,7 @@ describe("useSpacing", () => {
 
 		expect(spacingSm).toEqual({
 			type: "variable",
-			name: "spacing--sm",
+			name: "spacing.sm",
 			value: "0.5rem",
 		});
 
@@ -47,19 +47,19 @@ describe("useSpacing", () => {
 
 		expect(spacingSm).toEqual({
 			type: "variable",
-			name: "spacing--sm",
+			name: "spacing.sm",
 			value: "0.5rem",
 		});
 
 		expect(spacingMd).toEqual({
 			type: "variable",
-			name: "spacing--md",
+			name: "spacing.md",
 			value: "1rem",
 		});
 
 		expect(spacingLg).toEqual({
 			type: "variable",
-			name: "spacing--lg",
+			name: "spacing.lg",
 			value: "2rem",
 		});
 
@@ -68,7 +68,7 @@ describe("useSpacing", () => {
 			name: "spacing",
 			value: {
 				type: "reference",
-				name: "spacing--md",
+				name: "spacing.md",
 				fallback: undefined,
 			},
 		});
@@ -83,7 +83,7 @@ describe("useSpacing", () => {
 
 		expect(s.root.variables).toHaveLength(2);
 		expect(s.root.variables[0]?.name).toBe("spacing");
-		expect(s.root.variables[1]?.name).toBe("spacing--sm");
+		expect(s.root.variables[1]?.name).toBe("spacing.sm");
 	});
 
 	it("should handle kebab-case spacing names", () => {
@@ -94,7 +94,7 @@ describe("useSpacing", () => {
 
 		expect(spacingExtraLarge).toEqual({
 			type: "variable",
-			name: "spacing--extra-large",
+			name: "spacing.extra-large",
 			value: "3rem",
 		});
 	});
@@ -107,7 +107,7 @@ describe("useSpacing", () => {
 
 		expect(spacingCardPadding).toEqual({
 			type: "variable",
-			name: "spacing--card_padding",
+			name: "spacing.card_padding",
 			value: "1.5rem",
 		});
 	});
@@ -120,7 +120,7 @@ describe("useSpacing", () => {
 
 		expect(spacing100).toEqual({
 			type: "variable",
-			name: "spacing--100",
+			name: "spacing.100",
 			value: "0.25rem",
 		});
 	});
@@ -146,7 +146,7 @@ describe("useSpacing", () => {
 
 		expect(spacingBase).toEqual({
 			type: "variable",
-			name: "spacing--base",
+			name: "spacing.base",
 			value: "1.5em",
 		});
 	});
@@ -159,7 +159,7 @@ describe("useSpacing", () => {
 
 		expect(spacingRelative).toEqual({
 			type: "variable",
-			name: "spacing--relative",
+			name: "spacing.relative",
 			value: "5%",
 		});
 	});
@@ -172,7 +172,7 @@ describe("useSpacing", () => {
 
 		expect(spacingFluid).toEqual({
 			type: "variable",
-			name: "spacing--fluid",
+			name: "spacing.fluid",
 			value: "2.5vw",
 		});
 	});
@@ -257,7 +257,7 @@ describe("useSpacing", () => {
 		expect(spaces.spacingSm.value).toBe("0.5rem");
 		expect(spaces.spacing.value).toEqual({
 			type: "reference",
-			name: "spacing--md",
+			name: "spacing.md",
 			fallback: undefined,
 		});
 		expect(spaces.spacingMd.value).toBe("1rem");
@@ -277,10 +277,10 @@ describe("useSpacing", () => {
 
 			// Type assertions to verify the generic types are preserved
 			const defaultSpacing: Variable<"spacing"> = spaces.spacing;
-			const smSpacing: Variable<"spacing--sm"> = spaces.spacingSm;
+			const smSpacing: Variable<"spacing.sm"> = spaces.spacingSm;
 
 			expect(defaultSpacing.name).toBe("spacing");
-			expect(smSpacing.name).toBe("spacing--sm");
+			expect(smSpacing.name).toBe("spacing.sm");
 		});
 
 		it("should maintain type information for kebab-case names", () => {
@@ -289,8 +289,8 @@ describe("useSpacing", () => {
 				"extra-large": "3rem",
 			});
 
-			const typed: Variable<"spacing--extra-large"> = spacingExtraLarge;
-			expect(typed.name).toBe("spacing--extra-large");
+			const typed: Variable<"spacing.extra-large"> = spacingExtraLarge;
+			expect(typed.name).toBe("spacing.extra-large");
 		});
 
 		it("should work with const assertion", () => {
@@ -303,7 +303,7 @@ describe("useSpacing", () => {
 			const spaces = useSpacing(s, spacingConfig);
 
 			expect(spaces.spacing.name).toBe("spacing");
-			expect(spaces.spacingSm.name).toBe("spacing--sm");
+			expect(spaces.spacingSm.name).toBe("spacing.sm");
 		});
 	});
 });

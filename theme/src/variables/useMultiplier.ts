@@ -18,11 +18,11 @@ import type { ExportKeys } from "../types";
  * const scalePowers = useScalePowers(s, scale, defaultScalePowerValues);
  *
  * const {
- *   fontSizeXs, // Variable<'font-size--xs'>
- *   fontSizeSm, // Variable<'font-size--sm'>
- *   fontSizeMd, // Variable<'font-size--md'>
- *   fontSizeLg, // Variable<'font-size--lg'>
- *   fontSizeXl, // Variable<'font-size--xl'>
+ *   fontSizeXs, // Variable<'font-size.xs'>
+ *   fontSizeSm, // Variable<'font-size.sm'>
+ *   fontSizeMd, // Variable<'font-size.md'>
+ *   fontSizeLg, // Variable<'font-size.lg'>
+ *   fontSizeXl, // Variable<'font-size.xl'>
  * } = useMultiplier(s, fontSize, {
  *   xs: scalePowers[-2],
  *   sm: scalePowers[-1],

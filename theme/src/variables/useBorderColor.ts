@@ -16,8 +16,8 @@ import { createUseVariable } from "../utils";
  * });
  *
  * const {
- *   borderColorPrimary, // Variable<'border-color--primary'>
- *   borderColorSecondary, // Variable<'border-color--secondary'>
+ *   borderColorPrimary, // Variable<'border-color.primary'>
+ *   borderColorSecondary, // Variable<'border-color.secondary'>
  * } = useBorderColor(s, {
  * 	 primary: ref(colorPrimary),
  *   secondary: ref(colorSecondary),

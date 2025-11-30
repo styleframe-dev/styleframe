@@ -16,9 +16,9 @@ export const defaultFontSizeValues = {
  *
  * const {
  *   fontSize, // Variable<'font-size'>
- *   fontSizeSm, // Variable<'font-size--sm'>
- *   fontSizeMd, // Variable<'font-size--md'>
- *   fontSizeLg, // Variable<'font-size--lg'>
+ *   fontSizeSm, // Variable<'font-size.sm'>
+ *   fontSizeMd, // Variable<'font-size.md'>
+ *   fontSizeLg, // Variable<'font-size.lg'>
  * } = useFontSize(s, {
  *   default: "1rem",
  *   sm: "0.875rem",

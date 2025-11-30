@@ -29,7 +29,7 @@ describe("useMultiplier", () => {
 		});
 
 		expect(fontSizeSm.type).toBe("variable");
-		expect(fontSizeSm.name).toBe("font-size--sm");
+		expect(fontSizeSm.name).toBe("font-size.sm");
 		expect((fontSizeSm.value as CSS)?.type).toBe("css");
 
 		const css = consumeCSS(fontSizeSm, s.options);
@@ -50,11 +50,11 @@ describe("useMultiplier", () => {
 		expect(spacing.value).toBe("1rem");
 
 		expect(spacingSm.type).toBe("variable");
-		expect(spacingSm.name).toBe("spacing--sm");
+		expect(spacingSm.name).toBe("spacing.sm");
 		expect((spacingSm.value as CSS)?.type).toBe("css");
 
 		expect(spacingLg.type).toBe("variable");
-		expect(spacingLg.name).toBe("spacing--lg");
+		expect(spacingLg.name).toBe("spacing.lg");
 		expect((spacingLg.value as CSS)?.type).toBe("css");
 	});
 
@@ -68,8 +68,8 @@ describe("useMultiplier", () => {
 
 		expect(s.root.variables).toHaveLength(3); // base + sm + lg
 		expect(s.root.variables[0]?.name).toBe("size");
-		expect(s.root.variables[1]?.name).toBe("size--sm");
-		expect(s.root.variables[2]?.name).toBe("size--lg");
+		expect(s.root.variables[1]?.name).toBe("size.sm");
+		expect(s.root.variables[2]?.name).toBe("size.lg");
 	});
 
 	it("should handle kebab-case modifier names", () => {
@@ -80,7 +80,7 @@ describe("useMultiplier", () => {
 		});
 
 		expect(fontSizeExtraLarge.type).toBe("variable");
-		expect(fontSizeExtraLarge.name).toBe("font-size--extra-large");
+		expect(fontSizeExtraLarge.name).toBe("font-size.extra-large");
 		expect((fontSizeExtraLarge.value as CSS)?.type).toBe("css");
 	});
 
@@ -92,7 +92,7 @@ describe("useMultiplier", () => {
 		});
 
 		expect(spacingVeryLarge.type).toBe("variable");
-		expect(spacingVeryLarge.name).toBe("spacing--very_large");
+		expect(spacingVeryLarge.name).toBe("spacing.very_large");
 		expect((spacingVeryLarge.value as CSS)?.type).toBe("css");
 	});
 
@@ -104,7 +104,7 @@ describe("useMultiplier", () => {
 		});
 
 		expect(scale2.type).toBe("variable");
-		expect(scale2.name).toBe("scale--2");
+		expect(scale2.name).toBe("scale.2");
 		expect((scale2.value as CSS)?.type).toBe("css");
 	});
 
@@ -244,12 +244,12 @@ describe("useMultiplier", () => {
 			xl: 2,
 		});
 
-		expect(spacing2xs.name).toBe("spacing--2xs");
-		expect(spacingXs.name).toBe("spacing--xs");
-		expect(spacingSm.name).toBe("spacing--sm");
-		expect(spacingMd.name).toBe("spacing--md");
-		expect(spacingLg.name).toBe("spacing--lg");
-		expect(spacingXl.name).toBe("spacing--xl");
+		expect(spacing2xs.name).toBe("spacing.2xs");
+		expect(spacingXs.name).toBe("spacing.xs");
+		expect(spacingSm.name).toBe("spacing.sm");
+		expect(spacingMd.name).toBe("spacing.md");
+		expect(spacingLg.name).toBe("spacing.lg");
+		expect(spacingXl.name).toBe("spacing.xl");
 	});
 
 	it("should handle complex variable names", () => {
@@ -260,7 +260,7 @@ describe("useMultiplier", () => {
 		});
 
 		expect(componentFontSizeLg.type).toBe("variable");
-		expect(componentFontSizeLg.name).toBe("component-font-size--lg");
+		expect(componentFontSizeLg.name).toBe("component-font-size.lg");
 		expect((componentFontSizeLg.value as CSS)?.type).toBe("css");
 	});
 
@@ -309,11 +309,11 @@ describe("useMultiplier", () => {
 			});
 
 			// Type assertions to verify the generic types are preserved
-			const smSize: Variable<"font-size--sm"> = sizes.fontSizeSm;
-			const lgSize: Variable<"font-size--lg"> = sizes.fontSizeLg;
+			const smSize: Variable<"font-size.sm"> = sizes.fontSizeSm;
+			const lgSize: Variable<"font-size.lg"> = sizes.fontSizeLg;
 
-			expect(smSize.name).toBe("font-size--sm");
-			expect(lgSize.name).toBe("font-size--lg");
+			expect(smSize.name).toBe("font-size.sm");
+			expect(lgSize.name).toBe("font-size.lg");
 		});
 
 		it("should maintain type information for kebab-case names", () => {
@@ -323,8 +323,8 @@ describe("useMultiplier", () => {
 				"extra-large": 3,
 			});
 
-			const typed: Variable<"spacing--extra-large"> = spacingExtraLarge;
-			expect(typed.name).toBe("spacing--extra-large");
+			const typed: Variable<"spacing.extra-large"> = spacingExtraLarge;
+			expect(typed.name).toBe("spacing.extra-large");
 		});
 
 		it("should work with const assertion", () => {
@@ -337,8 +337,8 @@ describe("useMultiplier", () => {
 
 			const sizes = useMultiplier(s, baseVar, sizeConfig);
 
-			expect(sizes.sizeSm.name).toBe("size--sm");
-			expect(sizes.sizeLg.name).toBe("size--lg");
+			expect(sizes.sizeSm.name).toBe("size.sm");
+			expect(sizes.sizeLg.name).toBe("size.lg");
 		});
 
 		it("should handle default key with proper typing", () => {
@@ -371,8 +371,8 @@ describe("useMultiplier", () => {
 			});
 
 			expect(Object.keys(scale)).toHaveLength(9);
-			expect(scale.fontSizeXs.name).toBe("font-size--xs");
-			expect(scale.fontSize4xl.name).toBe("font-size--4xl");
+			expect(scale.fontSizeXs.name).toBe("font-size.xs");
+			expect(scale.fontSize4xl.name).toBe("font-size.4xl");
 		});
 
 		it("should create a spacing scale system", () => {
@@ -391,8 +391,8 @@ describe("useMultiplier", () => {
 				"16": 16,
 			});
 
-			expect(scale.spacing0.name).toBe("spacing--0");
-			expect(scale.spacing16.name).toBe("spacing--16");
+			expect(scale.spacing0.name).toBe("spacing.0");
+			expect(scale.spacing16.name).toBe("spacing.16");
 		});
 
 		it("should work with ratio scale", () => {
@@ -410,15 +410,15 @@ describe("useMultiplier", () => {
 				xl: scales[2],
 			});
 
-			expect(sizes.sizeXs.name).toBe("size--xs");
+			expect(sizes.sizeXs.name).toBe("size.xs");
 			expect(sizes.sizeXs.value).toMatchObject({ type: "css" });
-			expect(sizes.sizeSm.name).toBe("size--sm");
+			expect(sizes.sizeSm.name).toBe("size.sm");
 			expect(sizes.sizeSm.value).toMatchObject({ type: "css" });
-			expect(sizes.sizeMd.name).toBe("size--md");
+			expect(sizes.sizeMd.name).toBe("size.md");
 			expect(sizes.sizeMd.value).toMatchObject({ type: "css" });
-			expect(sizes.sizeLg.name).toBe("size--lg");
+			expect(sizes.sizeLg.name).toBe("size.lg");
 			expect(sizes.sizeLg.value).toMatchObject({ type: "css" });
-			expect(sizes.sizeXl.name).toBe("size--xl");
+			expect(sizes.sizeXl.name).toBe("size.xl");
 			expect(sizes.sizeXl.value).toMatchObject({ type: "css" });
 		});
 	});

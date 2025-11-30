@@ -12,8 +12,8 @@ import { createUseVariable } from "../utils";
  * const s = styleframe();
  *
  * const {
- *   colorPrimary, // Variable<'color--primary'>
- *   colorSecondary, // Variable<'color--secondary'>
+ *   colorPrimary, // Variable<'color.primary'>
+ *   colorSecondary, // Variable<'color.secondary'>
  * } = useColors(s, {
  *   primary: "#007bff",
  *   secondary: "#6c757d",
