@@ -7,7 +7,7 @@ import type { CamelCase } from "scule";
 type ExportKeyVariableName<
 	Prefix extends string,
 	K,
-	Separator extends string = "--",
+	Separator extends string = ".",
 > = K extends "default"
 	? Prefix
 	: `${Prefix}${Separator}${K & (string | number)}`;
@@ -18,13 +18,13 @@ type ExportKeyVariableName<
  * @example
  * ExportKeys<"example-property", { "default": "...", "variant": "..." }> -> {
  * 		"exampleProperty": Variable<'example-property'>,
- * 		"examplePropertyVariant": Variable<'example-property--variant'>,
+ * 		"examplePropertyVariant": Variable<'example-property.variant'>,
  * }
  */
 export type ExportKeys<
 	Prefix extends string,
 	T extends Record<string, unknown>,
-	Separator extends string = "--",
+	Separator extends string = ".",
 > = {
 	[K in keyof T as CamelCase<
 		ExportKeyVariableName<Prefix, K, Separator>

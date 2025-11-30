@@ -47,7 +47,7 @@ export function isKeyReferenceValue(value: unknown): value is `@${string}` {
 export function createUseVariable<
 	PropertyName extends string,
 	PropertyType = TokenValue,
-	Delimiter extends string = "--",
+	Delimiter extends string = ".",
 	Defaults extends Record<string, PropertyType> = Record<string, PropertyType>,
 	MergeDefaults extends boolean = false,
 >(
@@ -56,7 +56,7 @@ export function createUseVariable<
 		defaults,
 		mergeDefaults = false as MergeDefaults,
 		transform = (value) => value as TokenValue,
-		delimiter = "--" as Delimiter,
+		delimiter = "." as Delimiter,
 	}: {
 		defaults?: Defaults;
 		mergeDefaults?: MergeDefaults;

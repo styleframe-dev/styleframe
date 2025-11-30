@@ -134,7 +134,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-settings
     target: _blank
-    to: /docs/getting-started/configuration
+    to: /docs/api/instance#configuration-options
     ---
     #title
     Fully [Configurable]{.text-primary}
@@ -215,7 +215,7 @@ Styleframe generates CSS at build time for maximum performance. When you need pr
     :::u-page-feature
     ---
     icon: i-lucide-between-horizontal-start
-    to: /docs/getting-started/configuration
+    to: /docs/api/instance#configuration-options
     ---
     #title
     [Dual Output]{.text-primary} 

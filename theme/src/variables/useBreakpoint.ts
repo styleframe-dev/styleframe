@@ -19,11 +19,11 @@ export const defaultBreakpointValues = {
  * const s = styleframe();
  *
  * const {
- *   breakpointXs, // Variable<'breakpoint--xs'>
- *   breakpointSm, // Variable<'breakpoint--sm'>
- *   breakpointMd, // Variable<'breakpoint--md'>
- *   breakpointLg, // Variable<'breakpoint--lg'>
- *   breakpointXl, // Variable<'breakpoint--xl'>
+ *   breakpointXs, // Variable<'breakpoint.xs'>
+ *   breakpointSm, // Variable<'breakpoint.sm'>
+ *   breakpointMd, // Variable<'breakpoint.md'>
+ *   breakpointLg, // Variable<'breakpoint.lg'>
+ *   breakpointXl, // Variable<'breakpoint.xl'>
  * } = useBreakpoint(s, {
  *   xs: 0,
  *   sm: 576,

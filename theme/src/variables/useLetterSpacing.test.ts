@@ -20,31 +20,31 @@ describe("useLetterSpacing", () => {
 
 		expect(letterSpacingTighter).toEqual({
 			type: "variable",
-			name: "letter-spacing--tighter",
+			name: "letter-spacing.tighter",
 			value: "-0.05em",
 		});
 
 		expect(letterSpacingTight).toEqual({
 			type: "variable",
-			name: "letter-spacing--tight",
+			name: "letter-spacing.tight",
 			value: "-0.025em",
 		});
 
 		expect(letterSpacingNormal).toEqual({
 			type: "variable",
-			name: "letter-spacing--normal",
+			name: "letter-spacing.normal",
 			value: "normal",
 		});
 
 		expect(letterSpacingWide).toEqual({
 			type: "variable",
-			name: "letter-spacing--wide",
+			name: "letter-spacing.wide",
 			value: "0.05em",
 		});
 
 		expect(letterSpacingWider).toEqual({
 			type: "variable",
-			name: "letter-spacing--wider",
+			name: "letter-spacing.wider",
 			value: "0.1em",
 		});
 
@@ -53,7 +53,7 @@ describe("useLetterSpacing", () => {
 			name: "letter-spacing",
 			value: {
 				type: "reference",
-				name: "letter-spacing--normal",
+				name: "letter-spacing.normal",
 				fallback: undefined,
 			},
 		});
@@ -64,11 +64,11 @@ describe("useLetterSpacing", () => {
 		useLetterSpacing(s);
 
 		expect(s.root.variables).toHaveLength(6);
-		expect(s.root.variables[0]?.name).toBe("letter-spacing--tighter");
-		expect(s.root.variables[1]?.name).toBe("letter-spacing--tight");
-		expect(s.root.variables[2]?.name).toBe("letter-spacing--normal");
-		expect(s.root.variables[3]?.name).toBe("letter-spacing--wide");
-		expect(s.root.variables[4]?.name).toBe("letter-spacing--wider");
+		expect(s.root.variables[0]?.name).toBe("letter-spacing.tighter");
+		expect(s.root.variables[1]?.name).toBe("letter-spacing.tight");
+		expect(s.root.variables[2]?.name).toBe("letter-spacing.normal");
+		expect(s.root.variables[3]?.name).toBe("letter-spacing.wide");
+		expect(s.root.variables[4]?.name).toBe("letter-spacing.wider");
 		expect(s.root.variables[5]?.name).toBe("letter-spacing");
 	});
 
@@ -135,7 +135,7 @@ describe("useLetterSpacing", () => {
 
 		expect(customLetterSpacing.value).toEqual({
 			type: "reference",
-			name: "letter-spacing--wider",
+			name: "letter-spacing.wider",
 			fallback: undefined,
 		});
 
@@ -181,24 +181,24 @@ describe("useLetterSpacing", () => {
 			const letterSpacings = useLetterSpacing(s);
 
 			// Type assertions to verify the generic types are preserved
-			const tighter: Variable<"letter-spacing--tighter"> =
+			const tighter: Variable<"letter-spacing.tighter"> =
 				letterSpacings.letterSpacingTighter;
-			const tight: Variable<"letter-spacing--tight"> =
+			const tight: Variable<"letter-spacing.tight"> =
 				letterSpacings.letterSpacingTight;
-			const normal: Variable<"letter-spacing--normal"> =
+			const normal: Variable<"letter-spacing.normal"> =
 				letterSpacings.letterSpacingNormal;
-			const wide: Variable<"letter-spacing--wide"> =
+			const wide: Variable<"letter-spacing.wide"> =
 				letterSpacings.letterSpacingWide;
-			const wider: Variable<"letter-spacing--wider"> =
+			const wider: Variable<"letter-spacing.wider"> =
 				letterSpacings.letterSpacingWider;
 			const letterSpacing: Variable<"letter-spacing"> =
 				letterSpacings.letterSpacing;
 
-			expect(tighter.name).toBe("letter-spacing--tighter");
-			expect(tight.name).toBe("letter-spacing--tight");
-			expect(normal.name).toBe("letter-spacing--normal");
-			expect(wide.name).toBe("letter-spacing--wide");
-			expect(wider.name).toBe("letter-spacing--wider");
+			expect(tighter.name).toBe("letter-spacing.tighter");
+			expect(tight.name).toBe("letter-spacing.tight");
+			expect(normal.name).toBe("letter-spacing.normal");
+			expect(wide.name).toBe("letter-spacing.wide");
+			expect(wider.name).toBe("letter-spacing.wider");
 			expect(letterSpacing.name).toBe("letter-spacing");
 		});
 
@@ -225,7 +225,7 @@ describe("useLetterSpacing", () => {
 				name: "letter-spacing",
 				value: {
 					type: "reference",
-					name: "letter-spacing--normal",
+					name: "letter-spacing.normal",
 					fallback: undefined,
 				},
 			});
@@ -240,7 +240,7 @@ describe("useLetterSpacing", () => {
 
 			expect(letterSpacing.value).toEqual({
 				type: "reference",
-				name: "letter-spacing--wide",
+				name: "letter-spacing.wide",
 				fallback: undefined,
 			});
 		});
@@ -276,7 +276,7 @@ describe("useLetterSpacing", () => {
 
 				expect(letterSpacing.value).toEqual({
 					type: "reference",
-					name: `letter-spacing--${letterSpacingName}`,
+					name: `letter-spacing.${letterSpacingName}`,
 					fallback: undefined,
 				});
 			}

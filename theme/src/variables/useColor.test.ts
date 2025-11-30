@@ -24,7 +24,7 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			name: "color--primary",
+			name: "color.primary",
 			value: toOklch("#007bff"),
 		});
 
@@ -42,19 +42,19 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			name: "color--primary",
+			name: "color.primary",
 			value: toOklch("#007bff"),
 		});
 
 		expect(colorSecondary).toEqual({
 			type: "variable",
-			name: "color--secondary",
+			name: "color.secondary",
 			value: toOklch("#6c757d"),
 		});
 
 		expect(colorTertiary).toEqual({
 			type: "variable",
-			name: "color--tertiary",
+			name: "color.tertiary",
 			value: toOklch("#28a745"),
 		});
 	});
@@ -67,8 +67,8 @@ describe("useColor", () => {
 		});
 
 		expect(s.root.variables).toHaveLength(2);
-		expect(s.root.variables[0]?.name).toBe("color--primary");
-		expect(s.root.variables[1]?.name).toBe("color--secondary");
+		expect(s.root.variables[0]?.name).toBe("color.primary");
+		expect(s.root.variables[1]?.name).toBe("color.secondary");
 	});
 
 	it("should handle kebab-case color names", () => {
@@ -79,7 +79,7 @@ describe("useColor", () => {
 
 		expect(colorPrimaryDark).toEqual({
 			type: "variable",
-			name: "color--primary-dark",
+			name: "color.primary-dark",
 			value: toOklch("#0056b3"),
 		});
 	});
@@ -92,7 +92,7 @@ describe("useColor", () => {
 
 		expect(colorPrimaryLight).toEqual({
 			type: "variable",
-			name: "color--primary_light",
+			name: "color.primary_light",
 			value: toOklch("#80bdff"),
 		});
 	});
@@ -105,7 +105,7 @@ describe("useColor", () => {
 
 		expect(color500).toEqual({
 			type: "variable",
-			name: "color--500",
+			name: "color.500",
 			value: toOklch("#007bff"),
 		});
 	});
@@ -118,7 +118,7 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			name: "color--primary",
+			name: "color.primary",
 			value: toOklch("rgb(0, 123, 255)"),
 		});
 	});
@@ -131,7 +131,7 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			name: "color--primary",
+			name: "color.primary",
 			value: toOklch("rgba(0, 123, 255, 0.5)"),
 		});
 	});
@@ -144,7 +144,7 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			name: "color--primary",
+			name: "color.primary",
 			value: toOklch("hsl(211, 100%, 50%)"),
 		});
 	});
@@ -197,11 +197,11 @@ describe("useColor", () => {
 			});
 
 			// Type assertions to verify the generic types are preserved
-			const primary: Variable<"color--primary"> = colors.colorPrimary;
-			const secondary: Variable<"color--secondary"> = colors.colorSecondary;
+			const primary: Variable<"color.primary"> = colors.colorPrimary;
+			const secondary: Variable<"color.secondary"> = colors.colorSecondary;
 
-			expect(primary.name).toBe("color--primary");
-			expect(secondary.name).toBe("color--secondary");
+			expect(primary.name).toBe("color.primary");
+			expect(secondary.name).toBe("color.secondary");
 		});
 
 		it("should maintain type information for kebab-case names", () => {
@@ -210,8 +210,8 @@ describe("useColor", () => {
 				"primary-dark": "#0056b3",
 			});
 
-			const typed: Variable<"color--primary-dark"> = colorPrimaryDark;
-			expect(typed.name).toBe("color--primary-dark");
+			const typed: Variable<"color.primary-dark"> = colorPrimaryDark;
+			expect(typed.name).toBe("color.primary-dark");
 		});
 
 		it("should work with const assertion", () => {
@@ -223,8 +223,8 @@ describe("useColor", () => {
 
 			const colors = useColor(s, colorConfig);
 
-			expect(colors.colorPrimary.name).toBe("color--primary");
-			expect(colors.colorSecondary.name).toBe("color--secondary");
+			expect(colors.colorPrimary.name).toBe("color.primary");
+			expect(colors.colorSecondary.name).toBe("color.secondary");
 		});
 	});
 });
@@ -259,22 +259,22 @@ describe("integration", () => {
 		} as const);
 
 		// Verify all variables are created
-		expect(colorPrimary.name).toBe("color--primary");
-		expect(colorSecondary.name).toBe("color--secondary");
-		expect(primaryLevels.colorPrimary100.name).toBe("color--primary-100");
-		expect(primaryLevels.colorPrimary500.name).toBe("color--primary-500");
-		expect(primaryLevels.colorPrimary900.name).toBe("color--primary-900");
+		expect(colorPrimary.name).toBe("color.primary");
+		expect(colorSecondary.name).toBe("color.secondary");
+		expect(primaryLevels.colorPrimary100.name).toBe("color.primary-100");
+		expect(primaryLevels.colorPrimary500.name).toBe("color.primary-500");
+		expect(primaryLevels.colorPrimary900.name).toBe("color.primary-900");
 		expect(secondaryShades.colorSecondaryShade50.name).toBe(
-			"color--secondary-shade-50",
+			"color.secondary-shade-50",
 		);
 		expect(secondaryShades.colorSecondaryShade100.name).toBe(
-			"color--secondary-shade-100",
+			"color.secondary-shade-100",
 		);
 		expect(secondaryTints.colorSecondaryTint50.name).toBe(
-			"color--secondary-tint-50",
+			"color.secondary-tint-50",
 		);
 		expect(secondaryTints.colorSecondaryTint100.name).toBe(
-			"color--secondary-tint-100",
+			"color.secondary-tint-100",
 		);
 
 		// All variables should be in root
@@ -302,22 +302,22 @@ describe("integration", () => {
 
 		expect(colorBrandPrimary).toEqual({
 			type: "variable",
-			name: "color--brand-primary",
+			name: "color.brand-primary",
 			value: toOklch("#007bff"),
 		});
 		expect(levels.colorBrandPrimary400).toEqual({
 			type: "variable",
-			name: "color--brand-primary-400",
+			name: "color.brand-primary-400",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorBrandPrimaryShade50).toEqual({
 			type: "variable",
-			name: "color--brand-primary-shade-50",
+			name: "color.brand-primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(tints.colorBrandPrimaryTint50).toEqual({
 			type: "variable",
-			name: "color--brand-primary-tint-50",
+			name: "color.brand-primary-tint-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
 	});
