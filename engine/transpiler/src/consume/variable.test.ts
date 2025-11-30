@@ -194,4 +194,77 @@ describe("createVariableConsumer", () => {
 		// Both the variable name and the referenced variable should have the prefix
 		expect(result).toBe("--sf-color-primary: var(--sf-color-base);");
 	});
+
+	it("should convert dot notation to double dashes in variable names", () => {
+		const colorVar = variable("color.primary", "#006cff");
+		const result = consumeVariable(colorVar, options);
+
+		expect(result).toBe("--color--primary: #006cff;");
+	});
+
+	it("should handle multiple dots in variable names (nested paths)", () => {
+		const colorVar = variable("color.primary.500", "#006cff");
+		const result = consumeVariable(colorVar, options);
+
+		expect(result).toBe("--color--primary--500: #006cff;");
+	});
+
+	it("should handle dot notation when referencing variables", () => {
+		// Create a base variable with dot notation
+		const baseColorVar = variable("color.base", "#006cff");
+
+		// Create a reference to the base variable
+		const baseColorRef = ref(baseColorVar);
+
+		// Create a variable that uses the reference
+		const colorPrimaryVar = variable("color.primary", baseColorRef);
+
+		const result = consumeVariable(colorPrimaryVar, options);
+
+		expect(result).toBe("--color--primary: var(--color--base);");
+	});
+
+	it("should handle dot notation with string reference", () => {
+		// Create a reference using a string name with dot notation
+		const colorRef = ref("color.base");
+
+		// Create a variable that uses the reference
+		const colorPrimaryVar = variable("color.primary", colorRef);
+
+		const result = consumeVariable(colorPrimaryVar, options);
+
+		expect(result).toBe("--color--primary: var(--color--base);");
+	});
+
+	it("should handle dot notation with reference that has fallback", () => {
+		// Create a reference with fallback value using dot notation
+		const fontSizeRef = ref("font.size", "16px");
+
+		// Create a variable that uses the reference with fallback
+		const bodyFontVar = variable("body.font.size", fontSizeRef);
+
+		const result = consumeVariable(bodyFontVar, options);
+
+		expect(result).toBe("--body--font--size: var(--font--size, 16px);");
+	});
+
+	it("should apply custom variable name function with dot notation", () => {
+		const prefixOptions: StyleframeOptions = {
+			variables: {
+				name: ({ name }) => `--sf-${name.replaceAll(".", "-")}`,
+			},
+		};
+
+		const colorVar = variable("color.primary", "#006cff");
+		const result = consumeVariable(colorVar, prefixOptions);
+
+		expect(result).toBe("--sf-color-primary: #006cff;");
+	});
+
+	it("should handle mixed dot and dash notation", () => {
+		const colorVar = variable("color.primary-500", "#006cff");
+		const result = consumeVariable(colorVar, options);
+
+		expect(result).toBe("--color--primary-500: #006cff;");
+	});
 });

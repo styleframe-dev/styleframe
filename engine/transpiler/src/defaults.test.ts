@@ -110,12 +110,28 @@ describe("defaultUtilitySelectorFn", () => {
 });
 
 describe("defaultVariableNameFn", () => {
-	test("should return the variable name as-is", () => {
+	test("should return the variable name as-is when no dots present", () => {
 		const result = defaultVariableNameFn({ name: "color-primary" });
 		expect(result).toBe("color-primary");
 	});
 
-	test("should handle different variable names", () => {
+	test("should replace dots with double dashes", () => {
+		expect(defaultVariableNameFn({ name: "color.primary" })).toBe(
+			"color--primary",
+		);
+		expect(defaultVariableNameFn({ name: "spacing.sm" })).toBe("spacing--sm");
+	});
+
+	test("should handle multiple dots", () => {
+		expect(defaultVariableNameFn({ name: "color.primary.500" })).toBe(
+			"color--primary--500",
+		);
+		expect(defaultVariableNameFn({ name: "font.size.lg" })).toBe(
+			"font--size--lg",
+		);
+	});
+
+	test("should handle different variable names without dots", () => {
 		expect(defaultVariableNameFn({ name: "spacing-sm" })).toBe("spacing-sm");
 		expect(defaultVariableNameFn({ name: "font-size-lg" })).toBe(
 			"font-size-lg",
@@ -132,5 +148,47 @@ describe("defaultVariableNameFn", () => {
 			"color--primary",
 		);
 		expect(defaultVariableNameFn({ name: "theme_dark" })).toBe("theme_dark");
+	});
+
+	test("should handle mixed dots and dashes", () => {
+		expect(defaultVariableNameFn({ name: "color.primary-500" })).toBe(
+			"color--primary-500",
+		);
+		expect(defaultVariableNameFn({ name: "font-size.lg" })).toBe(
+			"font-size--lg",
+		);
+	});
+
+	test("should collapse consecutive dots into a single separator", () => {
+		expect(defaultVariableNameFn({ name: "color..primary" })).toBe(
+			"color--primary",
+		);
+		expect(defaultVariableNameFn({ name: "color...primary" })).toBe(
+			"color--primary",
+		);
+	});
+
+	test("should remove leading dots", () => {
+		expect(defaultVariableNameFn({ name: ".color" })).toBe("color");
+		expect(defaultVariableNameFn({ name: "..color" })).toBe("color");
+		expect(defaultVariableNameFn({ name: ".color.primary" })).toBe(
+			"color--primary",
+		);
+	});
+
+	test("should remove trailing dots", () => {
+		expect(defaultVariableNameFn({ name: "color." })).toBe("color");
+		expect(defaultVariableNameFn({ name: "color.." })).toBe("color");
+		expect(defaultVariableNameFn({ name: "color.primary." })).toBe(
+			"color--primary",
+		);
+	});
+
+	test("should handle leading and trailing dots combined", () => {
+		expect(defaultVariableNameFn({ name: ".color." })).toBe("color");
+		expect(defaultVariableNameFn({ name: "..color.." })).toBe("color");
+		expect(defaultVariableNameFn({ name: ".color.primary." })).toBe(
+			"color--primary",
+		);
 	});
 });
