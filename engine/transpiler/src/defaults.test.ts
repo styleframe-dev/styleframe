@@ -99,7 +99,7 @@ describe("defaultUtilitySelectorFn", () => {
 		expect(result).toBe("._sm\\:md\\:lg\\:text\\:sm");
 	});
 
-	test("should filter out falsy values", () => {
+	test("should not filter out string '0'", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "margin",
 			value: "0",
