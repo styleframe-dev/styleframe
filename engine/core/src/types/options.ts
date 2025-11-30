@@ -8,12 +8,12 @@ export type UtilitySelectorFn = (options: {
 	modifiers: string[];
 }) => string;
 
-export type ThemeSelectorFn = (options: { name: string }) => string;
-
-export type RecipeAutogenerateFn = (options: {
-	utilityName: string;
+export type UtilityAutogenerateFn = (options: {
+	name: string;
 	value: TokenValue;
 }) => string;
+
+export type ThemeSelectorFn = (options: { name: string }) => string;
 
 export type StyleframeOptions = {
 	indent?: string;
@@ -22,11 +22,9 @@ export type StyleframeOptions = {
 	};
 	utilities?: {
 		selector?: UtilitySelectorFn;
+		autogenerate?: UtilityAutogenerateFn;
 	};
 	themes?: {
 		selector?: ThemeSelectorFn;
-	};
-	recipes: {
-		autogenerate?: RecipeAutogenerateFn;
 	};
 };
