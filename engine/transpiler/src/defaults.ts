@@ -13,7 +13,9 @@ export const defaultUtilitySelectorFn: UtilitySelectorFn = ({
 	value,
 	modifiers,
 }) => {
-	return `._${[...modifiers, name, value].filter(Boolean).join("\\:")}`;
+	return `._${[...modifiers, name, ...(value === "default" ? [] : [value])]
+		.filter(Boolean)
+		.join("\\:")}`;
 };
 
 export const defaultVariableNameFn: VariableNameFn = ({ name }) => {
