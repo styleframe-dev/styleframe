@@ -28,7 +28,7 @@ describe("useFontSize", () => {
 
 		expect(fontSizeSm).toEqual({
 			type: "variable",
-			name: "font-size--sm",
+			name: "font-size.sm",
 			value: "0.875rem",
 		});
 
@@ -53,19 +53,19 @@ describe("useFontSize", () => {
 
 		expect(fontSizeSm).toEqual({
 			type: "variable",
-			name: "font-size--sm",
+			name: "font-size.sm",
 			value: "0.875rem",
 		});
 
 		expect(fontSizeMd).toEqual({
 			type: "variable",
-			name: "font-size--md",
+			name: "font-size.md",
 			value: "1rem",
 		});
 
 		expect(fontSizeLg).toEqual({
 			type: "variable",
-			name: "font-size--lg",
+			name: "font-size.lg",
 			value: "1.25rem",
 		});
 	});
@@ -79,7 +79,7 @@ describe("useFontSize", () => {
 
 		expect(s.root.variables).toHaveLength(2);
 		expect(s.root.variables[0]?.name).toBe("font-size");
-		expect(s.root.variables[1]?.name).toBe("font-size--sm");
+		expect(s.root.variables[1]?.name).toBe("font-size.sm");
 	});
 
 	it("should handle kebab-case font size names", () => {
@@ -90,7 +90,7 @@ describe("useFontSize", () => {
 
 		expect(fontSizeExtraLarge).toEqual({
 			type: "variable",
-			name: "font-size--extra-large",
+			name: "font-size.extra-large",
 			value: "2rem",
 		});
 	});
@@ -103,7 +103,7 @@ describe("useFontSize", () => {
 
 		expect(fontSizeHeadingPrimary).toEqual({
 			type: "variable",
-			name: "font-size--heading_primary",
+			name: "font-size.heading_primary",
 			value: "1.5rem",
 		});
 	});
@@ -116,7 +116,7 @@ describe("useFontSize", () => {
 
 		expect(fontSize100).toEqual({
 			type: "variable",
-			name: "font-size--100",
+			name: "font-size.100",
 			value: "0.75rem",
 		});
 	});
@@ -142,7 +142,7 @@ describe("useFontSize", () => {
 
 		expect(fontSizeBase).toEqual({
 			type: "variable",
-			name: "font-size--base",
+			name: "font-size.base",
 			value: "1.5em",
 		});
 	});
@@ -155,7 +155,7 @@ describe("useFontSize", () => {
 
 		expect(fontSizeRelative).toEqual({
 			type: "variable",
-			name: "font-size--relative",
+			name: "font-size.relative",
 			value: "125%",
 		});
 	});
@@ -168,7 +168,7 @@ describe("useFontSize", () => {
 
 		expect(fontSizeFluid).toEqual({
 			type: "variable",
-			name: "font-size--fluid",
+			name: "font-size.fluid",
 			value: "2.5vw",
 		});
 	});
@@ -267,10 +267,10 @@ describe("useFontSize", () => {
 
 			// Type assertions to verify the generic types are preserved
 			const defaultSize: Variable<"font-size"> = sizes.fontSize;
-			const smSize: Variable<"font-size--sm"> = sizes.fontSizeSm;
+			const smSize: Variable<"font-size.sm"> = sizes.fontSizeSm;
 
 			expect(defaultSize.name).toBe("font-size");
-			expect(smSize.name).toBe("font-size--sm");
+			expect(smSize.name).toBe("font-size.sm");
 		});
 
 		it("should maintain type information for kebab-case names", () => {
@@ -279,8 +279,8 @@ describe("useFontSize", () => {
 				"extra-large": "2rem",
 			});
 
-			const typed: Variable<"font-size--extra-large"> = fontSizeExtraLarge;
-			expect(typed.name).toBe("font-size--extra-large");
+			const typed: Variable<"font-size.extra-large"> = fontSizeExtraLarge;
+			expect(typed.name).toBe("font-size.extra-large");
 		});
 
 		it("should work with const assertion", () => {
@@ -293,7 +293,7 @@ describe("useFontSize", () => {
 			const sizes = useFontSize(s, sizeConfig);
 
 			expect(sizes.fontSize.name).toBe("font-size");
-			expect(sizes.fontSizeSm.name).toBe("font-size--sm");
+			expect(sizes.fontSizeSm.name).toBe("font-size.sm");
 		});
 	});
 });

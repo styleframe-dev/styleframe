@@ -15,12 +15,12 @@ export const defaultColorShadeValues = {
  * @usage
  * const s = styleframe();
  *
- * const colorPrimary = s.variable("color--primary", "#007bff");
+ * const { colorPrimary } = useColor(s, { primary: "#007bff" });
  *
  * const {
- *   colorPrimaryShade50, // Variable<'color--primary-shade-50'>
- *   colorPrimaryShade100, // Variable<'color--primary-shade-100'>
- *   colorPrimaryShade150, // Variable<'color--primary-shade-150'>
+ *   colorPrimaryShade50, // Variable<'color.primary-shade-50'>
+ *   colorPrimaryShade100, // Variable<'color.primary-shade-100'>
+ *   colorPrimaryShade150, // Variable<'color.primary-shade-150'>
  *   ...
  * } = useColorShadeLevels(s, colorPrimary, {
  *   50: 5,

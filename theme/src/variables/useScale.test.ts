@@ -21,49 +21,49 @@ describe("useScale", () => {
 
 		expect(scaleMinorSecond).toEqual({
 			type: "variable",
-			name: "scale--minor-second",
+			name: "scale.minor-second",
 			value: 1.067,
 		});
 
 		expect(scaleMajorSecond).toEqual({
 			type: "variable",
-			name: "scale--major-second",
+			name: "scale.major-second",
 			value: 1.125,
 		});
 
 		expect(scaleMinorThird).toEqual({
 			type: "variable",
-			name: "scale--minor-third",
+			name: "scale.minor-third",
 			value: 1.2,
 		});
 
 		expect(scaleMajorThird).toEqual({
 			type: "variable",
-			name: "scale--major-third",
+			name: "scale.major-third",
 			value: 1.25,
 		});
 
 		expect(scalePerfectFourth).toEqual({
 			type: "variable",
-			name: "scale--perfect-fourth",
+			name: "scale.perfect-fourth",
 			value: 1.333,
 		});
 
 		expect(scaleAugmentedFourth).toEqual({
 			type: "variable",
-			name: "scale--augmented-fourth",
+			name: "scale.augmented-fourth",
 			value: 1.414,
 		});
 
 		expect(scalePerfectFifth).toEqual({
 			type: "variable",
-			name: "scale--perfect-fifth",
+			name: "scale.perfect-fifth",
 			value: 1.5,
 		});
 
 		expect(scaleGolden).toEqual({
 			type: "variable",
-			name: "scale--golden",
+			name: "scale.golden",
 			value: 1.618,
 		});
 
@@ -72,7 +72,7 @@ describe("useScale", () => {
 			name: "scale",
 			value: {
 				type: "reference",
-				name: "scale--minor-third",
+				name: "scale.minor-third",
 				fallback: undefined,
 			},
 		});
@@ -83,14 +83,14 @@ describe("useScale", () => {
 		useScale(s);
 
 		expect(s.root.variables).toHaveLength(9);
-		expect(s.root.variables[0]?.name).toBe("scale--minor-second");
-		expect(s.root.variables[1]?.name).toBe("scale--major-second");
-		expect(s.root.variables[2]?.name).toBe("scale--minor-third");
-		expect(s.root.variables[3]?.name).toBe("scale--major-third");
-		expect(s.root.variables[4]?.name).toBe("scale--perfect-fourth");
-		expect(s.root.variables[5]?.name).toBe("scale--augmented-fourth");
-		expect(s.root.variables[6]?.name).toBe("scale--perfect-fifth");
-		expect(s.root.variables[7]?.name).toBe("scale--golden");
+		expect(s.root.variables[0]?.name).toBe("scale.minor-second");
+		expect(s.root.variables[1]?.name).toBe("scale.major-second");
+		expect(s.root.variables[2]?.name).toBe("scale.minor-third");
+		expect(s.root.variables[3]?.name).toBe("scale.major-third");
+		expect(s.root.variables[4]?.name).toBe("scale.perfect-fourth");
+		expect(s.root.variables[5]?.name).toBe("scale.augmented-fourth");
+		expect(s.root.variables[6]?.name).toBe("scale.perfect-fifth");
+		expect(s.root.variables[7]?.name).toBe("scale.golden");
 		expect(s.root.variables[8]?.name).toBe("scale");
 	});
 
@@ -158,7 +158,7 @@ describe("useScale", () => {
 
 		expect(customScale.value).toEqual({
 			type: "reference",
-			name: "scale--golden",
+			name: "scale.golden",
 			fallback: undefined,
 		});
 
@@ -187,29 +187,29 @@ describe("useScale", () => {
 			const scales = useScale(s);
 
 			// Type assertions to verify the generic types are preserved
-			const minorSecond: Variable<"scale--minor-second"> =
+			const minorSecond: Variable<"scale.minor-second"> =
 				scales.scaleMinorSecond;
-			const majorSecond: Variable<"scale--major-second"> =
+			const majorSecond: Variable<"scale.major-second"> =
 				scales.scaleMajorSecond;
-			const minorThird: Variable<"scale--minor-third"> = scales.scaleMinorThird;
-			const majorThird: Variable<"scale--major-third"> = scales.scaleMajorThird;
-			const perfectFourth: Variable<"scale--perfect-fourth"> =
+			const minorThird: Variable<"scale.minor-third"> = scales.scaleMinorThird;
+			const majorThird: Variable<"scale.major-third"> = scales.scaleMajorThird;
+			const perfectFourth: Variable<"scale.perfect-fourth"> =
 				scales.scalePerfectFourth;
-			const augmentedFourth: Variable<"scale--augmented-fourth"> =
+			const augmentedFourth: Variable<"scale.augmented-fourth"> =
 				scales.scaleAugmentedFourth;
-			const perfectFifth: Variable<"scale--perfect-fifth"> =
+			const perfectFifth: Variable<"scale.perfect-fifth"> =
 				scales.scalePerfectFifth;
-			const golden: Variable<"scale--golden"> = scales.scaleGolden;
+			const golden: Variable<"scale.golden"> = scales.scaleGolden;
 			const scale: Variable<"scale"> = scales.scale;
 
-			expect(minorSecond.name).toBe("scale--minor-second");
-			expect(majorSecond.name).toBe("scale--major-second");
-			expect(minorThird.name).toBe("scale--minor-third");
-			expect(majorThird.name).toBe("scale--major-third");
-			expect(perfectFourth.name).toBe("scale--perfect-fourth");
-			expect(augmentedFourth.name).toBe("scale--augmented-fourth");
-			expect(perfectFifth.name).toBe("scale--perfect-fifth");
-			expect(golden.name).toBe("scale--golden");
+			expect(minorSecond.name).toBe("scale.minor-second");
+			expect(majorSecond.name).toBe("scale.major-second");
+			expect(minorThird.name).toBe("scale.minor-third");
+			expect(majorThird.name).toBe("scale.major-third");
+			expect(perfectFourth.name).toBe("scale.perfect-fourth");
+			expect(augmentedFourth.name).toBe("scale.augmented-fourth");
+			expect(perfectFifth.name).toBe("scale.perfect-fifth");
+			expect(golden.name).toBe("scale.golden");
 			expect(scale.name).toBe("scale");
 		});
 
@@ -239,7 +239,7 @@ describe("useScale", () => {
 				name: "scale",
 				value: {
 					type: "reference",
-					name: "scale--minor-third",
+					name: "scale.minor-third",
 					fallback: undefined,
 				},
 			});
@@ -253,7 +253,7 @@ describe("useScale", () => {
 
 			expect(scale.value).toEqual({
 				type: "reference",
-				name: "scale--perfect-fourth",
+				name: "scale.perfect-fourth",
 				fallback: undefined,
 			});
 		});
@@ -287,7 +287,7 @@ describe("useScale", () => {
 
 				expect(scale.value).toEqual({
 					type: "reference",
-					name: `scale--${scaleName}`,
+					name: `scale.${scaleName}`,
 					fallback: undefined,
 				});
 			}

@@ -19,5 +19,5 @@ export const defaultUtilitySelectorFn: UtilitySelectorFn = ({
 };
 
 export const defaultVariableNameFn: VariableNameFn = ({ name }) => {
-	return name;
+	return name.replace(/^\.+|\.+$/g, "").replace(/\.+/g, "--");
 };

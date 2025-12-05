@@ -28,7 +28,7 @@ describe("useBoxShadow", () => {
 
 		expect(boxShadowSm).toEqual({
 			type: "variable",
-			name: "box-shadow--sm",
+			name: "box-shadow.sm",
 			value: "0 1px 2px rgba(0, 0, 0, 0.05)",
 		});
 
@@ -56,19 +56,19 @@ describe("useBoxShadow", () => {
 
 		expect(boxShadowSm).toEqual({
 			type: "variable",
-			name: "box-shadow--sm",
+			name: "box-shadow.sm",
 			value: "0 1px 2px rgba(0, 0, 0, 0.05)",
 		});
 
 		expect(boxShadowMd).toEqual({
 			type: "variable",
-			name: "box-shadow--md",
+			name: "box-shadow.md",
 			value: "0 4px 8px rgba(0, 0, 0, 0.1)",
 		});
 
 		expect(boxShadowLg).toEqual({
 			type: "variable",
-			name: "box-shadow--lg",
+			name: "box-shadow.lg",
 			value: "0 8px 16px rgba(0, 0, 0, 0.15)",
 		});
 	});
@@ -82,7 +82,7 @@ describe("useBoxShadow", () => {
 
 		expect(s.root.variables).toHaveLength(2);
 		expect(s.root.variables[0]?.name).toBe("box-shadow");
-		expect(s.root.variables[1]?.name).toBe("box-shadow--sm");
+		expect(s.root.variables[1]?.name).toBe("box-shadow.sm");
 	});
 
 	it("should handle kebab-case box-shadow names", () => {
@@ -93,7 +93,7 @@ describe("useBoxShadow", () => {
 
 		expect(boxShadowExtraLarge).toEqual({
 			type: "variable",
-			name: "box-shadow--extra-large",
+			name: "box-shadow.extra-large",
 			value: "0 20px 40px rgba(0, 0, 0, 0.2)",
 		});
 	});
@@ -106,7 +106,7 @@ describe("useBoxShadow", () => {
 
 		expect(boxShadowCardElevation).toEqual({
 			type: "variable",
-			name: "box-shadow--card_elevation",
+			name: "box-shadow.card_elevation",
 			value: "0 4px 6px rgba(0, 0, 0, 0.1)",
 		});
 	});
@@ -119,7 +119,7 @@ describe("useBoxShadow", () => {
 
 		expect(boxShadow100).toEqual({
 			type: "variable",
-			name: "box-shadow--100",
+			name: "box-shadow.100",
 			value: "0 1px 3px rgba(0, 0, 0, 0.12)",
 		});
 	});
@@ -132,7 +132,7 @@ describe("useBoxShadow", () => {
 
 		expect(boxShadowNone).toEqual({
 			type: "variable",
-			name: "box-shadow--none",
+			name: "box-shadow.none",
 			value: "none",
 		});
 	});
@@ -145,7 +145,7 @@ describe("useBoxShadow", () => {
 
 		expect(boxShadowInset).toEqual({
 			type: "variable",
-			name: "box-shadow--inset",
+			name: "box-shadow.inset",
 			value: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
 		});
 	});
@@ -304,10 +304,10 @@ describe("useBoxShadow", () => {
 
 			// Type assertions to verify the generic types are preserved
 			const defaultBoxShadow: Variable<"box-shadow"> = shadows.boxShadow;
-			const smBoxShadow: Variable<"box-shadow--sm"> = shadows.boxShadowSm;
+			const smBoxShadow: Variable<"box-shadow.sm"> = shadows.boxShadowSm;
 
 			expect(defaultBoxShadow.name).toBe("box-shadow");
-			expect(smBoxShadow.name).toBe("box-shadow--sm");
+			expect(smBoxShadow.name).toBe("box-shadow.sm");
 		});
 
 		it("should maintain type information for kebab-case names", () => {
@@ -316,8 +316,8 @@ describe("useBoxShadow", () => {
 				"extra-large": "0 20px 40px rgba(0, 0, 0, 0.2)",
 			});
 
-			const typed: Variable<"box-shadow--extra-large"> = boxShadowExtraLarge;
-			expect(typed.name).toBe("box-shadow--extra-large");
+			const typed: Variable<"box-shadow.extra-large"> = boxShadowExtraLarge;
+			expect(typed.name).toBe("box-shadow.extra-large");
 		});
 
 		it("should work with const assertion", () => {
@@ -330,7 +330,7 @@ describe("useBoxShadow", () => {
 			const shadows = useBoxShadow(s, boxShadowConfig);
 
 			expect(shadows.boxShadow.name).toBe("box-shadow");
-			expect(shadows.boxShadowSm.name).toBe("box-shadow--sm");
+			expect(shadows.boxShadowSm.name).toBe("box-shadow.sm");
 		});
 	});
 });

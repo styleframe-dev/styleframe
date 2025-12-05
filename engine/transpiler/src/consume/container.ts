@@ -5,7 +5,6 @@ import type {
 	Variable,
 } from "@styleframe/core";
 import type { ConsumeFunction } from "../types";
-import { addIndentToLine, indentLines } from "../utils";
 import { createDeclarationsConsumer } from "./declarations";
 import { createVariableConsumer } from "./variable";
 import { genSelector } from "../generator";

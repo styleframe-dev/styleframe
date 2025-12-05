@@ -207,12 +207,14 @@ describe("createRefFunction", () => {
 			const snakeCase = ref("font_size");
 			const withNumbers = ref("size-12");
 			const withDashes = ref("color--primary--500");
+			const withDots = ref("color.primary");
 
 			expect(kebabCase.name).toBe("font-family-sans");
 			expect(camelCase.name).toBe("fontSize");
 			expect(snakeCase.name).toBe("font_size");
 			expect(withNumbers.name).toBe("size-12");
 			expect(withDashes.name).toBe("color--primary--500");
+			expect(withDots.name).toBe("color.primary");
 		});
 
 		it("should handle empty string names", () => {
@@ -232,6 +234,80 @@ describe("createRefFunction", () => {
 				type: "reference",
 				name: "a",
 				fallback: undefined,
+			});
+		});
+	});
+
+	describe("dot notation handling", () => {
+		it("should create a reference with dot notation in name", () => {
+			const result = ref("color.primary");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.primary",
+				fallback: undefined,
+			});
+		});
+
+		it("should handle multiple dots in reference names (nested paths)", () => {
+			const result = ref("color.primary.500");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.primary.500",
+				fallback: undefined,
+			});
+		});
+
+		it("should handle dot notation with fallback value", () => {
+			const result = ref("color.primary", "#006cff");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.primary",
+				fallback: "#006cff",
+			});
+		});
+
+		it("should handle dot notation when referencing variables with dots", () => {
+			const colorVar = variable("color.primary", "#006cff");
+			const result = ref(colorVar);
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.primary",
+				fallback: undefined,
+			});
+		});
+
+		it("should handle mixed dot and dash notation", () => {
+			const result = ref("color.primary-500");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.primary-500",
+				fallback: undefined,
+			});
+		});
+
+		it("should handle dot notation in reference chains", () => {
+			const baseColor = variable("color.base", "#0066ff");
+			const primaryColor = variable("color.primary", ref(baseColor));
+
+			expect(primaryColor.value).toEqual({
+				type: "reference",
+				name: "color.base",
+				fallback: undefined,
+			});
+		});
+
+		it("should handle dot notation with complex fallback values", () => {
+			const result = ref("spacing.md", "calc(1rem + 4px)");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "spacing.md",
+				fallback: "calc(1rem + 4px)",
 			});
 		});
 	});

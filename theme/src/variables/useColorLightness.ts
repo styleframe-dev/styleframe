@@ -26,12 +26,12 @@ export const defaultColorLightnessValues = {
  *
  * const s = styleframe();
  *
- * const colorPrimary = s.variable("color--primary", "#007bff");
+ * const { colorPrimary } = useColor(s, { primary: "#007bff" });
  *
  * const {
- *   colorPrimary100, // Variable<'color--primary-100'>
- *   colorPrimary200, // Variable<'color--primary-200'>
- *   colorPrimary300, // Variable<'color--primary-300'>
+ *   colorPrimary100, // Variable<'color.primary-100'>
+ *   colorPrimary200, // Variable<'color.primary-200'>
+ *   colorPrimary300, // Variable<'color.primary-300'>
  *   ...
  * } = useColorLightnessLevels(s, colorPrimary, {
  *   100: 10,

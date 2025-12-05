@@ -16,25 +16,25 @@ describe("useFontStyle", () => {
 
 		expect(fontStyleItalic).toEqual({
 			type: "variable",
-			name: "font-style--italic",
+			name: "font-style.italic",
 			value: "italic",
 		});
 
 		expect(fontStyleOblique).toEqual({
 			type: "variable",
-			name: "font-style--oblique",
+			name: "font-style.oblique",
 			value: "oblique",
 		});
 
 		expect(fontStyleNormal).toEqual({
 			type: "variable",
-			name: "font-style--normal",
+			name: "font-style.normal",
 			value: "normal",
 		});
 
 		expect(fontStyleInherit).toEqual({
 			type: "variable",
-			name: "font-style--inherit",
+			name: "font-style.inherit",
 			value: "inherit",
 		});
 
@@ -43,7 +43,7 @@ describe("useFontStyle", () => {
 			name: "font-style",
 			value: {
 				type: "reference",
-				name: "font-style--normal",
+				name: "font-style.normal",
 				fallback: undefined,
 			},
 		});
@@ -54,10 +54,10 @@ describe("useFontStyle", () => {
 		useFontStyle(s);
 
 		expect(s.root.variables).toHaveLength(5);
-		expect(s.root.variables[0]?.name).toBe("font-style--italic");
-		expect(s.root.variables[1]?.name).toBe("font-style--oblique");
-		expect(s.root.variables[2]?.name).toBe("font-style--normal");
-		expect(s.root.variables[3]?.name).toBe("font-style--inherit");
+		expect(s.root.variables[0]?.name).toBe("font-style.italic");
+		expect(s.root.variables[1]?.name).toBe("font-style.oblique");
+		expect(s.root.variables[2]?.name).toBe("font-style.normal");
+		expect(s.root.variables[3]?.name).toBe("font-style.inherit");
 		expect(s.root.variables[4]?.name).toBe("font-style");
 	});
 
@@ -120,7 +120,7 @@ describe("useFontStyle", () => {
 
 		expect(customFontStyle.value).toEqual({
 			type: "reference",
-			name: "font-style--italic",
+			name: "font-style.italic",
 			fallback: undefined,
 		});
 
@@ -164,18 +164,18 @@ describe("useFontStyle", () => {
 			const fontStyles = useFontStyle(s);
 
 			// Type assertions to verify the generic types are preserved
-			const italic: Variable<"font-style--italic"> = fontStyles.fontStyleItalic;
-			const oblique: Variable<"font-style--oblique"> =
+			const italic: Variable<"font-style.italic"> = fontStyles.fontStyleItalic;
+			const oblique: Variable<"font-style.oblique"> =
 				fontStyles.fontStyleOblique;
-			const normal: Variable<"font-style--normal"> = fontStyles.fontStyleNormal;
-			const inherit: Variable<"font-style--inherit"> =
+			const normal: Variable<"font-style.normal"> = fontStyles.fontStyleNormal;
+			const inherit: Variable<"font-style.inherit"> =
 				fontStyles.fontStyleInherit;
 			const fontStyle: Variable<"font-style"> = fontStyles.fontStyle;
 
-			expect(italic.name).toBe("font-style--italic");
-			expect(oblique.name).toBe("font-style--oblique");
-			expect(normal.name).toBe("font-style--normal");
-			expect(inherit.name).toBe("font-style--inherit");
+			expect(italic.name).toBe("font-style.italic");
+			expect(oblique.name).toBe("font-style.oblique");
+			expect(normal.name).toBe("font-style.normal");
+			expect(inherit.name).toBe("font-style.inherit");
 			expect(fontStyle.name).toBe("font-style");
 		});
 
@@ -201,7 +201,7 @@ describe("useFontStyle", () => {
 				name: "font-style",
 				value: {
 					type: "reference",
-					name: "font-style--normal",
+					name: "font-style.normal",
 					fallback: undefined,
 				},
 			});
@@ -216,7 +216,7 @@ describe("useFontStyle", () => {
 
 			expect(fontStyle.value).toEqual({
 				type: "reference",
-				name: "font-style--italic",
+				name: "font-style.italic",
 				fallback: undefined,
 			});
 		});
@@ -251,7 +251,7 @@ describe("useFontStyle", () => {
 
 				expect(fontStyle.value).toEqual({
 					type: "reference",
-					name: `font-style--${fontStyleName}`,
+					name: `font-style.${fontStyleName}`,
 					fallback: undefined,
 				});
 			}
@@ -547,7 +547,7 @@ article blockquote {
 
 			expect(emphasizedStyle.value).toEqual({
 				type: "reference",
-				name: "font-style--italic",
+				name: "font-style.italic",
 				fallback: undefined,
 			});
 		});

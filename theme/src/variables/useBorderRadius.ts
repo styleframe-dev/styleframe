@@ -12,9 +12,9 @@ import { createUseVariable } from "../utils";
  *
  * const {
  *   borderRadius, // Variable<'border-radius'>
- *   borderRadiusSm, // Variable<'border-radius--sm'>
- *   borderRadiusMd, // Variable<'border-radius--md'>
- *   borderRadiusLg, // Variable<'border-radius--lg'>
+ *   borderRadiusSm, // Variable<'border-radius.sm'>
+ *   borderRadiusMd, // Variable<'border-radius.md'>
+ *   borderRadiusLg, // Variable<'border-radius.lg'>
  * } = useBorderRadius(s, {
  *   default: "0.25rem",
  *   sm: "0.125rem",

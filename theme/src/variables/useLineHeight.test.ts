@@ -17,31 +17,31 @@ describe("useLineHeight", () => {
 
 		expect(lineHeightTight).toEqual({
 			type: "variable",
-			name: "line-height--tight",
+			name: "line-height.tight",
 			value: 1.2,
 		});
 
 		expect(lineHeightSnug).toEqual({
 			type: "variable",
-			name: "line-height--snug",
+			name: "line-height.snug",
 			value: 1.35,
 		});
 
 		expect(lineHeightNormal).toEqual({
 			type: "variable",
-			name: "line-height--normal",
+			name: "line-height.normal",
 			value: 1.5,
 		});
 
 		expect(lineHeightRelaxed).toEqual({
 			type: "variable",
-			name: "line-height--relaxed",
+			name: "line-height.relaxed",
 			value: 1.65,
 		});
 
 		expect(lineHeightLoose).toEqual({
 			type: "variable",
-			name: "line-height--loose",
+			name: "line-height.loose",
 			value: 1.9,
 		});
 
@@ -50,7 +50,7 @@ describe("useLineHeight", () => {
 			name: "line-height",
 			value: {
 				type: "reference",
-				name: "line-height--normal",
+				name: "line-height.normal",
 				fallback: undefined,
 			},
 		});
@@ -61,11 +61,11 @@ describe("useLineHeight", () => {
 		useLineHeight(s);
 
 		expect(s.root.variables).toHaveLength(6);
-		expect(s.root.variables[0]?.name).toBe("line-height--tight");
-		expect(s.root.variables[1]?.name).toBe("line-height--snug");
-		expect(s.root.variables[2]?.name).toBe("line-height--normal");
-		expect(s.root.variables[3]?.name).toBe("line-height--relaxed");
-		expect(s.root.variables[4]?.name).toBe("line-height--loose");
+		expect(s.root.variables[0]?.name).toBe("line-height.tight");
+		expect(s.root.variables[1]?.name).toBe("line-height.snug");
+		expect(s.root.variables[2]?.name).toBe("line-height.normal");
+		expect(s.root.variables[3]?.name).toBe("line-height.relaxed");
+		expect(s.root.variables[4]?.name).toBe("line-height.loose");
 		expect(s.root.variables[5]?.name).toBe("line-height");
 	});
 
@@ -130,7 +130,7 @@ describe("useLineHeight", () => {
 
 		expect(customLineHeight.value).toEqual({
 			type: "reference",
-			name: "line-height--loose",
+			name: "line-height.loose",
 			fallback: undefined,
 		});
 
@@ -176,20 +176,20 @@ describe("useLineHeight", () => {
 			const lineHeights = useLineHeight(s);
 
 			// Type assertions to verify the generic types are preserved
-			const tight: Variable<"line-height--tight"> = lineHeights.lineHeightTight;
-			const snug: Variable<"line-height--snug"> = lineHeights.lineHeightSnug;
-			const normal: Variable<"line-height--normal"> =
+			const tight: Variable<"line-height.tight"> = lineHeights.lineHeightTight;
+			const snug: Variable<"line-height.snug"> = lineHeights.lineHeightSnug;
+			const normal: Variable<"line-height.normal"> =
 				lineHeights.lineHeightNormal;
-			const relaxed: Variable<"line-height--relaxed"> =
+			const relaxed: Variable<"line-height.relaxed"> =
 				lineHeights.lineHeightRelaxed;
-			const loose: Variable<"line-height--loose"> = lineHeights.lineHeightLoose;
+			const loose: Variable<"line-height.loose"> = lineHeights.lineHeightLoose;
 			const lineHeight: Variable<"line-height"> = lineHeights.lineHeight;
 
-			expect(tight.name).toBe("line-height--tight");
-			expect(snug.name).toBe("line-height--snug");
-			expect(normal.name).toBe("line-height--normal");
-			expect(relaxed.name).toBe("line-height--relaxed");
-			expect(loose.name).toBe("line-height--loose");
+			expect(tight.name).toBe("line-height.tight");
+			expect(snug.name).toBe("line-height.snug");
+			expect(normal.name).toBe("line-height.normal");
+			expect(relaxed.name).toBe("line-height.relaxed");
+			expect(loose.name).toBe("line-height.loose");
 			expect(lineHeight.name).toBe("line-height");
 		});
 
@@ -216,7 +216,7 @@ describe("useLineHeight", () => {
 				name: "line-height",
 				value: {
 					type: "reference",
-					name: "line-height--normal",
+					name: "line-height.normal",
 					fallback: undefined,
 				},
 			});
@@ -230,7 +230,7 @@ describe("useLineHeight", () => {
 
 			expect(lineHeight.value).toEqual({
 				type: "reference",
-				name: "line-height--relaxed",
+				name: "line-height.relaxed",
 				fallback: undefined,
 			});
 		});
@@ -266,7 +266,7 @@ describe("useLineHeight", () => {
 
 				expect(lineHeight.value).toEqual({
 					type: "reference",
-					name: `line-height--${lineHeightName}`,
+					name: `line-height.${lineHeightName}`,
 					fallback: undefined,
 				});
 			}

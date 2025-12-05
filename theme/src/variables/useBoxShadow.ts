@@ -38,9 +38,9 @@ export const defaultBoxShadowValues = {
  *
  * const {
  *   boxShadow, // Variable<'box-shadow'>
- *   boxShadowSm, // Variable<'box-shadow--sm'>
- *   boxShadowMd, // Variable<'box-shadow--md'>
- *   boxShadowLg, // Variable<'box-shadow--lg'>
+ *   boxShadowSm, // Variable<'box-shadow.sm'>
+ *   boxShadowMd, // Variable<'box-shadow.md'>
+ *   boxShadowLg, // Variable<'box-shadow.lg'>
  * } = useBoxShadow(s, {
  *   default: '@md',
  *   sm: css`0 1px 2px oklcha(${ref(boxShadowColor)} / 0.05)`,

@@ -20,49 +20,49 @@ describe("useBorderStyle", () => {
 
 		expect(borderStyleNone).toEqual({
 			type: "variable",
-			name: "border-style--none",
+			name: "border-style.none",
 			value: "none",
 		});
 
 		expect(borderStyleSolid).toEqual({
 			type: "variable",
-			name: "border-style--solid",
+			name: "border-style.solid",
 			value: "solid",
 		});
 
 		expect(borderStyleDashed).toEqual({
 			type: "variable",
-			name: "border-style--dashed",
+			name: "border-style.dashed",
 			value: "dashed",
 		});
 
 		expect(borderStyleDotted).toEqual({
 			type: "variable",
-			name: "border-style--dotted",
+			name: "border-style.dotted",
 			value: "dotted",
 		});
 
 		expect(borderStyleDouble).toEqual({
 			type: "variable",
-			name: "border-style--double",
+			name: "border-style.double",
 			value: "double",
 		});
 
 		expect(borderStyleGroove).toEqual({
 			type: "variable",
-			name: "border-style--groove",
+			name: "border-style.groove",
 			value: "groove",
 		});
 
 		expect(borderStyleInset).toEqual({
 			type: "variable",
-			name: "border-style--inset",
+			name: "border-style.inset",
 			value: "inset",
 		});
 
 		expect(borderStyleOutset).toEqual({
 			type: "variable",
-			name: "border-style--outset",
+			name: "border-style.outset",
 			value: "outset",
 		});
 
@@ -71,7 +71,7 @@ describe("useBorderStyle", () => {
 			name: "border-style",
 			value: {
 				type: "reference",
-				name: "border-style--solid",
+				name: "border-style.solid",
 				fallback: undefined,
 			},
 		});
@@ -82,14 +82,14 @@ describe("useBorderStyle", () => {
 		useBorderStyle(s);
 
 		expect(s.root.variables).toHaveLength(9);
-		expect(s.root.variables[0]?.name).toBe("border-style--none");
-		expect(s.root.variables[1]?.name).toBe("border-style--solid");
-		expect(s.root.variables[2]?.name).toBe("border-style--dashed");
-		expect(s.root.variables[3]?.name).toBe("border-style--dotted");
-		expect(s.root.variables[4]?.name).toBe("border-style--double");
-		expect(s.root.variables[5]?.name).toBe("border-style--groove");
-		expect(s.root.variables[6]?.name).toBe("border-style--inset");
-		expect(s.root.variables[7]?.name).toBe("border-style--outset");
+		expect(s.root.variables[0]?.name).toBe("border-style.none");
+		expect(s.root.variables[1]?.name).toBe("border-style.solid");
+		expect(s.root.variables[2]?.name).toBe("border-style.dashed");
+		expect(s.root.variables[3]?.name).toBe("border-style.dotted");
+		expect(s.root.variables[4]?.name).toBe("border-style.double");
+		expect(s.root.variables[5]?.name).toBe("border-style.groove");
+		expect(s.root.variables[6]?.name).toBe("border-style.inset");
+		expect(s.root.variables[7]?.name).toBe("border-style.outset");
 		expect(s.root.variables[8]?.name).toBe("border-style");
 	});
 
@@ -160,7 +160,7 @@ describe("useBorderStyle", () => {
 
 		expect(customBorderStyle.value).toEqual({
 			type: "reference",
-			name: "border-style--dotted",
+			name: "border-style.dotted",
 			fallback: undefined,
 		});
 
@@ -212,31 +212,31 @@ describe("useBorderStyle", () => {
 			const borderStyles = useBorderStyle(s);
 
 			// Type assertions to verify the generic types are preserved
-			const none: Variable<"border-style--none"> = borderStyles.borderStyleNone;
-			const solid: Variable<"border-style--solid"> =
+			const none: Variable<"border-style.none"> = borderStyles.borderStyleNone;
+			const solid: Variable<"border-style.solid"> =
 				borderStyles.borderStyleSolid;
-			const dashed: Variable<"border-style--dashed"> =
+			const dashed: Variable<"border-style.dashed"> =
 				borderStyles.borderStyleDashed;
-			const dotted: Variable<"border-style--dotted"> =
+			const dotted: Variable<"border-style.dotted"> =
 				borderStyles.borderStyleDotted;
-			const double: Variable<"border-style--double"> =
+			const double: Variable<"border-style.double"> =
 				borderStyles.borderStyleDouble;
-			const groove: Variable<"border-style--groove"> =
+			const groove: Variable<"border-style.groove"> =
 				borderStyles.borderStyleGroove;
-			const inset: Variable<"border-style--inset"> =
+			const inset: Variable<"border-style.inset"> =
 				borderStyles.borderStyleInset;
-			const outset: Variable<"border-style--outset"> =
+			const outset: Variable<"border-style.outset"> =
 				borderStyles.borderStyleOutset;
 			const borderStyle: Variable<"border-style"> = borderStyles.borderStyle;
 
-			expect(none.name).toBe("border-style--none");
-			expect(solid.name).toBe("border-style--solid");
-			expect(dashed.name).toBe("border-style--dashed");
-			expect(dotted.name).toBe("border-style--dotted");
-			expect(double.name).toBe("border-style--double");
-			expect(groove.name).toBe("border-style--groove");
-			expect(inset.name).toBe("border-style--inset");
-			expect(outset.name).toBe("border-style--outset");
+			expect(none.name).toBe("border-style.none");
+			expect(solid.name).toBe("border-style.solid");
+			expect(dashed.name).toBe("border-style.dashed");
+			expect(dotted.name).toBe("border-style.dotted");
+			expect(double.name).toBe("border-style.double");
+			expect(groove.name).toBe("border-style.groove");
+			expect(inset.name).toBe("border-style.inset");
+			expect(outset.name).toBe("border-style.outset");
 			expect(borderStyle.name).toBe("border-style");
 		});
 
@@ -266,7 +266,7 @@ describe("useBorderStyle", () => {
 				name: "border-style",
 				value: {
 					type: "reference",
-					name: "border-style--solid",
+					name: "border-style.solid",
 					fallback: undefined,
 				},
 			});
@@ -281,7 +281,7 @@ describe("useBorderStyle", () => {
 
 			expect(borderStyle.value).toEqual({
 				type: "reference",
-				name: "border-style--dashed",
+				name: "border-style.dashed",
 				fallback: undefined,
 			});
 		});
@@ -329,7 +329,7 @@ describe("useBorderStyle", () => {
 
 				expect(borderStyle.value).toEqual({
 					type: "reference",
-					name: `border-style--${borderStyleName}`,
+					name: `border-style.${borderStyleName}`,
 					fallback: undefined,
 				});
 			}

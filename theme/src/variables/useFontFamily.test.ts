@@ -30,7 +30,7 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilyMono).toEqual({
 			type: "variable",
-			name: "font-family--mono",
+			name: "font-family.mono",
 			value: "'SFMono-Regular', Menlo, Monaco, Consolas",
 		});
 
@@ -58,13 +58,13 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilyPrint).toEqual({
 			type: "variable",
-			name: "font-family--print",
+			name: "font-family.print",
 			value: "'Georgia', 'Times New Roman', 'Times', serif",
 		});
 
 		expect(fontFamilyMono).toEqual({
 			type: "variable",
-			name: "font-family--mono",
+			name: "font-family.mono",
 			value:
 				"'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 		});
@@ -79,7 +79,7 @@ describe("useFontFamily", () => {
 
 		expect(s.root.variables).toHaveLength(2);
 		expect(s.root.variables[0]?.name).toBe("font-family");
-		expect(s.root.variables[1]?.name).toBe("font-family--mono");
+		expect(s.root.variables[1]?.name).toBe("font-family.mono");
 	});
 
 	it("should handle kebab-case font family names", () => {
@@ -90,7 +90,7 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilySerifDisplay).toEqual({
 			type: "variable",
-			name: "font-family--serif-display",
+			name: "font-family.serif-display",
 			value: "'Playfair Display', Georgia, serif",
 		});
 	});
@@ -103,7 +103,7 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilyHeadingPrimary).toEqual({
 			type: "variable",
-			name: "font-family--heading_primary",
+			name: "font-family.heading_primary",
 			value: "'Inter', sans-serif",
 		});
 	});
@@ -116,7 +116,7 @@ describe("useFontFamily", () => {
 
 		expect(fontFamily100).toEqual({
 			type: "variable",
-			name: "font-family--100",
+			name: "font-family.100",
 			value: "'Roboto', sans-serif",
 		});
 	});
@@ -129,7 +129,7 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilyCustom).toEqual({
 			type: "variable",
-			name: "font-family--custom",
+			name: "font-family.custom",
 			value: "Arial",
 		});
 	});
@@ -195,10 +195,10 @@ describe("useFontFamily", () => {
 
 			// Type assertions to verify the generic types are preserved
 			const defaultFont: Variable<"font-family"> = fonts.fontFamily;
-			const monoFont: Variable<"font-family--mono"> = fonts.fontFamilyMono;
+			const monoFont: Variable<"font-family.mono"> = fonts.fontFamilyMono;
 
 			expect(defaultFont.name).toBe("font-family");
-			expect(monoFont.name).toBe("font-family--mono");
+			expect(monoFont.name).toBe("font-family.mono");
 		});
 
 		it("should maintain type information for kebab-case names", () => {
@@ -207,9 +207,9 @@ describe("useFontFamily", () => {
 				"serif-display": "'Playfair Display', Georgia, serif",
 			});
 
-			const typed: Variable<"font-family--serif-display"> =
+			const typed: Variable<"font-family.serif-display"> =
 				fontFamilySerifDisplay;
-			expect(typed.name).toBe("font-family--serif-display");
+			expect(typed.name).toBe("font-family.serif-display");
 		});
 
 		it("should work with const assertion", () => {
@@ -222,7 +222,7 @@ describe("useFontFamily", () => {
 			const fonts = useFontFamily(s, fontConfig);
 
 			expect(fonts.fontFamily.name).toBe("font-family");
-			expect(fonts.fontFamilyMono.name).toBe("font-family--mono");
+			expect(fonts.fontFamilyMono.name).toBe("font-family.mono");
 		});
 	});
 });

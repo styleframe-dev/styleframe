@@ -12,9 +12,9 @@ import { createUseVariable } from "../utils";
  *
  * const {
  *   spacing, // Variable<'spacing'>
- *   spacingSm, // Variable<'spacing--sm'>
- *   spacingMd, // Variable<'spacing--md'>
- *   spacingLg, // Variable<'spacing--lg'>
+ *   spacingSm, // Variable<'spacing.sm'>
+ *   spacingMd, // Variable<'spacing.md'>
+ *   spacingLg, // Variable<'spacing.lg'>
  * } = useSpacing(s, {
  *   default: "1rem",
  *   sm: "0.875rem",

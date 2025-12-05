@@ -55,7 +55,7 @@ describe("createUseVariable", () => {
 
 		expect(fontSizeLarge).toEqual({
 			type: "variable",
-			name: "font-size--large",
+			name: "font-size.large",
 			value: "20px",
 		});
 	});
@@ -77,13 +77,13 @@ describe("createUseVariable", () => {
 
 		expect(spacingSmall).toEqual({
 			type: "variable",
-			name: "spacing--small",
+			name: "spacing.small",
 			value: "8px",
 		});
 
 		expect(spacingLarge).toEqual({
 			type: "variable",
-			name: "spacing--large",
+			name: "spacing.large",
 			value: "32px",
 		});
 	});
@@ -98,7 +98,7 @@ describe("createUseVariable", () => {
 
 		expect(s.root.variables).toHaveLength(2);
 		expect(s.root.variables[0]?.name).toBe("border-width");
-		expect(s.root.variables[1]?.name).toBe("border-width--thick");
+		expect(s.root.variables[1]?.name).toBe("border-width.thick");
 	});
 
 	it("should handle kebab-case token names", () => {
@@ -110,7 +110,7 @@ describe("createUseVariable", () => {
 
 		expect(colorPrimaryLight).toEqual({
 			type: "variable",
-			name: "color--primary-light",
+			name: "color.primary-light",
 			value: "#3b82f6",
 		});
 	});
@@ -124,7 +124,7 @@ describe("createUseVariable", () => {
 
 		expect(colorPrimaryDark).toEqual({
 			type: "variable",
-			name: "color--primary_dark",
+			name: "color.primary_dark",
 			value: "#1e40af",
 		});
 	});
@@ -138,7 +138,7 @@ describe("createUseVariable", () => {
 
 		expect(fontWeight400).toEqual({
 			type: "variable",
-			name: "font-weight--400",
+			name: "font-weight.400",
 			value: "400",
 		});
 	});
@@ -196,10 +196,10 @@ describe("createUseVariable", () => {
 
 			// Type assertions to verify the generic types are preserved
 			const defaultMargin: Variable<"margin"> = margins.margin;
-			const autoMargin: Variable<"margin--auto"> = margins.marginAuto;
+			const autoMargin: Variable<"margin.auto"> = margins.marginAuto;
 
 			expect(defaultMargin.name).toBe("margin");
-			expect(autoMargin.name).toBe("margin--auto");
+			expect(autoMargin.name).toBe("margin.auto");
 		});
 
 		it("should maintain type information for kebab-case names", () => {
@@ -209,8 +209,8 @@ describe("createUseVariable", () => {
 				"fast-ease": "200ms ease",
 			});
 
-			const typed: Variable<"transition--fast-ease"> = transitionFastEase;
-			expect(typed.name).toBe("transition--fast-ease");
+			const typed: Variable<"transition.fast-ease"> = transitionFastEase;
+			expect(typed.name).toBe("transition.fast-ease");
 		});
 	});
 
@@ -566,7 +566,7 @@ describe("createUseVariable", () => {
 			});
 			expect(colorHover.value).toEqual({
 				type: "reference",
-				name: "color--primary",
+				name: "color.primary",
 				fallback: undefined,
 			});
 		});
@@ -588,7 +588,7 @@ describe("createUseVariable", () => {
 			});
 			expect(sizeLarge.value).toEqual({
 				type: "reference",
-				name: "size--medium",
+				name: "size.medium",
 				fallback: undefined,
 			});
 		});
@@ -653,7 +653,7 @@ describe("createUseVariable", () => {
 
 			// Verify references point to correct variables
 			const primaryVar = s.root.variables.find(
-				(v) => v.name === "color--primary",
+				(v) => v.name === "color.primary",
 			);
 			expect(primaryVar?.value).toEqual({
 				type: "reference",
@@ -681,7 +681,7 @@ describe("createUseVariable", () => {
 			});
 			expect(colorHover.value).toEqual({
 				type: "reference",
-				name: "color--primary",
+				name: "color.primary",
 				fallback: undefined,
 			});
 		});
@@ -707,7 +707,7 @@ describe("createUseVariable", () => {
 			});
 			expect(colorSecondary.value).toEqual({
 				type: "reference",
-				name: "color--primary",
+				name: "color.primary",
 				fallback: undefined,
 			});
 		});
@@ -725,7 +725,7 @@ describe("createUseVariable", () => {
 			expect(colorSecondary.value).toBe("#8b5cf6");
 			expect(colorAccent.value).toEqual({
 				type: "reference",
-				name: "color--secondary",
+				name: "color.secondary",
 				fallback: undefined,
 			});
 		});
@@ -746,6 +746,20 @@ describe("createUseVariable", () => {
 			expect(colorPrimary.name).toBe("color_primary");
 		});
 
+		it("should compile with dot delimiter", () => {
+			const useSpacing = createUseVariable("spacing", {
+				delimiter: ".",
+			});
+			const s = styleframe();
+			const { spacing, spacingPrimary } = useSpacing(s, {
+				default: "16px",
+				primary: "8px",
+			});
+
+			expect(spacing.name).toBe("spacing");
+			expect(spacingPrimary.name).toBe("spacing.primary");
+		});
+
 		it("should compile with custom delimiter", () => {
 			const useSpacing = createUseVariable("spacing", {
 				delimiter: ".",
@@ -760,7 +774,7 @@ describe("createUseVariable", () => {
 
 			expect(css).toBe(`:root {
 	--spacing: 16px;
-	--spacing-small: 8px;
+	--spacing--small: 8px;
 }`);
 		});
 	});
@@ -777,8 +791,8 @@ describe("createUseVariable", () => {
 			});
 
 			expect(fontFamily.name).toBe("font-family");
-			expect(fontFamilyMono.name).toBe("font-family--mono");
-			expect(fontFamilySerif.name).toBe("font-family--serif");
+			expect(fontFamilyMono.name).toBe("font-family.mono");
+			expect(fontFamilySerif.name).toBe("font-family.serif");
 		});
 
 		it("should work for spacing scale", () => {
@@ -811,9 +825,9 @@ describe("createUseVariable", () => {
 				tooltip: "3000",
 			});
 
-			expect(zIndexDropdown.name).toBe("z-index--dropdown");
-			expect(zIndexModal.name).toBe("z-index--modal");
-			expect(zIndexTooltip.name).toBe("z-index--tooltip");
+			expect(zIndexDropdown.name).toBe("z-index.dropdown");
+			expect(zIndexModal.name).toBe("z-index.modal");
+			expect(zIndexTooltip.name).toBe("z-index.tooltip");
 		});
 
 		it("should create semantic color system with references", () => {
@@ -841,22 +855,22 @@ describe("createUseVariable", () => {
 			expect(colorRed.value).toBe("#ef4444");
 			expect(colorPrimary.value).toEqual({
 				type: "reference",
-				name: "color--blue",
+				name: "color.blue",
 				fallback: undefined,
 			});
 			expect(colorDanger.value).toEqual({
 				type: "reference",
-				name: "color--red",
+				name: "color.red",
 				fallback: undefined,
 			});
 			expect(colorLink.value).toEqual({
 				type: "reference",
-				name: "color--primary",
+				name: "color.primary",
 				fallback: undefined,
 			});
 			expect(colorError.value).toEqual({
 				type: "reference",
-				name: "color--danger",
+				name: "color.danger",
 				fallback: undefined,
 			});
 		});
@@ -887,7 +901,7 @@ describe("createUseVariable", () => {
 			// Default should reference md
 			expect(spacing.value).toEqual({
 				type: "reference",
-				name: "spacing--md",
+				name: "spacing.md",
 				fallback: undefined,
 			});
 
@@ -920,7 +934,7 @@ describe("createUseVariable", () => {
 			expect(durationSlow.value).toBe("500ms");
 			expect(duration.value).toEqual({
 				type: "reference",
-				name: "duration--normal",
+				name: "duration.normal",
 				fallback: undefined,
 			});
 		});

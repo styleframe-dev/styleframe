@@ -16,25 +16,25 @@ describe("useBorderWidth", () => {
 
 		expect(borderWidthNone).toEqual({
 			type: "variable",
-			name: "border-width--none",
+			name: "border-width.none",
 			value: 0,
 		});
 
 		expect(borderWidthThin).toEqual({
 			type: "variable",
-			name: "border-width--thin",
+			name: "border-width.thin",
 			value: "thin",
 		});
 
 		expect(borderWidthMedium).toEqual({
 			type: "variable",
-			name: "border-width--medium",
+			name: "border-width.medium",
 			value: "medium",
 		});
 
 		expect(borderWidthThick).toEqual({
 			type: "variable",
-			name: "border-width--thick",
+			name: "border-width.thick",
 			value: "thick",
 		});
 
@@ -43,7 +43,7 @@ describe("useBorderWidth", () => {
 			name: "border-width",
 			value: {
 				type: "reference",
-				name: "border-width--thin",
+				name: "border-width.thin",
 				fallback: undefined,
 			},
 		});
@@ -54,10 +54,10 @@ describe("useBorderWidth", () => {
 		useBorderWidth(s);
 
 		expect(s.root.variables).toHaveLength(5);
-		expect(s.root.variables[0]?.name).toBe("border-width--none");
-		expect(s.root.variables[1]?.name).toBe("border-width--thin");
-		expect(s.root.variables[2]?.name).toBe("border-width--medium");
-		expect(s.root.variables[3]?.name).toBe("border-width--thick");
+		expect(s.root.variables[0]?.name).toBe("border-width.none");
+		expect(s.root.variables[1]?.name).toBe("border-width.thin");
+		expect(s.root.variables[2]?.name).toBe("border-width.medium");
+		expect(s.root.variables[3]?.name).toBe("border-width.thick");
 		expect(s.root.variables[4]?.name).toBe("border-width");
 	});
 
@@ -120,7 +120,7 @@ describe("useBorderWidth", () => {
 
 		expect(customBorderWidth.value).toEqual({
 			type: "reference",
-			name: "border-width--thick",
+			name: "border-width.thick",
 			fallback: undefined,
 		});
 
@@ -164,18 +164,18 @@ describe("useBorderWidth", () => {
 			const borderWidths = useBorderWidth(s);
 
 			// Type assertions to verify the generic types are preserved
-			const none: Variable<"border-width--none"> = borderWidths.borderWidthNone;
-			const thin: Variable<"border-width--thin"> = borderWidths.borderWidthThin;
-			const medium: Variable<"border-width--medium"> =
+			const none: Variable<"border-width.none"> = borderWidths.borderWidthNone;
+			const thin: Variable<"border-width.thin"> = borderWidths.borderWidthThin;
+			const medium: Variable<"border-width.medium"> =
 				borderWidths.borderWidthMedium;
-			const thick: Variable<"border-width--thick"> =
+			const thick: Variable<"border-width.thick"> =
 				borderWidths.borderWidthThick;
 			const borderWidth: Variable<"border-width"> = borderWidths.borderWidth;
 
-			expect(none.name).toBe("border-width--none");
-			expect(thin.name).toBe("border-width--thin");
-			expect(medium.name).toBe("border-width--medium");
-			expect(thick.name).toBe("border-width--thick");
+			expect(none.name).toBe("border-width.none");
+			expect(thin.name).toBe("border-width.thin");
+			expect(medium.name).toBe("border-width.medium");
+			expect(thick.name).toBe("border-width.thick");
 			expect(borderWidth.name).toBe("border-width");
 		});
 
@@ -201,7 +201,7 @@ describe("useBorderWidth", () => {
 				name: "border-width",
 				value: {
 					type: "reference",
-					name: "border-width--thin",
+					name: "border-width.thin",
 					fallback: undefined,
 				},
 			});
@@ -216,7 +216,7 @@ describe("useBorderWidth", () => {
 
 			expect(borderWidth.value).toEqual({
 				type: "reference",
-				name: "border-width--medium",
+				name: "border-width.medium",
 				fallback: undefined,
 			});
 		});
@@ -251,7 +251,7 @@ describe("useBorderWidth", () => {
 
 				expect(borderWidth.value).toEqual({
 					type: "reference",
-					name: `border-width--${borderWidthName}`,
+					name: `border-width.${borderWidthName}`,
 					fallback: undefined,
 				});
 			}
