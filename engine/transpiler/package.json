@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/transpiler",
-	"version": "2.2.0",
+	"version": "2.3.0",
 	"type": "module",
 	"types": "./dist/transpiler.d.ts",
 	"module": "./dist/transpiler.js",
@@ -29,13 +29,13 @@
 		"scule": "^1.3.0"
 	},
 	"peerDependencies": {
-		"@styleframe/core": "workspace:^2.2.0",
+		"@styleframe/core": "workspace:^2.3.0",
 		"@styleframe/license": "catalog:"
 	},
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^2",
 		"@styleframe/config-vite": "workspace:^2",
-		"@styleframe/core": "workspace:^2.2.0",
+		"@styleframe/core": "workspace:^2.3.0",
 		"@styleframe/license": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
