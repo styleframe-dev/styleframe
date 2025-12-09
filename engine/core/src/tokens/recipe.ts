@@ -12,33 +12,33 @@ import type {
  * recipe({
  *     name: "button",
  *     base: {
- *         borderWidth: ref(borderWidth), // Token reference => var(--border-width) => Auto-generate _border-width
- *         borderStyle: ref(borderStyle), // Token reference => var(--border-style) => Auto-generate _border-style
+ *         borderWidth: ref(borderWidth), // Token reference => Variable<'border-width'> => Auto-generate _border-width
+ *         borderStyle: ref(borderStyle), // Token reference => Variable<'border-style'> => Auto-generate _border-style
  *     },
  *     variants: {
  *         color: {
  *             primary: {
- *                 background: ref(colorPrimary), // Token reference => var(--color--primary) => Auto-generate _background:primary
- *                 color: ref(colorWhite), // Token reference => var(--color--white) => Auto-generate _color:white
- *                 borderColor: ref(colorPrimaryShade50), // Token reference => var(--color--primary-shade-50) => Auto-generate _border-color:primary-shade-50
+ *                 background: ref(colorPrimary), // Token reference => Variable<'color.primary'> => Auto-generate _background:primary
+ *                 color: ref(colorWhite), // Token reference => Variable<'color.white'> => Auto-generate _color:white
+ *                 borderColor: ref(colorPrimaryShade50), // Token reference => Variable<'color.primary-shade-50'> => Auto-generate _border-color:primary-shade-50
  *             },
  *             secondary: {
- *                 background: "@color.secondary", // Token path => var(--color--secondary) => Auto-generate _background:secondary
- *                 color: "@color.white", // Token path => var(--color--white) => Auto-generate _color:white
- *                 borderColor: "@color.secondary", // Token path => var(--color--secondary) => Auto-generate _border-color:secondary
+ *                 background: "@color.secondary", // Token path => Variable<'color.secondary'> => Auto-generate _background:secondary
+ *                 color: "@color.white", // Token path => Variable<'color.white'> => Auto-generate _color:white
+ *                 borderColor: "@color.secondary", // Token path => Variable<'color.secondary'> => Auto-generate _border-color:secondary
  *             },
  *         },
  *         size: {
  *             sm: {
- *                 padding: "@spacing.sm", // Token path => var(--spacing--sm) => Auto-generate _padding:sm
- *                 fontSize: "@font-size.sm", // Token path => var(--font-size--sm) => Auto-generate _font-size:sm
+ *                 padding: "@spacing.sm", // Token path => Variable<'spacing.sm'> => Auto-generate _padding:sm
+ *                 fontSize: "@font-size.sm", // Token path => Variable<'font-size.sm'> => Auto-generate _font-size:sm
  *             },
  *             md: {
  *                 padding: "1rem", // Arbitrary value => Auto-generate _padding:[1rem]
  *                 fontSize: "1rem", // Arbitrary value => Auto-generate _font-size:[1rem]
  *             },
  *             lg: {
- *                 padding: "@spacing.lg", // Token path => var(--spacing--lg) => Auto-generate _padding:lg
+ *                 padding: "@spacing.lg", // Token path => Variable<'spacing.lg'> => Auto-generate _padding:lg
  *                 fontSize: "1.25rem", // Arbitrary value => Auto-generate _font-size:[1.25rem]
  *             },
  *         },

@@ -3,6 +3,7 @@ import type {
 	DeclarationsCallback,
 	DeclarationsCallbackContext,
 } from "./declarations";
+import type { createRefFunction } from "../tokens/ref";
 
 export type Variable<Name extends string = string> = {
 	type: "variable";
@@ -38,11 +39,16 @@ export type CSS = {
 	value: TokenValue[];
 };
 
+export type UtilityAutogenerateFn = (
+	value: TokenValue,
+) => Record<string, TokenValue>;
+
 export type UtilityFactory<Name extends string = string> = {
 	type: "utility";
 	name: Name;
 	factory: UtilityCallbackFn;
 	values: Record<string, TokenValue>;
+	autogenerate?: UtilityAutogenerateFn;
 };
 
 export type Utility<Name extends string = string> = {
@@ -62,7 +68,7 @@ export type UtilityCallbackFn = DeclarationsCallback<
 >;
 
 export type UtilityCreatorFn = (
-	values: Record<string, TokenValue>,
+	values: Record<string, TokenValue> | TokenValue[],
 	modifiers?: ModifierFactory[],
 ) => void;
 

@@ -401,6 +401,7 @@ describe("mergeContainers", () => {
 						type: "utility",
 						name: "padding",
 						factory: () => {},
+						values: {},
 					},
 				],
 				modifiers: [],
@@ -417,6 +418,7 @@ describe("mergeContainers", () => {
 						type: "utility",
 						name: "margin",
 						factory: () => {},
+						values: {},
 					},
 				],
 				modifiers: [],
@@ -484,7 +486,6 @@ describe("mergeContainers", () => {
 					{
 						type: "recipe",
 						name: "button",
-						defaults: {},
 						variants: {},
 					},
 				],
@@ -501,7 +502,6 @@ describe("mergeContainers", () => {
 					{
 						type: "recipe",
 						name: "card",
-						defaults: {},
 						variants: {},
 					},
 				],
@@ -839,14 +839,14 @@ describe("merge", () => {
 			base.selector(".base", {});
 			base.utility("base-util", () => {});
 			base.modifier(["base"], () => {});
-			base.recipe("base-recipe", {}, {});
+			base.recipe({ name: "base-recipe" });
 			base.theme("base-theme", () => {});
 
 			extension.variable("ext-color", "#fff");
 			extension.selector(".ext", {});
 			extension.utility("ext-util", () => {});
 			extension.modifier(["ext"], () => {});
-			extension.recipe("ext-recipe", {}, {});
+			extension.recipe({ name: "ext-recipe" });
 			extension.theme("ext-theme", () => {});
 
 			const result = merge(base, extension);

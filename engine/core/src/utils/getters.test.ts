@@ -139,6 +139,7 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "padding",
 					factory: mockFactory,
+					values: {},
 				},
 			];
 
@@ -148,6 +149,7 @@ describe("getUtility", () => {
 				type: "utility",
 				name: "padding",
 				factory: mockFactory,
+				values: {},
 			});
 		});
 
@@ -161,16 +163,19 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "padding",
 					factory: mockFactory1,
+					values: {},
 				},
 				{
 					type: "utility",
 					name: "margin",
 					factory: mockFactory2,
+					values: {},
 				},
 				{
 					type: "utility",
 					name: "display",
 					factory: mockFactory3,
+					values: {},
 				},
 			];
 
@@ -180,6 +185,7 @@ describe("getUtility", () => {
 				type: "utility",
 				name: "margin",
 				factory: mockFactory2,
+				values: {},
 			});
 		});
 
@@ -190,6 +196,7 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "padding",
 					factory: () => {},
+					values: {},
 				},
 			];
 
@@ -216,6 +223,7 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "flex-direction",
 					factory: mockFactory,
+					values: {},
 				},
 			];
 
@@ -231,6 +239,7 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "padding",
 					factory: () => {},
+					values: {},
 				},
 			];
 
