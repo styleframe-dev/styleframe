@@ -49,6 +49,7 @@ export type UtilityFactory<Name extends string = string> = {
 	factory: UtilityCallbackFn;
 	values: Record<string, TokenValue>;
 	autogenerate?: UtilityAutogenerateFn;
+	create?: UtilityCreatorFn;
 };
 
 export type Utility<Name extends string = string> = {

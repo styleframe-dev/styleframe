@@ -51,6 +51,14 @@ describe("createUtilityFunction", () => {
 		});
 	});
 
+	test("should store creator function on factoryInstance under create field", () => {
+		const createMarginUtility = utility("margin", ({ value }) => ({
+			margin: value,
+		}));
+
+		expect(root.utilities[0]?.create).toBe(createMarginUtility);
+	});
+
 	test("should accumulate values when utility is called multiple times", () => {
 		const createSpacingUtility = utility("spacing", ({ value }) => ({
 			margin: value,

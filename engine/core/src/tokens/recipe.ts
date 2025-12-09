@@ -43,7 +43,10 @@ import type {
  *             },
  *         },
  *     },
- *     defaultVariants: {...},
+ *     defaultVariants: {
+ * 		   color: "primary",
+ * 	       size: "md",
+ *     },
  *     compoundVariants: [...],
  * });
  * ```
