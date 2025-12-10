@@ -21,9 +21,7 @@ function toClassName(utilityName: string, value: string | true): string {
 	}
 
 	return `_${kebabName}:${value}`;
-}
-
-/**
+} /**
  * Creates a runtime recipe function that generates utility class strings based on variant props.
  *
  * The function:
@@ -41,8 +39,8 @@ function toClassName(utilityName: string, value: string | true): string {
  * const buttonRecipe: Recipe = {
  *     name: "button",
  *     base: {
- *         borderWidth: "thin",
- *         borderStyle: "solid",
+ *         borderWidth: "thin", // Example of normal value
+ *         borderStyle: "[solid]", // Example of using brackets for raw value
  *     },
  *     variants: {
  *         color: {
@@ -50,7 +48,7 @@ function toClassName(utilityName: string, value: string | true): string {
  *             secondary: { background: "secondary", color: "white" },
  *         },
  *         size: {
- *             sm: { padding: "1" },
+ *             sm: { padding: "[10px]" },
  *             md: { padding: "2" },
  *         },
  *     },

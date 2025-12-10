@@ -16,19 +16,30 @@ import type {
  *     base: {
  *         borderWidth: ref(borderWidth), // Token reference => Variable<'border-width'> => Auto-generate _border-width
  *         borderStyle: ref(borderStyle), // Token reference => Variable<'border-style'> => Auto-generate _border-style
+ *  	   boxShadow: ref(boxShadowMd), // Token reference => Variable<'box-shadow.md'> => Auto-generate _box-shadow:md
+ *         'hover:focus': { // Applying hover and focus modifiers
+ *             boxShadow: ref(boxShadowSm), // Token reference => Variable<'box-shadow.sm'> => Auto-generate _hover:box-shadow:sm
+ *         }
  *     },
  *     variants: {
  *         color: {
  *             primary: {
  *                 background: ref(colorPrimary), // Token reference => Variable<'color.primary'> => Auto-generate _background:primary
  *                 color: ref(colorWhite), // Token reference => Variable<'color.white'> => Auto-generate _color:white
- *                 borderColor: ref(colorPrimaryShade50), // Token reference => Variable<'color.primary-shade-50'> => Auto-generate _border-color:primary-shade-50
+ *                 borderColor: ref(colorPrimaryShade50), // Token reference => Variable<'color.primary-shade-50'> => Auto-generate _border-color:primary-shade-50,
  *             },
  *             secondary: {
  *                 background: "@color.secondary", // Token path => Variable<'color.secondary'> => Auto-generate _background:secondary
  *                 color: "@color.white", // Token path => Variable<'color.white'> => Auto-generate _color:white
- *                 borderColor: "@color.secondary", // Token path => Variable<'color.secondary'> => Auto-generate _border-color:secondary
+ *                 borderColor: "@color.secondary-shade-50", // Token path => Variable<'color.secondary-shade-50'> => Auto-generate _border-color:secondary
  *             },
+ * 			   disabled: {
+ * 				   false: null,
+ * 				   true: {
+ * 					   opacity: "@opacity.50", // Token path => Variable<'opacity.50'> => Auto-generate _opacity:50
+ * 					   cursor: "not-allowed", // Arbitrary value => Auto-generate _cursor:[not-allowed]
+ * 				   }
+ *             }
  *         },
  *         size: {
  *             sm: {
@@ -53,24 +64,46 @@ import type {
  *         {
  *             match: {
  *                 color: "primary",
- *                 size: "lg",
+ *                 disabled: false
  *             },
  *             css: {
- *                 padding: "@spacing.xl", // Token path => Variable<'spacing.xl'> => Auto-generate _padding:xl
- *                 fontWeight: "bold", // Arbitrary value => Auto-generate _font-weight:[bold]
+ * 				   hover: {
+ * 					   background: "@color.primary-shade-50", // Token path => Variable<'color.primary-shade-50'> => Auto-generate _hover:background:primary-shade-50
+ * 				   }
  *             },
  *         },
  *         {
  *             match: {
  *                 color: "secondary",
- *                 size: "sm",
+ *                 disabled: false
  *             },
  *             css: {
- *                 borderColor: ref(colorSecondaryShade50), // Token reference => Variable<'color.secondary-shade-50'> => Auto-generate _border-color:secondary-shade-50
- *                 padding: "@spacing.xs", // Token path => Variable<'spacing.xs'> => Auto-generate _padding:xs
+ * 				   hover: {
+ * 					   background: ref(colorSecondaryShade50), // Token reference => Variable<'color.secondary-shade-50'> => Auto-generate _hover:background:secondary-shade-50
+ * 				   }
  *             },
  *         },
  *     ],
+ *     _processed: {
+ * 	       base: {
+ * 			   borderWidth: "default",
+ * 			   borderStyle: "default",
+ *         },
+ * 	   	   variants: {
+ * 			   color: {
+ * 				   primary: {
+ * 					   background: "primary",
+ * 					   color: "white",
+ * 					   borderColor: "primary-shade-50",
+ * 				   },
+ * 				   secondary: {
+ * 					   background: "secondary",
+ * 					   color: "white",
+ * 					   borderColor: "secondary-shade-50",
+ * 				   },
+ * 			   },
+ *
+ *     }
  * });
  * ```
  */
