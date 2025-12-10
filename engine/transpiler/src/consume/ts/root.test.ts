@@ -22,16 +22,16 @@ describe("createRootConsumer", () => {
 	});
 
 	it("should handle root with single recipe", () => {
-		recipe(
-			"button",
-			{ borderWidth: "thin", borderStyle: "solid", cursor: "pointer" },
-			{
+		recipe({
+			name: "button",
+			base: { borderWidth: "thin", borderStyle: "solid", cursor: "pointer" },
+			variants: {
 				color: {
 					primary: { background: "primary", color: "white" },
 					secondary: { background: "secondary", color: "white" },
 				},
 			},
-		);
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -41,7 +41,7 @@ import type { Recipe } from '@styleframe/runtime';
 const buttonRecipe: Recipe = {
     "type": "recipe",
     "name": "button",
-    "defaults": {
+    "base": {
         "borderWidth": "thin",
         "borderStyle": "solid",
         "cursor": "pointer"
@@ -65,27 +65,27 @@ export const button = createRecipe(buttonRecipe);
 	});
 
 	it("should handle root with multiple recipes", () => {
-		recipe(
-			"button",
-			{ cursor: "pointer" },
-			{
+		recipe({
+			name: "button",
+			base: { cursor: "pointer" },
+			variants: {
 				variant: {
 					primary: { background: "blue" },
 					secondary: { background: "gray" },
 				},
 			},
-		);
+		});
 
-		recipe(
-			"card",
-			{ borderRadius: "4px" },
-			{
+		recipe({
+			name: "card",
+			base: { borderRadius: "4px" },
+			variants: {
 				elevation: {
 					low: { boxShadow: "0 1px 2px rgba(0,0,0,0.1)" },
 					high: { boxShadow: "0 4px 8px rgba(0,0,0,0.2)" },
 				},
 			},
-		);
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -95,7 +95,7 @@ import type { Recipe } from '@styleframe/runtime';
 const buttonRecipe: Recipe = {
     "type": "recipe",
     "name": "button",
-    "defaults": {
+    "base": {
         "cursor": "pointer"
     },
     "variants": {
@@ -115,7 +115,7 @@ export const button = createRecipe(buttonRecipe);
 const cardRecipe: Recipe = {
     "type": "recipe",
     "name": "card",
-    "defaults": {
+    "base": {
         "borderRadius": "4px"
     },
     "variants": {
@@ -135,10 +135,10 @@ export const card = createRecipe(cardRecipe);
 	});
 
 	it("should handle recipe with defaultVariants", () => {
-		recipe(
-			"chip",
-			{ borderWidth: "thin" },
-			{
+		recipe({
+			name: "chip",
+			base: { borderWidth: "thin" },
+			variants: {
 				variant: {
 					filled: { background: "primary", color: "white" },
 					outline: { background: "transparent", color: "primary" },
@@ -148,10 +148,8 @@ export const card = createRecipe(cardRecipe);
 					md: { padding: "0.5rem" },
 				},
 			},
-			{
-				defaultVariants: { variant: "filled", size: "sm" },
-			},
-		);
+			defaultVariants: { variant: "filled", size: "sm" },
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -161,7 +159,7 @@ import type { Recipe } from '@styleframe/runtime';
 const chipRecipe: Recipe = {
     "type": "recipe",
     "name": "chip",
-    "defaults": {
+    "base": {
         "borderWidth": "thin"
     },
     "variants": {
@@ -195,10 +193,10 @@ export const chip = createRecipe(chipRecipe);
 	});
 
 	it("should handle recipe with compoundVariants", () => {
-		recipe(
-			"badge",
-			{ display: "inline-block" },
-			{
+		recipe({
+			name: "badge",
+			base: { display: "inline-block" },
+			variants: {
 				variant: {
 					solid: { background: "blue" },
 					outline: { border: "1px solid" },
@@ -208,15 +206,13 @@ export const chip = createRecipe(chipRecipe);
 					lg: { padding: "4px 8px" },
 				},
 			},
-			{
-				compoundVariants: [
-					{
-						match: { variant: "solid", size: "sm" },
-						declarations: { fontSize: "12px" },
-					},
-				],
-			},
-		);
+			compoundVariants: [
+				{
+					match: { variant: "solid", size: "sm" },
+					css: { fontSize: "12px" },
+				},
+			],
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -226,7 +222,7 @@ import type { Recipe } from '@styleframe/runtime';
 const badgeRecipe: Recipe = {
     "type": "recipe",
     "name": "badge",
-    "defaults": {
+    "base": {
         "display": "inline-block"
     },
     "variants": {
@@ -253,7 +249,7 @@ const badgeRecipe: Recipe = {
                 "variant": "solid",
                 "size": "sm"
             },
-            "declarations": {
+            "css": {
                 "fontSize": "12px"
             }
         }
@@ -265,10 +261,10 @@ export const badge = createRecipe(badgeRecipe);
 	});
 
 	it("should handle recipe with both defaultVariants and compoundVariants", () => {
-		recipe(
-			"input",
-			{ borderWidth: "1px" },
-			{
+		recipe({
+			name: "input",
+			base: { borderWidth: "1px" },
+			variants: {
 				variant: {
 					filled: { background: "gray" },
 					outline: { background: "transparent" },
@@ -278,16 +274,14 @@ export const badge = createRecipe(badgeRecipe);
 					lg: { height: "48px" },
 				},
 			},
-			{
-				defaultVariants: { variant: "outline", size: "sm" },
-				compoundVariants: [
-					{
-						match: { variant: "filled", size: "lg" },
-						declarations: { padding: "0 16px" },
-					},
-				],
-			},
-		);
+			defaultVariants: { variant: "outline", size: "sm" },
+			compoundVariants: [
+				{
+					match: { variant: "filled", size: "lg" },
+					css: { padding: "0 16px" },
+				},
+			],
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -297,7 +291,7 @@ import type { Recipe } from '@styleframe/runtime';
 const inputRecipe: Recipe = {
     "type": "recipe",
     "name": "input",
-    "defaults": {
+    "base": {
         "borderWidth": "1px"
     },
     "variants": {
@@ -328,7 +322,7 @@ const inputRecipe: Recipe = {
                 "variant": "filled",
                 "size": "lg"
             },
-            "declarations": {
+            "css": {
                 "padding": "0 16px"
             }
         }
@@ -340,15 +334,15 @@ export const input = createRecipe(inputRecipe);
 	});
 
 	it("should handle recipe with complex variant declarations", () => {
-		recipe(
-			"alert",
-			{
+		recipe({
+			name: "alert",
+			base: {
 				padding: "1rem",
 				borderRadius: "4px",
 				display: "flex",
 				alignItems: "center",
 			},
-			{
+			variants: {
 				severity: {
 					info: {
 						background: "#e3f2fd",
@@ -367,7 +361,7 @@ export const input = createRecipe(inputRecipe);
 					},
 				},
 			},
-		);
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -377,7 +371,7 @@ import type { Recipe } from '@styleframe/runtime';
 const alertRecipe: Recipe = {
     "type": "recipe",
     "name": "alert",
-    "defaults": {
+    "base": {
         "padding": "1rem",
         "borderRadius": "4px",
         "display": "flex",
@@ -408,17 +402,17 @@ export const alert = createRecipe(alertRecipe);
 `);
 	});
 
-	it("should handle empty defaults in recipe", () => {
-		recipe(
-			"minimal",
-			{},
-			{
+	it("should handle empty base in recipe", () => {
+		recipe({
+			name: "minimal",
+			base: {},
+			variants: {
 				size: {
 					sm: { fontSize: "12px" },
 					lg: { fontSize: "16px" },
 				},
 			},
-		);
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -428,7 +422,7 @@ import type { Recipe } from '@styleframe/runtime';
 const minimalRecipe: Recipe = {
     "type": "recipe",
     "name": "minimal",
-    "defaults": {},
+    "base": {},
     "variants": {
         "size": {
             "sm": {
@@ -446,7 +440,11 @@ export const minimal = createRecipe(minimalRecipe);
 	});
 
 	it("should handle empty variants in recipe", () => {
-		recipe("simple", { padding: "1rem", margin: "0" }, {});
+		recipe({
+			name: "simple",
+			base: { padding: "1rem", margin: "0" },
+			variants: {},
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -456,7 +454,7 @@ import type { Recipe } from '@styleframe/runtime';
 const simpleRecipe: Recipe = {
     "type": "recipe",
     "name": "simple",
-    "defaults": {
+    "base": {
         "padding": "1rem",
         "margin": "0"
     },
@@ -468,16 +466,16 @@ export const simple = createRecipe(simpleRecipe);
 	});
 
 	it("should preserve recipe type information in output", () => {
-		recipe(
-			"myRecipe",
-			{ display: "block" },
-			{
+		recipe({
+			name: "myRecipe",
+			base: { display: "block" },
+			variants: {
 				status: {
 					active: { opacity: "1" },
 					inactive: { opacity: "0.5" },
 				},
 			},
-		);
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -487,7 +485,7 @@ import type { Recipe } from '@styleframe/runtime';
 const myRecipeRecipe: Recipe = {
     "type": "recipe",
     "name": "myRecipe",
-    "defaults": {
+    "base": {
         "display": "block"
     },
     "variants": {
@@ -507,9 +505,21 @@ export const myRecipe = createRecipe(myRecipeRecipe);
 	});
 
 	it("should handle recipe names with different casing", () => {
-		recipe("PascalCase", {}, { variant: { a: {}, b: {} } });
-		recipe("camelCase", {}, { variant: { a: {}, b: {} } });
-		recipe("kebab-case", {}, { variant: { a: {}, b: {} } });
+		recipe({
+			name: "PascalCase",
+			base: {},
+			variants: { variant: { a: {}, b: {} } },
+		});
+		recipe({
+			name: "camelCase",
+			base: {},
+			variants: { variant: { a: {}, b: {} } },
+		});
+		recipe({
+			name: "kebab-case",
+			base: {},
+			variants: { variant: { a: {}, b: {} } },
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -519,7 +529,7 @@ import type { Recipe } from '@styleframe/runtime';
 const PascalCaseRecipe: Recipe = {
     "type": "recipe",
     "name": "PascalCase",
-    "defaults": {},
+    "base": {},
     "variants": {
         "variant": {
             "a": {},
@@ -533,7 +543,7 @@ export const PascalCase = createRecipe(PascalCaseRecipe);
 const camelCaseRecipe: Recipe = {
     "type": "recipe",
     "name": "camelCase",
-    "defaults": {},
+    "base": {},
     "variants": {
         "variant": {
             "a": {},
@@ -547,7 +557,7 @@ export const camelCase = createRecipe(camelCaseRecipe);
 const kebabCaseRecipe: Recipe = {
     "type": "recipe",
     "name": "kebab-case",
-    "defaults": {},
+    "base": {},
     "variants": {
         "variant": {
             "a": {},
@@ -561,8 +571,8 @@ export const kebabCase = createRecipe(kebabCaseRecipe);
 	});
 
 	it("should delegate to consume function for recipes array", () => {
-		recipe("first", { padding: "1rem" }, {});
-		recipe("second", { margin: "1rem" }, {});
+		recipe({ name: "first", base: { padding: "1rem" }, variants: {} });
+		recipe({ name: "second", base: { margin: "1rem" }, variants: {} });
 
 		const result = consumeRoot(root, options);
 
@@ -572,7 +582,7 @@ import type { Recipe } from '@styleframe/runtime';
 const firstRecipe: Recipe = {
     "type": "recipe",
     "name": "first",
-    "defaults": {
+    "base": {
         "padding": "1rem"
     },
     "variants": {}
@@ -583,7 +593,7 @@ export const first = createRecipe(firstRecipe);
 const secondRecipe: Recipe = {
     "type": "recipe",
     "name": "second",
-    "defaults": {
+    "base": {
         "margin": "1rem"
     },
     "variants": {}
@@ -596,7 +606,7 @@ export const second = createRecipe(secondRecipe);
 	it("should work with custom options", () => {
 		const customOptions: StyleframeOptions = {};
 
-		recipe("customized", { display: "flex" }, {});
+		recipe({ name: "customized", base: { display: "flex" }, variants: {} });
 
 		const result = consumeRoot(root, customOptions);
 
@@ -606,7 +616,7 @@ import type { Recipe } from '@styleframe/runtime';
 const customizedRecipe: Recipe = {
     "type": "recipe",
     "name": "customized",
-    "defaults": {
+    "base": {
         "display": "flex"
     },
     "variants": {}
@@ -617,7 +627,11 @@ export const customized = createRecipe(customizedRecipe);
 	});
 
 	it("should maintain proper structure with imports and exports", () => {
-		recipe("structured", {}, { size: { sm: {}, lg: {} } });
+		recipe({
+			name: "structured",
+			base: {},
+			variants: { size: { sm: {}, lg: {} } },
+		});
 
 		const result = consumeRoot(root, options);
 
@@ -627,7 +641,7 @@ import type { Recipe } from '@styleframe/runtime';
 const structuredRecipe: Recipe = {
     "type": "recipe",
     "name": "structured",
-    "defaults": {},
+    "base": {},
     "variants": {
         "size": {
             "sm": {},

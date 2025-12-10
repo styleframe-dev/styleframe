@@ -7,7 +7,7 @@ export function createThemeConsumer(consume: ConsumeFunction) {
 	const consumeContainer = createContainerConsumer(consume);
 
 	return function consumeTheme(instance: Theme, options: StyleframeOptions) {
-		const selectorFn = options.theme?.selector ?? defaultThemeSelectorFn;
+		const selectorFn = options.themes?.selector ?? defaultThemeSelectorFn;
 		const query = selectorFn({ name: instance.name });
 
 		return consumeContainer(query, instance, options);

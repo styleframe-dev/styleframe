@@ -14,7 +14,7 @@ describe("createRecipeConsumer", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: { cursor: "pointer" },
+			base: { cursor: "pointer" },
 			variants: {},
 		};
 
@@ -23,7 +23,7 @@ describe("createRecipeConsumer", () => {
 		expect(result).toEqual(`const buttonRecipe: Recipe = {
     "type": "recipe",
     "name": "button",
-    "defaults": {
+    "base": {
         "cursor": "pointer"
     },
     "variants": {}
@@ -37,7 +37,7 @@ export const button = createRecipe(buttonRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: { borderWidth: "thin", borderStyle: "solid" },
+			base: { borderWidth: "thin", borderStyle: "solid" },
 			variants: {
 				color: {
 					primary: { background: "blue", color: "white" },
@@ -51,7 +51,7 @@ export const button = createRecipe(buttonRecipe);
 		expect(result).toEqual(`const buttonRecipe: Recipe = {
     "type": "recipe",
     "name": "button",
-    "defaults": {
+    "base": {
         "borderWidth": "thin",
         "borderStyle": "solid"
     },
@@ -77,7 +77,7 @@ export const button = createRecipe(buttonRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "card",
-			defaults: { display: "block" },
+			base: { display: "block" },
 			variants: {
 				variant: {
 					elevated: { boxShadow: "0 2px 4px rgba(0,0,0,0.1)" },
@@ -96,7 +96,7 @@ export const button = createRecipe(buttonRecipe);
 		expect(result).toEqual(`const cardRecipe: Recipe = {
     "type": "recipe",
     "name": "card",
-    "defaults": {
+    "base": {
         "display": "block"
     },
     "variants": {
@@ -130,7 +130,7 @@ export const card = createRecipe(cardRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "chip",
-			defaults: { borderRadius: "4px" },
+			base: { borderRadius: "4px" },
 			variants: {
 				variant: {
 					filled: { background: "primary" },
@@ -152,7 +152,7 @@ export const card = createRecipe(cardRecipe);
 		expect(result).toEqual(`const chipRecipe: Recipe = {
     "type": "recipe",
     "name": "chip",
-    "defaults": {
+    "base": {
         "borderRadius": "4px"
     },
     "variants": {
@@ -187,7 +187,7 @@ export const chip = createRecipe(chipRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "badge",
-			defaults: { display: "inline-block" },
+			base: { display: "inline-block" },
 			variants: {
 				variant: {
 					solid: { background: "blue" },
@@ -201,11 +201,11 @@ export const chip = createRecipe(chipRecipe);
 			compoundVariants: [
 				{
 					match: { variant: "solid", size: "sm" },
-					declarations: { fontSize: "10px" },
+					css: { fontSize: "10px" },
 				},
 				{
 					match: { variant: "outline", size: "lg" },
-					declarations: { fontSize: "16px", fontWeight: "bold" },
+					css: { fontSize: "16px", fontWeight: "bold" },
 				},
 			],
 		};
@@ -215,7 +215,7 @@ export const chip = createRecipe(chipRecipe);
 		expect(result).toEqual(`const badgeRecipe: Recipe = {
     "type": "recipe",
     "name": "badge",
-    "defaults": {
+    "base": {
         "display": "inline-block"
     },
     "variants": {
@@ -242,7 +242,7 @@ export const chip = createRecipe(chipRecipe);
                 "variant": "solid",
                 "size": "sm"
             },
-            "declarations": {
+            "css": {
                 "fontSize": "10px"
             }
         },
@@ -251,7 +251,7 @@ export const chip = createRecipe(chipRecipe);
                 "variant": "outline",
                 "size": "lg"
             },
-            "declarations": {
+            "css": {
                 "fontSize": "16px",
                 "fontWeight": "bold"
             }
@@ -267,7 +267,7 @@ export const badge = createRecipe(badgeRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "input",
-			defaults: { borderWidth: "1px", borderStyle: "solid" },
+			base: { borderWidth: "1px", borderStyle: "solid" },
 			variants: {
 				variant: {
 					filled: { background: "gray" },
@@ -285,7 +285,7 @@ export const badge = createRecipe(badgeRecipe);
 			compoundVariants: [
 				{
 					match: { variant: "filled", size: "lg" },
-					declarations: { padding: "0 16px", fontSize: "18px" },
+					css: { padding: "0 16px", fontSize: "18px" },
 				},
 			],
 		};
@@ -295,7 +295,7 @@ export const badge = createRecipe(badgeRecipe);
 		expect(result).toEqual(`const inputRecipe: Recipe = {
     "type": "recipe",
     "name": "input",
-    "defaults": {
+    "base": {
         "borderWidth": "1px",
         "borderStyle": "solid"
     },
@@ -327,7 +327,7 @@ export const badge = createRecipe(badgeRecipe);
                 "variant": "filled",
                 "size": "lg"
             },
-            "declarations": {
+            "css": {
                 "padding": "0 16px",
                 "fontSize": "18px"
             }
@@ -343,7 +343,7 @@ export const input = createRecipe(inputRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "minimal",
-			defaults: {},
+			base: {},
 			variants: {
 				size: {
 					sm: { fontSize: "12px" },
@@ -357,7 +357,7 @@ export const input = createRecipe(inputRecipe);
 		expect(result).toEqual(`const minimalRecipe: Recipe = {
     "type": "recipe",
     "name": "minimal",
-    "defaults": {},
+    "base": {},
     "variants": {
         "size": {
             "sm": {
@@ -378,7 +378,7 @@ export const minimal = createRecipe(minimalRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "simple",
-			defaults: { padding: "1rem", margin: "0" },
+			base: { padding: "1rem", margin: "0" },
 			variants: {},
 		};
 
@@ -387,7 +387,7 @@ export const minimal = createRecipe(minimalRecipe);
 		expect(result).toEqual(`const simpleRecipe: Recipe = {
     "type": "recipe",
     "name": "simple",
-    "defaults": {
+    "base": {
         "padding": "1rem",
         "margin": "0"
     },
@@ -402,7 +402,7 @@ export const simple = createRecipe(simpleRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "PrimaryButton",
-			defaults: { cursor: "pointer" },
+			base: { cursor: "pointer" },
 			variants: {},
 		};
 
@@ -411,7 +411,7 @@ export const simple = createRecipe(simpleRecipe);
 		expect(result).toEqual(`const PrimaryButtonRecipe: Recipe = {
     "type": "recipe",
     "name": "PrimaryButton",
-    "defaults": {
+    "base": {
         "cursor": "pointer"
     },
     "variants": {}
@@ -425,7 +425,7 @@ export const PrimaryButton = createRecipe(PrimaryButtonRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "primaryButton",
-			defaults: { cursor: "pointer" },
+			base: { cursor: "pointer" },
 			variants: {},
 		};
 
@@ -434,7 +434,7 @@ export const PrimaryButton = createRecipe(PrimaryButtonRecipe);
 		expect(result).toEqual(`const primaryButtonRecipe: Recipe = {
     "type": "recipe",
     "name": "primaryButton",
-    "defaults": {
+    "base": {
         "cursor": "pointer"
     },
     "variants": {}
@@ -448,7 +448,7 @@ export const primaryButton = createRecipe(primaryButtonRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "primary-button",
-			defaults: { cursor: "pointer" },
+			base: { cursor: "pointer" },
 			variants: {},
 		};
 
@@ -457,7 +457,7 @@ export const primaryButton = createRecipe(primaryButtonRecipe);
 		expect(result).toEqual(`const primaryButtonRecipe: Recipe = {
     "type": "recipe",
     "name": "primary-button",
-    "defaults": {
+    "base": {
         "cursor": "pointer"
     },
     "variants": {}
@@ -471,7 +471,7 @@ export const primaryButton = createRecipe(primaryButtonRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "alert",
-			defaults: {
+			base: {
 				padding: "1rem",
 				borderRadius: "4px",
 				display: "flex",
@@ -508,7 +508,7 @@ export const primaryButton = createRecipe(primaryButtonRecipe);
 		expect(result).toEqual(`const alertRecipe: Recipe = {
     "type": "recipe",
     "name": "alert",
-    "defaults": {
+    "base": {
         "padding": "1rem",
         "borderRadius": "4px",
         "display": "flex",
@@ -548,7 +548,7 @@ export const alert = createRecipe(alertRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "myComponent",
-			defaults: {},
+			base: {},
 			variants: {},
 		};
 
@@ -564,7 +564,7 @@ export const alert = createRecipe(alertRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "complete",
-			defaults: { display: "block" },
+			base: { display: "block" },
 			variants: {
 				size: {
 					sm: { width: "100px" },
@@ -575,7 +575,7 @@ export const alert = createRecipe(alertRecipe);
 			compoundVariants: [
 				{
 					match: { size: "lg" },
-					declarations: { fontWeight: "bold" },
+					css: { fontWeight: "bold" },
 				},
 			],
 		};
@@ -584,7 +584,7 @@ export const alert = createRecipe(alertRecipe);
 
 		expect(result).toContain('"type": "recipe"');
 		expect(result).toContain('"name": "complete"');
-		expect(result).toContain('"defaults"');
+		expect(result).toContain('"base"');
 		expect(result).toContain('"variants"');
 		expect(result).toContain('"defaultVariants"');
 		expect(result).toContain('"compoundVariants"');
@@ -594,7 +594,7 @@ export const alert = createRecipe(alertRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "indented",
-			defaults: { padding: "1rem" },
+			base: { padding: "1rem" },
 			variants: {
 				size: {
 					sm: { fontSize: "12px" },
@@ -614,7 +614,7 @@ export const alert = createRecipe(alertRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "test",
-			defaults: {},
+			base: {},
 			variants: {},
 		};
 
@@ -627,7 +627,7 @@ export const alert = createRecipe(alertRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: { cursor: "pointer" },
+			base: { cursor: "pointer" },
 			variants: {},
 		};
 
@@ -637,7 +637,7 @@ export const alert = createRecipe(alertRecipe);
 		expect(result).toEqual(`const buttonRecipe: Recipe = {
     "type": "recipe",
     "name": "button",
-    "defaults": {
+    "base": {
         "cursor": "pointer"
     },
     "variants": {}
@@ -651,7 +651,7 @@ export const button = createRecipe(buttonRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "toggle",
-			defaults: { display: "inline-block" },
+			base: { display: "inline-block" },
 			variants: {
 				state: {
 					on: { background: "green" },
@@ -664,7 +664,7 @@ export const button = createRecipe(buttonRecipe);
 		expect(result).toEqual(`const toggleRecipe: Recipe = {
     "type": "recipe",
     "name": "toggle",
-    "defaults": {
+    "base": {
         "display": "inline-block"
     },
     "variants": {
@@ -684,7 +684,7 @@ export const toggle = createRecipe(toggleRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "placeholder",
-			defaults: { opacity: "0.5" },
+			base: { opacity: "0.5" },
 			variants: {
 				state: {
 					empty: {},
@@ -698,7 +698,7 @@ export const toggle = createRecipe(toggleRecipe);
 		expect(result).toEqual(`const placeholderRecipe: Recipe = {
     "type": "recipe",
     "name": "placeholder",
-    "defaults": {
+    "base": {
         "opacity": "0.5"
     },
     "variants": {
@@ -719,7 +719,7 @@ export const placeholder = createRecipe(placeholderRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "matrix",
-			defaults: {},
+			base: {},
 			variants: {
 				x: {
 					left: { justifyContent: "flex-start" },
@@ -733,15 +733,15 @@ export const placeholder = createRecipe(placeholderRecipe);
 			compoundVariants: [
 				{
 					match: { x: "left", y: "top" },
-					declarations: { padding: "10px 0 0 10px" },
+					css: { padding: "10px 0 0 10px" },
 				},
 				{
 					match: { x: "right", y: "bottom" },
-					declarations: { padding: "0 10px 10px 0" },
+					css: { padding: "0 10px 10px 0" },
 				},
 				{
 					match: { x: "left", y: "bottom" },
-					declarations: { padding: "0 0 10px 10px" },
+					css: { padding: "0 0 10px 10px" },
 				},
 			],
 		};
@@ -751,7 +751,7 @@ export const placeholder = createRecipe(placeholderRecipe);
 		expect(result).toEqual(`const matrixRecipe: Recipe = {
     "type": "recipe",
     "name": "matrix",
-    "defaults": {},
+    "base": {},
     "variants": {
         "x": {
             "left": {
@@ -776,7 +776,7 @@ export const placeholder = createRecipe(placeholderRecipe);
                 "x": "left",
                 "y": "top"
             },
-            "declarations": {
+            "css": {
                 "padding": "10px 0 0 10px"
             }
         },
@@ -785,7 +785,7 @@ export const placeholder = createRecipe(placeholderRecipe);
                 "x": "right",
                 "y": "bottom"
             },
-            "declarations": {
+            "css": {
                 "padding": "0 10px 10px 0"
             }
         },
@@ -794,7 +794,7 @@ export const placeholder = createRecipe(placeholderRecipe);
                 "x": "left",
                 "y": "bottom"
             },
-            "declarations": {
+            "css": {
                 "padding": "0 0 10px 10px"
             }
         }
@@ -809,7 +809,7 @@ export const matrix = createRecipe(matrixRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "themed",
-			defaults: {
+			base: {
 				"--primary-color": "blue",
 				"--secondary-color": "gray",
 			},
@@ -832,7 +832,7 @@ export const matrix = createRecipe(matrixRecipe);
 		expect(result).toEqual(`const themedRecipe: Recipe = {
     "type": "recipe",
     "name": "themed",
-    "defaults": {
+    "base": {
         "--primary-color": "blue",
         "--secondary-color": "gray"
     },
@@ -858,7 +858,7 @@ export const themed = createRecipe(themedRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "typeCheck",
-			defaults: {},
+			base: {},
 			variants: {},
 		};
 
@@ -871,7 +871,7 @@ export const themed = createRecipe(themedRecipe);
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "exportTest",
-			defaults: {},
+			base: {},
 			variants: {},
 		};
 

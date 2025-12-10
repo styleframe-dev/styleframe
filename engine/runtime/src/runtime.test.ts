@@ -3,11 +3,11 @@ import { describe, expect, it } from "vitest";
 import { createRecipe } from "./runtime";
 
 describe("createRecipe", () => {
-	it("should apply default declarations", () => {
+	it("should apply base declarations", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: {
+			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
 				cursor: "pointer",
@@ -28,7 +28,7 @@ describe("createRecipe", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: {
+			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
 				cursor: "pointer",
@@ -74,7 +74,7 @@ describe("createRecipe", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: {
+			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
 				cursor: "pointer",
@@ -120,7 +120,7 @@ describe("createRecipe", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: {
+			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
 				cursor: "pointer",
@@ -158,7 +158,7 @@ describe("createRecipe", () => {
 						color: "primary",
 						size: "sm",
 					},
-					declarations: {
+					css: {
 						padding: "1",
 						background: "primary-dark",
 						color: "white",
@@ -179,7 +179,7 @@ describe("createRecipe", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: {
+			base: {
 				borderWidth: "thin",
 			},
 			variants: {
@@ -210,7 +210,7 @@ describe("createRecipe", () => {
 						color: "primary",
 						size: "sm",
 					},
-					declarations: {
+					css: {
 						background: "primary-dark",
 					},
 				},
@@ -229,7 +229,7 @@ describe("createRecipe", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "card",
-			defaults: {
+			base: {
 				borderRadius: "md",
 				backgroundColor: "white",
 			},
@@ -247,7 +247,7 @@ describe("createRecipe", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "element",
-			defaults: {
+			base: {
 				display: true,
 			},
 			variants: {},
@@ -264,7 +264,7 @@ describe("createRecipe", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: {
+			base: {
 				cursor: "pointer",
 			},
 			variants: {
@@ -287,7 +287,7 @@ describe("createRecipe", () => {
 						color: "primary",
 						size: "sm",
 					},
-					declarations: {
+					css: {
 						padding: "0.5",
 					},
 				},
@@ -296,7 +296,7 @@ describe("createRecipe", () => {
 						color: "primary",
 						rounded: "true",
 					},
-					declarations: {
+					css: {
 						boxShadow: "glow",
 					},
 				},
@@ -316,7 +316,7 @@ describe("createRecipe", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "text",
-			defaults: {
+			base: {
 				fontFamily: "sans",
 			},
 			variants: {
@@ -333,11 +333,11 @@ describe("createRecipe", () => {
 		expect(result).toBe("text _font-family:sans");
 	});
 
-	it("should override declarations in correct order: defaults < variants < compound variants", () => {
+	it("should override declarations in correct order: base < variants < compound variants", () => {
 		const recipe: Recipe = {
 			type: "recipe",
 			name: "button",
-			defaults: {
+			base: {
 				padding: "default",
 			},
 			variants: {
@@ -352,7 +352,7 @@ describe("createRecipe", () => {
 					match: {
 						size: "sm",
 					},
-					declarations: {
+					css: {
 						padding: "compound",
 					},
 				},
@@ -362,7 +362,7 @@ describe("createRecipe", () => {
 		const button = createRecipe(recipe);
 		const result = button({ size: "sm" });
 
-		// Compound variant should override variant, which overrides default
+		// Compound variant should override variant, which overrides base
 		expect(result).toBe("button _padding:compound");
 	});
 });

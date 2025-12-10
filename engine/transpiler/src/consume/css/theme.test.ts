@@ -75,7 +75,7 @@ describe("createThemeConsumer", () => {
 
 	it("should respect custom theme selector format", () => {
 		const customOptions: StyleframeOptions = {
-			theme: {
+			themes: {
 				selector: ({ name }) => `.theme-${name}`,
 			},
 		};
@@ -196,7 +196,7 @@ describe("createThemeConsumer", () => {
 
 	it("should handle themes with both custom selector and variable prefix", () => {
 		const combinedOptions: StyleframeOptions = {
-			theme: {
+			themes: {
 				selector: ({ name }) => `#theme-${name}`,
 			},
 			variables: {

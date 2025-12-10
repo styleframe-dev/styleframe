@@ -393,6 +393,8 @@ describe("mergeContainers", () => {
 		});
 
 		it("should concatenate utilities arrays", () => {
+			const mockAutogenerate = () => ({});
+			const mockCreate = () => {};
 			const a: Root = {
 				type: "root",
 				declarations: {},
@@ -402,6 +404,8 @@ describe("mergeContainers", () => {
 						name: "padding",
 						factory: () => {},
 						values: {},
+						autogenerate: mockAutogenerate,
+						create: mockCreate,
 					},
 				],
 				modifiers: [],
@@ -419,6 +423,8 @@ describe("mergeContainers", () => {
 						name: "margin",
 						factory: () => {},
 						values: {},
+						autogenerate: mockAutogenerate,
+						create: mockCreate,
 					},
 				],
 				modifiers: [],

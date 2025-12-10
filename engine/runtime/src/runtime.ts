@@ -28,7 +28,7 @@ function toClassName(utilityName: string, value: string | true): string {
  *
  * The function:
  * 1. Applies the recipe name as the base class
- * 2. Applies all default declarations
+ * 2. Applies all base declarations
  * 3. Applies variant declarations based on props (with defaultVariants as fallback)
  * 4. Applies compound variants if all conditions match
  * 5. Later declarations override earlier ones
@@ -40,7 +40,7 @@ function toClassName(utilityName: string, value: string | true): string {
  * ```ts
  * const buttonRecipe: Recipe = {
  *     name: "button",
- *     defaults: {
+ *     base: {
  *         borderWidth: "thin",
  *         borderStyle: "solid",
  *     },
@@ -80,27 +80,31 @@ export function createRecipe<
 		// Key: utility name, Value: utility value
 		const declarationsMap = new Map<string, string | true>();
 
-		// 1. Apply default declarations
-		for (const [key, value] of Object.entries(recipe.defaults)) {
-			declarationsMap.set(key, value);
+		// 1. Apply base declarations
+		if (recipe.base) {
+			for (const [key, value] of Object.entries(recipe.base)) {
+				declarationsMap.set(key, value);
+			}
 		}
 
 		// 2. Apply variant declarations (with defaultVariants as fallback)
-		for (const [variantKey, variantOptions] of Object.entries(
-			recipe.variants,
-		)) {
-			// Get the selected variant value from props or defaultVariants
-			const selectedVariant =
-				(props as Record<string, string>)[variantKey] ??
-				recipe.defaultVariants?.[
-					variantKey as keyof typeof recipe.defaultVariants
-				];
+		if (recipe.variants) {
+			for (const [variantKey, variantOptions] of Object.entries(
+				recipe.variants,
+			)) {
+				// Get the selected variant value from props or defaultVariants
+				const selectedVariant =
+					(props as Record<string, string>)[variantKey] ??
+					recipe.defaultVariants?.[
+						variantKey as keyof typeof recipe.defaultVariants
+					];
 
-			if (selectedVariant && variantOptions[selectedVariant as string]) {
-				const declarations = variantOptions[selectedVariant as string];
-				if (declarations) {
-					for (const [key, value] of Object.entries(declarations)) {
-						declarationsMap.set(key, value);
+				if (selectedVariant && variantOptions[selectedVariant as string]) {
+					const declarations = variantOptions[selectedVariant as string];
+					if (declarations) {
+						for (const [key, value] of Object.entries(declarations)) {
+							declarationsMap.set(key, value);
+						}
 					}
 				}
 			}
@@ -128,11 +132,9 @@ export function createRecipe<
 					}
 				}
 
-				// If all conditions match, apply the compound variant declarations
+				// If all conditions match, apply the compound variant css declarations
 				if (allConditionsMatch) {
-					for (const [key, value] of Object.entries(
-						compoundVariant.declarations,
-					)) {
+					for (const [key, value] of Object.entries(compoundVariant.css)) {
 						declarationsMap.set(key, value);
 					}
 				}
