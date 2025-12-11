@@ -365,4 +365,164 @@ describe("createRecipe", () => {
 		// Compound variant should override variant, which overrides base
 		expect(result).toBe("button _padding:compound");
 	});
+
+	it("should handle modifier blocks in base declarations", () => {
+		const recipe: Recipe = {
+			type: "recipe",
+			name: "button",
+			base: {
+				background: "blue",
+				hover: {
+					background: "darkblue",
+				},
+			},
+			variants: {},
+		};
+
+		const button = createRecipe(recipe);
+		const result = button({});
+
+		expect(result).toContain("_background:blue");
+		expect(result).toContain("_hover:background:darkblue");
+	});
+
+	it("should handle compound modifiers like hover:focus", () => {
+		const recipe: Recipe = {
+			type: "recipe",
+			name: "button",
+			base: {
+				boxShadow: "none",
+				"hover:focus": {
+					boxShadow: "lg",
+				},
+			},
+			variants: {},
+		};
+
+		const button = createRecipe(recipe);
+		const result = button({});
+
+		expect(result).toContain("_box-shadow:none");
+		expect(result).toContain("_hover:focus:box-shadow:lg");
+	});
+
+	it("should handle modifier blocks in variant declarations", () => {
+		const recipe: Recipe = {
+			type: "recipe",
+			name: "button",
+			base: {},
+			variants: {
+				color: {
+					primary: {
+						background: "blue",
+						hover: {
+							background: "darkblue",
+						},
+					},
+				},
+			},
+			defaultVariants: {
+				color: "primary",
+			},
+		};
+
+		const button = createRecipe(recipe);
+		const result = button({});
+
+		expect(result).toContain("_background:blue");
+		expect(result).toContain("_hover:background:darkblue");
+	});
+
+	it("should handle modifier blocks in compoundVariants", () => {
+		const recipe: Recipe = {
+			type: "recipe",
+			name: "button",
+			base: {},
+			variants: {
+				color: {
+					primary: {},
+				},
+				disabled: {
+					false: {},
+				},
+			},
+			defaultVariants: {
+				color: "primary",
+				disabled: "false",
+			},
+			compoundVariants: [
+				{
+					match: {
+						color: "primary",
+						disabled: "false",
+					},
+					css: {
+						hover: {
+							background: "primary-shade-50",
+						},
+					},
+				},
+			],
+		};
+
+		const button = createRecipe(recipe);
+		const result = button({});
+
+		expect(result).toContain("_hover:background:primary-shade-50");
+	});
+
+	it("should handle multiple modifiers in same block", () => {
+		const recipe: Recipe = {
+			type: "recipe",
+			name: "button",
+			base: {
+				background: "blue",
+				hover: {
+					background: "darkblue",
+				},
+				focus: {
+					outline: "ring",
+				},
+			},
+			variants: {},
+		};
+
+		const button = createRecipe(recipe);
+		const result = button({});
+
+		expect(result).toContain("_background:blue");
+		expect(result).toContain("_hover:background:darkblue");
+		expect(result).toContain("_focus:outline:ring");
+	});
+
+	it("should override modifier declarations correctly", () => {
+		const recipe: Recipe = {
+			type: "recipe",
+			name: "button",
+			base: {
+				hover: {
+					background: "base-hover",
+				},
+			},
+			variants: {
+				color: {
+					primary: {
+						hover: {
+							background: "variant-hover",
+						},
+					},
+				},
+			},
+			defaultVariants: {
+				color: "primary",
+			},
+		};
+
+		const button = createRecipe(recipe);
+		const result = button({});
+
+		// Variant should override base for the same modifier+utility combination
+		expect(result).toContain("_hover:background:variant-hover");
+		expect(result).not.toContain("_hover:background:base-hover");
+	});
 });

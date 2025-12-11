@@ -84,7 +84,11 @@ export type ModifierFactory = {
 	factory: ModifierCallbackFn;
 };
 
-export type VariantDeclarationsBlock = Record<string, string | true>;
+export type ModifierDeclarationsBlock = Record<string, string | boolean>;
+
+export type VariantDeclarationsBlock = {
+	[key: string]: string | boolean | ModifierDeclarationsBlock;
+};
 
 export type Recipe<
 	Name extends string = string,

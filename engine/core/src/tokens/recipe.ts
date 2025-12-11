@@ -1,11 +1,15 @@
+import { isRef } from "../typeGuards";
 import type {
 	Container,
+	ModifierDeclarationsBlock,
+	ModifierFactory,
 	Recipe,
 	Root,
 	TokenValue,
 	UtilityFactory,
 	VariantDeclarationsBlock,
 } from "../types";
+import { getModifier } from "../utils/getters";
 
 /**
  * Creates a recipe function to define design system recipes with variants.
@@ -123,22 +127,58 @@ export function createRecipeFunction(_parent: Container, root: Root) {
 }
 
 /**
+ * Type representing an entry for a utility value with its modifier combination.
+ */
+type UtilityEntry = {
+	value: TokenValue;
+	modifiers: string[]; // compound modifier as array, e.g., ['hover', 'focus'] for 'hover:focus'
+};
+
+/**
+ * Checks if a value is a modifier block (an object) vs a primitive declaration value.
+ *
+ * @param value - The value to check
+ * @returns True if the value is a modifier block
+ */
+function isModifierBlock(
+	value: string | boolean | ModifierDeclarationsBlock,
+): value is ModifierDeclarationsBlock {
+	return !isRef(value) && typeof value === "object" && value !== null;
+}
+
+/**
  * Collects all values for a given utility key from a declarations block.
+ * Handles modifier blocks (one level deep) by extracting compound modifier keys.
  *
  * @param declarations - The declarations block to process
- * @param utilityValuesMap - Map to accumulate utility key -> values
+ * @param utilityEntriesMap - Map to accumulate utility key -> entries with values and modifier combinations
  */
 function collectDeclarationsValues(
 	declarations: VariantDeclarationsBlock,
-	utilityValuesMap: Map<string, Set<TokenValue>>,
+	utilityEntriesMap: Map<string, UtilityEntry[]>,
 ): void {
-	for (const [key, value] of Object.entries(declarations)) {
-		let valuesSet = utilityValuesMap.get(key);
-		if (!valuesSet) {
-			valuesSet = new Set();
-			utilityValuesMap.set(key, valuesSet);
+	const addUtilityEntry = (
+		utilityKey: string,
+		value: TokenValue,
+		modifiers: string[],
+	) => {
+		let entries = utilityEntriesMap.get(utilityKey);
+		if (!entries) {
+			entries = [];
+			utilityEntriesMap.set(utilityKey, entries);
 		}
-		valuesSet.add(value);
+		entries.push({ value, modifiers });
+	};
+
+	for (const [key, value] of Object.entries(declarations)) {
+		if (isModifierBlock(value)) {
+			const modifiers = key.split(":");
+			for (const [utilityKey, utilityValue] of Object.entries(value)) {
+				addUtilityEntry(utilityEntriesMap, utilityKey, utilityValue, modifiers);
+			}
+		} else {
+			addUtilityEntry(utilityEntriesMap, key, value, []);
+		}
 	}
 }
 
@@ -193,12 +233,12 @@ function getUtilityFactory(
  * ```
  */
 export function processRecipeUtilities(recipe: Recipe, root: Root): void {
-	// Map of utility key -> Set of values to create
-	const utilityValuesMap = new Map<string, Set<TokenValue>>();
+	// Map of utility key -> entries with values and modifier combinations
+	const utilityEntriesMap = new Map<string, UtilityEntry[]>();
 
 	// 1. Process base declarations
 	if (recipe.base) {
-		collectDeclarationsValues(recipe.base, utilityValuesMap);
+		collectDeclarationsValues(recipe.base, utilityEntriesMap);
 	}
 
 	// 2. Process variants.*.* declarations
@@ -207,7 +247,7 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 			for (const variantOption of Object.values(variantGroup)) {
 				collectDeclarationsValues(
 					variantOption as VariantDeclarationsBlock,
-					utilityValuesMap,
+					utilityEntriesMap,
 				);
 			}
 		}
@@ -217,13 +257,16 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 	if (recipe.compoundVariants) {
 		for (const compoundVariant of recipe.compoundVariants) {
 			if (compoundVariant.css) {
-				collectDeclarationsValues(compoundVariant.css, utilityValuesMap);
+				collectDeclarationsValues(compoundVariant.css, utilityEntriesMap);
 			}
 		}
 	}
 
+	// Cache for resolved modifier factories
+	const modifierCache = new Map<string, ModifierFactory | null>();
+
 	// Create utilities for each collected key
-	for (const [utilityKey, valuesSet] of utilityValuesMap) {
+	for (const [utilityKey, entries] of utilityEntriesMap) {
 		const utilityFactory = getUtilityFactory(root, utilityKey);
 
 		if (!utilityFactory) {
@@ -233,10 +276,32 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 			continue;
 		}
 
-		// Convert Set to Array for the create function
-		const valuesArray = Array.from(valuesSet);
+		for (const entry of entries) {
+			// Resolve modifier factories from modifier keys (using cache)
+			const modifierFactories: ModifierFactory[] = [];
+			for (const modifier of entry.modifiers) {
+				if (!modifierCache.has(modifier)) {
+					try {
+						modifierCache.set(modifier, getModifier(root, modifier));
+					} catch {
+						console.warn(
+							`[styleframe] Modifier "${modifier}" not found in registry. Skipping modifier for utility "${utilityKey}".`,
+						);
+						modifierCache.set(modifier, null);
+					}
+				}
 
-		// Call create with the array of values
-		utilityFactory.create(valuesArray);
+				const modifierFactory = modifierCache.get(modifier);
+				if (modifierFactory) {
+					modifierFactories.push(modifierFactory);
+				}
+			}
+
+			// Call create with the value and modifiers (if any)
+			utilityFactory.create(
+				[entry.value],
+				modifierFactories.length > 0 ? modifierFactories : undefined,
+			);
+		}
 	}
 }

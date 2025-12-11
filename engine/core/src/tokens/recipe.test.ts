@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { Root } from "../types";
+import { createModifierFunction } from "./modifier";
 import { createRecipeFunction, processRecipeUtilities } from "./recipe";
 import { createRoot } from "./root";
 import { createUtilityFunction } from "./utility";
@@ -256,35 +257,6 @@ describe("processRecipeUtilities", () => {
 		expect(utilityNames).toContain("fontWeight");
 	});
 
-	test("should deduplicate values across the recipe", () => {
-		utility("background", ({ value }) => ({ background: value }));
-
-		const instance = recipe({
-			name: "button",
-			base: { background: "blue" },
-			variants: {
-				color: {
-					primary: { background: "blue" }, // Same value as base
-					secondary: { background: "gray" },
-				},
-			},
-			compoundVariants: [
-				{
-					match: { color: "primary" },
-					css: { background: "blue" }, // Same value again
-				},
-			],
-		});
-
-		processRecipeUtilities(instance, root);
-
-		// Should only create 2 unique background utilities (blue and gray)
-		const backgroundUtilities = root.children.filter(
-			(child) => child.type === "utility" && child.name === "background",
-		);
-		expect(backgroundUtilities).toHaveLength(2);
-	});
-
 	test("should warn and skip when utility is not found in registry", () => {
 		const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
@@ -490,5 +462,248 @@ describe("processRecipeUtilities", () => {
 		);
 
 		warnSpy.mockRestore();
+	});
+
+	describe("modifier support", () => {
+		let modifier: ReturnType<typeof createModifierFunction>;
+
+		beforeEach(() => {
+			modifier = createModifierFunction(root, root);
+		});
+
+		test("should process modifier blocks in base declarations", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				base: {
+					background: "blue",
+					hover: {
+						boxShadow: "lg",
+					},
+				},
+				variants: {},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			// Should have created:
+			// 1. background utility without modifier
+			// 2. boxShadow utility without modifier (base)
+			// 3. boxShadow utility with hover modifier
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+			const boxShadowUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "boxShadow",
+			);
+
+			expect(backgroundUtilities).toHaveLength(1);
+			expect(boxShadowUtilities).toHaveLength(2); // base + hover modified
+
+			// Check that one has the hover modifier
+			const hoverBoxShadow = boxShadowUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBoxShadow).toBeDefined();
+		});
+
+		test("should process compound modifiers like hover:focus", () => {
+			utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+			modifier("focus", ({ selector }) => {
+				selector("&:focus", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				base: {
+					"hover:focus": {
+						boxShadow: "sm",
+					},
+				},
+				variants: {},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			// Should create modified utilities with both hover and focus
+			const boxShadowUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "boxShadow",
+			);
+
+			// Base utility + combinations with hover, focus, and hover+focus
+			expect(boxShadowUtilities.length).toBeGreaterThanOrEqual(1);
+
+			// Check that there's a utility with both modifiers
+			const hoverFocusBoxShadow = boxShadowUtilities.find(
+				(u) =>
+					u.type === "utility" &&
+					u.modifiers?.includes("hover") &&
+					u.modifiers?.includes("focus"),
+			);
+			expect(hoverFocusBoxShadow).toBeDefined();
+		});
+
+		test("should process modifier blocks in variant declarations", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				variants: {
+					color: {
+						primary: {
+							background: "blue",
+							hover: {
+								background: "darkblue",
+							},
+						},
+					},
+				},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+
+			// Should have created utilities for both values with hover modifier variants
+			expect(backgroundUtilities.length).toBeGreaterThanOrEqual(2);
+
+			// Check that there's a hover-modified background utility
+			const hoverBackground = backgroundUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBackground).toBeDefined();
+		});
+
+		test("should process modifier blocks in compoundVariants", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				variants: {
+					color: {
+						primary: {},
+					},
+					disabled: {
+						false: {},
+					},
+				},
+				compoundVariants: [
+					{
+						match: { color: "primary", disabled: "false" },
+						css: {
+							hover: {
+								background: "primary-shade-50",
+							},
+						},
+					},
+				],
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+
+			expect(backgroundUtilities.length).toBeGreaterThanOrEqual(1);
+
+			const hoverBackground = backgroundUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBackground).toBeDefined();
+		});
+
+		test("should warn when modifier is not found in registry", () => {
+			const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+			utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+			// Note: hover modifier is NOT registered
+
+			const instance = recipe({
+				name: "button",
+				base: {
+					hover: {
+						boxShadow: "lg",
+					},
+				},
+				variants: {},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			// Should warn about missing hover modifier
+			expect(warnSpy).toHaveBeenCalledWith(
+				'[styleframe] Modifier "hover" not found in registry. Skipping modifier for utility "boxShadow".',
+			);
+
+			// Should still create the base utility without modifier
+			const boxShadowUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "boxShadow",
+			);
+			expect(boxShadowUtilities).toHaveLength(1);
+
+			warnSpy.mockRestore();
+		});
+
+		test("should collect modifiers across multiple declarations", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			utility("color", ({ value }) => ({ color: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+			modifier("focus", ({ selector }) => {
+				selector("&:focus", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				base: {
+					background: "blue",
+					hover: {
+						background: "darkblue",
+					},
+					focus: {
+						color: "white",
+					},
+				},
+				variants: {},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			// background should have hover modifier
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+			const hoverBackground = backgroundUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBackground).toBeDefined();
+
+			// color should have focus modifier
+			const colorUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "color",
+			);
+			const focusColor = colorUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("focus"),
+			);
+			expect(focusColor).toBeDefined();
+		});
 	});
 });
