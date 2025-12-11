@@ -1,8 +1,10 @@
 import { transformUtilityKey } from "../defaults";
+import { isModifier } from "../typeGuards";
 import type {
 	Container,
 	ModifierFactory,
 	Root,
+	TokenValue,
 	Utility,
 	UtilityAutogenerateFn,
 	UtilityCallbackFn,
@@ -15,28 +17,6 @@ import {
 } from "./declarations";
 import { applyModifiers, combineKeys } from "./modifier";
 
-export function createModifiedUtilityInstances(
-	baseInstance: Utility,
-	availableModifiers: ModifierFactory[],
-	root: Root,
-): Utility[] {
-	const modifierKeys = availableModifiers.map((modifier) => modifier.key);
-	const modifierKeyCombinations = combineKeys(modifierKeys);
-
-	return modifierKeyCombinations.map((combination) => {
-		const modifiers = new Map<string, ModifierFactory>();
-
-		for (const modifierKey of combination) {
-			const modifier = availableModifiers.find((modifier) =>
-				modifier.key.includes(modifierKey),
-			);
-			if (modifier) modifiers.set(modifierKey, modifier);
-		}
-
-		return applyModifiers(baseInstance, root, modifiers);
-	});
-}
-
 export function createUtilityFunction(parent: Container, root: Root) {
 	return function utility<Name extends string>(
 		name: Name,
@@ -47,9 +27,9 @@ export function createUtilityFunction(parent: Container, root: Root) {
 			type: "utility",
 			name,
 			factory,
-			values: {},
+			values: [],
 			autogenerate: options.autogenerate ?? transformUtilityKey(),
-			create: (entries, modifiers) => {
+			create: (entries, modifiers = []) => {
 				let resolvedEntries = entries;
 
 				if (Array.isArray(entries)) {
@@ -73,7 +53,9 @@ export function createUtilityFunction(parent: Container, root: Root) {
 				}
 
 				for (const [key, value] of Object.entries(resolvedEntries)) {
-					factoryInstance.values[key] = value;
+					const existingEntry = factoryInstance.values.find(
+						(entry) => entry.key === key && entry.modifiers.length === 0,
+					);
 
 					const instance: Utility<Name> = {
 						type: "utility",
@@ -98,14 +80,56 @@ export function createUtilityFunction(parent: Container, root: Root) {
 
 					parseDeclarationsBlock(instance.declarations, callbackContext);
 
-					// Store the utility value on the instance
-					parent.children.push(instance);
+					if (!existingEntry) {
+						factoryInstance.values.push({
+							key,
+							value,
+							modifiers: [],
+						});
+
+						// Store the utility value on the instance
+						parent.children.push(instance);
+					}
 
 					// Create modified variants for this specific value
 					if (modifiers && modifiers.length > 0) {
-						parent.children.push(
-							...createModifiedUtilityInstances(instance, modifiers, root),
-						);
+						const modifierKeys = modifiers.map((modifier) => modifier.key);
+						const modifierKeyCombinations = combineKeys(modifierKeys);
+
+						const modifiedEntries = modifierKeyCombinations
+							.filter((combination) => {
+								// Check for duplicate keys without modifiers
+								return !factoryInstance.values.find(
+									(entry) =>
+										entry.key === key &&
+										entry.modifiers.length === combination.length &&
+										entry.modifiers.every((mod) => combination.includes(mod)),
+								);
+							})
+							.reduce<Utility[]>((acc, combination) => {
+								const modifiersByKey = new Map<string, ModifierFactory>();
+								for (const modKey of combination) {
+									const modifier = modifiers.find((modifier) =>
+										modifier.key.includes(modKey),
+									);
+
+									if (modifier && isModifier(modifier)) {
+										modifiersByKey.set(modKey, modifier);
+									}
+								}
+
+								factoryInstance.values.push({
+									key,
+									value,
+									modifiers: combination,
+								});
+
+								acc.push(applyModifiers(instance, root, modifiersByKey));
+
+								return acc;
+							}, []);
+
+						parent.children.push(...modifiedEntries);
 					}
 				}
 			},

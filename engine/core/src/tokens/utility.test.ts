@@ -44,11 +44,11 @@ describe("createUtilityFunction", () => {
 			lg: "24px",
 		});
 
-		expect(root.utilities[0]?.values).toEqual({
-			sm: "8px",
-			md: "16px",
-			lg: "24px",
-		});
+		expect(root.utilities[0]?.values).toEqual([
+			{ key: "sm", value: "8px", modifiers: [] },
+			{ key: "md", value: "16px", modifiers: [] },
+			{ key: "lg", value: "24px", modifiers: [] },
+		]);
 	});
 
 	test("should store creator function on factoryInstance under create field", () => {
@@ -74,15 +74,15 @@ describe("createUtilityFunction", () => {
 			xl: "32px",
 		});
 
-		expect(root.utilities[0]?.values).toEqual({
-			sm: "4px",
-			md: "8px",
-			lg: "16px",
-			xl: "32px",
-		});
+		expect(root.utilities[0]?.values).toEqual([
+			{ key: "sm", value: "4px", modifiers: [] },
+			{ key: "md", value: "8px", modifiers: [] },
+			{ key: "lg", value: "16px", modifiers: [] },
+			{ key: "xl", value: "32px", modifiers: [] },
+		]);
 	});
 
-	test("should overwrite values with same key on subsequent calls", () => {
+	test("should skip duplicate keys on subsequent calls", () => {
 		const createColorUtility = utility("color", ({ value }) => ({
 			color: value,
 		}));
@@ -95,9 +95,10 @@ describe("createUtilityFunction", () => {
 			primary: "red",
 		});
 
-		expect(root.utilities[0]?.values).toEqual({
-			primary: "red",
-		});
+		expect(root.utilities[0]?.values).toEqual([
+			{ key: "primary", value: "blue", modifiers: [] },
+		]);
+		expect(root.children).toHaveLength(1);
 	});
 
 	test("should store boolean values correctly", () => {
@@ -110,10 +111,10 @@ describe("createUtilityFunction", () => {
 			visible: false,
 		});
 
-		expect(root.utilities[0]?.values).toEqual({
-			default: true,
-			visible: false,
-		});
+		expect(root.utilities[0]?.values).toEqual([
+			{ key: "default", value: true, modifiers: [] },
+			{ key: "visible", value: false, modifiers: [] },
+		]);
 	});
 
 	test("should create utility instances without creating selectors", () => {
@@ -614,7 +615,7 @@ describe("createUtilityFunction", () => {
 		expect(xlUtility).toBeDefined();
 	});
 
-	test("should create additional utilities with same key", () => {
+	test("should skip duplicate keys on subsequent calls", () => {
 		const createColorUtility = utility("color", ({ value }) => ({
 			color: value,
 		}));
@@ -624,20 +625,19 @@ describe("createUtilityFunction", () => {
 			primary: "#007bff",
 		});
 
-		// Second call with same key - should create another utility instance
+		// Second call with same key - should skip the duplicate
 		createColorUtility({
 			primary: "#0056b3",
 		});
 
-		expect(root.children).toHaveLength(2);
+		expect(root.children).toHaveLength(1);
 
 		const utilities = root.children.filter(
 			(u): u is Utility =>
 				isUtility(u) && u.name === "color" && u.value === "primary",
 		);
-		expect(utilities).toHaveLength(2);
+		expect(utilities).toHaveLength(1);
 		expect(utilities[0]?.declarations?.color).toBe("#007bff");
-		expect(utilities[1]?.declarations?.color).toBe("#0056b3");
 	});
 
 	test("should handle different modifiers on subsequent calls", () => {
@@ -751,11 +751,11 @@ describe("createUtilityFunction", () => {
 
 			createColorUtility(["red", "blue", "green"]);
 
-			expect(root.utilities[0]?.values).toEqual({
-				"[red]": "red",
-				"[blue]": "blue",
-				"[green]": "green",
-			});
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "[red]", value: "red", modifiers: [] },
+				{ key: "[blue]", value: "blue", modifiers: [] },
+				{ key: "[green]", value: "green", modifiers: [] },
+			]);
 
 			expect(root.children).toHaveLength(3);
 
@@ -779,16 +779,24 @@ describe("createUtilityFunction", () => {
 
 			createColorUtility(["@color.primary", "@color.secondary"]);
 
-			expect(root.utilities[0]?.values).toEqual({
-				"color.primary": {
-					type: "reference",
-					name: "color.primary",
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "color.primary",
+					value: {
+						type: "reference",
+						name: "color.primary",
+					},
+					modifiers: [],
 				},
-				"color.secondary": {
-					type: "reference",
-					name: "color.secondary",
+				{
+					key: "color.secondary",
+					value: {
+						type: "reference",
+						name: "color.secondary",
+					},
+					modifiers: [],
 				},
-			});
+			]);
 
 			expect(root.children).toHaveLength(2);
 
@@ -814,10 +822,10 @@ describe("createUtilityFunction", () => {
 
 			createPaddingUtility([ref1, ref2]);
 
-			expect(root.utilities[0]?.values).toEqual({
-				"spacing.sm": ref1,
-				"spacing.md": ref2,
-			});
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "spacing.sm", value: ref1, modifiers: [] },
+				{ key: "spacing.md", value: ref2, modifiers: [] },
+			]);
 
 			expect(root.children).toHaveLength(2);
 
@@ -837,14 +845,18 @@ describe("createUtilityFunction", () => {
 
 			createMarginUtility(["@spacing.sm", ref, "16px"]);
 
-			expect(root.utilities[0]?.values).toEqual({
-				"spacing.sm": {
-					type: "reference",
-					name: "spacing.sm",
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "spacing.sm",
+					value: {
+						type: "reference",
+						name: "spacing.sm",
+					},
+					modifiers: [],
 				},
-				"spacing.lg": ref,
-				"[16px]": "16px",
-			});
+				{ key: "spacing.lg", value: ref, modifiers: [] },
+				{ key: "[16px]", value: "16px", modifiers: [] },
+			]);
 
 			expect(root.children).toHaveLength(3);
 		});
@@ -876,13 +888,17 @@ describe("createUtilityFunction", () => {
 
 			createSizeUtility(["@lg", "100px"]);
 
-			expect(root.utilities[0]?.values).toEqual({
-				"size-lg": {
-					type: "reference",
-					name: "lg",
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "size-lg",
+					value: {
+						type: "reference",
+						name: "lg",
+					},
+					modifiers: [],
 				},
-				"custom-100px": "100px",
-			});
+				{ key: "custom-100px", value: "100px", modifiers: [] },
+			]);
 
 			expect(root.children).toHaveLength(2);
 
@@ -931,16 +947,24 @@ describe("createUtilityFunction", () => {
 
 			createBgUtility(["@colors.brand.primary", "@colors.brand.secondary"]);
 
-			expect(root.utilities[0]?.values).toEqual({
-				primary: {
-					type: "reference",
-					name: "colors.brand.primary",
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: {
+						type: "reference",
+						name: "colors.brand.primary",
+					},
+					modifiers: [],
 				},
-				secondary: {
-					type: "reference",
-					name: "colors.brand.secondary",
+				{
+					key: "secondary",
+					value: {
+						type: "reference",
+						name: "colors.brand.secondary",
+					},
+					modifiers: [],
 				},
-			});
+			]);
 
 			expect(root.children).toHaveLength(2);
 
@@ -963,7 +987,7 @@ describe("createUtilityFunction", () => {
 
 			createEmptyUtility([]);
 
-			expect(root.utilities[0]?.values).toEqual({});
+			expect(root.utilities[0]?.values).toEqual([]);
 			expect(root.children).toHaveLength(0);
 		});
 
@@ -974,11 +998,11 @@ describe("createUtilityFunction", () => {
 
 			createZIndexUtility([10, 20, 30]);
 
-			expect(root.utilities[0]?.values).toEqual({
-				"[10]": 10,
-				"[20]": 20,
-				"[30]": 30,
-			});
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "[10]", value: 10, modifiers: [] },
+				{ key: "[20]", value: 20, modifiers: [] },
+				{ key: "[30]", value: 30, modifiers: [] },
+			]);
 
 			expect(root.children).toHaveLength(3);
 
@@ -1034,12 +1058,24 @@ describe("createUtilityFunction", () => {
 			createGapUtility(["@spacing.sm", "@spacing.md"]);
 			createGapUtility(["@spacing.lg", "32px"]);
 
-			expect(root.utilities[0]?.values).toEqual({
-				"spacing.sm": { type: "reference", name: "spacing.sm" },
-				"spacing.md": { type: "reference", name: "spacing.md" },
-				"spacing.lg": { type: "reference", name: "spacing.lg" },
-				"[32px]": "32px",
-			});
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "spacing.sm",
+					value: { type: "reference", name: "spacing.sm" },
+					modifiers: [],
+				},
+				{
+					key: "spacing.md",
+					value: { type: "reference", name: "spacing.md" },
+					modifiers: [],
+				},
+				{
+					key: "spacing.lg",
+					value: { type: "reference", name: "spacing.lg" },
+					modifiers: [],
+				},
+				{ key: "[32px]", value: "32px", modifiers: [] },
+			]);
 
 			expect(root.children).toHaveLength(4);
 		});
@@ -1057,9 +1093,9 @@ describe("createUtilityFunction", () => {
 
 			createBorderUtility([refWithFallback]);
 
-			expect(root.utilities[0]?.values).toEqual({
-				"border.width": refWithFallback,
-			});
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "border.width", value: refWithFallback, modifiers: [] },
+			]);
 
 			const borderUtility = root.children.find(
 				(u): u is Utility =>
@@ -1082,11 +1118,11 @@ describe("createUtilityFunction", () => {
 				none: "none",
 			});
 
-			expect(root.utilities[0]?.values).toEqual({
-				"1": "1 1 0%",
-				auto: "1 1 auto",
-				none: "none",
-			});
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "1", value: "1 1 0%", modifiers: [] },
+				{ key: "auto", value: "1 1 auto", modifiers: [] },
+				{ key: "none", value: "none", modifiers: [] },
+			]);
 
 			expect(root.children).toHaveLength(3);
 		});
