@@ -174,10 +174,10 @@ function collectDeclarationsValues(
 		if (isModifierBlock(value)) {
 			const modifiers = key.split(":");
 			for (const [utilityKey, utilityValue] of Object.entries(value)) {
-				addUtilityEntry(utilityEntriesMap, utilityKey, utilityValue, modifiers);
+				addUtilityEntry(utilityKey, utilityValue, modifiers);
 			}
 		} else {
-			addUtilityEntry(utilityEntriesMap, key, value, []);
+			addUtilityEntry(key, value, []);
 		}
 	}
 }
