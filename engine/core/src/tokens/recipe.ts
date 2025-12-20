@@ -9,9 +9,7 @@ import type {
 	UtilityFactory,
 	VariantDeclarationsBlock,
 } from "../types";
-import { getModifier } from "../utils/getters";
-
-/**
+import { getModifier } from "../utils/getters"; /**
  * Creates a recipe function to define design system recipes with variants.
  *
  * @example ```ts
@@ -88,10 +86,14 @@ import { getModifier } from "../utils/getters";
  *             },
  *         },
  *     ],
- *     _processed: {
+ *     runtime: {
  * 	       base: {
- * 			   borderWidth: "default",
- * 			   borderStyle: "default",
+ * 				borderWidth: '',
+ *         		borderStyle: '',
+ *  	   		boxShadow: 'md',
+ *         		'hover:focus': {
+ *             		boxShadow: 'sm',
+ *         		}
  *         },
  * 	   	   variants: {
  * 			   color: {
@@ -102,11 +104,60 @@ import { getModifier } from "../utils/getters";
  * 				   },
  * 				   secondary: {
  * 					   background: "secondary",
- * 					   color: "white",
+ * 					   color: "[white]",
  * 					   borderColor: "secondary-shade-50",
- * 				   },
+ * 				   }
  * 			   },
- *
+ * 			   disabled: {
+ * 				   	false: null,
+ * 				   	true: {
+ * 					   	opacity: "50",
+ * 					   	cursor: "[not-allowed]",
+ * 				   	}
+ *            },
+ *            size: {
+ *             		sm: {
+ *                 		padding: "sm",
+ *                 		fontSize: "sm",
+ *             		},
+ *             		md: {
+ *                 		padding: "[1rem]",
+ *                 		fontSize: "[1rem]",
+ *             		},
+ *             		lg: {
+ *                 		padding: "lg",
+ *                 		fontSize: "[1.25rem]",
+ *             		},
+ *         		},
+ *         }
+ *     		defaultVariants: {
+ * 		   		color: "primary",
+ * 	       		size: "md",
+ *     		},
+ *     		compoundVariants: [
+ *         		{
+ *             		match: {
+ *                 		color: "primary",
+ *                 		disabled: false
+ *             		},
+ *             		css: {
+ * 				   		hover: {
+ * 					   		background: "primary-shade-50",
+ * 				   		}
+ *             		},
+ *         		},
+ *         		{
+ *             		match: {
+ *                 		color: "secondary",
+ *                 		disabled: false
+ *             		},
+ *             		css: {
+ * 				   		hover: {
+ * 					   		background: 'background:secondary-shade-50',
+ * 				   		}
+ *             		},
+ *         		},
+ *     		],
  *     }
  * });
  * ```
