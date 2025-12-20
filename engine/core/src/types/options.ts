@@ -16,7 +16,7 @@ export type StyleframeOptions = {
 	utilities?: {
 		selector?: UtilitySelectorFn;
 	};
-	theme?: {
+	themes?: {
 		selector?: ThemeSelectorFn;
 	};
 };

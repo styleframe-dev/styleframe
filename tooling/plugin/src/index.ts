@@ -67,9 +67,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				let hasError = false;
 				const type = id.endsWith(".css") ? "css" : "ts";
 
-				if (!options.silent && type === "css") {
+				if (!options.silent) {
 					console.log("");
-					consola.info(`[styleframe] Building...`);
+					consola.info(`[styleframe] Building ${type}...`);
 				}
 
 				const results = [];
@@ -97,8 +97,8 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					"",
 				);
 
-				if (!options.silent && type === "css" && !hasError) {
-					consola.success(`[styleframe] Built successfully.`);
+				if (!options.silent && !hasError) {
+					consola.success(`[styleframe] Built ${type} successfully.`);
 					console.log("");
 				}
 

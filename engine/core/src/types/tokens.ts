@@ -38,10 +38,17 @@ export type CSS = {
 	value: TokenValue[];
 };
 
+export type UtilityAutogenerateFn = (
+	value: TokenValue,
+) => Record<string, TokenValue>;
+
 export type UtilityFactory<Name extends string = string> = {
 	type: "utility";
 	name: Name;
 	factory: UtilityCallbackFn;
+	values: Array<{ key: string; value: TokenValue; modifiers: string[] }>;
+	autogenerate: UtilityAutogenerateFn;
+	create: UtilityCreatorFn;
 };
 
 export type Utility<Name extends string = string> = {
@@ -61,7 +68,7 @@ export type UtilityCallbackFn = DeclarationsCallback<
 >;
 
 export type UtilityCreatorFn = (
-	values: Record<string, TokenValue>,
+	values: Record<string, TokenValue> | TokenValue[],
 	modifiers?: ModifierFactory[],
 ) => void;
 
@@ -76,29 +83,67 @@ export type ModifierFactory = {
 	factory: ModifierCallbackFn;
 };
 
-export type VariantDeclarationsBlock = Record<string, string | true>;
+export type ModifierDeclarationsBlock = Record<string, TokenValue>;
 
-export type Recipe<
-	Name extends string = string,
-	Variants extends Record<
-		string,
-		Record<string, VariantDeclarationsBlock>
-	> = Record<string, Record<string, VariantDeclarationsBlock>>,
-> = {
-	type: "recipe";
-	name: Name;
-	defaults: VariantDeclarationsBlock;
-	variants: Variants;
+export type VariantDeclarationsValue = TokenValue | ModifierDeclarationsBlock;
+
+export type VariantDeclarationsBlock = Record<string, VariantDeclarationsValue>;
+
+export type VariantsBase = Record<
+	string,
+	Record<string, VariantDeclarationsBlock>
+>;
+
+export type RuntimeModifierDeclarationsBlock = Record<
+	string,
+	PrimitiveTokenValue
+>;
+
+export type RuntimeVariantDeclarationsValue =
+	| PrimitiveTokenValue
+	| RuntimeModifierDeclarationsBlock;
+
+export type RuntimeVariantDeclarationsBlock = Record<
+	string,
+	RuntimeVariantDeclarationsValue
+>;
+
+export type RecipeRuntime<Variants extends VariantsBase = VariantsBase> = {
+	base?: RuntimeVariantDeclarationsBlock;
+	variants?: {
+		[K in keyof Variants]?: {
+			[O in keyof Variants[K]]?: RuntimeVariantDeclarationsBlock;
+		};
+	};
 	defaultVariants?: {
 		[K in keyof Variants]?: keyof Variants[K] & string;
 	};
-	compoundVariants?: Array<
-		{
+	compoundVariants?: Array<{
+		match: {
 			[K in keyof Variants]?: keyof Variants[K] & string;
-		} & {
-			declarations: VariantDeclarationsBlock;
-		}
-	>;
+		};
+		css?: RuntimeVariantDeclarationsBlock;
+	}>;
+};
+
+export type Recipe<
+	Name extends string = string,
+	Variants extends VariantsBase = VariantsBase,
+> = {
+	type: "recipe";
+	name: Name;
+	base?: VariantDeclarationsBlock;
+	variants?: Variants;
+	defaultVariants?: {
+		[K in keyof Variants]?: keyof Variants[K] & string;
+	};
+	compoundVariants?: Array<{
+		match: {
+			[K in keyof Variants]?: keyof Variants[K] & string;
+		};
+		css: VariantDeclarationsBlock;
+	}>;
+	_runtime?: RecipeRuntime<Variants>;
 };
 
 export type PrimitiveTokenValue = number | string | boolean | null | undefined;

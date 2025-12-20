@@ -3,7 +3,8 @@ import {
 	isInstanceLicenseRequired,
 	getInstanceLicenseValidationInfo,
 } from "@styleframe/license";
-import { consumeCSS, consumeTS } from "./consume";
+import { consume as consumeCSS } from "./consume/css";
+import { consume as consumeTS } from "./consume/ts";
 import { addLicenseWatermark } from "./license";
 import type { Output, OutputFile, TranspileOptions } from "./types";
 
@@ -31,15 +32,19 @@ export async function transpile(
 		}
 	}
 
-	const { recipes, ...root } = instance.root;
-
 	if (type === "all" || type === "css") {
-		const indexFile = createFile("index.css", consumers.css(root, options));
+		const indexFile = createFile(
+			"index.css",
+			consumers.css(instance.root, options),
+		);
 		output.files.push(indexFile);
 	}
 
 	if (type === "all" || type === "ts") {
-		const indexFile = createFile("index.ts", consumers.ts([], options));
+		const indexFile = createFile(
+			"index.ts",
+			consumers.ts(instance.root, options),
+		);
 		output.files.push(indexFile);
 	}
 

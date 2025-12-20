@@ -29,7 +29,92 @@ describe("createUtilityFunction", () => {
 		expect(root.utilities[0]).toMatchObject({
 			type: "utility",
 			name: "margin",
+			values: {},
 		});
+	});
+
+	test("should store values on factoryInstance when utility is used", () => {
+		const createPaddingUtility = utility("padding", ({ value }) => ({
+			padding: value,
+		}));
+
+		createPaddingUtility({
+			sm: "8px",
+			md: "16px",
+			lg: "24px",
+		});
+
+		expect(root.utilities[0]?.values).toEqual([
+			{ key: "sm", value: "8px", modifiers: [] },
+			{ key: "md", value: "16px", modifiers: [] },
+			{ key: "lg", value: "24px", modifiers: [] },
+		]);
+	});
+
+	test("should store creator function on factoryInstance under create field", () => {
+		const createMarginUtility = utility("margin", ({ value }) => ({
+			margin: value,
+		}));
+
+		expect(root.utilities[0]?.create).toBe(createMarginUtility);
+	});
+
+	test("should accumulate values when utility is called multiple times", () => {
+		const createSpacingUtility = utility("spacing", ({ value }) => ({
+			margin: value,
+		}));
+
+		createSpacingUtility({
+			sm: "4px",
+			md: "8px",
+		});
+
+		createSpacingUtility({
+			lg: "16px",
+			xl: "32px",
+		});
+
+		expect(root.utilities[0]?.values).toEqual([
+			{ key: "sm", value: "4px", modifiers: [] },
+			{ key: "md", value: "8px", modifiers: [] },
+			{ key: "lg", value: "16px", modifiers: [] },
+			{ key: "xl", value: "32px", modifiers: [] },
+		]);
+	});
+
+	test("should skip duplicate keys on subsequent calls", () => {
+		const createColorUtility = utility("color", ({ value }) => ({
+			color: value,
+		}));
+
+		createColorUtility({
+			primary: "blue",
+		});
+
+		createColorUtility({
+			primary: "red",
+		});
+
+		expect(root.utilities[0]?.values).toEqual([
+			{ key: "primary", value: "blue", modifiers: [] },
+		]);
+		expect(root.children).toHaveLength(1);
+	});
+
+	test("should store boolean values correctly", () => {
+		const createHiddenUtility = utility("hidden", ({ value }) => ({
+			display: value ? "none" : "block",
+		}));
+
+		createHiddenUtility({
+			default: true,
+			visible: false,
+		});
+
+		expect(root.utilities[0]?.values).toEqual([
+			{ key: "default", value: true, modifiers: [] },
+			{ key: "visible", value: false, modifiers: [] },
+		]);
 	});
 
 	test("should create utility instances without creating selectors", () => {
@@ -530,7 +615,7 @@ describe("createUtilityFunction", () => {
 		expect(xlUtility).toBeDefined();
 	});
 
-	test("should create additional utilities with same key", () => {
+	test("should skip duplicate keys on subsequent calls", () => {
 		const createColorUtility = utility("color", ({ value }) => ({
 			color: value,
 		}));
@@ -540,20 +625,19 @@ describe("createUtilityFunction", () => {
 			primary: "#007bff",
 		});
 
-		// Second call with same key - should create another utility instance
+		// Second call with same key - should skip the duplicate
 		createColorUtility({
 			primary: "#0056b3",
 		});
 
-		expect(root.children).toHaveLength(2);
+		expect(root.children).toHaveLength(1);
 
 		const utilities = root.children.filter(
 			(u): u is Utility =>
 				isUtility(u) && u.name === "color" && u.value === "primary",
 		);
-		expect(utilities).toHaveLength(2);
+		expect(utilities).toHaveLength(1);
 		expect(utilities[0]?.declarations?.color).toBe("#007bff");
-		expect(utilities[1]?.declarations?.color).toBe("#0056b3");
 	});
 
 	test("should handle different modifiers on subsequent calls", () => {
@@ -657,6 +741,391 @@ describe("createUtilityFunction", () => {
 		});
 		expect(advancedUtility?.variables).toHaveLength(1);
 		expect(advancedUtility?.children).toHaveLength(1);
+	});
+
+	describe("array entries functionality", () => {
+		test("should handle array entries with arbitrary values using default autogenerate", () => {
+			const createColorUtility = utility("color", ({ value }) => ({
+				color: value,
+			}));
+
+			createColorUtility(["red", "blue", "green"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "[red]", value: "red", modifiers: [] },
+				{ key: "[blue]", value: "blue", modifiers: [] },
+				{ key: "[green]", value: "green", modifiers: [] },
+			]);
+
+			expect(root.children).toHaveLength(3);
+
+			const redUtility = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) && u.name === "color" && u.value === "[red]",
+			);
+			expect(redUtility?.declarations).toEqual({ color: "red" });
+
+			const blueUtility = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) && u.name === "color" && u.value === "[blue]",
+			);
+			expect(blueUtility?.declarations).toEqual({ color: "blue" });
+		});
+
+		test("should handle array entries with @ string references using default autogenerate", () => {
+			const createColorUtility = utility("color", ({ value }) => ({
+				color: value,
+			}));
+
+			createColorUtility(["@color.primary", "@color.secondary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "color.primary",
+					value: {
+						type: "reference",
+						name: "color.primary",
+					},
+					modifiers: [],
+				},
+				{
+					key: "color.secondary",
+					value: {
+						type: "reference",
+						name: "color.secondary",
+					},
+					modifiers: [],
+				},
+			]);
+
+			expect(root.children).toHaveLength(2);
+
+			const primaryUtility = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) && u.name === "color" && u.value === "color.primary",
+			);
+			expect(primaryUtility?.declarations).toEqual({
+				color: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+
+		test("should handle array entries with Reference objects using default autogenerate", () => {
+			const createPaddingUtility = utility("padding", ({ value }) => ({
+				padding: value,
+			}));
+
+			const ref1 = { type: "reference" as const, name: "spacing.sm" };
+			const ref2 = { type: "reference" as const, name: "spacing.md" };
+
+			createPaddingUtility([ref1, ref2]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "spacing.sm", value: ref1, modifiers: [] },
+				{ key: "spacing.md", value: ref2, modifiers: [] },
+			]);
+
+			expect(root.children).toHaveLength(2);
+
+			const smUtility = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) && u.name === "padding" && u.value === "spacing.sm",
+			);
+			expect(smUtility?.declarations).toEqual({ padding: ref1 });
+		});
+
+		test("should handle mixed array entries with default autogenerate", () => {
+			const createMarginUtility = utility("margin", ({ value }) => ({
+				margin: value,
+			}));
+
+			const ref = { type: "reference" as const, name: "spacing.lg" };
+
+			createMarginUtility(["@spacing.sm", ref, "16px"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "spacing.sm",
+					value: {
+						type: "reference",
+						name: "spacing.sm",
+					},
+					modifiers: [],
+				},
+				{ key: "spacing.lg", value: ref, modifiers: [] },
+				{ key: "[16px]", value: "16px", modifiers: [] },
+			]);
+
+			expect(root.children).toHaveLength(3);
+		});
+
+		test("should handle array entries with custom autogenerate function", () => {
+			const createSizeUtility = utility(
+				"size",
+				({ value }) => ({
+					width: value,
+					height: value,
+				}),
+				{
+					autogenerate: (value) => {
+						if (typeof value === "string" && value.startsWith("@")) {
+							const name = value.slice(1);
+							// Custom: prefix with "size-"
+							return {
+								[`size-${name}`]: {
+									type: "reference",
+									name,
+								},
+							};
+						}
+						// Custom: use "custom-" prefix instead of brackets
+						return { [`custom-${value}`]: value };
+					},
+				},
+			);
+
+			createSizeUtility(["@lg", "100px"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "size-lg",
+					value: {
+						type: "reference",
+						name: "lg",
+					},
+					modifiers: [],
+				},
+				{ key: "custom-100px", value: "100px", modifiers: [] },
+			]);
+
+			expect(root.children).toHaveLength(2);
+
+			const lgUtility = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) && u.name === "size" && u.value === "size-lg",
+			);
+			expect(lgUtility?.declarations).toEqual({
+				width: { type: "reference", name: "lg" },
+				height: { type: "reference", name: "lg" },
+			});
+
+			const customUtility = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) && u.name === "size" && u.value === "custom-100px",
+			);
+			expect(customUtility?.declarations).toEqual({
+				width: "100px",
+				height: "100px",
+			});
+		});
+
+		test("should handle array entries with autogenerate that transforms variable names", () => {
+			const createBgUtility = utility(
+				"bg",
+				({ value }) => ({
+					backgroundColor: value,
+				}),
+				{
+					autogenerate: (value) => {
+						if (typeof value === "string" && value.startsWith("@")) {
+							const fullName = value.slice(1);
+							// Extract just the last part after the dot
+							const shortName = fullName.split(".").pop() ?? fullName;
+							return {
+								[shortName]: {
+									type: "reference",
+									name: fullName,
+								},
+							};
+						}
+						return { [`[${value}]`]: value };
+					},
+				},
+			);
+
+			createBgUtility(["@colors.brand.primary", "@colors.brand.secondary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: {
+						type: "reference",
+						name: "colors.brand.primary",
+					},
+					modifiers: [],
+				},
+				{
+					key: "secondary",
+					value: {
+						type: "reference",
+						name: "colors.brand.secondary",
+					},
+					modifiers: [],
+				},
+			]);
+
+			expect(root.children).toHaveLength(2);
+
+			const primaryUtility = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) && u.name === "bg" && u.value === "primary",
+			);
+			expect(primaryUtility?.declarations).toEqual({
+				backgroundColor: {
+					type: "reference",
+					name: "colors.brand.primary",
+				},
+			});
+		});
+
+		test("should handle empty array entries", () => {
+			const createEmptyUtility = utility("empty", ({ value }) => ({
+				display: value,
+			}));
+
+			createEmptyUtility([]);
+
+			expect(root.utilities[0]?.values).toEqual([]);
+			expect(root.children).toHaveLength(0);
+		});
+
+		test("should handle array entries with numeric values", () => {
+			const createZIndexUtility = utility("z", ({ value }) => ({
+				zIndex: value,
+			}));
+
+			createZIndexUtility([10, 20, 30]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "[10]", value: 10, modifiers: [] },
+				{ key: "[20]", value: 20, modifiers: [] },
+				{ key: "[30]", value: 30, modifiers: [] },
+			]);
+
+			expect(root.children).toHaveLength(3);
+
+			const z10Utility = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) && u.name === "z" && u.value === "[10]",
+			);
+			expect(z10Utility?.declarations).toEqual({ zIndex: 10 });
+		});
+
+		test("should handle array entries with modifiers", () => {
+			const hoverModifier: ModifierFactory = {
+				type: "modifier",
+				key: ["hover"],
+				factory: ({ declarations }) => ({
+					"&:hover": declarations,
+				}),
+			};
+
+			const createOpacityUtility = utility("opacity", ({ value }) => ({
+				opacity: value,
+			}));
+
+			createOpacityUtility(["@opacity.50", "@opacity.100"], [hoverModifier]);
+
+			// 2 base utilities + 2 hover variants = 4 total
+			expect(root.children).toHaveLength(4);
+
+			const opacity50 = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) &&
+					u.name === "opacity" &&
+					u.value === "opacity.50" &&
+					u.modifiers.length === 0,
+			);
+			expect(opacity50).toBeDefined();
+
+			const opacity50Hover = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) &&
+					u.name === "opacity" &&
+					u.value === "opacity.50" &&
+					u.modifiers.includes("hover"),
+			);
+			expect(opacity50Hover).toBeDefined();
+		});
+
+		test("should accumulate values from multiple array calls", () => {
+			const createGapUtility = utility("gap", ({ value }) => ({
+				gap: value,
+			}));
+
+			createGapUtility(["@spacing.sm", "@spacing.md"]);
+			createGapUtility(["@spacing.lg", "32px"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "spacing.sm",
+					value: { type: "reference", name: "spacing.sm" },
+					modifiers: [],
+				},
+				{
+					key: "spacing.md",
+					value: { type: "reference", name: "spacing.md" },
+					modifiers: [],
+				},
+				{
+					key: "spacing.lg",
+					value: { type: "reference", name: "spacing.lg" },
+					modifiers: [],
+				},
+				{ key: "[32px]", value: "32px", modifiers: [] },
+			]);
+
+			expect(root.children).toHaveLength(4);
+		});
+
+		test("should handle array entries with Reference objects containing fallback", () => {
+			const createBorderUtility = utility("border", ({ value }) => ({
+				borderWidth: value,
+			}));
+
+			const refWithFallback = {
+				type: "reference" as const,
+				name: "border.width",
+				fallback: "1px",
+			};
+
+			createBorderUtility([refWithFallback]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "border.width", value: refWithFallback, modifiers: [] },
+			]);
+
+			const borderUtility = root.children.find(
+				(u): u is Utility =>
+					isUtility(u) && u.name === "border" && u.value === "border.width",
+			);
+			expect(borderUtility?.declarations).toEqual({
+				borderWidth: refWithFallback,
+			});
+		});
+
+		test("should preserve object entries behavior when not using array", () => {
+			const createFlexUtility = utility("flex", ({ value }) => ({
+				flex: value,
+			}));
+
+			// Using object entries (original behavior)
+			createFlexUtility({
+				"1": "1 1 0%",
+				auto: "1 1 auto",
+				none: "none",
+			});
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "1", value: "1 1 0%", modifiers: [] },
+				{ key: "auto", value: "1 1 auto", modifiers: [] },
+				{ key: "none", value: "none", modifiers: [] },
+			]);
+
+			expect(root.children).toHaveLength(3);
+		});
 	});
 });
 

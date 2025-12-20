@@ -393,6 +393,8 @@ describe("mergeContainers", () => {
 		});
 
 		it("should concatenate utilities arrays", () => {
+			const mockAutogenerate = () => ({});
+			const mockCreate = () => {};
 			const a: Root = {
 				type: "root",
 				declarations: {},
@@ -401,6 +403,9 @@ describe("mergeContainers", () => {
 						type: "utility",
 						name: "padding",
 						factory: () => {},
+						values: [],
+						autogenerate: mockAutogenerate,
+						create: mockCreate,
 					},
 				],
 				modifiers: [],
@@ -417,6 +422,9 @@ describe("mergeContainers", () => {
 						type: "utility",
 						name: "margin",
 						factory: () => {},
+						values: [],
+						autogenerate: mockAutogenerate,
+						create: mockCreate,
 					},
 				],
 				modifiers: [],
@@ -484,7 +492,6 @@ describe("mergeContainers", () => {
 					{
 						type: "recipe",
 						name: "button",
-						defaults: {},
 						variants: {},
 					},
 				],
@@ -501,7 +508,6 @@ describe("mergeContainers", () => {
 					{
 						type: "recipe",
 						name: "card",
-						defaults: {},
 						variants: {},
 					},
 				],
@@ -773,26 +779,24 @@ describe("merge", () => {
 
 	describe("recipes concatenation", () => {
 		it("should concatenate recipes from both instances", () => {
-			base.recipe(
-				"button",
-				{},
-				{
+			base.recipe({
+				name: "button",
+				variants: {
 					size: {
 						sm: { fontSize: "0.875rem" },
 						lg: { fontSize: "1.125rem" },
 					},
 				},
-			);
-			extension.recipe(
-				"card",
-				{},
-				{
+			});
+			extension.recipe({
+				name: "card",
+				variants: {
 					elevation: {
 						low: { boxShadow: "0 1px 2px rgba(0,0,0,0.1)" },
 						high: { boxShadow: "0 4px 6px rgba(0,0,0,0.1)" },
 					},
 				},
-			);
+			});
 
 			const result = merge(base, extension);
 
@@ -841,14 +845,14 @@ describe("merge", () => {
 			base.selector(".base", {});
 			base.utility("base-util", () => {});
 			base.modifier(["base"], () => {});
-			base.recipe("base-recipe", {}, {});
+			base.recipe({ name: "base-recipe" });
 			base.theme("base-theme", () => {});
 
 			extension.variable("ext-color", "#fff");
 			extension.selector(".ext", {});
 			extension.utility("ext-util", () => {});
 			extension.modifier(["ext"], () => {});
-			extension.recipe("ext-recipe", {}, {});
+			extension.recipe({ name: "ext-recipe" });
 			extension.theme("ext-theme", () => {});
 
 			const result = merge(base, extension);

@@ -130,6 +130,9 @@ describe("getVariable", () => {
 });
 
 describe("getUtility", () => {
+	const mockAutogenerate = () => ({});
+	const mockCreate = () => {};
+
 	describe("basic functionality", () => {
 		it("should return a utility when it exists", () => {
 			const mockFactory = () => {};
@@ -139,6 +142,9 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "padding",
 					factory: mockFactory,
+					values: [],
+					autogenerate: mockAutogenerate,
+					create: mockCreate,
 				},
 			];
 
@@ -148,6 +154,9 @@ describe("getUtility", () => {
 				type: "utility",
 				name: "padding",
 				factory: mockFactory,
+				values: [],
+				autogenerate: mockAutogenerate,
+				create: mockCreate,
 			});
 		});
 
@@ -161,16 +170,25 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "padding",
 					factory: mockFactory1,
+					values: [],
+					autogenerate: mockAutogenerate,
+					create: mockCreate,
 				},
 				{
 					type: "utility",
 					name: "margin",
 					factory: mockFactory2,
+					values: [],
+					autogenerate: mockAutogenerate,
+					create: mockCreate,
 				},
 				{
 					type: "utility",
 					name: "display",
 					factory: mockFactory3,
+					values: [],
+					autogenerate: mockAutogenerate,
+					create: mockCreate,
 				},
 			];
 
@@ -180,6 +198,9 @@ describe("getUtility", () => {
 				type: "utility",
 				name: "margin",
 				factory: mockFactory2,
+				values: [],
+				autogenerate: mockAutogenerate,
+				create: mockCreate,
 			});
 		});
 
@@ -190,6 +211,9 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "padding",
 					factory: () => {},
+					values: [],
+					autogenerate: mockAutogenerate,
+					create: mockCreate,
 				},
 			];
 
@@ -216,6 +240,9 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "flex-direction",
 					factory: mockFactory,
+					values: [],
+					autogenerate: mockAutogenerate,
+					create: mockCreate,
 				},
 			];
 
@@ -231,6 +258,9 @@ describe("getUtility", () => {
 					type: "utility",
 					name: "padding",
 					factory: () => {},
+					values: [],
+					autogenerate: mockAutogenerate,
+					create: mockCreate,
 				},
 			];
 
