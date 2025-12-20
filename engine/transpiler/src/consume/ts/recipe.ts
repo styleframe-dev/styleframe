@@ -1,10 +1,15 @@
-import type { Recipe, StyleframeOptions } from "@styleframe/core";
+import type {
+	Recipe,
+	RecipeRuntime,
+	StyleframeOptions,
+} from "@styleframe/core";
 import { capitalizeFirst } from "@styleframe/core";
 import type { ConsumeFunction } from "../../types";
 import { isUppercase, toCamelCase } from "../../utils";
 
 /**
  * Consumes a recipe instance and generates TypeScript code for it.
+ * Outputs the _runtime field which contains resolved keys for efficient class name lookups.
  */
 export function createRecipeConsumer(_consume: ConsumeFunction) {
 	return function consumeRecipe(
@@ -19,9 +24,10 @@ export function createRecipeConsumer(_consume: ConsumeFunction) {
 		}
 
 		const recipeConstant = `${exportConstant}Recipe`;
+		const runtime = instance._runtime ?? {};
 
-		return `const ${recipeConstant}: Recipe = ${JSON.stringify(
-			instance,
+		return `const ${recipeConstant}: RecipeRuntime = ${JSON.stringify(
+			runtime,
 			null,
 			4,
 		)};

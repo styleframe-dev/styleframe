@@ -1,8 +1,4 @@
-import type {
-	ModifierDeclarationsBlock,
-	Recipe,
-	VariantDeclarationsBlock,
-} from "./types";
+import type { RecipeRuntime, RuntimeDeclarationsBlock } from "./types";
 
 /**
  * Converts a utility name and value to a class name string.
@@ -42,20 +38,20 @@ function toClassName(
  * @returns True if the value is a modifier block
  */
 function isModifierBlock(
-	value: string | boolean | ModifierDeclarationsBlock,
-): value is ModifierDeclarationsBlock {
+	value: string | boolean | Record<string, string | boolean>,
+): value is Record<string, string | boolean> {
 	return typeof value === "object" && value !== null;
 }
 
 /**
- * Processes a declarations block and adds entries to the declarations map.
+ * Processes a runtime declarations block and adds entries to the declarations map.
  * Handles modifier blocks (one level deep) by extracting modifier keys.
  *
- * @param declarations - The declarations block to process
+ * @param declarations - The runtime declarations block to process (already resolved values)
  * @param declarationsMap - Map to accumulate utility declarations
  */
 function processDeclarationsBlock(
-	declarations: VariantDeclarationsBlock,
+	declarations: RuntimeDeclarationsBlock,
 	declarationsMap: Map<
 		string,
 		{ value: string | boolean; modifiers: string[] }
@@ -92,16 +88,16 @@ function processDeclarationsBlock(
  * 4. Applies compound variants if all conditions match
  * 5. Later declarations override earlier ones
  *
- * @param recipe - The recipe configuration object
+ * @param name - The recipe name (used as the base class)
+ * @param runtime - The pre-computed RecipeRuntime object with resolved values
  * @returns A function that accepts variant props and returns a className string
  *
  * @example
  * ```ts
- * const buttonRecipe: Recipe = {
- *     name: "button",
+ * const buttonRuntime: RecipeRuntime = {
  *     base: {
- *         borderWidth: "thin", // Example of normal value
- *         borderStyle: "[solid]", // Example of using brackets for raw value
+ *         borderWidth: "thin",
+ *         borderStyle: "[solid]",
  *     },
  *     variants: {
  *         color: {
@@ -119,21 +115,15 @@ function processDeclarationsBlock(
  *     },
  * };
  *
- * const button = createRecipe(buttonRecipe);
- * button({}); // "button _border-width:thin _border-style:solid _background:primary _color:white _padding:2"
- * button({ color: "secondary" }); // "button _border-width:thin _border-style:solid _background:secondary _color:white _padding:2"
+ * const button = createRecipe("button", buttonRuntime);
+ * button({}); // "button _border-width:thin _border-style:[solid] _background:primary _color:white _padding:2"
+ * button({ color: "secondary" }); // "button _border-width:thin _border-style:[solid] _background:secondary _color:white _padding:2"
  * ```
  */
-export function createRecipe<
-	Name extends string,
-	Variants extends Record<string, Record<string, VariantDeclarationsBlock>>,
->(
-	recipe: Recipe<Name, Variants>,
-): (
-	props?: {
-		[K in keyof Variants]?: keyof Variants[K] & string;
-	},
-) => string {
+export function createRecipe(
+	name: string,
+	runtime: RecipeRuntime,
+): (props?: Record<string, string>) => string {
 	return (props = {}) => {
 		// Track all declarations in a map to handle overrides
 		// Key: utility name (possibly with modifier prefix), Value: { value, modifiers }
@@ -143,24 +133,32 @@ export function createRecipe<
 		>();
 
 		// 1. Apply base declarations
-		if (recipe.base) {
-			processDeclarationsBlock(recipe.base, declarationsMap);
+		if (runtime.base) {
+			processDeclarationsBlock(runtime.base, declarationsMap);
 		}
 
 		// 2. Apply variant declarations (with defaultVariants as fallback)
-		if (recipe.variants) {
+		if (runtime.variants) {
 			for (const [variantKey, variantOptions] of Object.entries(
-				recipe.variants,
+				runtime.variants,
 			)) {
 				// Get the selected variant value from props or defaultVariants
 				const selectedVariant =
 					(props as Record<string, string>)[variantKey] ??
-					recipe.defaultVariants?.[
-						variantKey as keyof typeof recipe.defaultVariants
+					runtime.defaultVariants?.[
+						variantKey as keyof typeof runtime.defaultVariants
 					];
 
-				if (selectedVariant && variantOptions[selectedVariant as string]) {
-					const declarations = variantOptions[selectedVariant as string];
+				if (
+					selectedVariant &&
+					variantOptions &&
+					(variantOptions as Record<string, RuntimeDeclarationsBlock | null>)[
+						selectedVariant as string
+					]
+				) {
+					const declarations = (
+						variantOptions as Record<string, RuntimeDeclarationsBlock | null>
+					)[selectedVariant as string];
 					if (declarations) {
 						processDeclarationsBlock(declarations, declarationsMap);
 					}
@@ -169,8 +167,8 @@ export function createRecipe<
 		}
 
 		// 3. Apply compound variants if conditions match
-		if (recipe.compoundVariants) {
-			for (const compoundVariant of recipe.compoundVariants) {
+		if (runtime.compoundVariants) {
+			for (const compoundVariant of runtime.compoundVariants) {
 				// Check if all variant conditions match
 				let allConditionsMatch = true;
 
@@ -180,8 +178,8 @@ export function createRecipe<
 					// Get the selected variant value from props or defaultVariants
 					const selectedVariant =
 						(props as Record<string, string>)[variantKey] ??
-						recipe.defaultVariants?.[
-							variantKey as keyof typeof recipe.defaultVariants
+						runtime.defaultVariants?.[
+							variantKey as keyof typeof runtime.defaultVariants
 						];
 
 					if (selectedVariant !== variantValue) {
@@ -191,14 +189,14 @@ export function createRecipe<
 				}
 
 				// If all conditions match, apply the compound variant css declarations
-				if (allConditionsMatch) {
+				if (allConditionsMatch && compoundVariant.css) {
 					processDeclarationsBlock(compoundVariant.css, declarationsMap);
 				}
 			}
 		}
 
 		// 4. Build the final class name string
-		const classNames: string[] = [recipe.name];
+		const classNames: string[] = [name];
 
 		// Convert declarations map to class names
 		// Extract the utility name from the map key (remove modifier prefix if present)

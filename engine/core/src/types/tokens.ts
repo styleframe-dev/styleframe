@@ -3,7 +3,6 @@ import type {
 	DeclarationsCallback,
 	DeclarationsCallbackContext,
 } from "./declarations";
-import type { createRefFunction } from "../tokens/ref";
 
 export type Variable<Name extends string = string> = {
 	type: "variable";
@@ -84,18 +83,50 @@ export type ModifierFactory = {
 	factory: ModifierCallbackFn;
 };
 
-export type ModifierDeclarationsBlock = Record<string, string | boolean>;
+export type ModifierDeclarationsBlock = Record<string, TokenValue>;
 
-export type VariantDeclarationsBlock = {
-	[key: string]: string | boolean | ModifierDeclarationsBlock;
+export type VariantDeclarationsValue = TokenValue | ModifierDeclarationsBlock;
+
+export type VariantDeclarationsBlock = Record<string, VariantDeclarationsValue>;
+
+export type VariantsBase = Record<
+	string,
+	Record<string, VariantDeclarationsBlock>
+>;
+
+export type RuntimeModifierDeclarationsBlock = Record<string, string | boolean>;
+
+export type RuntimeVariantDeclarationsValue =
+	| string
+	| boolean
+	| RuntimeModifierDeclarationsBlock;
+
+export type RuntimeVariantDeclarationsBlock = Record<
+	string,
+	RuntimeVariantDeclarationsValue
+>;
+
+export type RecipeRuntime<Variants extends VariantsBase = VariantsBase> = {
+	base?: RuntimeVariantDeclarationsBlock;
+	variants?: {
+		[K in keyof Variants]?: {
+			[O in keyof Variants[K]]?: RuntimeVariantDeclarationsBlock;
+		};
+	};
+	defaultVariants?: {
+		[K in keyof Variants]?: keyof Variants[K] & string;
+	};
+	compoundVariants?: Array<{
+		match: {
+			[K in keyof Variants]?: keyof Variants[K] & string;
+		};
+		css?: RuntimeVariantDeclarationsBlock;
+	}>;
 };
 
 export type Recipe<
 	Name extends string = string,
-	Variants extends Record<
-		string,
-		Record<string, VariantDeclarationsBlock>
-	> = Record<string, Record<string, VariantDeclarationsBlock>>,
+	Variants extends VariantsBase = VariantsBase,
 > = {
 	type: "recipe";
 	name: Name;
@@ -110,6 +141,7 @@ export type Recipe<
 		};
 		css: VariantDeclarationsBlock;
 	}>;
+	_runtime?: RecipeRuntime<Variants>;
 };
 
 export type PrimitiveTokenValue = number | string | boolean | null | undefined;

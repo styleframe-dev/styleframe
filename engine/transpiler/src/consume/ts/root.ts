@@ -5,7 +5,7 @@ export function createRootConsumer(consume: ConsumeFunction) {
 	return function consumeRoot(instance: Root, options: StyleframeOptions) {
 		return instance.recipes.length > 0
 			? `import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
 ${consume(instance.recipes, options)}`
 			: "";

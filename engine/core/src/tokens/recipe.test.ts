@@ -35,20 +35,21 @@ describe("createRecipeFunction", () => {
 			},
 		});
 
-		expect(instance).toEqual({
-			type: "recipe",
-			name: "button",
-			base: { borderWidth: "thin", borderStyle: "solid" },
-			variants: {
-				color: {
-					primary: { background: "primary", color: "white" },
-					secondary: { background: "secondary", color: "white" },
-				},
-				size: {
-					sm: { padding: "sm" },
-					md: { padding: "md" },
-					lg: { padding: "lg" },
-				},
+		expect(instance.type).toBe("recipe");
+		expect(instance.name).toBe("button");
+		expect(instance.base).toEqual({
+			borderWidth: "thin",
+			borderStyle: "solid",
+		});
+		expect(instance.variants).toEqual({
+			color: {
+				primary: { background: "primary", color: "white" },
+				secondary: { background: "secondary", color: "white" },
+			},
+			size: {
+				sm: { padding: "sm" },
+				md: { padding: "md" },
+				lg: { padding: "lg" },
 			},
 		});
 
@@ -704,6 +705,477 @@ describe("processRecipeUtilities", () => {
 				(u) => u.type === "utility" && u.modifiers?.includes("focus"),
 			);
 			expect(focusColor).toBeDefined();
+		});
+	});
+});
+
+describe("generateRecipeRuntime", () => {
+	let root: Root;
+	let recipe: ReturnType<typeof createRecipeFunction>;
+	let utility: ReturnType<typeof createUtilityFunction>;
+	let modifier: ReturnType<typeof createModifierFunction>;
+
+	beforeEach(() => {
+		root = createRoot();
+		recipe = createRecipeFunction(root, root);
+		utility = createUtilityFunction(root, root);
+		modifier = createModifierFunction(root, root);
+	});
+
+	test("should generate runtime for base declarations with arbitrary values", () => {
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+		utility("borderStyle", ({ value }) => ({ borderStyle: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: { borderWidth: "thin", borderStyle: "solid" },
+			variants: {},
+		});
+
+		expect(instance._runtime).toBeDefined();
+		expect(instance._runtime?.base).toEqual({
+			borderWidth: "[thin]",
+			borderStyle: "[solid]",
+		});
+	});
+
+	test("should generate runtime for base declarations with @ token references", () => {
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: {
+				background: "@color.primary",
+				color: "@color.white",
+			},
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			background: "color.primary",
+			color: "color.white",
+		});
+	});
+
+	test("should generate runtime for base declarations with Reference objects", () => {
+		utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+
+		const instance = recipe({
+			name: "card",
+			base: {
+				boxShadow: { type: "reference", name: "shadow.md" },
+			},
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			boxShadow: "shadow.md",
+		});
+	});
+
+	test("should generate runtime for variant declarations", () => {
+		utility("background", ({ value }) => ({ background: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: { background: "@color.primary" },
+					secondary: { background: "@color.secondary" },
+				},
+				size: {
+					sm: { padding: "0.5rem" },
+					lg: { padding: "1rem" },
+				},
+			},
+		});
+
+		expect(instance._runtime?.variants).toEqual({
+			color: {
+				primary: { background: "color.primary" },
+				secondary: { background: "color.secondary" },
+			},
+			size: {
+				sm: { padding: "[0.5rem]" },
+				lg: { padding: "[1rem]" },
+			},
+		});
+	});
+
+	test("should handle empty variant options", () => {
+		utility("opacity", ({ value }) => ({ opacity: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				disabled: {
+					false: {},
+					true: { opacity: "@opacity.50" },
+				},
+			},
+		});
+
+		expect(instance._runtime?.variants).toEqual({
+			disabled: {
+				false: {},
+				true: { opacity: "opacity.50" },
+			},
+		});
+	});
+
+	test("should copy defaultVariants as-is", () => {
+		utility("background", ({ value }) => ({ background: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: { background: "@color.primary" },
+					secondary: { background: "@color.secondary" },
+				},
+				size: {
+					sm: { padding: "0.5rem" },
+					md: { padding: "1rem" },
+				},
+			},
+			defaultVariants: {
+				color: "primary",
+				size: "md",
+			},
+		});
+
+		expect(instance._runtime?.defaultVariants).toEqual({
+			color: "primary",
+			size: "md",
+		});
+	});
+
+	test("should generate runtime for compoundVariants", () => {
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: { background: "@color.primary" },
+				},
+				disabled: {
+					false: {},
+					true: {},
+				},
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary", disabled: "false" },
+					css: { background: "@color.primary-hover" },
+				},
+			],
+		});
+
+		expect(instance._runtime?.compoundVariants).toEqual([
+			{
+				match: { color: "primary", disabled: "false" },
+				css: { background: "color.primary-hover" },
+			},
+		]);
+	});
+
+	test("should generate runtime for modifier blocks in base", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+
+		const instance = recipe({
+			name: "card",
+			base: {
+				boxShadow: "@shadow.md",
+				hover: {
+					boxShadow: "@shadow.lg",
+				},
+			},
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			boxShadow: "shadow.md",
+			hover: {
+				boxShadow: "shadow.lg",
+			},
+		});
+	});
+
+	test("should generate runtime for modifier blocks in variants", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: {
+						background: "@color.primary",
+						hover: {
+							background: "@color.primary-dark",
+						},
+					},
+				},
+			},
+		});
+
+		expect(instance._runtime?.variants).toEqual({
+			color: {
+				primary: {
+					background: "color.primary",
+					hover: {
+						background: "color.primary-dark",
+					},
+				},
+			},
+		});
+	});
+
+	test("should generate runtime for modifier blocks in compoundVariants", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: { background: "@color.primary" },
+				},
+				disabled: {
+					false: {},
+				},
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary", disabled: "false" },
+					css: {
+						hover: {
+							background: "@color.primary-dark",
+						},
+					},
+				},
+			],
+		});
+
+		expect(instance._runtime?.compoundVariants).toEqual([
+			{
+				match: { color: "primary", disabled: "false" },
+				css: {
+					hover: {
+						background: "color.primary-dark",
+					},
+				},
+			},
+		]);
+	});
+
+	test("should use custom autogenerate function to resolve keys", () => {
+		utility("background", ({ value }) => ({ background: value }), {
+			autogenerate: (value) => {
+				if (typeof value === "string" && value.startsWith("@")) {
+					const fullName = value.slice(1);
+					// Extract just the last part after the dot
+					const shortName = fullName.split(".").pop() ?? fullName;
+					return {
+						[shortName]: { type: "reference", name: fullName },
+					};
+				}
+				return { [`[${value}]`]: value };
+			},
+		});
+
+		const instance = recipe({
+			name: "button",
+			base: {
+				background: "@color.primary",
+			},
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			background: "primary",
+		});
+	});
+
+	test("should handle empty recipe gracefully", () => {
+		const instance = recipe({
+			name: "empty",
+			variants: {},
+		});
+
+		expect(instance._runtime).toBeDefined();
+		expect(instance._runtime?.base).toBeUndefined();
+		expect(instance._runtime?.defaultVariants).toBeUndefined();
+		expect(instance._runtime?.compoundVariants).toBeUndefined();
+	});
+
+	test("should skip utilities not found in registry", () => {
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: {
+				background: "@color.primary",
+				unknownUtility: "value", // This utility is not registered
+			},
+			variants: {},
+		});
+
+		// Should only include the known utility
+		expect(instance._runtime?.base).toEqual({
+			background: "color.primary",
+		});
+		expect(instance._runtime?.base).not.toHaveProperty("unknownUtility");
+	});
+
+	test("should handle compound modifiers like hover:focus", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		modifier("focus", ({ selector }) => {
+			selector("&:focus", {});
+		});
+		utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+
+		const instance = recipe({
+			name: "input",
+			base: {
+				"hover:focus": {
+					boxShadow: "@shadow.ring",
+				},
+			},
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			"hover:focus": {
+				boxShadow: "shadow.ring",
+			},
+		});
+	});
+
+	test("should handle boolean values in declarations", () => {
+		utility("hidden", ({ value }) => ({
+			display: value === true ? "none" : "block",
+		}));
+
+		const instance = recipe({
+			name: "element",
+			base: {
+				hidden: true,
+			},
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			hidden: true,
+		});
+	});
+
+	test("should generate complete runtime for complex recipe", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+		utility("opacity", ({ value }) => ({ opacity: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: {
+				borderWidth: "@border.thin",
+			},
+			variants: {
+				color: {
+					primary: {
+						background: "@color.primary",
+						color: "@color.white",
+						hover: {
+							background: "@color.primary-dark",
+						},
+					},
+					secondary: {
+						background: "@color.secondary",
+						color: "@color.black",
+					},
+				},
+				size: {
+					sm: { padding: "0.5rem" },
+					md: { padding: "1rem" },
+				},
+				disabled: {
+					false: {},
+					true: { opacity: "@opacity.50" },
+				},
+			},
+			defaultVariants: {
+				color: "primary",
+				size: "md",
+				disabled: "false",
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary", disabled: "false" },
+					css: {
+						hover: { background: "@color.primary-hover" },
+					},
+				},
+			],
+		});
+
+		expect(instance._runtime).toEqual({
+			base: {
+				borderWidth: "border.thin",
+			},
+			variants: {
+				color: {
+					primary: {
+						background: "color.primary",
+						color: "color.white",
+						hover: {
+							background: "color.primary-dark",
+						},
+					},
+					secondary: {
+						background: "color.secondary",
+						color: "color.black",
+					},
+				},
+				size: {
+					sm: { padding: "[0.5rem]" },
+					md: { padding: "[1rem]" },
+				},
+				disabled: {
+					false: {},
+					true: { opacity: "opacity.50" },
+				},
+			},
+			defaultVariants: {
+				color: "primary",
+				size: "md",
+				disabled: "false",
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary", disabled: "false" },
+					css: {
+						hover: { background: "color.primary-hover" },
+					},
+				},
+			],
 		});
 	});
 });

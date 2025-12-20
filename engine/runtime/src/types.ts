@@ -1,5 +1,4 @@
 export type {
-	ModifierDeclarationsBlock,
-	Recipe,
-	VariantDeclarationsBlock,
+	RecipeRuntime,
+	RuntimeDeclarationsBlock,
 } from "@styleframe/core";

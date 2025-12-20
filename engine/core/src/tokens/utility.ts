@@ -4,7 +4,6 @@ import type {
 	Container,
 	ModifierFactory,
 	Root,
-	TokenValue,
 	Utility,
 	UtilityAutogenerateFn,
 	UtilityCallbackFn,

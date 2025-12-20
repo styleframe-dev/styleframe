@@ -1,4 +1,11 @@
-import type { Recipe, StyleframeOptions } from "@styleframe/core";
+import type { Root, StyleframeOptions } from "@styleframe/core";
+import {
+	createRecipeFunction,
+	createRefFunction,
+	createRoot,
+	createUtilityFunction,
+	createVariableFunction,
+} from "@styleframe/core";
 import { createRecipeConsumer } from "./recipe";
 
 describe("createRecipeConsumer", () => {
@@ -6,25 +13,35 @@ describe("createRecipeConsumer", () => {
 	const consumeRecipe = createRecipeConsumer(mockConsume);
 	const options: StyleframeOptions = {};
 
+	let root: Root;
+	let recipe: ReturnType<typeof createRecipeFunction>;
+	let utility: ReturnType<typeof createUtilityFunction>;
+	let variable: ReturnType<typeof createVariableFunction>;
+	let ref: ReturnType<typeof createRefFunction>;
+
 	beforeEach(() => {
 		mockConsume.mockClear();
+		root = createRoot();
+		recipe = createRecipeFunction(root, root);
+		utility = createUtilityFunction(root, root);
+		variable = createVariableFunction(root, root);
+		ref = createRefFunction(root, root);
 	});
 
-	it("should generate basic recipe with minimal configuration", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should generate basic recipe with arbitrary values", () => {
+		utility("cursor", ({ value }) => ({ cursor: value }));
+
+		const instance = recipe({
 			name: "button",
 			base: { cursor: "pointer" },
 			variants: {},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const buttonRecipe: Recipe = {
-    "type": "recipe",
-    "name": "button",
+		expect(result).toEqual(`const buttonRecipe: RecipeRuntime = {
     "base": {
-        "cursor": "pointer"
+        "cursor": "[pointer]"
     },
     "variants": {}
 };
@@ -33,37 +50,48 @@ export const button = createRecipe(buttonRecipe);
 `);
 	});
 
-	it("should generate recipe with simple variants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should generate recipe with @ token references", () => {
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+		utility("borderStyle", ({ value }) => ({ borderStyle: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+
+		const instance = recipe({
 			name: "button",
-			base: { borderWidth: "thin", borderStyle: "solid" },
+			base: {
+				borderWidth: "@border.width.thin",
+				borderStyle: "@border.style.solid",
+			},
 			variants: {
 				color: {
-					primary: { background: "blue", color: "white" },
-					secondary: { background: "gray", color: "white" },
+					primary: {
+						background: "@color.primary",
+						color: "@color.white",
+					},
+					secondary: {
+						background: "@color.secondary",
+						color: "@color.white",
+					},
 				},
 			},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const buttonRecipe: Recipe = {
-    "type": "recipe",
-    "name": "button",
+		expect(result).toEqual(`const buttonRecipe: RecipeRuntime = {
     "base": {
-        "borderWidth": "thin",
-        "borderStyle": "solid"
+        "borderWidth": "border.width.thin",
+        "borderStyle": "border.style.solid"
     },
     "variants": {
         "color": {
             "primary": {
-                "background": "blue",
-                "color": "white"
+                "background": "color.primary",
+                "color": "color.white"
             },
             "secondary": {
-                "background": "gray",
-                "color": "white"
+                "background": "color.secondary",
+                "color": "color.white"
             }
         }
     }
@@ -73,103 +101,151 @@ export const button = createRecipe(buttonRecipe);
 `);
 	});
 
-	it("should generate recipe with multiple variant groups", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "card",
-			base: { display: "block" },
+	it("should generate recipe with ref() using variables", () => {
+		const colorPrimary = variable("color.primary", "#007bff");
+		const colorWhite = variable("color.white", "#ffffff");
+		const colorSecondary = variable("color.secondary", "#6c757d");
+		const spacingSm = variable("spacing.sm", "0.5rem");
+		const spacingMd = variable("spacing.md", "1rem");
+
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: {},
 			variants: {
-				variant: {
-					elevated: { boxShadow: "0 2px 4px rgba(0,0,0,0.1)" },
-					flat: { boxShadow: "none" },
+				color: {
+					primary: {
+						background: ref(colorPrimary),
+						color: ref(colorWhite),
+					},
+					secondary: {
+						background: ref(colorSecondary),
+						color: ref(colorWhite),
+					},
 				},
 				size: {
-					sm: { padding: "0.5rem" },
-					md: { padding: "1rem" },
-					lg: { padding: "1.5rem" },
+					sm: { padding: ref(spacingSm) },
+					md: { padding: ref(spacingMd) },
 				},
 			},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const cardRecipe: Recipe = {
-    "type": "recipe",
-    "name": "card",
-    "base": {
-        "display": "block"
-    },
+		expect(result).toEqual(`const buttonRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {
-        "variant": {
-            "elevated": {
-                "boxShadow": "0 2px 4px rgba(0,0,0,0.1)"
+        "color": {
+            "primary": {
+                "background": "color.primary",
+                "color": "color.white"
             },
-            "flat": {
-                "boxShadow": "none"
+            "secondary": {
+                "background": "color.secondary",
+                "color": "color.white"
             }
         },
         "size": {
             "sm": {
-                "padding": "0.5rem"
+                "padding": "spacing.sm"
             },
             "md": {
-                "padding": "1rem"
-            },
-            "lg": {
-                "padding": "1.5rem"
+                "padding": "spacing.md"
             }
         }
     }
+};
+
+export const button = createRecipe(buttonRecipe);
+`);
+	});
+
+	it("should generate recipe with mixed arbitrary values and refs", () => {
+		const colorPrimary = variable("color.primary", "#007bff");
+
+		utility("display", ({ value }) => ({ display: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		const instance = recipe({
+			name: "card",
+			base: {
+				display: "block",
+				background: ref(colorPrimary),
+				padding: "1rem",
+			},
+			variants: {},
+		});
+
+		const result = consumeRecipe(instance, options);
+
+		expect(result).toEqual(`const cardRecipe: RecipeRuntime = {
+    "base": {
+        "display": "[block]",
+        "background": "color.primary",
+        "padding": "[1rem]"
+    },
+    "variants": {}
 };
 
 export const card = createRecipe(cardRecipe);
 `);
 	});
 
-	it("should generate recipe with defaultVariants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should generate recipe with defaultVariants using refs", () => {
+		const borderRadiusSm = variable("border.radius.sm", "4px");
+		const colorPrimary = variable("color.primary", "#007bff");
+		const colorSecondary = variable("color.secondary", "#6c757d");
+		const fontSizeSm = variable("font.size.sm", "12px");
+		const fontSizeMd = variable("font.size.md", "14px");
+
+		utility("borderRadius", ({ value }) => ({ borderRadius: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("fontSize", ({ value }) => ({ fontSize: value }));
+
+		const instance = recipe({
 			name: "chip",
-			base: { borderRadius: "4px" },
+			base: { borderRadius: ref(borderRadiusSm) },
 			variants: {
 				variant: {
-					filled: { background: "primary" },
-					outline: { border: "1px solid" },
+					filled: { background: ref(colorPrimary) },
+					outline: { background: ref(colorSecondary) },
 				},
 				size: {
-					sm: { fontSize: "12px" },
-					md: { fontSize: "14px" },
+					sm: { fontSize: ref(fontSizeSm) },
+					md: { fontSize: ref(fontSizeMd) },
 				},
 			},
 			defaultVariants: {
 				variant: "filled",
 				size: "sm",
 			},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const chipRecipe: Recipe = {
-    "type": "recipe",
-    "name": "chip",
+		expect(result).toEqual(`const chipRecipe: RecipeRuntime = {
     "base": {
-        "borderRadius": "4px"
+        "borderRadius": "border.radius.sm"
     },
     "variants": {
         "variant": {
             "filled": {
-                "background": "primary"
+                "background": "color.primary"
             },
             "outline": {
-                "border": "1px solid"
+                "background": "color.secondary"
             }
         },
         "size": {
             "sm": {
-                "fontSize": "12px"
+                "fontSize": "font.size.sm"
             },
             "md": {
-                "fontSize": "14px"
+                "fontSize": "font.size.md"
             }
         }
     },
@@ -183,56 +259,60 @@ export const chip = createRecipe(chipRecipe);
 `);
 	});
 
-	it("should generate recipe with compoundVariants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should generate recipe with compoundVariants using @ references", () => {
+		utility("display", ({ value }) => ({ display: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("border", ({ value }) => ({ border: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+		utility("fontSize", ({ value }) => ({ fontSize: value }));
+		utility("fontWeight", ({ value }) => ({ fontWeight: value }));
+
+		const instance = recipe({
 			name: "badge",
 			base: { display: "inline-block" },
 			variants: {
 				variant: {
-					solid: { background: "blue" },
-					outline: { border: "1px solid blue" },
+					solid: { background: "@color.blue" },
+					outline: { border: "@border.solid.blue" },
 				},
 				size: {
-					sm: { padding: "2px 4px" },
-					lg: { padding: "4px 8px" },
+					sm: { padding: "@spacing.xs" },
+					lg: { padding: "@spacing.md" },
 				},
 			},
 			compoundVariants: [
 				{
 					match: { variant: "solid", size: "sm" },
-					css: { fontSize: "10px" },
+					css: { fontSize: "@font.size.xs" },
 				},
 				{
 					match: { variant: "outline", size: "lg" },
-					css: { fontSize: "16px", fontWeight: "bold" },
+					css: { fontSize: "@font.size.lg", fontWeight: "@font.weight.bold" },
 				},
 			],
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const badgeRecipe: Recipe = {
-    "type": "recipe",
-    "name": "badge",
+		expect(result).toEqual(`const badgeRecipe: RecipeRuntime = {
     "base": {
-        "display": "inline-block"
+        "display": "[inline-block]"
     },
     "variants": {
         "variant": {
             "solid": {
-                "background": "blue"
+                "background": "color.blue"
             },
             "outline": {
-                "border": "1px solid blue"
+                "border": "border.solid.blue"
             }
         },
         "size": {
             "sm": {
-                "padding": "2px 4px"
+                "padding": "spacing.xs"
             },
             "lg": {
-                "padding": "4px 8px"
+                "padding": "spacing.md"
             }
         }
     },
@@ -243,7 +323,7 @@ export const chip = createRecipe(chipRecipe);
                 "size": "sm"
             },
             "css": {
-                "fontSize": "10px"
+                "fontSize": "font.size.xs"
             }
         },
         {
@@ -252,8 +332,8 @@ export const chip = createRecipe(chipRecipe);
                 "size": "lg"
             },
             "css": {
-                "fontSize": "16px",
-                "fontWeight": "bold"
+                "fontSize": "font.size.lg",
+                "fontWeight": "font.weight.bold"
             }
         }
     ]
@@ -263,19 +343,37 @@ export const badge = createRecipe(badgeRecipe);
 `);
 	});
 
-	it("should generate recipe with both defaultVariants and compoundVariants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should generate recipe with both defaultVariants and compoundVariants using refs", () => {
+		const borderWidth = variable("border.width.default", "1px");
+		const borderStyle = variable("border.style.solid", "solid");
+		const colorGray = variable("color.gray", "#6c757d");
+		const colorTransparent = variable("color.transparent", "transparent");
+		const heightSm = variable("height.sm", "32px");
+		const heightLg = variable("height.lg", "48px");
+		const spacingMd = variable("spacing.md", "16px");
+		const fontSizeLg = variable("font.size.lg", "18px");
+
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+		utility("borderStyle", ({ value }) => ({ borderStyle: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("height", ({ value }) => ({ height: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+		utility("fontSize", ({ value }) => ({ fontSize: value }));
+
+		const instance = recipe({
 			name: "input",
-			base: { borderWidth: "1px", borderStyle: "solid" },
+			base: {
+				borderWidth: ref(borderWidth),
+				borderStyle: ref(borderStyle),
+			},
 			variants: {
 				variant: {
-					filled: { background: "gray" },
-					outline: { background: "transparent" },
+					filled: { background: ref(colorGray) },
+					outline: { background: ref(colorTransparent) },
 				},
 				size: {
-					sm: { height: "32px" },
-					lg: { height: "48px" },
+					sm: { height: ref(heightSm) },
+					lg: { height: ref(heightLg) },
 				},
 			},
 			defaultVariants: {
@@ -285,35 +383,36 @@ export const badge = createRecipe(badgeRecipe);
 			compoundVariants: [
 				{
 					match: { variant: "filled", size: "lg" },
-					css: { padding: "0 16px", fontSize: "18px" },
+					css: {
+						padding: ref(spacingMd),
+						fontSize: ref(fontSizeLg),
+					},
 				},
 			],
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const inputRecipe: Recipe = {
-    "type": "recipe",
-    "name": "input",
+		expect(result).toEqual(`const inputRecipe: RecipeRuntime = {
     "base": {
-        "borderWidth": "1px",
-        "borderStyle": "solid"
+        "borderWidth": "border.width.default",
+        "borderStyle": "border.style.solid"
     },
     "variants": {
         "variant": {
             "filled": {
-                "background": "gray"
+                "background": "color.gray"
             },
             "outline": {
-                "background": "transparent"
+                "background": "color.transparent"
             }
         },
         "size": {
             "sm": {
-                "height": "32px"
+                "height": "height.sm"
             },
             "lg": {
-                "height": "48px"
+                "height": "height.lg"
             }
         }
     },
@@ -328,8 +427,8 @@ export const badge = createRecipe(badgeRecipe);
                 "size": "lg"
             },
             "css": {
-                "padding": "0 16px",
-                "fontSize": "18px"
+                "padding": "spacing.md",
+                "fontSize": "font.size.lg"
             }
         }
     ]
@@ -339,57 +438,43 @@ export const input = createRecipe(inputRecipe);
 `);
 	});
 
-	it("should generate recipe with empty defaults", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should generate recipe with empty _runtime when no utilities registered", () => {
+		const instance = recipe({
 			name: "minimal",
 			base: {},
-			variants: {
-				size: {
-					sm: { fontSize: "12px" },
-					lg: { fontSize: "16px" },
-				},
-			},
-		};
+			variants: {},
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const minimalRecipe: Recipe = {
-    "type": "recipe",
-    "name": "minimal",
+		expect(result).toEqual(`const minimalRecipe: RecipeRuntime = {
     "base": {},
-    "variants": {
-        "size": {
-            "sm": {
-                "fontSize": "12px"
-            },
-            "lg": {
-                "fontSize": "16px"
-            }
-        }
-    }
+    "variants": {}
 };
 
 export const minimal = createRecipe(minimalRecipe);
 `);
 	});
 
-	it("should generate recipe with empty variants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should generate recipe with empty variants using @ references in base", () => {
+		utility("padding", ({ value }) => ({ padding: value }));
+		utility("margin", ({ value }) => ({ margin: value }));
+
+		const instance = recipe({
 			name: "simple",
-			base: { padding: "1rem", margin: "0" },
+			base: {
+				padding: "@spacing.md",
+				margin: "@spacing.none",
+			},
 			variants: {},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const simpleRecipe: Recipe = {
-    "type": "recipe",
-    "name": "simple",
+		expect(result).toEqual(`const simpleRecipe: RecipeRuntime = {
     "base": {
-        "padding": "1rem",
-        "margin": "0"
+        "padding": "spacing.md",
+        "margin": "spacing.none"
     },
     "variants": {}
 };
@@ -398,21 +483,22 @@ export const simple = createRecipe(simpleRecipe);
 `);
 	});
 
-	it("should handle recipe names with PascalCase", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should handle recipe names with PascalCase using refs", () => {
+		const colorPointer = variable("cursor.pointer", "pointer");
+
+		utility("cursor", ({ value }) => ({ cursor: value }));
+
+		const instance = recipe({
 			name: "PrimaryButton",
-			base: { cursor: "pointer" },
+			base: { cursor: ref(colorPointer) },
 			variants: {},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const PrimaryButtonRecipe: Recipe = {
-    "type": "recipe",
-    "name": "PrimaryButton",
+		expect(result).toEqual(`const PrimaryButtonRecipe: RecipeRuntime = {
     "base": {
-        "cursor": "pointer"
+        "cursor": "cursor.pointer"
     },
     "variants": {}
 };
@@ -422,20 +508,19 @@ export const PrimaryButton = createRecipe(PrimaryButtonRecipe);
 	});
 
 	it("should handle recipe names with camelCase", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+		utility("cursor", ({ value }) => ({ cursor: value }));
+
+		const instance = recipe({
 			name: "primaryButton",
-			base: { cursor: "pointer" },
+			base: { cursor: "@cursor.pointer" },
 			variants: {},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const primaryButtonRecipe: Recipe = {
-    "type": "recipe",
-    "name": "primaryButton",
+		expect(result).toEqual(`const primaryButtonRecipe: RecipeRuntime = {
     "base": {
-        "cursor": "pointer"
+        "cursor": "cursor.pointer"
     },
     "variants": {}
 };
@@ -445,20 +530,19 @@ export const primaryButton = createRecipe(primaryButtonRecipe);
 	});
 
 	it("should handle recipe names with kebab-case", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+		utility("cursor", ({ value }) => ({ cursor: value }));
+
+		const instance = recipe({
 			name: "primary-button",
-			base: { cursor: "pointer" },
+			base: { cursor: "@cursor.pointer" },
 			variants: {},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const primaryButtonRecipe: Recipe = {
-    "type": "recipe",
-    "name": "primary-button",
+		expect(result).toEqual(`const primaryButtonRecipe: RecipeRuntime = {
     "base": {
-        "cursor": "pointer"
+        "cursor": "cursor.pointer"
     },
     "variants": {}
 };
@@ -467,74 +551,98 @@ export const primaryButton = createRecipe(primaryButtonRecipe);
 `);
 	});
 
-	it("should handle recipe with complex nested variant declarations", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should handle recipe with complex nested variant declarations using refs", () => {
+		const spacingMd = variable("spacing.md", "1rem");
+		const radiusSm = variable("radius.sm", "4px");
+
+		const colorInfoBg = variable("color.info.bg", "#e3f2fd");
+		const colorInfoText = variable("color.info.text", "#0288d1");
+		const colorInfoBorder = variable("color.info.border", "#0288d1");
+
+		const colorWarningBg = variable("color.warning.bg", "#fff3e0");
+		const colorWarningText = variable("color.warning.text", "#f57c00");
+		const colorWarningBorder = variable("color.warning.border", "#f57c00");
+
+		const colorErrorBg = variable("color.error.bg", "#ffebee");
+		const colorErrorText = variable("color.error.text", "#d32f2f");
+		const colorErrorBorder = variable("color.error.border", "#d32f2f");
+
+		const colorSuccessBg = variable("color.success.bg", "#e8f5e9");
+		const colorSuccessText = variable("color.success.text", "#388e3c");
+		const colorSuccessBorder = variable("color.success.border", "#388e3c");
+
+		utility("padding", ({ value }) => ({ padding: value }));
+		utility("borderRadius", ({ value }) => ({ borderRadius: value }));
+		utility("display", ({ value }) => ({ display: value }));
+		utility("alignItems", ({ value }) => ({ alignItems: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+		utility("borderColor", ({ value }) => ({ borderColor: value }));
+
+		const instance = recipe({
 			name: "alert",
 			base: {
-				padding: "1rem",
-				borderRadius: "4px",
+				padding: ref(spacingMd),
+				borderRadius: ref(radiusSm),
 				display: "flex",
 				alignItems: "center",
 			},
 			variants: {
 				severity: {
 					info: {
-						background: "#e3f2fd",
-						color: "#0288d1",
-						borderColor: "#0288d1",
+						background: ref(colorInfoBg),
+						color: ref(colorInfoText),
+						borderColor: ref(colorInfoBorder),
 					},
 					warning: {
-						background: "#fff3e0",
-						color: "#f57c00",
-						borderColor: "#f57c00",
+						background: ref(colorWarningBg),
+						color: ref(colorWarningText),
+						borderColor: ref(colorWarningBorder),
 					},
 					error: {
-						background: "#ffebee",
-						color: "#d32f2f",
-						borderColor: "#d32f2f",
+						background: ref(colorErrorBg),
+						color: ref(colorErrorText),
+						borderColor: ref(colorErrorBorder),
 					},
 					success: {
-						background: "#e8f5e9",
-						color: "#388e3c",
-						borderColor: "#388e3c",
+						background: ref(colorSuccessBg),
+						color: ref(colorSuccessText),
+						borderColor: ref(colorSuccessBorder),
 					},
 				},
 			},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const alertRecipe: Recipe = {
-    "type": "recipe",
-    "name": "alert",
+		expect(result).toEqual(`const alertRecipe: RecipeRuntime = {
     "base": {
-        "padding": "1rem",
-        "borderRadius": "4px",
-        "display": "flex",
-        "alignItems": "center"
+        "padding": "spacing.md",
+        "borderRadius": "radius.sm",
+        "display": "[flex]",
+        "alignItems": "[center]"
     },
     "variants": {
         "severity": {
             "info": {
-                "background": "#e3f2fd",
-                "color": "#0288d1",
-                "borderColor": "#0288d1"
+                "background": "color.info.bg",
+                "color": "color.info.text",
+                "borderColor": "color.info.border"
             },
             "warning": {
-                "background": "#fff3e0",
-                "color": "#f57c00",
-                "borderColor": "#f57c00"
+                "background": "color.warning.bg",
+                "color": "color.warning.text",
+                "borderColor": "color.warning.border"
             },
             "error": {
-                "background": "#ffebee",
-                "color": "#d32f2f",
-                "borderColor": "#d32f2f"
+                "background": "color.error.bg",
+                "color": "color.error.text",
+                "borderColor": "color.error.border"
             },
             "success": {
-                "background": "#e8f5e9",
-                "color": "#388e3c",
-                "borderColor": "#388e3c"
+                "background": "color.success.bg",
+                "color": "color.success.text",
+                "borderColor": "color.success.border"
             }
         }
     }
@@ -544,101 +652,116 @@ export const alert = createRecipe(alertRecipe);
 `);
 	});
 
-	it("should correctly format recipe constant name", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should correctly format recipe constant name with ref values", () => {
+		const displayBlock = variable("display.block", "block");
+
+		utility("display", ({ value }) => ({ display: value }));
+
+		const instance = recipe({
 			name: "myComponent",
-			base: {},
+			base: { display: ref(displayBlock) },
 			variants: {},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toContain("const myComponentRecipe: Recipe =");
+		expect(result).toContain("const myComponentRecipe: RecipeRuntime =");
 		expect(result).toContain(
 			"export const myComponent = createRecipe(myComponentRecipe);",
 		);
 	});
 
-	it("should preserve all recipe properties in JSON stringification", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should preserve all _runtime properties in JSON stringification", () => {
+		const displayBlock = variable("display.block", "block");
+		const widthSm = variable("width.sm", "100px");
+		const widthLg = variable("width.lg", "200px");
+		const fontWeightBold = variable("font.weight.bold", "700");
+
+		utility("display", ({ value }) => ({ display: value }));
+		utility("width", ({ value }) => ({ width: value }));
+		utility("fontWeight", ({ value }) => ({ fontWeight: value }));
+
+		const instance = recipe({
 			name: "complete",
-			base: { display: "block" },
+			base: { display: ref(displayBlock) },
 			variants: {
 				size: {
-					sm: { width: "100px" },
-					lg: { width: "200px" },
+					sm: { width: ref(widthSm) },
+					lg: { width: ref(widthLg) },
 				},
 			},
 			defaultVariants: { size: "sm" },
 			compoundVariants: [
 				{
 					match: { size: "lg" },
-					css: { fontWeight: "bold" },
+					css: { fontWeight: ref(fontWeightBold) },
 				},
 			],
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toContain('"type": "recipe"');
-		expect(result).toContain('"name": "complete"');
 		expect(result).toContain('"base"');
 		expect(result).toContain('"variants"');
 		expect(result).toContain('"defaultVariants"');
 		expect(result).toContain('"compoundVariants"');
+		expect(result).not.toContain('"type": "recipe"');
+		expect(result).not.toContain('"name": "complete"');
 	});
 
-	it("should use 4-space indentation in JSON output", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should use 4-space indentation in JSON output with refs", () => {
+		const spacingMd = variable("spacing.md", "1rem");
+		const fontSizeSm = variable("font.size.sm", "12px");
+
+		utility("padding", ({ value }) => ({ padding: value }));
+		utility("fontSize", ({ value }) => ({ fontSize: value }));
+
+		const instance = recipe({
 			name: "indented",
-			base: { padding: "1rem" },
+			base: { padding: ref(spacingMd) },
 			variants: {
 				size: {
-					sm: { fontSize: "12px" },
+					sm: { fontSize: ref(fontSizeSm) },
 				},
 			},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
 		// Check for 4-space indentation
-		expect(result).toContain('    "type": "recipe"');
-		expect(result).toContain('    "name": "indented"');
-		expect(result).toContain('        "padding": "1rem"');
+		expect(result).toContain('    "base": {');
+		expect(result).toContain('        "padding": "spacing.md"');
 	});
 
 	it("should not call the consume function parameter", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+		const instance = recipe({
 			name: "test",
 			base: {},
 			variants: {},
-		};
+		});
 
-		consumeRecipe(recipe, options);
+		consumeRecipe(instance, options);
 
 		expect(mockConsume).not.toHaveBeenCalled();
 	});
 
-	it("should work with different options", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should work with different options using refs", () => {
+		const cursorPointer = variable("cursor.pointer", "pointer");
+
+		utility("cursor", ({ value }) => ({ cursor: value }));
+
+		const instance = recipe({
 			name: "button",
-			base: { cursor: "pointer" },
+			base: { cursor: ref(cursorPointer) },
 			variants: {},
-		};
+		});
 
 		const customOptions: StyleframeOptions = {};
-		const result = consumeRecipe(recipe, customOptions);
+		const result = consumeRecipe(instance, customOptions);
 
-		expect(result).toEqual(`const buttonRecipe: Recipe = {
-    "type": "recipe",
-    "name": "button",
+		expect(result).toEqual(`const buttonRecipe: RecipeRuntime = {
     "base": {
-        "cursor": "pointer"
+        "cursor": "cursor.pointer"
     },
     "variants": {}
 };
@@ -647,30 +770,30 @@ export const button = createRecipe(buttonRecipe);
 `);
 	});
 
-	it("should handle recipe with single variant group and single variant", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should handle recipe with single variant group using @ references", () => {
+		utility("display", ({ value }) => ({ display: value }));
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
 			name: "toggle",
-			base: { display: "inline-block" },
+			base: { display: "@display.inline-block" },
 			variants: {
 				state: {
-					on: { background: "green" },
+					on: { background: "@color.success" },
 				},
 			},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const toggleRecipe: Recipe = {
-    "type": "recipe",
-    "name": "toggle",
+		expect(result).toEqual(`const toggleRecipe: RecipeRuntime = {
     "base": {
-        "display": "inline-block"
+        "display": "display.inline-block"
     },
     "variants": {
         "state": {
             "on": {
-                "background": "green"
+                "background": "color.success"
             }
         }
     }
@@ -680,32 +803,34 @@ export const toggle = createRecipe(toggleRecipe);
 `);
 	});
 
-	it("should handle recipe with empty variant declarations", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should handle recipe with empty variant declarations using refs", () => {
+		const opacityHalf = variable("opacity.50", "0.5");
+		const opacityFull = variable("opacity.100", "1");
+
+		utility("opacity", ({ value }) => ({ opacity: value }));
+
+		const instance = recipe({
 			name: "placeholder",
-			base: { opacity: "0.5" },
+			base: { opacity: ref(opacityHalf) },
 			variants: {
 				state: {
 					empty: {},
-					filled: { opacity: "1" },
+					filled: { opacity: ref(opacityFull) },
 				},
 			},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const placeholderRecipe: Recipe = {
-    "type": "recipe",
-    "name": "placeholder",
+		expect(result).toEqual(`const placeholderRecipe: RecipeRuntime = {
     "base": {
-        "opacity": "0.5"
+        "opacity": "opacity.50"
     },
     "variants": {
         "state": {
             "empty": {},
             "filled": {
-                "opacity": "1"
+                "opacity": "opacity.100"
             }
         }
     }
@@ -715,58 +840,59 @@ export const placeholder = createRecipe(placeholderRecipe);
 `);
 	});
 
-	it("should handle recipe with multiple compound variants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should handle recipe with multiple compound variants using @ references", () => {
+		utility("justifyContent", ({ value }) => ({ justifyContent: value }));
+		utility("alignItems", ({ value }) => ({ alignItems: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		const instance = recipe({
 			name: "matrix",
 			base: {},
 			variants: {
 				x: {
-					left: { justifyContent: "flex-start" },
-					right: { justifyContent: "flex-end" },
+					left: { justifyContent: "@justify.start" },
+					right: { justifyContent: "@justify.end" },
 				},
 				y: {
-					top: { alignItems: "flex-start" },
-					bottom: { alignItems: "flex-end" },
+					top: { alignItems: "@align.start" },
+					bottom: { alignItems: "@align.end" },
 				},
 			},
 			compoundVariants: [
 				{
 					match: { x: "left", y: "top" },
-					css: { padding: "10px 0 0 10px" },
+					css: { padding: "@spacing.top-left" },
 				},
 				{
 					match: { x: "right", y: "bottom" },
-					css: { padding: "0 10px 10px 0" },
+					css: { padding: "@spacing.bottom-right" },
 				},
 				{
 					match: { x: "left", y: "bottom" },
-					css: { padding: "0 0 10px 10px" },
+					css: { padding: "@spacing.bottom-left" },
 				},
 			],
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const matrixRecipe: Recipe = {
-    "type": "recipe",
-    "name": "matrix",
+		expect(result).toEqual(`const matrixRecipe: RecipeRuntime = {
     "base": {},
     "variants": {
         "x": {
             "left": {
-                "justifyContent": "flex-start"
+                "justifyContent": "justify.start"
             },
             "right": {
-                "justifyContent": "flex-end"
+                "justifyContent": "justify.end"
             }
         },
         "y": {
             "top": {
-                "alignItems": "flex-start"
+                "alignItems": "align.start"
             },
             "bottom": {
-                "alignItems": "flex-end"
+                "alignItems": "align.end"
             }
         }
     },
@@ -777,7 +903,7 @@ export const placeholder = createRecipe(placeholderRecipe);
                 "y": "top"
             },
             "css": {
-                "padding": "10px 0 0 10px"
+                "padding": "spacing.top-left"
             }
         },
         {
@@ -786,7 +912,7 @@ export const placeholder = createRecipe(placeholderRecipe);
                 "y": "bottom"
             },
             "css": {
-                "padding": "0 10px 10px 0"
+                "padding": "spacing.bottom-right"
             }
         },
         {
@@ -795,7 +921,7 @@ export const placeholder = createRecipe(placeholderRecipe);
                 "y": "bottom"
             },
             "css": {
-                "padding": "0 0 10px 10px"
+                "padding": "spacing.bottom-left"
             }
         }
     ]
@@ -805,80 +931,108 @@ export const matrix = createRecipe(matrixRecipe);
 `);
 	});
 
-	it("should handle recipe with CSS custom properties", () => {
-		const recipe: Recipe = {
-			type: "recipe",
+	it("should handle recipe with custom autogenerate extracting token keys", () => {
+		// Custom autogenerate that extracts only the last part of token path
+		utility("background", ({ value }) => ({ background: value }), {
+			autogenerate: (value) => {
+				if (typeof value === "string" && value.startsWith("@")) {
+					const fullName = value.slice(1);
+					const shortName = fullName.split(".").pop() ?? fullName;
+					return { [shortName]: { type: "reference", name: fullName } };
+				}
+				return { [`[${value}]`]: value };
+			},
+		});
+		utility("color", ({ value }) => ({ color: value }), {
+			autogenerate: (value) => {
+				if (typeof value === "string" && value.startsWith("@")) {
+					const fullName = value.slice(1);
+					const shortName = fullName.split(".").pop() ?? fullName;
+					return { [shortName]: { type: "reference", name: fullName } };
+				}
+				return { [`[${value}]`]: value };
+			},
+		});
+
+		const instance = recipe({
 			name: "themed",
 			base: {
-				"--primary-color": "blue",
-				"--secondary-color": "gray",
+				background: "@color.primary",
+				color: "@color.white",
 			},
-			variants: {
-				theme: {
-					dark: {
-						"--primary-color": "lightblue",
-						"--secondary-color": "darkgray",
-					},
-					light: {
-						"--primary-color": "darkblue",
-						"--secondary-color": "lightgray",
-					},
-				},
-			},
-		};
+			variants: {},
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const themedRecipe: Recipe = {
-    "type": "recipe",
-    "name": "themed",
-    "base": {
-        "--primary-color": "blue",
-        "--secondary-color": "gray"
-    },
-    "variants": {
-        "theme": {
-            "dark": {
-                "--primary-color": "lightblue",
-                "--secondary-color": "darkgray"
-            },
-            "light": {
-                "--primary-color": "darkblue",
-                "--secondary-color": "lightgray"
-            }
-        }
-    }
-};
-
-export const themed = createRecipe(themedRecipe);
-`);
+		expect(result).toContain('"background": "primary"');
+		expect(result).toContain('"color": "white"');
 	});
 
 	it("should generate correct TypeScript type annotation", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "typeCheck",
+		const instance = recipe({
+			name: "typed",
 			base: {},
 			variants: {},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
-		expect(result).toContain("const typeCheckRecipe: Recipe = {");
+		expect(result).toContain("const typedRecipe: RecipeRuntime =");
 	});
 
 	it("should generate correct export statement", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "exportTest",
+		const instance = recipe({
+			name: "exported",
 			base: {},
 			variants: {},
-		};
+		});
 
-		const result = consumeRecipe(recipe, options);
+		const result = consumeRecipe(instance, options);
 
 		expect(result).toContain(
-			"export const exportTest = createRecipe(exportTestRecipe);",
+			"export const exported = createRecipe(exportedRecipe);",
 		);
+	});
+
+	it("should handle recipe without _runtime by outputting empty object", () => {
+		// Create a recipe without registered utilities
+		const bareRoot = createRoot();
+		const bareRecipe = createRecipeFunction(bareRoot, bareRoot);
+
+		const instance = bareRecipe({
+			name: "noRuntime",
+			base: { display: "block" },
+			variants: {},
+		});
+
+		// Manually remove _runtime to test fallback
+		delete instance._runtime;
+
+		const result = consumeRecipe(instance, options);
+
+		expect(result).toEqual(`const noRuntimeRecipe: RecipeRuntime = {};
+
+export const noRuntime = createRecipe(noRuntimeRecipe);
+`);
+	});
+
+	it("should handle ref() with string name directly", () => {
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+
+		const instance = recipe({
+			name: "stringRef",
+			base: {
+				background: ref("color.primary"),
+				color: ref("color.white"),
+			},
+			variants: {},
+		});
+
+		const result = consumeRecipe(instance, options);
+
+		expect(result).toContain('"background": "color.primary"');
+		expect(result).toContain('"color": "color.white"');
 	});
 });

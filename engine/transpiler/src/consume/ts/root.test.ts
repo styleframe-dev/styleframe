@@ -35,27 +35,16 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 
+		// Since no utilities are registered, _runtime will have empty objects
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const buttonRecipe: Recipe = {
-    "type": "recipe",
-    "name": "button",
-    "base": {
-        "borderWidth": "thin",
-        "borderStyle": "solid",
-        "cursor": "pointer"
-    },
+const buttonRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {
         "color": {
-            "primary": {
-                "background": "primary",
-                "color": "white"
-            },
-            "secondary": {
-                "background": "secondary",
-                "color": "white"
-            }
+            "primary": {},
+            "secondary": {}
         }
     }
 };
@@ -90,42 +79,26 @@ export const button = createRecipe(buttonRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const buttonRecipe: Recipe = {
-    "type": "recipe",
-    "name": "button",
-    "base": {
-        "cursor": "pointer"
-    },
+const buttonRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {
         "variant": {
-            "primary": {
-                "background": "blue"
-            },
-            "secondary": {
-                "background": "gray"
-            }
+            "primary": {},
+            "secondary": {}
         }
     }
 };
 
 export const button = createRecipe(buttonRecipe);
 
-const cardRecipe: Recipe = {
-    "type": "recipe",
-    "name": "card",
-    "base": {
-        "borderRadius": "4px"
-    },
+const cardRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {
         "elevation": {
-            "low": {
-                "boxShadow": "0 1px 2px rgba(0,0,0,0.1)"
-            },
-            "high": {
-                "boxShadow": "0 4px 8px rgba(0,0,0,0.2)"
-            }
+            "low": {},
+            "high": {}
         }
     }
 };
@@ -154,32 +127,18 @@ export const card = createRecipe(cardRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const chipRecipe: Recipe = {
-    "type": "recipe",
-    "name": "chip",
-    "base": {
-        "borderWidth": "thin"
-    },
+const chipRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {
         "variant": {
-            "filled": {
-                "background": "primary",
-                "color": "white"
-            },
-            "outline": {
-                "background": "transparent",
-                "color": "primary"
-            }
+            "filled": {},
+            "outline": {}
         },
         "size": {
-            "sm": {
-                "padding": "0.25rem"
-            },
-            "md": {
-                "padding": "0.5rem"
-            }
+            "sm": {},
+            "md": {}
         }
     },
     "defaultVariants": {
@@ -217,30 +176,18 @@ export const chip = createRecipe(chipRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const badgeRecipe: Recipe = {
-    "type": "recipe",
-    "name": "badge",
-    "base": {
-        "display": "inline-block"
-    },
+const badgeRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {
         "variant": {
-            "solid": {
-                "background": "blue"
-            },
-            "outline": {
-                "border": "1px solid"
-            }
+            "solid": {},
+            "outline": {}
         },
         "size": {
-            "sm": {
-                "padding": "2px 4px"
-            },
-            "lg": {
-                "padding": "4px 8px"
-            }
+            "sm": {},
+            "lg": {}
         }
     },
     "compoundVariants": [
@@ -249,9 +196,7 @@ const badgeRecipe: Recipe = {
                 "variant": "solid",
                 "size": "sm"
             },
-            "css": {
-                "fontSize": "12px"
-            }
+            "css": {}
         }
     ]
 };
@@ -286,30 +231,18 @@ export const badge = createRecipe(badgeRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const inputRecipe: Recipe = {
-    "type": "recipe",
-    "name": "input",
-    "base": {
-        "borderWidth": "1px"
-    },
+const inputRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {
         "variant": {
-            "filled": {
-                "background": "gray"
-            },
-            "outline": {
-                "background": "transparent"
-            }
+            "filled": {},
+            "outline": {}
         },
         "size": {
-            "sm": {
-                "height": "32px"
-            },
-            "lg": {
-                "height": "48px"
-            }
+            "sm": {},
+            "lg": {}
         }
     },
     "defaultVariants": {
@@ -322,9 +255,7 @@ const inputRecipe: Recipe = {
                 "variant": "filled",
                 "size": "lg"
             },
-            "css": {
-                "padding": "0 16px"
-            }
+            "css": {}
         }
     ]
 };
@@ -366,34 +297,15 @@ export const input = createRecipe(inputRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const alertRecipe: Recipe = {
-    "type": "recipe",
-    "name": "alert",
-    "base": {
-        "padding": "1rem",
-        "borderRadius": "4px",
-        "display": "flex",
-        "alignItems": "center"
-    },
+const alertRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {
         "severity": {
-            "info": {
-                "background": "#e3f2fd",
-                "color": "#0288d1",
-                "borderColor": "#0288d1"
-            },
-            "warning": {
-                "background": "#fff3e0",
-                "color": "#f57c00",
-                "borderColor": "#f57c00"
-            },
-            "error": {
-                "background": "#ffebee",
-                "color": "#d32f2f",
-                "borderColor": "#d32f2f"
-            }
+            "info": {},
+            "warning": {},
+            "error": {}
         }
     }
 };
@@ -417,20 +329,14 @@ export const alert = createRecipe(alertRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const minimalRecipe: Recipe = {
-    "type": "recipe",
-    "name": "minimal",
+const minimalRecipe: RecipeRuntime = {
     "base": {},
     "variants": {
         "size": {
-            "sm": {
-                "fontSize": "12px"
-            },
-            "lg": {
-                "fontSize": "16px"
-            }
+            "sm": {},
+            "lg": {}
         }
     }
 };
@@ -449,15 +355,10 @@ export const minimal = createRecipe(minimalRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const simpleRecipe: Recipe = {
-    "type": "recipe",
-    "name": "simple",
-    "base": {
-        "padding": "1rem",
-        "margin": "0"
-    },
+const simpleRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {}
 };
 
@@ -479,29 +380,11 @@ export const simple = createRecipe(simpleRecipe);
 
 		const result = consumeRoot(root, options);
 
-		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
-
-const myRecipeRecipe: Recipe = {
-    "type": "recipe",
-    "name": "myRecipe",
-    "base": {
-        "display": "block"
-    },
-    "variants": {
-        "status": {
-            "active": {
-                "opacity": "1"
-            },
-            "inactive": {
-                "opacity": "0.5"
-            }
-        }
-    }
-};
-
-export const myRecipe = createRecipe(myRecipeRecipe);
-`);
+		expect(result).toContain("RecipeRuntime");
+		expect(result).toContain("const myRecipeRecipe: RecipeRuntime =");
+		expect(result).toContain(
+			"export const myRecipe = createRecipe(myRecipeRecipe);",
+		);
 	});
 
 	it("should handle recipe names with different casing", () => {
@@ -524,11 +407,9 @@ export const myRecipe = createRecipe(myRecipeRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const PascalCaseRecipe: Recipe = {
-    "type": "recipe",
-    "name": "PascalCase",
+const PascalCaseRecipe: RecipeRuntime = {
     "base": {},
     "variants": {
         "variant": {
@@ -540,9 +421,7 @@ const PascalCaseRecipe: Recipe = {
 
 export const PascalCase = createRecipe(PascalCaseRecipe);
 
-const camelCaseRecipe: Recipe = {
-    "type": "recipe",
-    "name": "camelCase",
+const camelCaseRecipe: RecipeRuntime = {
     "base": {},
     "variants": {
         "variant": {
@@ -554,9 +433,7 @@ const camelCaseRecipe: Recipe = {
 
 export const camelCase = createRecipe(camelCaseRecipe);
 
-const kebabCaseRecipe: Recipe = {
-    "type": "recipe",
-    "name": "kebab-case",
+const kebabCaseRecipe: RecipeRuntime = {
     "base": {},
     "variants": {
         "variant": {
@@ -577,25 +454,17 @@ export const kebabCase = createRecipe(kebabCaseRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const firstRecipe: Recipe = {
-    "type": "recipe",
-    "name": "first",
-    "base": {
-        "padding": "1rem"
-    },
+const firstRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {}
 };
 
 export const first = createRecipe(firstRecipe);
 
-const secondRecipe: Recipe = {
-    "type": "recipe",
-    "name": "second",
-    "base": {
-        "margin": "1rem"
-    },
+const secondRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {}
 };
 
@@ -611,14 +480,10 @@ export const second = createRecipe(secondRecipe);
 		const result = consumeRoot(root, customOptions);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const customizedRecipe: Recipe = {
-    "type": "recipe",
-    "name": "customized",
-    "base": {
-        "display": "flex"
-    },
+const customizedRecipe: RecipeRuntime = {
+    "base": {},
     "variants": {}
 };
 
@@ -636,11 +501,9 @@ export const customized = createRecipe(customizedRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
-import type { Recipe } from '@styleframe/runtime';
+import type { RecipeRuntime } from '@styleframe/runtime';
 
-const structuredRecipe: Recipe = {
-    "type": "recipe",
-    "name": "structured",
+const structuredRecipe: RecipeRuntime = {
     "base": {},
     "variants": {
         "size": {

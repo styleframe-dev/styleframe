@@ -1,21 +1,18 @@
-import type { Recipe } from "@styleframe/core";
+import type { RecipeRuntime } from "@styleframe/core";
 import { describe, expect, it } from "vitest";
 import { createRecipe } from "./runtime";
 
 describe("createRecipe", () => {
 	it("should apply base declarations", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
 				cursor: "pointer",
 			},
-			variants: {},
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({});
 
 		expect(result).toContain("button");
@@ -25,9 +22,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should apply default variants when no props are provided", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
@@ -62,7 +57,7 @@ describe("createRecipe", () => {
 			},
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({});
 
 		expect(result).toBe(
@@ -71,9 +66,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should apply specified variant overriding default variant", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
@@ -108,7 +101,7 @@ describe("createRecipe", () => {
 			},
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({ color: "secondary" });
 
 		expect(result).toBe(
@@ -117,9 +110,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should apply compound variants when conditions match", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
@@ -165,9 +156,9 @@ describe("createRecipe", () => {
 					},
 				},
 			],
-		} as const;
+		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({ color: "primary", size: "sm" });
 
 		expect(result).toBe(
@@ -176,9 +167,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should not apply compound variants when conditions don't match", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				borderWidth: "thin",
 			},
@@ -217,7 +206,7 @@ describe("createRecipe", () => {
 			],
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({ color: "secondary", size: "sm" });
 
 		// Should not apply compound variant because color doesn't match
@@ -226,17 +215,14 @@ describe("createRecipe", () => {
 	});
 
 	it("should convert camelCase utility names to kebab-case", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "card",
+		const runtime: RecipeRuntime = {
 			base: {
 				borderRadius: "md",
 				backgroundColor: "white",
 			},
-			variants: {},
 		};
 
-		const card = createRecipe(recipe);
+		const card = createRecipe("card", runtime);
 		const result = card({});
 
 		expect(result).toContain("_border-radius:md");
@@ -244,16 +230,13 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle boolean value true", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "element",
+		const runtime: RecipeRuntime = {
 			base: {
 				display: true,
 			},
-			variants: {},
 		};
 
-		const element = createRecipe(recipe);
+		const element = createRecipe("element", runtime);
 		const result = element({});
 
 		expect(result).toContain("_display");
@@ -261,9 +244,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle multiple compound variants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				cursor: "pointer",
 			},
@@ -303,7 +284,7 @@ describe("createRecipe", () => {
 			],
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({ color: "primary", size: "sm", rounded: "true" });
 
 		// Should apply both compound variants
@@ -313,9 +294,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle recipes with no default variants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "text",
+		const runtime: RecipeRuntime = {
 			base: {
 				fontFamily: "sans",
 			},
@@ -327,16 +306,14 @@ describe("createRecipe", () => {
 			},
 		};
 
-		const text = createRecipe(recipe);
+		const text = createRecipe("text", runtime);
 		const result = text({});
 
 		expect(result).toBe("text _font-family:sans");
 	});
 
 	it("should override declarations in correct order: base < variants < compound variants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				padding: "default",
 			},
@@ -359,7 +336,7 @@ describe("createRecipe", () => {
 			],
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({ size: "sm" });
 
 		// Compound variant should override variant, which overrides base
@@ -367,19 +344,16 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle modifier blocks in base declarations", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				background: "blue",
 				hover: {
 					background: "darkblue",
 				},
 			},
-			variants: {},
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({});
 
 		expect(result).toContain("_background:blue");
@@ -387,19 +361,16 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle compound modifiers like hover:focus", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				boxShadow: "none",
 				"hover:focus": {
 					boxShadow: "lg",
 				},
 			},
-			variants: {},
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({});
 
 		expect(result).toContain("_box-shadow:none");
@@ -407,9 +378,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle modifier blocks in variant declarations", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {},
 			variants: {
 				color: {
@@ -426,7 +395,7 @@ describe("createRecipe", () => {
 			},
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({});
 
 		expect(result).toContain("_background:blue");
@@ -434,9 +403,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle modifier blocks in compoundVariants", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {},
 			variants: {
 				color: {
@@ -465,16 +432,14 @@ describe("createRecipe", () => {
 			],
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({});
 
 		expect(result).toContain("_hover:background:primary-shade-50");
 	});
 
 	it("should handle multiple modifiers in same block", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				background: "blue",
 				hover: {
@@ -484,10 +449,9 @@ describe("createRecipe", () => {
 					outline: "ring",
 				},
 			},
-			variants: {},
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({});
 
 		expect(result).toContain("_background:blue");
@@ -496,9 +460,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should override modifier declarations correctly", () => {
-		const recipe: Recipe = {
-			type: "recipe",
-			name: "button",
+		const runtime: RecipeRuntime = {
 			base: {
 				hover: {
 					background: "base-hover",
@@ -518,11 +480,59 @@ describe("createRecipe", () => {
 			},
 		};
 
-		const button = createRecipe(recipe);
+		const button = createRecipe("button", runtime);
 		const result = button({});
 
 		// Variant should override base for the same modifier+utility combination
 		expect(result).toContain("_hover:background:variant-hover");
 		expect(result).not.toContain("_hover:background:base-hover");
+	});
+
+	it("should handle empty runtime", () => {
+		const runtime: RecipeRuntime = {};
+
+		const element = createRecipe("element", runtime);
+		const result = element({});
+
+		expect(result).toBe("element");
+	});
+
+	it("should handle runtime with only variants and no base", () => {
+		const runtime: RecipeRuntime = {
+			variants: {
+				size: {
+					sm: { padding: "1" },
+					md: { padding: "2" },
+				},
+			},
+			defaultVariants: {
+				size: "sm",
+			},
+		};
+
+		const element = createRecipe("element", runtime);
+		const result = element({});
+
+		expect(result).toBe("element _padding:1");
+	});
+
+	it("should handle variant with undefined value", () => {
+		const runtime: RecipeRuntime = {
+			base: {
+				padding: "default",
+			},
+			variants: {
+				size: {
+					none: undefined,
+					sm: { padding: "1" },
+				},
+			},
+		};
+
+		const element = createRecipe("element", runtime);
+		const result = element({ size: "none" });
+
+		// Should only have base padding since variant is undefined
+		expect(result).toBe("element _padding:default");
 	});
 });
