@@ -46,7 +46,7 @@ describe("createRecipeConsumer", () => {
     "variants": {}
 };
 
-export const button = createRecipe(buttonRecipe);
+export const button = createRecipe("button", buttonRecipe);
 `);
 	});
 
@@ -97,7 +97,7 @@ export const button = createRecipe(buttonRecipe);
     }
 };
 
-export const button = createRecipe(buttonRecipe);
+export const button = createRecipe("button", buttonRecipe);
 `);
 	});
 
@@ -159,7 +159,7 @@ export const button = createRecipe(buttonRecipe);
     }
 };
 
-export const button = createRecipe(buttonRecipe);
+export const button = createRecipe("button", buttonRecipe);
 `);
 	});
 
@@ -191,7 +191,7 @@ export const button = createRecipe(buttonRecipe);
     "variants": {}
 };
 
-export const card = createRecipe(cardRecipe);
+export const card = createRecipe("card", cardRecipe);
 `);
 	});
 
@@ -255,7 +255,7 @@ export const card = createRecipe(cardRecipe);
     }
 };
 
-export const chip = createRecipe(chipRecipe);
+export const chip = createRecipe("chip", chipRecipe);
 `);
 	});
 
@@ -339,7 +339,7 @@ export const chip = createRecipe(chipRecipe);
     ]
 };
 
-export const badge = createRecipe(badgeRecipe);
+export const badge = createRecipe("badge", badgeRecipe);
 `);
 	});
 
@@ -434,7 +434,7 @@ export const badge = createRecipe(badgeRecipe);
     ]
 };
 
-export const input = createRecipe(inputRecipe);
+export const input = createRecipe("input", inputRecipe);
 `);
 	});
 
@@ -452,7 +452,7 @@ export const input = createRecipe(inputRecipe);
     "variants": {}
 };
 
-export const minimal = createRecipe(minimalRecipe);
+export const minimal = createRecipe("minimal", minimalRecipe);
 `);
 	});
 
@@ -479,7 +479,7 @@ export const minimal = createRecipe(minimalRecipe);
     "variants": {}
 };
 
-export const simple = createRecipe(simpleRecipe);
+export const simple = createRecipe("simple", simpleRecipe);
 `);
 	});
 
@@ -503,7 +503,7 @@ export const simple = createRecipe(simpleRecipe);
     "variants": {}
 };
 
-export const PrimaryButton = createRecipe(PrimaryButtonRecipe);
+export const PrimaryButton = createRecipe("PrimaryButton", PrimaryButtonRecipe);
 `);
 	});
 
@@ -525,7 +525,7 @@ export const PrimaryButton = createRecipe(PrimaryButtonRecipe);
     "variants": {}
 };
 
-export const primaryButton = createRecipe(primaryButtonRecipe);
+export const primaryButton = createRecipe("primaryButton", primaryButtonRecipe);
 `);
 	});
 
@@ -547,7 +547,7 @@ export const primaryButton = createRecipe(primaryButtonRecipe);
     "variants": {}
 };
 
-export const primaryButton = createRecipe(primaryButtonRecipe);
+export const primaryButton = createRecipe("primary-button", primaryButtonRecipe);
 `);
 	});
 
@@ -648,7 +648,7 @@ export const primaryButton = createRecipe(primaryButtonRecipe);
     }
 };
 
-export const alert = createRecipe(alertRecipe);
+export const alert = createRecipe("alert", alertRecipe);
 `);
 	});
 
@@ -667,7 +667,7 @@ export const alert = createRecipe(alertRecipe);
 
 		expect(result).toContain("const myComponentRecipe: RecipeRuntime =");
 		expect(result).toContain(
-			"export const myComponent = createRecipe(myComponentRecipe);",
+			`export const myComponent = createRecipe("myComponent", myComponentRecipe);`,
 		);
 	});
 
@@ -766,7 +766,7 @@ export const alert = createRecipe(alertRecipe);
     "variants": {}
 };
 
-export const button = createRecipe(buttonRecipe);
+export const button = createRecipe("button", buttonRecipe);
 `);
 	});
 
@@ -799,7 +799,7 @@ export const button = createRecipe(buttonRecipe);
     }
 };
 
-export const toggle = createRecipe(toggleRecipe);
+export const toggle = createRecipe("toggle", toggleRecipe);
 `);
 	});
 
@@ -836,7 +836,7 @@ export const toggle = createRecipe(toggleRecipe);
     }
 };
 
-export const placeholder = createRecipe(placeholderRecipe);
+export const placeholder = createRecipe("placeholder", placeholderRecipe);
 `);
 	});
 
@@ -927,7 +927,7 @@ export const placeholder = createRecipe(placeholderRecipe);
     ]
 };
 
-export const matrix = createRecipe(matrixRecipe);
+export const matrix = createRecipe("matrix", matrixRecipe);
 `);
 	});
 
@@ -991,7 +991,7 @@ export const matrix = createRecipe(matrixRecipe);
 		const result = consumeRecipe(instance, options);
 
 		expect(result).toContain(
-			"export const exported = createRecipe(exportedRecipe);",
+			`export const exported = createRecipe("exported", exportedRecipe);`,
 		);
 	});
 
@@ -1013,7 +1013,7 @@ export const matrix = createRecipe(matrixRecipe);
 
 		expect(result).toEqual(`const noRuntimeRecipe: RecipeRuntime = {};
 
-export const noRuntime = createRecipe(noRuntimeRecipe);
+export const noRuntime = createRecipe("noRuntime", noRuntimeRecipe);
 `);
 	});
 

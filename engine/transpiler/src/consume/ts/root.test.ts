@@ -49,7 +49,7 @@ const buttonRecipe: RecipeRuntime = {
     }
 };
 
-export const button = createRecipe(buttonRecipe);
+export const button = createRecipe("button", buttonRecipe);
 `);
 	});
 
@@ -91,7 +91,7 @@ const buttonRecipe: RecipeRuntime = {
     }
 };
 
-export const button = createRecipe(buttonRecipe);
+export const button = createRecipe("button", buttonRecipe);
 
 const cardRecipe: RecipeRuntime = {
     "base": {},
@@ -103,7 +103,7 @@ const cardRecipe: RecipeRuntime = {
     }
 };
 
-export const card = createRecipe(cardRecipe);
+export const card = createRecipe("card", cardRecipe);
 `);
 	});
 
@@ -147,7 +147,7 @@ const chipRecipe: RecipeRuntime = {
     }
 };
 
-export const chip = createRecipe(chipRecipe);
+export const chip = createRecipe("chip", chipRecipe);
 `);
 	});
 
@@ -201,7 +201,7 @@ const badgeRecipe: RecipeRuntime = {
     ]
 };
 
-export const badge = createRecipe(badgeRecipe);
+export const badge = createRecipe("badge", badgeRecipe);
 `);
 	});
 
@@ -260,7 +260,7 @@ const inputRecipe: RecipeRuntime = {
     ]
 };
 
-export const input = createRecipe(inputRecipe);
+export const input = createRecipe("input", inputRecipe);
 `);
 	});
 
@@ -310,7 +310,7 @@ const alertRecipe: RecipeRuntime = {
     }
 };
 
-export const alert = createRecipe(alertRecipe);
+export const alert = createRecipe("alert", alertRecipe);
 `);
 	});
 
@@ -341,7 +341,7 @@ const minimalRecipe: RecipeRuntime = {
     }
 };
 
-export const minimal = createRecipe(minimalRecipe);
+export const minimal = createRecipe("minimal", minimalRecipe);
 `);
 	});
 
@@ -362,7 +362,7 @@ const simpleRecipe: RecipeRuntime = {
     "variants": {}
 };
 
-export const simple = createRecipe(simpleRecipe);
+export const simple = createRecipe("simple", simpleRecipe);
 `);
 	});
 
@@ -383,7 +383,7 @@ export const simple = createRecipe(simpleRecipe);
 		expect(result).toContain("RecipeRuntime");
 		expect(result).toContain("const myRecipeRecipe: RecipeRuntime =");
 		expect(result).toContain(
-			"export const myRecipe = createRecipe(myRecipeRecipe);",
+			`export const myRecipe = createRecipe("myRecipe", myRecipeRecipe);`,
 		);
 	});
 
@@ -419,7 +419,7 @@ const PascalCaseRecipe: RecipeRuntime = {
     }
 };
 
-export const PascalCase = createRecipe(PascalCaseRecipe);
+export const PascalCase = createRecipe("PascalCase", PascalCaseRecipe);
 
 const camelCaseRecipe: RecipeRuntime = {
     "base": {},
@@ -431,7 +431,7 @@ const camelCaseRecipe: RecipeRuntime = {
     }
 };
 
-export const camelCase = createRecipe(camelCaseRecipe);
+export const camelCase = createRecipe("camelCase", camelCaseRecipe);
 
 const kebabCaseRecipe: RecipeRuntime = {
     "base": {},
@@ -443,7 +443,7 @@ const kebabCaseRecipe: RecipeRuntime = {
     }
 };
 
-export const kebabCase = createRecipe(kebabCaseRecipe);
+export const kebabCase = createRecipe("kebab-case", kebabCaseRecipe);
 `);
 	});
 
@@ -461,14 +461,14 @@ const firstRecipe: RecipeRuntime = {
     "variants": {}
 };
 
-export const first = createRecipe(firstRecipe);
+export const first = createRecipe("first", firstRecipe);
 
 const secondRecipe: RecipeRuntime = {
     "base": {},
     "variants": {}
 };
 
-export const second = createRecipe(secondRecipe);
+export const second = createRecipe("second", secondRecipe);
 `);
 	});
 
@@ -487,7 +487,7 @@ const customizedRecipe: RecipeRuntime = {
     "variants": {}
 };
 
-export const customized = createRecipe(customizedRecipe);
+export const customized = createRecipe("customized", customizedRecipe);
 `);
 	});
 
@@ -513,7 +513,7 @@ const structuredRecipe: RecipeRuntime = {
     }
 };
 
-export const structured = createRecipe(structuredRecipe);
+export const structured = createRecipe("structured", structuredRecipe);
 `);
 	});
 });

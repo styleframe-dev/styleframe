@@ -94,11 +94,13 @@ export type VariantsBase = Record<
 	Record<string, VariantDeclarationsBlock>
 >;
 
-export type RuntimeModifierDeclarationsBlock = Record<string, string | boolean>;
+export type RuntimeModifierDeclarationsBlock = Record<
+	string,
+	PrimitiveTokenValue
+>;
 
 export type RuntimeVariantDeclarationsValue =
-	| string
-	| boolean
+	| PrimitiveTokenValue
 	| RuntimeModifierDeclarationsBlock;
 
 export type RuntimeVariantDeclarationsBlock = Record<

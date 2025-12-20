@@ -1,8 +1,4 @@
-import type {
-	Recipe,
-	RecipeRuntime,
-	StyleframeOptions,
-} from "@styleframe/core";
+import type { Recipe, StyleframeOptions } from "@styleframe/core";
 import { capitalizeFirst } from "@styleframe/core";
 import type { ConsumeFunction } from "../../types";
 import { isUppercase, toCamelCase } from "../../utils";
@@ -32,7 +28,7 @@ export function createRecipeConsumer(_consume: ConsumeFunction) {
 			4,
 		)};
 
-export const ${exportConstant} = createRecipe(${recipeConstant});
+export const ${exportConstant} = createRecipe("${instance.name}", ${recipeConstant});
 `;
 	};
 }

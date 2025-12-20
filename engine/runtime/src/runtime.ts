@@ -1,4 +1,11 @@
-import type { RecipeRuntime, RuntimeDeclarationsBlock } from "./types";
+import type {
+	RecipeRuntime,
+	PrimitiveTokenValue,
+	RuntimeModifierDeclarationsBlock,
+	RuntimeVariantDeclarationsBlock,
+	RuntimeVariantDeclarationsValue,
+	RuntimeVariantOptions,
+} from "./types";
 
 /**
  * Converts a utility name and value to a class name string.
@@ -38,8 +45,8 @@ function toClassName(
  * @returns True if the value is a modifier block
  */
 function isModifierBlock(
-	value: string | boolean | Record<string, string | boolean>,
-): value is Record<string, string | boolean> {
+	value: RuntimeVariantDeclarationsValue,
+): value is RuntimeModifierDeclarationsBlock {
 	return typeof value === "object" && value !== null;
 }
 
@@ -51,10 +58,10 @@ function isModifierBlock(
  * @param declarationsMap - Map to accumulate utility declarations
  */
 function processDeclarationsBlock(
-	declarations: RuntimeDeclarationsBlock,
+	declarations: RuntimeVariantDeclarationsBlock,
 	declarationsMap: Map<
 		string,
-		{ value: string | boolean; modifiers: string[] }
+		{ value: PrimitiveTokenValue; modifiers: string[] }
 	>,
 ): void {
 	for (const [key, value] of Object.entries(declarations)) {
@@ -67,7 +74,7 @@ function processDeclarationsBlock(
 			for (const [utilityKey, utilityValue] of Object.entries(value)) {
 				const mapKey = `${modifierKeys.join(":")}:${utilityKey}`;
 				declarationsMap.set(mapKey, {
-					value: utilityValue,
+					value: utilityValue as string | boolean,
 					modifiers: modifierKeys,
 				});
 			}
@@ -149,19 +156,13 @@ export function createRecipe(
 						variantKey as keyof typeof runtime.defaultVariants
 					];
 
-				if (
-					selectedVariant &&
-					variantOptions &&
-					(variantOptions as Record<string, RuntimeDeclarationsBlock | null>)[
-						selectedVariant as string
-					]
-				) {
-					const declarations = (
-						variantOptions as Record<string, RuntimeDeclarationsBlock | null>
-					)[selectedVariant as string];
-					if (declarations) {
-						processDeclarationsBlock(declarations, declarationsMap);
-					}
+				const options = variantOptions as RuntimeVariantOptions;
+				const declarations = selectedVariant
+					? options[selectedVariant]
+					: undefined;
+
+				if (declarations) {
+					processDeclarationsBlock(declarations, declarationsMap);
 				}
 			}
 		}

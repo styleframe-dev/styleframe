@@ -5,11 +5,13 @@ import type {
 	ModifierFactory,
 	Recipe,
 	RecipeRuntime,
+	RuntimeModifierDeclarationsBlock,
 	RuntimeVariantDeclarationsBlock,
 	Root,
 	TokenValue,
 	UtilityFactory,
 	VariantDeclarationsBlock,
+	VariantsBase,
 } from "../types";
 import { getModifier } from "../utils/getters";
 
@@ -167,10 +169,9 @@ import { getModifier } from "../utils/getters";
  * ```
  */
 export function createRecipeFunction(_parent: Container, root: Root) {
-	return function recipe<
-		Name extends string,
-		Variants extends Record<string, Record<string, VariantDeclarationsBlock>>,
-	>(options: Omit<Recipe<Name, Variants>, "type">): Recipe<Name, Variants> {
+	return function recipe<Name extends string, Variants extends VariantsBase>(
+		options: Omit<Recipe<Name, Variants>, "type">,
+	): Recipe<Name, Variants> {
 		const instance: Recipe<Name, Variants> = {
 			type: "recipe",
 			...options,
@@ -211,16 +212,13 @@ function resolveRuntimeKey(
 function transformDeclarationsToRuntime(
 	declarations: VariantDeclarationsBlock,
 	root: Root,
-): Record<string, string | boolean | Record<string, string | boolean>> {
-	const result: Record<
-		string,
-		string | boolean | Record<string, string | boolean>
-	> = {};
+): RuntimeVariantDeclarationsBlock {
+	const result: RuntimeVariantDeclarationsBlock = {};
 
 	for (const [key, value] of Object.entries(declarations)) {
 		if (isModifierBlock(value)) {
 			// Handle modifier blocks (e.g., 'hover:focus': { ... })
-			const modifierResult: Record<string, string | boolean> = {};
+			const modifierResult: RuntimeModifierDeclarationsBlock = {};
 			for (const [utilityKey, utilityValue] of Object.entries(value)) {
 				const utilityFactory = getUtilityFactory(root, utilityKey);
 				if (utilityFactory) {
@@ -255,7 +253,7 @@ function transformDeclarationsToRuntime(
  */
 export function generateRecipeRuntime<
 	Name extends string,
-	Variants extends Record<string, Record<string, VariantDeclarationsBlock>>,
+	Variants extends VariantsBase,
 >(recipe: Recipe<Name, Variants>, root: Root): RecipeRuntime<Variants> {
 	const runtime = {} as RecipeRuntime<Variants>;
 
