@@ -1,6 +1,7 @@
 import type {
-	RecipeRuntime,
 	PrimitiveTokenValue,
+	RecipeRuntime,
+	RecipeVariantProps,
 	RuntimeModifierDeclarationsBlock,
 	RuntimeVariantDeclarationsBlock,
 	RuntimeVariantDeclarationsValue,
@@ -127,11 +128,11 @@ function processDeclarationsBlock(
  * button({ color: "secondary" }); // "button _border-width:thin _border-style:[solid] _background:secondary _color:white _padding:2"
  * ```
  */
-export function createRecipe(
+export function createRecipe<R extends RecipeRuntime>(
 	name: string,
-	runtime: RecipeRuntime,
-): (props?: Record<string, string>) => string {
-	return (props = {}) => {
+	runtime: R,
+): (props?: RecipeVariantProps<R>) => string {
+	return (props = {} as RecipeVariantProps<R>) => {
 		// Track all declarations in a map to handle overrides
 		// Key: utility name (possibly with modifier prefix), Value: { value, modifiers }
 		const declarationsMap = new Map<

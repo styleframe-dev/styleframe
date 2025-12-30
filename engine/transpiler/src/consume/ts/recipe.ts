@@ -22,11 +22,11 @@ export function createRecipeConsumer(_consume: ConsumeFunction) {
 		const recipeConstant = `${exportConstant}Recipe`;
 		const runtime = instance._runtime ?? {};
 
-		return `const ${recipeConstant}: RecipeRuntime = ${JSON.stringify(
+		return `const ${recipeConstant} = ${JSON.stringify(
 			runtime,
 			null,
 			4,
-		)};
+		)} as const satisfies RecipeRuntime;
 
 export const ${exportConstant} = createRecipe("${instance.name}", ${recipeConstant});
 `;

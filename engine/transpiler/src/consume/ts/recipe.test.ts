@@ -39,12 +39,12 @@ describe("createRecipeConsumer", () => {
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const buttonRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const buttonRecipe = {
     "base": {
         "cursor": "[pointer]"
     },
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const button = createRecipe("button", buttonRecipe);
 `);
@@ -78,7 +78,7 @@ export const button = createRecipe("button", buttonRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const buttonRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const buttonRecipe = {
     "base": {
         "borderWidth": "border.width.thin",
         "borderStyle": "border.style.solid"
@@ -95,7 +95,7 @@ export const button = createRecipe("button", buttonRecipe);
             }
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const button = createRecipe("button", buttonRecipe);
 `);
@@ -135,7 +135,7 @@ export const button = createRecipe("button", buttonRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const buttonRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const buttonRecipe = {
     "base": {},
     "variants": {
         "color": {
@@ -157,7 +157,7 @@ export const button = createRecipe("button", buttonRecipe);
             }
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const button = createRecipe("button", buttonRecipe);
 `);
@@ -182,14 +182,14 @@ export const button = createRecipe("button", buttonRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const cardRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const cardRecipe = {
     "base": {
         "display": "[block]",
         "background": "color.primary",
         "padding": "[1rem]"
     },
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const card = createRecipe("card", cardRecipe);
 `);
@@ -227,7 +227,7 @@ export const card = createRecipe("card", cardRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const chipRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const chipRecipe = {
     "base": {
         "borderRadius": "border.radius.sm"
     },
@@ -253,7 +253,7 @@ export const card = createRecipe("card", cardRecipe);
         "variant": "filled",
         "size": "sm"
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const chip = createRecipe("chip", chipRecipe);
 `);
@@ -294,7 +294,7 @@ export const chip = createRecipe("chip", chipRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const badgeRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const badgeRecipe = {
     "base": {
         "display": "[inline-block]"
     },
@@ -337,7 +337,7 @@ export const chip = createRecipe("chip", chipRecipe);
             }
         }
     ]
-};
+} as const satisfies RecipeRuntime;
 
 export const badge = createRecipe("badge", badgeRecipe);
 `);
@@ -393,7 +393,7 @@ export const badge = createRecipe("badge", badgeRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const inputRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const inputRecipe = {
     "base": {
         "borderWidth": "border.width.default",
         "borderStyle": "border.style.solid"
@@ -432,7 +432,7 @@ export const badge = createRecipe("badge", badgeRecipe);
             }
         }
     ]
-};
+} as const satisfies RecipeRuntime;
 
 export const input = createRecipe("input", inputRecipe);
 `);
@@ -447,10 +447,10 @@ export const input = createRecipe("input", inputRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const minimalRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const minimalRecipe = {
     "base": {},
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const minimal = createRecipe("minimal", minimalRecipe);
 `);
@@ -471,13 +471,13 @@ export const minimal = createRecipe("minimal", minimalRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const simpleRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const simpleRecipe = {
     "base": {
         "padding": "spacing.md",
         "margin": "spacing.none"
     },
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const simple = createRecipe("simple", simpleRecipe);
 `);
@@ -496,12 +496,12 @@ export const simple = createRecipe("simple", simpleRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const PrimaryButtonRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const PrimaryButtonRecipe = {
     "base": {
         "cursor": "cursor.pointer"
     },
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const PrimaryButton = createRecipe("PrimaryButton", PrimaryButtonRecipe);
 `);
@@ -518,12 +518,12 @@ export const PrimaryButton = createRecipe("PrimaryButton", PrimaryButtonRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const primaryButtonRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const primaryButtonRecipe = {
     "base": {
         "cursor": "cursor.pointer"
     },
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const primaryButton = createRecipe("primaryButton", primaryButtonRecipe);
 `);
@@ -540,12 +540,12 @@ export const primaryButton = createRecipe("primaryButton", primaryButtonRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const primaryButtonRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const primaryButtonRecipe = {
     "base": {
         "cursor": "cursor.pointer"
     },
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const primaryButton = createRecipe("primary-button", primaryButtonRecipe);
 `);
@@ -615,7 +615,7 @@ export const primaryButton = createRecipe("primary-button", primaryButtonRecipe)
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const alertRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const alertRecipe = {
     "base": {
         "padding": "spacing.md",
         "borderRadius": "radius.sm",
@@ -646,7 +646,7 @@ export const primaryButton = createRecipe("primary-button", primaryButtonRecipe)
             }
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const alert = createRecipe("alert", alertRecipe);
 `);
@@ -665,7 +665,7 @@ export const alert = createRecipe("alert", alertRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toContain("const myComponentRecipe: RecipeRuntime =");
+		expect(result).toContain("const myComponentRecipe = {");
 		expect(result).toContain(
 			`export const myComponent = createRecipe("myComponent", myComponentRecipe);`,
 		);
@@ -759,12 +759,12 @@ export const alert = createRecipe("alert", alertRecipe);
 		const customOptions: StyleframeOptions = {};
 		const result = consumeRecipe(instance, customOptions);
 
-		expect(result).toEqual(`const buttonRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const buttonRecipe = {
     "base": {
         "cursor": "cursor.pointer"
     },
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const button = createRecipe("button", buttonRecipe);
 `);
@@ -786,7 +786,7 @@ export const button = createRecipe("button", buttonRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const toggleRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const toggleRecipe = {
     "base": {
         "display": "display.inline-block"
     },
@@ -797,7 +797,7 @@ export const button = createRecipe("button", buttonRecipe);
             }
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const toggle = createRecipe("toggle", toggleRecipe);
 `);
@@ -822,7 +822,7 @@ export const toggle = createRecipe("toggle", toggleRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const placeholderRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const placeholderRecipe = {
     "base": {
         "opacity": "opacity.50"
     },
@@ -834,7 +834,7 @@ export const toggle = createRecipe("toggle", toggleRecipe);
             }
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const placeholder = createRecipe("placeholder", placeholderRecipe);
 `);
@@ -876,7 +876,7 @@ export const placeholder = createRecipe("placeholder", placeholderRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const matrixRecipe: RecipeRuntime = {
+		expect(result).toEqual(`const matrixRecipe = {
     "base": {},
     "variants": {
         "x": {
@@ -925,7 +925,7 @@ export const placeholder = createRecipe("placeholder", placeholderRecipe);
             }
         }
     ]
-};
+} as const satisfies RecipeRuntime;
 
 export const matrix = createRecipe("matrix", matrixRecipe);
 `);
@@ -978,7 +978,7 @@ export const matrix = createRecipe("matrix", matrixRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toContain("const typedRecipe: RecipeRuntime =");
+		expect(result).toContain("const typedRecipe = {");
 	});
 
 	it("should generate correct export statement", () => {
@@ -1011,7 +1011,9 @@ export const matrix = createRecipe("matrix", matrixRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toEqual(`const noRuntimeRecipe: RecipeRuntime = {};
+		expect(
+			result,
+		).toEqual(`const noRuntimeRecipe = {} as const satisfies RecipeRuntime;
 
 export const noRuntime = createRecipe("noRuntime", noRuntimeRecipe);
 `);

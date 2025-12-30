@@ -16,3 +16,36 @@ export type RuntimeVariantOptions = Record<
 	string,
 	RuntimeVariantDeclarationsBlock | undefined
 >;
+
+/**
+ * Extracts the variant props type from a RecipeRuntime.
+ * Maps each variant key to its possible option values.
+ *
+ * @example
+ * ```ts
+ * const runtime = {
+ *     variants: {
+ *         color: { primary: {...}, secondary: {...} },
+ *         size: { sm: {...}, md: {...} },
+ *     },
+ * } as const;
+ *
+ * type Props = RecipeVariantProps<typeof runtime>;
+ * // { color?: 'primary' | 'secondary', size?: 'sm' | 'md' }
+ * ```
+ */
+export type RecipeVariantProps<R> = R extends {
+	variants?: infer V;
+}
+	? V extends Record<string, Record<string, unknown> | undefined>
+		? string extends keyof V
+			? // Generic RecipeRuntime with string index - fall back to Record<string, string>
+				Record<string, string>
+			: // Specific type with literal keys - extract exact variant keys and options
+				{
+					[K in keyof V]?: V[K] extends Record<string, unknown>
+						? keyof V[K] & string
+						: never;
+				}
+		: Record<string, string>
+	: Record<string, string>;
