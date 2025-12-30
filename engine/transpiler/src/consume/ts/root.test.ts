@@ -39,7 +39,7 @@ describe("createRootConsumer", () => {
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const buttonRecipe: RecipeRuntime = {
+const buttonRecipe = {
     "base": {},
     "variants": {
         "color": {
@@ -47,7 +47,7 @@ const buttonRecipe: RecipeRuntime = {
             "secondary": {}
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const button = createRecipe("button", buttonRecipe);
 `);
@@ -81,7 +81,7 @@ export const button = createRecipe("button", buttonRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const buttonRecipe: RecipeRuntime = {
+const buttonRecipe = {
     "base": {},
     "variants": {
         "variant": {
@@ -89,11 +89,11 @@ const buttonRecipe: RecipeRuntime = {
             "secondary": {}
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const button = createRecipe("button", buttonRecipe);
 
-const cardRecipe: RecipeRuntime = {
+const cardRecipe = {
     "base": {},
     "variants": {
         "elevation": {
@@ -101,7 +101,7 @@ const cardRecipe: RecipeRuntime = {
             "high": {}
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const card = createRecipe("card", cardRecipe);
 `);
@@ -129,7 +129,7 @@ export const card = createRecipe("card", cardRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const chipRecipe: RecipeRuntime = {
+const chipRecipe = {
     "base": {},
     "variants": {
         "variant": {
@@ -145,7 +145,7 @@ const chipRecipe: RecipeRuntime = {
         "variant": "filled",
         "size": "sm"
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const chip = createRecipe("chip", chipRecipe);
 `);
@@ -178,7 +178,7 @@ export const chip = createRecipe("chip", chipRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const badgeRecipe: RecipeRuntime = {
+const badgeRecipe = {
     "base": {},
     "variants": {
         "variant": {
@@ -199,7 +199,7 @@ const badgeRecipe: RecipeRuntime = {
             "css": {}
         }
     ]
-};
+} as const satisfies RecipeRuntime;
 
 export const badge = createRecipe("badge", badgeRecipe);
 `);
@@ -233,7 +233,7 @@ export const badge = createRecipe("badge", badgeRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const inputRecipe: RecipeRuntime = {
+const inputRecipe = {
     "base": {},
     "variants": {
         "variant": {
@@ -258,7 +258,7 @@ const inputRecipe: RecipeRuntime = {
             "css": {}
         }
     ]
-};
+} as const satisfies RecipeRuntime;
 
 export const input = createRecipe("input", inputRecipe);
 `);
@@ -299,7 +299,7 @@ export const input = createRecipe("input", inputRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const alertRecipe: RecipeRuntime = {
+const alertRecipe = {
     "base": {},
     "variants": {
         "severity": {
@@ -308,7 +308,7 @@ const alertRecipe: RecipeRuntime = {
             "error": {}
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const alert = createRecipe("alert", alertRecipe);
 `);
@@ -331,7 +331,7 @@ export const alert = createRecipe("alert", alertRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const minimalRecipe: RecipeRuntime = {
+const minimalRecipe = {
     "base": {},
     "variants": {
         "size": {
@@ -339,7 +339,7 @@ const minimalRecipe: RecipeRuntime = {
             "lg": {}
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const minimal = createRecipe("minimal", minimalRecipe);
 `);
@@ -357,10 +357,10 @@ export const minimal = createRecipe("minimal", minimalRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const simpleRecipe: RecipeRuntime = {
+const simpleRecipe = {
     "base": {},
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const simple = createRecipe("simple", simpleRecipe);
 `);
@@ -381,7 +381,7 @@ export const simple = createRecipe("simple", simpleRecipe);
 		const result = consumeRoot(root, options);
 
 		expect(result).toContain("RecipeRuntime");
-		expect(result).toContain("const myRecipeRecipe: RecipeRuntime =");
+		expect(result).toContain("const myRecipeRecipe = {");
 		expect(result).toContain(
 			`export const myRecipe = createRecipe("myRecipe", myRecipeRecipe);`,
 		);
@@ -409,7 +409,7 @@ export const simple = createRecipe("simple", simpleRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const PascalCaseRecipe: RecipeRuntime = {
+const PascalCaseRecipe = {
     "base": {},
     "variants": {
         "variant": {
@@ -417,11 +417,11 @@ const PascalCaseRecipe: RecipeRuntime = {
             "b": {}
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const PascalCase = createRecipe("PascalCase", PascalCaseRecipe);
 
-const camelCaseRecipe: RecipeRuntime = {
+const camelCaseRecipe = {
     "base": {},
     "variants": {
         "variant": {
@@ -429,11 +429,11 @@ const camelCaseRecipe: RecipeRuntime = {
             "b": {}
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const camelCase = createRecipe("camelCase", camelCaseRecipe);
 
-const kebabCaseRecipe: RecipeRuntime = {
+const kebabCaseRecipe = {
     "base": {},
     "variants": {
         "variant": {
@@ -441,7 +441,7 @@ const kebabCaseRecipe: RecipeRuntime = {
             "b": {}
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const kebabCase = createRecipe("kebab-case", kebabCaseRecipe);
 `);
@@ -456,17 +456,17 @@ export const kebabCase = createRecipe("kebab-case", kebabCaseRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const firstRecipe: RecipeRuntime = {
+const firstRecipe = {
     "base": {},
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const first = createRecipe("first", firstRecipe);
 
-const secondRecipe: RecipeRuntime = {
+const secondRecipe = {
     "base": {},
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const second = createRecipe("second", secondRecipe);
 `);
@@ -482,10 +482,10 @@ export const second = createRecipe("second", secondRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const customizedRecipe: RecipeRuntime = {
+const customizedRecipe = {
     "base": {},
     "variants": {}
-};
+} as const satisfies RecipeRuntime;
 
 export const customized = createRecipe("customized", customizedRecipe);
 `);
@@ -503,7 +503,7 @@ export const customized = createRecipe("customized", customizedRecipe);
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
-const structuredRecipe: RecipeRuntime = {
+const structuredRecipe = {
     "base": {},
     "variants": {
         "size": {
@@ -511,7 +511,7 @@ const structuredRecipe: RecipeRuntime = {
             "lg": {}
         }
     }
-};
+} as const satisfies RecipeRuntime;
 
 export const structured = createRecipe("structured", structuredRecipe);
 `);

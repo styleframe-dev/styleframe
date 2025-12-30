@@ -4,13 +4,13 @@ import { createRecipe } from "./runtime";
 
 describe("createRecipe", () => {
 	it("should apply base declarations", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
 				cursor: "pointer",
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({});
@@ -22,7 +22,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should apply default variants when no props are provided", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
@@ -55,7 +55,7 @@ describe("createRecipe", () => {
 				color: "primary",
 				size: "md",
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({});
@@ -66,7 +66,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should apply specified variant overriding default variant", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
@@ -99,7 +99,7 @@ describe("createRecipe", () => {
 				color: "primary",
 				size: "md",
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({ color: "secondary" });
@@ -110,7 +110,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should apply compound variants when conditions match", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				borderWidth: "thin",
 				borderStyle: "solid",
@@ -156,7 +156,7 @@ describe("createRecipe", () => {
 					},
 				},
 			],
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({ color: "primary", size: "sm" });
@@ -167,7 +167,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should not apply compound variants when conditions don't match", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				borderWidth: "thin",
 			},
@@ -204,7 +204,7 @@ describe("createRecipe", () => {
 					},
 				},
 			],
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({ color: "secondary", size: "sm" });
@@ -215,12 +215,12 @@ describe("createRecipe", () => {
 	});
 
 	it("should convert camelCase utility names to kebab-case", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				borderRadius: "md",
 				backgroundColor: "white",
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const card = createRecipe("card", runtime);
 		const result = card({});
@@ -230,11 +230,11 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle boolean value true", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				display: true,
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const element = createRecipe("element", runtime);
 		const result = element({});
@@ -244,7 +244,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle multiple compound variants", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				cursor: "pointer",
 			},
@@ -282,7 +282,7 @@ describe("createRecipe", () => {
 					},
 				},
 			],
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({ color: "primary", size: "sm", rounded: "true" });
@@ -294,7 +294,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle recipes with no default variants", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				fontFamily: "sans",
 			},
@@ -304,7 +304,7 @@ describe("createRecipe", () => {
 					md: { fontSize: "16" },
 				},
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const text = createRecipe("text", runtime);
 		const result = text({});
@@ -313,7 +313,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should override declarations in correct order: base < variants < compound variants", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				padding: "default",
 			},
@@ -334,7 +334,7 @@ describe("createRecipe", () => {
 					},
 				},
 			],
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({ size: "sm" });
@@ -344,14 +344,14 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle modifier blocks in base declarations", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				background: "blue",
 				hover: {
 					background: "darkblue",
 				},
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({});
@@ -361,14 +361,14 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle compound modifiers like hover:focus", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				boxShadow: "none",
 				"hover:focus": {
 					boxShadow: "lg",
 				},
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({});
@@ -378,7 +378,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle modifier blocks in variant declarations", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {},
 			variants: {
 				color: {
@@ -393,7 +393,7 @@ describe("createRecipe", () => {
 			defaultVariants: {
 				color: "primary",
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({});
@@ -403,7 +403,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle modifier blocks in compoundVariants", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {},
 			variants: {
 				color: {
@@ -430,7 +430,7 @@ describe("createRecipe", () => {
 					},
 				},
 			],
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({});
@@ -439,7 +439,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle multiple modifiers in same block", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				background: "blue",
 				hover: {
@@ -449,7 +449,7 @@ describe("createRecipe", () => {
 					outline: "ring",
 				},
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({});
@@ -460,7 +460,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should override modifier declarations correctly", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				hover: {
 					background: "base-hover",
@@ -478,7 +478,7 @@ describe("createRecipe", () => {
 			defaultVariants: {
 				color: "primary",
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const button = createRecipe("button", runtime);
 		const result = button({});
@@ -489,7 +489,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle empty runtime", () => {
-		const runtime: RecipeRuntime = {};
+		const runtime = {} as const satisfies RecipeRuntime;
 
 		const element = createRecipe("element", runtime);
 		const result = element({});
@@ -498,7 +498,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle runtime with only variants and no base", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			variants: {
 				size: {
 					sm: { padding: "1" },
@@ -508,7 +508,7 @@ describe("createRecipe", () => {
 			defaultVariants: {
 				size: "sm",
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const element = createRecipe("element", runtime);
 		const result = element({});
@@ -517,7 +517,7 @@ describe("createRecipe", () => {
 	});
 
 	it("should handle variant with undefined value", () => {
-		const runtime: RecipeRuntime = {
+		const runtime = {
 			base: {
 				padding: "default",
 			},
@@ -527,7 +527,7 @@ describe("createRecipe", () => {
 					sm: { padding: "1" },
 				},
 			},
-		};
+		} as const satisfies RecipeRuntime;
 
 		const element = createRecipe("element", runtime);
 		const result = element({ size: "none" });
