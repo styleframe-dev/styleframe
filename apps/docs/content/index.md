@@ -198,7 +198,7 @@ export const button = recipe('button', {
 Zero-Runtime by Default, Dynamic When You Need It
 
 #description
-Styleframe generates CSS at build time for maximum performance. When you need prop-based styling, an optional runtime handles [Recipes](/docs/api/recipes).
+Styleframe generates CSS at build time for maximum performance. When you need prop-based styling, an optional runtime handles Recipes.
 
 #features
     :::u-page-feature
@@ -234,6 +234,17 @@ Styleframe generates CSS at build time for maximum performance. When you need pr
 
     #description
     Need prop-based class generation? Use Recipes for dynamic component variants without sacrificing the static benefits.
+    :::
+
+#links
+    :::u-button
+    ---
+    color: neutral
+    icon: i-lucide-chef-hat
+    to: /docs/api/recipes
+    variant: outline
+    ---
+    Learn more about Recipes
     :::
 ::
 
