@@ -30,7 +30,7 @@
 		"@vitest/coverage-v8": "catalog:",
 		"playwright": "^1.56.1",
 		"shelljs": "^0.10.0",
-		"styleframe": "workspace:^2.2.0",
+		"styleframe": "workspace:^2.3.0",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
