@@ -2,6 +2,10 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
+s.utility("borderRadius", ({ value }) => ({ borderRadius: value }));
+s.utility("fontSize", ({ value }) => ({ fontSize: value }));
+s.utility("fontWeight", ({ value }) => ({ fontWeight: value }));
+
 s.selector(".badge", {
 	background: "purple",
 	color: "white",

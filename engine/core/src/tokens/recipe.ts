@@ -180,6 +180,8 @@ export function createRecipeFunction(_parent: Container, root: Root) {
 		// Generate runtime object for efficient class name lookups
 		instance._runtime = generateRecipeRuntime(instance, root);
 
+		processRecipeUtilities(instance, root);
+
 		root.recipes.push(instance);
 		return instance;
 	};
@@ -371,7 +373,13 @@ function getUtilityFactory(
 	root: Root,
 	name: string,
 ): UtilityFactory | undefined {
-	return root.utilities.find((utility) => utility.name === name);
+	const exactMatch = root.utilities.find((utility) => utility.name === name);
+	if (exactMatch) {
+		return exactMatch;
+	}
+
+	const kebabName = name.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`);
+	return root.utilities.find((utility) => utility.name === kebabName);
 }
 
 /**

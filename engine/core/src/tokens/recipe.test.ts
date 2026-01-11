@@ -277,6 +277,29 @@ describe("processRecipeUtilities", () => {
 		warnSpy.mockRestore();
 	});
 
+	test("should match camelCase recipe property to kebab-case utility", () => {
+		utility("border-radius", ({ value }) => ({ borderRadius: value }));
+
+		const instance = recipe({
+			name: "card",
+			base: {
+				borderRadius: "8px",
+			},
+			variants: {},
+		});
+
+		processRecipeUtilities(instance, root);
+
+		expect(root.children).toHaveLength(1);
+		expect(root.children[0]).toEqual(
+			expect.objectContaining({
+				type: "utility",
+				name: "border-radius",
+				value: "[8px]",
+			}),
+		);
+	});
+
 	test("should handle empty recipe gracefully", () => {
 		const instance = recipe({
 			name: "empty",

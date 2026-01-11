@@ -1,19 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h, defineComponent } from "vue";
 
-import "./useColor.styleframe.css";
-import { colorPreview } from "./useColor.styleframe";
+import "./useColor.styleframe?css";
+import { colorPreview } from "./useColor.styleframe?recipe";
 
 console.log(colorPreview.toString());
 
 const ColorSwatch = defineComponent({
 	name: "ColorSwatch",
 	props: {
-		variant: {
-			type: String,
-			required: true,
-		},
-		label: {
+		color: {
 			type: String,
 			required: true,
 		},
@@ -23,22 +19,12 @@ const ColorSwatch = defineComponent({
 			h(
 				"div",
 				{
-					style: {
-						display: "flex",
-						flexDirection: "column",
-						alignItems: "center",
-						gap: "8px",
-					},
+					class: "color-swatch",
 				},
 				[
 					h("div", {
-						class: colorPreview({ color: props.variant }),
+						class: colorPreview({ color: props.color }),
 					}),
-					h(
-						"span",
-						{ style: { fontSize: "14px", fontWeight: "500" } },
-						props.label,
-					),
 				],
 			);
 	},
@@ -48,28 +34,21 @@ const ColorGrid = defineComponent({
 	name: "ColorGrid",
 	setup() {
 		const colors = [
-			{ variant: "primary", label: "Primary (#1E3A8A)" },
-			{ variant: "secondary", label: "Secondary (#9333EA)" },
-			{ variant: "info", label: "Info (#3B82F6)" },
-			{ variant: "success", label: "Success (#10B981)" },
-			{ variant: "warning", label: "Warning (#F59E0B)" },
-			{ variant: "danger", label: "Danger (#EF4444)" },
+			"primary",
+			"secondary",
+			"info",
+			"success",
+			"warning",
+			"danger",
 		];
 
 		return () =>
 			h(
 				"div",
 				{
-					style: {
-						display: "flex",
-						flexWrap: "wrap",
-						gap: "24px",
-						padding: "16px",
-					},
+					class: "color-grid",
 				},
-				colors.map((color) =>
-					h(ColorSwatch, { variant: color.variant, label: color.label }),
-				),
+				colors.map((color) => h(ColorSwatch, { color })),
 			);
 	},
 });
@@ -79,11 +58,10 @@ const meta = {
 	component: ColorSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		variant: {
+		color: {
 			control: "select",
 			options: ["primary", "secondary", "info", "success", "warning", "danger"],
 		},
-		label: { control: "text" },
 	},
 } satisfies Meta<typeof ColorSwatch>;
 
@@ -99,42 +77,36 @@ export const AllColors: StoryObj = {
 
 export const Primary: Story = {
 	args: {
-		variant: "primary",
-		label: "Primary (#1E3A8A)",
+		color: "primary",
 	},
 };
 
 export const Secondary: Story = {
 	args: {
-		variant: "secondary",
-		label: "Secondary (#9333EA)",
+		color: "secondary",
 	},
 };
 
 export const Info: Story = {
 	args: {
-		variant: "info",
-		label: "Info (#3B82F6)",
+		color: "info",
 	},
 };
 
 export const Success: Story = {
 	args: {
-		variant: "success",
-		label: "Success (#10B981)",
+		color: "success",
 	},
 };
 
 export const Warning: Story = {
 	args: {
-		variant: "warning",
-		label: "Warning (#F59E0B)",
+		color: "warning",
 	},
 };
 
 export const Danger: Story = {
 	args: {
-		variant: "danger",
-		label: "Danger (#EF4444)",
+		color: "danger",
 	},
 };

@@ -7,6 +7,9 @@ const s = styleframe();
 
 const { colorPrimary, colorSecondary } = useTokens(s);
 
+s.utility("fontSize", ({ value }) => ({ fontSize: value }));
+s.utility("fontWeight", ({ value }) => ({ fontWeight: value }));
+
 s.selector(".h1", {
 	color: s.ref(colorPrimary),
 	background: s.ref(colorSecondary),

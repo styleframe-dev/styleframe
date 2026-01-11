@@ -8,7 +8,7 @@ import type { TranspileOptions } from "@styleframe/transpiler";
 import { transpile } from "@styleframe/transpiler";
 import { consola } from "consola";
 import { transform as esbuildTransform } from "esbuild";
-import type { UnpluginFactory } from "unplugin";
+import type { UnpluginBuildContext, UnpluginFactory } from "unplugin";
 import { createUnplugin } from "unplugin";
 import {
 	DEFAULT_ENTRY,
@@ -22,11 +22,6 @@ import {
 } from "./constants";
 import type { Options } from "./types";
 
-// Regex patterns for styleframe file imports
-// Matches: ./button.styleframe.css, ../components/button.styleframe.css
-const STYLEFRAME_CSS_IMPORT_REGEX = /\.styleframe\.css$/;
-// Matches: ./button.styleframe, ../components/button.styleframe (without .css or .ts)
-const STYLEFRAME_TS_IMPORT_REGEX = /\.styleframe$/;
 // Matches the source file: ./button.styleframe.ts
 const STYLEFRAME_SOURCE_REGEX = /\.styleframe\.ts$/;
 
@@ -50,29 +45,8 @@ async function loadAndBuildEntry(
 	return transpile(instance, options);
 }
 
-function isStyleframeCssImport(id: string): boolean {
-	return STYLEFRAME_CSS_IMPORT_REGEX.test(id);
-}
-
-function isStyleframeTsImport(id: string): boolean {
-	return STYLEFRAME_TS_IMPORT_REGEX.test(id);
-}
-
 function isStyleframeSourceFile(id: string): boolean {
 	return STYLEFRAME_SOURCE_REGEX.test(id);
-}
-
-function getSourceFilePath(importPath: string): string {
-	// Convert import path to source file path
-	// ./button.styleframe.css -> ./button.styleframe.ts
-	// ./button.styleframe -> ./button.styleframe.ts
-	if (isStyleframeCssImport(importPath)) {
-		return importPath.replace(/\.css$/, ".ts");
-	}
-	if (isStyleframeTsImport(importPath)) {
-		return `${importPath}.ts`;
-	}
-	return importPath;
 }
 
 function getResolvedVirtualId(filePath: string, type: "css" | "ts"): string {
@@ -108,6 +82,67 @@ function parseVirtualId(
 	return null;
 }
 
+function resolveSourcePath(file: string, importer?: string): string {
+	if (path.isAbsolute(file)) {
+		return file;
+	}
+	if (importer) {
+		return path.resolve(path.dirname(importer), file);
+	}
+	return path.resolve(process.cwd(), file);
+}
+
+async function buildEntries(
+	ctx: UnpluginBuildContext,
+	entries: string[],
+	type: "css" | "ts",
+	outputName: string,
+	options: Options,
+	isBuildCommand: boolean,
+) {
+	let hasError = false;
+	const isGlobalConfig = outputName.startsWith("styleframe.config");
+
+	if (!options.silent) {
+		if (isGlobalConfig) {
+			console.log("");
+		}
+		consola.info(`[styleframe] Building ${outputName}...`);
+	}
+
+	const results = [];
+	for (const entry of entries) {
+		ctx.addWatchFile(entry);
+
+		try {
+			results.push(await loadAndBuildEntry(entry, { type }, isBuildCommand));
+		} catch (error) {
+			hasError = true;
+			consola.error(`[styleframe] Failed to build: ${entry}`, error);
+			if (!isGlobalConfig) {
+				throw error;
+			}
+		}
+	}
+
+	const code = results.reduce(
+		(acc, result) =>
+			acc +
+			"\n" +
+			result.files.reduce((fileAcc, file) => `${fileAcc}\n${file.content}`, ""),
+		"",
+	);
+
+	if (!options.silent && !hasError) {
+		consola.success(`[styleframe] Built ${outputName} successfully.`);
+		if (isGlobalConfig) {
+			console.log("");
+		}
+	}
+
+	return { code };
+}
+
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	options = DEFAULT_OPTIONS,
 ) => {
@@ -132,55 +167,42 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				return RESOLVED_VIRTUAL_TS_MODULE_ID;
 			}
 
-			// Handle .styleframe.css imports (CSS output)
-			if (isStyleframeCssImport(id)) {
-				const sourceFile = getSourceFilePath(id);
-				let resolvedSourcePath: string;
+			// Parse query parameters
+			const [pathPart, queryPart] = id.split("?");
 
-				if (path.isAbsolute(sourceFile)) {
-					resolvedSourcePath = sourceFile;
-				} else if (importer) {
-					resolvedSourcePath = path.resolve(path.dirname(importer), sourceFile);
-				} else {
-					resolvedSourcePath = path.resolve(process.cwd(), sourceFile);
-				}
-
-				const virtualId = getResolvedVirtualId(resolvedSourcePath, "css");
-
-				// Track the mapping for HMR
-				if (!sourceToVirtualModules.has(resolvedSourcePath)) {
-					sourceToVirtualModules.set(resolvedSourcePath, new Set());
-				}
-				sourceToVirtualModules.get(resolvedSourcePath)!.add(virtualId);
-
-				return virtualId;
+			// Only handle .styleframe files with specific queries
+			// .styleframe or .styleframe.ts
+			if (!pathPart || !/\.styleframe(\.ts)?$/.test(pathPart)) {
+				return null;
 			}
 
-			// Handle .styleframe imports (TS/recipe output)
-			if (isStyleframeTsImport(id)) {
-				const sourceFile = getSourceFilePath(id);
-				let resolvedSourcePath: string;
+			const isCss = queryPart === "css";
+			const isRecipe = queryPart === "recipe";
 
-				if (path.isAbsolute(sourceFile)) {
-					resolvedSourcePath = sourceFile;
-				} else if (importer) {
-					resolvedSourcePath = path.resolve(path.dirname(importer), sourceFile);
-				} else {
-					resolvedSourcePath = path.resolve(process.cwd(), sourceFile);
-				}
-
-				const virtualId = getResolvedVirtualId(resolvedSourcePath, "ts");
-
-				// Track the mapping for HMR
-				if (!sourceToVirtualModules.has(resolvedSourcePath)) {
-					sourceToVirtualModules.set(resolvedSourcePath, new Set());
-				}
-				sourceToVirtualModules.get(resolvedSourcePath)!.add(virtualId);
-
-				return virtualId;
+			if (!isCss && !isRecipe) {
+				// Pass through for default resolution (e.g. importing the instance itself)
+				return null;
 			}
 
-			return null;
+			// Resolve the source file path
+			let sourceFile = pathPart;
+			if (!sourceFile.endsWith(".ts")) {
+				sourceFile += ".ts";
+			}
+
+			const resolvedSourcePath = resolveSourcePath(sourceFile, importer);
+			const type = isCss ? "css" : "ts";
+			const virtualId = getResolvedVirtualId(resolvedSourcePath, type);
+
+			// Track the mapping for HMR
+			let modules = sourceToVirtualModules.get(resolvedSourcePath);
+			if (!modules) {
+				modules = new Set();
+				sourceToVirtualModules.set(resolvedSourcePath, modules);
+			}
+			modules.add(virtualId);
+
+			return virtualId;
 		},
 		buildStart() {
 			isBuildCommand = process.argv.includes("build");
@@ -191,86 +213,33 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				id === RESOLVED_VIRTUAL_CSS_MODULE_ID ||
 				id === RESOLVED_VIRTUAL_TS_MODULE_ID
 			) {
-				let hasError = false;
 				const type = id.endsWith(".css") ? "css" : "ts";
-
-				if (!options.silent) {
-					console.log("");
-					consola.info(`[styleframe] Building styleframe.config.${type}...`);
-				}
-
-				const results = [];
-				for (const entry of entries) {
-					this.addWatchFile(entry);
-
-					try {
-						results.push(
-							await loadAndBuildEntry(entry, { type }, isBuildCommand),
-						);
-					} catch (error) {
-						hasError = true;
-						consola.error(`[styleframe] Failed to build: ${entry}`, error);
-					}
-				}
-
-				const code = results.reduce(
-					(acc, result) =>
-						acc +
-						"\n" +
-						result.files.reduce(
-							(fileAcc, file) => `${fileAcc}\n${file.content}`,
-							"",
-						),
-					"",
+				return buildEntries(
+					this,
+					entries,
+					type,
+					`styleframe.config.${type}`,
+					options,
+					isBuildCommand,
 				);
-
-				if (!options.silent && !hasError) {
-					consola.success(
-						`[styleframe] Built styleframe.config.${type} successfully.`,
-					);
-					console.log("");
-				}
-
-				return { code };
 			}
 
 			// Handle .styleframe virtual modules
 			const parsed = parseVirtualId(id);
 			if (parsed) {
 				const { type, filePath } = parsed;
-
-				// Add the source file to watch for HMR
-				this.addWatchFile(filePath);
-
 				const relativePath = path.relative(process.cwd(), filePath);
 				const consolePath =
 					type === "css" ? relativePath.replace(".ts", ".css") : relativePath;
 
-				if (!options.silent) {
-					consola.info(`[styleframe] Building ${consolePath}...`);
-				}
-
-				try {
-					const result = await loadAndBuildEntry(
-						filePath,
-						{ type },
-						isBuildCommand,
-					);
-
-					const code = result.files.reduce(
-						(acc, file) => `${acc}\n${file.content}`,
-						"",
-					);
-
-					if (!options.silent) {
-						consola.success(`[styleframe] Built ${consolePath} successfully.`);
-					}
-
-					return { code };
-				} catch (error) {
-					consola.error(`[styleframe] Failed to build: ${filePath}`, error);
-					throw error;
-				}
+				return buildEntries(
+					this,
+					[filePath],
+					type,
+					consolePath,
+					options,
+					isBuildCommand,
+				);
 			}
 
 			return null;

@@ -2,6 +2,10 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
+s.utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+s.utility("borderStyle", ({ value }) => ({ borderStyle: value }));
+s.utility("borderColor", ({ value }) => ({ borderColor: value }));
+
 s.selector(".button", {
 	background: "blue",
 	color: "white",
