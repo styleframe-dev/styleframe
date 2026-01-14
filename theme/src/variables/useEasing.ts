@@ -55,7 +55,7 @@ export const defaultEasingValues = {
 	// Bounce (linear() function)
 	bounce:
 		"linear(0, 0.004, 0.016, 0.035, 0.063, 0.098, 0.141 13.6%, 0.25, 0.391, 0.563, 0.765, 1, 0.891 40.9%, 0.848, 0.813, 0.785, 0.766, 0.754, 0.75, 0.754, 0.766, 0.785, 0.813, 0.848, 0.891 68.2%, 1 72.7%, 0.973, 0.953, 0.941, 0.938, 0.941, 0.953, 0.973, 1, 0.988, 0.984, 0.988, 1)",
-};
+} as const;
 
 /**
  * Create a set of easing variables for use in a Styleframe instance.
