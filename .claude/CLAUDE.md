@@ -140,6 +140,7 @@ import { useScale, useScalePowers } from '@styleframe/theme';
 import { useFontFamily, useFontSize, useFontWeight, useLineHeight, useLetterSpacing } from '@styleframe/theme';
 import { useBreakpoint } from '@styleframe/theme';
 import { useBorderWidth, useBorderRadius, useBoxShadow } from '@styleframe/theme';
+import { useEasing } from '@styleframe/theme';
 
 // @styleframe/pro (fluid design)
 import { useFluidViewport, useFluidFontSize, useFluidClamp } from '@styleframe/pro';
