@@ -1,0 +1,42 @@
+{
+	"name": "@styleframe/storybook",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "storybook dev -p 6006",
+		"build": "storybook build"
+	},
+	"dependencies": {
+		"@styleframe/core": "workspace:*",
+		"@styleframe/plugin": "workspace:*",
+		"@styleframe/runtime": "workspace:*",
+		"@styleframe/theme": "workspace:*",
+		"styleframe": "workspace:*",
+		"vue": "catalog:nuxt"
+	},
+	"devDependencies": {
+		"@types/node": "catalog:",
+		"@vitejs/plugin-vue": "catalog:nuxt",
+		"@vue/tsconfig": "catalog:nuxt",
+		"typescript": "catalog:",
+		"vite": "catalog:nuxt",
+		"vue-tsc": "catalog:nuxt",
+		"storybook": "^10.1.11",
+		"@storybook/vue3-vite": "^10.1.11",
+		"@chromatic-com/storybook": "^4.1.3",
+		"@storybook/addon-vitest": "^10.1.11",
+		"@storybook/addon-a11y": "^10.1.11",
+		"@storybook/addon-docs": "^10.1.11",
+		"@storybook/addon-onboarding": "^10.1.11",
+		"vitest": "catalog:",
+		"playwright": "^1.57.0",
+		"@vitest/browser-playwright": "^4.0.16",
+		"@vitest/coverage-v8": "catalog:"
+	},
+	"pnpm": {
+		"overrides": {
+			"vite": "npm:rolldown-vite@7.2.5"
+		}
+	}
+}

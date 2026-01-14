@@ -379,7 +379,7 @@ describe("createUtilityConsumer", () => {
 		}
 
 		const decimalResult = consumeUtility(decimalUtility, options);
-		const expectedDecimal = `._p\\:2.5 {
+		const expectedDecimal = `._p\\:2\\.5 {
 \tpadding: 0.625rem;
 }`;
 		expect(decimalResult).toBe(expectedDecimal);
@@ -692,5 +692,60 @@ describe("createUtilityConsumer", () => {
 				u.modifiers.includes("focus"),
 		);
 		expect(bothModifiersUtility).toBeDefined();
+	});
+
+	it("should generate utility with reference value", () => {
+		const consumeUtility = createUtilityConsumer(consume);
+
+		const reference = {
+			type: "reference" as const,
+			name: "color.primary",
+		};
+
+		const instance = {
+			type: "utility" as const,
+			name: "background",
+			value: "primary",
+			declarations: {
+				background: reference,
+			},
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const result = consumeUtility(instance, {});
+
+		// Expected CSS: ._background\:primary { background: var(--color--primary); }
+		expect(result).toContain("._background\\:primary");
+		expect(result).toContain("background: var(--color--primary)");
+	});
+
+	it("should generate utility with dotted reference key", () => {
+		const consumeUtility = createUtilityConsumer(consume);
+
+		const reference = {
+			type: "reference" as const,
+			name: "color.primary",
+		};
+
+		const instance = {
+			type: "utility" as const,
+			name: "background",
+			value: "color.primary",
+			declarations: {
+				background: reference,
+			},
+			variables: [],
+			children: [],
+			modifiers: [],
+		};
+
+		const result = consumeUtility(instance, {});
+
+		// Expected CSS: ._background\:color\.primary { background: var(--color--primary); }
+		// Note: The dot needs to be escaped in the CSS selector
+		expect(result).toContain("._background\\:color\\.primary");
+		expect(result).toContain("background: var(--color--primary)");
 	});
 });

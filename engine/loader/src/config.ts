@@ -5,14 +5,14 @@ import path from "node:path";
 
 export async function loadConfiguration({
 	cwd = process.cwd(),
-	name = "styleframe",
+	configFile = "styleframe.config",
 }: {
 	cwd?: string;
-	name?: string;
+	configFile?: string;
 } = {}) {
 	const { config } = await loadConfig<Styleframe>({
 		cwd,
-		name,
+		configFile,
 		defaults: styleframe(),
 	});
 
@@ -22,9 +22,9 @@ export async function loadConfiguration({
 export async function loadConfigurationFromPath(entry: string) {
 	const entryPath = path.resolve(entry);
 	const cwd = path.dirname(entryPath);
-	const name = path.basename(entryPath).replace(/(\.config)?(\.ts)?$/, "");
+	const configFile = path.basename(entryPath).replace(/(\.ts)?$/, "");
 
-	return await loadConfiguration({ cwd, name });
+	return await loadConfiguration({ cwd, configFile });
 }
 
 export async function watchConfiguration({
