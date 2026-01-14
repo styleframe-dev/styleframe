@@ -199,6 +199,66 @@ const { boxShadowSm, boxShadowMd, boxShadowLg } =
 
 ---
 
+### Easing (Animation Timing Functions)
+
+```ts
+import { useEasing, defaultEasingValues } from '@styleframe/theme';
+
+// Use all default easing values
+const {
+    easing,                // Base variable
+    easingLinear,          // linear
+    easingEase,            // ease
+    easingEaseIn,          // ease-in
+    easingEaseOut,         // ease-out
+    easingEaseInOut,       // ease-in-out
+    easingEaseInCubic,     // cubic-bezier(0.55, 0.055, 0.675, 0.19)
+    easingEaseOutCubic,    // cubic-bezier(0.215, 0.61, 0.355, 1)
+    easingEaseInOutCubic,  // cubic-bezier(0.645, 0.045, 0.355, 1)
+    easingSpring,          // linear() spring animation
+    easingBounce,          // linear() bounce animation
+} = useEasing(s, defaultEasingValues);
+
+// Or use custom subset
+const { easingEaseOut, easingSpring } = useEasing(s, {
+    'ease-out': 'ease-out',
+    spring: defaultEasingValues.spring,
+} as const);
+
+// Apply to selectors
+selector('.button', {
+    transition: css`all 200ms ${ref(easingEaseOutCubic)}`,
+});
+
+selector('.modal', {
+    animation: css`slide-in 300ms ${ref(easingSpring)}`,
+});
+```
+
+**Available Easing Values:**
+
+| Category | Easings |
+|----------|---------|
+| CSS Keywords | `linear`, `ease`, `ease-in`, `ease-out`, `ease-in-out` |
+| Sine | `ease-in-sine`, `ease-out-sine`, `ease-in-out-sine` |
+| Quad | `ease-in-quad`, `ease-out-quad`, `ease-in-out-quad` |
+| Cubic | `ease-in-cubic`, `ease-out-cubic`, `ease-in-out-cubic` |
+| Quart | `ease-in-quart`, `ease-out-quart`, `ease-in-out-quart` |
+| Quint | `ease-in-quint`, `ease-out-quint`, `ease-in-out-quint` |
+| Expo | `ease-in-expo`, `ease-out-expo`, `ease-in-out-expo` |
+| Circ | `ease-in-circ`, `ease-out-circ`, `ease-in-out-circ` |
+| Back | `ease-in-back`, `ease-out-back`, `ease-in-out-back` |
+| Special | `spring`, `bounce` (using `linear()` function) |
+
+**Easing Recommendations:**
+- **UI Interactions**: `ease-out-cubic` or `ease-out-quad` - fast start, smooth finish
+- **Enter animations**: `ease-out` variants - elements appear naturally
+- **Exit animations**: `ease-in` variants - elements leave naturally
+- **Playful UI**: `spring` or `bounce` - adds character to interactions
+- **Back easings**: Include overshoot - good for attention-grabbing animations
+
+---
+
 ## @styleframe/pro Package (Fluid Design)
 
 ### Fluid Viewport Setup
