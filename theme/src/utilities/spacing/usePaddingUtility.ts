@@ -95,3 +95,25 @@ export const usePaddingInlineEndUtility = createUseUtility(
 		paddingInlineEnd: value,
 	}),
 );
+
+/**
+ * Create padding-x utility classes (left and right).
+ */
+export const usePaddingXUtility = createUseUtility(
+	"padding-x",
+	({ value }) => ({
+		paddingLeft: value,
+		paddingRight: value,
+	}),
+);
+
+/**
+ * Create padding-y utility classes (top and bottom).
+ */
+export const usePaddingYUtility = createUseUtility(
+	"padding-y",
+	({ value }) => ({
+		paddingTop: value,
+		paddingBottom: value,
+	}),
+);

@@ -11,6 +11,8 @@ import {
 	useMarginRightUtility,
 	useMarginTopUtility,
 	useMarginUtility,
+	useMarginXUtility,
+	useMarginYUtility,
 } from "./useMarginUtility";
 
 describe("useMarginUtility", () => {
@@ -270,5 +272,51 @@ describe("useMarginInlineEndUtility", () => {
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._margin-inline-end\\:xl {");
 		expect(css).toContain("margin-inline-end: 32px;");
+	});
+});
+
+describe("useMarginXUtility", () => {
+	it("should set marginLeft and marginRight", () => {
+		const s = styleframe();
+		useMarginXUtility(s, { sm: "8px" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({
+			marginLeft: "8px",
+			marginRight: "8px",
+		});
+	});
+
+	it("should compile to correct CSS output", () => {
+		const s = styleframe();
+		useMarginXUtility(s, { auto: "auto" });
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._margin-x\\:auto {");
+		expect(css).toContain("margin-left: auto;");
+		expect(css).toContain("margin-right: auto;");
+	});
+});
+
+describe("useMarginYUtility", () => {
+	it("should set marginTop and marginBottom", () => {
+		const s = styleframe();
+		useMarginYUtility(s, { md: "16px" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({
+			marginTop: "16px",
+			marginBottom: "16px",
+		});
+	});
+
+	it("should compile to correct CSS output", () => {
+		const s = styleframe();
+		useMarginYUtility(s, { lg: "24px" });
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._margin-y\\:lg {");
+		expect(css).toContain("margin-top: 24px;");
+		expect(css).toContain("margin-bottom: 24px;");
 	});
 });

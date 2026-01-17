@@ -95,3 +95,19 @@ export const useMarginInlineEndUtility = createUseUtility(
 		marginInlineEnd: value,
 	}),
 );
+
+/**
+ * Create margin-x utility classes (left and right).
+ */
+export const useMarginXUtility = createUseUtility("margin-x", ({ value }) => ({
+	marginLeft: value,
+	marginRight: value,
+}));
+
+/**
+ * Create margin-y utility classes (top and bottom).
+ */
+export const useMarginYUtility = createUseUtility("margin-y", ({ value }) => ({
+	marginTop: value,
+	marginBottom: value,
+}));
