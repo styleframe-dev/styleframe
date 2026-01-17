@@ -107,6 +107,60 @@ describe("defaultUtilitySelectorFn", () => {
 		});
 		expect(result).toBe("._margin\\:0");
 	});
+
+	test("should escape hash character in values", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "border-color",
+			value: "[#1E3A8A]",
+			modifiers: [],
+		});
+		expect(result).toBe("._border-color\\:\\[\\#1E3A8A\\]");
+	});
+
+	test("should escape parentheses and commas in values", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "background",
+			value: "[rgb(255,0,0)]",
+			modifiers: [],
+		});
+		expect(result).toBe("._background\\:\\[rgb\\(255\\,0\\,0\\)\\]");
+	});
+
+	test("should escape percentage in values", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "width",
+			value: "[50%]",
+			modifiers: [],
+		});
+		expect(result).toBe("._width\\:\\[50\\%\\]");
+	});
+
+	test("should escape complex calc expression without spaces", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "width",
+			value: "[calc(100%-20px)]",
+			modifiers: [],
+		});
+		expect(result).toBe("._width\\:\\[calc\\(100\\%-20px\\)\\]");
+	});
+
+	test("should escape rgba without spaces", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "background",
+			value: "[rgba(255,0,0,0.5)]",
+			modifiers: [],
+		});
+		expect(result).toBe("._background\\:\\[rgba\\(255\\,0\\,0\\,0\\.5\\)\\]");
+	});
+
+	test("should escape hsl with percentage", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "color",
+			value: "[hsl(200,100%,50%)]",
+			modifiers: [],
+		});
+		expect(result).toBe("._color\\:\\[hsl\\(200\\,100\\%\\,50\\%\\)\\]");
+	});
 });
 
 describe("defaultVariableNameFn", () => {
