@@ -20,7 +20,8 @@
 		"lint": "oxlint",
 		"format:check": "biome format",
 		"format": "biome format --write",
-		"prepare": "husky"
+		"prepare": "husky",
+		"cleanup": "git clean -ffdx -e '.env.*'"
 	},
 	"keywords": [
 		"styleframe",
