@@ -16,7 +16,7 @@ import { createUseUtility } from "../../utils";
  * ```
  */
 export const useBorderWidthUtility = createUseUtility(
-	"border",
+	"border-width",
 	({ value }) => ({
 		borderWidth: value,
 	}),
@@ -26,7 +26,7 @@ export const useBorderWidthUtility = createUseUtility(
  * Create border-x-width utility classes.
  */
 export const useBorderWidthXUtility = createUseUtility(
-	"border-x",
+	"border-x-width",
 	({ value }) => ({
 		borderLeftWidth: value,
 		borderRightWidth: value,
@@ -37,7 +37,7 @@ export const useBorderWidthXUtility = createUseUtility(
  * Create border-y-width utility classes.
  */
 export const useBorderWidthYUtility = createUseUtility(
-	"border-y",
+	"border-y-width",
 	({ value }) => ({
 		borderTopWidth: value,
 		borderBottomWidth: value,
@@ -48,7 +48,7 @@ export const useBorderWidthYUtility = createUseUtility(
  * Create border-top-width utility classes.
  */
 export const useBorderWidthTopUtility = createUseUtility(
-	"border-t",
+	"border-top-width",
 	({ value }) => ({
 		borderTopWidth: value,
 	}),
@@ -58,7 +58,7 @@ export const useBorderWidthTopUtility = createUseUtility(
  * Create border-right-width utility classes.
  */
 export const useBorderWidthRightUtility = createUseUtility(
-	"border-r",
+	"border-right-width",
 	({ value }) => ({
 		borderRightWidth: value,
 	}),
@@ -68,7 +68,7 @@ export const useBorderWidthRightUtility = createUseUtility(
  * Create border-bottom-width utility classes.
  */
 export const useBorderWidthBottomUtility = createUseUtility(
-	"border-b",
+	"border-bottom-width",
 	({ value }) => ({
 		borderBottomWidth: value,
 	}),
@@ -78,7 +78,7 @@ export const useBorderWidthBottomUtility = createUseUtility(
  * Create border-left-width utility classes.
  */
 export const useBorderWidthLeftUtility = createUseUtility(
-	"border-l",
+	"border-left-width",
 	({ value }) => ({
 		borderLeftWidth: value,
 	}),
@@ -88,7 +88,7 @@ export const useBorderWidthLeftUtility = createUseUtility(
  * Create border-inline-start-width utility classes.
  */
 export const useBorderWidthStartUtility = createUseUtility(
-	"border-s",
+	"border-inline-start-width",
 	({ value }) => ({
 		borderInlineStartWidth: value,
 	}),
@@ -98,7 +98,7 @@ export const useBorderWidthStartUtility = createUseUtility(
  * Create border-inline-end-width utility classes.
  */
 export const useBorderWidthEndUtility = createUseUtility(
-	"border-e",
+	"border-inline-end-width",
 	({ value }) => ({
 		borderInlineEndWidth: value,
 	}),

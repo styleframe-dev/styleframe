@@ -1,3 +1,4 @@
+export * from "./useColorUtility";
 export * from "./useContentUtility";
 export * from "./useFontFamilyUtility";
 export * from "./useFontSizeUtility";

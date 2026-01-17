@@ -1,5 +1,7 @@
 import type { Preview } from "@storybook/vue3-vite";
 
+import "../src/global.styleframe?css";
+
 const preview: Preview = {
 	parameters: {
 		controls: {

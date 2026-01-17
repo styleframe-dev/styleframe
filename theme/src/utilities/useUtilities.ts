@@ -300,6 +300,7 @@ import {
 
 // Typography
 import {
+	useColorUtility,
 	useContentUtility,
 	useFontFamilyUtility,
 	useFontSizeUtility,
@@ -647,6 +648,7 @@ export function useUtilities(s: Styleframe) {
 			useTransitionTimingFunctionUtility(s),
 
 		// Typography
+		createColorUtility: useColorUtility(s),
 		createContentUtility: useContentUtility(s),
 		createFontFamilyUtility: useFontFamilyUtility(s),
 		createFontSizeUtility: useFontSizeUtility(s),
