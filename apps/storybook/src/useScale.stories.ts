@@ -3,44 +3,17 @@ import { h } from "vue";
 
 import "./components/swatch.styleframe?css";
 import "./useScale.styleframe?css";
-import { scalePreview } from "./useScale.styleframe?recipe";
+import {
+	scalePreview,
+	scaleValues,
+	scaleRatios,
+} from "./useScale.styleframe?recipe";
 import {
 	createSwatchComponent,
 	createGridComponent,
 } from "./components/TokenSwatch";
 
-const scales = [
-	"minor-second",
-	"major-second",
-	"minor-third",
-	"major-third",
-	"perfect-fourth",
-	"augmented-fourth",
-	"perfect-fifth",
-	"golden",
-];
-
-const scaleValues: Record<string, string> = {
-	"minor-second": "1.067",
-	"major-second": "1.125",
-	"minor-third": "1.200",
-	"major-third": "1.250",
-	"perfect-fourth": "1.333",
-	"augmented-fourth": "1.414",
-	"perfect-fifth": "1.500",
-	golden: "1.618",
-};
-
-const scaleRatios: Record<string, number> = {
-	"minor-second": 1.067,
-	"major-second": 1.125,
-	"minor-third": 1.2,
-	"major-third": 1.25,
-	"perfect-fourth": 1.333,
-	"augmented-fourth": 1.414,
-	"perfect-fifth": 1.5,
-	golden: 1.618,
-};
+const scales = Object.keys(scaleValues);
 
 const ScaleSwatch = createSwatchComponent(
 	"ScaleSwatch",

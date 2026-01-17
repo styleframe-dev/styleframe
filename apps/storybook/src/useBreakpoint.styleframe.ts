@@ -3,6 +3,24 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
+// Exported for use in stories to display values
+export const breakpointValues = {
+	xs: "0px",
+	sm: "576px",
+	md: "992px",
+	lg: "1200px",
+	xl: "1440px",
+} as const;
+
+// Exported for use in stories for bar width calculations
+export const breakpointWidths = {
+	xs: 0,
+	sm: 576,
+	md: 992,
+	lg: 1200,
+	xl: 1440,
+} as const;
+
 // Register breakpoint variables (used by the theme)
 useBreakpoint(s);
 

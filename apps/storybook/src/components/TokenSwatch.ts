@@ -63,8 +63,9 @@ export const TokenSwatch = defineComponent({
 				case "row":
 					return h("div", { class: "token-swatch token-swatch--row" }, [
 						h("div", { class: "token-swatch__name" }, props.name),
-						props.value !== undefined &&
-							h("div", { class: "token-swatch__value" }, props.value),
+						props.value !== undefined
+							? h("div", { class: "token-swatch__value" }, props.value)
+							: null,
 						h(
 							props.previewTag,
 							{ class: `token-swatch__preview ${props.previewClass}` },
@@ -75,8 +76,9 @@ export const TokenSwatch = defineComponent({
 				case "text":
 					return h("div", { class: "token-swatch token-swatch--text" }, [
 						h("div", { class: "token-swatch__name" }, props.name),
-						props.value !== undefined &&
-							h("div", { class: "token-swatch__value" }, props.value),
+						props.value !== undefined
+							? h("div", { class: "token-swatch__value" }, props.value)
+							: null,
 						h(
 							props.previewTag,
 							{ class: `token-swatch__preview ${props.previewClass}` },
@@ -94,8 +96,9 @@ export const TokenSwatch = defineComponent({
 								{ class: `token-swatch__preview ${props.previewClass}` },
 								props.name,
 							),
-							props.label !== undefined &&
-								h("span", { class: "token-swatch__label" }, props.label),
+							props.label !== undefined
+								? h("span", { class: "token-swatch__label" }, props.label)
+								: null,
 						],
 					);
 
@@ -195,8 +198,13 @@ export function createSwatchComponent(
 				if (options.renderPreview) {
 					return h("div", { class: "token-swatch token-swatch--row" }, [
 						h("div", { class: "token-swatch__name" }, displayName),
-						options.values?.[value] !== undefined &&
-							h("div", { class: "token-swatch__value" }, options.values[value]),
+						options.values?.[value] !== undefined
+							? h(
+									"div",
+									{ class: "token-swatch__value" },
+									options.values[value],
+								)
+							: null,
 						options.renderPreview(value, previewClass),
 					]);
 				}

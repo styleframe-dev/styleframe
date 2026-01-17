@@ -2,31 +2,16 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useFontWeight.styleframe?css";
-import { fontWeightPreview } from "./useFontWeight.styleframe?recipe";
+import {
+	fontWeightPreview,
+	fontWeightValues,
+} from "./useFontWeight.styleframe?recipe";
 import {
 	createSwatchComponent,
 	createGridComponent,
 } from "./components/TokenSwatch";
 
-const fontWeights = [
-	"extralight",
-	"light",
-	"normal",
-	"medium",
-	"semibold",
-	"bold",
-	"black",
-];
-
-const fontWeightValues: Record<string, string> = {
-	extralight: "200",
-	light: "300",
-	normal: "400",
-	medium: "500",
-	semibold: "600",
-	bold: "700",
-	black: "900",
-};
+const fontWeights = Object.keys(fontWeightValues);
 
 const FontWeightSwatch = createSwatchComponent(
 	"FontWeightSwatch",

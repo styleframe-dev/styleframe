@@ -2,21 +2,16 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useLetterSpacing.styleframe?css";
-import { letterSpacingPreview } from "./useLetterSpacing.styleframe?recipe";
+import {
+	letterSpacingPreview,
+	letterSpacingValues,
+} from "./useLetterSpacing.styleframe?recipe";
 import {
 	createSwatchComponent,
 	createGridComponent,
 } from "./components/TokenSwatch";
 
-const letterSpacings = ["tighter", "tight", "normal", "wide", "wider"];
-
-const letterSpacingValues: Record<string, string> = {
-	tighter: "-0.05em",
-	tight: "-0.025em",
-	normal: "normal",
-	wide: "0.05em",
-	wider: "0.1em",
-};
+const letterSpacings = Object.keys(letterSpacingValues);
 
 const LetterSpacingSwatch = createSwatchComponent(
 	"LetterSpacingSwatch",

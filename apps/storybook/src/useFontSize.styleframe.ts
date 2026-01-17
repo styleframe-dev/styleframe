@@ -3,6 +3,18 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
+// Exported for use in stories to display values
+export const fontSizeValues = {
+	xs: "0.75rem",
+	sm: "0.875rem",
+	md: "1rem",
+	lg: "1.125rem",
+	xl: "1.25rem",
+	"2xl": "1.5rem",
+	"3xl": "1.875rem",
+	"4xl": "2.25rem",
+} as const;
+
 const {
 	fontSizeXs,
 	fontSizeSm,
@@ -12,16 +24,7 @@ const {
 	fontSize2xl,
 	fontSize3xl,
 	fontSize4xl,
-} = useFontSize(s, {
-	xs: "0.75rem",
-	sm: "0.875rem",
-	md: "1rem",
-	lg: "1.125rem",
-	xl: "1.25rem",
-	"2xl": "1.5rem",
-	"3xl": "1.875rem",
-	"4xl": "2.25rem",
-});
+} = useFontSize(s, fontSizeValues);
 
 // Register all utilities and generate utility classes
 const { createFontSizeUtility } = useUtilities(s);
@@ -74,36 +77,6 @@ export const fontSizePreview = s.recipe({
 	defaultVariants: {
 		fontSize: "md",
 	},
-});
-
-s.selector(".font-size-swatch", {
-	display: "flex",
-	alignItems: "center",
-	gap: "16px",
-	padding: "12px 16px",
-	borderRadius: "8px",
-	background: "#f8fafc",
-});
-
-s.selector(".font-size-name", {
-	fontWeight: "600",
-	fontSize: "14px",
-	color: "#1E3A8A",
-	minWidth: "40px",
-});
-
-s.selector(".font-size-value", {
-	fontSize: "12px",
-	color: "#64748b",
-	fontFamily: "monospace",
-	minWidth: "70px",
-});
-
-s.selector(".font-size-grid", {
-	display: "flex",
-	flexDirection: "column",
-	gap: "8px",
-	padding: "16px",
 });
 
 export default s;

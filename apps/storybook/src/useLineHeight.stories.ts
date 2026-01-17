@@ -2,21 +2,16 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useLineHeight.styleframe?css";
-import { lineHeightPreview } from "./useLineHeight.styleframe?recipe";
+import {
+	lineHeightPreview,
+	lineHeightValues,
+} from "./useLineHeight.styleframe?recipe";
 import {
 	createSwatchComponent,
 	createGridComponent,
 } from "./components/TokenSwatch";
 
-const lineHeights = ["tight", "snug", "normal", "relaxed", "loose"];
-
-const lineHeightValues: Record<string, string> = {
-	tight: "1.2",
-	snug: "1.35",
-	normal: "1.5",
-	relaxed: "1.65",
-	loose: "1.9",
-};
+const lineHeights = Object.keys(lineHeightValues);
 
 const sampleText =
 	"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.";

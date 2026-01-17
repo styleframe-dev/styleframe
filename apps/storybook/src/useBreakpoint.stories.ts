@@ -3,29 +3,17 @@ import { h } from "vue";
 
 import "./components/swatch.styleframe?css";
 import "./useBreakpoint.styleframe?css";
-import { breakpointPreview } from "./useBreakpoint.styleframe?recipe";
+import {
+	breakpointPreview,
+	breakpointValues,
+	breakpointWidths,
+} from "./useBreakpoint.styleframe?recipe";
 import {
 	createSwatchComponent,
 	createGridComponent,
 } from "./components/TokenSwatch";
 
-const breakpoints = ["xs", "sm", "md", "lg", "xl"];
-
-const breakpointValues: Record<string, string> = {
-	xs: "0px",
-	sm: "576px",
-	md: "992px",
-	lg: "1200px",
-	xl: "1440px",
-};
-
-const breakpointWidths: Record<string, number> = {
-	xs: 0,
-	sm: 576,
-	md: 992,
-	lg: 1200,
-	xl: 1440,
-};
+const breakpoints = Object.keys(breakpointValues);
 
 const maxBreakpoint = 1440;
 

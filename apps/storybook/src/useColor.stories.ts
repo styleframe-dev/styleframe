@@ -26,7 +26,7 @@ const ColorGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/useColor",
+	title: "Theme/Colors/useColor",
 	component: ColorSwatch,
 	tags: ["autodocs"],
 	argTypes: {

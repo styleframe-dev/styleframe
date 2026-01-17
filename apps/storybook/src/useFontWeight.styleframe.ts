@@ -3,6 +3,17 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
+// Exported for use in stories to display values
+export const fontWeightValues = {
+	extralight: "200",
+	light: "300",
+	normal: "400",
+	medium: "500",
+	semibold: "600",
+	bold: "700",
+	black: "900",
+} as const;
+
 const {
 	fontWeightExtralight,
 	fontWeightLight,
@@ -60,36 +71,6 @@ export const fontWeightPreview = s.recipe({
 	defaultVariants: {
 		fontWeight: "normal",
 	},
-});
-
-s.selector(".font-weight-swatch", {
-	display: "flex",
-	alignItems: "center",
-	gap: "16px",
-	padding: "12px 16px",
-	borderRadius: "8px",
-	background: "#f8fafc",
-});
-
-s.selector(".font-weight-name", {
-	fontWeight: "600",
-	fontSize: "14px",
-	color: "#1E3A8A",
-	minWidth: "80px",
-});
-
-s.selector(".font-weight-value", {
-	fontSize: "12px",
-	color: "#64748b",
-	fontFamily: "monospace",
-	minWidth: "40px",
-});
-
-s.selector(".font-weight-grid", {
-	display: "flex",
-	flexDirection: "column",
-	gap: "8px",
-	padding: "16px",
 });
 
 export default s;

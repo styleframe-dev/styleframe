@@ -3,6 +3,15 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
+// Exported for use in stories to display values
+export const letterSpacingValues = {
+	tighter: "-0.05em",
+	tight: "-0.025em",
+	normal: "normal",
+	wide: "0.05em",
+	wider: "0.1em",
+} as const;
+
 const {
 	letterSpacingTighter,
 	letterSpacingTight,
@@ -51,36 +60,6 @@ export const letterSpacingPreview = s.recipe({
 	defaultVariants: {
 		letterSpacing: "normal",
 	},
-});
-
-s.selector(".letter-spacing-swatch", {
-	display: "flex",
-	alignItems: "center",
-	gap: "16px",
-	padding: "16px",
-	borderRadius: "8px",
-	background: "#f8fafc",
-});
-
-s.selector(".letter-spacing-name", {
-	fontWeight: "600",
-	fontSize: "14px",
-	color: "#1E3A8A",
-	minWidth: "60px",
-});
-
-s.selector(".letter-spacing-value", {
-	fontSize: "12px",
-	color: "#64748b",
-	fontFamily: "monospace",
-	minWidth: "70px",
-});
-
-s.selector(".letter-spacing-grid", {
-	display: "flex",
-	flexDirection: "column",
-	gap: "8px",
-	padding: "16px",
 });
 
 export default s;

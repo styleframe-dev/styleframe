@@ -2,24 +2,16 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useFontSize.styleframe?css";
-import { fontSizePreview } from "./useFontSize.styleframe?recipe";
+import {
+	fontSizePreview,
+	fontSizeValues,
+} from "./useFontSize.styleframe?recipe";
 import {
 	createSwatchComponent,
 	createGridComponent,
 } from "./components/TokenSwatch";
 
-const fontSizes = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"];
-
-const fontSizeValues: Record<string, string> = {
-	xs: "0.75rem",
-	sm: "0.875rem",
-	md: "1rem",
-	lg: "1.125rem",
-	xl: "1.25rem",
-	"2xl": "1.5rem",
-	"3xl": "1.875rem",
-	"4xl": "2.25rem",
-};
+const fontSizes = Object.keys(fontSizeValues);
 
 const FontSizeSwatch = createSwatchComponent(
 	"FontSizeSwatch",

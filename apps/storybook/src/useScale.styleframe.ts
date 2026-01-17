@@ -3,6 +3,30 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
+// Exported for use in stories to display values
+export const scaleValues = {
+	"minor-second": "1.067",
+	"major-second": "1.125",
+	"minor-third": "1.200",
+	"major-third": "1.250",
+	"perfect-fourth": "1.333",
+	"augmented-fourth": "1.414",
+	"perfect-fifth": "1.500",
+	golden: "1.618",
+} as const;
+
+// Exported for use in stories for bar height calculations
+export const scaleRatios = {
+	"minor-second": 1.067,
+	"major-second": 1.125,
+	"minor-third": 1.2,
+	"major-third": 1.25,
+	"perfect-fourth": 1.333,
+	"augmented-fourth": 1.414,
+	"perfect-fifth": 1.5,
+	golden: 1.618,
+} as const;
+
 // Register scale variables (used by the theme)
 useScale(s);
 

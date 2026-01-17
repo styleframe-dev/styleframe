@@ -3,6 +3,15 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
+// Exported for use in stories to display values
+export const lineHeightValues = {
+	tight: "1.2",
+	snug: "1.35",
+	normal: "1.5",
+	relaxed: "1.65",
+	loose: "1.9",
+} as const;
+
 const {
 	lineHeightTight,
 	lineHeightSnug,
@@ -51,40 +60,6 @@ export const lineHeightPreview = s.recipe({
 	defaultVariants: {
 		lineHeight: "normal",
 	},
-});
-
-s.selector(".line-height-swatch", {
-	display: "flex",
-	flexDirection: "column",
-	gap: "8px",
-	padding: "16px",
-	borderRadius: "8px",
-	background: "#f8fafc",
-});
-
-s.selector(".line-height-header", {
-	display: "flex",
-	alignItems: "center",
-	gap: "12px",
-});
-
-s.selector(".line-height-name", {
-	fontWeight: "600",
-	fontSize: "14px",
-	color: "#1E3A8A",
-});
-
-s.selector(".line-height-value", {
-	fontSize: "12px",
-	color: "#64748b",
-	fontFamily: "monospace",
-});
-
-s.selector(".line-height-grid", {
-	display: "flex",
-	flexDirection: "column",
-	gap: "16px",
-	padding: "16px",
 });
 
 export default s;

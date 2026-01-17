@@ -3,15 +3,18 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
+// Exported for use in stories to display values
+export const spacingValues = {
+	xs: "0.25rem",
+	sm: "0.5rem",
+	md: "1rem",
+	lg: "1.5rem",
+	xl: "2rem",
+	"2xl": "3rem",
+} as const;
+
 const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl, spacing2xl } =
-	useSpacing(s, {
-		xs: "0.25rem",
-		sm: "0.5rem",
-		md: "1rem",
-		lg: "1.5rem",
-		xl: "2rem",
-		"2xl": "3rem",
-	});
+	useSpacing(s, spacingValues);
 
 // Register all utilities and generate utility classes
 const { createPaddingUtility, createMarginUtility, createGapUtility } =
