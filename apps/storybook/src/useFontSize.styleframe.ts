@@ -1,0 +1,111 @@
+import { useFontSize } from "@styleframe/theme";
+import { styleframe } from "styleframe";
+
+const s = styleframe();
+
+const {
+	fontSizeXs,
+	fontSizeSm,
+	fontSizeMd,
+	fontSizeLg,
+	fontSizeXl,
+	fontSize2xl,
+	fontSize3xl,
+	fontSize4xl,
+} = useFontSize(s, {
+	xs: "0.75rem",
+	sm: "0.875rem",
+	md: "1rem",
+	lg: "1.125rem",
+	xl: "1.25rem",
+	"2xl": "1.5rem",
+	"3xl": "1.875rem",
+	"4xl": "2.25rem",
+});
+
+// Create font-size utility and generate utility classes
+const createFontSize = s.utility("font-size", ({ value }) => ({
+	fontSize: value,
+}));
+
+createFontSize({
+	xs: s.ref(fontSizeXs),
+	sm: s.ref(fontSizeSm),
+	md: s.ref(fontSizeMd),
+	lg: s.ref(fontSizeLg),
+	xl: s.ref(fontSizeXl),
+	"2xl": s.ref(fontSize2xl),
+	"3xl": s.ref(fontSize3xl),
+	"4xl": s.ref(fontSize4xl),
+});
+
+export const fontSizePreview = s.recipe({
+	name: "font-size-preview",
+	base: {
+		color: "#1e293b",
+		lineHeight: "1.4",
+	},
+	variants: {
+		fontSize: {
+			xs: {
+				fontSize: s.ref(fontSizeXs),
+			},
+			sm: {
+				fontSize: s.ref(fontSizeSm),
+			},
+			md: {
+				fontSize: s.ref(fontSizeMd),
+			},
+			lg: {
+				fontSize: s.ref(fontSizeLg),
+			},
+			xl: {
+				fontSize: s.ref(fontSizeXl),
+			},
+			"2xl": {
+				fontSize: s.ref(fontSize2xl),
+			},
+			"3xl": {
+				fontSize: s.ref(fontSize3xl),
+			},
+			"4xl": {
+				fontSize: s.ref(fontSize4xl),
+			},
+		},
+	},
+	defaultVariants: {
+		fontSize: "md",
+	},
+});
+
+s.selector(".font-size-swatch", {
+	display: "flex",
+	alignItems: "center",
+	gap: "16px",
+	padding: "12px 16px",
+	borderRadius: "8px",
+	background: "#f8fafc",
+});
+
+s.selector(".font-size-name", {
+	fontWeight: "600",
+	fontSize: "14px",
+	color: "#1E3A8A",
+	minWidth: "40px",
+});
+
+s.selector(".font-size-value", {
+	fontSize: "12px",
+	color: "#64748b",
+	fontFamily: "monospace",
+	minWidth: "70px",
+});
+
+s.selector(".font-size-grid", {
+	display: "flex",
+	flexDirection: "column",
+	gap: "8px",
+	padding: "16px",
+});
+
+export default s;
