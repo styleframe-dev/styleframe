@@ -51,18 +51,4 @@ export const borderWidthPreview = s.recipe({
 	},
 });
 
-s.selector(".border-width-swatch", {
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-	gap: "8px",
-});
-
-s.selector(".border-width-grid", {
-	display: "flex",
-	flexWrap: "wrap",
-	gap: "24px",
-	padding: "16px",
-});
-
 export default s;

@@ -69,34 +69,4 @@ export const spacingPreview = s.recipe({
 	},
 });
 
-s.selector(".spacing-swatch", {
-	display: "flex",
-	alignItems: "center",
-	gap: "16px",
-	padding: "12px 16px",
-	borderRadius: "8px",
-	background: "#f8fafc",
-});
-
-s.selector(".spacing-name", {
-	fontWeight: "600",
-	fontSize: "14px",
-	color: "#1E3A8A",
-	minWidth: "40px",
-});
-
-s.selector(".spacing-value", {
-	fontSize: "14px",
-	color: "#64748b",
-	fontFamily: "monospace",
-	minWidth: "60px",
-});
-
-s.selector(".spacing-grid", {
-	display: "flex",
-	flexDirection: "column",
-	gap: "8px",
-	padding: "16px",
-});
-
 export default s;

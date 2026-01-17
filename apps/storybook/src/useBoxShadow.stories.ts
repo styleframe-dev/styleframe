@@ -1,62 +1,39 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useBoxShadow.styleframe?css";
 import { boxShadowPreview } from "./useBoxShadow.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
 
-const BoxShadowSwatch = defineComponent({
-	name: "BoxShadowSwatch",
-	props: {
-		boxShadow: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "box-shadow-swatch",
-				},
-				[
-					h(
-						"div",
-						{
-							class: boxShadowPreview({ boxShadow: props.boxShadow }),
-						},
-						props.boxShadow,
-					),
-				],
-			);
-	},
-});
+const boxShadows = [
+	"none",
+	"xs",
+	"sm",
+	"md",
+	"lg",
+	"xl",
+	"2xl",
+	"inner",
+	"ring",
+];
 
-const BoxShadowGrid = defineComponent({
-	name: "BoxShadowGrid",
-	setup() {
-		const boxShadows = [
-			"none",
-			"xs",
-			"sm",
-			"md",
-			"lg",
-			"xl",
-			"2xl",
-			"inner",
-			"ring",
-		];
+const BoxShadowSwatch = createSwatchComponent(
+	"BoxShadowSwatch",
+	"boxShadow",
+	(boxShadow) => boxShadowPreview({ boxShadow }),
+	{ layout: "box" },
+);
 
-		return () =>
-			h(
-				"div",
-				{
-					class: "box-shadow-grid",
-				},
-				boxShadows.map((boxShadow) => h(BoxShadowSwatch, { boxShadow })),
-			);
-	},
-});
+const BoxShadowGrid = createGridComponent(
+	"BoxShadowGrid",
+	boxShadows,
+	BoxShadowSwatch,
+	"boxShadow",
+	"grid",
+);
 
 const meta = {
 	title: "Theme/Shadows/useBoxShadow",
@@ -65,7 +42,7 @@ const meta = {
 	argTypes: {
 		boxShadow: {
 			control: "select",
-			options: ["none", "xs", "sm", "md", "lg", "xl", "2xl", "inner", "ring"],
+			options: boxShadows,
 		},
 	},
 } satisfies Meta<typeof BoxShadowSwatch>;

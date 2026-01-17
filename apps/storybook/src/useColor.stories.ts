@@ -1,57 +1,29 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useColor.styleframe?css";
 import { colorPreview } from "./useColor.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
 
-console.log(colorPreview.toString());
+const colors = ["primary", "secondary", "info", "success", "warning", "danger"];
 
-const ColorSwatch = defineComponent({
-	name: "ColorSwatch",
-	props: {
-		color: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "color-swatch",
-				},
-				[
-					h("div", {
-						class: colorPreview({ color: props.color }),
-					}),
-				],
-			);
-	},
-});
+const ColorSwatch = createSwatchComponent(
+	"ColorSwatch",
+	"color",
+	(color) => colorPreview({ color }),
+	{ layout: "box" },
+);
 
-const ColorGrid = defineComponent({
-	name: "ColorGrid",
-	setup() {
-		const colors = [
-			"primary",
-			"secondary",
-			"info",
-			"success",
-			"warning",
-			"danger",
-		];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "color-grid",
-				},
-				colors.map((color) => h(ColorSwatch, { color })),
-			);
-	},
-});
+const ColorGrid = createGridComponent(
+	"ColorGrid",
+	colors,
+	ColorSwatch,
+	"color",
+	"grid",
+);
 
 const meta = {
 	title: "Theme/useColor",
@@ -60,7 +32,7 @@ const meta = {
 	argTypes: {
 		color: {
 			control: "select",
-			options: ["primary", "secondary", "info", "success", "warning", "danger"],
+			options: colors,
 		},
 	},
 } satisfies Meta<typeof ColorSwatch>;

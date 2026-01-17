@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useLetterSpacing.styleframe?css";
 import { letterSpacingPreview } from "./useLetterSpacing.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
+
+const letterSpacings = ["tighter", "tight", "normal", "wide", "wider"];
 
 const letterSpacingValues: Record<string, string> = {
 	tighter: "-0.05em",
@@ -12,59 +18,25 @@ const letterSpacingValues: Record<string, string> = {
 	wider: "0.1em",
 };
 
-const LetterSpacingSwatch = defineComponent({
-	name: "LetterSpacingSwatch",
-	props: {
-		letterSpacing: {
-			type: String,
-			required: true,
-		},
+const LetterSpacingSwatch = createSwatchComponent(
+	"LetterSpacingSwatch",
+	"letterSpacing",
+	(letterSpacing) => letterSpacingPreview({ letterSpacing }),
+	{
+		layout: "text",
+		values: letterSpacingValues,
+		sampleText: "Letter Spacing",
+		previewTag: "span",
 	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "letter-spacing-swatch",
-				},
-				[
-					h("div", { class: "letter-spacing-name" }, props.letterSpacing),
-					h(
-						"div",
-						{ class: "letter-spacing-value" },
-						letterSpacingValues[props.letterSpacing],
-					),
-					h(
-						"span",
-						{
-							class: letterSpacingPreview({
-								letterSpacing: props.letterSpacing,
-							}),
-						},
-						"Letter Spacing",
-					),
-				],
-			);
-	},
-});
+);
 
-const LetterSpacingGrid = defineComponent({
-	name: "LetterSpacingGrid",
-	setup() {
-		const letterSpacings = ["tighter", "tight", "normal", "wide", "wider"];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "letter-spacing-grid",
-				},
-				letterSpacings.map((letterSpacing) =>
-					h(LetterSpacingSwatch, { letterSpacing }),
-				),
-			);
-	},
-});
+const LetterSpacingGrid = createGridComponent(
+	"LetterSpacingGrid",
+	letterSpacings,
+	LetterSpacingSwatch,
+	"letterSpacing",
+	"list",
+);
 
 const meta = {
 	title: "Theme/Typography/useLetterSpacing",
@@ -73,7 +45,7 @@ const meta = {
 	argTypes: {
 		letterSpacing: {
 			control: "select",
-			options: ["tighter", "tight", "normal", "wide", "wider"],
+			options: letterSpacings,
 		},
 	},
 } satisfies Meta<typeof LetterSpacingSwatch>;

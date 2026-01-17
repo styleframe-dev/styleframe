@@ -67,23 +67,4 @@ export const colorShadePreview = s.recipe({
 	},
 });
 
-s.selector(".color-shade-swatch", {
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-	gap: "8px",
-});
-
-s.selector(".color-shade-label", {
-	fontSize: "12px",
-	color: "#64748b",
-});
-
-s.selector(".color-shade-grid", {
-	display: "flex",
-	flexWrap: "wrap",
-	gap: "16px",
-	padding: "16px",
-});
-
 export default s;

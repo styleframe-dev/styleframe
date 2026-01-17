@@ -1,51 +1,29 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useBorderWidth.styleframe?css";
 import { borderWidthPreview } from "./useBorderWidth.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
 
-const BorderWidthSwatch = defineComponent({
-	name: "BorderWidthSwatch",
-	props: {
-		borderWidth: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "border-width-swatch",
-				},
-				[
-					h("div", {
-						class: borderWidthPreview({ borderWidth: props.borderWidth }),
-					}),
-					h("span", props.borderWidth),
-				],
-			);
-	},
-});
+const borderWidths = ["none", "thin", "medium", "thick"];
 
-const BorderWidthGrid = defineComponent({
-	name: "BorderWidthGrid",
-	setup() {
-		const borderWidths = ["none", "thin", "medium", "thick"];
+const BorderWidthSwatch = createSwatchComponent(
+	"BorderWidthSwatch",
+	"borderWidth",
+	(borderWidth) => borderWidthPreview({ borderWidth }),
+	{ layout: "box" },
+);
 
-		return () =>
-			h(
-				"div",
-				{
-					class: "border-width-grid",
-				},
-				borderWidths.map((borderWidth) =>
-					h(BorderWidthSwatch, { borderWidth }),
-				),
-			);
-	},
-});
+const BorderWidthGrid = createGridComponent(
+	"BorderWidthGrid",
+	borderWidths,
+	BorderWidthSwatch,
+	"borderWidth",
+	"grid",
+);
 
 const meta = {
 	title: "Theme/Borders/useBorderWidth",
@@ -54,7 +32,7 @@ const meta = {
 	argTypes: {
 		borderWidth: {
 			control: "select",
-			options: ["none", "thin", "medium", "thick"],
+			options: borderWidths,
 		},
 	},
 } satisfies Meta<typeof BorderWidthSwatch>;

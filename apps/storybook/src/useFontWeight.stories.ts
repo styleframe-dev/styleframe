@@ -1,8 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useFontWeight.styleframe?css";
 import { fontWeightPreview } from "./useFontWeight.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
+
+const fontWeights = [
+	"extralight",
+	"light",
+	"normal",
+	"medium",
+	"semibold",
+	"bold",
+	"black",
+];
 
 const fontWeightValues: Record<string, string> = {
 	extralight: "200",
@@ -14,63 +28,25 @@ const fontWeightValues: Record<string, string> = {
 	black: "900",
 };
 
-const FontWeightSwatch = defineComponent({
-	name: "FontWeightSwatch",
-	props: {
-		fontWeight: {
-			type: String,
-			required: true,
-		},
+const FontWeightSwatch = createSwatchComponent(
+	"FontWeightSwatch",
+	"fontWeight",
+	(fontWeight) => fontWeightPreview({ fontWeight }),
+	{
+		layout: "text",
+		values: fontWeightValues,
+		sampleText: "The quick brown fox jumps over the lazy dog",
+		previewTag: "span",
 	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "font-weight-swatch",
-				},
-				[
-					h("div", { class: "font-weight-name" }, props.fontWeight),
-					h(
-						"div",
-						{ class: "font-weight-value" },
-						fontWeightValues[props.fontWeight],
-					),
-					h(
-						"span",
-						{
-							class: fontWeightPreview({ fontWeight: props.fontWeight }),
-						},
-						"The quick brown fox jumps over the lazy dog",
-					),
-				],
-			);
-	},
-});
+);
 
-const FontWeightGrid = defineComponent({
-	name: "FontWeightGrid",
-	setup() {
-		const fontWeights = [
-			"extralight",
-			"light",
-			"normal",
-			"medium",
-			"semibold",
-			"bold",
-			"black",
-		];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "font-weight-grid",
-				},
-				fontWeights.map((fontWeight) => h(FontWeightSwatch, { fontWeight })),
-			);
-	},
-});
+const FontWeightGrid = createGridComponent(
+	"FontWeightGrid",
+	fontWeights,
+	FontWeightSwatch,
+	"fontWeight",
+	"list",
+);
 
 const meta = {
 	title: "Theme/Typography/useFontWeight",
@@ -79,15 +55,7 @@ const meta = {
 	argTypes: {
 		fontWeight: {
 			control: "select",
-			options: [
-				"extralight",
-				"light",
-				"normal",
-				"medium",
-				"semibold",
-				"bold",
-				"black",
-			],
+			options: fontWeights,
 		},
 	},
 } satisfies Meta<typeof FontWeightSwatch>;

@@ -1,51 +1,29 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useBorderRadius.styleframe?css";
 import { borderRadiusPreview } from "./useBorderRadius.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
 
-const BorderRadiusSwatch = defineComponent({
-	name: "BorderRadiusSwatch",
-	props: {
-		borderRadius: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "border-radius-swatch",
-				},
-				[
-					h("div", {
-						class: borderRadiusPreview({ borderRadius: props.borderRadius }),
-					}),
-					h("span", props.borderRadius),
-				],
-			);
-	},
-});
+const borderRadiuses = ["none", "sm", "md", "lg", "xl", "full"];
 
-const BorderRadiusGrid = defineComponent({
-	name: "BorderRadiusGrid",
-	setup() {
-		const borderRadiuses = ["none", "sm", "md", "lg", "xl", "full"];
+const BorderRadiusSwatch = createSwatchComponent(
+	"BorderRadiusSwatch",
+	"borderRadius",
+	(borderRadius) => borderRadiusPreview({ borderRadius }),
+	{ layout: "box" },
+);
 
-		return () =>
-			h(
-				"div",
-				{
-					class: "border-radius-grid",
-				},
-				borderRadiuses.map((borderRadius) =>
-					h(BorderRadiusSwatch, { borderRadius }),
-				),
-			);
-	},
-});
+const BorderRadiusGrid = createGridComponent(
+	"BorderRadiusGrid",
+	borderRadiuses,
+	BorderRadiusSwatch,
+	"borderRadius",
+	"grid",
+);
 
 const meta = {
 	title: "Theme/Borders/useBorderRadius",
@@ -54,7 +32,7 @@ const meta = {
 	argTypes: {
 		borderRadius: {
 			control: "select",
-			options: ["none", "sm", "md", "lg", "xl", "full"],
+			options: borderRadiuses,
 		},
 	},
 } satisfies Meta<typeof BorderRadiusSwatch>;

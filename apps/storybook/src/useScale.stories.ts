@@ -1,10 +1,37 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
+import { h } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useScale.styleframe?css";
 import { scalePreview } from "./useScale.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
 
-const scaleValues: Record<string, number> = {
+const scales = [
+	"minor-second",
+	"major-second",
+	"minor-third",
+	"major-third",
+	"perfect-fourth",
+	"augmented-fourth",
+	"perfect-fifth",
+	"golden",
+];
+
+const scaleValues: Record<string, string> = {
+	"minor-second": "1.067",
+	"major-second": "1.125",
+	"minor-third": "1.200",
+	"major-third": "1.250",
+	"perfect-fourth": "1.333",
+	"augmented-fourth": "1.414",
+	"perfect-fifth": "1.500",
+	golden: "1.618",
+};
+
+const scaleRatios: Record<string, number> = {
 	"minor-second": 1.067,
 	"major-second": 1.125,
 	"minor-third": 1.2,
@@ -15,66 +42,37 @@ const scaleValues: Record<string, number> = {
 	golden: 1.618,
 };
 
-const ScaleSwatch = defineComponent({
-	name: "ScaleSwatch",
-	props: {
-		scale: {
-			type: String,
-			required: true,
+const ScaleSwatch = createSwatchComponent(
+	"ScaleSwatch",
+	"scale",
+	(scale) => scalePreview({ scale }),
+	{
+		values: scaleValues,
+		renderPreview: (scale) => {
+			const ratio = scaleRatios[scale] || 1;
+			const baseHeight = 10;
+
+			return h(
+				"div",
+				{ class: "scale-bars" },
+				[0, 1, 2, 3, 4].map((power) =>
+					h("div", {
+						class: "scale-bar",
+						style: { height: `${baseHeight * Math.pow(ratio, power)}px` },
+					}),
+				),
+			);
 		},
 	},
-	setup(props) {
-		const ratio = scaleValues[props.scale] || 1;
-		const baseHeight = 10;
+);
 
-		return () =>
-			h(
-				"div",
-				{
-					class: `scale-swatch ${scalePreview({ scale: props.scale })}`,
-				},
-				[
-					h("div", { class: "scale-name" }, props.scale),
-					h("div", { class: "scale-value" }, ratio.toFixed(3)),
-					h(
-						"div",
-						{ class: "scale-bars" },
-						[0, 1, 2, 3, 4].map((power) =>
-							h("div", {
-								class: "scale-bar",
-								style: { height: `${baseHeight * Math.pow(ratio, power)}px` },
-							}),
-						),
-					),
-				],
-			);
-	},
-});
-
-const ScaleGrid = defineComponent({
-	name: "ScaleGrid",
-	setup() {
-		const scales = [
-			"minor-second",
-			"major-second",
-			"minor-third",
-			"major-third",
-			"perfect-fourth",
-			"augmented-fourth",
-			"perfect-fifth",
-			"golden",
-		];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "scale-grid",
-				},
-				scales.map((scale) => h(ScaleSwatch, { scale })),
-			);
-	},
-});
+const ScaleGrid = createGridComponent(
+	"ScaleGrid",
+	scales,
+	ScaleSwatch,
+	"scale",
+	"list",
+);
 
 const meta = {
 	title: "Theme/Scales/useScale",
@@ -83,16 +81,7 @@ const meta = {
 	argTypes: {
 		scale: {
 			control: "select",
-			options: [
-				"minor-second",
-				"major-second",
-				"minor-third",
-				"major-third",
-				"perfect-fourth",
-				"augmented-fourth",
-				"perfect-fifth",
-				"golden",
-			],
+			options: scales,
 		},
 	},
 } satisfies Meta<typeof ScaleSwatch>;

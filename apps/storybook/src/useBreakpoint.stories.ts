@@ -1,10 +1,25 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
+import { h } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useBreakpoint.styleframe?css";
 import { breakpointPreview } from "./useBreakpoint.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
 
-const breakpointValues: Record<string, number> = {
+const breakpoints = ["xs", "sm", "md", "lg", "xl"];
+
+const breakpointValues: Record<string, string> = {
+	xs: "0px",
+	sm: "576px",
+	md: "992px",
+	lg: "1200px",
+	xl: "1440px",
+};
+
+const breakpointWidths: Record<string, number> = {
 	xs: 0,
 	sm: 576,
 	md: 992,
@@ -14,55 +29,32 @@ const breakpointValues: Record<string, number> = {
 
 const maxBreakpoint = 1440;
 
-const BreakpointSwatch = defineComponent({
-	name: "BreakpointSwatch",
-	props: {
-		breakpoint: {
-			type: String,
-			required: true,
+const BreakpointSwatch = createSwatchComponent(
+	"BreakpointSwatch",
+	"breakpoint",
+	(breakpoint) => breakpointPreview({ breakpoint }),
+	{
+		values: breakpointValues,
+		formatName: (value) => value.toUpperCase(),
+		renderPreview: (breakpoint) => {
+			const value = breakpointWidths[breakpoint] || 0;
+			const barWidth = Math.max(10, (value / maxBreakpoint) * 100);
+
+			return h("div", {
+				class: "breakpoint-bar",
+				style: { width: `${barWidth}%` },
+			});
 		},
 	},
-	setup(props) {
-		const value = breakpointValues[props.breakpoint] || 0;
-		const barWidth = Math.max(10, (value / maxBreakpoint) * 100);
+);
 
-		return () =>
-			h(
-				"div",
-				{
-					class: `breakpoint-swatch ${breakpointPreview({ breakpoint: props.breakpoint })}`,
-				},
-				[
-					h(
-						"div",
-						{ class: "breakpoint-name" },
-						props.breakpoint.toUpperCase(),
-					),
-					h("div", { class: "breakpoint-value" }, `${value}px`),
-					h("div", {
-						class: "breakpoint-bar",
-						style: { width: `${barWidth}%` },
-					}),
-				],
-			);
-	},
-});
-
-const BreakpointGrid = defineComponent({
-	name: "BreakpointGrid",
-	setup() {
-		const breakpoints = ["xs", "sm", "md", "lg", "xl"];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "breakpoint-grid",
-				},
-				breakpoints.map((breakpoint) => h(BreakpointSwatch, { breakpoint })),
-			);
-	},
-});
+const BreakpointGrid = createGridComponent(
+	"BreakpointGrid",
+	breakpoints,
+	BreakpointSwatch,
+	"breakpoint",
+	"list",
+);
 
 const meta = {
 	title: "Theme/Layout/useBreakpoint",
@@ -71,7 +63,7 @@ const meta = {
 	argTypes: {
 		breakpoint: {
 			control: "select",
-			options: ["xs", "sm", "md", "lg", "xl"],
+			options: breakpoints,
 		},
 	},
 } satisfies Meta<typeof BreakpointSwatch>;

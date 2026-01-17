@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useSpacing.styleframe?css";
 import { spacingPreview } from "./useSpacing.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
+
+const spacings = ["xs", "sm", "md", "lg", "xl", "2xl"];
 
 const spacingValues: Record<string, string> = {
 	xs: "0.25rem",
@@ -13,47 +19,20 @@ const spacingValues: Record<string, string> = {
 	"2xl": "3rem",
 };
 
-const SpacingSwatch = defineComponent({
-	name: "SpacingSwatch",
-	props: {
-		spacing: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "spacing-swatch",
-				},
-				[
-					h("div", { class: "spacing-name" }, props.spacing),
-					h("div", { class: "spacing-value" }, spacingValues[props.spacing]),
-					h("div", {
-						class: spacingPreview({ spacing: props.spacing }),
-					}),
-				],
-			);
-	},
-});
+const SpacingSwatch = createSwatchComponent(
+	"SpacingSwatch",
+	"spacing",
+	(spacing) => spacingPreview({ spacing }),
+	{ layout: "row", values: spacingValues },
+);
 
-const SpacingGrid = defineComponent({
-	name: "SpacingGrid",
-	setup() {
-		const spacings = ["xs", "sm", "md", "lg", "xl", "2xl"];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "spacing-grid",
-				},
-				spacings.map((spacing) => h(SpacingSwatch, { spacing })),
-			);
-	},
-});
+const SpacingGrid = createGridComponent(
+	"SpacingGrid",
+	spacings,
+	SpacingSwatch,
+	"spacing",
+	"list",
+);
 
 const meta = {
 	title: "Theme/Spacing/useSpacing",
@@ -62,7 +41,7 @@ const meta = {
 	argTypes: {
 		spacing: {
 			control: "select",
-			options: ["xs", "sm", "md", "lg", "xl", "2xl"],
+			options: spacings,
 		},
 	},
 } satisfies Meta<typeof SpacingSwatch>;

@@ -39,26 +39,4 @@ export const fontFamilyPreview = s.recipe({
 	},
 });
 
-s.selector(".font-family-swatch", {
-	display: "flex",
-	flexDirection: "column",
-	gap: "8px",
-	padding: "16px",
-	borderRadius: "8px",
-	background: "#f8fafc",
-});
-
-s.selector(".font-family-name", {
-	fontWeight: "600",
-	fontSize: "14px",
-	color: "#1E3A8A",
-});
-
-s.selector(".font-family-grid", {
-	display: "flex",
-	flexDirection: "column",
-	gap: "16px",
-	padding: "16px",
-});
-
 export default s;

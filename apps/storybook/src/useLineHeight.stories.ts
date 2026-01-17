@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useLineHeight.styleframe?css";
 import { lineHeightPreview } from "./useLineHeight.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
+
+const lineHeights = ["tight", "snug", "normal", "relaxed", "loose"];
 
 const lineHeightValues: Record<string, string> = {
 	tight: "1.2",
@@ -15,57 +21,25 @@ const lineHeightValues: Record<string, string> = {
 const sampleText =
 	"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.";
 
-const LineHeightSwatch = defineComponent({
-	name: "LineHeightSwatch",
-	props: {
-		lineHeight: {
-			type: String,
-			required: true,
-		},
+const LineHeightSwatch = createSwatchComponent(
+	"LineHeightSwatch",
+	"lineHeight",
+	(lineHeight) => lineHeightPreview({ lineHeight }),
+	{
+		layout: "text",
+		values: lineHeightValues,
+		sampleText,
+		previewTag: "p",
 	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "line-height-swatch",
-				},
-				[
-					h("div", { class: "line-height-header" }, [
-						h("span", { class: "line-height-name" }, props.lineHeight),
-						h(
-							"span",
-							{ class: "line-height-value" },
-							lineHeightValues[props.lineHeight],
-						),
-					]),
-					h(
-						"p",
-						{
-							class: lineHeightPreview({ lineHeight: props.lineHeight }),
-						},
-						sampleText,
-					),
-				],
-			);
-	},
-});
+);
 
-const LineHeightGrid = defineComponent({
-	name: "LineHeightGrid",
-	setup() {
-		const lineHeights = ["tight", "snug", "normal", "relaxed", "loose"];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "line-height-grid",
-				},
-				lineHeights.map((lineHeight) => h(LineHeightSwatch, { lineHeight })),
-			);
-	},
-});
+const LineHeightGrid = createGridComponent(
+	"LineHeightGrid",
+	lineHeights,
+	LineHeightSwatch,
+	"lineHeight",
+	"list",
+);
 
 const meta = {
 	title: "Theme/Typography/useLineHeight",
@@ -74,7 +48,7 @@ const meta = {
 	argTypes: {
 		lineHeight: {
 			control: "select",
-			options: ["tight", "snug", "normal", "relaxed", "loose"],
+			options: lineHeights,
 		},
 	},
 } satisfies Meta<typeof LineHeightSwatch>;

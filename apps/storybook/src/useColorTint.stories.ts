@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useColorTint.styleframe?css";
 import { colorTintPreview } from "./useColorTint.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
+
+const tints = ["base", "50", "100", "150", "200"];
 
 const tintLabels: Record<string, string> = {
 	base: "Base",
@@ -12,50 +18,23 @@ const tintLabels: Record<string, string> = {
 	"200": "Tint 200 (+20%)",
 };
 
-const ColorTintSwatch = defineComponent({
-	name: "ColorTintSwatch",
-	props: {
-		tint: {
-			type: String,
-			required: true,
-		},
+const ColorTintSwatch = createSwatchComponent(
+	"ColorTintSwatch",
+	"tint",
+	(tint) => colorTintPreview({ tint }),
+	{
+		layout: "color-variant",
+		getLabel: (tint) => tintLabels[tint],
 	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "color-tint-swatch",
-				},
-				[
-					h(
-						"div",
-						{
-							class: colorTintPreview({ tint: props.tint }),
-						},
-						props.tint === "base" ? "Base" : props.tint,
-					),
-					h("span", { class: "color-tint-label" }, tintLabels[props.tint]),
-				],
-			);
-	},
-});
+);
 
-const ColorTintGrid = defineComponent({
-	name: "ColorTintGrid",
-	setup() {
-		const tints = ["base", "50", "100", "150", "200"];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "color-tint-grid",
-				},
-				tints.map((tint) => h(ColorTintSwatch, { tint })),
-			);
-	},
-});
+const ColorTintGrid = createGridComponent(
+	"ColorTintGrid",
+	tints,
+	ColorTintSwatch,
+	"tint",
+	"grid",
+);
 
 const meta = {
 	title: "Theme/Colors/useColorTint",
@@ -64,7 +43,7 @@ const meta = {
 	argTypes: {
 		tint: {
 			control: "select",
-			options: ["base", "50", "100", "150", "200"],
+			options: tints,
 		},
 	},
 } satisfies Meta<typeof ColorTintSwatch>;

@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useFontSize.styleframe?css";
 import { fontSizePreview } from "./useFontSize.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
+
+const fontSizes = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"];
 
 const fontSizeValues: Record<string, string> = {
 	xs: "0.75rem",
@@ -15,55 +21,25 @@ const fontSizeValues: Record<string, string> = {
 	"4xl": "2.25rem",
 };
 
-const FontSizeSwatch = defineComponent({
-	name: "FontSizeSwatch",
-	props: {
-		fontSize: {
-			type: String,
-			required: true,
-		},
+const FontSizeSwatch = createSwatchComponent(
+	"FontSizeSwatch",
+	"fontSize",
+	(fontSize) => fontSizePreview({ fontSize }),
+	{
+		layout: "text",
+		values: fontSizeValues,
+		sampleText: "The quick brown fox",
+		previewTag: "span",
 	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "font-size-swatch",
-				},
-				[
-					h("div", { class: "font-size-name" }, props.fontSize),
-					h(
-						"div",
-						{ class: "font-size-value" },
-						fontSizeValues[props.fontSize],
-					),
-					h(
-						"span",
-						{
-							class: fontSizePreview({ fontSize: props.fontSize }),
-						},
-						"The quick brown fox",
-					),
-				],
-			);
-	},
-});
+);
 
-const FontSizeGrid = defineComponent({
-	name: "FontSizeGrid",
-	setup() {
-		const fontSizes = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "font-size-grid",
-				},
-				fontSizes.map((fontSize) => h(FontSizeSwatch, { fontSize })),
-			);
-	},
-});
+const FontSizeGrid = createGridComponent(
+	"FontSizeGrid",
+	fontSizes,
+	FontSizeSwatch,
+	"fontSize",
+	"list",
+);
 
 const meta = {
 	title: "Theme/Typography/useFontSize",
@@ -72,7 +48,7 @@ const meta = {
 	argTypes: {
 		fontSize: {
 			control: "select",
-			options: ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"],
+			options: fontSizes,
 		},
 	},
 } satisfies Meta<typeof FontSizeSwatch>;

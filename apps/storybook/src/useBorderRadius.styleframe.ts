@@ -68,18 +68,4 @@ export const borderRadiusPreview = s.recipe({
 	},
 });
 
-s.selector(".border-radius-swatch", {
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-	gap: "8px",
-});
-
-s.selector(".border-radius-grid", {
-	display: "flex",
-	flexWrap: "wrap",
-	gap: "24px",
-	padding: "16px",
-});
-
 export default s;

@@ -1,60 +1,38 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useBorderStyle.styleframe?css";
 import { borderStylePreview } from "./useBorderStyle.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
 
-const BorderStyleSwatch = defineComponent({
-	name: "BorderStyleSwatch",
-	props: {
-		borderStyle: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "border-style-swatch",
-				},
-				[
-					h("div", {
-						class: borderStylePreview({ borderStyle: props.borderStyle }),
-					}),
-					h("span", props.borderStyle),
-				],
-			);
-	},
-});
+const borderStyles = [
+	"none",
+	"solid",
+	"dashed",
+	"dotted",
+	"double",
+	"groove",
+	"inset",
+	"outset",
+];
 
-const BorderStyleGrid = defineComponent({
-	name: "BorderStyleGrid",
-	setup() {
-		const borderStyles = [
-			"none",
-			"solid",
-			"dashed",
-			"dotted",
-			"double",
-			"groove",
-			"inset",
-			"outset",
-		];
+const BorderStyleSwatch = createSwatchComponent(
+	"BorderStyleSwatch",
+	"borderStyle",
+	(borderStyle) => borderStylePreview({ borderStyle }),
+	{ layout: "box" },
+);
 
-		return () =>
-			h(
-				"div",
-				{
-					class: "border-style-grid",
-				},
-				borderStyles.map((borderStyle) =>
-					h(BorderStyleSwatch, { borderStyle }),
-				),
-			);
-	},
-});
+const BorderStyleGrid = createGridComponent(
+	"BorderStyleGrid",
+	borderStyles,
+	BorderStyleSwatch,
+	"borderStyle",
+	"grid",
+);
 
 const meta = {
 	title: "Theme/Borders/useBorderStyle",
@@ -63,16 +41,7 @@ const meta = {
 	argTypes: {
 		borderStyle: {
 			control: "select",
-			options: [
-				"none",
-				"solid",
-				"dashed",
-				"dotted",
-				"double",
-				"groove",
-				"inset",
-				"outset",
-			],
+			options: borderStyles,
 		},
 	},
 } satisfies Meta<typeof BorderStyleSwatch>;

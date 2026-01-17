@@ -33,15 +33,10 @@ createBoxShadowUtility({
 export const boxShadowPreview = s.recipe({
 	name: "box-shadow-preview",
 	base: {
-		width: "120px",
-		height: "80px",
+		width: "100px",
+		height: "100px",
 		borderRadius: "8px",
 		background: "#ffffff",
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "center",
-		fontSize: "12px",
-		color: "#64748b",
 	},
 	variants: {
 		boxShadow: {
@@ -77,22 +72,6 @@ export const boxShadowPreview = s.recipe({
 	defaultVariants: {
 		boxShadow: "md",
 	},
-});
-
-s.selector(".box-shadow-swatch", {
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-	gap: "12px",
-});
-
-s.selector(".box-shadow-grid", {
-	display: "flex",
-	flexWrap: "wrap",
-	gap: "32px",
-	padding: "24px",
-	background: "#f1f5f9",
-	borderRadius: "8px",
 });
 
 export default s;

@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useColorShade.styleframe?css";
 import { colorShadePreview } from "./useColorShade.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
+
+const shades = ["base", "50", "100", "150", "200"];
 
 const shadeLabels: Record<string, string> = {
 	base: "Base",
@@ -12,50 +18,23 @@ const shadeLabels: Record<string, string> = {
 	"200": "Shade 200 (-20%)",
 };
 
-const ColorShadeSwatch = defineComponent({
-	name: "ColorShadeSwatch",
-	props: {
-		shade: {
-			type: String,
-			required: true,
-		},
+const ColorShadeSwatch = createSwatchComponent(
+	"ColorShadeSwatch",
+	"shade",
+	(shade) => colorShadePreview({ shade }),
+	{
+		layout: "color-variant",
+		getLabel: (shade) => shadeLabels[shade],
 	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "color-shade-swatch",
-				},
-				[
-					h(
-						"div",
-						{
-							class: colorShadePreview({ shade: props.shade }),
-						},
-						props.shade === "base" ? "Base" : props.shade,
-					),
-					h("span", { class: "color-shade-label" }, shadeLabels[props.shade]),
-				],
-			);
-	},
-});
+);
 
-const ColorShadeGrid = defineComponent({
-	name: "ColorShadeGrid",
-	setup() {
-		const shades = ["base", "50", "100", "150", "200"];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "color-shade-grid",
-				},
-				shades.map((shade) => h(ColorShadeSwatch, { shade })),
-			);
-	},
-});
+const ColorShadeGrid = createGridComponent(
+	"ColorShadeGrid",
+	shades,
+	ColorShadeSwatch,
+	"shade",
+	"grid",
+);
 
 const meta = {
 	title: "Theme/Colors/useColorShade",
@@ -64,7 +43,7 @@ const meta = {
 	argTypes: {
 		shade: {
 			control: "select",
-			options: ["base", "50", "100", "150", "200"],
+			options: shades,
 		},
 	},
 } satisfies Meta<typeof ColorShadeSwatch>;

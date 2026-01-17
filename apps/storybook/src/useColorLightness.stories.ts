@@ -1,66 +1,41 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useColorLightness.styleframe?css";
 import { colorLightnessPreview } from "./useColorLightness.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
 
-const ColorLightnessSwatch = defineComponent({
-	name: "ColorLightnessSwatch",
-	props: {
-		lightness: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "color-lightness-swatch",
-				},
-				[
-					h(
-						"div",
-						{
-							class: colorLightnessPreview({ lightness: props.lightness }),
-						},
-						props.lightness,
-					),
-				],
-			);
-	},
-});
+const lightnessLevels = [
+	"50",
+	"100",
+	"200",
+	"300",
+	"400",
+	"500",
+	"600",
+	"700",
+	"800",
+	"900",
+	"950",
+];
 
-const ColorLightnessGrid = defineComponent({
-	name: "ColorLightnessGrid",
-	setup() {
-		const lightnessLevels = [
-			"50",
-			"100",
-			"200",
-			"300",
-			"400",
-			"500",
-			"600",
-			"700",
-			"800",
-			"900",
-			"950",
-		];
+const ColorLightnessSwatch = createSwatchComponent(
+	"ColorLightnessSwatch",
+	"lightness",
+	(lightness) => colorLightnessPreview({ lightness }),
+	{ layout: "color-variant" },
+);
 
-		return () =>
-			h(
-				"div",
-				{
-					class: "color-lightness-grid",
-				},
-				lightnessLevels.map((lightness) =>
-					h(ColorLightnessSwatch, { lightness }),
-				),
-			);
-	},
-});
+const ColorLightnessGrid = createGridComponent(
+	"ColorLightnessGrid",
+	lightnessLevels,
+	ColorLightnessSwatch,
+	"lightness",
+	"grid",
+);
 
 const meta = {
 	title: "Theme/Colors/useColorLightness",
@@ -69,19 +44,7 @@ const meta = {
 	argTypes: {
 		lightness: {
 			control: "select",
-			options: [
-				"50",
-				"100",
-				"200",
-				"300",
-				"400",
-				"500",
-				"600",
-				"700",
-				"800",
-				"900",
-				"950",
-			],
+			options: lightnessLevels,
 		},
 	},
 } satisfies Meta<typeof ColorLightnessSwatch>;

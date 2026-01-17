@@ -1,55 +1,32 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
+import "./components/swatch.styleframe?css";
 import "./useFontFamily.styleframe?css";
 import { fontFamilyPreview } from "./useFontFamily.styleframe?recipe";
+import {
+	createSwatchComponent,
+	createGridComponent,
+} from "./components/TokenSwatch";
 
-const sampleText = "The quick brown fox jumps over the lazy dog. 0123456789";
+const fontFamilies = ["base", "print", "mono"];
 
-const FontFamilySwatch = defineComponent({
-	name: "FontFamilySwatch",
-	props: {
-		fontFamily: {
-			type: String,
-			required: true,
-		},
+const FontFamilySwatch = createSwatchComponent(
+	"FontFamilySwatch",
+	"fontFamily",
+	(fontFamily) => fontFamilyPreview({ fontFamily }),
+	{
+		layout: "text",
+		sampleText: "The quick brown fox jumps over the lazy dog. 0123456789",
 	},
-	setup(props) {
-		return () =>
-			h(
-				"div",
-				{
-					class: "font-family-swatch",
-				},
-				[
-					h("div", { class: "font-family-name" }, props.fontFamily),
-					h(
-						"div",
-						{
-							class: fontFamilyPreview({ fontFamily: props.fontFamily }),
-						},
-						sampleText,
-					),
-				],
-			);
-	},
-});
+);
 
-const FontFamilyGrid = defineComponent({
-	name: "FontFamilyGrid",
-	setup() {
-		const fontFamilies = ["base", "print", "mono"];
-
-		return () =>
-			h(
-				"div",
-				{
-					class: "font-family-grid",
-				},
-				fontFamilies.map((fontFamily) => h(FontFamilySwatch, { fontFamily })),
-			);
-	},
-});
+const FontFamilyGrid = createGridComponent(
+	"FontFamilyGrid",
+	fontFamilies,
+	FontFamilySwatch,
+	"fontFamily",
+	"list",
+);
 
 const meta = {
 	title: "Theme/Typography/useFontFamily",
@@ -58,7 +35,7 @@ const meta = {
 	argTypes: {
 		fontFamily: {
 			control: "select",
-			options: ["base", "print", "mono"],
+			options: fontFamilies,
 		},
 	},
 } satisfies Meta<typeof FontFamilySwatch>;
