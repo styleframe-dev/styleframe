@@ -1,0 +1,7 @@
+{
+	"extends": "../../config/typescript/tsconfig.json",
+	"compilerOptions": {
+		"tsBuildInfoFile": ".tsbuildinfo"
+	},
+	"include": ["src/**/*.ts", "tsdown.config.ts", "vite.config.ts"]
+}
