@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Styleframe Sync</title>
+	<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+	<div class="container">
+		<div class="tabs">
+			<button class="tab active" data-tab="import">Import to Figma</button>
+			<button class="tab" data-tab="export">Export from Figma</button>
+		</div>
+
+		<!-- Import Panel -->
+		<div id="import-panel" class="panel active">
+			<div class="form-group">
+				<label for="json-input">Paste JSON from <code>styleframe figma export</code></label>
+				<textarea
+					id="json-input"
+					placeholder='{"collection": "Design Tokens", "modes": ["Default"], "variables": [...]}'
+				></textarea>
+			</div>
+
+			<div id="import-preview" class="preview">
+				<div class="preview-empty">Paste JSON to preview variables</div>
+			</div>
+
+			<div id="import-status" class="status"></div>
+
+			<button id="import-btn" class="btn btn-primary" disabled>
+				Create Variables
+			</button>
+		</div>
+
+		<!-- Export Panel -->
+		<div id="export-panel" class="panel">
+			<div class="form-group">
+				<label for="collection-select">Select Collection</label>
+				<div class="collection-select">
+					<select id="collection-select">
+						<option value="">Loading collections...</option>
+					</select>
+					<button id="refresh-btn" class="refresh-btn" title="Refresh collections">
+						↻
+					</button>
+				</div>
+			</div>
+
+			<button id="export-btn" class="btn btn-primary" disabled>
+				Export Variables
+			</button>
+
+			<div class="output-wrapper">
+				<label>JSON Output (use with <code>styleframe figma import</code>)</label>
+				<textarea
+					id="export-output"
+					readonly
+					placeholder="Click 'Export Variables' to generate JSON..."
+				></textarea>
+				<button id="copy-btn" class="btn btn-secondary copy-btn" disabled>
+					Copy
+				</button>
+			</div>
+
+			<div id="export-status" class="status"></div>
+		</div>
+	</div>
+
+	<script type="module" src="./main.ts"></script>
+</body>
+</html>

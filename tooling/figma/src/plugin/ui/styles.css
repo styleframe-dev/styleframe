@@ -1,0 +1,278 @@
+:root {
+	--figma-color-bg: var(--figma-color-bg-secondary, #fff);
+	--figma-color-bg-secondary: var(--figma-color-bg-tertiary, #f5f5f5);
+	--figma-color-text: var(--figma-color-text, #333);
+	--figma-color-text-secondary: var(--figma-color-text-secondary, #666);
+	--figma-color-border: var(--figma-color-border, #e6e6e6);
+	--figma-color-brand: var(--figma-color-bg-brand, #0d99ff);
+	--figma-color-brand-hover: var(--figma-color-bg-brand-hover, #007be5);
+	--figma-color-success: #1bc47d;
+	--figma-color-error: #f24822;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	font-size: 12px;
+	color: var(--figma-color-text);
+	background: var(--figma-color-bg);
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	padding: 16px;
+	gap: 16px;
+}
+
+.tabs {
+	display: flex;
+	gap: 8px;
+	border-bottom: 1px solid var(--figma-color-border);
+	padding-bottom: 8px;
+}
+
+.tab {
+	padding: 8px 16px;
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--figma-color-text-secondary);
+	border-radius: 6px;
+	transition: all 0.15s ease;
+}
+
+.tab:hover {
+	background: var(--figma-color-bg-secondary);
+}
+
+.tab.active {
+	color: var(--figma-color-brand);
+	background: rgba(13, 153, 255, 0.1);
+}
+
+.panel {
+	display: none;
+	flex: 1;
+	flex-direction: column;
+	gap: 12px;
+	overflow: hidden;
+}
+
+.panel.active {
+	display: flex;
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+label {
+	font-weight: 500;
+	color: var(--figma-color-text-secondary);
+}
+
+input,
+select,
+textarea {
+	width: 100%;
+	padding: 10px 12px;
+	border: 1px solid var(--figma-color-border);
+	border-radius: 6px;
+	font-size: 12px;
+	font-family: inherit;
+	background: var(--figma-color-bg);
+	color: var(--figma-color-text);
+	transition: border-color 0.15s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	outline: none;
+	border-color: var(--figma-color-brand);
+}
+
+textarea {
+	flex: 1;
+	min-height: 200px;
+	font-family: "JetBrains Mono", "Fira Code", "SF Mono", Consolas, monospace;
+	font-size: 11px;
+	line-height: 1.5;
+	resize: none;
+}
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	padding: 10px 16px;
+	border: none;
+	border-radius: 6px;
+	font-size: 12px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.btn-primary {
+	background: var(--figma-color-brand);
+	color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+	background: var(--figma-color-brand-hover);
+}
+
+.btn-primary:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.btn-secondary {
+	background: var(--figma-color-bg-secondary);
+	color: var(--figma-color-text);
+}
+
+.btn-secondary:hover {
+	background: var(--figma-color-border);
+}
+
+.btn-group {
+	display: flex;
+	gap: 8px;
+}
+
+.status {
+	padding: 12px;
+	border-radius: 6px;
+	font-size: 12px;
+	display: none;
+}
+
+.status.visible {
+	display: block;
+}
+
+.status.success {
+	background: rgba(27, 196, 125, 0.1);
+	color: var(--figma-color-success);
+}
+
+.status.error {
+	background: rgba(242, 72, 34, 0.1);
+	color: var(--figma-color-error);
+}
+
+.preview {
+	flex: 1;
+	overflow: auto;
+	background: var(--figma-color-bg-secondary);
+	border-radius: 6px;
+	padding: 12px;
+}
+
+.preview-empty {
+	color: var(--figma-color-text-secondary);
+	text-align: center;
+	padding: 24px;
+}
+
+.variable-list {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.variable-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px;
+	background: var(--figma-color-bg);
+	border-radius: 4px;
+	font-size: 11px;
+}
+
+.variable-name {
+	flex: 1;
+	font-family: monospace;
+}
+
+.variable-type {
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-size: 10px;
+	font-weight: 500;
+	text-transform: uppercase;
+}
+
+.variable-type.color {
+	background: rgba(168, 85, 247, 0.1);
+	color: #a855f7;
+}
+
+.variable-type.float {
+	background: rgba(59, 130, 246, 0.1);
+	color: #3b82f6;
+}
+
+.variable-type.string {
+	background: rgba(34, 197, 94, 0.1);
+	color: #22c55e;
+}
+
+.variable-type.boolean {
+	background: rgba(249, 115, 22, 0.1);
+	color: #f97316;
+}
+
+.collection-select {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.collection-select select {
+	flex: 1;
+}
+
+.refresh-btn {
+	padding: 10px;
+	border: 1px solid var(--figma-color-border);
+	background: var(--figma-color-bg);
+	border-radius: 6px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.refresh-btn:hover {
+	background: var(--figma-color-bg-secondary);
+}
+
+.copy-btn {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+}
+
+.output-wrapper {
+	position: relative;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}

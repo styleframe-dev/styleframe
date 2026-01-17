@@ -30,6 +30,7 @@
 		"playground:build": "tsx playground/build.ts"
 	},
 	"dependencies": {
+		"@styleframe/figma": "workspace:^1.0.0",
 		"citty": "^0.1.6",
 		"consola": "^3.0.0-2",
 		"magicast": "^0.5.0"
