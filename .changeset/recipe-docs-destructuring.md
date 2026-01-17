@@ -1,5 +1,6 @@
 ---
 "styleframe": patch
+"@styleframe/theme": patch
 ---
 
 docs: update recipe documentation to use destructuring pattern
