@@ -11,6 +11,8 @@ import {
 	usePaddingRightUtility,
 	usePaddingTopUtility,
 	usePaddingUtility,
+	usePaddingXUtility,
+	usePaddingYUtility,
 } from "./usePaddingUtility";
 
 describe("usePaddingUtility", () => {
@@ -264,5 +266,51 @@ describe("usePaddingInlineEndUtility", () => {
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._padding-inline-end\\:xl {");
 		expect(css).toContain("padding-inline-end: 32px;");
+	});
+});
+
+describe("usePaddingXUtility", () => {
+	it("should set paddingLeft and paddingRight", () => {
+		const s = styleframe();
+		usePaddingXUtility(s, { sm: "8px" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({
+			paddingLeft: "8px",
+			paddingRight: "8px",
+		});
+	});
+
+	it("should compile to correct CSS output", () => {
+		const s = styleframe();
+		usePaddingXUtility(s, { md: "16px" });
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._padding-x\\:md {");
+		expect(css).toContain("padding-left: 16px;");
+		expect(css).toContain("padding-right: 16px;");
+	});
+});
+
+describe("usePaddingYUtility", () => {
+	it("should set paddingTop and paddingBottom", () => {
+		const s = styleframe();
+		usePaddingYUtility(s, { md: "16px" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({
+			paddingTop: "16px",
+			paddingBottom: "16px",
+		});
+	});
+
+	it("should compile to correct CSS output", () => {
+		const s = styleframe();
+		usePaddingYUtility(s, { lg: "24px" });
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._padding-y\\:lg {");
+		expect(css).toContain("padding-top: 24px;");
+		expect(css).toContain("padding-bottom: 24px;");
 	});
 });
