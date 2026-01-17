@@ -1,4 +1,4 @@
-import { useSpacing } from "@styleframe/theme";
+import { useSpacing, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -13,18 +13,9 @@ const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl, spacing2xl } =
 		"2xl": "3rem",
 	});
 
-// Create spacing utilities and generate utility classes
-const createPadding = s.utility("padding", ({ value }) => ({
-	padding: value,
-}));
-
-const createMargin = s.utility("margin", ({ value }) => ({
-	margin: value,
-}));
-
-const createGap = s.utility("gap", ({ value }) => ({
-	gap: value,
-}));
+// Register all utilities and generate utility classes
+const { createPaddingUtility, createMarginUtility, createGapUtility } =
+	useUtilities(s);
 
 const spacingMap = {
 	xs: s.ref(spacingXs),
@@ -35,9 +26,9 @@ const spacingMap = {
 	"2xl": s.ref(spacing2xl),
 };
 
-createPadding(spacingMap);
-createMargin(spacingMap);
-createGap(spacingMap);
+createPaddingUtility(spacingMap);
+createMarginUtility(spacingMap);
+createGapUtility(spacingMap);
 
 export const spacingPreview = s.recipe({
 	name: "spacing-preview",

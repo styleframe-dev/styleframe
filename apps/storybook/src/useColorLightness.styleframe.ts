@@ -1,4 +1,4 @@
-import { useColor, useColorLightness } from "@styleframe/theme";
+import { useColor, useColorLightness, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -31,6 +31,23 @@ const {
 	800: 20,
 	900: 10,
 	950: 5,
+});
+
+// Register all utilities and generate utility classes
+const { createBackgroundColorUtility } = useUtilities(s);
+
+createBackgroundColorUtility({
+	"primary-50": s.ref(colorPrimary50),
+	"primary-100": s.ref(colorPrimary100),
+	"primary-200": s.ref(colorPrimary200),
+	"primary-300": s.ref(colorPrimary300),
+	"primary-400": s.ref(colorPrimary400),
+	"primary-500": s.ref(colorPrimary500),
+	"primary-600": s.ref(colorPrimary600),
+	"primary-700": s.ref(colorPrimary700),
+	"primary-800": s.ref(colorPrimary800),
+	"primary-900": s.ref(colorPrimary900),
+	"primary-950": s.ref(colorPrimary950),
 });
 
 export const colorLightnessPreview = s.recipe({

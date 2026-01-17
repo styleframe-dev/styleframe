@@ -1,4 +1,4 @@
-import { useBorderRadius } from "@styleframe/theme";
+import { useBorderRadius, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -19,12 +19,10 @@ const {
 	full: "9999px",
 });
 
-// Create border-radius utility and generate utility classes
-const createBorderRadius = s.utility("border-radius", ({ value }) => ({
-	borderRadius: value,
-}));
+// Register all utilities and generate utility classes
+const { createBorderRadiusUtility } = useUtilities(s);
 
-createBorderRadius({
+createBorderRadiusUtility({
 	none: s.ref(borderRadiusNone),
 	sm: s.ref(borderRadiusSm),
 	md: s.ref(borderRadiusMd),
@@ -39,7 +37,9 @@ export const borderRadiusPreview = s.recipe({
 		width: "100px",
 		height: "100px",
 		background: "#e0e7ff",
-		border: "2px solid #1E3A8A",
+		borderWidth: "2px",
+		borderStyle: "solid",
+		borderColor: "#1E3A8A",
 	},
 	variants: {
 		borderRadius: {

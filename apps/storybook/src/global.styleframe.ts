@@ -3,6 +3,7 @@ import {
 	useFontSize,
 	useLineHeight,
 	useColor,
+	useUtilities,
 } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
@@ -19,48 +20,32 @@ const { colorText, colorBackground } = useColor(s, {
 	background: "#ffffff",
 });
 
-// Create font-family utility
-const createFontFamily = s.utility("font-family", ({ value }) => ({
-	fontFamily: value,
-}));
+// Register all utilities and generate utility classes
+const {
+	createFontFamilyUtility,
+	createFontSizeUtility,
+	createLineHeightUtility,
+	createTextColorUtility,
+	createBackgroundColorUtility,
+} = useUtilities(s);
 
-createFontFamily({
+createFontFamilyUtility({
 	base: s.ref(fontFamilyBase),
 });
 
-// Create font-size utility
-const createFontSize = s.utility("font-size", ({ value }) => ({
-	fontSize: value,
-}));
-
-createFontSize({
+createFontSizeUtility({
 	md: s.ref(fontSizeMd),
 });
 
-// Create line-height utility
-const createLineHeight = s.utility("line-height", ({ value }) => ({
-	lineHeight: value,
-}));
-
-createLineHeight({
+createLineHeightUtility({
 	normal: s.ref(lineHeightNormal),
 });
 
-// Create color utility
-const createColor = s.utility("color", ({ value }) => ({
-	color: value,
-}));
-
-createColor({
+createTextColorUtility({
 	text: s.ref(colorText),
 });
 
-// Create background utility
-const createBackground = s.utility("background", ({ value }) => ({
-	background: value,
-}));
-
-createBackground({
+createBackgroundColorUtility({
 	base: s.ref(colorBackground),
 });
 

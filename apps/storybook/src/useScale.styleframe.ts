@@ -1,4 +1,4 @@
-import { useScale } from "@styleframe/theme";
+import { useScale, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -14,6 +14,9 @@ const {
 	scaleGolden,
 } = useScale(s);
 
+// Register all utilities
+useUtilities(s);
+
 export const scalePreview = s.recipe({
 	name: "scale-preview",
 	base: {
@@ -23,7 +26,9 @@ export const scalePreview = s.recipe({
 		padding: "16px",
 		borderRadius: "8px",
 		background: "#f8fafc",
-		borderLeft: "4px solid #1E3A8A",
+		borderLeftWidth: "4px",
+		borderLeftStyle: "solid",
+		borderLeftColor: "#1E3A8A",
 	},
 	variants: {
 		scale: {

@@ -1,4 +1,4 @@
-import { useLineHeight } from "@styleframe/theme";
+import { useLineHeight, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -11,12 +11,10 @@ const {
 	lineHeightLoose,
 } = useLineHeight(s);
 
-// Create line-height utility and generate utility classes
-const createLineHeight = s.utility("line-height", ({ value }) => ({
-	lineHeight: value,
-}));
+// Register all utilities and generate utility classes
+const { createLineHeightUtility } = useUtilities(s);
 
-createLineHeight({
+createLineHeightUtility({
 	tight: s.ref(lineHeightTight),
 	snug: s.ref(lineHeightSnug),
 	normal: s.ref(lineHeightNormal),

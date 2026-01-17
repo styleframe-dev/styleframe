@@ -1,4 +1,4 @@
-import { useColor, useColorTint } from "@styleframe/theme";
+import { useColor, useColorTint, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -17,6 +17,17 @@ const {
 	100: 10,
 	150: 15,
 	200: 20,
+});
+
+// Register all utilities and generate utility classes
+const { createBackgroundColorUtility } = useUtilities(s);
+
+createBackgroundColorUtility({
+	primary: s.ref(colorPrimary),
+	"primary-tint-50": s.ref(colorPrimaryTint50),
+	"primary-tint-100": s.ref(colorPrimaryTint100),
+	"primary-tint-150": s.ref(colorPrimaryTint150),
+	"primary-tint-200": s.ref(colorPrimaryTint200),
 });
 
 export const colorTintPreview = s.recipe({

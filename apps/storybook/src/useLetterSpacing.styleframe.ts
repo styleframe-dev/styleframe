@@ -1,4 +1,4 @@
-import { useLetterSpacing } from "@styleframe/theme";
+import { useLetterSpacing, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -11,12 +11,10 @@ const {
 	letterSpacingWider,
 } = useLetterSpacing(s);
 
-// Create letter-spacing utility and generate utility classes
-const createLetterSpacing = s.utility("letter-spacing", ({ value }) => ({
-	letterSpacing: value,
-}));
+// Register all utilities and generate utility classes
+const { createLetterSpacingUtility } = useUtilities(s);
 
-createLetterSpacing({
+createLetterSpacingUtility({
 	tighter: s.ref(letterSpacingTighter),
 	tight: s.ref(letterSpacingTight),
 	normal: s.ref(letterSpacingNormal),

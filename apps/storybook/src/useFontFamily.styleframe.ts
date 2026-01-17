@@ -1,16 +1,14 @@
-import { useFontFamily } from "@styleframe/theme";
+import { useFontFamily, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
 
 const { fontFamilyBase, fontFamilyPrint, fontFamilyMono } = useFontFamily(s);
 
-// Create font-family utility and generate utility classes
-const createFontFamily = s.utility("font-family", ({ value }) => ({
-	fontFamily: value,
-}));
+// Register all utilities and generate utility classes
+const { createFontFamilyUtility } = useUtilities(s);
 
-createFontFamily({
+createFontFamilyUtility({
 	base: s.ref(fontFamilyBase),
 	print: s.ref(fontFamilyPrint),
 	mono: s.ref(fontFamilyMono),

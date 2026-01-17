@@ -1,4 +1,4 @@
-import { useBorderStyle } from "@styleframe/theme";
+import { useBorderStyle, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -14,12 +14,10 @@ const {
 	borderStyleOutset,
 } = useBorderStyle(s);
 
-// Create border-style utility and generate utility classes
-const createBorderStyle = s.utility("border-style", ({ value }) => ({
-	borderStyle: value,
-}));
+// Register all utilities and generate utility classes
+const { createBorderStyleUtility } = useUtilities(s);
 
-createBorderStyle({
+createBorderStyleUtility({
 	none: s.ref(borderStyleNone),
 	solid: s.ref(borderStyleSolid),
 	dashed: s.ref(borderStyleDashed),

@@ -1,4 +1,4 @@
-import { useFontSize } from "@styleframe/theme";
+import { useFontSize, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -23,12 +23,10 @@ const {
 	"4xl": "2.25rem",
 });
 
-// Create font-size utility and generate utility classes
-const createFontSize = s.utility("font-size", ({ value }) => ({
-	fontSize: value,
-}));
+// Register all utilities and generate utility classes
+const { createFontSizeUtility } = useUtilities(s);
 
-createFontSize({
+createFontSizeUtility({
 	xs: s.ref(fontSizeXs),
 	sm: s.ref(fontSizeSm),
 	md: s.ref(fontSizeMd),

@@ -1,10 +1,13 @@
-import { useBreakpoint } from "@styleframe/theme";
+import { useBreakpoint, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
 
 const { breakpointXs, breakpointSm, breakpointMd, breakpointLg, breakpointXl } =
 	useBreakpoint(s);
+
+// Register all utilities
+useUtilities(s);
 
 export const breakpointPreview = s.recipe({
 	name: "breakpoint-preview",
@@ -15,7 +18,9 @@ export const breakpointPreview = s.recipe({
 		padding: "16px",
 		borderRadius: "8px",
 		background: "#f8fafc",
-		borderLeft: "4px solid #1E3A8A",
+		borderLeftWidth: "4px",
+		borderLeftStyle: "solid",
+		borderLeftColor: "#1E3A8A",
 	},
 	variants: {
 		breakpoint: {

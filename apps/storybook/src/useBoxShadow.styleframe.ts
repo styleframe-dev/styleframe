@@ -1,4 +1,4 @@
-import { useBoxShadow } from "@styleframe/theme";
+import { useBoxShadow, useUtilities } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -15,12 +15,10 @@ const {
 	boxShadowRing,
 } = useBoxShadow(s);
 
-// Create box-shadow utility and generate utility classes
-const createBoxShadow = s.utility("box-shadow", ({ value }) => ({
-	boxShadow: value,
-}));
+// Register all utilities and generate utility classes
+const { createBoxShadowUtility } = useUtilities(s);
 
-createBoxShadow({
+createBoxShadowUtility({
 	none: s.ref(boxShadowNone),
 	xs: s.ref(boxShadowXs),
 	sm: s.ref(boxShadowSm),
