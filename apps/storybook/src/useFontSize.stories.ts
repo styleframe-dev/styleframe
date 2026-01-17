@@ -2,10 +2,8 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useFontSize.styleframe?css";
-import {
-	fontSizePreview,
-	fontSizeValues,
-} from "./useFontSize.styleframe?recipe";
+import { fontSizePreview } from "./useFontSize.styleframe?recipe";
+import { fontSizeValues } from "./useFontSize.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,

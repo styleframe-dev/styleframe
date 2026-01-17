@@ -3,11 +3,8 @@ import { h } from "vue";
 
 import "./components/swatch.styleframe?css";
 import "./useScale.styleframe?css";
-import {
-	scalePreview,
-	scaleValues,
-	scaleRatios,
-} from "./useScale.styleframe?recipe";
+import { scalePreview } from "./useScale.styleframe?recipe";
+import { scaleValues, scaleRatios } from "./useScale.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,

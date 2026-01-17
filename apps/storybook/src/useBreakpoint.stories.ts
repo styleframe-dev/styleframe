@@ -3,11 +3,8 @@ import { h } from "vue";
 
 import "./components/swatch.styleframe?css";
 import "./useBreakpoint.styleframe?css";
-import {
-	breakpointPreview,
-	breakpointValues,
-	breakpointWidths,
-} from "./useBreakpoint.styleframe?recipe";
+import { breakpointPreview } from "./useBreakpoint.styleframe?recipe";
+import { breakpointValues, breakpointWidths } from "./useBreakpoint.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,
