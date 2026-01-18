@@ -11,7 +11,13 @@
 				"tsdown.config.ts",
 				"package.json"
 			],
-			"outputs": ["theme/**", "dist/**", ".output/**", ".nuxt/**"],
+			"outputs": [
+				"theme/**",
+				"dist/**",
+				".output/**",
+				".nuxt/**",
+				"storybook-static/**"
+			],
 			"dependsOn": ["^build"]
 		},
 		"lint": {
