@@ -1,5 +1,33 @@
 # styleframe
 
+## 2.4.0
+
+### Minor Changes
+
+- [#72](https://github.com/styleframe-dev/styleframe/pull/72) [`d98b650`](https://github.com/styleframe-dev/styleframe/commit/d98b65030170582ceacfabde3ba9ff7d92105389) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add support for .styleframe file imports
+
+- [#75](https://github.com/styleframe-dev/styleframe/pull/75) [`72bb1f6`](https://github.com/styleframe-dev/styleframe/commit/72bb1f64aae1531496c5e7398c4bd3c11f5433f9) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add Tailwind-style utility functions
+
+  Add `createUseUtility` factory function and 15 utility categories (accessibility, backgrounds, borders, effects, filters, flexbox-grid, interactivity, layout, sizing, spacing, svg, tables, transforms, transitions-animation, typography) for generating composable CSS utility classes.
+
+### Patch Changes
+
+- [#80](https://github.com/styleframe-dev/styleframe/pull/80) [`ff1a689`](https://github.com/styleframe-dev/styleframe/commit/ff1a689f36dc4294b2a7353949c6efd220451e9d) Thanks [@alexgrozav](https://github.com/alexgrozav)! - fix: Expand CSS selector escaping for arbitrary values
+
+  Consolidate escape logic into a single regex and extend escaping to cover additional special characters (#, (, ), %, ,) needed for arbitrary CSS value syntax like `[#1E3A8A]`, `[rgb(255,0,0)]`, and `[calc(100%-20px)]`.
+
+- [#76](https://github.com/styleframe-dev/styleframe/pull/76) [`06afe2a`](https://github.com/styleframe-dev/styleframe/commit/06afe2af66c3ecd8c6a516336e594c1e8cb56de1) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add useUtilities function for registering all utility factories
+
+  Introduces `useUtilities()` that registers all ~180 utility composables with a Styleframe instance and returns their creator functions. This enables automatic utility class generation for recipe declarations.
+
+  Updated recipe documentation examples to use `useUtilities()` with destructured functions and demonstrate both `ref()` and `@variable.name` syntax for referencing design tokens.
+
+- Updated dependencies [[`ff1a689`](https://github.com/styleframe-dev/styleframe/commit/ff1a689f36dc4294b2a7353949c6efd220451e9d), [`d98b650`](https://github.com/styleframe-dev/styleframe/commit/d98b65030170582ceacfabde3ba9ff7d92105389)]:
+  - @styleframe/transpiler@2.5.0
+  - @styleframe/plugin@2.3.0
+  - @styleframe/loader@2.3.0
+  - @styleframe/core@2.5.0
+
 ## 2.3.0
 
 ### Minor Changes
