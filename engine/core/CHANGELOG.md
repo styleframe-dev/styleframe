@@ -1,5 +1,11 @@
 # @styleframe/core
 
+## 2.5.0
+
+### Minor Changes
+
+- [#72](https://github.com/styleframe-dev/styleframe/pull/72) [`d98b650`](https://github.com/styleframe-dev/styleframe/commit/d98b65030170582ceacfabde3ba9ff7d92105389) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add support for .styleframe file imports
+
 ## 2.4.0
 
 ### Minor Changes

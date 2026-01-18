@@ -1,5 +1,17 @@
 # @styleframe/plugin
 
+## 2.3.0
+
+### Minor Changes
+
+- [#72](https://github.com/styleframe-dev/styleframe/pull/72) [`d98b650`](https://github.com/styleframe-dev/styleframe/commit/d98b65030170582ceacfabde3ba9ff7d92105389) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add support for .styleframe file imports
+
+### Patch Changes
+
+- Updated dependencies [[`ff1a689`](https://github.com/styleframe-dev/styleframe/commit/ff1a689f36dc4294b2a7353949c6efd220451e9d), [`d98b650`](https://github.com/styleframe-dev/styleframe/commit/d98b65030170582ceacfabde3ba9ff7d92105389)]:
+  - @styleframe/transpiler@2.5.0
+  - @styleframe/loader@2.3.0
+
 ## 2.2.0
 
 ### Minor Changes
