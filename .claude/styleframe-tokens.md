@@ -368,6 +368,7 @@ selector('h3', { fontSize: ref(fontSizeLg) });
 5. **`useMultiplier` creates calc() expressions** referencing the base variable
 6. **Call `useFluidViewport()` BEFORE** using other fluid composables
 7. **Fluid design eliminates media query breakpoints** - values scale smoothly
+8. **The `default` key generates the base variable name without suffix** - e.g., `useFontSize(s, { default: '1rem' })` returns `{ fontSize }` not `{ fontSizeDefault }`, generates CSS variable `--font-size` not `--font-size--default`, and utility class `._font-size` not `._font-size:default`. This applies to all theme composables: `useColor` returns `color`, `useSpacing` returns `spacing`, etc.
 
 ---
 
