@@ -583,13 +583,13 @@ importers:
         specifier: workspace:^2
         version: link:../../config/vite
       '@styleframe/core':
-        specifier: workspace:^2.2.0
+        specifier: workspace:^2.5.0
         version: link:../core
       '@styleframe/license':
         specifier: 'catalog:'
         version: 2.0.0
       '@styleframe/transpiler':
-        specifier: workspace:^2.2.0
+        specifier: workspace:^2.5.0
         version: link:../transpiler
       '@vitest/coverage-v8':
         specifier: 'catalog:'
@@ -649,16 +649,16 @@ importers:
         specifier: workspace:^2
         version: link:../../config/typescript
       '@styleframe/core':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^2.5.0
         version: link:../core
       '@styleframe/loader':
-        specifier: workspace:^2.2.0
+        specifier: workspace:^2.3.0
         version: link:../loader
       '@styleframe/plugin':
-        specifier: workspace:^2.2.0
+        specifier: workspace:^2.3.0
         version: link:../../tooling/plugin
       '@styleframe/transpiler':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^2.5.0
         version: link:../transpiler
       '@types/node':
         specifier: ^22.15.17
@@ -692,7 +692,7 @@ importers:
         specifier: workspace:^2
         version: link:../../config/vite
       '@styleframe/core':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^2.5.0
         version: link:../core
       '@styleframe/license':
         specifier: 'catalog:'
@@ -747,7 +747,7 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
       styleframe:
-        specifier: workspace:^2.3.0
+        specifier: workspace:^2.4.0
         version: link:../../engine/styleframe
       tsx:
         specifier: 'catalog:'
@@ -781,10 +781,10 @@ importers:
         specifier: workspace:^2
         version: link:../config/vite
       '@styleframe/core':
-        specifier: workspace:^2.3.0
+        specifier: workspace:^2.5.0
         version: link:../engine/core
       '@styleframe/transpiler':
-        specifier: workspace:^2.3.0
+        specifier: workspace:^2.5.0
         version: link:../engine/transpiler
       '@vitest/coverage-v8':
         specifier: 'catalog:'
@@ -860,10 +860,10 @@ importers:
         specifier: 'catalog:'
         version: 2.0.0
       '@styleframe/loader':
-        specifier: workspace:^2.2.0
+        specifier: workspace:^2.3.0
         version: link:../../engine/loader
       '@styleframe/transpiler':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^2.5.0
         version: link:../../engine/transpiler
       consola:
         specifier: ^3.4.2
@@ -924,7 +924,7 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../../../engine/runtime
       styleframe:
-        specifier: workspace:^2.3.0
+        specifier: workspace:^2.4.0
         version: link:../../../engine/styleframe
       vite:
         specifier: ^6.3.5
