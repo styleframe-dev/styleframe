@@ -1,0 +1,13 @@
+{
+	"name": "Styleframe Sync",
+	"id": "styleframe-figma-sync",
+	"api": "1.0.0",
+	"main": "dist/plugin/code.js",
+	"ui": "dist/plugin/ui.html",
+	"editorType": ["figma"],
+	"documentAccess": "dynamic-page",
+	"menu": [
+		{ "name": "Import to Figma", "command": "import" },
+		{ "name": "Export from Figma", "command": "export" }
+	]
+}
