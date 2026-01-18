@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"setup": "pnpm install && pnpm build",
-		"run": "pnpm run dev",
+		"run": "pnpm run dev:docs",
 		"archive": "pnpm run cleanup"
 	}
 }
