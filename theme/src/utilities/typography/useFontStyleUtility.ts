@@ -1,12 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default font-style utility values matching Tailwind CSS.
- */
-export const defaultFontStyleValues = {
-	italic: "italic",
-	"not-italic": "normal",
-};
+import { defaultFontStyleValues } from "../../variables/useFontStyle";
 
 /**
  * Create font-style utility classes.
