@@ -71,6 +71,7 @@ export function createUseVariable<
 	>(
 		s: Styleframe,
 		tokens?: T,
+		{ default: isDefault = true }: { default?: boolean } = {},
 	): ExportKeys<PropertyName, WithDefaults<T>, Delimiter> {
 		const result: Record<string, Variable<string>> = {};
 
@@ -101,7 +102,7 @@ export function createUseVariable<
 				: transform(value);
 
 			result[exportName] = s.variable(variableName, variableValue, {
-				default: true,
+				default: isDefault,
 			});
 		}
 

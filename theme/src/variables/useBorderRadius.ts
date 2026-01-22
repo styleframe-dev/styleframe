@@ -1,5 +1,16 @@
 import { createUseVariable } from "../utils";
 
+export const defaultBorderRadiusValues = {
+	default: "@md",
+	none: "0",
+	sm: "0.125rem",
+	md: "0.25rem",
+	lg: "0.5rem",
+	xl: "0.75rem",
+	"2xl": "1rem",
+	full: "9999px",
+};
+
 /**
  * Create a set of border-radius variables for use in a Styleframe instance.
  *
@@ -23,4 +34,6 @@ import { createUseVariable } from "../utils";
  * });
  * ```
  */
-export const useBorderRadius = createUseVariable("border-radius");
+export const useBorderRadius = createUseVariable("border-radius", {
+	defaults: defaultBorderRadiusValues,
+});

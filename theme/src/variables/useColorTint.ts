@@ -37,6 +37,7 @@ export function useColorTint<
 	s: Styleframe,
 	color: Variable<Name>,
 	levels: T,
+	{ default: isDefault = true }: { default?: boolean } = {},
 ): ExportKeys<`${Name}-tint`, T, "-"> {
 	return createUseVariable(`${color.name}-tint`, {
 		defaults: defaultColorTintValues,
@@ -48,5 +49,5 @@ export function useColorTint<
 			return s.css`oklch(from ${s.ref(color)} calc(l + ${value / 100}) c h / a)`;
 		},
 		delimiter: "-" as const,
-	})(s, levels);
+	})(s, levels, { default: isDefault });
 }

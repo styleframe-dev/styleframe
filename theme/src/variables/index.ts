@@ -11,6 +11,7 @@ export * from "./useColorTint";
 export * from "./useEasing";
 export * from "./useFontFamily";
 export * from "./useFontSize";
+export * from "./useFontStyle";
 export * from "./useFontWeight";
 export * from "./useLetterSpacing";
 export * from "./useLineHeight";
