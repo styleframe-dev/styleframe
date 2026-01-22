@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useColorShade.styleframe?css";
-import { colorShadePreview } from "./useColorShade.styleframe?recipe";
+import { colorShadePreview } from "./useColorShade.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,

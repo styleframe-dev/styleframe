@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useBoxShadow.styleframe?css";
-import { boxShadowPreview } from "./useBoxShadow.styleframe?recipe";
+import { boxShadowPreview } from "./useBoxShadow.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useFontFamily.styleframe?css";
-import { fontFamilyPreview } from "./useFontFamily.styleframe?recipe";
+import { fontFamilyPreview } from "./useFontFamily.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,

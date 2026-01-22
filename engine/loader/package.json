@@ -29,7 +29,8 @@
 		"playground:watch": "tsx playground/watch.ts"
 	},
 	"dependencies": {
-		"c12": "^3.1.0"
+		"c12": "^3.1.0",
+		"jiti": "^2.4.2"
 	},
 	"peerDependencies": {
 		"@styleframe/core": "workspace:^2.5.0",

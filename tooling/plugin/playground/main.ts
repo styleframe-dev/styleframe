@@ -3,7 +3,7 @@ import "./button.styleframe?css";
 import "./badge.styleframe?css";
 
 import { h1 } from "virtual:styleframe";
-import { button } from "./button.styleframe?recipe";
-import { badge } from "./badge.styleframe?recipe";
+import { buttonRecipe, buttonSelector } from "./button.styleframe?ts";
+import { badge } from "./badge.styleframe?ts";
 
-console.log(h1(), button(), badge());
+console.log(h1(), buttonRecipe(), buttonSelector, badge());

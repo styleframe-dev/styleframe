@@ -22,6 +22,7 @@ export type Selector = {
 	declarations: DeclarationsBlock;
 	variables: Variable[];
 	children: ContainerChild[];
+	_exportName?: string;
 };
 
 export type AtRule = {
@@ -144,6 +145,7 @@ export type Recipe<
 		css: VariantDeclarationsBlock;
 	}>;
 	_runtime?: RecipeRuntime<Variants>;
+	_exportName?: string;
 };
 
 export type PrimitiveTokenValue = number | string | boolean | null | undefined;
