@@ -482,7 +482,7 @@ export function useDefaultDesignTokensPreset<
 
 	const scaleValues = resolveValues(config.scale, defaultScaleValues);
 	if (scaleValues !== undefined) {
-		const scaleResult = useScale(s, scaleValues);
+		const scaleResult = useScale(s, scaleValues, { default: true });
 		scale = scaleResult;
 
 		if ("scale" in scaleResult) {
@@ -497,7 +497,9 @@ export function useDefaultDesignTokensPreset<
 	// 2. Spacing
 	const spacingValues = resolveValues(config.spacing, defaultSpacingValues);
 	const spacing =
-		spacingValues !== undefined ? useSpacing(s, spacingValues) : undefined;
+		spacingValues !== undefined
+			? useSpacing(s, spacingValues, { default: true })
+			: undefined;
 
 	// 3. Border tokens
 	const borderWidthValues = resolveValues(
@@ -506,7 +508,7 @@ export function useDefaultDesignTokensPreset<
 	);
 	const borderWidth =
 		borderWidthValues !== undefined
-			? useBorderWidth(s, borderWidthValues)
+			? useBorderWidth(s, borderWidthValues, { default: true })
 			: undefined;
 
 	const borderRadiusValues = resolveValues(
@@ -515,7 +517,7 @@ export function useDefaultDesignTokensPreset<
 	);
 	const borderRadius =
 		borderRadiusValues !== undefined
-			? useBorderRadius(s, borderRadiusValues)
+			? useBorderRadius(s, borderRadiusValues, { default: true })
 			: undefined;
 
 	const borderStyleValues = resolveValues(
@@ -524,7 +526,7 @@ export function useDefaultDesignTokensPreset<
 	);
 	const borderStyle =
 		borderStyleValues !== undefined
-			? useBorderStyle(s, borderStyleValues)
+			? useBorderStyle(s, borderStyleValues, { default: true })
 			: undefined;
 
 	// 4. Box shadow
@@ -534,7 +536,7 @@ export function useDefaultDesignTokensPreset<
 	);
 	const boxShadow =
 		boxShadowValues !== undefined
-			? useBoxShadow(s, boxShadowValues)
+			? useBoxShadow(s, boxShadowValues, { default: true })
 			: undefined;
 
 	// 5. Colors
@@ -549,7 +551,7 @@ export function useDefaultDesignTokensPreset<
 			...config.meta?.colors,
 		};
 
-		const baseColors = useColor(s, colorValues);
+		const baseColors = useColor(s, colorValues, { default: true });
 		colors = { ...baseColors };
 
 		for (const colorVariable of Object.values(baseColors) as Variable[]) {
@@ -558,6 +560,7 @@ export function useDefaultDesignTokensPreset<
 					s,
 					colorVariable,
 					colorsMetaConfig.lightnessLevels,
+					{ default: true },
 				);
 				colors = { ...colors, ...lightnessVars };
 			}
@@ -567,6 +570,7 @@ export function useDefaultDesignTokensPreset<
 					s,
 					colorVariable,
 					colorsMetaConfig.shadeLevels,
+					{ default: true },
 				);
 				colors = { ...colors, ...shadeVars };
 			}
@@ -576,6 +580,7 @@ export function useDefaultDesignTokensPreset<
 					s,
 					colorVariable,
 					colorsMetaConfig.tintLevels,
+					{ default: true },
 				);
 				colors = { ...colors, ...tintVars };
 			}
@@ -589,12 +594,14 @@ export function useDefaultDesignTokensPreset<
 	);
 	const fontFamily =
 		fontFamilyValues !== undefined
-			? useFontFamily(s, fontFamilyValues)
+			? useFontFamily(s, fontFamilyValues, { default: true })
 			: undefined;
 
 	const fontSizeValues = resolveValues(config.fontSize, defaultFontSizeValues);
 	const fontSize =
-		fontSizeValues !== undefined ? useFontSize(s, fontSizeValues) : undefined;
+		fontSizeValues !== undefined
+			? useFontSize(s, fontSizeValues, { default: true })
+			: undefined;
 
 	const fontStyleValues = resolveValues(
 		config.fontStyle,
@@ -602,7 +609,7 @@ export function useDefaultDesignTokensPreset<
 	);
 	const fontStyle =
 		fontStyleValues !== undefined
-			? useFontStyle(s, fontStyleValues)
+			? useFontStyle(s, fontStyleValues, { default: true })
 			: undefined;
 
 	const fontWeightValues = resolveValues(
@@ -611,7 +618,7 @@ export function useDefaultDesignTokensPreset<
 	);
 	const fontWeight =
 		fontWeightValues !== undefined
-			? useFontWeight(s, fontWeightValues)
+			? useFontWeight(s, fontWeightValues, { default: true })
 			: undefined;
 
 	const lineHeightValues = resolveValues(
@@ -620,7 +627,7 @@ export function useDefaultDesignTokensPreset<
 	);
 	const lineHeight =
 		lineHeightValues !== undefined
-			? useLineHeight(s, lineHeightValues)
+			? useLineHeight(s, lineHeightValues, { default: true })
 			: undefined;
 
 	const letterSpacingValues = resolveValues(
@@ -629,7 +636,7 @@ export function useDefaultDesignTokensPreset<
 	);
 	const letterSpacing =
 		letterSpacingValues !== undefined
-			? useLetterSpacing(s, letterSpacingValues)
+			? useLetterSpacing(s, letterSpacingValues, { default: true })
 			: undefined;
 
 	// 7. Breakpoints
@@ -639,13 +646,15 @@ export function useDefaultDesignTokensPreset<
 	);
 	const breakpoint =
 		breakpointValues !== undefined
-			? useBreakpoint(s, breakpointValues)
+			? useBreakpoint(s, breakpointValues, { default: true })
 			: undefined;
 
 	// 8. Easing
 	const easingValues = resolveValues(config.easing, defaultEasingValues);
 	const easing =
-		easingValues !== undefined ? useEasing(s, easingValues) : undefined;
+		easingValues !== undefined
+			? useEasing(s, easingValues, { default: true })
+			: undefined;
 
 	return {
 		scale,

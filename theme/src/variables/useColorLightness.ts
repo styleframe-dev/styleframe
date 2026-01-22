@@ -44,7 +44,12 @@ export const defaultColorLightnessValues = {
 export function useColorLightness<
 	Name extends string,
 	T extends Record<string | number, number>,
->(s: Styleframe, color: Variable<Name>, levels: T): ExportKeys<Name, T, "-"> {
+>(
+	s: Styleframe,
+	color: Variable<Name>,
+	levels: T,
+	{ default: isDefault = true }: { default?: boolean } = {},
+): ExportKeys<Name, T, "-"> {
 	return createUseVariable(color.name, {
 		defaults: defaultColorLightnessValues,
 		transform: (value) => {
@@ -55,5 +60,5 @@ export function useColorLightness<
 			return s.css`oklch(from ${s.ref(color)} ${value / 100} c h / a)`;
 		},
 		delimiter: "-" as const,
-	})(s, levels);
+	})(s, levels, { default: isDefault });
 }
