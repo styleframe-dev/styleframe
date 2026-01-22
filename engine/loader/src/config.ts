@@ -1,71 +1,106 @@
 import type { Styleframe } from "@styleframe/core";
 import { isRecipe, isSelector, styleframe } from "@styleframe/core";
-import { loadConfig, watchConfig } from "c12";
+import { watch } from "chokidar";
 import { createJiti } from "jiti";
+import { existsSync } from "node:fs";
 import path from "node:path";
 
-export async function loadConfiguration({
-	cwd = process.cwd(),
-	configFile = "styleframe.config",
-}: {
-	cwd?: string;
-	configFile?: string;
-} = {}) {
-	const { config } = await loadConfig<Styleframe>({
-		cwd,
-		configFile,
-		defaults: styleframe(),
-	});
+const SUPPORTED_EXTENSIONS = [".ts", ".mts", ".cts", ".js", ".mjs", ".cjs"];
 
-	return config;
+function hasKnownExtension(filePath: string): boolean {
+	return SUPPORTED_EXTENSIONS.some((ext) => filePath.endsWith(ext));
 }
 
-/**
- * Loads configuration from a path and captures named exports.
- * Sets `_exportName` on Recipe and Selector tokens that are exported.
- */
-export async function loadConfigurationFromPath(entry: string) {
-	const entryPath = path.resolve(entry);
-	const jiti = createJiti(path.dirname(entryPath));
+function resolveConfigFile(cwd: string, entry: string): string | undefined {
+	const basePath = path.isAbsolute(entry) ? entry : path.join(cwd, entry);
 
-	// Import module - returns all exports when default option is not set
-	const module = (await jiti.import(entryPath)) as Record<string, unknown>;
-
-	// Get the default export (Styleframe instance)
-	if (!module.default) {
-		throw new Error(
-			`Missing default export in ${entryPath}. Expected a Styleframe instance.`,
-		);
+	if (hasKnownExtension(basePath)) {
+		return existsSync(basePath) ? basePath : undefined;
 	}
-	const instance = module.default as Styleframe;
 
-	// Map named exports to tokens by setting _exportName
+	for (const ext of SUPPORTED_EXTENSIONS) {
+		const filePath = `${basePath}${ext}`;
+		if (existsSync(filePath)) {
+			return filePath;
+		}
+	}
+
+	return undefined;
+}
+
+function trackNamedExports(module: Record<string, unknown>) {
 	for (const [exportName, exportValue] of Object.entries(module)) {
 		if (exportName === "default") continue;
-
 		if (isRecipe(exportValue)) {
 			exportValue._exportName = exportName;
 		} else if (isSelector(exportValue)) {
 			exportValue._exportName = exportName;
 		}
 	}
+}
 
-	return instance;
+export async function loadConfiguration({
+	cwd = process.cwd(),
+	entry = "styleframe.config",
+}: {
+	cwd?: string;
+	entry?: string;
+} = {}) {
+	const resolvedPath = resolveConfigFile(cwd, entry);
+
+	if (!resolvedPath) {
+		// Return default instance if no config found
+		return styleframe();
+	}
+
+	const jiti = createJiti(path.dirname(resolvedPath), { cache: false });
+	const module = (await jiti.import(resolvedPath)) as Record<string, unknown>;
+
+	if (!module.default) {
+		throw new Error(
+			`Missing default export in ${resolvedPath}. Expected a Styleframe instance.`,
+		);
+	}
+
+	trackNamedExports(module);
+
+	return module.default as Styleframe;
 }
 
 export async function watchConfiguration({
 	cwd = process.cwd(),
+	entry = "styleframe.config",
+	onUpdate,
+	onError,
 }: {
 	cwd?: string;
+	entry?: string;
+	onUpdate?: (config: Styleframe) => void;
+	onError?: (error: Error) => void;
 } = {}) {
-	return await watchConfig<Styleframe>({
-		cwd,
-		name: "styleframe",
-		acceptHMR({ getDiff }) {
-			const diff = getDiff();
-			if (diff.length === 0) {
-				return true; // No changes!
-			}
-		},
+	const resolvedPath = resolveConfigFile(cwd, entry);
+	if (!resolvedPath) {
+		throw new Error(`Config file not found: ${entry}`);
+	}
+
+	const watcher = watch(resolvedPath, { ignoreInitial: true });
+
+	watcher.on("change", async () => {
+		try {
+			const config = await loadConfiguration({ entry: resolvedPath });
+			onUpdate?.(config);
+		} catch (error) {
+			onError?.(error instanceof Error ? error : new Error(String(error)));
+		}
 	});
+
+	watcher.on("unlink", () => {
+		onError?.(new Error(`Config file was deleted: ${resolvedPath}`));
+	});
+
+	return {
+		config: await loadConfiguration({ entry: resolvedPath }),
+		configFile: resolvedPath,
+		unwatch: () => watcher.close(),
+	};
 }

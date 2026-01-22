@@ -8,23 +8,14 @@ import { isSelector } from "@styleframe/core";
 import type { ConsumeFunction } from "../../types";
 
 /**
- * Recursively collects selectors with _exportName from children
+ * Collects selectors with _exportName from children.
+ * Exported selectors are always direct children of root since
+ * _exportName is only set on module-level exports.
  */
 function collectExportedSelectors(children: ContainerChild[]): Selector[] {
-	const selectors: Selector[] = [];
-
-	for (const child of children) {
-		if (isSelector(child) && child._exportName) {
-			selectors.push(child);
-		}
-
-		// Recurse into nested containers (selectors can have children)
-		if ("children" in child && Array.isArray(child.children)) {
-			selectors.push(...collectExportedSelectors(child.children));
-		}
-	}
-
-	return selectors;
+	return children.filter(
+		(child): child is Selector => isSelector(child) && !!child._exportName,
+	);
 }
 
 export function createRootConsumer(consume: ConsumeFunction) {
@@ -39,15 +30,11 @@ export function createRootConsumer(consume: ConsumeFunction) {
 
 		const parts: string[] = [];
 
-		// Add imports only if we have recipes
+		// Add imports and generate recipe exports
 		if (hasRecipes) {
 			parts.push(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 `);
-		}
-
-		// Generate recipe exports
-		if (hasRecipes) {
 			parts.push(consume(instance.recipes, options));
 		}
 

@@ -29,7 +29,7 @@
 		"playground:watch": "tsx playground/watch.ts"
 	},
 	"dependencies": {
-		"c12": "^3.1.0",
+		"chokidar": "^4.0.0",
 		"jiti": "^2.4.2"
 	},
 	"peerDependencies": {
