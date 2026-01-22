@@ -3,7 +3,7 @@ import {
 	useFontSize,
 	useLineHeight,
 	useColor,
-	useUtilities,
+	useDefaultUtilitiesPreset,
 } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
@@ -27,7 +27,7 @@ const {
 	createLineHeightUtility,
 	createTextColorUtility,
 	createBackgroundColorUtility,
-} = useUtilities(s);
+} = useDefaultUtilitiesPreset(s);
 
 createFontFamilyUtility({
 	base: s.ref(fontFamilyBase),

@@ -1,4 +1,4 @@
-import { useFontWeight, useUtilities } from "@styleframe/theme";
+import { useFontWeight, useDefaultUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -25,7 +25,7 @@ const {
 } = useFontWeight(s);
 
 // Register all utilities and generate utility classes
-const { createFontWeightUtility } = useUtilities(s);
+const { createFontWeightUtility } = useDefaultUtilitiesPreset(s);
 
 createFontWeightUtility({
 	extralight: s.ref(fontWeightExtralight),

@@ -1,4 +1,4 @@
-import { useSpacing, useUtilities } from "@styleframe/theme";
+import { useSpacing, useDefaultUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -18,7 +18,7 @@ const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl, spacing2xl } =
 
 // Register all utilities and generate utility classes
 const { createPaddingUtility, createMarginUtility, createGapUtility } =
-	useUtilities(s);
+	useDefaultUtilitiesPreset(s);
 
 const spacingMap = {
 	xs: s.ref(spacingXs),

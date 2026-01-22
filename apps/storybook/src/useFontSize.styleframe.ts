@@ -1,4 +1,4 @@
-import { useFontSize, useUtilities } from "@styleframe/theme";
+import { useFontSize, useDefaultUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -27,7 +27,7 @@ const {
 } = useFontSize(s, fontSizeValues);
 
 // Register all utilities and generate utility classes
-const { createFontSizeUtility } = useUtilities(s);
+const { createFontSizeUtility } = useDefaultUtilitiesPreset(s);
 
 createFontSizeUtility({
 	xs: s.ref(fontSizeXs),

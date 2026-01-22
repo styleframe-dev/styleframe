@@ -1,4 +1,4 @@
-import { useLetterSpacing, useUtilities } from "@styleframe/theme";
+import { useLetterSpacing, useDefaultUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -21,7 +21,7 @@ const {
 } = useLetterSpacing(s);
 
 // Register all utilities and generate utility classes
-const { createLetterSpacingUtility } = useUtilities(s);
+const { createLetterSpacingUtility } = useDefaultUtilitiesPreset(s);
 
 createLetterSpacingUtility({
 	tighter: s.ref(letterSpacingTighter),

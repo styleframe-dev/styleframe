@@ -343,7 +343,7 @@ import {
  * @example
  * ```typescript
  * import { styleframe } from "styleframe";
- * import { useUtilities } from "@styleframe/theme";
+ * import { useDefaultUtilitiesPreset } from "@styleframe/theme";
  *
  * const s = styleframe();
  * const {
@@ -351,7 +351,7 @@ import {
  *   createPaddingUtility,
  *   createDisplayUtility,
  *   // ... all other utilities
- * } = useUtilities(s);
+ * } = useDefaultUtilitiesPreset(s);
  *
  * // Now you can use the creator functions to define utility values
  * createMarginUtility({ sm: '0.5rem', md: '1rem', lg: '1.5rem' });
@@ -370,7 +370,7 @@ import {
  * });
  * ```
  */
-export function useUtilities(s: Styleframe) {
+export function useDefaultUtilitiesPreset(s: Styleframe) {
 	return {
 		// Accessibility
 		createForcedColorAdjustUtility: useForcedColorAdjustUtility(s),

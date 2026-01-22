@@ -1,4 +1,4 @@
-import { useBoxShadow, useUtilities } from "@styleframe/theme";
+import { useBoxShadow, useDefaultUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -16,7 +16,7 @@ const {
 } = useBoxShadow(s);
 
 // Register all utilities and generate utility classes
-const { createBoxShadowUtility } = useUtilities(s);
+const { createBoxShadowUtility } = useDefaultUtilitiesPreset(s);
 
 createBoxShadowUtility({
 	none: s.ref(boxShadowNone),

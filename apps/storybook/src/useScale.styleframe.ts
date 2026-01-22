@@ -1,4 +1,4 @@
-import { useScale, useUtilities } from "@styleframe/theme";
+import { useScale, useDefaultUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -31,7 +31,7 @@ export const scaleRatios = {
 useScale(s);
 
 // Register all utilities
-useUtilities(s);
+useDefaultUtilitiesPreset(s);
 
 export const scalePreview = s.recipe({
 	name: "scale-preview",
