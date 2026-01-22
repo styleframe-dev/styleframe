@@ -20,19 +20,11 @@ export async function loadConfiguration({
 	return config;
 }
 
-export async function loadConfigurationFromPath(entry: string) {
-	const entryPath = path.resolve(entry);
-	const cwd = path.dirname(entryPath);
-	const configFile = path.basename(entryPath).replace(/(\.ts)?$/, "");
-
-	return await loadConfiguration({ cwd, configFile });
-}
-
 /**
  * Loads configuration from a path and captures named exports.
  * Sets `_exportName` on Recipe and Selector tokens that are exported.
  */
-export async function loadConfigurationWithExports(entry: string) {
+export async function loadConfigurationFromPath(entry: string) {
 	const entryPath = path.resolve(entry);
 	const jiti = createJiti(path.dirname(entryPath));
 

@@ -3,10 +3,7 @@ import {
 	getLicenseKeyFromEnv,
 	validateInstanceLicense,
 } from "@styleframe/license";
-import {
-	loadConfigurationFromPath,
-	loadConfigurationWithExports,
-} from "@styleframe/loader";
+import { loadConfigurationFromPath } from "@styleframe/loader";
 import type { TranspileOptions } from "@styleframe/transpiler";
 import { transpile } from "@styleframe/transpiler";
 import { consola } from "consola";
@@ -37,12 +34,7 @@ async function loadAndBuildEntry(
 	options: TranspileOptions,
 	isBuild: boolean,
 ) {
-	// Use loadConfigurationWithExports for TS output to capture named exports
-	// This sets _exportName on Recipe and Selector tokens
-	const instance =
-		options.type === "ts"
-			? await loadConfigurationWithExports(entry)
-			: await loadConfigurationFromPath(entry);
+	const instance = await loadConfigurationFromPath(entry);
 
 	await validateInstanceLicense(instance, {
 		licenseKey: getLicenseKeyFromEnv() || "",
