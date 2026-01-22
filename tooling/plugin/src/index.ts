@@ -185,7 +185,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 			}
 
 			const isCss = queryPart === "css";
-			const isTs = queryPart === "ts" || queryPart === "recipe"; // Support both ?ts and ?recipe
+			const isTs = queryPart === "ts";
 
 			if (!isCss && !isTs) {
 				// Pass through for default resolution (e.g. importing the instance itself)

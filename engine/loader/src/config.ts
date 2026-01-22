@@ -40,6 +40,11 @@ export async function loadConfigurationWithExports(entry: string) {
 	const module = (await jiti.import(entryPath)) as Record<string, unknown>;
 
 	// Get the default export (Styleframe instance)
+	if (!module.default) {
+		throw new Error(
+			`Missing default export in ${entryPath}. Expected a Styleframe instance.`,
+		);
+	}
 	const instance = module.default as Styleframe;
 
 	// Map named exports to tokens by setting _exportName
