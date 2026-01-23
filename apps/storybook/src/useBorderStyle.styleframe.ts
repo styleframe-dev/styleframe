@@ -1,4 +1,4 @@
-import { useBorderStyle, useDefaultUtilitiesPreset } from "@styleframe/theme";
+import { useBorderStyle, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -15,7 +15,7 @@ const {
 } = useBorderStyle(s);
 
 // Register all utilities and generate utility classes
-const { createBorderStyleUtility } = useDefaultUtilitiesPreset(s);
+const { createBorderStyleUtility } = useUtilitiesPreset(s);
 
 createBorderStyleUtility({
 	none: s.ref(borderStyleNone),

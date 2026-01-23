@@ -2,15 +2,15 @@ import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
 import {
 	defaultColorsMetaConfig,
-	useDefaultDesignTokensPreset,
-	type DefaultDesignTokensPresetConfig,
-} from "./useDefaultDesignTokensPreset";
+	useDesignTokensPreset,
+	type DesignTokensPresetConfig,
+} from "./useDesignTokensPreset";
 
-describe("useDefaultDesignTokensPreset", () => {
+describe("useDesignTokensPreset", () => {
 	describe("basic functionality", () => {
 		it("should create all default design tokens when called with no config", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s);
+			const result = useDesignTokensPreset(s);
 
 			expect(result.scale).toBeDefined();
 			expect(result.scalePowers).toBeDefined();
@@ -32,7 +32,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should create all default design tokens when called with empty config", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {});
+			const result = useDesignTokensPreset(s, {});
 
 			expect(result.scale).toBeDefined();
 			expect(result.spacing).toBeDefined();
@@ -42,14 +42,14 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should add variables to root", () => {
 			const s = styleframe();
-			useDefaultDesignTokensPreset(s);
+			useDesignTokensPreset(s);
 
 			expect(s.root.variables.length).toBeGreaterThan(0);
 		});
 
 		it("should generate CSS output", () => {
 			const s = styleframe();
-			useDefaultDesignTokensPreset(s);
+			useDesignTokensPreset(s);
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain(":root");
@@ -62,7 +62,7 @@ describe("useDefaultDesignTokensPreset", () => {
 	describe("disabling domains", () => {
 		it("should disable scale when scale is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				scale: false,
 			});
 
@@ -72,7 +72,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should disable spacing when spacing is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				spacing: false,
 			});
 
@@ -81,7 +81,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should disable border tokens when set to false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				borderWidth: false,
 				borderRadius: false,
 				borderStyle: false,
@@ -94,7 +94,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should disable boxShadow when boxShadow is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				boxShadow: false,
 			});
 
@@ -103,7 +103,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should disable colors when colors is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: false,
 			});
 
@@ -112,7 +112,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should disable typography tokens when set to false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				fontFamily: false,
 				fontSize: false,
 				fontStyle: false,
@@ -131,7 +131,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should disable breakpoint when breakpoint is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				breakpoint: false,
 			});
 
@@ -140,7 +140,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should disable easing when easing is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				easing: false,
 			});
 
@@ -149,7 +149,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should disable all domains when all set to false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				scale: false,
 				spacing: false,
 				borderWidth: false,
@@ -191,7 +191,7 @@ describe("useDefaultDesignTokensPreset", () => {
 	describe("custom values", () => {
 		it("should use custom spacing values", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				spacing: {
 					default: "1rem",
 					sm: "0.5rem",
@@ -206,7 +206,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom color values", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: {
 					primary: "#ff6600",
 					secondary: "#333333",
@@ -219,7 +219,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom borderRadius values", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				borderRadius: {
 					default: "4px",
 					sm: "2px",
@@ -234,7 +234,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom fontSize values", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				fontSize: {
 					default: "1rem",
 					sm: "0.875rem",
@@ -249,7 +249,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom breakpoint values", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				breakpoint: {
 					sm: 576,
 					md: 768,
@@ -264,7 +264,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom scale values", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				scale: {
 					default: "1.25",
 				},
@@ -275,7 +275,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom scalePowers", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				scalePowers: [-2, -1, 0, 1, 2],
 			});
 
@@ -286,7 +286,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom easing values", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				easing: {
 					default: "ease",
 					linear: "linear",
@@ -301,7 +301,7 @@ describe("useDefaultDesignTokensPreset", () => {
 	describe("meta.colors configuration", () => {
 		it("should generate color lightness variations by default", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 			});
 
@@ -314,7 +314,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should generate color shades by default", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 			});
 
@@ -327,7 +327,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should generate color tints by default", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 			});
 
@@ -340,7 +340,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should not generate lightness when generateLightness is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				meta: {
 					colors: {
@@ -358,7 +358,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should not generate shades when generateShades is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				meta: {
 					colors: {
@@ -376,7 +376,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should not generate tints when generateTints is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				meta: {
 					colors: {
@@ -394,7 +394,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom lightness levels", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				meta: {
 					colors: {
@@ -414,7 +414,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom shade levels", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				meta: {
 					colors: {
@@ -433,7 +433,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should use custom tint levels", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				meta: {
 					colors: {
@@ -452,7 +452,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should disable all color variations", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				meta: {
 					colors: {
@@ -471,7 +471,7 @@ describe("useDefaultDesignTokensPreset", () => {
 	describe("using defaults when domains are omitted", () => {
 		it("should use defaults when domain is omitted", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				// All domains omitted - should use defaults
 			});
 
@@ -495,7 +495,7 @@ describe("useDefaultDesignTokensPreset", () => {
 	describe("integration", () => {
 		it("should create a working design system with custom colors and spacing", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: {
 					primary: "#006cff",
 					secondary: "#6b7280",
@@ -531,7 +531,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should allow using variables from preset in selectors", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				spacing: {
 					default: "1rem",
 					md: "1rem",
@@ -560,7 +560,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should work with minimal configuration", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				scale: false,
 				borderWidth: false,
 				borderRadius: false,
@@ -599,7 +599,7 @@ describe("useDefaultDesignTokensPreset", () => {
 	describe("edge cases", () => {
 		it("should handle multiple colors with variations", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: {
 					primary: "#007bff",
 					secondary: "#6c757d",
@@ -621,7 +621,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should handle empty custom values object", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				spacing: {},
 			});
 
@@ -630,7 +630,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should not create scalePowers when scale doesn't include scale variable", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				scale: {
 					base: "1.25",
 				},
@@ -644,7 +644,7 @@ describe("useDefaultDesignTokensPreset", () => {
 	describe("type checking", () => {
 		it("should accept valid config types", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				spacing: { default: "1rem" },
 				colors: { primary: "#000" },
 				borderRadius: { default: "4px" },
@@ -659,7 +659,7 @@ describe("useDefaultDesignTokensPreset", () => {
 	describe("type safety", () => {
 		it("should infer custom spacing keys in return type", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				spacing: { sm: "0.5rem", md: "1rem" },
 			});
 
@@ -673,7 +673,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should type disabled domains as undefined", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: false,
 				spacing: false,
 			});
@@ -692,7 +692,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should include default keys when domain is omitted", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s);
+			const result = useDesignTokensPreset(s);
 
 			// All default keys should be present for all domains
 			expect(result.spacing.spacing).toBeDefined();
@@ -705,7 +705,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should infer custom borderRadius keys", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				borderRadius: { none: "0", sm: "2px", xl: "16px" },
 			});
 
@@ -719,7 +719,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should infer custom fontSize keys", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				fontSize: { xs: "0.75rem", base: "1rem" },
 			});
 
@@ -732,7 +732,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should infer custom breakpoint keys", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				breakpoint: { mobile: 480, tablet: 768, desktop: 1024 },
 			});
 
@@ -746,7 +746,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should infer custom easing keys", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				easing: {
 					linear: "linear",
 					bounce: "cubic-bezier(0.68, -0.55, 0.27, 1.55)",
@@ -762,7 +762,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should type scalePowers as undefined when scale is false", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				scale: false,
 			});
 
@@ -772,7 +772,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should allow mixed disabled and custom domains", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				spacing: { sm: "0.5rem" },
 				borderRadius: false,
 				colors: { brand: "#ff0000" },
@@ -798,7 +798,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should infer custom colors keys", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff", secondary: "#6c757d", accent: "#ff6600" },
 				meta: {
 					colors: {
@@ -820,7 +820,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should include default color keys when colors is omitted", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				// colors: omitted - uses defaults
 			});
 
@@ -834,7 +834,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should allow access to color variations via type assertion", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 			});
 
@@ -852,7 +852,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should infer custom fontWeight keys", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				fontWeight: { light: "300", regular: "400", bold: "700" },
 			});
 
@@ -866,7 +866,7 @@ describe("useDefaultDesignTokensPreset", () => {
 
 		it("should infer custom lineHeight keys", () => {
 			const s = styleframe();
-			const result = useDefaultDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				lineHeight: { tight: "1.25", normal: "1.5", loose: "2" },
 			});
 

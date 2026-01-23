@@ -1,1 +1,1 @@
-export * from "./useDefaultDesignTokensPreset";
+export * from "./useDesignTokensPreset";

@@ -1,4 +1,4 @@
-import { useBorderRadius, useDefaultUtilitiesPreset } from "@styleframe/theme";
+import { useBorderRadius, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -20,7 +20,7 @@ const {
 });
 
 // Register all utilities and generate utility classes
-const { createBorderRadiusUtility } = useDefaultUtilitiesPreset(s);
+const { createBorderRadiusUtility } = useUtilitiesPreset(s);
 
 createBorderRadiusUtility({
 	none: s.ref(borderRadiusNone),

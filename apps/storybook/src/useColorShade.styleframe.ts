@@ -1,8 +1,4 @@
-import {
-	useColor,
-	useColorShade,
-	useDefaultUtilitiesPreset,
-} from "@styleframe/theme";
+import { useColor, useColorShade, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -24,7 +20,7 @@ const {
 });
 
 // Register all utilities and generate utility classes
-const { createBackgroundColorUtility } = useDefaultUtilitiesPreset(s);
+const { createBackgroundColorUtility } = useUtilitiesPreset(s);
 
 createBackgroundColorUtility({
 	primary: s.ref(colorPrimary),
