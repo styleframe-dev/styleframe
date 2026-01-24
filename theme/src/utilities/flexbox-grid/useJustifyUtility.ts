@@ -39,7 +39,7 @@ export const defaultJustifySelfValues = {
  * Create justify-content utility classes.
  */
 export const useJustifyContentUtility = createUseUtility(
-	"justify",
+	"justify-content",
 	({ value }) => ({
 		justifyContent: value,
 	}),

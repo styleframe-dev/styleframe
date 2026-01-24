@@ -17,7 +17,7 @@ import { createUseUtility } from "../../utils";
  * ```
  */
 export const useTextUnderlineOffsetUtility = createUseUtility(
-	"underline-offset",
+	"text-underline-offset",
 	({ value }) => ({
 		textUnderlineOffset: value,
 	}),

@@ -19,7 +19,7 @@ export const defaultTransitionPropertyValues = {
  * Create transition-property utility classes.
  */
 export const useTransitionPropertyUtility = createUseUtility(
-	"transition",
+	"transition-property",
 	({ value }) => ({
 		transitionProperty: value,
 		transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
@@ -51,7 +51,7 @@ export const useTransitionBehaviorUtility = createUseUtility(
  * Create transition-duration utility classes.
  */
 export const useTransitionDurationUtility = createUseUtility(
-	"duration",
+	"transition-duration",
 	({ value }) => ({
 		transitionDuration: value,
 	}),
@@ -61,7 +61,7 @@ export const useTransitionDurationUtility = createUseUtility(
  * Create transition-timing-function utility classes.
  */
 export const useTransitionTimingFunctionUtility = createUseUtility(
-	"ease",
+	"transition-timing-function",
 	({ value }) => ({
 		transitionTimingFunction: value,
 	}),
@@ -71,7 +71,7 @@ export const useTransitionTimingFunctionUtility = createUseUtility(
  * Create transition-delay utility classes.
  */
 export const useTransitionDelayUtility = createUseUtility(
-	"delay",
+	"transition-delay",
 	({ value }) => ({
 		transitionDelay: value,
 	}),

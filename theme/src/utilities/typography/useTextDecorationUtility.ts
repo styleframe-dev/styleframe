@@ -14,7 +14,7 @@ export const defaultTextDecorationLineValues = {
  * Create text-decoration-line utility classes.
  */
 export const useTextDecorationLineUtility = createUseUtility(
-	"text-decoration",
+	"text-decoration-line",
 	({ value }) => ({
 		textDecorationLine: value,
 	}),

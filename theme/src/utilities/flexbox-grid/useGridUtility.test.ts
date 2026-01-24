@@ -24,7 +24,7 @@ describe("useGridTemplateColumnsUtility", () => {
 		});
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "grid-cols",
+			(u): u is Utility => isUtility(u) && u.name === "grid-template-columns",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -44,7 +44,7 @@ describe("useGridTemplateColumnsUtility", () => {
 		useGridTemplateColumnsUtility(s, { none: "none" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._grid-cols\\:none {");
+		expect(css).toContain("._grid-template-columns\\:none {");
 		expect(css).toContain("grid-template-columns: none;");
 	});
 
@@ -70,7 +70,7 @@ describe("useGridColumnUtility", () => {
 		useGridColumnUtility(s, { auto: "auto" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._col\\:auto {");
+		expect(css).toContain("._grid-column\\:auto {");
 		expect(css).toContain("grid-column: auto;");
 	});
 });
@@ -89,7 +89,7 @@ describe("useGridColumnStartUtility", () => {
 		useGridColumnStartUtility(s, { auto: "auto" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._col-start\\:auto {");
+		expect(css).toContain("._grid-column-start\\:auto {");
 		expect(css).toContain("grid-column-start: auto;");
 	});
 });
@@ -108,7 +108,7 @@ describe("useGridColumnEndUtility", () => {
 		useGridColumnEndUtility(s, { auto: "auto" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._col-end\\:auto {");
+		expect(css).toContain("._grid-column-end\\:auto {");
 		expect(css).toContain("grid-column-end: auto;");
 	});
 });
@@ -129,7 +129,7 @@ describe("useGridTemplateRowsUtility", () => {
 		useGridTemplateRowsUtility(s, { none: "none" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._grid-rows\\:none {");
+		expect(css).toContain("._grid-template-rows\\:none {");
 		expect(css).toContain("grid-template-rows: none;");
 	});
 });
@@ -148,7 +148,7 @@ describe("useGridRowUtility", () => {
 		useGridRowUtility(s, { auto: "auto" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._row\\:auto {");
+		expect(css).toContain("._grid-row\\:auto {");
 		expect(css).toContain("grid-row: auto;");
 	});
 });
@@ -167,7 +167,7 @@ describe("useGridRowStartUtility", () => {
 		useGridRowStartUtility(s, { auto: "auto" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._row-start\\:auto {");
+		expect(css).toContain("._grid-row-start\\:auto {");
 		expect(css).toContain("grid-row-start: auto;");
 	});
 });
@@ -186,7 +186,7 @@ describe("useGridRowEndUtility", () => {
 		useGridRowEndUtility(s, { auto: "auto" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._row-end\\:auto {");
+		expect(css).toContain("._grid-row-end\\:auto {");
 		expect(css).toContain("grid-row-end: auto;");
 	});
 });
@@ -205,7 +205,7 @@ describe("useGridAutoFlowUtility", () => {
 		useGridAutoFlowUtility(s, { dense: "dense" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._grid-flow\\:dense {");
+		expect(css).toContain("._grid-auto-flow\\:dense {");
 		expect(css).toContain("grid-auto-flow: dense;");
 	});
 
@@ -232,7 +232,7 @@ describe("useGridAutoColumnsUtility", () => {
 		useGridAutoColumnsUtility(s, { fr: "minmax(0, 1fr)" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._auto-cols\\:fr {");
+		expect(css).toContain("._grid-auto-columns\\:fr {");
 		expect(css).toContain("grid-auto-columns: minmax(0, 1fr);");
 	});
 });
@@ -251,7 +251,7 @@ describe("useGridAutoRowsUtility", () => {
 		useGridAutoRowsUtility(s, { min: "min-content" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._auto-rows\\:min {");
+		expect(css).toContain("._grid-auto-rows\\:min {");
 		expect(css).toContain("grid-auto-rows: min-content;");
 	});
 });

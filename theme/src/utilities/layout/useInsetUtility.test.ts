@@ -117,7 +117,7 @@ describe("useInsetStartUtility", () => {
 		useInsetStartUtility(s, { "4": "1rem" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._start\\:4 {");
+		expect(css).toContain("._inset-inline-start\\:4 {");
 		expect(css).toContain("inset-inline-start: 1rem;");
 	});
 });
@@ -136,7 +136,7 @@ describe("useInsetEndUtility", () => {
 		useInsetEndUtility(s, { "4": "1rem" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._end\\:4 {");
+		expect(css).toContain("._inset-inline-end\\:4 {");
 		expect(css).toContain("inset-inline-end: 1rem;");
 	});
 });

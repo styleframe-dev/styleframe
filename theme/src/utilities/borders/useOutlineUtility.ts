@@ -16,7 +16,7 @@ import { createUseUtility } from "../../utils";
  * ```
  */
 export const useOutlineWidthUtility = createUseUtility(
-	"outline",
+	"outline-width",
 	({ value }) => ({
 		outlineWidth: value,
 	}),

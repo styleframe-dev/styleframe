@@ -31,7 +31,7 @@ describe("useBackfaceVisibilityUtility", () => {
 		useBackfaceVisibilityUtility(s, { visible: "visible", hidden: "hidden" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "backface",
+			(u): u is Utility => isUtility(u) && u.name === "backface-visibility",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -49,7 +49,7 @@ describe("useBackfaceVisibilityUtility", () => {
 		useBackfaceVisibilityUtility(s, { hidden: "hidden" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._backface\\:hidden {");
+		expect(css).toContain("._backface-visibility\\:hidden {");
 		expect(css).toContain("backface-visibility: hidden;");
 	});
 
@@ -58,7 +58,7 @@ describe("useBackfaceVisibilityUtility", () => {
 		useBackfaceVisibilityUtility(s);
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "backface",
+			(u): u is Utility => isUtility(u) && u.name === "backface-visibility",
 		);
 		expect(utilities).toHaveLength(
 			Object.keys(defaultBackfaceVisibilityValues).length,
@@ -451,7 +451,7 @@ describe("useTransformOriginUtility", () => {
 		useTransformOriginUtility(s, { center: "center", top: "top" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "origin",
+			(u): u is Utility => isUtility(u) && u.name === "transform-origin",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -469,7 +469,7 @@ describe("useTransformOriginUtility", () => {
 		useTransformOriginUtility(s, { "top-left": "top left" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._origin\\:top-left {");
+		expect(css).toContain("._transform-origin\\:top-left {");
 		expect(css).toContain("transform-origin: top left;");
 	});
 
@@ -478,7 +478,7 @@ describe("useTransformOriginUtility", () => {
 		useTransformOriginUtility(s);
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "origin",
+			(u): u is Utility => isUtility(u) && u.name === "transform-origin",
 		);
 		expect(utilities).toHaveLength(
 			Object.keys(defaultTransformOriginValues).length,

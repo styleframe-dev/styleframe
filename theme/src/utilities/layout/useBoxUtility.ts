@@ -20,7 +20,7 @@ export const defaultBoxSizingValues = {
  * Create box-decoration-break utility classes.
  */
 export const useBoxDecorationBreakUtility = createUseUtility(
-	"box-decoration",
+	"box-decoration-break",
 	({ value }) => ({
 		boxDecorationBreak: value,
 	}),
