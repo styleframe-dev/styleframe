@@ -16,7 +16,7 @@ import { createUseUtility } from "../../utils";
  * ```
  */
 export const useBackgroundColorUtility = createUseUtility(
-	"background",
+	"background-color",
 	({ value }) => ({
 		backgroundColor: value,
 	}),

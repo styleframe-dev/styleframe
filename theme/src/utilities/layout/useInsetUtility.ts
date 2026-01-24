@@ -35,16 +35,22 @@ export const useInsetYUtility = createUseUtility("inset-y", ({ value }) => ({
 /**
  * Create inset-inline-start utility classes.
  */
-export const useInsetStartUtility = createUseUtility("start", ({ value }) => ({
-	insetInlineStart: value,
-}));
+export const useInsetStartUtility = createUseUtility(
+	"inset-inline-start",
+	({ value }) => ({
+		insetInlineStart: value,
+	}),
+);
 
 /**
  * Create inset-inline-end utility classes.
  */
-export const useInsetEndUtility = createUseUtility("end", ({ value }) => ({
-	insetInlineEnd: value,
-}));
+export const useInsetEndUtility = createUseUtility(
+	"inset-inline-end",
+	({ value }) => ({
+		insetInlineEnd: value,
+	}),
+);
 
 /**
  * Create top utility classes.

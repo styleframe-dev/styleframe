@@ -42,7 +42,7 @@ export const defaultAlignSelfValues = {
  * Create align-content utility classes.
  */
 export const useAlignContentUtility = createUseUtility(
-	"content",
+	"align-content",
 	({ value }) => ({
 		alignContent: value,
 	}),
@@ -53,7 +53,7 @@ export const useAlignContentUtility = createUseUtility(
  * Create align-items utility classes.
  */
 export const useAlignItemsUtility = createUseUtility(
-	"items",
+	"align-items",
 	({ value }) => ({
 		alignItems: value,
 	}),
@@ -64,7 +64,7 @@ export const useAlignItemsUtility = createUseUtility(
  * Create align-self utility classes.
  */
 export const useAlignSelfUtility = createUseUtility(
-	"self",
+	"align-self",
 	({ value }) => ({
 		alignSelf: value,
 	}),

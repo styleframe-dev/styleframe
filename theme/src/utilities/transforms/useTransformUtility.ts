@@ -12,7 +12,7 @@ export const defaultBackfaceVisibilityValues = {
  * Create backface-visibility utility classes.
  */
 export const useBackfaceVisibilityUtility = createUseUtility(
-	"backface",
+	"backface-visibility",
 	({ value }) => ({
 		backfaceVisibility: value,
 	}),
@@ -147,7 +147,7 @@ export const defaultTransformOriginValues = {
  * Create transform-origin utility classes.
  */
 export const useTransformOriginUtility = createUseUtility(
-	"origin",
+	"transform-origin",
 	({ value }) => ({
 		transformOrigin: value,
 	}),

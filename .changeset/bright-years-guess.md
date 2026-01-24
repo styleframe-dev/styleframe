@@ -3,7 +3,7 @@
 "styleframe": minor
 ---
 
-Add `useDefaultDesignTokensPreset` composable for quick design token system setup
+Add `useDesignTokensPreset` composable for quick design token system setup
 
 - Introduces a comprehensive preset function that bootstraps complete design token systems with sensible defaults in a single function call
 - Full TypeScript type inference for all configuration options

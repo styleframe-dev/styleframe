@@ -192,7 +192,7 @@ export type MetaConfigWithMerge<TMerge extends boolean = false> = Omit<
  * - Provide a custom record to use custom values
  * - Set `meta.merge` to `true` to merge custom values with defaults
  */
-export interface DefaultDesignTokensPresetConfig<
+export interface DesignTokensPresetConfig<
 	TSpacing extends Record<string, TokenValue> | false = DefaultSpacing,
 	TBorderWidth extends Record<string, TokenValue> | false = DefaultBorderWidth,
 	TBorderRadius extends
@@ -237,7 +237,7 @@ export interface DefaultDesignTokensPresetConfig<
  * Result structure for the default design tokens preset.
  * The result type reflects the exact structure based on config generics.
  */
-export interface DefaultDesignTokensPresetResult<
+export interface DesignTokensPresetResult<
 	TSpacing extends Record<string, TokenValue> | false = DefaultSpacing,
 	TBorderWidth extends Record<string, TokenValue> | false = DefaultBorderWidth,
 	TBorderRadius extends
@@ -340,15 +340,15 @@ export const defaultColorsMetaConfig: Required<ColorsMetaConfig> = {
  * @example
  * ```typescript
  * import { styleframe } from "styleframe";
- * import { useDefaultDesignTokensPreset } from "@styleframe/theme";
+ * import { useDesignTokensPreset } from "@styleframe/theme";
  *
  * const s = styleframe();
  *
  * // Use all defaults
- * const tokens = useDefaultDesignTokensPreset(s);
+ * const tokens = useDesignTokensPreset(s);
  *
  * // Customize specific domains
- * const tokens = useDefaultDesignTokensPreset(s, {
+ * const tokens = useDesignTokensPreset(s, {
  *     colors: { primary: "#ff6600", secondary: "#333" },
  *     meta: {
  *         colors: {
@@ -366,14 +366,14 @@ export const defaultColorsMetaConfig: Required<ColorsMetaConfig> = {
  * });
  *
  * // Merge custom values with defaults
- * const tokens = useDefaultDesignTokensPreset(s, {
+ * const tokens = useDesignTokensPreset(s, {
  *     meta: { merge: true },
  *     spacing: { xl: "2rem", xxl: "4rem" }, // Added to default spacing values
  *     colors: { brand: "#ff6600" }, // Added to default colors
  * });
  * ```
  */
-export function useDefaultDesignTokensPreset<
+export function useDesignTokensPreset<
 	TSpacing extends Record<string, TokenValue> | false = DefaultSpacing,
 	TBorderWidth extends Record<string, TokenValue> | false = DefaultBorderWidth,
 	TBorderRadius extends
@@ -396,7 +396,7 @@ export function useDefaultDesignTokensPreset<
 	TMerge extends boolean = false,
 >(
 	s: Styleframe,
-	config: DefaultDesignTokensPresetConfig<
+	config: DesignTokensPresetConfig<
 		TSpacing,
 		TBorderWidth,
 		TBorderRadius,
@@ -413,7 +413,7 @@ export function useDefaultDesignTokensPreset<
 		TBreakpoint,
 		TEasing,
 		TMerge
-	> = {} as DefaultDesignTokensPresetConfig<
+	> = {} as DesignTokensPresetConfig<
 		TSpacing,
 		TBorderWidth,
 		TBorderRadius,
@@ -431,7 +431,7 @@ export function useDefaultDesignTokensPreset<
 		TEasing,
 		TMerge
 	>,
-): DefaultDesignTokensPresetResult<
+): DesignTokensPresetResult<
 	TSpacing,
 	TBorderWidth,
 	TBorderRadius,
@@ -673,7 +673,7 @@ export function useDefaultDesignTokensPreset<
 		letterSpacing,
 		breakpoint,
 		easing,
-	} as DefaultDesignTokensPresetResult<
+	} as DesignTokensPresetResult<
 		TSpacing,
 		TBorderWidth,
 		TBorderRadius,

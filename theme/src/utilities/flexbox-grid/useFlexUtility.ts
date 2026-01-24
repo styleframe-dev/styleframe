@@ -31,20 +31,29 @@ export const useFlexUtility = createUseUtility(
 /**
  * Create flex-grow utility classes.
  */
-export const useFlexGrowUtility = createUseUtility("grow", ({ value }) => ({
-	flexGrow: value,
-}));
+export const useFlexGrowUtility = createUseUtility(
+	"flex-grow",
+	({ value }) => ({
+		flexGrow: value,
+	}),
+);
 
 /**
  * Create flex-shrink utility classes.
  */
-export const useFlexShrinkUtility = createUseUtility("shrink", ({ value }) => ({
-	flexShrink: value,
-}));
+export const useFlexShrinkUtility = createUseUtility(
+	"flex-shrink",
+	({ value }) => ({
+		flexShrink: value,
+	}),
+);
 
 /**
  * Create flex-basis utility classes.
  */
-export const useFlexBasisUtility = createUseUtility("basis", ({ value }) => ({
-	flexBasis: value,
-}));
+export const useFlexBasisUtility = createUseUtility(
+	"flex-basis",
+	({ value }) => ({
+		flexBasis: value,
+	}),
+);

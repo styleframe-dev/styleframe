@@ -12,7 +12,7 @@ describe("useBoxDecorationBreakUtility", () => {
 		useBoxDecorationBreakUtility(s, { clone: "clone", slice: "slice" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "box-decoration",
+			(u): u is Utility => isUtility(u) && u.name === "box-decoration-break",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -30,7 +30,7 @@ describe("useBoxDecorationBreakUtility", () => {
 		useBoxDecorationBreakUtility(s, { slice: "slice" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._box-decoration\\:slice {");
+		expect(css).toContain("._box-decoration-break\\:slice {");
 		expect(css).toContain("box-decoration-break: slice;");
 	});
 

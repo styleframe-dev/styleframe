@@ -1,4 +1,4 @@
-import { useBreakpoint, useUtilities } from "@styleframe/theme";
+import { useBreakpoint, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -25,7 +25,7 @@ export const breakpointWidths = {
 useBreakpoint(s);
 
 // Register all utilities
-useUtilities(s);
+useUtilitiesPreset(s);
 
 export const breakpointPreview = s.recipe({
 	name: "breakpoint-preview",
