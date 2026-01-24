@@ -1,12 +1,7 @@
 import { createUseVariable } from "../utils";
+import { defaultFontStyleValues } from "../values";
 
-export const defaultFontStyleValues = {
-	default: "@normal",
-	italic: "italic",
-	oblique: "oblique",
-	normal: "normal",
-	inherit: "inherit",
-};
+export { defaultFontStyleValues };
 
 /**
  * Create a set of font-style variables for use in a Styleframe instance.

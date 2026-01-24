@@ -6,10 +6,9 @@ import type {
 	Variable,
 } from "@styleframe/core";
 import { isRef } from "@styleframe/core";
+import { defaultScalePowerValues } from "../values";
 
-export const defaultScalePowerValues: readonly number[] = [
-	-2, -1, 0, 1, 2, 3, 4, 5,
-] as const;
+export { defaultScalePowerValues };
 
 export function useScalePowers<T extends readonly number[]>(
 	s: Styleframe,

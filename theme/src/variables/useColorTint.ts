@@ -1,13 +1,9 @@
 import type { Styleframe, Variable } from "@styleframe/core";
 import type { ExportKeys } from "../types";
 import { createUseVariable } from "../utils";
+import { defaultColorTintValues } from "../values";
 
-export const defaultColorTintValues = {
-	50: 5,
-	100: 10,
-	150: 15,
-	200: 20,
-} as const;
+export { defaultColorTintValues };
 
 /**
  * Create a set of relative color tint (lighter) levels

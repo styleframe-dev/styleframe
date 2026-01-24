@@ -1,16 +1,7 @@
 import { createUseVariable } from "../utils";
+import { defaultBorderStyleValues } from "../values";
 
-export const defaultBorderStyleValues = {
-	default: "@solid",
-	none: "none",
-	solid: "solid",
-	dashed: "dashed",
-	dotted: "dotted",
-	double: "double",
-	groove: "groove",
-	inset: "inset",
-	outset: "outset",
-} as const;
+export { defaultBorderStyleValues };
 
 /**
  * Create a set of border-style variables for use in a Styleframe instance.
