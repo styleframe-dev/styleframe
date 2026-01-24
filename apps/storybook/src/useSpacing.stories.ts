@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useSpacing.styleframe?css";
-import { spacingPreview } from "./useSpacing.styleframe?recipe";
+import { spacingPreview } from "./useSpacing.styleframe?ts";
 import { spacingValues } from "./useSpacing.styleframe";
 import {
 	createSwatchComponent,

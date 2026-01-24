@@ -3,7 +3,7 @@ import { h } from "vue";
 
 import "./components/swatch.styleframe?css";
 import "./useScale.styleframe?css";
-import { scalePreview } from "./useScale.styleframe?recipe";
+import { scalePreview } from "./useScale.styleframe?ts";
 import { scaleValues, scaleRatios } from "./useScale.styleframe";
 import {
 	createSwatchComponent,

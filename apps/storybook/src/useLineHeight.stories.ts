@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useLineHeight.styleframe?css";
-import { lineHeightPreview } from "./useLineHeight.styleframe?recipe";
+import { lineHeightPreview } from "./useLineHeight.styleframe?ts";
 import { lineHeightValues } from "./useLineHeight.styleframe";
 import {
 	createSwatchComponent,

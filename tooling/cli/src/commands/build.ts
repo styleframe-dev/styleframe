@@ -1,5 +1,5 @@
 import path from "node:path";
-import { build, loadConfigurationFromPath } from "@styleframe/loader";
+import { build, loadConfiguration } from "@styleframe/loader";
 import { defineCommand } from "citty";
 import consola from "consola";
 
@@ -33,7 +33,7 @@ export default defineCommand({
 			`Loading configuration from "${path.relative(process.cwd(), path.resolve(args.entry))}"...`,
 		);
 
-		const instance = await loadConfigurationFromPath(args.entry);
+		const instance = await loadConfiguration({ entry: args.entry });
 
 		consola.info("Building styleframe...");
 

@@ -6,13 +6,15 @@ s.utility("borderWidth", ({ value }) => ({ borderWidth: value }));
 s.utility("borderStyle", ({ value }) => ({ borderStyle: value }));
 s.utility("borderColor", ({ value }) => ({ borderColor: value }));
 
-s.selector(".button", {
+// Named export for selector - will be exported as the selector string
+export const buttonSelector = s.selector(".button", {
 	background: "blue",
 	color: "white",
 	padding: "10px 20px",
 });
 
-s.recipe({
+// Named export for recipe - will be exported with this exact name
+export const buttonRecipe = s.recipe({
 	name: "button",
 	base: {
 		borderWidth: "thin",

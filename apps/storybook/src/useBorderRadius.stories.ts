@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useBorderRadius.styleframe?css";
-import { borderRadiusPreview } from "./useBorderRadius.styleframe?recipe";
+import { borderRadiusPreview } from "./useBorderRadius.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
