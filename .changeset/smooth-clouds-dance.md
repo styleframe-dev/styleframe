@@ -1,5 +1,5 @@
 ---
-"@styleframe/theme": major
+"@styleframe/theme": minor
 ---
 
 Standardize utility class names to match CSS property syntax
