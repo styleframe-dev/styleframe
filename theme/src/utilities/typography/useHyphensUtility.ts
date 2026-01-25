@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default hyphens utility values matching Tailwind CSS.
- */
-export const defaultHyphensValues = {
-	none: "none",
-	manual: "manual",
-	auto: "auto",
-};
+import { hyphensValues } from "../../values";
 
 /**
  * Create hyphens utility classes.
@@ -17,5 +9,5 @@ export const useHyphensUtility = createUseUtility(
 	({ value }) => ({
 		hyphens: value,
 	}),
-	{ defaults: defaultHyphensValues },
+	{ defaults: hyphensValues },
 );

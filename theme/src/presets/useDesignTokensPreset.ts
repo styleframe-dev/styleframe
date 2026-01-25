@@ -1,25 +1,25 @@
 import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
 import type { ExportKeys } from "../types";
 import {
-	defaultBorderRadiusValues,
-	defaultBorderStyleValues,
-	defaultBorderWidthValues,
-	defaultBoxShadowValues,
-	defaultBreakpointValues,
-	defaultColorLightnessValues,
-	defaultColorShadeValues,
-	defaultColorTintValues,
-	defaultColorValues,
-	defaultEasingValues,
-	defaultFontFamilyValues,
-	defaultFontSizeValues,
-	defaultFontStyleValues,
-	defaultFontWeightValues,
-	defaultLetterSpacingValues,
-	defaultLineHeightValues,
-	defaultScalePowerValues,
-	defaultScaleValues,
-	defaultSpacingValues,
+	borderRadiusValues,
+	borderStyleValues,
+	borderWidthValues,
+	boxShadowValues,
+	breakpointValues,
+	colorLightnessValues,
+	colorShadeValues,
+	colorTintValues,
+	colorValues,
+	easingValues,
+	fontFamilyValues,
+	fontSizeValues,
+	fontStyleValues,
+	fontWeightValues,
+	letterSpacingValues,
+	lineHeightValues,
+	scalePowerValues,
+	scaleValues,
+	spacingValues,
 	useBorderRadius,
 	useBorderStyle,
 	useBorderWidth,
@@ -45,26 +45,26 @@ import {
 // Default Value Type Aliases
 // =============================================================================
 
-type DefaultSpacing = typeof defaultSpacingValues;
-type DefaultBorderWidth = typeof defaultBorderWidthValues;
-type DefaultBorderRadius = typeof defaultBorderRadiusValues;
-type DefaultBorderStyle = typeof defaultBorderStyleValues;
-type DefaultBoxShadow = typeof defaultBoxShadowValues;
-type DefaultColors = typeof defaultColorValues;
-type DefaultFontFamily = typeof defaultFontFamilyValues;
-type DefaultFontSize = typeof defaultFontSizeValues;
-type DefaultFontStyle = typeof defaultFontStyleValues;
-type DefaultFontWeight = typeof defaultFontWeightValues;
-type DefaultLineHeight = typeof defaultLineHeightValues;
-type DefaultLetterSpacing = typeof defaultLetterSpacingValues;
-type DefaultScale = typeof defaultScaleValues;
-type DefaultBreakpoint = typeof defaultBreakpointValues;
-type DefaultEasing = typeof defaultEasingValues;
+type DefaultSpacing = typeof spacingValues;
+type DefaultBorderWidth = typeof borderWidthValues;
+type DefaultBorderRadius = typeof borderRadiusValues;
+type DefaultBorderStyle = typeof borderStyleValues;
+type DefaultBoxShadow = typeof boxShadowValues;
+type DefaultColors = typeof colorValues;
+type DefaultFontFamily = typeof fontFamilyValues;
+type DefaultFontSize = typeof fontSizeValues;
+type DefaultFontStyle = typeof fontStyleValues;
+type DefaultFontWeight = typeof fontWeightValues;
+type DefaultLineHeight = typeof lineHeightValues;
+type DefaultLetterSpacing = typeof letterSpacingValues;
+type DefaultScale = typeof scaleValues;
+type DefaultBreakpoint = typeof breakpointValues;
+type DefaultEasing = typeof easingValues;
 
 // Variation level types
-type DefaultLightnessLevels = typeof defaultColorLightnessValues;
-type DefaultShadeLevels = typeof defaultColorShadeValues;
-type DefaultTintLevels = typeof defaultColorTintValues;
+type DefaultLightnessLevels = typeof colorLightnessValues;
+type DefaultShadeLevels = typeof colorShadeValues;
+type DefaultTintLevels = typeof colorTintValues;
 
 // =============================================================================
 // Helper Types for Conditional Result Inference
@@ -319,9 +319,9 @@ export const defaultColorsMetaConfig: Required<ColorsMetaConfig> = {
 	generateLightness: true,
 	generateShades: true,
 	generateTints: true,
-	lightnessLevels: defaultColorLightnessValues,
-	shadeLevels: defaultColorShadeValues,
-	tintLevels: defaultColorTintValues,
+	lightnessLevels: colorLightnessValues,
+	shadeLevels: colorShadeValues,
+	tintLevels: colorTintValues,
 };
 
 /**
@@ -480,78 +480,78 @@ export function useDesignTokensPreset<
 	let scale: Record<string, Variable> | undefined;
 	let scalePowers: Record<number, TokenValue> | undefined;
 
-	const scaleValues = resolveValues(config.scale, defaultScaleValues);
-	if (scaleValues !== undefined) {
-		const scaleResult = useScale(s, scaleValues, { default: true });
+	const resolvedScaleValues = resolveValues(config.scale, scaleValues);
+	if (resolvedScaleValues !== undefined) {
+		const scaleResult = useScale(s, resolvedScaleValues, { default: true });
 		scale = scaleResult;
 
 		if ("scale" in scaleResult) {
 			scalePowers = useScalePowers(
 				s,
 				scaleResult.scale as Variable,
-				config.scalePowers ?? defaultScalePowerValues,
+				config.scalePowers ?? scalePowerValues,
 			);
 		}
 	}
 
 	// 2. Spacing
-	const spacingValues = resolveValues(config.spacing, defaultSpacingValues);
+	const resolvedSpacingValues = resolveValues(config.spacing, spacingValues);
 	const spacing =
-		spacingValues !== undefined
-			? useSpacing(s, spacingValues, { default: true })
+		resolvedSpacingValues !== undefined
+			? useSpacing(s, resolvedSpacingValues, { default: true })
 			: undefined;
 
 	// 3. Border tokens
-	const borderWidthValues = resolveValues(
+	const resolvedBorderWidthValues = resolveValues(
 		config.borderWidth,
-		defaultBorderWidthValues,
+		borderWidthValues,
 	);
 	const borderWidth =
-		borderWidthValues !== undefined
-			? useBorderWidth(s, borderWidthValues, { default: true })
+		resolvedBorderWidthValues !== undefined
+			? useBorderWidth(s, resolvedBorderWidthValues, { default: true })
 			: undefined;
 
-	const borderRadiusValues = resolveValues(
+	const resolvedBorderRadiusValues = resolveValues(
 		config.borderRadius,
-		defaultBorderRadiusValues,
+		borderRadiusValues,
 	);
 	const borderRadius =
-		borderRadiusValues !== undefined
-			? useBorderRadius(s, borderRadiusValues, { default: true })
+		resolvedBorderRadiusValues !== undefined
+			? useBorderRadius(s, resolvedBorderRadiusValues, { default: true })
 			: undefined;
 
-	const borderStyleValues = resolveValues(
+	const resolvedBorderStyleValues = resolveValues(
 		config.borderStyle,
-		defaultBorderStyleValues,
+		borderStyleValues,
 	);
 	const borderStyle =
-		borderStyleValues !== undefined
-			? useBorderStyle(s, borderStyleValues, { default: true })
+		resolvedBorderStyleValues !== undefined
+			? useBorderStyle(s, resolvedBorderStyleValues, { default: true })
 			: undefined;
 
 	// 4. Box shadow
-	const boxShadowValues = resolveValues(
+	const resolvedBoxShadowValues = resolveValues(
 		config.boxShadow,
-		defaultBoxShadowValues,
+		boxShadowValues,
 	);
 	const boxShadow =
-		boxShadowValues !== undefined
-			? useBoxShadow(s, boxShadowValues, { default: true })
+		resolvedBoxShadowValues !== undefined
+			? useBoxShadow(s, resolvedBoxShadowValues, { default: true })
 			: undefined;
 
 	// 5. Colors
 	let colors: Record<string, Variable> | undefined;
 	if (config.colors !== false) {
-		const colorValues = resolveValues(
+		const resolvedColorValues = resolveValues(
 			config.colors,
-			defaultColorValues,
+			colorValues,
 		) as Record<string, string>;
 		const colorsMetaConfig = {
 			...defaultColorsMetaConfig,
 			...config.meta?.colors,
 		};
 
-		const baseColors = useColor(s, colorValues, { default: true });
+		const baseColors = useColor(s, resolvedColorValues, { default: true });
 		colors = { ...baseColors };
 
 		for (const colorVariable of Object.values(baseColors) as Variable[]) {
@@ -588,72 +588,72 @@ export function useDesignTokensPreset<
 	}
 
 	// 6. Typography
-	const fontFamilyValues = resolveValues(
+	const resolvedFontFamilyValues = resolveValues(
 		config.fontFamily,
-		defaultFontFamilyValues,
+		fontFamilyValues,
 	);
 	const fontFamily =
-		fontFamilyValues !== undefined
-			? useFontFamily(s, fontFamilyValues, { default: true })
+		resolvedFontFamilyValues !== undefined
+			? useFontFamily(s, resolvedFontFamilyValues, { default: true })
 			: undefined;
 
-	const fontSizeValues = resolveValues(config.fontSize, defaultFontSizeValues);
+	const resolvedFontSizeValues = resolveValues(config.fontSize, fontSizeValues);
 	const fontSize =
-		fontSizeValues !== undefined
-			? useFontSize(s, fontSizeValues, { default: true })
+		resolvedFontSizeValues !== undefined
+			? useFontSize(s, resolvedFontSizeValues, { default: true })
 			: undefined;
 
-	const fontStyleValues = resolveValues(
+	const resolvedFontStyleValues = resolveValues(
 		config.fontStyle,
-		defaultFontStyleValues,
+		fontStyleValues,
 	);
 	const fontStyle =
-		fontStyleValues !== undefined
-			? useFontStyle(s, fontStyleValues, { default: true })
+		resolvedFontStyleValues !== undefined
+			? useFontStyle(s, resolvedFontStyleValues, { default: true })
 			: undefined;
 
-	const fontWeightValues = resolveValues(
+	const resolvedFontWeightValues = resolveValues(
 		config.fontWeight,
-		defaultFontWeightValues,
+		fontWeightValues,
 	);
 	const fontWeight =
-		fontWeightValues !== undefined
-			? useFontWeight(s, fontWeightValues, { default: true })
+		resolvedFontWeightValues !== undefined
+			? useFontWeight(s, resolvedFontWeightValues, { default: true })
 			: undefined;
 
-	const lineHeightValues = resolveValues(
+	const resolvedLineHeightValues = resolveValues(
 		config.lineHeight,
-		defaultLineHeightValues,
+		lineHeightValues,
 	);
 	const lineHeight =
-		lineHeightValues !== undefined
-			? useLineHeight(s, lineHeightValues, { default: true })
+		resolvedLineHeightValues !== undefined
+			? useLineHeight(s, resolvedLineHeightValues, { default: true })
 			: undefined;
 
-	const letterSpacingValues = resolveValues(
+	const resolvedLetterSpacingValues = resolveValues(
 		config.letterSpacing,
-		defaultLetterSpacingValues,
+		letterSpacingValues,
 	);
 	const letterSpacing =
-		letterSpacingValues !== undefined
-			? useLetterSpacing(s, letterSpacingValues, { default: true })
+		resolvedLetterSpacingValues !== undefined
+			? useLetterSpacing(s, resolvedLetterSpacingValues, { default: true })
 			: undefined;
 
 	// 7. Breakpoints
-	const breakpointValues = resolveValues(
+	const resolvedBreakpointValues = resolveValues(
 		config.breakpoint,
-		defaultBreakpointValues,
+		breakpointValues,
 	);
 	const breakpoint =
-		breakpointValues !== undefined
-			? useBreakpoint(s, breakpointValues, { default: true })
+		resolvedBreakpointValues !== undefined
+			? useBreakpoint(s, resolvedBreakpointValues, { default: true })
 			: undefined;
 
 	// 8. Easing
-	const easingValues = resolveValues(config.easing, defaultEasingValues);
+	const resolvedEasingValues = resolveValues(config.easing, easingValues);
 	const easing =
-		easingValues !== undefined
-			? useEasing(s, easingValues, { default: true })
+		resolvedEasingValues !== undefined
+			? useEasing(s, resolvedEasingValues, { default: true })
 			: undefined;
 
 	return {

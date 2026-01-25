@@ -1,20 +1,9 @@
 import type { Styleframe, Variable } from "@styleframe/core";
 import type { ExportKeys } from "../types";
 import { createUseVariable } from "../utils";
+import { colorLightnessValues } from "../values";
 
-export const defaultColorLightnessValues = {
-	50: 5,
-	100: 10,
-	200: 20,
-	300: 30,
-	400: 40,
-	500: 50,
-	600: 60,
-	700: 70,
-	800: 80,
-	900: 90,
-	950: 95,
-} as const;
+export { colorLightnessValues };
 
 /**
  * Create a set of lightness levels for a color variable.
@@ -51,7 +40,7 @@ export function useColorLightness<
 	{ default: isDefault = true }: { default?: boolean } = {},
 ): ExportKeys<Name, T, "-"> {
 	return createUseVariable(color.name, {
-		defaults: defaultColorLightnessValues,
+		defaults: colorLightnessValues,
 		transform: (value) => {
 			if (typeof value !== "number") {
 				return 0;

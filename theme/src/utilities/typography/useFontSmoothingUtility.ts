@@ -1,12 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default font-smoothing utility values matching Tailwind CSS.
- */
-export const defaultFontSmoothingValues = {
-	antialiased: "antialiased",
-	"subpixel-antialiased": "auto",
-};
+import { fontSmoothingValues } from "../../values";
 
 /**
  * Create font-smoothing utility classes.
@@ -25,5 +18,5 @@ export const useFontSmoothingUtility = createUseUtility(
 			MozOsxFontSmoothing: "auto",
 		};
 	},
-	{ defaults: defaultFontSmoothingValues },
+	{ defaults: fontSmoothingValues },
 );

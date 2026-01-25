@@ -21,9 +21,9 @@ import { createUseUtility } from "../../utils";
 export const useBoxShadowUtility = createUseUtility(
 	"box-shadow",
 	({ value }) => ({
-		"--tw-shadow": value,
+		"--box-shadow": value,
 		boxShadow:
-			"var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)",
+			"var(--box-shadow-ring-offset, 0 0 #0000), var(--box-shadow-ring, 0 0 #0000), var(--box-shadow)",
 	}),
 );
 
@@ -33,6 +33,6 @@ export const useBoxShadowUtility = createUseUtility(
 export const useBoxShadowColorUtility = createUseUtility(
 	"box-shadow-color",
 	({ value }) => ({
-		"--tw-shadow-color": value,
+		"--box-shadow-color": value,
 	}),
 );

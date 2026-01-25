@@ -1,13 +1,7 @@
 import { createUseVariable } from "../utils";
+import { lineHeightValues } from "../values";
 
-export const defaultLineHeightValues = {
-	default: "@normal",
-	tight: 1.2,
-	snug: 1.35,
-	normal: 1.5,
-	relaxed: 1.65,
-	loose: 1.9,
-};
+export { lineHeightValues };
 
 /**
  * Create a set of line-height variables for use in a Styleframe instance.
@@ -37,5 +31,5 @@ export const defaultLineHeightValues = {
  * ```
  */
 export const useLineHeight = createUseVariable("line-height", {
-	defaults: defaultLineHeightValues,
+	defaults: lineHeightValues,
 });

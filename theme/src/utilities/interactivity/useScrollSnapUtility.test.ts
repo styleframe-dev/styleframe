@@ -5,10 +5,12 @@ import {
 	useScrollSnapAlignUtility,
 	useScrollSnapStopUtility,
 	useScrollSnapTypeUtility,
-	defaultScrollSnapAlignValues,
-	defaultScrollSnapStopValues,
-	defaultScrollSnapTypeValues,
 } from "./useScrollSnapUtility";
+import {
+	scrollSnapAlignValues,
+	scrollSnapStopValues,
+	scrollSnapTypeValues,
+} from "../../values";
 
 describe("useScrollSnapAlignUtility", () => {
 	it("should create utility instances with provided values", () => {
@@ -45,9 +47,7 @@ describe("useScrollSnapAlignUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "scroll-snap-align",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultScrollSnapAlignValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(scrollSnapAlignValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -93,9 +93,7 @@ describe("useScrollSnapStopUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "scroll-snap-stop",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultScrollSnapStopValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(scrollSnapStopValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -111,7 +109,7 @@ describe("useScrollSnapTypeUtility", () => {
 		const s = styleframe();
 		useScrollSnapTypeUtility(s, {
 			none: "none",
-			x: "x var(--tw-scroll-snap-strictness)",
+			x: "x var(--scroll-snap-type-strictness)",
 		});
 
 		const utilities = s.root.children.filter(
@@ -122,11 +120,11 @@ describe("useScrollSnapTypeUtility", () => {
 
 	it("should set correct declarations for axis values", () => {
 		const s = styleframe();
-		useScrollSnapTypeUtility(s, { x: "x var(--tw-scroll-snap-strictness)" });
+		useScrollSnapTypeUtility(s, { x: "x var(--scroll-snap-type-strictness)" });
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			scrollSnapType: "x var(--tw-scroll-snap-strictness)",
+			scrollSnapType: "x var(--scroll-snap-type-strictness)",
 		});
 	});
 
@@ -136,7 +134,7 @@ describe("useScrollSnapTypeUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-scroll-snap-strictness": "mandatory",
+			"--scroll-snap-type-strictness": "mandatory",
 		});
 	});
 
@@ -146,18 +144,18 @@ describe("useScrollSnapTypeUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-scroll-snap-strictness": "proximity",
+			"--scroll-snap-type-strictness": "proximity",
 		});
 	});
 
 	it("should compile to correct CSS output for axis values", () => {
 		const s = styleframe();
-		useScrollSnapTypeUtility(s, { x: "x var(--tw-scroll-snap-strictness)" });
+		useScrollSnapTypeUtility(s, { x: "x var(--scroll-snap-type-strictness)" });
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._scroll-snap-type\\:x {");
 		expect(css).toContain(
-			"scroll-snap-type: x var(--tw-scroll-snap-strictness);",
+			"scroll-snap-type: x var(--scroll-snap-type-strictness);",
 		);
 	});
 
@@ -167,7 +165,7 @@ describe("useScrollSnapTypeUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._scroll-snap-type\\:mandatory {");
-		expect(css).toContain("--tw-scroll-snap-strictness: mandatory;");
+		expect(css).toContain("--scroll-snap-type-strictness: mandatory;");
 	});
 
 	it("should use default values when called without arguments", () => {
@@ -177,9 +175,7 @@ describe("useScrollSnapTypeUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "scroll-snap-type",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultScrollSnapTypeValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(scrollSnapTypeValues).length);
 	});
 
 	it("should handle empty values object", () => {

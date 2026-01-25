@@ -1,5 +1,5 @@
 import { createUseUtility } from "../../utils";
-import { defaultFontStyleValues } from "../../variables/useFontStyle";
+import { fontStyleValues } from "../../variables/useFontStyle";
 
 /**
  * Create font-style utility classes.
@@ -9,5 +9,5 @@ export const useFontStyleUtility = createUseUtility(
 	({ value }) => ({
 		fontStyle: value,
 	}),
-	{ defaults: defaultFontStyleValues },
+	{ defaults: fontStyleValues },
 );

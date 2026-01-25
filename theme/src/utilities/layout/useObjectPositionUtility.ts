@@ -1,19 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default object-position utility values matching Tailwind CSS.
- */
-export const defaultObjectPositionValues = {
-	bottom: "bottom",
-	center: "center",
-	left: "left",
-	"left-bottom": "left bottom",
-	"left-top": "left top",
-	right: "right",
-	"right-bottom": "right bottom",
-	"right-top": "right top",
-	top: "top",
-};
+import { objectPositionValues } from "../../values";
 
 /**
  * Create object-position utility classes.
@@ -23,5 +9,5 @@ export const useObjectPositionUtility = createUseUtility(
 	({ value }) => ({
 		objectPosition: value,
 	}),
-	{ defaults: defaultObjectPositionValues },
+	{ defaults: objectPositionValues },
 );

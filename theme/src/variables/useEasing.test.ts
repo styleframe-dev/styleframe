@@ -1,7 +1,7 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { defaultEasingValues, useEasing } from "./useEasing";
+import { easingValues, useEasing } from "./useEasing";
 
 describe("useEasing", () => {
 	it("should create a single easing variable with 'default' key", () => {
@@ -204,39 +204,39 @@ describe("useEasing", () => {
 		expect(easings.easingBounce.value).toContain("linear(");
 	});
 
-	it("should export defaultEasingValues with all expected keys", () => {
+	it("should export easingValues with all expected keys", () => {
 		// Basic CSS keywords
-		expect(defaultEasingValues.linear).toBe("linear");
-		expect(defaultEasingValues.ease).toBe("ease");
-		expect(defaultEasingValues["ease-in"]).toBe("ease-in");
-		expect(defaultEasingValues["ease-out"]).toBe("ease-out");
-		expect(defaultEasingValues["ease-in-out"]).toBe("ease-in-out");
+		expect(easingValues.linear).toBe("linear");
+		expect(easingValues.ease).toBe("ease");
+		expect(easingValues["ease-in"]).toBe("ease-in");
+		expect(easingValues["ease-out"]).toBe("ease-out");
+		expect(easingValues["ease-in-out"]).toBe("ease-in-out");
 
 		// Sine family
-		expect(defaultEasingValues["ease-in-sine"]).toBe(
+		expect(easingValues["ease-in-sine"]).toBe(
 			"cubic-bezier(0.47, 0, 0.745, 0.715)",
 		);
-		expect(defaultEasingValues["ease-out-sine"]).toBe(
+		expect(easingValues["ease-out-sine"]).toBe(
 			"cubic-bezier(0.39, 0.575, 0.565, 1)",
 		);
-		expect(defaultEasingValues["ease-in-out-sine"]).toBe(
+		expect(easingValues["ease-in-out-sine"]).toBe(
 			"cubic-bezier(0.445, 0.05, 0.55, 0.95)",
 		);
 
 		// Back family (with overshoot)
-		expect(defaultEasingValues["ease-in-back"]).toBe(
+		expect(easingValues["ease-in-back"]).toBe(
 			"cubic-bezier(0.6, -0.28, 0.735, 0.045)",
 		);
-		expect(defaultEasingValues["ease-out-back"]).toBe(
+		expect(easingValues["ease-out-back"]).toBe(
 			"cubic-bezier(0.175, 0.885, 0.32, 1.275)",
 		);
-		expect(defaultEasingValues["ease-in-out-back"]).toBe(
+		expect(easingValues["ease-in-out-back"]).toBe(
 			"cubic-bezier(0.68, -0.55, 0.265, 1.55)",
 		);
 
 		// Spring and bounce
-		expect(defaultEasingValues.spring).toContain("linear(");
-		expect(defaultEasingValues.bounce).toContain("linear(");
+		expect(easingValues.spring).toContain("linear(");
+		expect(easingValues.bounce).toContain("linear(");
 	});
 
 	describe("type safety", () => {

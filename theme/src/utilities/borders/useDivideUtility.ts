@@ -1,4 +1,5 @@
 import { createUseUtility } from "../../utils";
+import { divideStyleValues } from "../../values";
 
 /**
  * Create divide-x-width utility classes.
@@ -59,17 +60,6 @@ export const useDivideColorUtility = createUseUtility(
 );
 
 /**
- * Default divide-style utility values matching Tailwind CSS.
- */
-export const defaultDivideStyleValues = {
-	solid: "solid",
-	dashed: "dashed",
-	dotted: "dotted",
-	double: "double",
-	none: "none",
-};
-
-/**
  * Create divide-style utility classes.
  */
 export const useDivideStyleUtility = createUseUtility(
@@ -79,5 +69,5 @@ export const useDivideStyleUtility = createUseUtility(
 			borderStyle: value,
 		},
 	}),
-	{ defaults: defaultDivideStyleValues },
+	{ defaults: divideStyleValues },
 );

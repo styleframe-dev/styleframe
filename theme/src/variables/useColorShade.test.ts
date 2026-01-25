@@ -1,13 +1,13 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { useColorShade, defaultColorShadeValues } from "./useColorShade";
+import { useColorShade, colorShadeValues } from "./useColorShade";
 
 describe("useColorShade", () => {
 	it("should create shade levels with default values", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
-		const shades = useColorShade(s, colorPrimary, defaultColorShadeValues);
+		const shades = useColorShade(s, colorPrimary, colorShadeValues);
 
 		expect(shades.colorPrimaryShade50).toEqual({
 			type: "variable",

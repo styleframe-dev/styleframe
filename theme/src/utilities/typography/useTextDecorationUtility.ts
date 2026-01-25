@@ -1,14 +1,8 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default text-decoration-line utility values matching Tailwind CSS.
- */
-export const defaultTextDecorationLineValues = {
-	underline: "underline",
-	overline: "overline",
-	"line-through": "line-through",
-	"no-underline": "none",
-};
+import {
+	textDecorationLineValues,
+	textDecorationStyleValues,
+} from "../../values";
 
 /**
  * Create text-decoration-line utility classes.
@@ -18,7 +12,7 @@ export const useTextDecorationLineUtility = createUseUtility(
 	({ value }) => ({
 		textDecorationLine: value,
 	}),
-	{ defaults: defaultTextDecorationLineValues },
+	{ defaults: textDecorationLineValues },
 );
 
 /**
@@ -32,17 +26,6 @@ export const useTextDecorationColorUtility = createUseUtility(
 );
 
 /**
- * Default text-decoration-style utility values matching Tailwind CSS.
- */
-export const defaultTextDecorationStyleValues = {
-	solid: "solid",
-	double: "double",
-	dotted: "dotted",
-	dashed: "dashed",
-	wavy: "wavy",
-};
-
-/**
  * Create text-decoration-style utility classes.
  */
 export const useTextDecorationStyleUtility = createUseUtility(
@@ -50,7 +33,7 @@ export const useTextDecorationStyleUtility = createUseUtility(
 	({ value }) => ({
 		textDecorationStyle: value,
 	}),
-	{ defaults: defaultTextDecorationStyleValues },
+	{ defaults: textDecorationStyleValues },
 );
 
 /**

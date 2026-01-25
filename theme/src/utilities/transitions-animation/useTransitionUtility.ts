@@ -1,19 +1,8 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default transition-property utility values matching Tailwind CSS.
- */
-export const defaultTransitionPropertyValues = {
-	none: "none",
-	all: "all",
-	default:
-		"color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter",
-	colors:
-		"color, background-color, border-color, text-decoration-color, fill, stroke",
-	opacity: "opacity",
-	shadow: "box-shadow",
-	transform: "transform",
-};
+import {
+	transitionPropertyValues,
+	transitionBehaviorValues,
+} from "../../values";
 
 /**
  * Create transition-property utility classes.
@@ -25,16 +14,8 @@ export const useTransitionPropertyUtility = createUseUtility(
 		transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
 		transitionDuration: "150ms",
 	}),
-	{ defaults: defaultTransitionPropertyValues },
+	{ defaults: transitionPropertyValues },
 );
-
-/**
- * Default transition-behavior utility values matching Tailwind CSS.
- */
-export const defaultTransitionBehaviorValues = {
-	normal: "normal",
-	"allow-discrete": "allow-discrete",
-};
 
 /**
  * Create transition-behavior utility classes.
@@ -44,7 +25,7 @@ export const useTransitionBehaviorUtility = createUseUtility(
 	({ value }) => ({
 		transitionBehavior: value,
 	}),
-	{ defaults: defaultTransitionBehaviorValues },
+	{ defaults: transitionBehaviorValues },
 );
 
 /**

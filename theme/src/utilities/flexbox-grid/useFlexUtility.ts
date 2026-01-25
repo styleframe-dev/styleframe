@@ -1,14 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default flex utility values matching Tailwind CSS.
- */
-export const defaultFlexValues = {
-	"1": "1 1 0%",
-	auto: "1 1 auto",
-	initial: "0 1 auto",
-	none: "none",
-};
+import { flexValues } from "../../values";
 
 /**
  * Create flex utility classes.
@@ -25,7 +16,7 @@ export const useFlexUtility = createUseUtility(
 	({ value }) => ({
 		flex: value,
 	}),
-	{ defaults: defaultFlexValues },
+	{ defaults: flexValues },
 );
 
 /**
