@@ -75,6 +75,8 @@ export default defineAppConfig({
 		},
 		contentNavigation: {
 			slots: {
+				trigger:
+					"font-normal text-muted data-[state=open]:text-muted cursor-pointer",
 				linkLeadingIcon: "size-4 mr-1",
 				linkTrailing: "hidden",
 			},
