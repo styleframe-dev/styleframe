@@ -1,6 +1,6 @@
 import path from "node:path";
 import { writeFile } from "node:fs/promises";
-import { loadConfigurationFromPath } from "@styleframe/loader";
+import { loadConfiguration } from "@styleframe/loader";
 import { defineCommand } from "citty";
 import consola from "consola";
 import type {
@@ -61,7 +61,7 @@ export default defineCommand({
 			`Loading configuration from "${path.relative(process.cwd(), configPath)}"...`,
 		);
 
-		const instance = await loadConfigurationFromPath(configPath);
+		const instance = await loadConfiguration({ entry: configPath });
 		const root = instance.root as Root;
 
 		consola.info("Extracting variables...");
