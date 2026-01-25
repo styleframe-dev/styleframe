@@ -19,11 +19,13 @@ import {
 	useTranslateXUtility,
 	useTranslateYUtility,
 	useTranslateZUtility,
-	defaultBackfaceVisibilityValues,
-	defaultPerspectiveOriginValues,
-	defaultTransformOriginValues,
-	defaultTransformStyleValues,
 } from "./useTransformUtility";
+import {
+	backfaceVisibilityValues,
+	perspectiveOriginValues,
+	transformOriginValues,
+	transformStyleValues,
+} from "../../values";
 
 describe("useBackfaceVisibilityUtility", () => {
 	it("should create utility instances with provided values", () => {
@@ -61,7 +63,7 @@ describe("useBackfaceVisibilityUtility", () => {
 			(u): u is Utility => isUtility(u) && u.name === "backface-visibility",
 		);
 		expect(utilities).toHaveLength(
-			Object.keys(defaultBackfaceVisibilityValues).length,
+			Object.keys(backfaceVisibilityValues).length,
 		);
 	});
 
@@ -144,9 +146,7 @@ describe("usePerspectiveOriginUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "perspective-origin",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultPerspectiveOriginValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(perspectiveOriginValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -174,9 +174,9 @@ describe("useRotateUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-rotate": "45deg",
+			"--transform-rotate": "45deg",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -186,7 +186,7 @@ describe("useRotateUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._rotate\\:45 {");
-		expect(css).toContain("--tw-rotate: 45deg;");
+		expect(css).toContain("--transform-rotate: 45deg;");
 	});
 
 	it("should handle empty values object", () => {
@@ -214,9 +214,9 @@ describe("useRotateXUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-rotate-x": "45deg",
+			"--transform-rotate-x": "45deg",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) rotateX(var(--tw-rotate-x)) rotateY(var(--tw-rotate-y)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) rotateX(var(--transform-rotate-x)) rotateY(var(--transform-rotate-y)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -226,7 +226,7 @@ describe("useRotateXUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._rotate-x\\:45 {");
-		expect(css).toContain("--tw-rotate-x: 45deg;");
+		expect(css).toContain("--transform-rotate-x: 45deg;");
 	});
 
 	it("should handle empty values object", () => {
@@ -254,9 +254,9 @@ describe("useRotateYUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-rotate-y": "45deg",
+			"--transform-rotate-y": "45deg",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) rotateX(var(--tw-rotate-x)) rotateY(var(--tw-rotate-y)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) rotateX(var(--transform-rotate-x)) rotateY(var(--transform-rotate-y)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -266,7 +266,7 @@ describe("useRotateYUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._rotate-y\\:45 {");
-		expect(css).toContain("--tw-rotate-y: 45deg;");
+		expect(css).toContain("--transform-rotate-y: 45deg;");
 	});
 
 	it("should handle empty values object", () => {
@@ -294,10 +294,10 @@ describe("useScaleUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-scale-x": "1.5",
-			"--tw-scale-y": "1.5",
+			"--transform-scale-x": "1.5",
+			"--transform-scale-y": "1.5",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -307,8 +307,8 @@ describe("useScaleUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._scale\\:150 {");
-		expect(css).toContain("--tw-scale-x: 1.5;");
-		expect(css).toContain("--tw-scale-y: 1.5;");
+		expect(css).toContain("--transform-scale-x: 1.5;");
+		expect(css).toContain("--transform-scale-y: 1.5;");
 	});
 
 	it("should handle empty values object", () => {
@@ -326,9 +326,9 @@ describe("useScaleXUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-scale-x": "1.5",
+			"--transform-scale-x": "1.5",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -338,7 +338,7 @@ describe("useScaleXUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._scale-x\\:150 {");
-		expect(css).toContain("--tw-scale-x: 1.5;");
+		expect(css).toContain("--transform-scale-x: 1.5;");
 	});
 });
 
@@ -349,9 +349,9 @@ describe("useScaleYUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-scale-y": "1.5",
+			"--transform-scale-y": "1.5",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -361,7 +361,7 @@ describe("useScaleYUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._scale-y\\:150 {");
-		expect(css).toContain("--tw-scale-y: 1.5;");
+		expect(css).toContain("--transform-scale-y: 1.5;");
 	});
 });
 
@@ -382,9 +382,9 @@ describe("useSkewXUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-skew-x": "12deg",
+			"--transform-skew-x": "12deg",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -394,7 +394,7 @@ describe("useSkewXUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._skew-x\\:12 {");
-		expect(css).toContain("--tw-skew-x: 12deg;");
+		expect(css).toContain("--transform-skew-x: 12deg;");
 	});
 
 	it("should handle empty values object", () => {
@@ -422,9 +422,9 @@ describe("useSkewYUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-skew-y": "12deg",
+			"--transform-skew-y": "12deg",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -434,7 +434,7 @@ describe("useSkewYUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._skew-y\\:12 {");
-		expect(css).toContain("--tw-skew-y: 12deg;");
+		expect(css).toContain("--transform-skew-y: 12deg;");
 	});
 
 	it("should handle empty values object", () => {
@@ -480,9 +480,7 @@ describe("useTransformOriginUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "transform-origin",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultTransformOriginValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(transformOriginValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -528,9 +526,7 @@ describe("useTransformStyleUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "transform-style",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultTransformStyleValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(transformStyleValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -558,10 +554,10 @@ describe("useTranslateUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-translate-x": "1rem",
-			"--tw-translate-y": "1rem",
+			"--transform-translate-x": "1rem",
+			"--transform-translate-y": "1rem",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -571,8 +567,8 @@ describe("useTranslateUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._translate\\:4 {");
-		expect(css).toContain("--tw-translate-x: 1rem;");
-		expect(css).toContain("--tw-translate-y: 1rem;");
+		expect(css).toContain("--transform-translate-x: 1rem;");
+		expect(css).toContain("--transform-translate-y: 1rem;");
 	});
 
 	it("should handle empty values object", () => {
@@ -590,9 +586,9 @@ describe("useTranslateXUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-translate-x": "1rem",
+			"--transform-translate-x": "1rem",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -602,7 +598,7 @@ describe("useTranslateXUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._translate-x\\:4 {");
-		expect(css).toContain("--tw-translate-x: 1rem;");
+		expect(css).toContain("--transform-translate-x: 1rem;");
 	});
 });
 
@@ -613,9 +609,9 @@ describe("useTranslateYUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-translate-y": "1rem",
+			"--transform-translate-y": "1rem",
 			transform:
-				"translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate(var(--transform-translate-x), var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -625,7 +621,7 @@ describe("useTranslateYUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._translate-y\\:4 {");
-		expect(css).toContain("--tw-translate-y: 1rem;");
+		expect(css).toContain("--transform-translate-y: 1rem;");
 	});
 });
 
@@ -636,9 +632,9 @@ describe("useTranslateZUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-translate-z": "1rem",
+			"--transform-translate-z": "1rem",
 			transform:
-				"translate3d(var(--tw-translate-x), var(--tw-translate-y), var(--tw-translate-z)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
+				"translate3d(var(--transform-translate-x), var(--transform-translate-y), var(--transform-translate-z)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 		});
 	});
 
@@ -648,6 +644,6 @@ describe("useTranslateZUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._translate-z\\:4 {");
-		expect(css).toContain("--tw-translate-z: 1rem;");
+		expect(css).toContain("--transform-translate-z: 1rem;");
 	});
 });

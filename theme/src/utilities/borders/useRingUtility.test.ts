@@ -25,8 +25,8 @@ describe("useRingWidthUtility", () => {
 		useRingWidthUtility(s, { "2": "2px" });
 
 		const utility = s.root.children[0] as Utility;
-		expect(utility.declarations).toHaveProperty("--tw-ring-offset-shadow");
-		expect(utility.declarations).toHaveProperty("--tw-ring-shadow");
+		expect(utility.declarations).toHaveProperty("--box-shadow-ring-offset");
+		expect(utility.declarations).toHaveProperty("--box-shadow-ring");
 		expect(utility.declarations).toHaveProperty("boxShadow");
 	});
 
@@ -53,7 +53,9 @@ describe("useRingInsetUtility", () => {
 		useRingInsetUtility(s, { default: true });
 
 		const utility = s.root.children[0] as Utility;
-		expect(utility.declarations).toEqual({ "--tw-ring-inset": "inset" });
+		expect(utility.declarations).toEqual({
+			"--box-shadow-ring-inset": "inset",
+		});
 	});
 
 	it("should compile to correct CSS output", () => {
@@ -71,7 +73,7 @@ describe("useRingColorUtility", () => {
 		useRingColorUtility(s, { blue: "blue" });
 
 		const utility = s.root.children[0] as Utility;
-		expect(utility.declarations).toEqual({ "--tw-ring-color": "blue" });
+		expect(utility.declarations).toEqual({ "--box-shadow-ring-color": "blue" });
 	});
 
 	it("should compile to correct CSS output", () => {
@@ -89,7 +91,9 @@ describe("useRingOffsetWidthUtility", () => {
 		useRingOffsetWidthUtility(s, { "2": "2px" });
 
 		const utility = s.root.children[0] as Utility;
-		expect(utility.declarations).toEqual({ "--tw-ring-offset-width": "2px" });
+		expect(utility.declarations).toEqual({
+			"--box-shadow-ring-offset-width": "2px",
+		});
 	});
 
 	it("should compile to correct CSS output", () => {
@@ -107,7 +111,9 @@ describe("useRingOffsetColorUtility", () => {
 		useRingOffsetColorUtility(s, { white: "white" });
 
 		const utility = s.root.children[0] as Utility;
-		expect(utility.declarations).toEqual({ "--tw-ring-offset-color": "white" });
+		expect(utility.declarations).toEqual({
+			"--box-shadow-ring-offset-color": "white",
+		});
 	});
 
 	it("should compile to correct CSS output", () => {

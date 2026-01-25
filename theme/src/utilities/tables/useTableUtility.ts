@@ -1,12 +1,9 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default border-collapse utility values matching Tailwind CSS.
- */
-export const defaultBorderCollapseValues = {
-	collapse: "collapse",
-	separate: "separate",
-};
+import {
+	borderCollapseValues,
+	tableLayoutValues,
+	captionSideValues,
+} from "../../values";
 
 /**
  * Create border-collapse utility classes.
@@ -16,7 +13,7 @@ export const useBorderCollapseUtility = createUseUtility(
 	({ value }) => ({
 		borderCollapse: value,
 	}),
-	{ defaults: defaultBorderCollapseValues },
+	{ defaults: borderCollapseValues },
 );
 
 /**
@@ -35,7 +32,7 @@ export const useBorderSpacingUtility = createUseUtility(
 export const useBorderSpacingXUtility = createUseUtility(
 	"border-spacing-x",
 	({ value }) => ({
-		borderSpacing: `${value} var(--tw-border-spacing-y, 0)`,
+		borderSpacing: `${value} var(--border-spacing-y, 0)`,
 	}),
 );
 
@@ -45,17 +42,9 @@ export const useBorderSpacingXUtility = createUseUtility(
 export const useBorderSpacingYUtility = createUseUtility(
 	"border-spacing-y",
 	({ value }) => ({
-		borderSpacing: `var(--tw-border-spacing-x, 0) ${value}`,
+		borderSpacing: `var(--border-spacing-x, 0) ${value}`,
 	}),
 );
-
-/**
- * Default table-layout utility values matching Tailwind CSS.
- */
-export const defaultTableLayoutValues = {
-	auto: "auto",
-	fixed: "fixed",
-};
 
 /**
  * Create table-layout utility classes.
@@ -65,16 +54,8 @@ export const useTableLayoutUtility = createUseUtility(
 	({ value }) => ({
 		tableLayout: value,
 	}),
-	{ defaults: defaultTableLayoutValues },
+	{ defaults: tableLayoutValues },
 );
-
-/**
- * Default caption-side utility values matching Tailwind CSS.
- */
-export const defaultCaptionSideValues = {
-	top: "top",
-	bottom: "bottom",
-};
 
 /**
  * Create caption-side utility classes.
@@ -84,5 +65,5 @@ export const useCaptionSideUtility = createUseUtility(
 	({ value }) => ({
 		captionSide: value,
 	}),
-	{ defaults: defaultCaptionSideValues },
+	{ defaults: captionSideValues },
 );

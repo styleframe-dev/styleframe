@@ -8,10 +8,12 @@ import {
 	useBorderSpacingYUtility,
 	useTableLayoutUtility,
 	useCaptionSideUtility,
-	defaultBorderCollapseValues,
-	defaultTableLayoutValues,
-	defaultCaptionSideValues,
 } from "./useTableUtility";
+import {
+	borderCollapseValues,
+	tableLayoutValues,
+	captionSideValues,
+} from "../../values";
 
 describe("useBorderCollapseUtility", () => {
 	it("should create utility instances with provided values", () => {
@@ -48,9 +50,7 @@ describe("useBorderCollapseUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "border-collapse",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultBorderCollapseValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(borderCollapseValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -114,7 +114,7 @@ describe("useBorderSpacingXUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			borderSpacing: "0.5rem var(--tw-border-spacing-y, 0)",
+			borderSpacing: "0.5rem var(--border-spacing-y, 0)",
 		});
 	});
 
@@ -124,9 +124,7 @@ describe("useBorderSpacingXUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._border-spacing-x\\:2 {");
-		expect(css).toContain(
-			"border-spacing: 0.5rem var(--tw-border-spacing-y, 0);",
-		);
+		expect(css).toContain("border-spacing: 0.5rem var(--border-spacing-y, 0);");
 	});
 
 	it("should handle empty values object", () => {
@@ -154,7 +152,7 @@ describe("useBorderSpacingYUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			borderSpacing: "var(--tw-border-spacing-x, 0) 0.5rem",
+			borderSpacing: "var(--border-spacing-x, 0) 0.5rem",
 		});
 	});
 
@@ -164,9 +162,7 @@ describe("useBorderSpacingYUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._border-spacing-y\\:2 {");
-		expect(css).toContain(
-			"border-spacing: var(--tw-border-spacing-x, 0) 0.5rem;",
-		);
+		expect(css).toContain("border-spacing: var(--border-spacing-x, 0) 0.5rem;");
 	});
 
 	it("should handle empty values object", () => {
@@ -212,9 +208,7 @@ describe("useTableLayoutUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "table-layout",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultTableLayoutValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(tableLayoutValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -260,9 +254,7 @@ describe("useCaptionSideUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "caption-side",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultCaptionSideValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(captionSideValues).length);
 	});
 
 	it("should handle empty values object", () => {

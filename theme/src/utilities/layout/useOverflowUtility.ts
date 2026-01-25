@@ -1,15 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default overflow utility values matching Tailwind CSS.
- */
-export const defaultOverflowValues = {
-	auto: "auto",
-	hidden: "hidden",
-	clip: "clip",
-	visible: "visible",
-	scroll: "scroll",
-};
+import { overflowValues } from "../../values";
 
 /**
  * Create overflow utility classes.
@@ -26,7 +16,7 @@ export const useOverflowUtility = createUseUtility(
 	({ value }) => ({
 		overflow: value,
 	}),
-	{ defaults: defaultOverflowValues },
+	{ defaults: overflowValues },
 );
 
 /**
@@ -37,7 +27,7 @@ export const useOverflowXUtility = createUseUtility(
 	({ value }) => ({
 		overflowX: value,
 	}),
-	{ defaults: defaultOverflowValues },
+	{ defaults: overflowValues },
 );
 
 /**
@@ -48,5 +38,5 @@ export const useOverflowYUtility = createUseUtility(
 	({ value }) => ({
 		overflowY: value,
 	}),
-	{ defaults: defaultOverflowValues },
+	{ defaults: overflowValues },
 );

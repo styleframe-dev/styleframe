@@ -1,4 +1,5 @@
 import { createUseUtility } from "../../utils";
+import { gridAutoFlowValues } from "../../values";
 
 /**
  * Create grid-template-columns utility classes.
@@ -90,17 +91,6 @@ export const useGridRowEndUtility = createUseUtility(
 );
 
 /**
- * Default grid-auto-flow utility values matching Tailwind CSS.
- */
-export const defaultGridAutoFlowValues = {
-	row: "row",
-	col: "column",
-	dense: "dense",
-	"row-dense": "row dense",
-	"col-dense": "column dense",
-};
-
-/**
  * Create grid-auto-flow utility classes.
  */
 export const useGridAutoFlowUtility = createUseUtility(
@@ -108,7 +98,7 @@ export const useGridAutoFlowUtility = createUseUtility(
 	({ value }) => ({
 		gridAutoFlow: value,
 	}),
-	{ defaults: defaultGridAutoFlowValues },
+	{ defaults: gridAutoFlowValues },
 );
 
 /**

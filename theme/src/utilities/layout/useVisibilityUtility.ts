@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default visibility utility values matching Tailwind CSS.
- */
-export const defaultVisibilityValues = {
-	visible: "visible",
-	invisible: "hidden",
-	collapse: "collapse",
-};
+import { visibilityValues } from "../../values";
 
 /**
  * Create visibility utility classes.
@@ -24,5 +16,5 @@ export const useVisibilityUtility = createUseUtility(
 	({ value }) => ({
 		visibility: value,
 	}),
-	{ defaults: defaultVisibilityValues },
+	{ defaults: visibilityValues },
 );

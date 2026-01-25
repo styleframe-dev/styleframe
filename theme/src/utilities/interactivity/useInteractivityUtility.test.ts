@@ -13,16 +13,18 @@ import {
 	useTouchActionUtility,
 	useUserSelectUtility,
 	useWillChangeUtility,
-	defaultAppearanceValues,
-	defaultColorSchemeValues,
-	defaultCursorValues,
-	defaultPointerEventsValues,
-	defaultResizeValues,
-	defaultScrollBehaviorValues,
-	defaultTouchActionValues,
-	defaultUserSelectValues,
-	defaultWillChangeValues,
 } from "./useInteractivityUtility";
+import {
+	appearanceValues,
+	colorSchemeValues,
+	cursorValues,
+	pointerEventsValues,
+	resizeValues,
+	scrollBehaviorValues,
+	touchActionValues,
+	userSelectValues,
+	willChangeValues,
+} from "../../values";
 
 describe("useAccentColorUtility", () => {
 	it("should create utility instances with provided values", () => {
@@ -95,7 +97,7 @@ describe("useAppearanceUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "appearance",
 		);
-		expect(utilities).toHaveLength(Object.keys(defaultAppearanceValues).length);
+		expect(utilities).toHaveLength(Object.keys(appearanceValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -177,9 +179,7 @@ describe("useColorSchemeUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "color-scheme",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultColorSchemeValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(colorSchemeValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -225,7 +225,7 @@ describe("useCursorUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "cursor",
 		);
-		expect(utilities).toHaveLength(Object.keys(defaultCursorValues).length);
+		expect(utilities).toHaveLength(Object.keys(cursorValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -271,9 +271,7 @@ describe("usePointerEventsUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "pointer-events",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultPointerEventsValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(pointerEventsValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -319,7 +317,7 @@ describe("useResizeUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "resize",
 		);
-		expect(utilities).toHaveLength(Object.keys(defaultResizeValues).length);
+		expect(utilities).toHaveLength(Object.keys(resizeValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -365,9 +363,7 @@ describe("useScrollBehaviorUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "scroll-behavior",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultScrollBehaviorValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(scrollBehaviorValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -413,9 +409,7 @@ describe("useTouchActionUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "touch-action",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultTouchActionValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(touchActionValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -461,7 +455,7 @@ describe("useUserSelectUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "user-select",
 		);
-		expect(utilities).toHaveLength(Object.keys(defaultUserSelectValues).length);
+		expect(utilities).toHaveLength(Object.keys(userSelectValues).length);
 	});
 
 	it("should handle empty values object", () => {
@@ -507,7 +501,7 @@ describe("useWillChangeUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "will-change",
 		);
-		expect(utilities).toHaveLength(Object.keys(defaultWillChangeValues).length);
+		expect(utilities).toHaveLength(Object.keys(willChangeValues).length);
 	});
 
 	it("should handle empty values object", () => {

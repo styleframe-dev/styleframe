@@ -1,4 +1,5 @@
 import { createUseUtility } from "../../utils";
+import { listStylePositionValues, listStyleTypeValues } from "../../values";
 
 /**
  * Create list-style-image utility classes.
@@ -11,14 +12,6 @@ export const useListStyleImageUtility = createUseUtility(
 );
 
 /**
- * Default list-style-position utility values matching Tailwind CSS.
- */
-export const defaultListStylePositionValues = {
-	inside: "inside",
-	outside: "outside",
-};
-
-/**
  * Create list-style-position utility classes.
  */
 export const useListStylePositionUtility = createUseUtility(
@@ -26,17 +19,8 @@ export const useListStylePositionUtility = createUseUtility(
 	({ value }) => ({
 		listStylePosition: value,
 	}),
-	{ defaults: defaultListStylePositionValues },
+	{ defaults: listStylePositionValues },
 );
-
-/**
- * Default list-style-type utility values matching Tailwind CSS.
- */
-export const defaultListStyleTypeValues = {
-	none: "none",
-	disc: "disc",
-	decimal: "decimal",
-};
 
 /**
  * Create list-style-type utility classes.
@@ -46,5 +30,5 @@ export const useListStyleTypeUtility = createUseUtility(
 	({ value }) => ({
 		listStyleType: value,
 	}),
-	{ defaults: defaultListStyleTypeValues },
+	{ defaults: listStyleTypeValues },
 );

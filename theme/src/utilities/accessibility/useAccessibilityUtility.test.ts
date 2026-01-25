@@ -5,8 +5,8 @@ import {
 	useForcedColorAdjustUtility,
 	useSrOnlyUtility,
 	useNotSrOnlyUtility,
-	defaultForcedColorAdjustValues,
 } from "./useAccessibilityUtility";
+import { forcedColorAdjustValues } from "../../values";
 
 describe("useForcedColorAdjustUtility", () => {
 	it("should create utility instances with provided values", () => {
@@ -43,9 +43,7 @@ describe("useForcedColorAdjustUtility", () => {
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "forced-color-adjust",
 		);
-		expect(utilities).toHaveLength(
-			Object.keys(defaultForcedColorAdjustValues).length,
-		);
+		expect(utilities).toHaveLength(Object.keys(forcedColorAdjustValues).length);
 	});
 
 	it("should handle empty values object", () => {

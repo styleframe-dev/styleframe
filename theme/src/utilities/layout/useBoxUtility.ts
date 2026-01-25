@@ -1,20 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default box-decoration-break utility values matching Tailwind CSS.
- */
-export const defaultBoxDecorationBreakValues = {
-	clone: "clone",
-	slice: "slice",
-};
-
-/**
- * Default box-sizing utility values matching Tailwind CSS.
- */
-export const defaultBoxSizingValues = {
-	border: "border-box",
-	content: "content-box",
-};
+import { boxDecorationBreakValues, boxSizingValues } from "../../values";
 
 /**
  * Create box-decoration-break utility classes.
@@ -24,7 +9,7 @@ export const useBoxDecorationBreakUtility = createUseUtility(
 	({ value }) => ({
 		boxDecorationBreak: value,
 	}),
-	{ defaults: defaultBoxDecorationBreakValues },
+	{ defaults: boxDecorationBreakValues },
 );
 
 /**
@@ -35,5 +20,5 @@ export const useBoxSizingUtility = createUseUtility(
 	({ value }) => ({
 		boxSizing: value,
 	}),
-	{ defaults: defaultBoxSizingValues },
+	{ defaults: boxSizingValues },
 );

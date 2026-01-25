@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default background-size utility values matching Tailwind CSS.
- */
-export const defaultBackgroundSizeValues = {
-	auto: "auto",
-	cover: "cover",
-	contain: "contain",
-};
+import { backgroundSizeValues } from "../../values";
 
 /**
  * Create background-size utility classes.
@@ -17,5 +9,5 @@ export const useBackgroundSizeUtility = createUseUtility(
 	({ value }) => ({
 		backgroundSize: value,
 	}),
-	{ defaults: defaultBackgroundSizeValues },
+	{ defaults: backgroundSizeValues },
 );

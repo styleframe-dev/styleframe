@@ -1,4 +1,15 @@
 import { createUseUtility } from "../../utils";
+import {
+	appearanceValues,
+	colorSchemeValues,
+	cursorValues,
+	pointerEventsValues,
+	resizeValues,
+	scrollBehaviorValues,
+	touchActionValues,
+	userSelectValues,
+	willChangeValues,
+} from "../../values";
 
 /**
  * Create accent-color utility classes.
@@ -11,14 +22,6 @@ export const useAccentColorUtility = createUseUtility(
 );
 
 /**
- * Default appearance utility values matching Tailwind CSS.
- */
-export const defaultAppearanceValues = {
-	none: "none",
-	auto: "auto",
-};
-
-/**
  * Create appearance utility classes.
  */
 export const useAppearanceUtility = createUseUtility(
@@ -26,7 +29,7 @@ export const useAppearanceUtility = createUseUtility(
 	({ value }) => ({
 		appearance: value,
 	}),
-	{ defaults: defaultAppearanceValues },
+	{ defaults: appearanceValues },
 );
 
 /**
@@ -40,16 +43,6 @@ export const useCaretColorUtility = createUseUtility(
 );
 
 /**
- * Default color-scheme utility values matching Tailwind CSS.
- */
-export const defaultColorSchemeValues = {
-	normal: "normal",
-	light: "light",
-	dark: "dark",
-	"light-dark": "light dark",
-};
-
-/**
  * Create color-scheme utility classes.
  */
 export const useColorSchemeUtility = createUseUtility(
@@ -57,50 +50,8 @@ export const useColorSchemeUtility = createUseUtility(
 	({ value }) => ({
 		colorScheme: value,
 	}),
-	{ defaults: defaultColorSchemeValues },
+	{ defaults: colorSchemeValues },
 );
-
-/**
- * Default cursor utility values matching Tailwind CSS.
- */
-export const defaultCursorValues = {
-	auto: "auto",
-	default: "default",
-	pointer: "pointer",
-	wait: "wait",
-	text: "text",
-	move: "move",
-	help: "help",
-	"not-allowed": "not-allowed",
-	none: "none",
-	"context-menu": "context-menu",
-	progress: "progress",
-	cell: "cell",
-	crosshair: "crosshair",
-	"vertical-text": "vertical-text",
-	alias: "alias",
-	copy: "copy",
-	"no-drop": "no-drop",
-	grab: "grab",
-	grabbing: "grabbing",
-	"all-scroll": "all-scroll",
-	"col-resize": "col-resize",
-	"row-resize": "row-resize",
-	"n-resize": "n-resize",
-	"e-resize": "e-resize",
-	"s-resize": "s-resize",
-	"w-resize": "w-resize",
-	"ne-resize": "ne-resize",
-	"nw-resize": "nw-resize",
-	"se-resize": "se-resize",
-	"sw-resize": "sw-resize",
-	"ew-resize": "ew-resize",
-	"ns-resize": "ns-resize",
-	"nesw-resize": "nesw-resize",
-	"nwse-resize": "nwse-resize",
-	"zoom-in": "zoom-in",
-	"zoom-out": "zoom-out",
-};
 
 /**
  * Create cursor utility classes.
@@ -110,16 +61,8 @@ export const useCursorUtility = createUseUtility(
 	({ value }) => ({
 		cursor: value,
 	}),
-	{ defaults: defaultCursorValues },
+	{ defaults: cursorValues },
 );
-
-/**
- * Default pointer-events utility values matching Tailwind CSS.
- */
-export const defaultPointerEventsValues = {
-	none: "none",
-	auto: "auto",
-};
 
 /**
  * Create pointer-events utility classes.
@@ -129,18 +72,8 @@ export const usePointerEventsUtility = createUseUtility(
 	({ value }) => ({
 		pointerEvents: value,
 	}),
-	{ defaults: defaultPointerEventsValues },
+	{ defaults: pointerEventsValues },
 );
-
-/**
- * Default resize utility values matching Tailwind CSS.
- */
-export const defaultResizeValues = {
-	none: "none",
-	y: "vertical",
-	x: "horizontal",
-	both: "both",
-};
 
 /**
  * Create resize utility classes.
@@ -150,16 +83,8 @@ export const useResizeUtility = createUseUtility(
 	({ value }) => ({
 		resize: value,
 	}),
-	{ defaults: defaultResizeValues },
+	{ defaults: resizeValues },
 );
-
-/**
- * Default scroll-behavior utility values matching Tailwind CSS.
- */
-export const defaultScrollBehaviorValues = {
-	auto: "auto",
-	smooth: "smooth",
-};
 
 /**
  * Create scroll-behavior utility classes.
@@ -169,24 +94,8 @@ export const useScrollBehaviorUtility = createUseUtility(
 	({ value }) => ({
 		scrollBehavior: value,
 	}),
-	{ defaults: defaultScrollBehaviorValues },
+	{ defaults: scrollBehaviorValues },
 );
-
-/**
- * Default touch-action utility values matching Tailwind CSS.
- */
-export const defaultTouchActionValues = {
-	auto: "auto",
-	none: "none",
-	"pan-x": "pan-x",
-	"pan-left": "pan-left",
-	"pan-right": "pan-right",
-	"pan-y": "pan-y",
-	"pan-up": "pan-up",
-	"pan-down": "pan-down",
-	"pinch-zoom": "pinch-zoom",
-	manipulation: "manipulation",
-};
 
 /**
  * Create touch-action utility classes.
@@ -196,18 +105,8 @@ export const useTouchActionUtility = createUseUtility(
 	({ value }) => ({
 		touchAction: value,
 	}),
-	{ defaults: defaultTouchActionValues },
+	{ defaults: touchActionValues },
 );
-
-/**
- * Default user-select utility values matching Tailwind CSS.
- */
-export const defaultUserSelectValues = {
-	none: "none",
-	text: "text",
-	all: "all",
-	auto: "auto",
-};
 
 /**
  * Create user-select utility classes.
@@ -217,18 +116,8 @@ export const useUserSelectUtility = createUseUtility(
 	({ value }) => ({
 		userSelect: value,
 	}),
-	{ defaults: defaultUserSelectValues },
+	{ defaults: userSelectValues },
 );
-
-/**
- * Default will-change utility values matching Tailwind CSS.
- */
-export const defaultWillChangeValues = {
-	auto: "auto",
-	scroll: "scroll-position",
-	contents: "contents",
-	transform: "transform",
-};
 
 /**
  * Create will-change utility classes.
@@ -238,5 +127,5 @@ export const useWillChangeUtility = createUseUtility(
 	({ value }) => ({
 		willChange: value,
 	}),
-	{ defaults: defaultWillChangeValues },
+	{ defaults: willChangeValues },
 );

@@ -1,14 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default flex-direction utility values matching Tailwind CSS.
- */
-export const defaultFlexDirectionValues = {
-	row: "row",
-	"row-reverse": "row-reverse",
-	col: "column",
-	"col-reverse": "column-reverse",
-};
+import { flexDirectionValues } from "../../values";
 
 /**
  * Create flex-direction utility classes.
@@ -18,5 +9,5 @@ export const useFlexDirectionUtility = createUseUtility(
 	({ value }) => ({
 		flexDirection: value,
 	}),
-	{ defaults: defaultFlexDirectionValues },
+	{ defaults: flexDirectionValues },
 );

@@ -1,16 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default text-align utility values matching Tailwind CSS.
- */
-export const defaultTextAlignValues = {
-	left: "left",
-	center: "center",
-	right: "right",
-	justify: "justify",
-	start: "start",
-	end: "end",
-};
+import { textAlignValues } from "../../values";
 
 /**
  * Create text-align utility classes.
@@ -20,5 +9,5 @@ export const useTextAlignUtility = createUseUtility(
 	({ value }) => ({
 		textAlign: value,
 	}),
-	{ defaults: defaultTextAlignValues },
+	{ defaults: textAlignValues },
 );

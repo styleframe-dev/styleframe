@@ -30,9 +30,9 @@ describe("useBackdropBlurUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-backdrop-blur": "blur(4px)",
+			"--backdrop-filter-blur": "blur(4px)",
 			backdropFilter:
-				"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+				"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 		});
 	});
 
@@ -42,7 +42,7 @@ describe("useBackdropBlurUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._backdrop-blur\\:sm {");
-		expect(css).toContain("--tw-backdrop-blur: blur(4px);");
+		expect(css).toContain("--backdrop-filter-blur: blur(4px);");
 	});
 
 	it("should handle empty values object", () => {
@@ -70,9 +70,9 @@ describe("useBackdropBrightnessUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-backdrop-brightness": "brightness(0.5)",
+			"--backdrop-filter-brightness": "brightness(0.5)",
 			backdropFilter:
-				"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+				"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 		});
 	});
 
@@ -82,7 +82,7 @@ describe("useBackdropBrightnessUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._backdrop-brightness\\:50 {");
-		expect(css).toContain("--tw-backdrop-brightness: brightness(0.5);");
+		expect(css).toContain("--backdrop-filter-brightness: brightness(0.5);");
 	});
 
 	it("should handle empty values object", () => {
@@ -110,9 +110,9 @@ describe("useBackdropContrastUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-backdrop-contrast": "contrast(1)",
+			"--backdrop-filter-contrast": "contrast(1)",
 			backdropFilter:
-				"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+				"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 		});
 	});
 
@@ -122,7 +122,7 @@ describe("useBackdropContrastUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._backdrop-contrast\\:100 {");
-		expect(css).toContain("--tw-backdrop-contrast: contrast(1);");
+		expect(css).toContain("--backdrop-filter-contrast: contrast(1);");
 	});
 
 	it("should handle empty values object", () => {
@@ -150,9 +150,9 @@ describe("useBackdropGrayscaleUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-backdrop-grayscale": "grayscale(1)",
+			"--backdrop-filter-grayscale": "grayscale(1)",
 			backdropFilter:
-				"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+				"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 		});
 	});
 
@@ -162,7 +162,7 @@ describe("useBackdropGrayscaleUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._backdrop-grayscale\\:full {");
-		expect(css).toContain("--tw-backdrop-grayscale: grayscale(1);");
+		expect(css).toContain("--backdrop-filter-grayscale: grayscale(1);");
 	});
 
 	it("should handle empty values object", () => {
@@ -190,9 +190,9 @@ describe("useBackdropHueRotateUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-backdrop-hue-rotate": "hue-rotate(90deg)",
+			"--backdrop-filter-hue-rotate": "hue-rotate(90deg)",
 			backdropFilter:
-				"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+				"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 		});
 	});
 
@@ -202,7 +202,7 @@ describe("useBackdropHueRotateUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._backdrop-hue-rotate\\:90 {");
-		expect(css).toContain("--tw-backdrop-hue-rotate: hue-rotate(90deg);");
+		expect(css).toContain("--backdrop-filter-hue-rotate: hue-rotate(90deg);");
 	});
 
 	it("should handle empty values object", () => {
@@ -230,9 +230,9 @@ describe("useBackdropInvertUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-backdrop-invert": "invert(1)",
+			"--backdrop-filter-invert": "invert(1)",
 			backdropFilter:
-				"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+				"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 		});
 	});
 
@@ -242,7 +242,7 @@ describe("useBackdropInvertUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._backdrop-invert\\:full {");
-		expect(css).toContain("--tw-backdrop-invert: invert(1);");
+		expect(css).toContain("--backdrop-filter-invert: invert(1);");
 	});
 
 	it("should handle empty values object", () => {
@@ -270,9 +270,9 @@ describe("useBackdropOpacityUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-backdrop-opacity": "opacity(0.75)",
+			"--backdrop-filter-opacity": "opacity(0.75)",
 			backdropFilter:
-				"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+				"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 		});
 	});
 
@@ -282,7 +282,7 @@ describe("useBackdropOpacityUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._backdrop-opacity\\:75 {");
-		expect(css).toContain("--tw-backdrop-opacity: opacity(0.75);");
+		expect(css).toContain("--backdrop-filter-opacity: opacity(0.75);");
 	});
 
 	it("should handle empty values object", () => {
@@ -310,9 +310,9 @@ describe("useBackdropSaturateUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-backdrop-saturate": "saturate(1.5)",
+			"--backdrop-filter-saturate": "saturate(1.5)",
 			backdropFilter:
-				"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+				"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 		});
 	});
 
@@ -322,7 +322,7 @@ describe("useBackdropSaturateUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._backdrop-saturate\\:150 {");
-		expect(css).toContain("--tw-backdrop-saturate: saturate(1.5);");
+		expect(css).toContain("--backdrop-filter-saturate: saturate(1.5);");
 	});
 
 	it("should handle empty values object", () => {
@@ -350,9 +350,9 @@ describe("useBackdropSepiaUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-backdrop-sepia": "sepia(1)",
+			"--backdrop-filter-sepia": "sepia(1)",
 			backdropFilter:
-				"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+				"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 		});
 	});
 
@@ -362,7 +362,7 @@ describe("useBackdropSepiaUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._backdrop-sepia\\:full {");
-		expect(css).toContain("--tw-backdrop-sepia: sepia(1);");
+		expect(css).toContain("--backdrop-filter-sepia: sepia(1);");
 	});
 
 	it("should handle empty values object", () => {

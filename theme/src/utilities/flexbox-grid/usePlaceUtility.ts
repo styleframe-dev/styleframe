@@ -1,40 +1,9 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default place-content utility values matching Tailwind CSS.
- */
-export const defaultPlaceContentValues = {
-	center: "center",
-	start: "start",
-	end: "end",
-	between: "space-between",
-	around: "space-around",
-	evenly: "space-evenly",
-	baseline: "baseline",
-	stretch: "stretch",
-};
-
-/**
- * Default place-items utility values matching Tailwind CSS.
- */
-export const defaultPlaceItemsValues = {
-	start: "start",
-	end: "end",
-	center: "center",
-	baseline: "baseline",
-	stretch: "stretch",
-};
-
-/**
- * Default place-self utility values matching Tailwind CSS.
- */
-export const defaultPlaceSelfValues = {
-	auto: "auto",
-	start: "start",
-	end: "end",
-	center: "center",
-	stretch: "stretch",
-};
+import {
+	placeContentValues,
+	placeItemsValues,
+	placeSelfValues,
+} from "../../values";
 
 /**
  * Create place-content utility classes.
@@ -44,7 +13,7 @@ export const usePlaceContentUtility = createUseUtility(
 	({ value }) => ({
 		placeContent: value,
 	}),
-	{ defaults: defaultPlaceContentValues },
+	{ defaults: placeContentValues },
 );
 
 /**
@@ -55,7 +24,7 @@ export const usePlaceItemsUtility = createUseUtility(
 	({ value }) => ({
 		placeItems: value,
 	}),
-	{ defaults: defaultPlaceItemsValues },
+	{ defaults: placeItemsValues },
 );
 
 /**
@@ -66,5 +35,5 @@ export const usePlaceSelfUtility = createUseUtility(
 	({ value }) => ({
 		placeSelf: value,
 	}),
-	{ defaults: defaultPlaceSelfValues },
+	{ defaults: placeSelfValues },
 );

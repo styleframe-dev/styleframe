@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default aspect ratio utility values matching Tailwind CSS.
- */
-export const defaultAspectRatioValues = {
-	auto: "auto",
-	square: "1 / 1",
-	video: "16 / 9",
-};
+import { aspectRatioValues } from "../../values";
 
 /**
  * Create aspect-ratio utility classes.
@@ -23,5 +15,5 @@ export const useAspectRatioUtility = createUseUtility(
 	({ value }) => ({
 		aspectRatio: value,
 	}),
-	{ defaults: defaultAspectRatioValues },
+	{ defaults: aspectRatioValues },
 );

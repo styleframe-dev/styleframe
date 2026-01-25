@@ -30,9 +30,9 @@ describe("useBlurUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-blur": "blur(4px)",
+			"--filter-blur": "blur(4px)",
 			filter:
-				"var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)",
+				"var(--filter-blur) var(--filter-brightness) var(--filter-contrast) var(--filter-grayscale) var(--filter-hue-rotate) var(--filter-invert) var(--filter-saturate) var(--filter-sepia) var(--filter-drop-shadow)",
 		});
 	});
 
@@ -42,7 +42,7 @@ describe("useBlurUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._blur\\:sm {");
-		expect(css).toContain("--tw-blur: blur(4px);");
+		expect(css).toContain("--filter-blur: blur(4px);");
 	});
 
 	it("should handle empty values object", () => {
@@ -70,9 +70,9 @@ describe("useBrightnessUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-brightness": "brightness(0.5)",
+			"--filter-brightness": "brightness(0.5)",
 			filter:
-				"var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)",
+				"var(--filter-blur) var(--filter-brightness) var(--filter-contrast) var(--filter-grayscale) var(--filter-hue-rotate) var(--filter-invert) var(--filter-saturate) var(--filter-sepia) var(--filter-drop-shadow)",
 		});
 	});
 
@@ -82,7 +82,7 @@ describe("useBrightnessUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._brightness\\:50 {");
-		expect(css).toContain("--tw-brightness: brightness(0.5);");
+		expect(css).toContain("--filter-brightness: brightness(0.5);");
 	});
 
 	it("should handle empty values object", () => {
@@ -110,9 +110,9 @@ describe("useContrastUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-contrast": "contrast(1)",
+			"--filter-contrast": "contrast(1)",
 			filter:
-				"var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)",
+				"var(--filter-blur) var(--filter-brightness) var(--filter-contrast) var(--filter-grayscale) var(--filter-hue-rotate) var(--filter-invert) var(--filter-saturate) var(--filter-sepia) var(--filter-drop-shadow)",
 		});
 	});
 
@@ -122,7 +122,7 @@ describe("useContrastUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._contrast\\:100 {");
-		expect(css).toContain("--tw-contrast: contrast(1);");
+		expect(css).toContain("--filter-contrast: contrast(1);");
 	});
 
 	it("should handle empty values object", () => {
@@ -153,9 +153,9 @@ describe("useDropShadowUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-drop-shadow": "drop-shadow(0 1px 1px rgb(0 0 0 / 0.05))",
+			"--filter-drop-shadow": "drop-shadow(0 1px 1px rgb(0 0 0 / 0.05))",
 			filter:
-				"var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)",
+				"var(--filter-blur) var(--filter-brightness) var(--filter-contrast) var(--filter-grayscale) var(--filter-hue-rotate) var(--filter-invert) var(--filter-saturate) var(--filter-sepia) var(--filter-drop-shadow)",
 		});
 	});
 
@@ -166,7 +166,7 @@ describe("useDropShadowUtility", () => {
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._drop-shadow\\:sm {");
 		expect(css).toContain(
-			"--tw-drop-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));",
+			"--filter-drop-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));",
 		);
 	});
 
@@ -195,9 +195,9 @@ describe("useGrayscaleUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-grayscale": "grayscale(1)",
+			"--filter-grayscale": "grayscale(1)",
 			filter:
-				"var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)",
+				"var(--filter-blur) var(--filter-brightness) var(--filter-contrast) var(--filter-grayscale) var(--filter-hue-rotate) var(--filter-invert) var(--filter-saturate) var(--filter-sepia) var(--filter-drop-shadow)",
 		});
 	});
 
@@ -207,7 +207,7 @@ describe("useGrayscaleUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._grayscale\\:full {");
-		expect(css).toContain("--tw-grayscale: grayscale(1);");
+		expect(css).toContain("--filter-grayscale: grayscale(1);");
 	});
 
 	it("should handle empty values object", () => {
@@ -235,9 +235,9 @@ describe("useHueRotateUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-hue-rotate": "hue-rotate(90deg)",
+			"--filter-hue-rotate": "hue-rotate(90deg)",
 			filter:
-				"var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)",
+				"var(--filter-blur) var(--filter-brightness) var(--filter-contrast) var(--filter-grayscale) var(--filter-hue-rotate) var(--filter-invert) var(--filter-saturate) var(--filter-sepia) var(--filter-drop-shadow)",
 		});
 	});
 
@@ -247,7 +247,7 @@ describe("useHueRotateUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._hue-rotate\\:90 {");
-		expect(css).toContain("--tw-hue-rotate: hue-rotate(90deg);");
+		expect(css).toContain("--filter-hue-rotate: hue-rotate(90deg);");
 	});
 
 	it("should handle empty values object", () => {
@@ -275,9 +275,9 @@ describe("useInvertUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-invert": "invert(1)",
+			"--filter-invert": "invert(1)",
 			filter:
-				"var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)",
+				"var(--filter-blur) var(--filter-brightness) var(--filter-contrast) var(--filter-grayscale) var(--filter-hue-rotate) var(--filter-invert) var(--filter-saturate) var(--filter-sepia) var(--filter-drop-shadow)",
 		});
 	});
 
@@ -287,7 +287,7 @@ describe("useInvertUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._invert\\:full {");
-		expect(css).toContain("--tw-invert: invert(1);");
+		expect(css).toContain("--filter-invert: invert(1);");
 	});
 
 	it("should handle empty values object", () => {
@@ -315,9 +315,9 @@ describe("useSaturateUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-saturate": "saturate(1.5)",
+			"--filter-saturate": "saturate(1.5)",
 			filter:
-				"var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)",
+				"var(--filter-blur) var(--filter-brightness) var(--filter-contrast) var(--filter-grayscale) var(--filter-hue-rotate) var(--filter-invert) var(--filter-saturate) var(--filter-sepia) var(--filter-drop-shadow)",
 		});
 	});
 
@@ -327,7 +327,7 @@ describe("useSaturateUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._saturate\\:150 {");
-		expect(css).toContain("--tw-saturate: saturate(1.5);");
+		expect(css).toContain("--filter-saturate: saturate(1.5);");
 	});
 
 	it("should handle empty values object", () => {
@@ -355,9 +355,9 @@ describe("useSepiaUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-sepia": "sepia(1)",
+			"--filter-sepia": "sepia(1)",
 			filter:
-				"var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)",
+				"var(--filter-blur) var(--filter-brightness) var(--filter-contrast) var(--filter-grayscale) var(--filter-hue-rotate) var(--filter-invert) var(--filter-saturate) var(--filter-sepia) var(--filter-drop-shadow)",
 		});
 	});
 
@@ -367,7 +367,7 @@ describe("useSepiaUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._sepia\\:full {");
-		expect(css).toContain("--tw-sepia: sepia(1);");
+		expect(css).toContain("--filter-sepia: sepia(1);");
 	});
 
 	it("should handle empty values object", () => {

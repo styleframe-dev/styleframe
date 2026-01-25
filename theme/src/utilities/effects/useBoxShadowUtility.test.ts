@@ -26,9 +26,9 @@ describe("useBoxShadowUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-shadow": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+			"--box-shadow": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
 			boxShadow:
-				"var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)",
+				"var(--box-shadow-ring-offset, 0 0 #0000), var(--box-shadow-ring, 0 0 #0000), var(--box-shadow)",
 		});
 	});
 
@@ -38,9 +38,9 @@ describe("useBoxShadowUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._box-shadow\\:lg {");
-		expect(css).toContain("--tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);");
+		expect(css).toContain("--box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);");
 		expect(css).toContain(
-			"box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);",
+			"box-shadow: var(--box-shadow-ring-offset, 0 0 #0000), var(--box-shadow-ring, 0 0 #0000), var(--box-shadow);",
 		);
 	});
 
@@ -68,7 +68,7 @@ describe("useBoxShadowColorUtility", () => {
 		useBoxShadowColorUtility(s, { primary: "#006cff" });
 
 		const utility = s.root.children[0] as Utility;
-		expect(utility.declarations).toEqual({ "--tw-shadow-color": "#006cff" });
+		expect(utility.declarations).toEqual({ "--box-shadow-color": "#006cff" });
 	});
 
 	it("should compile to correct CSS output", () => {
@@ -77,7 +77,7 @@ describe("useBoxShadowColorUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._box-shadow-color\\:black {");
-		expect(css).toContain("--tw-shadow-color: #000;");
+		expect(css).toContain("--box-shadow-color: #000;");
 	});
 
 	it("should handle empty values object", () => {
