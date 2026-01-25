@@ -1,4 +1,4 @@
-export const defaultBorderRadiusValues = {
+export const borderRadiusValues = {
 	default: "@md",
 	none: "0",
 	sm: "0.125rem",

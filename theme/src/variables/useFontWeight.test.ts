@@ -1,7 +1,7 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { defaultFontWeightValues, useFontWeight } from "./useFontWeight";
+import { fontWeightValues, useFontWeight } from "./useFontWeight";
 
 describe("useFontWeight", () => {
 	it("should create all font weight variables with correct names and values", () => {
@@ -296,7 +296,7 @@ describe("useFontWeight", () => {
 		it("should allow customizing the default font weight", () => {
 			const s = styleframe();
 			const { fontWeight } = useFontWeight(s, {
-				...defaultFontWeightValues,
+				...fontWeightValues,
 				default: "@bold",
 			});
 
@@ -310,7 +310,7 @@ describe("useFontWeight", () => {
 		it("should compile default font weight to CSS correctly", () => {
 			const s = styleframe();
 			useFontWeight(s, {
-				...defaultFontWeightValues,
+				...fontWeightValues,
 				default: "@semibold",
 			});
 
@@ -347,7 +347,7 @@ describe("useFontWeight", () => {
 			for (const fontWeightName of fontWeights) {
 				const s = styleframe();
 				const { fontWeight } = useFontWeight(s, {
-					...defaultFontWeightValues,
+					...fontWeightValues,
 					default: `@${fontWeightName}`,
 				});
 

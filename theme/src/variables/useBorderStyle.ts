@@ -1,7 +1,7 @@
 import { createUseVariable } from "../utils";
-import { defaultBorderStyleValues } from "../values";
+import { borderStyleValues } from "../values";
 
-export { defaultBorderStyleValues };
+export { borderStyleValues };
 
 /**
  * Create a set of border-style variables for use in a Styleframe instance.
@@ -36,5 +36,5 @@ export { defaultBorderStyleValues };
  * ```
  */
 export const useBorderStyle = createUseVariable("border-style", {
-	defaults: defaultBorderStyleValues,
+	defaults: borderStyleValues,
 });

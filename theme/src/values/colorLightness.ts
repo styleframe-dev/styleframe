@@ -1,4 +1,4 @@
-export const defaultColorLightnessValues = {
+export const colorLightnessValues = {
 	50: 5,
 	100: 10,
 	200: 20,

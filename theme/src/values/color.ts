@@ -1,4 +1,4 @@
-export const defaultColorValues = {
+export const colorValues = {
 	primary: "#3b82f6",
 	secondary: "#6b7280",
 	success: "#22c55e",

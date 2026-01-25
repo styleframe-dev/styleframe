@@ -6,14 +6,14 @@ import type {
 	Variable,
 } from "@styleframe/core";
 import { isRef } from "@styleframe/core";
-import { defaultScalePowerValues } from "../values";
+import { scalePowerValues } from "../values";
 
-export { defaultScalePowerValues };
+export { scalePowerValues };
 
 export function useScalePowers<T extends readonly number[]>(
 	s: Styleframe,
 	scale: Variable | Reference,
-	powers: T = defaultScalePowerValues as T,
+	powers: T = scalePowerValues as T,
 ): Record<number, TokenValue> {
 	const results: Record<number, CSS> = {};
 

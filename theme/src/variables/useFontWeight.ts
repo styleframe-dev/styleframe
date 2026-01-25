@@ -1,7 +1,7 @@
 import { createUseVariable } from "../utils";
-import { defaultFontWeightValues } from "../values";
+import { fontWeightValues } from "../values";
 
-export { defaultFontWeightValues };
+export { fontWeightValues };
 
 /**
  * Create a set of font-weight variables for use in a Styleframe instance.
@@ -40,5 +40,5 @@ export { defaultFontWeightValues };
  * ```
  */
 export const useFontWeight = createUseVariable("font-weight", {
-	defaults: defaultFontWeightValues,
+	defaults: fontWeightValues,
 });

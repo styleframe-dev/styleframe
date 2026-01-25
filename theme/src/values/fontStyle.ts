@@ -1,4 +1,4 @@
-export const defaultFontStyleValues = {
+export const fontStyleValues = {
 	default: "@normal",
 	italic: "italic",
 	oblique: "oblique",

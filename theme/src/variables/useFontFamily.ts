@@ -1,7 +1,7 @@
 import { createUseVariable } from "../utils";
-import { defaultFontFamilyValues } from "../values";
+import { fontFamilyValues } from "../values";
 
-export { defaultFontFamilyValues };
+export { fontFamilyValues };
 
 /**
  * Create a set of font family variables for use in a Styleframe instance.
@@ -25,5 +25,5 @@ export { defaultFontFamilyValues };
  * ```
  */
 export const useFontFamily = createUseVariable("font-family", {
-	defaults: defaultFontFamilyValues,
+	defaults: fontFamilyValues,
 });

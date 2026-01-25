@@ -1,4 +1,4 @@
-export const defaultSpacingValues = {
+export const spacingValues = {
 	default: "@md",
 	"2xs": "0.25rem",
 	xs: "0.5rem",

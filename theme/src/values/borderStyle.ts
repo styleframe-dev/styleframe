@@ -1,4 +1,4 @@
-export const defaultBorderStyleValues = {
+export const borderStyleValues = {
 	default: "@solid",
 	none: "none",
 	solid: "solid",

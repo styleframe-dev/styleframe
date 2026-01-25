@@ -1,7 +1,7 @@
 import { createUseVariable } from "../utils";
-import { defaultScaleValues } from "../values";
+import { scaleValues } from "../values";
 
-export { defaultScaleValues };
+export { scaleValues };
 
 /**
  * Create a set of scale variables for use in a Styleframe instance.
@@ -38,5 +38,5 @@ export { defaultScaleValues };
  */
 
 export const useScale = createUseVariable("scale", {
-	defaults: defaultScaleValues,
+	defaults: scaleValues,
 });

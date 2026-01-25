@@ -1,3 +1,4 @@
+// Design token defaults
 export * from "./borderRadius";
 export * from "./borderStyle";
 export * from "./borderWidth";
@@ -17,3 +18,16 @@ export * from "./lineHeight";
 export * from "./scale";
 export * from "./scalePowers";
 export * from "./spacing";
+
+// Utility defaults
+export * from "./accessibility";
+export * from "./backgrounds";
+export * from "./blendModes";
+export * from "./borders";
+export * from "./flexboxGrid";
+export * from "./interactivity";
+export * from "./layout";
+export * from "./tables";
+export * from "./transforms";
+export * from "./transitions";
+export * from "./typography";

@@ -1,7 +1,7 @@
 import { createUseVariable } from "../utils";
-import { defaultBorderWidthValues } from "../values";
+import { borderWidthValues } from "../values";
 
-export { defaultBorderWidthValues };
+export { borderWidthValues };
 
 /**
  * Create a set of border-width variables for use in a Styleframe instance.
@@ -29,5 +29,5 @@ export { defaultBorderWidthValues };
  * ```
  */
 export const useBorderWidth = createUseVariable("border-width", {
-	defaults: defaultBorderWidthValues,
+	defaults: borderWidthValues,
 });

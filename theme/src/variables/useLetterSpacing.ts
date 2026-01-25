@@ -1,7 +1,7 @@
 import { createUseVariable } from "../utils";
-import { defaultLetterSpacingValues } from "../values";
+import { letterSpacingValues } from "../values";
 
-export { defaultLetterSpacingValues };
+export { letterSpacingValues };
 
 /**
  * Create a set of letter-spacing variables for use in a Styleframe instance.
@@ -31,5 +31,5 @@ export { defaultLetterSpacingValues };
  * ```
  */
 export const useLetterSpacing = createUseVariable("letter-spacing", {
-	defaults: defaultLetterSpacingValues,
+	defaults: letterSpacingValues,
 });

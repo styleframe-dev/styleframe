@@ -1,13 +1,13 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { useColorTint, defaultColorTintValues } from "./useColorTint";
+import { useColorTint, colorTintValues } from "./useColorTint";
 
 describe("useColorTint", () => {
 	it("should create tint levels with default values", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
-		const tints = useColorTint(s, colorPrimary, defaultColorTintValues);
+		const tints = useColorTint(s, colorPrimary, colorTintValues);
 
 		expect(tints.colorPrimaryTint50).toEqual({
 			type: "variable",

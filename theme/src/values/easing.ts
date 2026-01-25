@@ -1,4 +1,4 @@
-export const defaultEasingValues = {
+export const easingValues = {
 	// Basic CSS Keywords
 	linear: "linear",
 	ease: "ease",

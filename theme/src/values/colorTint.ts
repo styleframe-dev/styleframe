@@ -1,4 +1,4 @@
-export const defaultColorTintValues = {
+export const colorTintValues = {
 	50: 5,
 	100: 10,
 	150: 15,

@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noApproximativeNumericConstant: Scale ratios are magic numbers */
-export const defaultScaleValues = {
+export const scaleValues = {
 	default: "@minor-third",
 	"minor-second": 1.067,
 	"major-second": 1.125,

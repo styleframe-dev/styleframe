@@ -1,20 +1,13 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import {
-	useColorLightness,
-	defaultColorLightnessValues,
-} from "./useColorLightness";
+import { useColorLightness, colorLightnessValues } from "./useColorLightness";
 
 describe("useColorLightness", () => {
 	it("should create lightness levels with default values", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
-		const levels = useColorLightness(
-			s,
-			colorPrimary,
-			defaultColorLightnessValues,
-		);
+		const levels = useColorLightness(s, colorPrimary, colorLightnessValues);
 
 		// Test some of the default levels (we know they exist from the default parameter)
 		expect(levels.colorPrimary50).toEqual({

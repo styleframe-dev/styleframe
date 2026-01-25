@@ -1,4 +1,4 @@
-export const defaultBorderWidthValues = {
+export const borderWidthValues = {
 	default: "@thin",
 	none: 0,
 	thin: "thin",

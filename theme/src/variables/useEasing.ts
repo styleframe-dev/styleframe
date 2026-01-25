@@ -1,7 +1,7 @@
 import { createUseVariable } from "../utils";
-import { defaultEasingValues } from "../values";
+import { easingValues } from "../values";
 
-export { defaultEasingValues };
+export { easingValues };
 
 /**
  * Create a set of easing variables for use in a Styleframe instance.
@@ -32,5 +32,5 @@ export { defaultEasingValues };
  * ```
  */
 export const useEasing = createUseVariable("easing", {
-	defaults: defaultEasingValues,
+	defaults: easingValues,
 });

@@ -1,4 +1,4 @@
-export const defaultBreakpointValues = {
+export const breakpointValues = {
 	xs: 0,
 	sm: 576,
 	md: 992,

@@ -1,9 +1,9 @@
 import type { Styleframe, Variable } from "@styleframe/core";
 import type { ExportKeys } from "../types";
 import { createUseVariable } from "../utils";
-import { defaultColorTintValues } from "../values";
+import { colorTintValues } from "../values";
 
-export { defaultColorTintValues };
+export { colorTintValues };
 
 /**
  * Create a set of relative color tint (lighter) levels
@@ -36,7 +36,7 @@ export function useColorTint<
 	{ default: isDefault = true }: { default?: boolean } = {},
 ): ExportKeys<`${Name}-tint`, T, "-"> {
 	return createUseVariable(`${color.name}-tint`, {
-		defaults: defaultColorTintValues,
+		defaults: colorTintValues,
 		transform: (value) => {
 			if (typeof value !== "number") {
 				return 0;

@@ -1,4 +1,4 @@
-export const defaultLineHeightValues = {
+export const lineHeightValues = {
 	default: "@normal",
 	tight: 1.2,
 	snug: 1.35,

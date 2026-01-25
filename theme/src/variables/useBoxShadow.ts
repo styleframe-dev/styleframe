@@ -1,7 +1,7 @@
 import { createUseVariable } from "../utils";
-import { defaultBoxShadowValues } from "../values";
+import { boxShadowValues } from "../values";
 
-export { defaultBoxShadowValues };
+export { boxShadowValues };
 
 /**
  * Create a set of box-shadow variables for use in a Styleframe instance.
@@ -30,5 +30,5 @@ export { defaultBoxShadowValues };
  * ```
  */
 export const useBoxShadow = createUseVariable("box-shadow", {
-	defaults: defaultBoxShadowValues,
+	defaults: boxShadowValues,
 });

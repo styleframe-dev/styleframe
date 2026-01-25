@@ -1,4 +1,4 @@
-export const defaultFontWeightValues = {
+export const fontWeightValues = {
 	default: "@normal",
 	extralight: 200,
 	light: 300,

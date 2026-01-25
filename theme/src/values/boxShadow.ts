@@ -1,4 +1,4 @@
-export const defaultBoxShadowValues = {
+export const boxShadowValues = {
 	default: "@md",
 	none: "none",
 	// subtle card / surfaces
