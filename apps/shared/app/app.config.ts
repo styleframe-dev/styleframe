@@ -67,6 +67,12 @@ export default defineAppConfig({
 			primary: "teal",
 			neutral: "zinc",
 		},
+		navigationMenu: {
+			slots: {
+				label:
+					"w-full flex items-center gap-1.5 font-normal text-xs/5 text-highlighted px-2.5 py-1.5",
+			},
+		},
 		commandPalette: {
 			slots: {
 				input: "[&_.iconify]:size-4 [&_.iconify]:mx-0.5",
@@ -75,6 +81,8 @@ export default defineAppConfig({
 		},
 		contentNavigation: {
 			slots: {
+				trigger:
+					"font-normal text-muted data-[state=open]:text-muted cursor-pointer",
 				linkLeadingIcon: "size-4 mr-1",
 				linkTrailing: "hidden",
 			},
