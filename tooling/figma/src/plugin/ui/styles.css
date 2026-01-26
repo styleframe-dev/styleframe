@@ -25,7 +25,8 @@
 	--color-error-bg: rgba(242, 72, 34, 0.08);
 
 	/* Typography */
-	--font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	--font-family:
+		"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 	--font-mono: "SF Mono", "Fira Code", "JetBrains Mono", Consolas, monospace;
 
 	/* Spacing */
@@ -102,7 +103,9 @@ body {
 .tab.active {
 	color: var(--color-text);
 	background: var(--color-bg);
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.1);
+	box-shadow:
+		0 1px 2px rgba(0, 0, 0, 0.06),
+		0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Panels */
