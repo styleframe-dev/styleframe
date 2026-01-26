@@ -97,6 +97,7 @@
 	"devDependencies": {
 		"@farmfe/core": "^1.7.11",
 		"@styleframe/config-typescript": "workspace:^2",
+		"@styleframe/core": "workspace:^2.5.0",
 		"@vitest/coverage-v8": "catalog:",
 		"@nuxt/kit": "catalog:nuxt",
 		"@nuxt/schema": "catalog:nuxt",
