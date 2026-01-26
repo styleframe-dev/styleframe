@@ -1,5 +1,19 @@
 # @styleframe/core
 
+## 2.6.0
+
+### Minor Changes
+
+- [#96](https://github.com/styleframe-dev/styleframe/pull/96) [`8460f16`](https://github.com/styleframe-dev/styleframe/commit/8460f169cec1199810e9203b357dac9f2f128c56) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Rename `?recipe` imports to `?ts` and add named selector export support
+  - **Breaking:** Renamed import query parameter from `?recipe` to `?ts` for styleframe files
+  - Add support for exporting named selectors alongside recipes via `?ts` imports
+  - Add `_exportName` property to `Selector` and `Recipe` types for tracking named exports
+  - Replace `c12` with `chokidar` + `jiti` for simpler, more reliable config loading
+  - Add `onError` callback to `watchConfiguration` for error reporting during file watch
+  - Add file deletion detection with `unlink` handler in watch mode
+  - Simplify `loadConfiguration` API by merging `loadConfigurationFromPath`
+  - Add comprehensive unit tests for TypeScript selector consumer
+
 ## 2.5.0
 
 ### Minor Changes

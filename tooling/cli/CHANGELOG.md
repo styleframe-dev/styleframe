@@ -1,5 +1,14 @@
 # @styleframe/cli
 
+## 2.3.1
+
+### Patch Changes
+
+- [`1f60314`](https://github.com/styleframe-dev/styleframe/commit/1f60314cde97278294f06e248682026eb53a8af9) Thanks [@alexgrozav](https://github.com/alexgrozav)! - fix: update cli dependency
+
+- Updated dependencies [[`8460f16`](https://github.com/styleframe-dev/styleframe/commit/8460f169cec1199810e9203b357dac9f2f128c56)]:
+  - @styleframe/loader@2.4.0
+
 ## 2.3.0
 
 ### Minor Changes
