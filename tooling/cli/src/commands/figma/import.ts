@@ -4,18 +4,20 @@ import { defineCommand } from "citty";
 import consola from "consola";
 import {
 	generateStyleframeCode,
+	fromDTCG,
 	type FigmaExportFormat,
+	type DTCGDocument,
 } from "@styleframe/figma";
 
 export default defineCommand({
 	meta: {
 		name: "import",
-		description: "Generate Styleframe code from Figma-exported JSON",
+		description: "Generate Styleframe code from DTCG format JSON",
 	},
 	args: {
 		input: {
 			type: "string",
-			description: "Input JSON file path (exported from Figma plugin)",
+			description: "Input DTCG JSON file path",
 			required: true,
 			alias: ["i"],
 			valueHint: "path",
@@ -61,22 +63,13 @@ export default defineCommand({
 		let data: FigmaExportFormat;
 		try {
 			const content = await readFile(inputPath, "utf-8");
-			data = JSON.parse(content) as FigmaExportFormat;
+			const rawData = JSON.parse(content) as DTCGDocument;
+
+			// Convert from DTCG format to internal format
+			data = fromDTCG(rawData);
 		} catch (error) {
 			consola.error(
 				`Failed to read or parse input file: ${error instanceof Error ? error.message : error}`,
-			);
-			process.exit(1);
-		}
-
-		// Validate the input format
-		if (
-			!data.collection ||
-			!Array.isArray(data.modes) ||
-			!Array.isArray(data.variables)
-		) {
-			consola.error(
-				"Invalid input format. Expected { collection, modes, variables }.",
 			);
 			process.exit(1);
 		}

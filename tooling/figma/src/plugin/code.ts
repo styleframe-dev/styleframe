@@ -5,17 +5,21 @@ import type {
 	FigmaExportVariable,
 	FigmaRGBA,
 } from "../types";
+import type { DTCGDocument } from "../converters/dtcg/types";
 import {
 	figmaToStyleframeName,
 	styleframeToFigmaName,
 } from "../converters/name-mapping";
+import { fromDTCG } from "../converters/dtcg/from-dtcg";
+import { toDTCG } from "../converters/dtcg/to-dtcg";
+import { isDTCGFormat } from "./shared";
 
 /**
  * Message types for plugin <-> UI communication
  */
 interface ImportMessage {
 	type: "import";
-	data: FigmaExportFormat;
+	data: FigmaExportFormat | DTCGDocument;
 }
 
 interface ExportMessage {
@@ -82,7 +86,7 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
  * Send available collections to the UI
  */
 async function sendCollections(): Promise<void> {
-	const collections = figma.variables.getLocalVariableCollections();
+	const collections = await figma.variables.getLocalVariableCollectionsAsync();
 	const collectionData = collections.map((c) => ({
 		id: c.id,
 		name: c.name,
@@ -94,15 +98,22 @@ async function sendCollections(): Promise<void> {
 }
 
 /**
- * Import variables from JSON data
+ * Import variables from JSON data (supports both DTCG and legacy formats)
  */
-async function handleImport(data: FigmaExportFormat): Promise<void> {
+async function handleImport(
+	rawData: FigmaExportFormat | DTCGDocument,
+): Promise<void> {
+	// Convert DTCG format to internal format if needed
+	const data: FigmaExportFormat = isDTCGFormat(rawData)
+		? fromDTCG(rawData)
+		: (rawData as FigmaExportFormat);
+
 	const { collection: collectionName, modes, variables } = data;
 
 	// Create or get the collection
-	let collection = figma.variables
-		.getLocalVariableCollections()
-		.find((c) => c.name === collectionName);
+	const existingCollections =
+		await figma.variables.getLocalVariableCollectionsAsync();
+	let collection = existingCollections.find((c) => c.name === collectionName);
 
 	if (!collection) {
 		collection = figma.variables.createVariableCollection(collectionName);
@@ -138,15 +149,16 @@ async function handleImport(data: FigmaExportFormat): Promise<void> {
 	// Create a map to track created variables for alias resolution
 	const variableMap = new Map<string, Variable>();
 
+	// Get existing variables once
+	const existingVariables = await figma.variables.getLocalVariablesAsync();
+
 	// First pass: create all non-alias variables
 	for (const v of variables) {
 		if (v.aliasTo) continue; // Skip aliases for now
 
-		const existing = figma.variables
-			.getLocalVariables()
-			.find(
-				(fv) => fv.name === v.name && fv.variableCollectionId === collection.id,
-			);
+		const existing = existingVariables.find(
+			(fv) => fv.name === v.name && fv.variableCollectionId === collection.id,
+		);
 
 		let figmaVar: Variable;
 		if (existing) {
@@ -183,11 +195,9 @@ async function handleImport(data: FigmaExportFormat): Promise<void> {
 			continue;
 		}
 
-		const existing = figma.variables
-			.getLocalVariables()
-			.find(
-				(fv) => fv.name === v.name && fv.variableCollectionId === collection.id,
-			);
+		const existing = existingVariables.find(
+			(fv) => fv.name === v.name && fv.variableCollectionId === collection.id,
+		);
 
 		let figmaVar: Variable;
 		if (existing) {
@@ -225,7 +235,7 @@ async function handleImport(data: FigmaExportFormat): Promise<void> {
  * Export variables to JSON format
  */
 async function handleExport(collectionId?: string): Promise<void> {
-	const collections = figma.variables.getLocalVariableCollections();
+	const collections = await figma.variables.getLocalVariableCollectionsAsync();
 	let collection: VariableCollection | undefined;
 
 	if (collectionId) {
@@ -246,14 +256,14 @@ async function handleExport(collectionId?: string): Promise<void> {
 
 	// First pass: build ID to name map
 	for (const varId of collection.variableIds) {
-		const figmaVar = figma.variables.getVariableById(varId);
+		const figmaVar = await figma.variables.getVariableByIdAsync(varId);
 		if (!figmaVar) continue;
 		variableIdToName.set(figmaVar.id, figmaVar.name);
 	}
 
 	// Second pass: export variables
 	for (const varId of collection.variableIds) {
-		const figmaVar = figma.variables.getVariableById(varId);
+		const figmaVar = await figma.variables.getVariableByIdAsync(varId);
 		if (!figmaVar) continue;
 
 		const values: Record<string, unknown> = {};
@@ -284,11 +294,14 @@ async function handleExport(collectionId?: string): Promise<void> {
 		});
 	}
 
-	const exportData: FigmaExportFormat = {
+	const intermediateData: FigmaExportFormat = {
 		collection: collection.name,
 		modes,
 		variables,
 	};
+
+	// Convert to DTCG format
+	const exportData = toDTCG(intermediateData);
 
 	figma.ui.postMessage({
 		type: "export-complete",

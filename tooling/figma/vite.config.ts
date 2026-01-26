@@ -12,8 +12,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig(({ mode }) => {
 	if (mode === "code") {
 		// Build the plugin sandbox code
+		// Figma's sandbox has limited ES support, so we target ES2017
 		return {
+			esbuild: {
+				target: "es2017",
+			},
 			build: {
+				target: "es2017",
 				outDir: "dist/plugin",
 				emptyDirOnBuild: false,
 				lib: {

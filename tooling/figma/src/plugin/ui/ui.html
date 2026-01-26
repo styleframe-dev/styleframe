@@ -9,17 +9,17 @@
 <body>
 	<div class="container">
 		<div class="tabs">
-			<button class="tab active" data-tab="import">Import to Figma</button>
-			<button class="tab" data-tab="export">Export from Figma</button>
+			<button class="tab active" data-tab="import">Import</button>
+			<button class="tab" data-tab="export">Export</button>
 		</div>
 
 		<!-- Import Panel -->
 		<div id="import-panel" class="panel active">
 			<div class="form-group">
-				<label for="json-input">Paste JSON from <code>styleframe figma export</code></label>
+				<label for="json-input">Paste DTCG JSON</label>
 				<textarea
 					id="json-input"
-					placeholder='{"collection": "Design Tokens", "modes": ["Default"], "variables": [...]}'
+					placeholder='Paste output from "styleframe figma export" command...'
 				></textarea>
 			</div>
 
@@ -30,20 +30,22 @@
 			<div id="import-status" class="status"></div>
 
 			<button id="import-btn" class="btn btn-primary" disabled>
-				Create Variables
+				Import Variables
 			</button>
 		</div>
 
 		<!-- Export Panel -->
 		<div id="export-panel" class="panel">
 			<div class="form-group">
-				<label for="collection-select">Select Collection</label>
+				<label for="collection-select">Collection</label>
 				<div class="collection-select">
 					<select id="collection-select">
-						<option value="">Loading collections...</option>
+						<option value="">Loading...</option>
 					</select>
-					<button id="refresh-btn" class="refresh-btn" title="Refresh collections">
-						↻
+					<button id="refresh-btn" class="refresh-btn" title="Refresh">
+						<svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+							<path d="M13.65 2.35a8 8 0 1 0 1.86 5.15h-2.02a6 6 0 1 1-1.28-3.71L10 6h6V0l-2.35 2.35z" fill="currentColor"/>
+						</svg>
 					</button>
 				</div>
 			</div>
@@ -53,11 +55,11 @@
 			</button>
 
 			<div class="output-wrapper">
-				<label>JSON Output (use with <code>styleframe figma import</code>)</label>
+				<label>Output</label>
 				<textarea
 					id="export-output"
 					readonly
-					placeholder="Click 'Export Variables' to generate JSON..."
+					placeholder="Click Export to generate DTCG JSON..."
 				></textarea>
 				<button id="copy-btn" class="btn btn-secondary copy-btn" disabled>
 					Copy

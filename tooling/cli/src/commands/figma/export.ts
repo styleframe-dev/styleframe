@@ -15,6 +15,7 @@ import {
 	cssColorToFigma,
 	detectFigmaType,
 	styleframeValueToFigma,
+	toDTCG,
 	type FigmaExportFormat,
 	type FigmaExportVariable,
 	type FigmaVariableType,
@@ -23,7 +24,7 @@ import {
 export default defineCommand({
 	meta: {
 		name: "export",
-		description: "Export Styleframe variables to Figma-compatible JSON",
+		description: "Export Styleframe variables to DTCG format JSON",
 	},
 	args: {
 		config: {
@@ -36,7 +37,7 @@ export default defineCommand({
 		output: {
 			type: "string",
 			description: "Output JSON file path",
-			default: "figma-variables.json",
+			default: "tokens.json",
 			alias: ["o"],
 			valueHint: "path",
 		},
@@ -128,23 +129,23 @@ export default defineCommand({
 			});
 		}
 
-		const exportData: FigmaExportFormat = {
+		const intermediateData: FigmaExportFormat = {
 			collection: args.collection,
 			modes,
 			variables,
 		};
 
+		// Convert to DTCG format
+		const dtcgData = toDTCG(intermediateData);
+
 		consola.info(
 			`Writing ${variables.length} variables to "${path.relative(process.cwd(), outputPath)}"...`,
 		);
 
-		await writeFile(outputPath, JSON.stringify(exportData, null, 2));
+		await writeFile(outputPath, JSON.stringify(dtcgData, null, 2));
 
 		consola.success(
-			`Exported ${variables.length} variables to "${path.relative(process.cwd(), outputPath)}"`,
-		);
-		consola.info(
-			"Use this JSON file with the Styleframe Sync Figma plugin to import variables.",
+			`Exported ${variables.length} variables in DTCG format to "${path.relative(process.cwd(), outputPath)}"`,
 		);
 	},
 });

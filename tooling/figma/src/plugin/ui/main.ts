@@ -1,4 +1,10 @@
 import type { FigmaExportFormat } from "../../types";
+import type { DTCGDocument } from "../../converters/dtcg/types";
+import {
+	isDTCGFormat,
+	extractDTCGVariables,
+	type PreviewVariable,
+} from "../shared";
 
 interface Collection {
 	id: string;
@@ -89,9 +95,9 @@ function handleJsonInput(): void {
 	}
 
 	try {
-		const data = JSON.parse(value) as FigmaExportFormat;
-		validateExportFormat(data);
-		renderPreview(data);
+		const data = JSON.parse(value);
+		const variables = getPreviewVariables(data);
+		renderPreview(variables);
 		importBtn.disabled = false;
 	} catch (error) {
 		const message = error instanceof Error ? error.message : "Invalid JSON";
@@ -101,35 +107,38 @@ function handleJsonInput(): void {
 }
 
 /**
- * Validate the export format
+ * Get preview variables from either DTCG or legacy format
  */
-function validateExportFormat(
-	data: unknown,
-): asserts data is FigmaExportFormat {
+function getPreviewVariables(data: unknown): PreviewVariable[] {
 	if (typeof data !== "object" || data === null) {
 		throw new Error("Invalid format: expected an object");
 	}
 
-	const obj = data as Record<string, unknown>;
-
-	if (typeof obj.collection !== "string") {
-		throw new Error('Invalid format: missing "collection" string');
+	if (isDTCGFormat(data)) {
+		const variables = extractDTCGVariables(data);
+		if (variables.length === 0) {
+			throw new Error("No variables found in DTCG format");
+		}
+		return variables;
 	}
 
-	if (!Array.isArray(obj.modes)) {
-		throw new Error('Invalid format: missing "modes" array');
-	}
-
+	// Legacy format
+	const obj = data as FigmaExportFormat;
 	if (!Array.isArray(obj.variables)) {
-		throw new Error('Invalid format: missing "variables" array');
+		throw new Error("Invalid format: not a valid DTCG or legacy format");
 	}
+
+	return obj.variables.map((v) => ({
+		name: v.name,
+		type: v.type,
+	}));
 }
 
 /**
  * Render the variable preview
  */
-function renderPreview(data: FigmaExportFormat): void {
-	if (data.variables.length === 0) {
+function renderPreview(variables: PreviewVariable[]): void {
+	if (variables.length === 0) {
 		importPreview.innerHTML =
 			'<div class="preview-empty">No variables found</div>';
 		return;
@@ -137,7 +146,7 @@ function renderPreview(data: FigmaExportFormat): void {
 
 	const html = `
 		<div class="variable-list">
-			${data.variables
+			${variables
 				.map(
 					(v) => `
 				<div class="variable-item">
@@ -265,16 +274,21 @@ window.onmessage = (event: MessageEvent) => {
 			importBtn.disabled = false;
 			break;
 
-		case "export-complete":
+		case "export-complete": {
 			exportOutput.value = JSON.stringify(msg.result, null, 2);
+			// Extract variable count and collection from DTCG format
+			const exportedVars = extractDTCGVariables(msg.result);
+			const collectionName =
+				msg.result.$extensions?.["dev.styleframe"]?.collection || "Collection";
 			showStatus(
 				exportStatus,
 				"success",
-				`Exported ${msg.result.variables.length} variables from "${msg.result.collection}"`,
+				`Exported ${exportedVars.length} variables from "${collectionName}"`,
 			);
 			exportBtn.disabled = false;
 			copyBtn.disabled = false;
 			break;
+		}
 
 		case "error":
 			if (currentMode === "import") {
