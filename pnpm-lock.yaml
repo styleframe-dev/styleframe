@@ -775,6 +775,9 @@ importers:
       '@styleframe/config-vite':
         specifier: workspace:^2
         version: link:../../config/vite
+      '@styleframe/theme':
+        specifier: workspace:^2
+        version: link:../../theme
       '@types/node':
         specifier: 'catalog:'
         version: 22.15.32
