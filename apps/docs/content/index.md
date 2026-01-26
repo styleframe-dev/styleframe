@@ -434,7 +434,60 @@ Easily create and manage themes for your design system using styleframe's native
     :::
 ::
 
-<!-- 
+<!--
+Figma Section ----------------------------------------------------------------------------------------------
+-->
+
+::u-page-section{class="border-t border-default"}
+---
+orientation: horizontal
+reverse: true
+---
+
+![Styleframe - Import Design Tokens into Figma](/assets/images/figma-import.png)
+
+#title
+Sync Design Tokens with [Figma]{.text-primary}
+
+#description
+Export your Styleframe design tokens to the W3C DTCG format and import them into Figma. Keep your code and design files in perfect sync with full multi-mode support for light and dark themes.
+
+#features
+    :::u-page-feature
+    ---
+    icon: i-lucide-arrow-left-right
+    ---
+    #title
+    [Bidirectional]{.text-primary} Sync
+
+    #description
+    Import tokens into Figma or export Figma Variables back to JSON. Both directions preserve structure, aliases, and semantics.
+    :::
+
+    :::u-page-feature
+    ---
+    icon: i-lucide-sun-moon
+    ---
+    #title
+    [Multi-Mode]{.text-primary} Support
+
+    #description
+    Light, dark, and custom themes are preserved as Figma modes. Your theme structure stays intact across every sync.
+    :::
+
+#links
+    :::u-button
+    ---
+    color: neutral
+    icon: i-lucide-figma
+    to: /figma
+    variant: outline
+    ---
+    Learn more about the Figma Plugin
+    :::
+::
+
+<!--
 AI Section ----------------------------------------------------------------------------------------------
 -->
 

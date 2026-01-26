@@ -1,0 +1,16 @@
+{
+	"name": "Styleframe - Design Tokens Sync",
+	"id": "1597716416772135340",
+	"api": "1.0.0",
+	"main": "dist/plugin/code.js",
+	"ui": "dist/plugin/ui.html",
+	"editorType": ["figma"],
+	"documentAccess": "dynamic-page",
+	"menu": [
+		{ "name": "Import to Figma", "command": "import" },
+		{ "name": "Export from Figma", "command": "export" }
+	],
+	"networkAccess": {
+		"allowedDomains": ["none"]
+	}
+}
