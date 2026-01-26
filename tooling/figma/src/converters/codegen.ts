@@ -242,13 +242,18 @@ function generateComposableCode(
 
 /**
  * Generate variable declaration code
+ * Returns null if the variable cannot be generated (e.g., reference with unknown target)
  */
-function generateVariableCode(variable: ParsedVariable): string {
+function generateVariableCode(variable: ParsedVariable): string | null {
 	const identifier = toVariableIdentifier(variable.name);
 
-	if (variable.isReference && variable.referenceTo) {
-		const refTarget = toVariableIdentifier(variable.referenceTo);
-		return `const ${identifier} = variable("${variable.name}", ref(${refTarget}));`;
+	if (variable.isReference) {
+		if (variable.referenceTo) {
+			const refTarget = toVariableIdentifier(variable.referenceTo);
+			return `const ${identifier} = variable("${variable.name}", ref(${refTarget}));`;
+		}
+		// Skip references with unknown targets - they can't be properly generated
+		return null;
 	}
 
 	const valueStr =
@@ -320,8 +325,11 @@ export function generateStyleframeCode(
 			if (generatedIdentifiers.has(identifier)) continue;
 
 			if (!useComposables || v.isReference || !COMPOSABLE_MAP[category]) {
-				lines.push(generateVariableCode(v));
-				generatedIdentifiers.add(identifier);
+				const code = generateVariableCode(v);
+				if (code) {
+					lines.push(code);
+					generatedIdentifiers.add(identifier);
+				}
 			}
 		}
 	}

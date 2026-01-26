@@ -135,8 +135,11 @@ export default defineCommand({
 			variables,
 		};
 
-		// Convert to DTCG format
-		const dtcgData = toDTCG(intermediateData);
+		// Extract theme names from Styleframe configuration
+		const themeNames = root.themes.map((t) => capitalize(t.name));
+
+		// Convert to DTCG format with theme information
+		const dtcgData = toDTCG(intermediateData, { themeNames });
 
 		consola.info(
 			`Writing ${variables.length} variables to "${path.relative(process.cwd(), outputPath)}"...`,

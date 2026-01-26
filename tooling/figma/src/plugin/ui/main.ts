@@ -20,10 +20,17 @@ const importPanel = document.getElementById("import-panel")!;
 const exportPanel = document.getElementById("export-panel")!;
 
 // Import elements
-const jsonInput = document.getElementById("json-input") as HTMLTextAreaElement;
+const fileDropZone = document.getElementById("file-drop-zone")!;
+const fileInput = document.getElementById("file-input") as HTMLInputElement;
+const fileSelected = document.getElementById("file-selected")!;
+const fileName = document.getElementById("file-name")!;
+const fileClearBtn = document.getElementById("file-clear-btn")!;
 const importBtn = document.getElementById("import-btn") as HTMLButtonElement;
 const importPreview = document.getElementById("import-preview")!;
 const importStatus = document.getElementById("import-status")!;
+
+// Store the loaded JSON data
+let loadedImportData: unknown = null;
 
 // Export elements
 const collectionSelect = document.getElementById(
@@ -35,6 +42,9 @@ const exportOutput = document.getElementById(
 	"export-output",
 ) as HTMLTextAreaElement;
 const copyBtn = document.getElementById("copy-btn") as HTMLButtonElement;
+const downloadBtn = document.getElementById(
+	"download-btn",
+) as HTMLButtonElement;
 const exportStatus = document.getElementById("export-status")!;
 
 let currentMode: "import" | "export" = "import";
@@ -52,14 +62,22 @@ function init(): void {
 		});
 	});
 
-	// Import handlers
-	jsonInput.addEventListener("input", handleJsonInput);
+	// Import handlers - file picker
+	fileDropZone.addEventListener("click", () => fileInput.click());
+	fileInput.addEventListener("change", handleFileSelect);
+	fileClearBtn.addEventListener("click", handleFileClear);
 	importBtn.addEventListener("click", handleImport);
+
+	// Drag and drop handlers
+	fileDropZone.addEventListener("dragover", handleDragOver);
+	fileDropZone.addEventListener("dragleave", handleDragLeave);
+	fileDropZone.addEventListener("drop", handleDrop);
 
 	// Export handlers
 	refreshBtn.addEventListener("click", requestCollections);
 	exportBtn.addEventListener("click", handleExport);
 	copyBtn.addEventListener("click", handleCopy);
+	downloadBtn.addEventListener("click", handleDownload);
 
 	// Request initial collections
 	requestCollections();
@@ -81,29 +99,114 @@ function switchTab(mode: "import" | "export"): void {
 }
 
 /**
- * Handle JSON input changes
+ * Handle drag over event
  */
-function handleJsonInput(): void {
-	const value = jsonInput.value.trim();
+function handleDragOver(e: DragEvent): void {
+	e.preventDefault();
+	e.stopPropagation();
+	fileDropZone.classList.add("drag-over");
+}
+
+/**
+ * Handle drag leave event
+ */
+function handleDragLeave(e: DragEvent): void {
+	e.preventDefault();
+	e.stopPropagation();
+	fileDropZone.classList.remove("drag-over");
+}
+
+/**
+ * Handle drop event
+ */
+function handleDrop(e: DragEvent): void {
+	e.preventDefault();
+	e.stopPropagation();
+	fileDropZone.classList.remove("drag-over");
+
+	const files = e.dataTransfer?.files;
+	if (files && files.length > 0) {
+		const file = files[0];
+		if (
+			file &&
+			(file.type === "application/json" || file.name.endsWith(".json"))
+		) {
+			processFile(file);
+		} else {
+			showStatus(importStatus, "error", "Please select a JSON file");
+		}
+	}
+}
+
+/**
+ * Handle file input change
+ */
+function handleFileSelect(): void {
+	const file = fileInput.files?.[0];
+	if (file) {
+		processFile(file);
+	}
+}
+
+/**
+ * Process the selected file
+ */
+function processFile(file: File): void {
 	hideStatus(importStatus);
 
-	if (!value) {
-		importPreview.innerHTML =
-			'<div class="preview-empty">Paste JSON to preview variables</div>';
-		importBtn.disabled = true;
-		return;
-	}
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		try {
+			const content = e.target?.result as string;
+			const data = JSON.parse(content);
+			const variables = getPreviewVariables(data);
 
-	try {
-		const data = JSON.parse(value);
-		const variables = getPreviewVariables(data);
-		renderPreview(variables);
-		importBtn.disabled = false;
-	} catch (error) {
-		const message = error instanceof Error ? error.message : "Invalid JSON";
-		importPreview.innerHTML = `<div class="preview-empty" style="color: var(--figma-color-error)">${message}</div>`;
-		importBtn.disabled = true;
-	}
+			// Store the data for import
+			loadedImportData = data;
+
+			// Show file selected state
+			fileDropZone
+				.querySelector(".file-drop-content")
+				?.setAttribute("hidden", "");
+			fileSelected.removeAttribute("hidden");
+			fileName.textContent = file.name;
+
+			// Render preview
+			renderPreview(variables);
+			importBtn.disabled = false;
+		} catch (error) {
+			const message = error instanceof Error ? error.message : "Invalid JSON";
+			importPreview.innerHTML = `<div class="preview-empty" style="color: var(--color-error)">${message}</div>`;
+			importBtn.disabled = true;
+			loadedImportData = null;
+		}
+	};
+
+	reader.onerror = () => {
+		showStatus(importStatus, "error", "Failed to read file");
+		loadedImportData = null;
+	};
+
+	reader.readAsText(file);
+}
+
+/**
+ * Handle clear file button
+ */
+function handleFileClear(e: Event): void {
+	e.stopPropagation();
+	fileInput.value = "";
+	loadedImportData = null;
+
+	// Reset UI
+	fileDropZone.querySelector(".file-drop-content")?.removeAttribute("hidden");
+	fileSelected.setAttribute("hidden", "");
+	fileName.textContent = "";
+
+	importPreview.innerHTML =
+		'<div class="preview-empty">Select a JSON file to preview variables</div>';
+	importBtn.disabled = true;
+	hideStatus(importStatus);
 }
 
 /**
@@ -140,7 +243,7 @@ function getPreviewVariables(data: unknown): PreviewVariable[] {
 function renderPreview(variables: PreviewVariable[]): void {
 	if (variables.length === 0) {
 		importPreview.innerHTML =
-			'<div class="preview-empty">No variables found</div>';
+			'<div class="preview-empty">No variables found in file</div>';
 		return;
 	}
 
@@ -166,13 +269,16 @@ function renderPreview(variables: PreviewVariable[]): void {
  * Handle import button click
  */
 function handleImport(): void {
-	try {
-		const data = JSON.parse(jsonInput.value) as FigmaExportFormat;
-		parent.postMessage({ pluginMessage: { type: "import", data } }, "*");
-		importBtn.disabled = true;
-	} catch (error) {
-		showStatus(importStatus, "error", "Failed to parse JSON");
+	if (!loadedImportData) {
+		showStatus(importStatus, "error", "No file loaded");
+		return;
 	}
+
+	parent.postMessage(
+		{ pluginMessage: { type: "import", data: loadedImportData } },
+		"*",
+	);
+	importBtn.disabled = true;
 }
 
 /**
@@ -198,13 +304,60 @@ function handleCopy(): void {
 	const text = exportOutput.value;
 	if (!text) return;
 
-	navigator.clipboard.writeText(text).then(() => {
-		const originalText = copyBtn.textContent;
-		copyBtn.textContent = "Copied!";
-		setTimeout(() => {
-			copyBtn.textContent = originalText;
-		}, 2000);
+	const originalHTML = copyBtn.innerHTML;
+	const checkmarkIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+		<path d="M20 6L9 17l-5-5" stroke="#14ae5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+	</svg>`;
+
+	// Try modern clipboard API first, fallback to execCommand
+	const copyToClipboard = async () => {
+		try {
+			await navigator.clipboard.writeText(text);
+			return true;
+		} catch {
+			// Fallback for Figma plugin sandbox
+			const textarea = document.createElement("textarea");
+			textarea.value = text;
+			textarea.style.position = "fixed";
+			textarea.style.opacity = "0";
+			document.body.appendChild(textarea);
+			textarea.select();
+			const success = document.execCommand("copy");
+			document.body.removeChild(textarea);
+			return success;
+		}
+	};
+
+	copyToClipboard().then((success) => {
+		if (success) {
+			copyBtn.innerHTML = checkmarkIcon;
+			copyBtn.title = "Copied to clipboard";
+			copyBtn.classList.add("copied");
+			setTimeout(() => {
+				copyBtn.innerHTML = originalHTML;
+				copyBtn.title = "Copy";
+				copyBtn.classList.remove("copied");
+			}, 2000);
+		}
 	});
+}
+
+/**
+ * Handle download button click
+ */
+function handleDownload(): void {
+	const text = exportOutput.value;
+	if (!text) return;
+
+	const blob = new Blob([text], { type: "application/json" });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement("a");
+	a.href = url;
+	a.download = "tokens.json";
+	document.body.appendChild(a);
+	a.click();
+	document.body.removeChild(a);
+	URL.revokeObjectURL(url);
 }
 
 /**
@@ -287,6 +440,7 @@ window.onmessage = (event: MessageEvent) => {
 			);
 			exportBtn.disabled = false;
 			copyBtn.disabled = false;
+			downloadBtn.disabled = false;
 			break;
 		}
 

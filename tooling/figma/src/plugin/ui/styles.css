@@ -47,6 +47,10 @@
 	padding: 0;
 }
 
+[hidden] {
+	display: none !important;
+}
+
 html,
 body {
 	font-family: var(--font-family);
@@ -107,7 +111,8 @@ body {
 	flex: 1;
 	flex-direction: column;
 	gap: var(--space-md);
-	overflow: visible;
+	overflow: hidden;
+	min-height: 0;
 }
 
 .panel.active {
@@ -280,6 +285,110 @@ textarea::placeholder {
 	font-weight: 700;
 }
 
+/* File Drop Zone */
+.file-drop-zone {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: var(--space-xl);
+	border: 2px dashed var(--color-border);
+	border-radius: var(--radius-lg);
+	background: var(--color-bg-secondary);
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.file-drop-zone:hover {
+	border-color: var(--color-brand);
+	background: var(--color-bg-hover);
+}
+
+.file-drop-zone.drag-over {
+	border-color: var(--color-brand);
+	background: var(--color-brand-tertiary);
+}
+
+.file-drop-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--space-sm);
+}
+
+.file-icon {
+	color: var(--color-text-tertiary);
+	transition: color 0.15s ease;
+}
+
+.file-drop-zone:hover .file-icon {
+	color: var(--color-text-secondary);
+}
+
+.file-drop-zone.drag-over .file-icon {
+	color: var(--color-brand);
+}
+
+.file-drop-text {
+	font-size: 11px;
+	color: var(--color-text-secondary);
+}
+
+.file-browse-link {
+	color: var(--color-brand);
+	text-decoration: underline;
+}
+
+.file-drop-hint {
+	font-size: 10px;
+	color: var(--color-text-tertiary);
+}
+
+.file-selected {
+	display: flex;
+	align-items: center;
+	gap: var(--space-sm);
+	padding: var(--space-sm) var(--space-md);
+	background: var(--color-bg);
+	border-radius: var(--radius-md);
+	border: 1px solid var(--color-border);
+}
+
+.file-check-icon {
+	color: var(--color-success);
+	flex-shrink: 0;
+}
+
+.file-name {
+	flex: 1;
+	font-size: 11px;
+	font-weight: 500;
+	color: var(--color-text);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.file-clear-btn {
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	border-radius: var(--radius-sm);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--color-text-tertiary);
+	transition: all 0.15s ease;
+}
+
+.file-clear-btn:hover {
+	background: var(--color-bg-tertiary);
+	color: var(--color-text);
+}
+
 /* Preview Area */
 .preview {
 	flex: 1;
@@ -402,13 +511,29 @@ textarea::placeholder {
 	gap: var(--space-xs);
 }
 
-.copy-btn {
+.output-actions {
 	position: absolute;
 	top: 28px;
 	right: var(--space-sm);
-	height: 24px;
-	padding: 0 var(--space-sm);
-	font-size: 10px;
+	display: flex;
+	gap: var(--space-xs);
+}
+
+.output-actions .btn-icon {
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.output-actions .btn-icon svg {
+	flex-shrink: 0;
+}
+
+.output-actions .btn-icon.copied {
+	pointer-events: none;
 }
 
 /* Scrollbar Styling */

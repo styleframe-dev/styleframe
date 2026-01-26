@@ -46,6 +46,34 @@ export type DTCGTokenValue =
 	| DTCGAliasValue;
 
 /**
+ * DTCG Modifier context - contains token overrides for a specific context
+ * Token paths use dot notation (e.g., "color.background")
+ */
+export interface DTCGModifierContext {
+	[tokenPath: string]: { $value: DTCGTokenValue } | DTCGModifierContext;
+}
+
+/**
+ * DTCG Modifier definition
+ * @see https://www.designtokens.org/tr/2025.10/
+ */
+export interface DTCGModifier {
+	$type: "modifier";
+	/** The default context name (optional) */
+	$default?: string;
+	/** Context definitions with token overrides */
+	contexts: Record<string, DTCGModifierContext>;
+}
+
+/**
+ * DTCG Modifiers section at document root
+ */
+export interface DTCGModifiers {
+	theme?: DTCGModifier;
+	[key: string]: DTCGModifier | undefined;
+}
+
+/**
  * Styleframe-specific extensions for DTCG format
  */
 export interface DTCGStyleframeExtensions {
@@ -116,9 +144,11 @@ export interface DTCGDocument {
 	$schema?: string;
 	$description?: string;
 	$extensions?: DTCGDocumentExtensions;
+	$modifiers?: DTCGModifiers;
 	[key: string]:
 		| DTCGToken
 		| DTCGGroup
+		| DTCGModifiers
 		| string
 		| DTCGDocumentExtensions
 		| undefined;
@@ -132,6 +162,14 @@ export interface ToDTCGOptions {
 	includeSchema?: boolean;
 	/** DTCG schema URL */
 	schemaUrl?: string;
+	/** Use DTCG modifier format for multi-mode values (default: true) */
+	useModifiers?: boolean;
+	/**
+	 * Theme names from Styleframe configuration.
+	 * When provided, only these modes will be used to generate $modifiers.theme.
+	 * If not provided, all non-default modes are treated as themes.
+	 */
+	themeNames?: string[];
 }
 
 /**
@@ -142,6 +180,8 @@ export interface FromDTCGOptions {
 	defaultModeName?: string;
 	/** Collection name override */
 	collectionName?: string;
+	/** Preferred modifier to use for modes if multiple exist (default: "theme") */
+	preferredModifier?: string;
 }
 
 /**

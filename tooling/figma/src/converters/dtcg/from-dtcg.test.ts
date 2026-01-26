@@ -179,4 +179,230 @@ describe("fromDTCG", () => {
 
 		expect(result.collection).toBe("Override");
 	});
+
+	it("should import from $modifiers.theme format", () => {
+		const input: DTCGDocument = {
+			$extensions: {
+				"dev.styleframe": {
+					collection: "Design Tokens",
+					modes: ["Light", "Dark"],
+				},
+			},
+			color: {
+				background: {
+					$value: "#ffffff",
+					$type: "color",
+				},
+			},
+			$modifiers: {
+				theme: {
+					$type: "modifier",
+					contexts: {
+						Dark: {
+							color: {
+								background: { $value: "#000000" },
+							},
+						},
+					},
+				},
+			},
+		};
+
+		const result = fromDTCG(input);
+
+		expect(result.modes).toEqual(["Light", "Dark"]);
+		const bgVar = result.variables.find((v) => v.name === "color/background");
+		expect(bgVar?.values.Light).toBeDefined();
+		expect(bgVar?.values.Dark).toBeDefined();
+	});
+
+	it("should infer modes from modifier contexts when no extension modes", () => {
+		const input: DTCGDocument = {
+			color: {
+				primary: {
+					$value: "#006cff",
+					$type: "color",
+				},
+			},
+			$modifiers: {
+				theme: {
+					$type: "modifier",
+					contexts: {
+						Dark: {
+							color: {
+								primary: { $value: "#60a5fa" },
+							},
+						},
+					},
+				},
+			},
+		};
+
+		const result = fromDTCG(input);
+
+		expect(result.modes).toContain("Default");
+		expect(result.modes).toContain("Dark");
+	});
+
+	it("should prefer modifiers over legacy extension format", () => {
+		const input: DTCGDocument = {
+			$extensions: {
+				"dev.styleframe": {
+					collection: "Design Tokens",
+					modes: ["Light", "Dark"],
+				},
+			},
+			color: {
+				background: {
+					$value: "#ffffff",
+					$type: "color",
+					// Legacy format (should be ignored when modifiers present)
+					$extensions: {
+						"dev.styleframe": {
+							modes: { Dark: "#111111" },
+						},
+					},
+				},
+			},
+			$modifiers: {
+				theme: {
+					$type: "modifier",
+					contexts: {
+						Dark: {
+							color: {
+								background: { $value: "#000000" },
+							},
+						},
+					},
+				},
+			},
+		};
+
+		const result = fromDTCG(input);
+
+		const bgVar = result.variables.find((v) => v.name === "color/background");
+		// Should use modifier value (#000000), not legacy value (#111111)
+		expect(bgVar?.values.Dark).toEqual({ r: 0, g: 0, b: 0, a: 1 });
+	});
+
+	it("should handle nested paths in modifier contexts", () => {
+		const input: DTCGDocument = {
+			$extensions: {
+				"dev.styleframe": {
+					collection: "Design Tokens",
+					modes: ["Light", "Dark"],
+				},
+			},
+			color: {
+				brand: {
+					primary: {
+						$value: "#006cff",
+						$type: "color",
+					},
+				},
+			},
+			$modifiers: {
+				theme: {
+					$type: "modifier",
+					contexts: {
+						Dark: {
+							color: {
+								brand: {
+									primary: { $value: "#60a5fa" },
+								},
+							},
+						},
+					},
+				},
+			},
+		};
+
+		const result = fromDTCG(input);
+
+		const primaryVar = result.variables.find(
+			(v) => v.name === "color/brand/primary",
+		);
+		expect(primaryVar?.values.Light).toBeDefined();
+		expect(primaryVar?.values.Dark).toBeDefined();
+	});
+
+	it("should still support legacy $extensions.dev.styleframe.modes format", () => {
+		const input: DTCGDocument = {
+			$extensions: {
+				"dev.styleframe": {
+					collection: "My Tokens",
+					modes: ["Light", "Dark"],
+				},
+			},
+			color: {
+				background: {
+					$value: "#ffffff",
+					$type: "color",
+					$extensions: {
+						"dev.styleframe": {
+							modes: { Dark: "#000000" },
+						},
+					},
+				},
+			},
+		};
+
+		const result = fromDTCG(input);
+
+		expect(result.collection).toBe("My Tokens");
+		expect(result.modes).toEqual(["Light", "Dark"]);
+		const bgVar = result.variables.find((v) => v.name === "color/background");
+		expect(bgVar?.values.Light).toBeDefined();
+		expect(bgVar?.values.Dark).toBeDefined();
+	});
+
+	it("should handle tokens without overrides in modifier format", () => {
+		const input: DTCGDocument = {
+			$extensions: {
+				"dev.styleframe": {
+					collection: "Design Tokens",
+					modes: ["Light", "Dark"],
+				},
+			},
+			color: {
+				background: {
+					$value: "#ffffff",
+					$type: "color",
+				},
+				text: {
+					$value: "#000000",
+					$type: "color",
+				},
+			},
+			spacing: {
+				md: {
+					$value: "16px",
+					$type: "dimension",
+				},
+			},
+			$modifiers: {
+				theme: {
+					$type: "modifier",
+					contexts: {
+						Dark: {
+							color: {
+								background: { $value: "#000000" },
+								text: { $value: "#ffffff" },
+							},
+							// No spacing override - should use base value
+						},
+					},
+				},
+			},
+		};
+
+		const result = fromDTCG(input);
+
+		// Tokens without modifier overrides only have the default mode value set.
+		// Consumers should fall back to the default mode when a specific mode value is undefined.
+		const spacingVar = result.variables.find((v) => v.name === "spacing/md");
+		expect(spacingVar?.values.Light).toBe(16);
+		// Dark mode not set by modifier - value is undefined, consumers must fall back to Light
+		expect(spacingVar?.values.Dark).toBeUndefined();
+	});
 });

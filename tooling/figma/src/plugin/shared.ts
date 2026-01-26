@@ -1,7 +1,7 @@
 import type { DTCGDocument, DTCGToken } from "../converters/dtcg/types";
 
 /**
- * Check if data is in DTCG format (has tokens with $value properties)
+ * Check if data is in DTCG format (has tokens with $value properties or $modifiers)
  */
 export function isDTCGFormat(data: unknown): data is DTCGDocument {
 	if (typeof data !== "object" || data === null) return false;
@@ -11,6 +11,8 @@ export function isDTCGFormat(data: unknown): data is DTCGDocument {
 	if ("collection" in obj && "modes" in obj && "variables" in obj) {
 		return false; // This is the old Figma format
 	}
+	// Check for $modifiers (DTCG modifier format indicator)
+	if ("$modifiers" in obj) return true;
 	// Check if it has any tokens with $value
 	for (const [key, value] of Object.entries(obj)) {
 		if (key.startsWith("$")) continue;
