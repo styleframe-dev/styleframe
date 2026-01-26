@@ -17,3 +17,5 @@ const main = defineCommand({
 export default function run() {
 	runMain(main);
 }
+
+run();

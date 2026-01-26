@@ -644,10 +644,11 @@ importers:
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
 
   engine/styleframe:
-    devDependencies:
+    dependencies:
       '@styleframe/cli':
         specifier: workspace:^2.3.0
         version: link:../../tooling/cli
+    devDependencies:
       '@styleframe/config-typescript':
         specifier: workspace:^2
         version: link:../../config/typescript
@@ -9291,8 +9292,8 @@ packages:
   vue-component-type-helpers@3.1.1:
     resolution: {integrity: sha512-B0kHv7qX6E7+kdc5nsaqjdGZ1KwNKSUQDWGy7XkTYT7wFsOpkEyaJ1Vq79TjwrrtuLRgizrTV7PPuC4rRQo+vw==}
 
-  vue-component-type-helpers@3.2.2:
-    resolution: {integrity: sha512-x8C2nx5XlUNM0WirgfTkHjJGO/ABBxlANZDtHw2HclHtQnn+RFPTnbjMJn8jHZW4TlUam0asHcA14lf1C6Jb+A==}
+  vue-component-type-helpers@3.2.4:
+    resolution: {integrity: sha512-05lR16HeZDcDpB23ku5b5f1fBOoHqFnMiKRr2CiEvbG5Ux4Yi0McmQBOET0dR0nxDXosxyVqv67q6CzS3AK8rw==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -13072,7 +13073,7 @@ snapshots:
       storybook: 10.1.11(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       type-fest: 2.19.0
       vue: 3.5.26(typescript@5.8.3)
-      vue-component-type-helpers: 3.2.2
+      vue-component-type-helpers: 3.2.4
 
   '@styleframe/license@2.0.0': {}
 
@@ -20542,7 +20543,7 @@ snapshots:
 
   vue-component-type-helpers@3.1.1: {}
 
-  vue-component-type-helpers@3.2.2: {}
+  vue-component-type-helpers@3.2.4: {}
 
   vue-demi@0.14.10(vue@3.5.26(typescript@5.8.3)):
     dependencies:
