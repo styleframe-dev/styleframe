@@ -1,4 +1,5 @@
 import { createUseUtility } from "../../utils";
+import { outlineStyleValues } from "../../values";
 
 /**
  * Create outline-width utility classes.
@@ -16,7 +17,7 @@ import { createUseUtility } from "../../utils";
  * ```
  */
 export const useOutlineWidthUtility = createUseUtility(
-	"outline",
+	"outline-width",
 	({ value }) => ({
 		outlineWidth: value,
 	}),
@@ -33,17 +34,6 @@ export const useOutlineColorUtility = createUseUtility(
 );
 
 /**
- * Default outline-style utility values matching Tailwind CSS.
- */
-export const defaultOutlineStyleValues = {
-	none: "none",
-	solid: "solid",
-	dashed: "dashed",
-	dotted: "dotted",
-	double: "double",
-};
-
-/**
  * Create outline-style utility classes.
  */
 export const useOutlineStyleUtility = createUseUtility(
@@ -51,7 +41,7 @@ export const useOutlineStyleUtility = createUseUtility(
 	({ value }) => ({
 		outlineStyle: value,
 	}),
-	{ defaults: defaultOutlineStyleValues },
+	{ defaults: outlineStyleValues },
 );
 
 /**

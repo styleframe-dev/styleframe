@@ -1,12 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default forced-color-adjust utility values matching Tailwind CSS.
- */
-export const defaultForcedColorAdjustValues = {
-	auto: "auto",
-	none: "none",
-};
+import { forcedColorAdjustValues } from "../../values";
 
 /**
  * Create forced-color-adjust utility classes.
@@ -16,7 +9,7 @@ export const useForcedColorAdjustUtility = createUseUtility(
 	({ value }) => ({
 		forcedColorAdjust: value,
 	}),
-	{ defaults: defaultForcedColorAdjustValues },
+	{ defaults: forcedColorAdjustValues },
 );
 
 /**

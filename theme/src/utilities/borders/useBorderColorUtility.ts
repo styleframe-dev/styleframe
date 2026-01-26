@@ -48,7 +48,7 @@ export const useBorderColorYUtility = createUseUtility(
  * Create border-top-color utility classes.
  */
 export const useBorderColorTopUtility = createUseUtility(
-	"border-t-color",
+	"border-top-color",
 	({ value }) => ({
 		borderTopColor: value,
 	}),
@@ -58,7 +58,7 @@ export const useBorderColorTopUtility = createUseUtility(
  * Create border-right-color utility classes.
  */
 export const useBorderColorRightUtility = createUseUtility(
-	"border-r-color",
+	"border-right-color",
 	({ value }) => ({
 		borderRightColor: value,
 	}),
@@ -68,7 +68,7 @@ export const useBorderColorRightUtility = createUseUtility(
  * Create border-bottom-color utility classes.
  */
 export const useBorderColorBottomUtility = createUseUtility(
-	"border-b-color",
+	"border-bottom-color",
 	({ value }) => ({
 		borderBottomColor: value,
 	}),
@@ -78,7 +78,7 @@ export const useBorderColorBottomUtility = createUseUtility(
  * Create border-left-color utility classes.
  */
 export const useBorderColorLeftUtility = createUseUtility(
-	"border-l-color",
+	"border-left-color",
 	({ value }) => ({
 		borderLeftColor: value,
 	}),
@@ -88,7 +88,7 @@ export const useBorderColorLeftUtility = createUseUtility(
  * Create border-inline-start-color utility classes.
  */
 export const useBorderColorStartUtility = createUseUtility(
-	"border-s-color",
+	"border-inline-start-color",
 	({ value }) => ({
 		borderInlineStartColor: value,
 	}),
@@ -98,7 +98,7 @@ export const useBorderColorStartUtility = createUseUtility(
  * Create border-inline-end-color utility classes.
  */
 export const useBorderColorEndUtility = createUseUtility(
-	"border-e-color",
+	"border-inline-end-color",
 	({ value }) => ({
 		borderInlineEndColor: value,
 	}),

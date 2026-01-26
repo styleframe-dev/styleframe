@@ -6,9 +6,9 @@ import { createUseUtility } from "../../utils";
 export const useBackdropBlurUtility = createUseUtility(
 	"backdrop-blur",
 	({ value }) => ({
-		"--tw-backdrop-blur": `blur(${value})`,
+		"--backdrop-filter-blur": `blur(${value})`,
 		backdropFilter:
-			"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+			"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 	}),
 );
 
@@ -18,9 +18,9 @@ export const useBackdropBlurUtility = createUseUtility(
 export const useBackdropBrightnessUtility = createUseUtility(
 	"backdrop-brightness",
 	({ value }) => ({
-		"--tw-backdrop-brightness": `brightness(${value})`,
+		"--backdrop-filter-brightness": `brightness(${value})`,
 		backdropFilter:
-			"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+			"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 	}),
 );
 
@@ -30,9 +30,9 @@ export const useBackdropBrightnessUtility = createUseUtility(
 export const useBackdropContrastUtility = createUseUtility(
 	"backdrop-contrast",
 	({ value }) => ({
-		"--tw-backdrop-contrast": `contrast(${value})`,
+		"--backdrop-filter-contrast": `contrast(${value})`,
 		backdropFilter:
-			"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+			"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 	}),
 );
 
@@ -42,9 +42,9 @@ export const useBackdropContrastUtility = createUseUtility(
 export const useBackdropGrayscaleUtility = createUseUtility(
 	"backdrop-grayscale",
 	({ value }) => ({
-		"--tw-backdrop-grayscale": `grayscale(${value})`,
+		"--backdrop-filter-grayscale": `grayscale(${value})`,
 		backdropFilter:
-			"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+			"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 	}),
 );
 
@@ -54,9 +54,9 @@ export const useBackdropGrayscaleUtility = createUseUtility(
 export const useBackdropHueRotateUtility = createUseUtility(
 	"backdrop-hue-rotate",
 	({ value }) => ({
-		"--tw-backdrop-hue-rotate": `hue-rotate(${value})`,
+		"--backdrop-filter-hue-rotate": `hue-rotate(${value})`,
 		backdropFilter:
-			"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+			"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 	}),
 );
 
@@ -66,9 +66,9 @@ export const useBackdropHueRotateUtility = createUseUtility(
 export const useBackdropInvertUtility = createUseUtility(
 	"backdrop-invert",
 	({ value }) => ({
-		"--tw-backdrop-invert": `invert(${value})`,
+		"--backdrop-filter-invert": `invert(${value})`,
 		backdropFilter:
-			"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+			"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 	}),
 );
 
@@ -78,9 +78,9 @@ export const useBackdropInvertUtility = createUseUtility(
 export const useBackdropOpacityUtility = createUseUtility(
 	"backdrop-opacity",
 	({ value }) => ({
-		"--tw-backdrop-opacity": `opacity(${value})`,
+		"--backdrop-filter-opacity": `opacity(${value})`,
 		backdropFilter:
-			"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+			"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 	}),
 );
 
@@ -90,9 +90,9 @@ export const useBackdropOpacityUtility = createUseUtility(
 export const useBackdropSaturateUtility = createUseUtility(
 	"backdrop-saturate",
 	({ value }) => ({
-		"--tw-backdrop-saturate": `saturate(${value})`,
+		"--backdrop-filter-saturate": `saturate(${value})`,
 		backdropFilter:
-			"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+			"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 	}),
 );
 
@@ -102,8 +102,8 @@ export const useBackdropSaturateUtility = createUseUtility(
 export const useBackdropSepiaUtility = createUseUtility(
 	"backdrop-sepia",
 	({ value }) => ({
-		"--tw-backdrop-sepia": `sepia(${value})`,
+		"--backdrop-filter-sepia": `sepia(${value})`,
 		backdropFilter:
-			"var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)",
+			"var(--backdrop-filter-blur) var(--backdrop-filter-brightness) var(--backdrop-filter-contrast) var(--backdrop-filter-grayscale) var(--backdrop-filter-hue-rotate) var(--backdrop-filter-invert) var(--backdrop-filter-opacity) var(--backdrop-filter-saturate) var(--backdrop-filter-sepia)",
 	}),
 );

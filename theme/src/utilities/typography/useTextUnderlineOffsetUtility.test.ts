@@ -9,7 +9,7 @@ describe("useTextUnderlineOffsetUtility", () => {
 		useTextUnderlineOffsetUtility(s, { auto: "auto", "1": "1px" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "underline-offset",
+			(u): u is Utility => isUtility(u) && u.name === "text-underline-offset",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -27,7 +27,7 @@ describe("useTextUnderlineOffsetUtility", () => {
 		useTextUnderlineOffsetUtility(s, { auto: "auto" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._underline-offset\\:auto {");
+		expect(css).toContain("._text-underline-offset\\:auto {");
 		expect(css).toContain("text-underline-offset: auto;");
 	});
 

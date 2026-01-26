@@ -1,13 +1,9 @@
 import type { Styleframe, Variable } from "@styleframe/core";
 import type { ExportKeys } from "../types";
 import { createUseVariable } from "../utils";
+import { colorTintValues } from "../values";
 
-export const defaultColorTintValues = {
-	50: 5,
-	100: 10,
-	150: 15,
-	200: 20,
-} as const;
+export { colorTintValues };
 
 /**
  * Create a set of relative color tint (lighter) levels
@@ -37,9 +33,10 @@ export function useColorTint<
 	s: Styleframe,
 	color: Variable<Name>,
 	levels: T,
+	{ default: isDefault = true }: { default?: boolean } = {},
 ): ExportKeys<`${Name}-tint`, T, "-"> {
 	return createUseVariable(`${color.name}-tint`, {
-		defaults: defaultColorTintValues,
+		defaults: colorTintValues,
 		transform: (value) => {
 			if (typeof value !== "number") {
 				return 0;
@@ -48,5 +45,5 @@ export function useColorTint<
 			return s.css`oklch(from ${s.ref(color)} calc(l + ${value / 100}) c h / a)`;
 		},
 		delimiter: "-" as const,
-	})(s, levels);
+	})(s, levels, { default: isDefault });
 }

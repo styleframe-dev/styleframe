@@ -1,42 +1,9 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default break-after utility values matching Tailwind CSS.
- */
-export const defaultBreakAfterValues = {
-	auto: "auto",
-	avoid: "avoid",
-	all: "all",
-	"avoid-page": "avoid-page",
-	page: "page",
-	left: "left",
-	right: "right",
-	column: "column",
-};
-
-/**
- * Default break-before utility values matching Tailwind CSS.
- */
-export const defaultBreakBeforeValues = {
-	auto: "auto",
-	avoid: "avoid",
-	all: "all",
-	"avoid-page": "avoid-page",
-	page: "page",
-	left: "left",
-	right: "right",
-	column: "column",
-};
-
-/**
- * Default break-inside utility values matching Tailwind CSS.
- */
-export const defaultBreakInsideValues = {
-	auto: "auto",
-	avoid: "avoid",
-	"avoid-page": "avoid-page",
-	"avoid-column": "avoid-column",
-};
+import {
+	breakAfterValues,
+	breakBeforeValues,
+	breakInsideValues,
+} from "../../values";
 
 /**
  * Create break-after utility classes.
@@ -46,7 +13,7 @@ export const useBreakAfterUtility = createUseUtility(
 	({ value }) => ({
 		breakAfter: value,
 	}),
-	{ defaults: defaultBreakAfterValues },
+	{ defaults: breakAfterValues },
 );
 
 /**
@@ -57,7 +24,7 @@ export const useBreakBeforeUtility = createUseUtility(
 	({ value }) => ({
 		breakBefore: value,
 	}),
-	{ defaults: defaultBreakBeforeValues },
+	{ defaults: breakBeforeValues },
 );
 
 /**
@@ -68,5 +35,5 @@ export const useBreakInsideUtility = createUseUtility(
 	({ value }) => ({
 		breakInside: value,
 	}),
-	{ defaults: defaultBreakInsideValues },
+	{ defaults: breakInsideValues },
 );

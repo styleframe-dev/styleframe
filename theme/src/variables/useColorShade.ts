@@ -1,13 +1,9 @@
 import type { Styleframe, Variable } from "@styleframe/core";
 import type { ExportKeys } from "../types";
 import { createUseVariable } from "../utils";
+import { colorShadeValues } from "../values";
 
-export const defaultColorShadeValues = {
-	50: 5,
-	100: 10,
-	150: 15,
-	200: 20,
-} as const;
+export { colorShadeValues };
 
 /**
  * Create a set of relative color shade (darker) levels
@@ -37,9 +33,10 @@ export function useColorShade<
 	s: Styleframe,
 	color: Variable<Name>,
 	levels: T,
+	{ default: isDefault = true }: { default?: boolean } = {},
 ): ExportKeys<`${Name}-shade`, T, "-"> {
 	return createUseVariable(`${color.name}-shade`, {
-		defaults: defaultColorShadeValues,
+		defaults: colorShadeValues,
 		transform: (value) => {
 			if (typeof value !== "number") {
 				return 0;
@@ -48,5 +45,5 @@ export function useColorShade<
 			return s.css`oklch(from ${s.ref(color)} calc(l - ${value / 100}) c h / a)`;
 		},
 		delimiter: "-" as const,
-	})(s, levels);
+	})(s, levels, { default: isDefault });
 }

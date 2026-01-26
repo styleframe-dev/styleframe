@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useLetterSpacing.styleframe?css";
-import { letterSpacingPreview } from "./useLetterSpacing.styleframe?recipe";
+import { letterSpacingPreview } from "./useLetterSpacing.styleframe?ts";
 import { letterSpacingValues } from "./useLetterSpacing.styleframe";
 import {
 	createSwatchComponent,

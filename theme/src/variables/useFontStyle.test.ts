@@ -1,7 +1,7 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { defaultFontStyleValues, useFontStyle } from "./useFontStyle";
+import { fontStyleValues, useFontStyle } from "./useFontStyle";
 
 describe("useFontStyle", () => {
 	it("should create all font style variables with correct names and values", () => {
@@ -210,7 +210,7 @@ describe("useFontStyle", () => {
 		it("should allow customizing the default font style", () => {
 			const s = styleframe();
 			const { fontStyle } = useFontStyle(s, {
-				...defaultFontStyleValues,
+				...fontStyleValues,
 				default: "@italic",
 			});
 
@@ -224,7 +224,7 @@ describe("useFontStyle", () => {
 		it("should compile default font style to CSS correctly", () => {
 			const s = styleframe();
 			useFontStyle(s, {
-				...defaultFontStyleValues,
+				...fontStyleValues,
 				default: "@oblique",
 			});
 
@@ -245,7 +245,7 @@ describe("useFontStyle", () => {
 			for (const fontStyleName of fontStyles) {
 				const s = styleframe();
 				const { fontStyle } = useFontStyle(s, {
-					...defaultFontStyleValues,
+					...fontStyleValues,
 					default: `@${fontStyleName}`,
 				});
 
@@ -518,7 +518,7 @@ article blockquote {
 		it("should allow overriding only specific font style values", () => {
 			const s = styleframe();
 			const { fontStyleItalic, fontStyleNormal } = useFontStyle(s, {
-				...defaultFontStyleValues,
+				...fontStyleValues,
 				italic: "oblique",
 			});
 
@@ -529,7 +529,7 @@ article blockquote {
 		it("should handle direct value assignment for default", () => {
 			const s = styleframe();
 			const { fontStyle } = useFontStyle(s, {
-				...defaultFontStyleValues,
+				...fontStyleValues,
 				default: "italic",
 			});
 

@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default overflow-wrap utility values matching Tailwind CSS.
- */
-export const defaultOverflowWrapValues = {
-	normal: "normal",
-	"break-word": "break-word",
-	anywhere: "anywhere",
-};
+import { overflowWrapValues } from "../../values";
 
 /**
  * Create overflow-wrap utility classes.
@@ -17,5 +9,5 @@ export const useOverflowWrapUtility = createUseUtility(
 	({ value }) => ({
 		overflowWrap: value,
 	}),
-	{ defaults: defaultOverflowWrapValues },
+	{ defaults: overflowWrapValues },
 );

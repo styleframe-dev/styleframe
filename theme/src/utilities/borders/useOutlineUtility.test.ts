@@ -14,7 +14,7 @@ describe("useOutlineWidthUtility", () => {
 		useOutlineWidthUtility(s, { "0": "0px", "2": "2px" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "outline",
+			(u): u is Utility => isUtility(u) && u.name === "outline-width",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -32,7 +32,7 @@ describe("useOutlineWidthUtility", () => {
 		useOutlineWidthUtility(s, { "4": "4px" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._outline\\:4 {");
+		expect(css).toContain("._outline-width\\:4 {");
 		expect(css).toContain("outline-width: 4px;");
 	});
 

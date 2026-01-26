@@ -1,4 +1,7 @@
 import { createUseVariable } from "../utils";
+import { borderRadiusValues } from "../values";
+
+export { borderRadiusValues };
 
 /**
  * Create a set of border-radius variables for use in a Styleframe instance.
@@ -23,4 +26,6 @@ import { createUseVariable } from "../utils";
  * });
  * ```
  */
-export const useBorderRadius = createUseVariable("border-radius");
+export const useBorderRadius = createUseVariable("border-radius", {
+	defaults: borderRadiusValues,
+});

@@ -1,4 +1,4 @@
-import { useBorderWidth, useUtilities } from "@styleframe/theme";
+import { useBorderWidth, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 
 const s = styleframe();
@@ -11,7 +11,7 @@ const {
 } = useBorderWidth(s);
 
 // Register all utilities and generate utility classes
-const { createBorderWidthUtility } = useUtilities(s);
+const { createBorderWidthUtility } = useUtilitiesPreset(s);
 
 createBorderWidthUtility({
 	none: s.ref(borderWidthNone),

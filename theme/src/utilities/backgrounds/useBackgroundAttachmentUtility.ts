@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default background-attachment utility values matching Tailwind CSS.
- */
-export const defaultBackgroundAttachmentValues = {
-	fixed: "fixed",
-	local: "local",
-	scroll: "scroll",
-};
+import { backgroundAttachmentValues } from "../../values";
 
 /**
  * Create background-attachment utility classes.
@@ -17,5 +9,5 @@ export const useBackgroundAttachmentUtility = createUseUtility(
 	({ value }) => ({
 		backgroundAttachment: value,
 	}),
-	{ defaults: defaultBackgroundAttachmentValues },
+	{ defaults: backgroundAttachmentValues },
 );

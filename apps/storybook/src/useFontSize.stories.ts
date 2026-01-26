@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import "./components/swatch.styleframe?css";
 import "./useFontSize.styleframe?css";
-import { fontSizePreview } from "./useFontSize.styleframe?recipe";
+import { fontSizePreview } from "./useFontSize.styleframe?ts";
 import { fontSizeValues } from "./useFontSize.styleframe";
 import {
 	createSwatchComponent,

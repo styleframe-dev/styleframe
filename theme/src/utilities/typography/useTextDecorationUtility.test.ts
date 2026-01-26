@@ -17,7 +17,7 @@ describe("useTextDecorationLineUtility", () => {
 		});
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "text-decoration",
+			(u): u is Utility => isUtility(u) && u.name === "text-decoration-line",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -35,7 +35,7 @@ describe("useTextDecorationLineUtility", () => {
 		useTextDecorationLineUtility(s, { overline: "overline" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._text-decoration\\:overline {");
+		expect(css).toContain("._text-decoration-line\\:overline {");
 		expect(css).toContain("text-decoration-line: overline;");
 	});
 

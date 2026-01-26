@@ -1,12 +1,7 @@
 import { createUseVariable } from "../utils";
+import { borderWidthValues } from "../values";
 
-export const defaultBorderWidthValues = {
-	default: "@thin",
-	none: 0,
-	thin: "thin",
-	medium: "medium",
-	thick: "thick",
-};
+export { borderWidthValues };
 
 /**
  * Create a set of border-width variables for use in a Styleframe instance.
@@ -34,5 +29,5 @@ export const defaultBorderWidthValues = {
  * ```
  */
 export const useBorderWidth = createUseVariable("border-width", {
-	defaults: defaultBorderWidthValues,
+	defaults: borderWidthValues,
 });

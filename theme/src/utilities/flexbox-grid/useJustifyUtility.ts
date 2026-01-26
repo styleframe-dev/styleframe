@@ -1,49 +1,19 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default justify-content utility values matching Tailwind CSS.
- */
-export const defaultJustifyContentValues = {
-	normal: "normal",
-	start: "flex-start",
-	end: "flex-end",
-	center: "center",
-	between: "space-between",
-	around: "space-around",
-	evenly: "space-evenly",
-	stretch: "stretch",
-};
-
-/**
- * Default justify-items utility values matching Tailwind CSS.
- */
-export const defaultJustifyItemsValues = {
-	start: "start",
-	end: "end",
-	center: "center",
-	stretch: "stretch",
-};
-
-/**
- * Default justify-self utility values matching Tailwind CSS.
- */
-export const defaultJustifySelfValues = {
-	auto: "auto",
-	start: "start",
-	end: "end",
-	center: "center",
-	stretch: "stretch",
-};
+import {
+	justifyContentValues,
+	justifyItemsValues,
+	justifySelfValues,
+} from "../../values";
 
 /**
  * Create justify-content utility classes.
  */
 export const useJustifyContentUtility = createUseUtility(
-	"justify",
+	"justify-content",
 	({ value }) => ({
 		justifyContent: value,
 	}),
-	{ defaults: defaultJustifyContentValues },
+	{ defaults: justifyContentValues },
 );
 
 /**
@@ -54,7 +24,7 @@ export const useJustifyItemsUtility = createUseUtility(
 	({ value }) => ({
 		justifyItems: value,
 	}),
-	{ defaults: defaultJustifyItemsValues },
+	{ defaults: justifyItemsValues },
 );
 
 /**
@@ -65,5 +35,5 @@ export const useJustifySelfUtility = createUseUtility(
 	({ value }) => ({
 		justifySelf: value,
 	}),
-	{ defaults: defaultJustifySelfValues },
+	{ defaults: justifySelfValues },
 );

@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default overscroll-behavior utility values matching Tailwind CSS.
- */
-export const defaultOverscrollValues = {
-	auto: "auto",
-	contain: "contain",
-	none: "none",
-};
+import { overscrollValues } from "../../values";
 
 /**
  * Create overscroll-behavior utility classes.
@@ -17,7 +9,7 @@ export const useOverscrollUtility = createUseUtility(
 	({ value }) => ({
 		overscrollBehavior: value,
 	}),
-	{ defaults: defaultOverscrollValues },
+	{ defaults: overscrollValues },
 );
 
 /**
@@ -28,7 +20,7 @@ export const useOverscrollXUtility = createUseUtility(
 	({ value }) => ({
 		overscrollBehaviorX: value,
 	}),
-	{ defaults: defaultOverscrollValues },
+	{ defaults: overscrollValues },
 );
 
 /**
@@ -39,5 +31,5 @@ export const useOverscrollYUtility = createUseUtility(
 	({ value }) => ({
 		overscrollBehaviorY: value,
 	}),
-	{ defaults: defaultOverscrollValues },
+	{ defaults: overscrollValues },
 );

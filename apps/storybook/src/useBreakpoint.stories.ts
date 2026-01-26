@@ -3,7 +3,7 @@ import { h } from "vue";
 
 import "./components/swatch.styleframe?css";
 import "./useBreakpoint.styleframe?css";
-import { breakpointPreview } from "./useBreakpoint.styleframe?recipe";
+import { breakpointPreview } from "./useBreakpoint.styleframe?ts";
 import { breakpointValues, breakpointWidths } from "./useBreakpoint.styleframe";
 import {
 	createSwatchComponent,

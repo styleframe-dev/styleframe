@@ -10,8 +10,8 @@ describe("useTextShadowUtility", () => {
 	it("should create utility instances with provided values", () => {
 		const s = styleframe();
 		useTextShadowUtility(s, {
-			sm: "0 1px 2px var(--tw-text-shadow-color, rgb(0 0 0 / 0.05))",
-			md: "0 2px 4px var(--tw-text-shadow-color, rgb(0 0 0 / 0.1))",
+			sm: "0 1px 2px var(--text-shadow-color, rgb(0 0 0 / 0.05))",
+			md: "0 2px 4px var(--text-shadow-color, rgb(0 0 0 / 0.1))",
 		});
 
 		const utilities = s.root.children.filter(
@@ -23,12 +23,12 @@ describe("useTextShadowUtility", () => {
 	it("should set correct declarations", () => {
 		const s = styleframe();
 		useTextShadowUtility(s, {
-			sm: "0 1px 2px var(--tw-text-shadow-color, rgb(0 0 0 / 0.05))",
+			sm: "0 1px 2px var(--text-shadow-color, rgb(0 0 0 / 0.05))",
 		});
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			textShadow: "0 1px 2px var(--tw-text-shadow-color, rgb(0 0 0 / 0.05))",
+			textShadow: "0 1px 2px var(--text-shadow-color, rgb(0 0 0 / 0.05))",
 		});
 	});
 
@@ -66,7 +66,7 @@ describe("useTextShadowColorUtility", () => {
 
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({
-			"--tw-text-shadow-color": "#006cff",
+			"--text-shadow-color": "#006cff",
 		});
 	});
 
@@ -76,7 +76,7 @@ describe("useTextShadowColorUtility", () => {
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("._text-shadow-color\\:black {");
-		expect(css).toContain("--tw-text-shadow-color: #000;");
+		expect(css).toContain("--text-shadow-color: #000;");
 	});
 
 	it("should handle empty values object", () => {

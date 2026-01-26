@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/loader",
-	"version": "2.2.0",
+	"version": "2.3.0",
 	"type": "module",
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.js",
@@ -29,19 +29,20 @@
 		"playground:watch": "tsx playground/watch.ts"
 	},
 	"dependencies": {
-		"c12": "^3.1.0"
+		"chokidar": "^4.0.0",
+		"jiti": "^2.4.2"
 	},
 	"peerDependencies": {
-		"@styleframe/core": "workspace:^2.2.0",
+		"@styleframe/core": "workspace:^2.5.0",
 		"@styleframe/license": "catalog:",
-		"@styleframe/transpiler": "workspace:^2.2.0"
+		"@styleframe/transpiler": "workspace:^2.5.0"
 	},
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^2",
 		"@styleframe/config-vite": "workspace:^2",
-		"@styleframe/core": "workspace:^2.2.0",
+		"@styleframe/core": "workspace:^2.5.0",
 		"@styleframe/license": "catalog:",
-		"@styleframe/transpiler": "workspace:^2.2.0",
+		"@styleframe/transpiler": "workspace:^2.5.0",
 		"@vitest/coverage-v8": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",

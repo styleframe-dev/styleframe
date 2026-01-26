@@ -13,7 +13,7 @@ describe("useJustifyContentUtility", () => {
 		useJustifyContentUtility(s, { center: "center", between: "space-between" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "justify",
+			(u): u is Utility => isUtility(u) && u.name === "justify-content",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -31,7 +31,7 @@ describe("useJustifyContentUtility", () => {
 		useJustifyContentUtility(s, { center: "center" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._justify\\:center {");
+		expect(css).toContain("._justify-content\\:center {");
 		expect(css).toContain("justify-content: center;");
 	});
 

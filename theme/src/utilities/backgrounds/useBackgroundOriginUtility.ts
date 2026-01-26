@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default background-origin utility values matching Tailwind CSS.
- */
-export const defaultBackgroundOriginValues = {
-	border: "border-box",
-	padding: "padding-box",
-	content: "content-box",
-};
+import { backgroundOriginValues } from "../../values";
 
 /**
  * Create background-origin utility classes.
@@ -17,5 +9,5 @@ export const useBackgroundOriginUtility = createUseUtility(
 	({ value }) => ({
 		backgroundOrigin: value,
 	}),
-	{ defaults: defaultBackgroundOriginValues },
+	{ defaults: backgroundOriginValues },
 );

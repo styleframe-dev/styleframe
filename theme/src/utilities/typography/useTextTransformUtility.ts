@@ -1,14 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default text-transform utility values matching Tailwind CSS.
- */
-export const defaultTextTransformValues = {
-	uppercase: "uppercase",
-	lowercase: "lowercase",
-	capitalize: "capitalize",
-	"normal-case": "none",
-};
+import { textTransformValues } from "../../values";
 
 /**
  * Create text-transform utility classes.
@@ -18,5 +9,5 @@ export const useTextTransformUtility = createUseUtility(
 	({ value }) => ({
 		textTransform: value,
 	}),
-	{ defaults: defaultTextTransformValues },
+	{ defaults: textTransformValues },
 );

@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default text-overflow utility values matching Tailwind CSS.
- */
-export const defaultTextOverflowValues = {
-	truncate: "ellipsis",
-	"text-ellipsis": "ellipsis",
-	"text-clip": "clip",
-};
+import { textOverflowValues } from "../../values";
 
 /**
  * Create text-overflow utility classes.
@@ -26,5 +18,5 @@ export const useTextOverflowUtility = createUseUtility(
 			textOverflow: value,
 		};
 	},
-	{ defaults: defaultTextOverflowValues },
+	{ defaults: textOverflowValues },
 );

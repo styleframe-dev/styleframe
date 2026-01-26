@@ -13,4 +13,3 @@ export * from "./tables";
 export * from "./transforms";
 export * from "./transitions-animation";
 export * from "./typography";
-export * from "./useUtilities";

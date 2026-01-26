@@ -1,14 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default background-clip utility values matching Tailwind CSS.
- */
-export const defaultBackgroundClipValues = {
-	border: "border-box",
-	padding: "padding-box",
-	content: "content-box",
-	text: "text",
-};
+import { backgroundClipValues } from "../../values";
 
 /**
  * Create background-clip utility classes.
@@ -18,5 +9,5 @@ export const useBackgroundClipUtility = createUseUtility(
 	({ value }) => ({
 		backgroundClip: value,
 	}),
-	{ defaults: defaultBackgroundClipValues },
+	{ defaults: backgroundClipValues },
 );

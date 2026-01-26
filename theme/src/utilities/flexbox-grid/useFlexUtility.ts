@@ -1,14 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default flex utility values matching Tailwind CSS.
- */
-export const defaultFlexValues = {
-	"1": "1 1 0%",
-	auto: "1 1 auto",
-	initial: "0 1 auto",
-	none: "none",
-};
+import { flexValues } from "../../values";
 
 /**
  * Create flex utility classes.
@@ -25,26 +16,35 @@ export const useFlexUtility = createUseUtility(
 	({ value }) => ({
 		flex: value,
 	}),
-	{ defaults: defaultFlexValues },
+	{ defaults: flexValues },
 );
 
 /**
  * Create flex-grow utility classes.
  */
-export const useFlexGrowUtility = createUseUtility("grow", ({ value }) => ({
-	flexGrow: value,
-}));
+export const useFlexGrowUtility = createUseUtility(
+	"flex-grow",
+	({ value }) => ({
+		flexGrow: value,
+	}),
+);
 
 /**
  * Create flex-shrink utility classes.
  */
-export const useFlexShrinkUtility = createUseUtility("shrink", ({ value }) => ({
-	flexShrink: value,
-}));
+export const useFlexShrinkUtility = createUseUtility(
+	"flex-shrink",
+	({ value }) => ({
+		flexShrink: value,
+	}),
+);
 
 /**
  * Create flex-basis utility classes.
  */
-export const useFlexBasisUtility = createUseUtility("basis", ({ value }) => ({
-	flexBasis: value,
-}));
+export const useFlexBasisUtility = createUseUtility(
+	"flex-basis",
+	({ value }) => ({
+		flexBasis: value,
+	}),
+);

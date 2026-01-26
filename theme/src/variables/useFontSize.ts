@@ -1,8 +1,7 @@
 import { createUseVariable } from "../utils";
+import { fontSizeValues } from "../values";
 
-export const defaultFontSizeValues = {
-	default: "1rem",
-};
+export { fontSizeValues };
 
 /**
  * Create a set of font-size variables for use in a Styleframe instance.
@@ -28,5 +27,5 @@ export const defaultFontSizeValues = {
  * ```
  */
 export const useFontSize = createUseVariable("font-size", {
-	defaults: defaultFontSizeValues,
+	defaults: fontSizeValues,
 });

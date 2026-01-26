@@ -1,15 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default position utility values matching Tailwind CSS.
- */
-export const defaultPositionValues = {
-	static: "static",
-	fixed: "fixed",
-	absolute: "absolute",
-	relative: "relative",
-	sticky: "sticky",
-};
+import { positionValues } from "../../values";
 
 /**
  * Create position utility classes.
@@ -26,5 +16,5 @@ export const usePositionUtility = createUseUtility(
 	({ value }) => ({
 		position: value,
 	}),
-	{ defaults: defaultPositionValues },
+	{ defaults: positionValues },
 );

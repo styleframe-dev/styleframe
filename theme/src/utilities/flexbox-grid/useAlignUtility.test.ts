@@ -13,7 +13,7 @@ describe("useAlignContentUtility", () => {
 		useAlignContentUtility(s, { center: "center", start: "flex-start" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "content",
+			(u): u is Utility => isUtility(u) && u.name === "align-content",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -31,7 +31,7 @@ describe("useAlignContentUtility", () => {
 		useAlignContentUtility(s, { center: "center" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._content\\:center {");
+		expect(css).toContain("._align-content\\:center {");
 		expect(css).toContain("align-content: center;");
 	});
 
@@ -49,7 +49,7 @@ describe("useAlignItemsUtility", () => {
 		useAlignItemsUtility(s, { center: "center", start: "flex-start" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "items",
+			(u): u is Utility => isUtility(u) && u.name === "align-items",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -67,7 +67,7 @@ describe("useAlignItemsUtility", () => {
 		useAlignItemsUtility(s, { stretch: "stretch" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._items\\:stretch {");
+		expect(css).toContain("._align-items\\:stretch {");
 		expect(css).toContain("align-items: stretch;");
 	});
 
@@ -85,7 +85,7 @@ describe("useAlignSelfUtility", () => {
 		useAlignSelfUtility(s, { auto: "auto", center: "center" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "self",
+			(u): u is Utility => isUtility(u) && u.name === "align-self",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -103,7 +103,7 @@ describe("useAlignSelfUtility", () => {
 		useAlignSelfUtility(s, { end: "flex-end" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._self\\:end {");
+		expect(css).toContain("._align-self\\:end {");
 		expect(css).toContain("align-self: flex-end;");
 	});
 

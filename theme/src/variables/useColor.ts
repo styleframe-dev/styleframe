@@ -1,5 +1,8 @@
 import { oklch } from "culori";
 import { createUseVariable } from "../utils";
+import { colorValues } from "../values";
+
+export { colorValues };
 
 /**
  * Create a set of color variables for use in a Styleframe instance.

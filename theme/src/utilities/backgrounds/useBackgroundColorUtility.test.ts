@@ -9,7 +9,7 @@ describe("useBackgroundColorUtility", () => {
 		useBackgroundColorUtility(s, { black: "#000", white: "#fff" });
 
 		const utilities = s.root.children.filter(
-			(u): u is Utility => isUtility(u) && u.name === "background",
+			(u): u is Utility => isUtility(u) && u.name === "background-color",
 		);
 		expect(utilities).toHaveLength(2);
 	});
@@ -27,7 +27,7 @@ describe("useBackgroundColorUtility", () => {
 		useBackgroundColorUtility(s, { transparent: "transparent" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._background\\:transparent {");
+		expect(css).toContain("._background-color\\:transparent {");
 		expect(css).toContain("background-color: transparent;");
 	});
 

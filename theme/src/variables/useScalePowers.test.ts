@@ -2,13 +2,13 @@ import type { TokenValue } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
 import { useScale } from "./useScale";
-import { useScalePowers, defaultScalePowerValues } from "./useScalePowers";
+import { useScalePowers, scalePowerValues } from "./useScalePowers";
 
 describe("useScalePowers", () => {
 	it("should create scale powers with default powers array", () => {
 		const s = styleframe();
 		const { scaleGolden } = useScale(s);
-		const powers = useScalePowers(s, scaleGolden, defaultScalePowerValues);
+		const powers = useScalePowers(s, scaleGolden, scalePowerValues);
 
 		// Keys are in insertion order
 		expect(Object.keys(powers).length).toBe(8);
@@ -282,14 +282,10 @@ describe("useScalePowers", () => {
 		it("should work with default scale powers constant", () => {
 			const s = styleframe();
 			const { scaleMajorSecond } = useScale(s);
-			const powers = useScalePowers(
-				s,
-				scaleMajorSecond,
-				defaultScalePowerValues,
-			);
+			const powers = useScalePowers(s, scaleMajorSecond, scalePowerValues);
 
-			// defaultScalePowerValues = [-2, -1, 1, 2, 3, 4, 5]
-			expect(Object.keys(powers).length).toBe(defaultScalePowerValues.length);
+			// scalePowerValues = [-2, -1, 1, 2, 3, 4, 5]
+			expect(Object.keys(powers).length).toBe(scalePowerValues.length);
 			expect(powers[-2]).toBeDefined();
 			expect(powers[-1]).toBeDefined();
 			expect(powers[1]).toBeDefined();

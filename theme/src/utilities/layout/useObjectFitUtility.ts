@@ -1,15 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default object-fit utility values matching Tailwind CSS.
- */
-export const defaultObjectFitValues = {
-	contain: "contain",
-	cover: "cover",
-	fill: "fill",
-	none: "none",
-	"scale-down": "scale-down",
-};
+import { objectFitValues } from "../../values";
 
 /**
  * Create object-fit utility classes.
@@ -19,5 +9,5 @@ export const useObjectFitUtility = createUseUtility(
 	({ value }) => ({
 		objectFit: value,
 	}),
-	{ defaults: defaultObjectFitValues },
+	{ defaults: objectFitValues },
 );

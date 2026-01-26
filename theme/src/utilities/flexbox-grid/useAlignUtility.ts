@@ -1,72 +1,39 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default align-content utility values matching Tailwind CSS.
- */
-export const defaultAlignContentValues = {
-	normal: "normal",
-	center: "center",
-	start: "flex-start",
-	end: "flex-end",
-	between: "space-between",
-	around: "space-around",
-	evenly: "space-evenly",
-	baseline: "baseline",
-	stretch: "stretch",
-};
-
-/**
- * Default align-items utility values matching Tailwind CSS.
- */
-export const defaultAlignItemsValues = {
-	start: "flex-start",
-	end: "flex-end",
-	center: "center",
-	baseline: "baseline",
-	stretch: "stretch",
-};
-
-/**
- * Default align-self utility values matching Tailwind CSS.
- */
-export const defaultAlignSelfValues = {
-	auto: "auto",
-	start: "flex-start",
-	end: "flex-end",
-	center: "center",
-	stretch: "stretch",
-	baseline: "baseline",
-};
+import {
+	alignContentValues,
+	alignItemsValues,
+	alignSelfValues,
+} from "../../values";
 
 /**
  * Create align-content utility classes.
  */
 export const useAlignContentUtility = createUseUtility(
-	"content",
+	"align-content",
 	({ value }) => ({
 		alignContent: value,
 	}),
-	{ defaults: defaultAlignContentValues },
+	{ defaults: alignContentValues },
 );
 
 /**
  * Create align-items utility classes.
  */
 export const useAlignItemsUtility = createUseUtility(
-	"items",
+	"align-items",
 	({ value }) => ({
 		alignItems: value,
 	}),
-	{ defaults: defaultAlignItemsValues },
+	{ defaults: alignItemsValues },
 );
 
 /**
  * Create align-self utility classes.
  */
 export const useAlignSelfUtility = createUseUtility(
-	"self",
+	"align-self",
 	({ value }) => ({
 		alignSelf: value,
 	}),
-	{ defaults: defaultAlignSelfValues },
+	{ defaults: alignSelfValues },
 );

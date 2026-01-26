@@ -12,11 +12,16 @@ export function createRecipeConsumer(_consume: ConsumeFunction) {
 		instance: Recipe,
 		_options: StyleframeOptions,
 	): string {
-		let exportConstant = toCamelCase(instance.name);
+		// Use _exportName if present, otherwise derive from recipe name
+		let exportConstant = instance._exportName;
 
-		// Handle PascalCase names
-		if (instance.name[0] && isUppercase(instance.name[0])) {
-			exportConstant = capitalizeFirst(exportConstant);
+		if (!exportConstant) {
+			exportConstant = toCamelCase(instance.name);
+
+			// Handle PascalCase names
+			if (instance.name[0] && isUppercase(instance.name[0])) {
+				exportConstant = capitalizeFirst(exportConstant);
+			}
 		}
 
 		const recipeConstant = `${exportConstant}Recipe`;

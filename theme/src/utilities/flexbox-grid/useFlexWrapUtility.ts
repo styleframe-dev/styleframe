@@ -1,13 +1,5 @@
 import { createUseUtility } from "../../utils";
-
-/**
- * Default flex-wrap utility values matching Tailwind CSS.
- */
-export const defaultFlexWrapValues = {
-	wrap: "wrap",
-	"wrap-reverse": "wrap-reverse",
-	nowrap: "nowrap",
-};
+import { flexWrapValues } from "../../values";
 
 /**
  * Create flex-wrap utility classes.
@@ -17,5 +9,5 @@ export const useFlexWrapUtility = createUseUtility(
 	({ value }) => ({
 		flexWrap: value,
 	}),
-	{ defaults: defaultFlexWrapValues },
+	{ defaults: flexWrapValues },
 );

@@ -3,7 +3,7 @@ import {
 	getLicenseKeyFromEnv,
 	validateInstanceLicense,
 } from "@styleframe/license";
-import { loadConfigurationFromPath } from "@styleframe/loader";
+import { loadConfiguration } from "@styleframe/loader";
 import type { TranspileOptions } from "@styleframe/transpiler";
 import { transpile } from "@styleframe/transpiler";
 import { consola } from "consola";
@@ -34,7 +34,7 @@ async function loadAndBuildEntry(
 	options: TranspileOptions,
 	isBuild: boolean,
 ) {
-	const instance = await loadConfigurationFromPath(entry);
+	const instance = await loadConfiguration({ entry });
 
 	await validateInstanceLicense(instance, {
 		licenseKey: getLicenseKeyFromEnv() || "",
@@ -177,9 +177,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 			}
 
 			const isCss = queryPart === "css";
-			const isRecipe = queryPart === "recipe";
+			const isTs = queryPart === "ts";
 
-			if (!isCss && !isRecipe) {
+			if (!isCss && !isTs) {
 				// Pass through for default resolution (e.g. importing the instance itself)
 				return null;
 			}

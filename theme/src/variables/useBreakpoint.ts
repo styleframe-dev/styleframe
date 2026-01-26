@@ -1,12 +1,7 @@
 import { createUseVariable } from "../utils";
+import { breakpointValues } from "../values";
 
-export const defaultBreakpointValues = {
-	xs: 0,
-	sm: 576,
-	md: 992,
-	lg: 1200,
-	xl: 1440,
-};
+export { breakpointValues };
 
 /**
  * Create a set of breakpoint variables for use in a Styleframe instance.
@@ -34,5 +29,5 @@ export const defaultBreakpointValues = {
  * ```
  */
 export const useBreakpoint = createUseVariable("breakpoint", {
-	defaults: defaultBreakpointValues,
+	defaults: breakpointValues,
 });

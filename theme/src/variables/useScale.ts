@@ -1,17 +1,7 @@
-/** biome-ignore-all lint/suspicious/noApproximativeNumericConstant: Scale ratios are magic numbers */
 import { createUseVariable } from "../utils";
+import { scaleValues } from "../values";
 
-export const defaultScaleValues = {
-	default: "@minor-third",
-	"minor-second": 1.067,
-	"major-second": 1.125,
-	"minor-third": 1.2,
-	"major-third": 1.25,
-	"perfect-fourth": 1.333,
-	"augmented-fourth": 1.414,
-	"perfect-fifth": 1.5,
-	golden: 1.618,
-} as const;
+export { scaleValues };
 
 /**
  * Create a set of scale variables for use in a Styleframe instance.
@@ -48,5 +38,5 @@ export const defaultScaleValues = {
  */
 
 export const useScale = createUseVariable("scale", {
-	defaults: defaultScaleValues,
+	defaults: scaleValues,
 });

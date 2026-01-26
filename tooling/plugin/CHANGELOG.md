@@ -1,5 +1,25 @@
 # @styleframe/plugin
 
+## 2.3.1
+
+### Patch Changes
+
+- [#88](https://github.com/styleframe-dev/styleframe/pull/88) [`0b20658`](https://github.com/styleframe-dev/styleframe/commit/0b20658bb2b8362286ac8d955dfbc961b68d4aec) Thanks [@alexgrozav](https://github.com/alexgrozav)! - fix: add Nuxt 4 compatibility
+
+  Updated `@nuxt/kit` and `@nuxt/schema` dependencies to v4.1.3 via the nuxt catalog. Peer dependencies now accept both `^3 || ^4` to support Nuxt 3 and Nuxt 4 projects.
+
+## 2.3.0
+
+### Minor Changes
+
+- [#72](https://github.com/styleframe-dev/styleframe/pull/72) [`d98b650`](https://github.com/styleframe-dev/styleframe/commit/d98b65030170582ceacfabde3ba9ff7d92105389) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add support for .styleframe file imports
+
+### Patch Changes
+
+- Updated dependencies [[`ff1a689`](https://github.com/styleframe-dev/styleframe/commit/ff1a689f36dc4294b2a7353949c6efd220451e9d), [`d98b650`](https://github.com/styleframe-dev/styleframe/commit/d98b65030170582ceacfabde3ba9ff7d92105389)]:
+  - @styleframe/transpiler@2.5.0
+  - @styleframe/loader@2.3.0
+
 ## 2.2.0
 
 ### Minor Changes

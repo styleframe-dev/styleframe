@@ -1,7 +1,7 @@
 {
 	"name": "@styleframe/plugin",
 	"type": "module",
-	"version": "2.2.0",
+	"version": "2.3.1",
 	"description": "Unplugin for Styleframe. Use it with Vite, Webpack, Astro, Nuxt, Rollup, Rspack, and more.",
 	"license": "MIT",
 	"keywords": [
@@ -89,8 +89,8 @@
 	},
 	"dependencies": {
 		"@styleframe/license": "catalog:",
-		"@styleframe/loader": "workspace:^2.2.0",
-		"@styleframe/transpiler": "workspace:^2.4.0",
+		"@styleframe/loader": "workspace:^2.3.0",
+		"@styleframe/transpiler": "workspace:^2.5.0",
 		"consola": "^3.4.2",
 		"unplugin": "^2.3.4"
 	},

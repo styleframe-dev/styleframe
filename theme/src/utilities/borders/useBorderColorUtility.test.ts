@@ -109,7 +109,7 @@ describe("useBorderColorTopUtility", () => {
 		useBorderColorTopUtility(s, { blue: "blue" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._border-t-color\\:blue {");
+		expect(css).toContain("._border-top-color\\:blue {");
 		expect(css).toContain("border-top-color: blue;");
 	});
 });
@@ -158,7 +158,7 @@ describe("useBorderColorStartUtility", () => {
 		useBorderColorStartUtility(s, { blue: "blue" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._border-s-color\\:blue {");
+		expect(css).toContain("._border-inline-start-color\\:blue {");
 		expect(css).toContain("border-inline-start-color: blue;");
 	});
 });
@@ -177,7 +177,7 @@ describe("useBorderColorEndUtility", () => {
 		useBorderColorEndUtility(s, { blue: "blue" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._border-e-color\\:blue {");
+		expect(css).toContain("._border-inline-end-color\\:blue {");
 		expect(css).toContain("border-inline-end-color: blue;");
 	});
 });

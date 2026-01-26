@@ -1,4 +1,7 @@
 import { createUseVariable } from "../utils";
+import { spacingValues } from "../values";
+
+export { spacingValues };
 
 /**
  * Create a set of spacing variables for use in a Styleframe instance.
@@ -23,4 +26,6 @@ import { createUseVariable } from "../utils";
  * });
  * ```
  */
-export const useSpacing = createUseVariable("spacing");
+export const useSpacing = createUseVariable("spacing", {
+	defaults: spacingValues,
+});
