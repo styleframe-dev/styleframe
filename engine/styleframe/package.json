@@ -91,7 +91,8 @@
 		"release": "bumpp && npm publish"
 	},
 	"dependencies": {
-		"@styleframe/cli": "workspace:^2.3.1"
+		"@styleframe/cli": "workspace:^2.3.0",
+		"@styleframe/license": "catalog:"
 	},
 	"peerDependencies": {
 		"@styleframe/plugin": "workspace:^2.4.0",
