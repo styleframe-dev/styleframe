@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@styleframe/license':
-      specifier: ^2.0.0
-      version: 2.0.0
+      specifier: ^2.0.2
+      version: 2.0.2
     '@types/node':
       specifier: ^22.15.32
       version: 22.15.32
@@ -553,7 +553,7 @@ importers:
         version: link:../../config/vite
       '@styleframe/license':
         specifier: 'catalog:'
-        version: 2.0.0
+        version: 2.0.2
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
@@ -590,7 +590,7 @@ importers:
         version: link:../core
       '@styleframe/license':
         specifier: 'catalog:'
-        version: 2.0.0
+        version: 2.0.2
       '@styleframe/transpiler':
         specifier: workspace:^2.6.0
         version: link:../transpiler
@@ -646,8 +646,11 @@ importers:
   engine/styleframe:
     dependencies:
       '@styleframe/cli':
-        specifier: workspace:^2.3.1
+        specifier: workspace:^2.3.0
         version: link:../../tooling/cli
+      '@styleframe/license':
+        specifier: 'catalog:'
+        version: 2.0.2
     devDependencies:
       '@styleframe/config-typescript':
         specifier: workspace:^2
@@ -700,7 +703,7 @@ importers:
         version: link:../core
       '@styleframe/license':
         specifier: 'catalog:'
-        version: 2.0.0
+        version: 2.0.2
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 3.2.4(vitest@3.2.4(@types/debug@4.1.12)(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
@@ -829,7 +832,7 @@ importers:
         version: link:../../engine/core
       '@styleframe/license':
         specifier: 'catalog:'
-        version: 2.0.0
+        version: 2.0.2
       '@styleframe/loader':
         specifier: workspace:^2.4.0
         version: link:../../engine/loader
@@ -862,7 +865,7 @@ importers:
     dependencies:
       '@styleframe/license':
         specifier: 'catalog:'
-        version: 2.0.0
+        version: 2.0.2
       '@styleframe/loader':
         specifier: workspace:^2.4.0
         version: link:../../engine/loader
@@ -3570,8 +3573,8 @@ packages:
       storybook: ^10.1.11
       vue: ^3.0.0
 
-  '@styleframe/license@2.0.0':
-    resolution: {integrity: sha512-NeKLfFjImqP0w+UKeI+94y69rrBjpB73amwermLEDMj+FaLLYJ3t6gmRsQXFiPtRPOo0FyvWeb+WDtjDlmwGoQ==}
+  '@styleframe/license@2.0.2':
+    resolution: {integrity: sha512-53MBcduOG12E4h6PN/wIcdfa2aiIJkX8XLfuh4Ok1bsPqWEEk6ArF09WipdyAERYT0PoKFuVVEL1OE9CZcZtOA==}
 
   '@supabase/auth-js@2.81.1':
     resolution: {integrity: sha512-K20GgiSm9XeRLypxYHa5UCnybWc2K0ok0HLbqCej/wRxDpJxToXNOwKt0l7nO8xI1CyQ+GrNfU6bcRzvdbeopQ==}
@@ -13075,7 +13078,7 @@ snapshots:
       vue: 3.5.26(typescript@5.8.3)
       vue-component-type-helpers: 3.2.4
 
-  '@styleframe/license@2.0.0': {}
+  '@styleframe/license@2.0.2': {}
 
   '@supabase/auth-js@2.81.1':
     dependencies:
