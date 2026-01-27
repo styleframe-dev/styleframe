@@ -1,5 +1,11 @@
 # @styleframe/cli
 
+## 2.3.3
+
+### Patch Changes
+
+- [#102](https://github.com/styleframe-dev/styleframe/pull/102) [`90c3ae8`](https://github.com/styleframe-dev/styleframe/commit/90c3ae8dd19a688f88d1b362af6bef732de988d6) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `@styleframe/license` dependency and move runtime to production dependencies in init command
+
 ## 2.3.2
 
 ### Patch Changes
