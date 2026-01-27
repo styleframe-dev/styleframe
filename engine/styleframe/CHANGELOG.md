@@ -1,5 +1,14 @@
 # styleframe
 
+## 2.5.1
+
+### Patch Changes
+
+- [#100](https://github.com/styleframe-dev/styleframe/pull/100) [`6ae30fd`](https://github.com/styleframe-dev/styleframe/commit/6ae30fdd281033eb3a37c0a0b0388692506a0e58) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `@styleframe/license` as a dependency to the main `styleframe` package and update the CLI init command to add `@styleframe/runtime` as a production dependency instead of a dev dependency.
+
+- Updated dependencies [[`6ae30fd`](https://github.com/styleframe-dev/styleframe/commit/6ae30fdd281033eb3a37c0a0b0388692506a0e58)]:
+  - @styleframe/cli@2.3.2
+
 ## 2.5.0
 
 ### Minor Changes

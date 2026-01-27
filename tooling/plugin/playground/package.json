@@ -9,7 +9,7 @@
 	},
 	"devDependencies": {
 		"@styleframe/runtime": "workspace:^2.0.0",
-		"styleframe": "workspace:^2.5.0",
+		"styleframe": "workspace:^2.5.1",
 		"vite": "^6.3.5",
 		"vite-plugin-inspect": "^11.1.0"
 	}
