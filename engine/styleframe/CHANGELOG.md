@@ -1,5 +1,54 @@
 # styleframe
 
+## 2.5.1
+
+### Patch Changes
+
+- [#100](https://github.com/styleframe-dev/styleframe/pull/100) [`6ae30fd`](https://github.com/styleframe-dev/styleframe/commit/6ae30fdd281033eb3a37c0a0b0388692506a0e58) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `@styleframe/license` as a dependency to the main `styleframe` package and update the CLI init command to add `@styleframe/runtime` as a production dependency instead of a dev dependency.
+
+- Updated dependencies [[`6ae30fd`](https://github.com/styleframe-dev/styleframe/commit/6ae30fdd281033eb3a37c0a0b0388692506a0e58)]:
+  - @styleframe/cli@2.3.2
+
+## 2.5.0
+
+### Minor Changes
+
+- [#93](https://github.com/styleframe-dev/styleframe/pull/93) [`4ebc385`](https://github.com/styleframe-dev/styleframe/commit/4ebc3856ad4468e6caea5f72e595e781e2651b09) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `useDesignTokensPreset` composable for quick design token system setup
+  - Introduces a comprehensive preset function that bootstraps complete design token systems with sensible defaults in a single function call
+  - Full TypeScript type inference for all configuration options
+  - Flexible domain configuration: use defaults, disable domains with `false`, or provide custom values
+  - Automatic color variation generation (lightness, shades, tints) with configurable levels
+  - Exports default values from variable composables (`defaultSpacingValues`, `defaultColorValues`, etc.)
+  - Adds `useFontStyle` variable composable
+  - Includes 54 comprehensive tests and detailed documentation
+
+- [#95](https://github.com/styleframe-dev/styleframe/pull/95) [`75fd781`](https://github.com/styleframe-dev/styleframe/commit/75fd78196d61498db066de6e355eabcebbd39071) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Rename `useUtilities` to `useUtilitiesPreset` for consistency with design tokens preset naming
+  - **BREAKING**: Renamed `useUtilities()` to `useUtilitiesPreset()` to align with `useDesignTokensPreset()` naming convention
+  - Added comprehensive presets documentation page with complete API reference for 200+ utility creators
+  - Updated all documentation examples and storybook files to use the new function name
+  - Clarified CHANGELOG entries to indicate this is a rename from the previous function
+
+- [#96](https://github.com/styleframe-dev/styleframe/pull/96) [`8460f16`](https://github.com/styleframe-dev/styleframe/commit/8460f169cec1199810e9203b357dac9f2f128c56) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Rename `?recipe` imports to `?ts` and add named selector export support
+  - **Breaking:** Renamed import query parameter from `?recipe` to `?ts` for styleframe files
+  - Add support for exporting named selectors alongside recipes via `?ts` imports
+  - Add `_exportName` property to `Selector` and `Recipe` types for tracking named exports
+  - Replace `c12` with `chokidar` + `jiti` for simpler, more reliable config loading
+  - Add `onError` callback to `watchConfiguration` for error reporting during file watch
+  - Add file deletion detection with `unlink` handler in watch mode
+  - Simplify `loadConfiguration` API by merging `loadConfigurationFromPath`
+  - Add comprehensive unit tests for TypeScript selector consumer
+
+### Patch Changes
+
+- [`1f60314`](https://github.com/styleframe-dev/styleframe/commit/1f60314cde97278294f06e248682026eb53a8af9) Thanks [@alexgrozav](https://github.com/alexgrozav)! - fix: update cli dependency
+
+- Updated dependencies [[`1f60314`](https://github.com/styleframe-dev/styleframe/commit/1f60314cde97278294f06e248682026eb53a8af9), [`8460f16`](https://github.com/styleframe-dev/styleframe/commit/8460f169cec1199810e9203b357dac9f2f128c56), [`4e06424`](https://github.com/styleframe-dev/styleframe/commit/4e064245e78903307e6996eebf3f6dae5565de5f)]:
+  - @styleframe/cli@2.3.1
+  - @styleframe/loader@2.4.0
+  - @styleframe/transpiler@2.6.0
+  - @styleframe/plugin@2.4.0
+  - @styleframe/core@2.6.0
+
 ## 2.4.0
 
 ### Minor Changes
