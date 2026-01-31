@@ -11,10 +11,10 @@ export const useBadgeRecipeBase = createUseRecipe("badge", {
 		fontWeight: "@font-weight.medium",
 		fontSize: "@font-size.xs",
 		lineHeight: "1",
-		paddingTop: "@spacing.1",
-		paddingBottom: "@spacing.1",
-		paddingLeft: "@spacing.2",
-		paddingRight: "@spacing.2",
+		paddingTop: "@spacing.xs",
+		paddingBottom: "@spacing.xs",
+		paddingLeft: "@spacing.sm",
+		paddingRight: "@spacing.sm",
 		borderRadius: "@border-radius.md",
 	},
 });
@@ -25,8 +25,7 @@ const colors = [
 	"success",
 	"info",
 	"warning",
-	"error",
-	"neutral",
+	"danger",
 ] as const;
 type Color = (typeof colors)[number];
 
@@ -42,63 +41,34 @@ function createColorVariantCompounds(): CompoundVariant[] {
 	const compounds: CompoundVariant[] = [];
 
 	for (const color of colors) {
-		if (color === "neutral") {
-			compounds.push(
-				{
-					match: { color: "neutral", variant: "solid" },
-					css: { color: "@color.inverted", background: "@color.inverted" },
+		compounds.push(
+			{
+				match: { color, variant: "solid" },
+				css: { background: `@color.${color}`, color: "@color.light" },
+			},
+			{
+				match: { color, variant: "outline" },
+				css: {
+					color: `@color.${color}`,
+					boxShadow: `inset 0 0 0 1px color-mix(in oklch, var(--color--${color}) 50%, transparent)`,
 				},
-				{
-					match: { color: "neutral", variant: "outline" },
-					css: {
-						boxShadow: "inset 0 0 0 1px var(--color--accented)",
-						color: "@color.default",
-						background: "@color.default",
-					},
+			},
+			{
+				match: { color, variant: "soft" },
+				css: {
+					background: `color-mix(in oklch, var(--color--${color}) 10%, transparent)`,
+					color: `@color.${color}`,
 				},
-				{
-					match: { color: "neutral", variant: "soft" },
-					css: { color: "@color.default", background: "@color.elevated" },
+			},
+			{
+				match: { color, variant: "subtle" },
+				css: {
+					background: `color-mix(in oklch, var(--color--${color}) 10%, transparent)`,
+					color: `@color.${color}`,
+					boxShadow: `inset 0 0 0 1px color-mix(in oklch, var(--color--${color}) 25%, transparent)`,
 				},
-				{
-					match: { color: "neutral", variant: "subtle" },
-					css: {
-						boxShadow: "inset 0 0 0 1px var(--color--accented)",
-						color: "@color.default",
-						background: "@color.elevated",
-					},
-				},
-			);
-		} else {
-			compounds.push(
-				{
-					match: { color, variant: "solid" },
-					css: { background: `@color.${color}`, color: "@color.inverted" },
-				},
-				{
-					match: { color, variant: "outline" },
-					css: {
-						color: `@color.${color}`,
-						boxShadow: `inset 0 0 0 1px color-mix(in oklch, var(--color--${color}) 50%, transparent)`,
-					},
-				},
-				{
-					match: { color, variant: "soft" },
-					css: {
-						background: `color-mix(in oklch, var(--color--${color}) 10%, transparent)`,
-						color: `@color.${color}`,
-					},
-				},
-				{
-					match: { color, variant: "subtle" },
-					css: {
-						background: `color-mix(in oklch, var(--color--${color}) 10%, transparent)`,
-						color: `@color.${color}`,
-						boxShadow: `inset 0 0 0 1px color-mix(in oklch, var(--color--${color}) 25%, transparent)`,
-					},
-				},
-			);
-		}
+			},
+		);
 	}
 
 	return compounds;
@@ -121,8 +91,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			success: {},
 			info: {},
 			warning: {},
-			error: {},
-			neutral: {},
+			danger: {},
 		},
 		variant: {
 			solid: {},
@@ -134,48 +103,48 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			xs: {
 				fontSize: "8px",
 				lineHeight: "12px",
-				paddingTop: "@spacing.0-5",
-				paddingBottom: "@spacing.0-5",
-				paddingLeft: "@spacing.1",
-				paddingRight: "@spacing.1",
-				gap: "@spacing.1",
+				paddingTop: "calc(var(--spacing--2xs) * 0.5)",
+				paddingBottom: "calc(var(--spacing--2xs) * 0.5)",
+				paddingLeft: "@spacing.2xs",
+				paddingRight: "@spacing.2xs",
+				gap: "@spacing.2xs",
 				borderRadius: "@border-radius.sm",
 			},
 			sm: {
 				fontSize: "10px",
 				lineHeight: "12px",
-				paddingTop: "@spacing.1",
-				paddingBottom: "@spacing.1",
-				paddingLeft: "@spacing.1-5",
-				paddingRight: "@spacing.1-5",
-				gap: "@spacing.1",
+				paddingTop: "@spacing.2xs",
+				paddingBottom: "@spacing.2xs",
+				paddingLeft: "@spacing.xs",
+				paddingRight: "@spacing.xs",
+				gap: "@spacing.2xs",
 				borderRadius: "@border-radius.sm",
 			},
 			md: {
 				fontSize: "@font-size.xs",
-				paddingTop: "@spacing.1",
-				paddingBottom: "@spacing.1",
-				paddingLeft: "@spacing.2",
-				paddingRight: "@spacing.2",
-				gap: "@spacing.1",
+				paddingTop: "@spacing.xs",
+				paddingBottom: "@spacing.xs",
+				paddingLeft: "@spacing.sm",
+				paddingRight: "@spacing.sm",
+				gap: "@spacing.2xs",
 				borderRadius: "@border-radius.md",
 			},
 			lg: {
 				fontSize: "@font-size.sm",
-				paddingTop: "@spacing.1",
-				paddingBottom: "@spacing.1",
-				paddingLeft: "@spacing.2",
-				paddingRight: "@spacing.2",
-				gap: "@spacing.1-5",
+				paddingTop: "@spacing.xs",
+				paddingBottom: "@spacing.xs",
+				paddingLeft: "@spacing.md",
+				paddingRight: "@spacing.md",
+				gap: "@spacing.xs",
 				borderRadius: "@border-radius.md",
 			},
 			xl: {
-				fontSize: "@font-size.base",
-				paddingTop: "@spacing.1",
-				paddingBottom: "@spacing.1",
-				paddingLeft: "@spacing.2-5",
-				paddingRight: "@spacing.2-5",
-				gap: "@spacing.1-5",
+				fontSize: "@font-size.md",
+				paddingTop: "@spacing.sm",
+				paddingBottom: "@spacing.sm",
+				paddingLeft: "@spacing.lg",
+				paddingRight: "@spacing.lg",
+				gap: "@spacing.xs",
 				borderRadius: "@border-radius.md",
 			},
 		},
@@ -184,6 +153,6 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 	defaultVariants: {
 		color: "primary",
 		variant: "solid",
-		size: "md",
+		size: "sm",
 	},
 });
