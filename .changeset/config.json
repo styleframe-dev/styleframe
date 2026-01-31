@@ -20,7 +20,8 @@
 		"@styleframe/testing-integration",
 		"@styleframe/docs",
 		"@styleframe/app",
-		"@styleframe/storybook"
+		"@styleframe/storybook",
+		"@styleframe/figma"
 	],
 	"___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
 		"onlyUpdatePeerDependentsWhenOutOfRange": true

@@ -1,11 +1,11 @@
 import { isInstanceLicenseRequired } from "@styleframe/license";
 import { markInstanceLicenseRequired } from "@styleframe/license";
+import { useDesignTokensPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
-import { useTokens } from "./theme/useTokens";
 
 const s = styleframe();
 
-const { colorPrimary, colorSecondary } = useTokens(s);
+const { colorPrimary, colorSecondary } = useDesignTokensPreset(s);
 
 s.utility("fontSize", ({ value }) => ({ fontSize: value }));
 s.utility("fontWeight", ({ value }) => ({ fontWeight: value }));

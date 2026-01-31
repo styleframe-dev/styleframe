@@ -1,0 +1,61 @@
+{
+	"name": "@styleframe/figma",
+	"type": "module",
+	"version": "1.0.0",
+	"description": "Figma plugin for syncing Styleframe variables with Figma variables",
+	"license": "MIT",
+	"keywords": [
+		"styleframe",
+		"figma",
+		"design-tokens",
+		"css-variables"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist",
+		"manifest.json",
+		"LICENSE",
+		"CHANGELOG.md",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsdown && vite build --mode code && vite build",
+		"build:lib": "tsdown",
+		"build:plugin": "vite build --mode code && vite build",
+		"dev": "tsdown -w",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@styleframe/core": "workspace:^2.4.0",
+		"culori": "^4.0.2"
+	},
+	"devDependencies": {
+		"@figma/plugin-typings": "^1.103.0",
+		"@styleframe/config-typescript": "workspace:^2",
+		"@vitest/coverage-v8": "catalog:",
+		"tsdown": "^0.12.0",
+		"typescript": "^5.8.3",
+		"vite": "^6.3.5",
+		"vite-plugin-singlefile": "^2.0.3",
+		"vitest": "^3.1.4"
+	},
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
+	"bugs": {
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
+	},
+	"author": "Alex Grozav <alex@styleframe.dev>"
+}

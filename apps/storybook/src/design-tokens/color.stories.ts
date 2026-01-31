@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useColor.styleframe?css";
-import { colorPreview } from "./useColor.styleframe?ts";
+import "../components/swatch.styleframe?css";
+import "./color.styleframe?css";
+import { colorPreview } from "./color.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const colors = ["primary", "secondary", "info", "success", "warning", "danger"];
 
@@ -26,7 +26,7 @@ const ColorGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Colors/useColor",
+	title: "Design Tokens/Colors/Color",
 	component: ColorSwatch,
 	tags: ["autodocs"],
 	argTypes: {

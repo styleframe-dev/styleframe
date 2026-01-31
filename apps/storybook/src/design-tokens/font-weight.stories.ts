@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useFontWeight.styleframe?css";
-import { fontWeightPreview } from "./useFontWeight.styleframe?ts";
-import { fontWeightValues } from "./useFontWeight.styleframe";
+import "../components/swatch.styleframe?css";
+import "./font-weight.styleframe?css";
+import { fontWeightPreview } from "./font-weight.styleframe?ts";
+import { fontWeightValues } from "./font-weight.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const fontWeights = Object.keys(fontWeightValues);
 
@@ -32,7 +32,7 @@ const FontWeightGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Typography/useFontWeight",
+	title: "Design Tokens/Typography/Font Weight",
 	component: FontWeightSwatch,
 	tags: ["autodocs"],
 	argTypes: {

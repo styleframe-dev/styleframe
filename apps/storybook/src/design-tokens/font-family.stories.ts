@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useFontFamily.styleframe?css";
-import { fontFamilyPreview } from "./useFontFamily.styleframe?ts";
+import "../components/swatch.styleframe?css";
+import "./font-family.styleframe?css";
+import { fontFamilyPreview } from "./font-family.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const fontFamilies = ["base", "print", "mono"];
 
@@ -29,7 +29,7 @@ const FontFamilyGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Typography/useFontFamily",
+	title: "Design Tokens/Typography/Font Family",
 	component: FontFamilySwatch,
 	tags: ["autodocs"],
 	argTypes: {

@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useFontSize.styleframe?css";
-import { fontSizePreview } from "./useFontSize.styleframe?ts";
-import { fontSizeValues } from "./useFontSize.styleframe";
+import "../components/swatch.styleframe?css";
+import "./font-size.styleframe?css";
+import { fontSizePreview } from "./font-size.styleframe?ts";
+import { fontSizeValues } from "./font-size.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const fontSizes = Object.keys(fontSizeValues);
 
@@ -32,7 +32,7 @@ const FontSizeGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Typography/useFontSize",
+	title: "Design Tokens/Typography/Font Size",
 	component: FontSizeSwatch,
 	tags: ["autodocs"],
 	argTypes: {

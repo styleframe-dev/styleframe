@@ -11,9 +11,12 @@ const main = defineCommand({
 	subCommands: {
 		init: () => import("./commands/init").then((m) => m.default),
 		build: () => import("./commands/build").then((m) => m.default),
+		figma: () => import("./commands/figma").then((m) => m.default),
 	},
 });
 
 export default function run() {
 	runMain(main);
 }
+
+run();

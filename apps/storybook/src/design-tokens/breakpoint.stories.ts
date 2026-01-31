@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h } from "vue";
 
-import "./components/swatch.styleframe?css";
-import "./useBreakpoint.styleframe?css";
-import { breakpointPreview } from "./useBreakpoint.styleframe?ts";
-import { breakpointValues, breakpointWidths } from "./useBreakpoint.styleframe";
+import "../components/swatch.styleframe?css";
+import "./breakpoint.styleframe?css";
+import { breakpointPreview } from "./breakpoint.styleframe?ts";
+import { breakpointValues, breakpointWidths } from "./breakpoint.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const breakpoints = Object.keys(breakpointValues);
 
@@ -42,7 +42,7 @@ const BreakpointGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Layout/useBreakpoint",
+	title: "Design Tokens/Layout/Breakpoint",
 	component: BreakpointSwatch,
 	tags: ["autodocs"],
 	argTypes: {
