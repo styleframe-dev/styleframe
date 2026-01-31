@@ -4,6 +4,7 @@ import {
 	extractFromHTML,
 	extractFromJSX,
 	extractFromStringLiterals,
+	extractFromSvelte,
 	extractFromVue,
 } from "./extractor";
 
@@ -138,6 +139,77 @@ describe("extractFromVue", () => {
 		const result = extractFromVue(content);
 
 		expect(result).toContain("_margin:sm");
+	});
+});
+
+describe("extractFromSvelte", () => {
+	it("should extract from class attributes", () => {
+		const content = '<div class="_margin:sm _padding:md">content</div>';
+		const result = extractFromSvelte(content);
+
+		expect(result).toContain("_margin:sm");
+		expect(result).toContain("_padding:md");
+	});
+
+	it("should extract from class={...} expressions", () => {
+		const content = `<div class={"_margin:sm"}>content</div>`;
+		const result = extractFromSvelte(content);
+
+		expect(result).toContain("_margin:sm");
+	});
+
+	it("should extract from class:directive syntax", () => {
+		const content = `<div class:_margin:sm={isActive}>content</div>`;
+		const result = extractFromSvelte(content);
+
+		expect(result).toContain("_margin:sm");
+	});
+
+	it("should extract from class:directive with complex utility names", () => {
+		const content = `
+			<div class:_hover:background:primary={hovered}>content</div>
+			<div class:_dark:text:lg={isDark}>content</div>
+		`;
+		const result = extractFromSvelte(content);
+
+		expect(result).toContain("_hover:background:primary");
+		expect(result).toContain("_dark:text:lg");
+	});
+
+	it("should extract from class:directive with arbitrary values", () => {
+		const content = `<div class:_margin:[16px]={hasMargin}>content</div>`;
+		const result = extractFromSvelte(content);
+
+		expect(result).toContain("_margin:[16px]");
+	});
+
+	it("should extract from script section", () => {
+		const content = `
+			<script>
+				const styles = "_margin:sm";
+			</script>
+			<div>content</div>
+		`;
+		const result = extractFromSvelte(content);
+
+		expect(result).toContain("_margin:sm");
+	});
+
+	it("should combine all extraction methods", () => {
+		const content = `
+			<script>
+				const dynamicClass = "_text:xl";
+			</script>
+			<div class="_margin:sm" class:_padding:md={condition} class={"_background:primary"}>
+				content
+			</div>
+		`;
+		const result = extractFromSvelte(content);
+
+		expect(result).toContain("_margin:sm");
+		expect(result).toContain("_padding:md");
+		expect(result).toContain("_background:primary");
+		expect(result).toContain("_text:xl");
 	});
 });
 

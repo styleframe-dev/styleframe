@@ -157,6 +157,7 @@ import { useFluidViewport, useFluidFontSize, useFluidClamp } from '@styleframe/p
 5. **NEVER use arbitrary CSS values without `css` template literal for complex expressions**
 6. **NEVER forget to export the Styleframe instance as default**
 7. **NEVER use appearance-based names** - Use semantic names (e.g., `color.primary` not `color.blue`)
+8. **NEVER use named exports in index files** - Use `export *` for all re-exports in index files
 
 ---
 

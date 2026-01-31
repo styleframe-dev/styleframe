@@ -26,7 +26,7 @@ import { createChangeHandler } from "./watcher";
  * @example
  * ```ts
  * const scanner = createScanner({
- *   content: ['./src/** /*.{html,vue,jsx,tsx}'],
+ *   content: ['./src/components/*.tsx', './src/pages/*.vue'],
  * });
  *
  * const result = await scanner.scan();

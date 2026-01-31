@@ -126,10 +126,14 @@ export function matchesPatterns(filePath: string, patterns: string[]): boolean {
 			normalizedPattern.includes("*") ||
 			normalizedPattern.includes("?")
 		) {
-			const regexStr = globToRegex(normalizedPattern);
-			const regex = new RegExp(`^${regexStr}$`);
-			if (regex.test(normalizedPath)) {
-				return true;
+			try {
+				const regexStr = globToRegex(normalizedPattern);
+				const regex = new RegExp(`^${regexStr}$`);
+				if (regex.test(normalizedPath)) {
+					return true;
+				}
+			} catch {
+				// Invalid regex pattern, fall through to next pattern
 			}
 		} else if (normalizedPath === normalizedPattern) {
 			return true;

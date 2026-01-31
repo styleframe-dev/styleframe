@@ -148,7 +148,7 @@ function extractFromVue(content: string): string[] {
 
 /**
  * Extract utility classes from Svelte content.
- * Handles class="...", class:directive, and class={...} patterns.
+ * Handles class="...", class:directive={condition}, and class={...} patterns.
  */
 function extractFromSvelte(content: string): string[] {
 	const classes: string[] = [];
@@ -160,6 +160,16 @@ function extractFromSvelte(content: string): string[] {
 	const expressions = extractClassExpressions(content);
 	for (const expr of expressions) {
 		classes.push(...extractFromStringLiterals(expr));
+	}
+
+	// Handle Svelte class:directive syntax (e.g., class:_margin-sm={condition})
+	// Matches class: followed by a utility class name (starting with _)
+	const classDirectivePattern = /\bclass:(_[a-zA-Z][a-zA-Z0-9-:[\]._]*)/g;
+	let match: RegExpExecArray | null;
+	while ((match = classDirectivePattern.exec(content)) !== null) {
+		if (match[1]) {
+			classes.push(match[1]);
+		}
 	}
 
 	// Extract from script section
@@ -194,6 +204,10 @@ function extractFromAstro(content: string): string[] {
 /**
  * Extract utility classes from string literals in JavaScript/TypeScript code.
  * Handles single quotes, double quotes, and template literals.
+ *
+ * Note: Template literals with interpolations (e.g., `_margin:${size}`) will only
+ * extract the static portions. Dynamic class names cannot be statically analyzed.
+ * For full coverage, use explicit string arrays or safelist patterns.
  */
 function extractFromStringLiterals(content: string): string[] {
 	const classes: string[] = [];
@@ -216,7 +230,9 @@ function extractFromStringLiterals(content: string): string[] {
 		}
 	}
 
-	// Match template literals (simplified - doesn't handle nested expressions)
+	// Match template literals without interpolations.
+	// Literals like `_margin:${size}` will match but ${...} appears as literal text,
+	// so only static class names before/after interpolations are extracted.
 	const templatePattern = /`([^`\\]*(?:\\.[^`\\]*)*)`/g;
 	while ((match = templatePattern.exec(content)) !== null) {
 		if (match[1]) {
