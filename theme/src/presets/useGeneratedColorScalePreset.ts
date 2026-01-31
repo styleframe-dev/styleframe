@@ -1,159 +1,25 @@
 import type { Styleframe, Variable } from "@styleframe/core";
+import { type Oklch, oklch, clampChroma, formatHex } from "culori";
 
 // =============================================================================
-// Color Conversion Utilities
+// Color Utilities
 // =============================================================================
 
-interface RGB {
-	r: number;
-	g: number;
-	b: number;
-}
-
-interface XYZ {
-	x: number;
-	y: number;
-	z: number;
-}
-
-interface OKLab {
-	L: number;
-	a: number;
-	b: number;
-}
-
-interface OKLCH {
-	l: number;
-	c: number;
-	h: number;
-}
-
-function hexToRgb(hex: string): RGB | null {
-	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	if (!result) return null;
-	return {
-		r: parseInt(result[1]!, 16) / 255,
-		g: parseInt(result[2]!, 16) / 255,
-		b: parseInt(result[3]!, 16) / 255,
-	};
-}
-
-function srgbToLinear(c: number): number {
-	return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-}
-
-function linearToSrgb(c: number): number {
-	return c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
-}
-
-function rgbToXyz({ r, g, b }: RGB): XYZ {
-	const lr = srgbToLinear(r);
-	const lg = srgbToLinear(g);
-	const lb = srgbToLinear(b);
-	return {
-		x: 0.4124564 * lr + 0.3575761 * lg + 0.1804375 * lb,
-		y: 0.2126729 * lr + 0.7151522 * lg + 0.072175 * lb,
-		z: 0.0193339 * lr + 0.119192 * lg + 0.9503041 * lb,
-	};
-}
-
-function xyzToRgb({ x, y, z }: XYZ): RGB {
-	const lr = 3.2404542 * x - 1.5371385 * y - 0.4985314 * z;
-	const lg = -0.969266 * x + 1.8760108 * y + 0.041556 * z;
-	const lb = 0.0556434 * x - 0.2040259 * y + 1.0572252 * z;
-	return {
-		r: linearToSrgb(lr),
-		g: linearToSrgb(lg),
-		b: linearToSrgb(lb),
-	};
-}
-
-function xyzToOklab({ x, y, z }: XYZ): OKLab {
-	const l_ = Math.cbrt(0.8189330101 * x + 0.3618667424 * y - 0.1288597137 * z);
-	const m_ = Math.cbrt(0.0329845436 * x + 0.9293118715 * y + 0.0361456387 * z);
-	const s_ = Math.cbrt(-0.0482003018 * x + 0.2643662691 * y + 0.633851707 * z);
-	return {
-		L: 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_,
-		a: 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_,
-		b: 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_,
-	};
-}
-
-function oklabToXyz({ L, a, b }: OKLab): XYZ {
-	const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
-	const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
-	const s_ = L - 0.0894841775 * a - 1.291485548 * b;
-	return {
-		x:
-			1.2270138511 * l_ * l_ * l_ -
-			0.5577999807 * m_ * m_ * m_ +
-			0.281256149 * s_ * s_ * s_,
-		y:
-			-0.0405801784 * l_ * l_ * l_ +
-			1.1122568696 * m_ * m_ * m_ -
-			0.0716766787 * s_ * s_ * s_,
-		z:
-			-0.0763812845 * l_ * l_ * l_ -
-			0.4214819784 * m_ * m_ * m_ +
-			1.5861632204 * s_ * s_ * s_,
-	};
-}
-
-function oklchToOklab({ l, c, h }: OKLCH): OKLab {
-	return {
-		L: l,
-		a: c * Math.cos((h * Math.PI) / 180),
-		b: c * Math.sin((h * Math.PI) / 180),
-	};
-}
-
-function oklabToOklch({ L, a, b }: OKLab): OKLCH {
-	return {
-		l: L,
-		c: Math.sqrt(a * a + b * b),
-		h: ((Math.atan2(b, a) * 180) / Math.PI + 360) % 360,
-	};
-}
-
-function hexToOklch(hex: string): OKLCH {
-	const rgb = hexToRgb(hex);
-	if (!rgb) {
+function hexToOklch(hex: string): Oklch {
+	const color = oklch(hex);
+	if (!color) {
 		throw new Error(`Invalid hex color: ${hex}`);
 	}
-	return oklabToOklch(xyzToOklab(rgbToXyz(rgb)));
+	return color;
 }
 
-function isInGamut({ r, g, b }: RGB): boolean {
-	const epsilon = 0.001;
-	return (
-		r >= -epsilon &&
-		r <= 1 + epsilon &&
-		g >= -epsilon &&
-		g <= 1 + epsilon &&
-		b >= -epsilon &&
-		b <= 1 + epsilon
-	);
+function gamutMapOklch(color: Oklch): Oklch {
+	return clampChroma(color, "oklch");
 }
 
-function gamutMapOklch({ l, c, h }: OKLCH): OKLCH {
-	let currentC = c;
-	for (let i = 0; i < 50 && currentC > 0.001; i++) {
-		const rgb = xyzToRgb(oklabToXyz(oklchToOklab({ l, c: currentC, h })));
-		if (isInGamut(rgb)) {
-			return { l, c: currentC, h };
-		}
-		currentC *= 0.95;
-	}
-	return { l, c: 0, h };
-}
-
-function oklchToHex({ l, c, h }: OKLCH): string {
-	const rgb = xyzToRgb(oklabToXyz(oklchToOklab({ l, c, h })));
-	const clamp = (v: number) => Math.max(0, Math.min(1, v));
-	const r = Math.round(clamp(rgb.r) * 255);
-	const g = Math.round(clamp(rgb.g) * 255);
-	const b = Math.round(clamp(rgb.b) * 255);
-	return "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("");
+function oklchToHex(color: Oklch): string {
+	const clamped = clampChroma(color, "oklch");
+	return formatHex(clamped) ?? "#000000";
 }
 
 // =============================================================================
@@ -172,7 +38,7 @@ const LIGHT_LIGHTNESS_CURVE = [
 	0.26, // step 5: active ui element
 	0.381, // step 6: subtle borders
 	0.536, // step 7: borders
-	0.756, // step 8: strong borders
+	0.72, // step 8: strong borders (reduced to match Radix better)
 	1.0, // step 9: solid backgrounds (base)
 	1.078, // step 10: hovered solid
 	1.27, // step 11: low contrast text
@@ -182,6 +48,7 @@ const LIGHT_LIGHTNESS_CURVE = [
 /**
  * Lightness curve coefficients for dark mode.
  * Each value represents the fraction of distance from black (0.17) to the base lightness.
+ * Steps 11-12 are boosted significantly to ensure readable light text.
  */
 const DARK_LIGHTNESS_CURVE = [
 	0.01, // step 1: app background
@@ -194,46 +61,49 @@ const DARK_LIGHTNESS_CURVE = [
 	0.765, // step 8: strong borders
 	1.0, // step 9: solid backgrounds (base)
 	1.085, // step 10: hovered solid
-	1.25, // step 11: low contrast text
-	1.56, // step 12: high contrast text
+	1.55, // step 11: low contrast text (significantly boosted)
+	1.95, // step 12: high contrast text (significantly boosted)
 ] as const;
 
 /**
  * Chroma curve coefficients for light mode.
  * Each value is a multiplier of the base chroma.
+ * Steps 1-2 use very low chroma for subtle, near-white backgrounds.
  */
 const LIGHT_CHROMA_CURVE = [
-	0.12, // step 1
-	0.12, // step 2
-	0.14, // step 3
-	0.2, // step 4
-	0.28, // step 5
-	0.38, // step 6
-	0.5, // step 7
-	0.7, // step 8
+	0.02, // step 1: nearly achromatic
+	0.05, // step 2: hint of color
+	0.11, // step 3
+	0.19, // step 4: slightly increased
+	0.28, // step 5: slightly increased
+	0.38, // step 6: slightly increased
+	0.5, // step 7: increased for better gradient
+	0.68, // step 8: increased to match Radix
 	1.0, // step 9: full chroma
-	0.93, // step 10
-	0.84, // step 11
-	0.5, // step 12
+	0.95, // step 10
+	0.9, // step 11: increased for better text contrast
+	0.55, // step 12: slightly increased
 ] as const;
 
 /**
  * Chroma curve coefficients for dark mode.
  * Each value is a multiplier of the base chroma.
+ * Steps 1-2 use low chroma for subtle, near-black backgrounds.
+ * Steps 11-12 maintain high chroma for colorful light text.
  */
 const DARK_CHROMA_CURVE = [
-	0.12, // step 1
-	0.15, // step 2
-	0.34, // step 3
-	0.5, // step 4
+	0.08, // step 1: nearly achromatic
+	0.12, // step 2: hint of color
+	0.32, // step 3
+	0.48, // step 4
 	0.55, // step 5
 	0.6, // step 6
 	0.66, // step 7
 	0.76, // step 8
 	1.0, // step 9: full chroma
-	0.87, // step 10
-	0.63, // step 11
-	0.24, // step 12
+	0.8, // step 10
+	0.7, // step 11: colorful light text
+	0.55, // step 12: maintain visible color at high lightness
 ] as const;
 
 /**
@@ -242,11 +112,199 @@ const DARK_CHROMA_CURVE = [
 const LIGHT_EDGE = 0.995;
 const DARK_EDGE = 0.17;
 
+/**
+ * Hue shift curves for light mode.
+ * Positive values shift toward yellow/warm, negative toward cyan/cool.
+ * Values are multiplied by a hue-dependent factor.
+ */
+const LIGHT_HUE_SHIFT_CURVE = [
+	0.9, // step 1: strongest shift for subtle backgrounds
+	0.85, // step 2
+	0.75, // step 3
+	0.6, // step 4
+	0.45, // step 5
+	0.32, // step 6
+	0.2, // step 7
+	0.1, // step 8
+	0.0, // step 9: base (no shift)
+	-0.05, // step 10: slight opposite shift
+	-0.05, // step 11
+	-0.15, // step 12: moderate opposite shift for contrast
+] as const;
+
+/**
+ * Hue shift curves for dark mode.
+ * Similar pattern but with different magnitudes.
+ */
+const DARK_HUE_SHIFT_CURVE = [
+	0.3, // step 1: moderate shift for dark backgrounds
+	0.25, // step 2
+	0.2, // step 3
+	0.15, // step 4
+	0.1, // step 5
+	0.08, // step 6
+	0.05, // step 7
+	0.02, // step 8
+	0.0, // step 9: base (no shift)
+	-0.02, // step 10
+	-0.05, // step 11
+	-0.1, // step 12
+] as const;
+
+/**
+ * Calculate the hue shift direction and magnitude based on the base hue.
+ * Different hue ranges shift in different directions to maintain perceptual warmth.
+ *
+ * @param baseHue - The base hue in degrees (0-360)
+ * @returns The maximum hue shift in degrees (positive = toward yellow/warm)
+ */
+function getHueShiftMagnitude(baseHue: number): number {
+	// Normalize hue to 0-360
+	const h = ((baseHue % 360) + 360) % 360;
+
+	// Orange/yellow range (30-80°): shift toward yellow (positive)
+	// These colors benefit most from shifting lighter tints toward yellow
+	if (h >= 30 && h <= 80) {
+		return 35; // Strong shift toward yellow for orange
+	}
+
+	// Red range (0-30° or 350-360°): moderate shift toward orange
+	if (h < 30 || h >= 350) {
+		return -10; // Shift toward orange (lower hue)
+	}
+
+	// Yellow-green range (80-120°): minimal shift
+	if (h >= 80 && h <= 120) {
+		return 5; // Slight shift toward yellow
+	}
+
+	// Green range (120-160°): minimal shift
+	if (h > 120 && h <= 160) {
+		return 3; // Very slight shift
+	}
+
+	// Cyan-green range (160-200°): shift toward cyan
+	if (h > 160 && h <= 200) {
+		return -5; // Slight shift toward cyan
+	}
+
+	// Blue range (200-260°): shift toward cyan for lighter steps
+	if (h > 200 && h <= 260) {
+		return -18; // Shift toward cyan
+	}
+
+	// Blue-violet range (260-290°): moderate shift toward blue
+	if (h > 260 && h <= 290) {
+		return -12;
+	}
+
+	// Purple/violet range (290-350°): shift toward pink/magenta
+	if (h > 290 && h < 350) {
+		return 20; // Shift toward pink (higher hue, wrapping toward red)
+	}
+
+	return 0;
+}
+
+/**
+ * Apply hue shift to a color based on the step and mode.
+ * This creates more natural color progressions by shifting lighter
+ * tints toward warmer hues and darker shades toward cooler hues.
+ *
+ * @param baseHue - The base hue in degrees
+ * @param step - The color scale step (1-12)
+ * @param mode - Light or dark mode
+ * @returns The shifted hue in degrees
+ */
+export function applyHueShift(
+	baseHue: number,
+	step: ColorScaleStep,
+	mode: "light" | "dark",
+): number {
+	const shiftCurve =
+		mode === "light" ? LIGHT_HUE_SHIFT_CURVE : DARK_HUE_SHIFT_CURVE;
+	const magnitude = getHueShiftMagnitude(baseHue);
+	const shiftFactor = shiftCurve[step - 1]!;
+
+	const shift = magnitude * shiftFactor;
+	let newHue = baseHue + shift;
+
+	// Normalize to 0-360
+	newHue = ((newHue % 360) + 360) % 360;
+
+	return newHue;
+}
+
+/**
+ * Get a chroma multiplier based on the base hue.
+ * Different colors benefit from chroma adjustments at different steps.
+ *
+ * @param baseHue - The base hue in degrees
+ * @param step - The color scale step
+ * @param mode - Light or dark mode
+ * @returns A multiplier to apply to the base chroma curve value
+ */
+function getChromaMultiplier(
+	baseHue: number,
+	step: ColorScaleStep,
+	mode: "light" | "dark",
+): number {
+	const h = ((baseHue % 360) + 360) % 360;
+
+	if (mode === "light") {
+		// Orange/yellow range (30-80°): boost chroma for warmer tints in mid-steps
+		if (h >= 30 && h <= 80 && step >= 3 && step <= 7) {
+			const boostCurve = [
+				0, 0, 1.15, 1.25, 1.3, 1.25, 1.15, 1.0, 1.0, 1.0, 1.0, 1.0,
+			];
+			return boostCurve[step - 1]!;
+		}
+	} else {
+		// Dark mode: boost chroma for step 11 only for greens (H ~150-165)
+		// Green specifically needs higher saturation for vibrant light text
+		if (h >= 145 && h <= 170 && step === 11) {
+			return 1.5; // Strong boost for green step 11
+		}
+	}
+
+	return 1.0;
+}
+
 export type ColorScaleStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 export const colorScaleSteps: readonly ColorScaleStep[] = [
 	1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
 ] as const;
+
+/**
+ * Minimum lightness floors for specific steps.
+ * These prevent extreme steps from going too dark/light regardless of base color.
+ */
+const LIGHT_MIN_LIGHTNESS: Partial<Record<ColorScaleStep, number>> = {
+	11: 0.5, // Ensure step 11 text is readable
+	12: 0.3, // Ensure step 12 text has good contrast but isn't too dark
+};
+
+const DARK_MAX_LIGHTNESS: Partial<Record<ColorScaleStep, number>> = {
+	11: 0.8, // Cap step 11 to avoid being too washed out
+	12: 0.91, // Cap step 12 for subtle light text
+};
+
+/**
+ * Get hue-specific lightness adjustment for step 12 in light mode.
+ * Some colors (like orange) need to go darker than the universal minimum.
+ */
+function getStep12MinLightness(baseHue: number): number {
+	const h = ((baseHue % 360) + 360) % 360;
+
+	// Orange/warm colors (30-80°): allow darker step 12 for better contrast
+	if (h >= 30 && h <= 80) {
+		return 0.25;
+	}
+
+	// Default minimum
+	return 0.3;
+}
 
 /**
  * Generate a 12-step color scale from a single base color.
@@ -271,13 +329,39 @@ export function generateColorScale(
 
 	for (let i = 1; i <= 12; i++) {
 		const step = i as ColorScaleStep;
-		const targetL = Math.max(
-			0.05,
-			Math.min(0.98, lightEdge + lightnessCurve[i - 1]! * range),
-		);
-		const targetC = base.c * chromaCurve[i - 1]!;
+		let targetL = lightEdge + lightnessCurve[i - 1]! * range;
 
-		const mapped = gamutMapOklch({ l: targetL, c: targetC, h: base.h });
+		// Apply mode-specific lightness constraints
+		if (mode === "light") {
+			let minL = LIGHT_MIN_LIGHTNESS[step];
+			// Use hue-specific minimum for step 12
+			if (step === 12) {
+				minL = getStep12MinLightness(base.h ?? 0);
+			}
+			if (minL !== undefined) {
+				targetL = Math.max(minL, targetL);
+			}
+			targetL = Math.max(0.05, Math.min(0.98, targetL));
+		} else {
+			const maxL = DARK_MAX_LIGHTNESS[step];
+			if (maxL !== undefined) {
+				targetL = Math.min(maxL, targetL);
+			}
+			targetL = Math.max(0.05, Math.min(0.98, targetL));
+		}
+
+		// Apply hue shift and chroma adjustments based on step and mode
+		const baseHue = base.h ?? 0;
+		const chromaMultiplier = getChromaMultiplier(baseHue, step, mode);
+		const targetC = base.c * chromaCurve[i - 1]! * chromaMultiplier;
+		const targetH = applyHueShift(baseHue, step, mode);
+
+		const mapped = gamutMapOklch({
+			mode: "oklch",
+			l: targetL,
+			c: targetC,
+			h: targetH,
+		});
 		result[step] = oklchToHex(mapped);
 	}
 
@@ -294,7 +378,7 @@ export function getColorProperties(hex: string): {
 	hue: number;
 } {
 	const { l, c, h } = hexToOklch(hex);
-	return { lightness: l, chroma: c, hue: h };
+	return { lightness: l, chroma: c, hue: h ?? 0 };
 }
 
 // =============================================================================
@@ -351,13 +435,7 @@ export interface GeneratedColorScalePresetConfig<
 }
 
 // Type utilities for generating result types
-type Capitalize<S extends string> = S extends `${infer F}${infer R}`
-	? `${Uppercase<F>}${R}`
-	: S;
-
-type ColorScaleVariables<TPrefix extends string, TScale extends string> = {
-	[K in ColorScaleStep as `${TPrefix}${Capitalize<TScale>}${K}`]: Variable<`${TPrefix}.${TScale}.${K}`>;
-};
+// Note: Capitalize<S> is a built-in TypeScript intrinsic type (TS 4.1+)
 
 type GeneratedColorScaleResult<
 	TPrefix extends string,

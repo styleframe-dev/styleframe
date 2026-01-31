@@ -30,6 +30,7 @@
 		"@styleframe/config-vite": "workspace:^2",
 		"@styleframe/core": "workspace:^2.6.0",
 		"@styleframe/transpiler": "workspace:^2.6.0",
+		"@types/culori": "^4.0.1",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
