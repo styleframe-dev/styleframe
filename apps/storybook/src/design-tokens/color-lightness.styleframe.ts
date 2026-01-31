@@ -18,47 +18,47 @@ export const colorLightnessPreview = s.recipe({
 	variants: {
 		lightness: {
 			"50": {
-				background: s.ref(colors["colorPrimary-50"]),
+				background: s.ref(colors.colorPrimary50),
 				color: "#1e293b",
 			},
 			"100": {
-				background: s.ref(colors["colorPrimary-100"]),
+				background: s.ref(colors.colorPrimary100),
 				color: "#1e293b",
 			},
 			"200": {
-				background: s.ref(colors["colorPrimary-200"]),
+				background: s.ref(colors.colorPrimary200),
 				color: "#1e293b",
 			},
 			"300": {
-				background: s.ref(colors["colorPrimary-300"]),
+				background: s.ref(colors.colorPrimary300),
 				color: "#1e293b",
 			},
 			"400": {
-				background: s.ref(colors["colorPrimary-400"]),
+				background: s.ref(colors.colorPrimary400),
 				color: "#ffffff",
 			},
 			"500": {
-				background: s.ref(colors["colorPrimary-500"]),
+				background: s.ref(colors.colorPrimary500),
 				color: "#ffffff",
 			},
 			"600": {
-				background: s.ref(colors["colorPrimary-600"]),
+				background: s.ref(colors.colorPrimary600),
 				color: "#ffffff",
 			},
 			"700": {
-				background: s.ref(colors["colorPrimary-700"]),
+				background: s.ref(colors.colorPrimary700),
 				color: "#ffffff",
 			},
 			"800": {
-				background: s.ref(colors["colorPrimary-800"]),
+				background: s.ref(colors.colorPrimary800),
 				color: "#ffffff",
 			},
 			"900": {
-				background: s.ref(colors["colorPrimary-900"]),
+				background: s.ref(colors.colorPrimary900),
 				color: "#ffffff",
 			},
 			"950": {
-				background: s.ref(colors["colorPrimary-950"]),
+				background: s.ref(colors.colorPrimary950),
 				color: "#ffffff",
 			},
 		},

@@ -22,16 +22,16 @@ export const colorShadePreview = s.recipe({
 				background: s.ref(colors.colorPrimary),
 			},
 			"50": {
-				background: s.ref(colors["colorPrimary-shade-50"]),
+				background: s.ref(colors.colorPrimaryShade50),
 			},
 			"100": {
-				background: s.ref(colors["colorPrimary-shade-100"]),
+				background: s.ref(colors.colorPrimaryShade100),
 			},
 			"150": {
-				background: s.ref(colors["colorPrimary-shade-150"]),
+				background: s.ref(colors.colorPrimaryShade150),
 			},
 			"200": {
-				background: s.ref(colors["colorPrimary-shade-200"]),
+				background: s.ref(colors.colorPrimaryShade200),
 			},
 		},
 	},
