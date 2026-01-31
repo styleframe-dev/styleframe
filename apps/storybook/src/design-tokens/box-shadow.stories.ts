@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useBoxShadow.styleframe?css";
-import { boxShadowPreview } from "./useBoxShadow.styleframe?ts";
+import "../components/swatch.styleframe?css";
+import "./box-shadow.styleframe?css";
+import { boxShadowPreview } from "./box-shadow.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const boxShadows = [
 	"none",
@@ -36,7 +36,7 @@ const BoxShadowGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Shadows/useBoxShadow",
+	title: "Design Tokens/Shadows/Box Shadow",
 	component: BoxShadowSwatch,
 	tags: ["autodocs"],
 	argTypes: {

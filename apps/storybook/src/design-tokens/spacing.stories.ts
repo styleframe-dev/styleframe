@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useSpacing.styleframe?css";
-import { spacingPreview } from "./useSpacing.styleframe?ts";
-import { spacingValues } from "./useSpacing.styleframe";
+import "../components/swatch.styleframe?css";
+import "./spacing.styleframe?css";
+import { spacingPreview } from "./spacing.styleframe?ts";
+import { spacingValues } from "./spacing.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const spacings = Object.keys(spacingValues);
 
@@ -27,7 +27,7 @@ const SpacingGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Spacing/useSpacing",
+	title: "Design Tokens/Spacing/Spacing",
 	component: SpacingSwatch,
 	tags: ["autodocs"],
 	argTypes: {

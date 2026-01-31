@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useBorderWidth.styleframe?css";
-import { borderWidthPreview } from "./useBorderWidth.styleframe?ts";
+import "../components/swatch.styleframe?css";
+import "./border-width.styleframe?css";
+import { borderWidthPreview } from "./border-width.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const borderWidths = ["none", "thin", "medium", "thick"];
 
@@ -26,7 +26,7 @@ const BorderWidthGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Borders/useBorderWidth",
+	title: "Design Tokens/Borders/Border Width",
 	component: BorderWidthSwatch,
 	tags: ["autodocs"],
 	argTypes: {

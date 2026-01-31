@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useColorTint.styleframe?css";
-import { colorTintPreview } from "./useColorTint.styleframe?ts";
+import "../components/swatch.styleframe?css";
+import "./color-tint.styleframe?css";
+import { colorTintPreview } from "./color-tint.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const tints = ["base", "50", "100", "150", "200"];
 
@@ -37,7 +37,7 @@ const ColorTintGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Colors/useColorTint",
+	title: "Design Tokens/Colors/Color Tint",
 	component: ColorTintSwatch,
 	tags: ["autodocs"],
 	argTypes: {

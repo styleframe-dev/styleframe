@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useLineHeight.styleframe?css";
-import { lineHeightPreview } from "./useLineHeight.styleframe?ts";
-import { lineHeightValues } from "./useLineHeight.styleframe";
+import "../components/swatch.styleframe?css";
+import "./line-height.styleframe?css";
+import { lineHeightPreview } from "./line-height.styleframe?ts";
+import { lineHeightValues } from "./line-height.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const lineHeights = Object.keys(lineHeightValues);
 
@@ -35,7 +35,7 @@ const LineHeightGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Typography/useLineHeight",
+	title: "Design Tokens/Typography/Line Height",
 	component: LineHeightSwatch,
 	tags: ["autodocs"],
 	argTypes: {

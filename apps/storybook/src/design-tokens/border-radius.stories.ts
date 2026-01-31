@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useBorderRadius.styleframe?css";
-import { borderRadiusPreview } from "./useBorderRadius.styleframe?ts";
+import "../components/swatch.styleframe?css";
+import "./border-radius.styleframe?css";
+import { borderRadiusPreview } from "./border-radius.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const borderRadiuses = ["none", "sm", "md", "lg", "xl", "full"];
 
@@ -26,7 +26,7 @@ const BorderRadiusGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Borders/useBorderRadius",
+	title: "Design Tokens/Borders/Border Radius",
 	component: BorderRadiusSwatch,
 	tags: ["autodocs"],
 	argTypes: {

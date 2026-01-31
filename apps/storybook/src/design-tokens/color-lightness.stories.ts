@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useColorLightness.styleframe?css";
-import { colorLightnessPreview } from "./useColorLightness.styleframe?ts";
+import "../components/swatch.styleframe?css";
+import "./color-lightness.styleframe?css";
+import { colorLightnessPreview } from "./color-lightness.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const lightnessLevels = [
 	"50",
@@ -38,7 +38,7 @@ const ColorLightnessGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Colors/useColorLightness",
+	title: "Design Tokens/Colors/Color Lightness",
 	component: ColorLightnessSwatch,
 	tags: ["autodocs"],
 	argTypes: {
