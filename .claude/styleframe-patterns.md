@@ -94,6 +94,41 @@ export function useSpacingUtilities(s: Styleframe) {
 }
 ```
 
+### Spacing Utilities with Multipliers
+
+Use theme composables for spacing utilities with multiplier support:
+
+```ts
+import type { Styleframe } from 'styleframe';
+import { useSpacing } from '@styleframe/theme';
+import { useMarginUtility, usePaddingUtility, useGapUtility } from '@styleframe/theme';
+
+export function useSpacingUtilities(s: Styleframe) {
+    const { ref } = s;
+    const { spacing, spacingSm, spacingMd, spacingLg } = useSpacing(s, {
+        default: '1rem',
+        sm: '0.5rem',
+        md: '1rem',
+        lg: '1.5rem',
+    } as const);
+
+    // Create utilities with named values
+    const createMargin = useMarginUtility(s, {
+        sm: ref(spacingSm),
+        md: ref(spacingMd),
+        lg: ref(spacingLg),
+    });
+
+    // Add multiplier values for flexible spacing (with @ prefix)
+    createMargin(["@1.5", "@2", "@0.5", "@-1"]);
+
+    // Generates: _margin:sm, _margin:md, _margin:lg (named)
+    //            _margin:1.5, _margin:2, etc. (multipliers with calc())
+
+    return { createMargin };
+}
+```
+
 ---
 
 ## Complete Design System Setup

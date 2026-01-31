@@ -139,6 +139,34 @@ createPadding({ sm: ref(spacingSm) }, [hover, focus]);
 
 **IMPORTANT:** Always invoke the creator function. Defining the utility without calling it produces no CSS.
 
+### Spacing Utility Composables
+
+Spacing utilities (`useMarginUtility`, `usePaddingUtility`, `useGapUtility`, `useSpaceUtility`) support **multiplier values** that generate `calc()` expressions:
+
+```ts
+import { useMarginUtility, usePaddingUtility, useGapUtility } from '@styleframe/theme';
+
+// Create utility with named values
+const createMargin = useMarginUtility(s, {
+    sm: ref(spacingSm),
+    md: ref(spacingMd),
+});
+
+// Add multiplier values using array syntax (with @ prefix)
+createMargin(["@1.5", "@2", "@0.5", "@-1"]);
+
+// Generates:
+// ._margin:1.5 { margin: calc(var(--spacing) * 1.5); }
+// ._margin:2 { margin: calc(var(--spacing) * 2); }
+// ._margin:0.5 { margin: calc(var(--spacing) * 0.5); }
+// ._margin:-1 { margin: calc(var(--spacing) * -1); }
+```
+
+**Supported multiplier formats (with @ prefix):**
+- Integers: `@1`, `@2`, `@3`
+- Decimals: `@0.5`, `@1.5`, `@2.25`
+- Negative: `@-1`, `@-0.5` (for negative margins)
+
 ### modifier(name, factory)
 
 Creates reusable utility modifiers.

@@ -1,23 +1,31 @@
-import { createUseUtility } from "../../utils";
+import { createUseSpacingUtility } from "../../utils";
 
 /**
- * Create padding utility classes.
+ * Create padding utility classes with multiplier support.
  *
  * @example
  * ```typescript
  * const s = styleframe();
- * usePaddingUtility(s, { sm: '0.5rem', md: '1rem', lg: '1.5rem' });
- * // Generates: ._padding:sm, ._padding:md, ._padding:lg
+ * const createPadding = usePaddingUtility(s, { sm: '0.5rem', md: '1rem', lg: '1.5rem' });
+ *
+ * // Add multiplier values (with @ prefix):
+ * createPadding(["@1.5", "@2"]);
+ * // Generates:
+ * // ._padding:1.5 { padding: calc(var(--spacing) * 1.5); }
+ * // ._padding:2 { padding: calc(var(--spacing) * 2); }
  * ```
  */
-export const usePaddingUtility = createUseUtility("padding", ({ value }) => ({
-	padding: value,
-}));
+export const usePaddingUtility = createUseSpacingUtility(
+	"padding",
+	({ value }) => ({
+		padding: value,
+	}),
+);
 
 /**
  * Create horizontal padding utility classes (left and right).
  */
-export const usePaddingInlineUtility = createUseUtility(
+export const usePaddingInlineUtility = createUseSpacingUtility(
 	"padding-inline",
 	({ value }) => ({
 		paddingLeft: value,
@@ -28,7 +36,7 @@ export const usePaddingInlineUtility = createUseUtility(
 /**
  * Create vertical padding utility classes (top and bottom).
  */
-export const usePaddingBlockUtility = createUseUtility(
+export const usePaddingBlockUtility = createUseSpacingUtility(
 	"padding-block",
 	({ value }) => ({
 		paddingTop: value,
@@ -39,7 +47,7 @@ export const usePaddingBlockUtility = createUseUtility(
 /**
  * Create padding-top utility classes.
  */
-export const usePaddingTopUtility = createUseUtility(
+export const usePaddingTopUtility = createUseSpacingUtility(
 	"padding-top",
 	({ value }) => ({
 		paddingTop: value,
@@ -49,7 +57,7 @@ export const usePaddingTopUtility = createUseUtility(
 /**
  * Create padding-right utility classes.
  */
-export const usePaddingRightUtility = createUseUtility(
+export const usePaddingRightUtility = createUseSpacingUtility(
 	"padding-right",
 	({ value }) => ({
 		paddingRight: value,
@@ -59,7 +67,7 @@ export const usePaddingRightUtility = createUseUtility(
 /**
  * Create padding-bottom utility classes.
  */
-export const usePaddingBottomUtility = createUseUtility(
+export const usePaddingBottomUtility = createUseSpacingUtility(
 	"padding-bottom",
 	({ value }) => ({
 		paddingBottom: value,
@@ -69,7 +77,7 @@ export const usePaddingBottomUtility = createUseUtility(
 /**
  * Create padding-left utility classes.
  */
-export const usePaddingLeftUtility = createUseUtility(
+export const usePaddingLeftUtility = createUseSpacingUtility(
 	"padding-left",
 	({ value }) => ({
 		paddingLeft: value,
@@ -79,7 +87,7 @@ export const usePaddingLeftUtility = createUseUtility(
 /**
  * Create padding-inline-start utility classes.
  */
-export const usePaddingInlineStartUtility = createUseUtility(
+export const usePaddingInlineStartUtility = createUseSpacingUtility(
 	"padding-inline-start",
 	({ value }) => ({
 		paddingInlineStart: value,
@@ -89,7 +97,7 @@ export const usePaddingInlineStartUtility = createUseUtility(
 /**
  * Create padding-inline-end utility classes.
  */
-export const usePaddingInlineEndUtility = createUseUtility(
+export const usePaddingInlineEndUtility = createUseSpacingUtility(
 	"padding-inline-end",
 	({ value }) => ({
 		paddingInlineEnd: value,
@@ -99,7 +107,7 @@ export const usePaddingInlineEndUtility = createUseUtility(
 /**
  * Create padding-x utility classes (left and right).
  */
-export const usePaddingXUtility = createUseUtility(
+export const usePaddingXUtility = createUseSpacingUtility(
 	"padding-x",
 	({ value }) => ({
 		paddingLeft: value,
@@ -110,7 +118,7 @@ export const usePaddingXUtility = createUseUtility(
 /**
  * Create padding-y utility classes (top and bottom).
  */
-export const usePaddingYUtility = createUseUtility(
+export const usePaddingYUtility = createUseSpacingUtility(
 	"padding-y",
 	({ value }) => ({
 		paddingTop: value,
