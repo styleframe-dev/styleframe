@@ -147,7 +147,35 @@ button({ disabled: true })
 |--------------|----------------|-----------------|
 | `ref(variable)` | Token path | `_property:token.path` |
 | `"@token.path"` | Token path | `_property:token.path` |
+| `"@1.5"` (auto-generated) | Multiplier value | `_property:1.5` |
 | `"literal"` | Wrapped value | `_property:[literal]` |
+
+### Auto-generated Values in Recipes
+
+Spacing properties (`padding`, `margin`, `gap`) support numeric multiplier values with the `@` prefix:
+
+```ts
+recipe({
+    name: 'card',
+    base: {
+        padding: '@1.5',    // → _padding:1.5 → calc(var(--spacing) * 1.5)
+        margin: '@2',       // → _margin:2 → calc(var(--spacing) * 2)
+        gap: '@0.5',        // → _gap:0.5 → calc(var(--spacing) * 0.5)
+    },
+    variants: {
+        spacing: {
+            compact: { padding: '@0.5' },
+            normal: { padding: '@1' },
+            relaxed: { padding: '@2' },
+        },
+    },
+});
+```
+
+**Supported formats:**
+- Integers: `@1`, `@2`, `@3`
+- Decimals: `@0.5`, `@1.5`, `@2.25`
+- Negative: `@-1`, `@-0.5` (useful for negative margins)
 
 ---
 
