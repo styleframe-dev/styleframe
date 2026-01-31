@@ -1,17 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
+import { spacingValues } from "@styleframe/theme";
 import SpacingSwatch from "../components/SpacingSwatch.vue";
 import StoryGrid from "../components/StoryGrid.vue";
-import { spacings } from "../components/SpacingSwatch.styleframe";
 
 const meta = {
 	title: "Design Tokens/Spacing/Spacing",
 	component: SpacingSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		spacing: {
+		value: {
 			control: "select",
-			options: spacings,
+			options: Object.keys(spacingValues),
 		},
 	},
 } satisfies Meta<typeof SpacingSwatch>;
@@ -23,48 +22,70 @@ export const AllSpacings: StoryObj = {
 	render: () => ({
 		components: { SpacingSwatch, StoryGrid },
 		setup() {
-			return { spacings };
+			return { items: Object.keys(spacingValues) };
 		},
 		template: `
-			<StoryGrid :items="spacings" layout="list" v-slot="{ item }">
-				<SpacingSwatch :spacing="item" />
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<SpacingSwatch :name="item" :value="item" />
+				</template>
 			</StoryGrid>
 		`,
 	}),
 };
 
+export const DoubleExtraSmall: Story = {
+	args: {
+		name: "2xs",
+		value: "2xs",
+	},
+};
+
 export const ExtraSmall: Story = {
 	args: {
-		spacing: "xs",
+		name: "xs",
+		value: "xs",
 	},
 };
 
 export const Small: Story = {
 	args: {
-		spacing: "sm",
+		name: "sm",
+		value: "sm",
 	},
 };
 
 export const Medium: Story = {
 	args: {
-		spacing: "md",
+		name: "md",
+		value: "md",
 	},
 };
 
 export const Large: Story = {
 	args: {
-		spacing: "lg",
+		name: "lg",
+		value: "lg",
 	},
 };
 
 export const ExtraLarge: Story = {
 	args: {
-		spacing: "xl",
+		name: "xl",
+		value: "xl",
 	},
 };
 
 export const DoubleExtraLarge: Story = {
 	args: {
-		spacing: "2xl",
+		name: "2xl",
+		value: "2xl",
+	},
+};
+
+export const TripleExtraLarge: Story = {
+	args: {
+		name: "3xl",
+		value: "3xl",
 	},
 };

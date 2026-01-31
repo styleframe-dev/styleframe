@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import "./SpacingSwatch.styleframe?css";
-import { spacingSwatch } from "./SpacingSwatch.styleframe?ts";
+import "./BorderWidthSwatch.styleframe?css";
+import { borderWidthSwatch } from "./BorderWidthSwatch.styleframe?ts";
 import SwatchCard from "./primitives/SwatchCard.vue";
 
 const props = defineProps<{
@@ -11,6 +11,6 @@ const props = defineProps<{
 
 <template>
 	<SwatchCard :name="name">
-		<div :class="['spacing-swatch__preview', spacingSwatch({ variant: value })]" />
+		<div :class="['border-width-swatch__preview', borderWidthSwatch({ variant: value })]" />
 	</SwatchCard>
 </template>

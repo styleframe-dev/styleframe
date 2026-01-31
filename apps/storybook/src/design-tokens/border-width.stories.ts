@@ -1,38 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { defineComponent, h } from "vue";
-
-import BorderSwatch from "../components/BorderSwatch.vue";
+import { borderWidthValues } from "@styleframe/theme";
+import BorderWidthSwatch from "../components/BorderWidthSwatch.vue";
 import StoryGrid from "../components/StoryGrid.vue";
-import "./border-width.styleframe?css";
-import { borderWidthPreview } from "./border-width.styleframe?ts";
-
-const borderWidths = ["none", "thin", "medium", "thick"];
-
-const BorderWidthSwatch = defineComponent({
-	name: "BorderWidthSwatch",
-	props: {
-		borderWidth: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(BorderSwatch, {
-				name: props.borderWidth,
-				previewClass: borderWidthPreview({ borderWidth: props.borderWidth }),
-			});
-	},
-});
 
 const meta = {
 	title: "Design Tokens/Borders/Border Width",
 	component: BorderWidthSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		borderWidth: {
+		value: {
 			control: "select",
-			options: borderWidths,
+			options: Object.keys(borderWidthValues),
 		},
 	},
 } satisfies Meta<typeof BorderWidthSwatch>;
@@ -44,11 +22,13 @@ export const AllBorderWidths: StoryObj = {
 	render: () => ({
 		components: { BorderWidthSwatch, StoryGrid },
 		setup() {
-			return { borderWidths };
+			return { items: Object.keys(borderWidthValues) };
 		},
 		template: `
-			<StoryGrid :items="borderWidths" layout="grid" v-slot="{ item }">
-				<BorderWidthSwatch :border-width="item" />
+			<StoryGrid :items="items">
+				<template #default="{ item }">
+					<BorderWidthSwatch :name="item" :value="item" />
+				</template>
 			</StoryGrid>
 		`,
 	}),
@@ -56,24 +36,28 @@ export const AllBorderWidths: StoryObj = {
 
 export const None: Story = {
 	args: {
-		borderWidth: "none",
+		name: "none",
+		value: "none",
 	},
 };
 
 export const Thin: Story = {
 	args: {
-		borderWidth: "thin",
+		name: "thin",
+		value: "thin",
 	},
 };
 
 export const Medium: Story = {
 	args: {
-		borderWidth: "medium",
+		name: "medium",
+		value: "medium",
 	},
 };
 
 export const Thick: Story = {
 	args: {
-		borderWidth: "thick",
+		name: "thick",
+		value: "thick",
 	},
 };

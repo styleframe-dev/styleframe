@@ -1,41 +1,43 @@
-import { useSpacing } from "@styleframe/theme";
 import { styleframe } from "styleframe";
 import {
 	useSwatchColors,
 	useSwatchDimensions,
 } from "./primitives/tokens.styleframe";
+import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
 
+useUtilitiesPreset(s);
+
+const { spacing } = useDesignTokensPreset(s);
+const {
+	spacing2xs,
+	spacingXs,
+	spacingSm,
+	spacingMd,
+	spacingLg,
+	spacingXl,
+	spacing2xl,
+	spacing3xl,
+} = spacing;
+
 const { swatchColorPrimary } = useSwatchColors(s);
 const { swatchBorderRadiusSm } = useSwatchDimensions(s);
-
-export const spacingValues = {
-	xs: "0.25rem",
-	sm: "0.5rem",
-	md: "1rem",
-	lg: "1.5rem",
-	xl: "2rem",
-	"2xl": "3rem",
-} as const;
-
-export const spacings = Object.keys(spacingValues) as Spacing[];
-
-export type Spacing = keyof typeof spacingValues;
-
-const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl, spacing2xl } =
-	useSpacing(s, spacingValues);
 
 s.selector(".spacing-swatch__preview", {
 	background: s.ref(swatchColorPrimary),
 	borderRadius: s.ref(swatchBorderRadiusSm),
 });
 
-export const spacingPreview = s.recipe({
-	name: "spacing-preview",
+export const spacingSwatch = s.recipe({
+	name: "spacing-swatch",
 	base: {},
 	variants: {
-		spacing: {
+		variant: {
+			"2xs": {
+				width: s.ref(spacing2xs),
+				height: s.ref(spacing2xs),
+			},
 			xs: {
 				width: s.ref(spacingXs),
 				height: s.ref(spacingXs),
@@ -60,10 +62,14 @@ export const spacingPreview = s.recipe({
 				width: s.ref(spacing2xl),
 				height: s.ref(spacing2xl),
 			},
+			"3xl": {
+				width: s.ref(spacing3xl),
+				height: s.ref(spacing3xl),
+			},
 		},
 	},
 	defaultVariants: {
-		spacing: "md",
+		variant: "md",
 	},
 });
 

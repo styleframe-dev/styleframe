@@ -9,56 +9,50 @@ useUtilitiesPreset(s);
 const { colors } = useDesignTokensPreset(s);
 const {
 	colorPrimary,
-	colorSecondary,
-	colorSuccess,
-	colorWarning,
-	colorDanger,
-	colorInfo,
-	colorLight,
-	colorDark,
+	colorPrimaryTint50,
+	colorPrimaryTint100,
+	colorPrimaryTint150,
+	colorPrimaryTint200,
 } = colors;
 
 const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
 
-s.selector(".color-swatch__preview", {
+s.selector(".color-tint-swatch__preview", {
 	width: s.ref(swatchPreviewSize),
 	height: s.ref(swatchPreviewSize),
 	borderRadius: s.ref(swatchBorderRadius),
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+	fontSize: "12px",
+	fontWeight: "600",
+	color: "#ffffff",
 });
 
-export const colorSwatch = s.recipe({
-	name: "color-swatch",
+export const colorTintSwatch = s.recipe({
+	name: "color-tint-swatch",
 	base: {},
 	variants: {
 		variant: {
-			primary: {
+			base: {
 				background: s.ref(colorPrimary),
 			},
-			secondary: {
-				background: s.ref(colorSecondary),
+			"50": {
+				background: s.ref(colorPrimaryTint50),
 			},
-			success: {
-				background: s.ref(colorSuccess),
+			"100": {
+				background: s.ref(colorPrimaryTint100),
 			},
-			warning: {
-				background: s.ref(colorWarning),
+			"150": {
+				background: s.ref(colorPrimaryTint150),
 			},
-			danger: {
-				background: s.ref(colorDanger),
-			},
-			info: {
-				background: s.ref(colorInfo),
-			},
-			light: {
-				background: s.ref(colorLight),
-			},
-			dark: {
-				background: s.ref(colorDark),
+			"200": {
+				background: s.ref(colorPrimaryTint200),
 			},
 		},
 	},
 	defaultVariants: {
-		variant: "primary",
+		variant: "base",
 	},
 });
 

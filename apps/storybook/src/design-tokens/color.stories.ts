@@ -1,17 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
+import { colorValues } from "@styleframe/theme";
 import ColorSwatch from "../components/ColorSwatch.vue";
 import StoryGrid from "../components/StoryGrid.vue";
-import { colors } from "../components/ColorSwatch.styleframe";
 
 const meta = {
 	title: "Design Tokens/Colors/Color",
 	component: ColorSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		color: {
+		value: {
 			control: "select",
-			options: colors,
+			options: Object.keys(colorValues),
 		},
 	},
 } satisfies Meta<typeof ColorSwatch>;
@@ -23,11 +22,13 @@ export const AllColors: StoryObj = {
 	render: () => ({
 		components: { ColorSwatch, StoryGrid },
 		setup() {
-			return { colors };
+			return { items: Object.keys(colorValues) };
 		},
 		template: `
-			<StoryGrid :items="colors" layout="grid" v-slot="{ item }">
-				<ColorSwatch :color="item" />
+			<StoryGrid :items="items">
+				<template #default="{ item }">
+					<ColorSwatch :name="item" :value="item" />
+				</template>
 			</StoryGrid>
 		`,
 	}),
@@ -35,36 +36,56 @@ export const AllColors: StoryObj = {
 
 export const Primary: Story = {
 	args: {
-		color: "primary",
+		name: "primary",
+		value: "primary",
 	},
 };
 
 export const Secondary: Story = {
 	args: {
-		color: "secondary",
+		name: "secondary",
+		value: "secondary",
 	},
 };
 
 export const Info: Story = {
 	args: {
-		color: "info",
+		name: "info",
+		value: "info",
 	},
 };
 
 export const Success: Story = {
 	args: {
-		color: "success",
+		name: "success",
+		value: "success",
 	},
 };
 
 export const Warning: Story = {
 	args: {
-		color: "warning",
+		name: "warning",
+		value: "warning",
 	},
 };
 
 export const Danger: Story = {
 	args: {
-		color: "danger",
+		name: "danger",
+		value: "danger",
+	},
+};
+
+export const Light: Story = {
+	args: {
+		name: "light",
+		value: "light",
+	},
+};
+
+export const Dark: Story = {
+	args: {
+		name: "dark",
+		value: "dark",
 	},
 };

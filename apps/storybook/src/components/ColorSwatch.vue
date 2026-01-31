@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import "./ColorSwatch.styleframe?css";
-import { colorPreview } from "./ColorSwatch.styleframe?ts";
-import type { Color } from "./ColorSwatch.styleframe";
+import { colorSwatch } from "./ColorSwatch.styleframe?ts";
+import SwatchCard from "./primitives/SwatchCard.vue";
 
-defineProps<{
-	color: Color;
+const props = defineProps<{
+	name: string;
+	value: string;
 }>();
 </script>
 
 <template>
-	<div class="color-swatch">
-		<div :class="['color-swatch__preview', colorPreview({ color })]" />
-		<span class="color-swatch__name">{{ color }}</span>
-	</div>
+	<SwatchCard :name="name">
+		<div :class="['color-swatch__preview', colorSwatch({ variant: value })]" />
+	</SwatchCard>
 </template>

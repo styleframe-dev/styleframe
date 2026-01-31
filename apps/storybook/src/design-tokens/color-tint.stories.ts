@@ -1,12 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { defineComponent, h } from "vue";
-
-import ColorVariantSwatch from "../components/ColorVariantSwatch.vue";
+import { colorTintValues } from "@styleframe/theme";
+import ColorTintSwatch from "../components/ColorTintSwatch.vue";
 import StoryGrid from "../components/StoryGrid.vue";
-import "./color-tint.styleframe?css";
-import { colorTintPreview } from "./color-tint.styleframe?ts";
 
-const tints = ["base", "50", "100", "150", "200"];
+const tints = ["base", ...Object.keys(colorTintValues)];
 
 const tintLabels: Record<string, string> = {
 	base: "Base",
@@ -16,30 +13,12 @@ const tintLabels: Record<string, string> = {
 	"200": "Tint 200 (+20%)",
 };
 
-const ColorTintSwatch = defineComponent({
-	name: "ColorTintSwatch",
-	props: {
-		tint: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(ColorVariantSwatch, {
-				name: props.tint,
-				previewClass: colorTintPreview({ tint: props.tint }),
-				label: tintLabels[props.tint],
-			});
-	},
-});
-
 const meta = {
 	title: "Design Tokens/Colors/Color Tint",
 	component: ColorTintSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		tint: {
+		value: {
 			control: "select",
 			options: tints,
 		},
@@ -53,11 +32,13 @@ export const AllTints: StoryObj = {
 	render: () => ({
 		components: { ColorTintSwatch, StoryGrid },
 		setup() {
-			return { tints };
+			return { tints, tintLabels };
 		},
 		template: `
-			<StoryGrid :items="tints" layout="grid" v-slot="{ item }">
-				<ColorTintSwatch :tint="item" />
+			<StoryGrid :items="tints">
+				<template #default="{ item }">
+					<ColorTintSwatch :name="item" :value="item" :label="tintLabels[item]" />
+				</template>
 			</StoryGrid>
 		`,
 	}),
@@ -65,30 +46,40 @@ export const AllTints: StoryObj = {
 
 export const Base: Story = {
 	args: {
-		tint: "base",
+		name: "base",
+		value: "base",
+		label: "Base",
 	},
 };
 
 export const Tint50: Story = {
 	args: {
-		tint: "50",
+		name: "50",
+		value: "50",
+		label: "Tint 50 (+5%)",
 	},
 };
 
 export const Tint100: Story = {
 	args: {
-		tint: "100",
+		name: "100",
+		value: "100",
+		label: "Tint 100 (+10%)",
 	},
 };
 
 export const Tint150: Story = {
 	args: {
-		tint: "150",
+		name: "150",
+		value: "150",
+		label: "Tint 150 (+15%)",
 	},
 };
 
 export const Tint200: Story = {
 	args: {
-		tint: "200",
+		name: "200",
+		value: "200",
+		label: "Tint 200 (+20%)",
 	},
 };

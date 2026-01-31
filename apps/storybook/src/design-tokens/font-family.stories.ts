@@ -1,39 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { defineComponent, h } from "vue";
-
-import TypographySwatch from "../components/TypographySwatch.vue";
+import { fontFamilyValues } from "@styleframe/theme";
+import FontFamilySwatch from "../components/FontFamilySwatch.vue";
 import StoryGrid from "../components/StoryGrid.vue";
-import "./font-family.styleframe?css";
-import { fontFamilyPreview } from "./font-family.styleframe?ts";
-
-const fontFamilies = ["base", "print", "mono"];
-
-const FontFamilySwatch = defineComponent({
-	name: "FontFamilySwatch",
-	props: {
-		fontFamily: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(TypographySwatch, {
-				name: props.fontFamily,
-				previewClass: fontFamilyPreview({ fontFamily: props.fontFamily }),
-				sampleText: "The quick brown fox jumps over the lazy dog. 0123456789",
-			});
-	},
-});
 
 const meta = {
 	title: "Design Tokens/Typography/Font Family",
 	component: FontFamilySwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		fontFamily: {
+		value: {
 			control: "select",
-			options: fontFamilies,
+			options: Object.keys(fontFamilyValues),
 		},
 	},
 } satisfies Meta<typeof FontFamilySwatch>;
@@ -45,11 +22,13 @@ export const AllFontFamilies: StoryObj = {
 	render: () => ({
 		components: { FontFamilySwatch, StoryGrid },
 		setup() {
-			return { fontFamilies };
+			return { items: Object.keys(fontFamilyValues) };
 		},
 		template: `
-			<StoryGrid :items="fontFamilies" layout="list" v-slot="{ item }">
-				<FontFamilySwatch :font-family="item" />
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<FontFamilySwatch :name="item" :value="item" />
+				</template>
 			</StoryGrid>
 		`,
 	}),
@@ -57,18 +36,21 @@ export const AllFontFamilies: StoryObj = {
 
 export const Base: Story = {
 	args: {
-		fontFamily: "base",
+		name: "base",
+		value: "base",
 	},
 };
 
 export const Print: Story = {
 	args: {
-		fontFamily: "print",
+		name: "print",
+		value: "print",
 	},
 };
 
 export const Mono: Story = {
 	args: {
-		fontFamily: "mono",
+		name: "mono",
+		value: "mono",
 	},
 };

@@ -1,50 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { defineComponent, h } from "vue";
-
-import ColorVariantSwatch from "../components/ColorVariantSwatch.vue";
+import { colorLightnessValues } from "@styleframe/theme";
+import ColorLightnessSwatch from "../components/ColorLightnessSwatch.vue";
 import StoryGrid from "../components/StoryGrid.vue";
-import "./color-lightness.styleframe?css";
-import { colorLightnessPreview } from "./color-lightness.styleframe?ts";
-
-const lightnessLevels = [
-	"50",
-	"100",
-	"200",
-	"300",
-	"400",
-	"500",
-	"600",
-	"700",
-	"800",
-	"900",
-	"950",
-];
-
-const ColorLightnessSwatch = defineComponent({
-	name: "ColorLightnessSwatch",
-	props: {
-		lightness: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(ColorVariantSwatch, {
-				name: props.lightness,
-				previewClass: colorLightnessPreview({ lightness: props.lightness }),
-			});
-	},
-});
 
 const meta = {
 	title: "Design Tokens/Colors/Color Lightness",
 	component: ColorLightnessSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		lightness: {
+		value: {
 			control: "select",
-			options: lightnessLevels,
+			options: Object.keys(colorLightnessValues),
 		},
 	},
 } satisfies Meta<typeof ColorLightnessSwatch>;
@@ -56,11 +22,13 @@ export const AllLightnessLevels: StoryObj = {
 	render: () => ({
 		components: { ColorLightnessSwatch, StoryGrid },
 		setup() {
-			return { lightnessLevels };
+			return { items: Object.keys(colorLightnessValues) };
 		},
 		template: `
-			<StoryGrid :items="lightnessLevels" layout="grid" v-slot="{ item }">
-				<ColorLightnessSwatch :lightness="item" />
+			<StoryGrid :items="items">
+				<template #default="{ item }">
+					<ColorLightnessSwatch :name="item" :value="item" />
+				</template>
 			</StoryGrid>
 		`,
 	}),
@@ -68,66 +36,77 @@ export const AllLightnessLevels: StoryObj = {
 
 export const Lightness50: Story = {
 	args: {
-		lightness: "50",
+		name: "50",
+		value: "50",
 	},
 };
 
 export const Lightness100: Story = {
 	args: {
-		lightness: "100",
+		name: "100",
+		value: "100",
 	},
 };
 
 export const Lightness200: Story = {
 	args: {
-		lightness: "200",
+		name: "200",
+		value: "200",
 	},
 };
 
 export const Lightness300: Story = {
 	args: {
-		lightness: "300",
+		name: "300",
+		value: "300",
 	},
 };
 
 export const Lightness400: Story = {
 	args: {
-		lightness: "400",
+		name: "400",
+		value: "400",
 	},
 };
 
 export const Lightness500: Story = {
 	args: {
-		lightness: "500",
+		name: "500",
+		value: "500",
 	},
 };
 
 export const Lightness600: Story = {
 	args: {
-		lightness: "600",
+		name: "600",
+		value: "600",
 	},
 };
 
 export const Lightness700: Story = {
 	args: {
-		lightness: "700",
+		name: "700",
+		value: "700",
 	},
 };
 
 export const Lightness800: Story = {
 	args: {
-		lightness: "800",
+		name: "800",
+		value: "800",
 	},
 };
 
 export const Lightness900: Story = {
 	args: {
-		lightness: "900",
+		name: "900",
+		value: "900",
 	},
 };
 
 export const Lightness950: Story = {
 	args: {
-		lightness: "950",
+		name: "950",
+		value: "950",
 	},
 };

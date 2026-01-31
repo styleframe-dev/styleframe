@@ -1,48 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { defineComponent, h } from "vue";
-
-import TypographySwatch from "../components/TypographySwatch.vue";
+import { letterSpacingValues } from "@styleframe/theme";
+import LetterSpacingSwatch from "../components/LetterSpacingSwatch.vue";
 import StoryGrid from "../components/StoryGrid.vue";
-import "./letter-spacing.styleframe?css";
-import { letterSpacingPreview } from "./letter-spacing.styleframe?ts";
-import { letterSpacingValues } from "./letter-spacing.styleframe";
-
-const letterSpacings = Object.keys(
-	letterSpacingValues,
-) as (keyof typeof letterSpacingValues)[];
-
-const LetterSpacingSwatch = defineComponent({
-	name: "LetterSpacingSwatch",
-	props: {
-		letterSpacing: {
-			type: String,
-			required: true,
-		},
-	},
-	setup(props) {
-		return () =>
-			h(TypographySwatch, {
-				name: props.letterSpacing,
-				value:
-					letterSpacingValues[
-						props.letterSpacing as keyof typeof letterSpacingValues
-					],
-				previewClass: letterSpacingPreview({
-					letterSpacing: props.letterSpacing,
-				}),
-				sampleText: "Letter Spacing",
-			});
-	},
-});
 
 const meta = {
 	title: "Design Tokens/Typography/Letter Spacing",
 	component: LetterSpacingSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		letterSpacing: {
+		value: {
 			control: "select",
-			options: letterSpacings,
+			options: Object.keys(letterSpacingValues),
 		},
 	},
 } satisfies Meta<typeof LetterSpacingSwatch>;
@@ -54,11 +22,13 @@ export const AllLetterSpacings: StoryObj = {
 	render: () => ({
 		components: { LetterSpacingSwatch, StoryGrid },
 		setup() {
-			return { letterSpacings };
+			return { items: Object.keys(letterSpacingValues) };
 		},
 		template: `
-			<StoryGrid :items="letterSpacings" layout="list" v-slot="{ item }">
-				<LetterSpacingSwatch :letter-spacing="item" />
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<LetterSpacingSwatch :name="item" :value="item" />
+				</template>
 			</StoryGrid>
 		`,
 	}),
@@ -66,30 +36,35 @@ export const AllLetterSpacings: StoryObj = {
 
 export const Tighter: Story = {
 	args: {
-		letterSpacing: "tighter",
+		name: "tighter",
+		value: "tighter",
 	},
 };
 
 export const Tight: Story = {
 	args: {
-		letterSpacing: "tight",
+		name: "tight",
+		value: "tight",
 	},
 };
 
 export const Normal: Story = {
 	args: {
-		letterSpacing: "normal",
+		name: "normal",
+		value: "normal",
 	},
 };
 
 export const Wide: Story = {
 	args: {
-		letterSpacing: "wide",
+		name: "wide",
+		value: "wide",
 	},
 };
 
 export const Wider: Story = {
 	args: {
-		letterSpacing: "wider",
+		name: "wider",
+		value: "wider",
 	},
 };
