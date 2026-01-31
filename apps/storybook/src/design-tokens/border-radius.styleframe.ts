@@ -1,35 +1,11 @@
-import { useBorderRadius, useUtilitiesPreset } from "@styleframe/theme";
+import { borderRadiusValues as defaultBorderRadiusValues } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { borderRadius } from "../tokens.styleframe";
 
 const s = styleframe();
 
-const {
-	borderRadiusNone,
-	borderRadiusSm,
-	borderRadiusMd,
-	borderRadiusLg,
-	borderRadiusXl,
-	borderRadiusFull,
-} = useBorderRadius(s, {
-	none: "0",
-	sm: "0.125rem",
-	md: "0.25rem",
-	lg: "0.5rem",
-	xl: "1rem",
-	full: "9999px",
-});
-
-// Register all utilities and generate utility classes
-const { createBorderRadiusUtility } = useUtilitiesPreset(s);
-
-createBorderRadiusUtility({
-	none: s.ref(borderRadiusNone),
-	sm: s.ref(borderRadiusSm),
-	md: s.ref(borderRadiusMd),
-	lg: s.ref(borderRadiusLg),
-	xl: s.ref(borderRadiusXl),
-	full: s.ref(borderRadiusFull),
-});
+// Re-export default values for display in stories
+export const borderRadiusValues = defaultBorderRadiusValues;
 
 export const borderRadiusPreview = s.recipe({
 	name: "border-radius-preview",
@@ -37,22 +13,25 @@ export const borderRadiusPreview = s.recipe({
 	variants: {
 		borderRadius: {
 			none: {
-				borderRadius: s.ref(borderRadiusNone),
+				borderRadius: s.ref(borderRadius.borderRadiusNone),
 			},
 			sm: {
-				borderRadius: s.ref(borderRadiusSm),
+				borderRadius: s.ref(borderRadius.borderRadiusSm),
 			},
 			md: {
-				borderRadius: s.ref(borderRadiusMd),
+				borderRadius: s.ref(borderRadius.borderRadiusMd),
 			},
 			lg: {
-				borderRadius: s.ref(borderRadiusLg),
+				borderRadius: s.ref(borderRadius.borderRadiusLg),
 			},
 			xl: {
-				borderRadius: s.ref(borderRadiusXl),
+				borderRadius: s.ref(borderRadius.borderRadiusXl),
+			},
+			"2xl": {
+				borderRadius: s.ref(borderRadius.borderRadius2xl),
 			},
 			full: {
-				borderRadius: s.ref(borderRadiusFull),
+				borderRadius: s.ref(borderRadius.borderRadiusFull),
 			},
 		},
 	},

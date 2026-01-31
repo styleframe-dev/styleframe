@@ -1,66 +1,48 @@
-import { useSpacing, useUtilitiesPreset } from "@styleframe/theme";
+import { spacingValues as defaultSpacingValues } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { spacing } from "../tokens.styleframe";
 
 const s = styleframe();
 
-// Exported for use in stories to display values
-export const spacingValues = {
-	xs: "0.25rem",
-	sm: "0.5rem",
-	md: "1rem",
-	lg: "1.5rem",
-	xl: "2rem",
-	"2xl": "3rem",
-} as const;
-
-const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl, spacing2xl } =
-	useSpacing(s, spacingValues);
-
-// Register all utilities and generate utility classes
-const { createPaddingUtility, createMarginUtility, createGapUtility } =
-	useUtilitiesPreset(s);
-
-const spacingMap = {
-	xs: s.ref(spacingXs),
-	sm: s.ref(spacingSm),
-	md: s.ref(spacingMd),
-	lg: s.ref(spacingLg),
-	xl: s.ref(spacingXl),
-	"2xl": s.ref(spacing2xl),
-};
-
-createPaddingUtility(spacingMap);
-createMarginUtility(spacingMap);
-createGapUtility(spacingMap);
+// Re-export default values for display in stories
+export const spacingValues = defaultSpacingValues;
 
 export const spacingPreview = s.recipe({
 	name: "spacing-preview",
 	base: {},
 	variants: {
 		spacing: {
+			"2xs": {
+				width: s.ref(spacing.spacing2xs),
+				height: s.ref(spacing.spacing2xs),
+			},
 			xs: {
-				width: s.ref(spacingXs),
-				height: s.ref(spacingXs),
+				width: s.ref(spacing.spacingXs),
+				height: s.ref(spacing.spacingXs),
 			},
 			sm: {
-				width: s.ref(spacingSm),
-				height: s.ref(spacingSm),
+				width: s.ref(spacing.spacingSm),
+				height: s.ref(spacing.spacingSm),
 			},
 			md: {
-				width: s.ref(spacingMd),
-				height: s.ref(spacingMd),
+				width: s.ref(spacing.spacingMd),
+				height: s.ref(spacing.spacingMd),
 			},
 			lg: {
-				width: s.ref(spacingLg),
-				height: s.ref(spacingLg),
+				width: s.ref(spacing.spacingLg),
+				height: s.ref(spacing.spacingLg),
 			},
 			xl: {
-				width: s.ref(spacingXl),
-				height: s.ref(spacingXl),
+				width: s.ref(spacing.spacingXl),
+				height: s.ref(spacing.spacingXl),
 			},
 			"2xl": {
-				width: s.ref(spacing2xl),
-				height: s.ref(spacing2xl),
+				width: s.ref(spacing.spacing2xl),
+				height: s.ref(spacing.spacing2xl),
+			},
+			"3xl": {
+				width: s.ref(spacing.spacing3xl),
+				height: s.ref(spacing.spacing3xl),
 			},
 		},
 	},

@@ -1,35 +1,11 @@
-import { useLineHeight, useUtilitiesPreset } from "@styleframe/theme";
+import { lineHeightValues as defaultLineHeightValues } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { lineHeight } from "../tokens.styleframe";
 
 const s = styleframe();
 
-// Exported for use in stories to display values
-export const lineHeightValues = {
-	tight: "1.2",
-	snug: "1.35",
-	normal: "1.5",
-	relaxed: "1.65",
-	loose: "1.9",
-} as const;
-
-const {
-	lineHeightTight,
-	lineHeightSnug,
-	lineHeightNormal,
-	lineHeightRelaxed,
-	lineHeightLoose,
-} = useLineHeight(s);
-
-// Register all utilities and generate utility classes
-const { createLineHeightUtility } = useUtilitiesPreset(s);
-
-createLineHeightUtility({
-	tight: s.ref(lineHeightTight),
-	snug: s.ref(lineHeightSnug),
-	normal: s.ref(lineHeightNormal),
-	relaxed: s.ref(lineHeightRelaxed),
-	loose: s.ref(lineHeightLoose),
-});
+// Re-export default values for display in stories
+export const lineHeightValues = defaultLineHeightValues;
 
 export const lineHeightPreview = s.recipe({
 	name: "line-height-preview",
@@ -37,19 +13,19 @@ export const lineHeightPreview = s.recipe({
 	variants: {
 		lineHeight: {
 			tight: {
-				lineHeight: s.ref(lineHeightTight),
+				lineHeight: s.ref(lineHeight.lineHeightTight),
 			},
 			snug: {
-				lineHeight: s.ref(lineHeightSnug),
+				lineHeight: s.ref(lineHeight.lineHeightSnug),
 			},
 			normal: {
-				lineHeight: s.ref(lineHeightNormal),
+				lineHeight: s.ref(lineHeight.lineHeightNormal),
 			},
 			relaxed: {
-				lineHeight: s.ref(lineHeightRelaxed),
+				lineHeight: s.ref(lineHeight.lineHeightRelaxed),
 			},
 			loose: {
-				lineHeight: s.ref(lineHeightLoose),
+				lineHeight: s.ref(lineHeight.lineHeightLoose),
 			},
 		},
 	},

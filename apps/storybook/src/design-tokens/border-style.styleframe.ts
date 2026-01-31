@@ -1,32 +1,7 @@
-import { useBorderStyle, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { borderStyle } from "../tokens.styleframe";
 
 const s = styleframe();
-
-const {
-	borderStyleNone,
-	borderStyleSolid,
-	borderStyleDashed,
-	borderStyleDotted,
-	borderStyleDouble,
-	borderStyleGroove,
-	borderStyleInset,
-	borderStyleOutset,
-} = useBorderStyle(s);
-
-// Register all utilities and generate utility classes
-const { createBorderStyleUtility } = useUtilitiesPreset(s);
-
-createBorderStyleUtility({
-	none: s.ref(borderStyleNone),
-	solid: s.ref(borderStyleSolid),
-	dashed: s.ref(borderStyleDashed),
-	dotted: s.ref(borderStyleDotted),
-	double: s.ref(borderStyleDouble),
-	groove: s.ref(borderStyleGroove),
-	inset: s.ref(borderStyleInset),
-	outset: s.ref(borderStyleOutset),
-});
 
 export const borderStylePreview = s.recipe({
 	name: "border-style-preview",
@@ -36,48 +11,34 @@ export const borderStylePreview = s.recipe({
 	variants: {
 		borderStyle: {
 			none: {
-				borderStyle: s.ref(borderStyleNone),
+				borderStyle: s.ref(borderStyle.borderStyleNone),
 			},
 			solid: {
-				borderStyle: s.ref(borderStyleSolid),
+				borderStyle: s.ref(borderStyle.borderStyleSolid),
 			},
 			dashed: {
-				borderStyle: s.ref(borderStyleDashed),
+				borderStyle: s.ref(borderStyle.borderStyleDashed),
 			},
 			dotted: {
-				borderStyle: s.ref(borderStyleDotted),
+				borderStyle: s.ref(borderStyle.borderStyleDotted),
 			},
 			double: {
-				borderStyle: s.ref(borderStyleDouble),
+				borderStyle: s.ref(borderStyle.borderStyleDouble),
 			},
 			groove: {
-				borderStyle: s.ref(borderStyleGroove),
+				borderStyle: s.ref(borderStyle.borderStyleGroove),
 			},
 			inset: {
-				borderStyle: s.ref(borderStyleInset),
+				borderStyle: s.ref(borderStyle.borderStyleInset),
 			},
 			outset: {
-				borderStyle: s.ref(borderStyleOutset),
+				borderStyle: s.ref(borderStyle.borderStyleOutset),
 			},
 		},
 	},
 	defaultVariants: {
 		borderStyle: "solid",
 	},
-});
-
-s.selector(".border-style-swatch", {
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-	gap: "8px",
-});
-
-s.selector(".border-style-grid", {
-	display: "flex",
-	flexWrap: "wrap",
-	gap: "24px",
-	padding: "16px",
 });
 
 export default s;

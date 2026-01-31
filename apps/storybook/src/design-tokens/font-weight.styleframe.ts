@@ -1,41 +1,11 @@
-import { useFontWeight, useUtilitiesPreset } from "@styleframe/theme";
+import { fontWeightValues as defaultFontWeightValues } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { fontWeight } from "../tokens.styleframe";
 
 const s = styleframe();
 
-// Exported for use in stories to display values
-export const fontWeightValues = {
-	extralight: "200",
-	light: "300",
-	normal: "400",
-	medium: "500",
-	semibold: "600",
-	bold: "700",
-	black: "900",
-} as const;
-
-const {
-	fontWeightExtralight,
-	fontWeightLight,
-	fontWeightNormal,
-	fontWeightMedium,
-	fontWeightSemibold,
-	fontWeightBold,
-	fontWeightBlack,
-} = useFontWeight(s);
-
-// Register all utilities and generate utility classes
-const { createFontWeightUtility } = useUtilitiesPreset(s);
-
-createFontWeightUtility({
-	extralight: s.ref(fontWeightExtralight),
-	light: s.ref(fontWeightLight),
-	normal: s.ref(fontWeightNormal),
-	medium: s.ref(fontWeightMedium),
-	semibold: s.ref(fontWeightSemibold),
-	bold: s.ref(fontWeightBold),
-	black: s.ref(fontWeightBlack),
-});
+// Re-export default values for display in stories
+export const fontWeightValues = defaultFontWeightValues;
 
 export const fontWeightPreview = s.recipe({
 	name: "font-weight-preview",
@@ -43,25 +13,25 @@ export const fontWeightPreview = s.recipe({
 	variants: {
 		fontWeight: {
 			extralight: {
-				fontWeight: s.ref(fontWeightExtralight),
+				fontWeight: s.ref(fontWeight.fontWeightExtralight),
 			},
 			light: {
-				fontWeight: s.ref(fontWeightLight),
+				fontWeight: s.ref(fontWeight.fontWeightLight),
 			},
 			normal: {
-				fontWeight: s.ref(fontWeightNormal),
+				fontWeight: s.ref(fontWeight.fontWeightNormal),
 			},
 			medium: {
-				fontWeight: s.ref(fontWeightMedium),
+				fontWeight: s.ref(fontWeight.fontWeightMedium),
 			},
 			semibold: {
-				fontWeight: s.ref(fontWeightSemibold),
+				fontWeight: s.ref(fontWeight.fontWeightSemibold),
 			},
 			bold: {
-				fontWeight: s.ref(fontWeightBold),
+				fontWeight: s.ref(fontWeight.fontWeightBold),
 			},
 			black: {
-				fontWeight: s.ref(fontWeightBlack),
+				fontWeight: s.ref(fontWeight.fontWeightBlack),
 			},
 		},
 	},

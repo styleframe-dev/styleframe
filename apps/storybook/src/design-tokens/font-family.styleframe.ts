@@ -1,18 +1,7 @@
-import { useFontFamily, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { fontFamily } from "../tokens.styleframe";
 
 const s = styleframe();
-
-const { fontFamilyBase, fontFamilyPrint, fontFamilyMono } = useFontFamily(s);
-
-// Register all utilities and generate utility classes
-const { createFontFamilyUtility } = useUtilitiesPreset(s);
-
-createFontFamilyUtility({
-	base: s.ref(fontFamilyBase),
-	print: s.ref(fontFamilyPrint),
-	mono: s.ref(fontFamilyMono),
-});
 
 export const fontFamilyPreview = s.recipe({
 	name: "font-family-preview",
@@ -20,13 +9,13 @@ export const fontFamilyPreview = s.recipe({
 	variants: {
 		fontFamily: {
 			base: {
-				fontFamily: s.ref(fontFamilyBase),
+				fontFamily: s.ref(fontFamily.fontFamilyBase),
 			},
 			print: {
-				fontFamily: s.ref(fontFamilyPrint),
+				fontFamily: s.ref(fontFamily.fontFamilyPrint),
 			},
 			mono: {
-				fontFamily: s.ref(fontFamilyMono),
+				fontFamily: s.ref(fontFamily.fontFamilyMono),
 			},
 		},
 	},

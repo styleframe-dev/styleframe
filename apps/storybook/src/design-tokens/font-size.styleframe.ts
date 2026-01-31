@@ -1,44 +1,11 @@
-import { useFontSize, useUtilitiesPreset } from "@styleframe/theme";
+import { fontSizeValues as defaultFontSizeValues } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { fontSize } from "../tokens.styleframe";
 
 const s = styleframe();
 
-// Exported for use in stories to display values
-export const fontSizeValues = {
-	xs: "0.75rem",
-	sm: "0.875rem",
-	md: "1rem",
-	lg: "1.125rem",
-	xl: "1.25rem",
-	"2xl": "1.5rem",
-	"3xl": "1.875rem",
-	"4xl": "2.25rem",
-} as const;
-
-const {
-	fontSizeXs,
-	fontSizeSm,
-	fontSizeMd,
-	fontSizeLg,
-	fontSizeXl,
-	fontSize2xl,
-	fontSize3xl,
-	fontSize4xl,
-} = useFontSize(s, fontSizeValues);
-
-// Register all utilities and generate utility classes
-const { createFontSizeUtility } = useUtilitiesPreset(s);
-
-createFontSizeUtility({
-	xs: s.ref(fontSizeXs),
-	sm: s.ref(fontSizeSm),
-	md: s.ref(fontSizeMd),
-	lg: s.ref(fontSizeLg),
-	xl: s.ref(fontSizeXl),
-	"2xl": s.ref(fontSize2xl),
-	"3xl": s.ref(fontSize3xl),
-	"4xl": s.ref(fontSize4xl),
-});
+// Re-export default values for display in stories
+export const fontSizeValues = defaultFontSizeValues;
 
 export const fontSizePreview = s.recipe({
 	name: "font-size-preview",
@@ -46,28 +13,28 @@ export const fontSizePreview = s.recipe({
 	variants: {
 		fontSize: {
 			xs: {
-				fontSize: s.ref(fontSizeXs),
+				fontSize: s.ref(fontSize.fontSizeXs),
 			},
 			sm: {
-				fontSize: s.ref(fontSizeSm),
+				fontSize: s.ref(fontSize.fontSizeSm),
 			},
 			md: {
-				fontSize: s.ref(fontSizeMd),
+				fontSize: s.ref(fontSize.fontSizeMd),
 			},
 			lg: {
-				fontSize: s.ref(fontSizeLg),
+				fontSize: s.ref(fontSize.fontSizeLg),
 			},
 			xl: {
-				fontSize: s.ref(fontSizeXl),
+				fontSize: s.ref(fontSize.fontSizeXl),
 			},
 			"2xl": {
-				fontSize: s.ref(fontSize2xl),
+				fontSize: s.ref(fontSize.fontSize2xl),
 			},
 			"3xl": {
-				fontSize: s.ref(fontSize3xl),
+				fontSize: s.ref(fontSize.fontSize3xl),
 			},
 			"4xl": {
-				fontSize: s.ref(fontSize4xl),
+				fontSize: s.ref(fontSize.fontSize4xl),
 			},
 		},
 	},

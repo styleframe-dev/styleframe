@@ -1,35 +1,11 @@
-import { useLetterSpacing, useUtilitiesPreset } from "@styleframe/theme";
+import { letterSpacingValues as defaultLetterSpacingValues } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { letterSpacing } from "../tokens.styleframe";
 
 const s = styleframe();
 
-// Exported for use in stories to display values
-export const letterSpacingValues = {
-	tighter: "-0.05em",
-	tight: "-0.025em",
-	normal: "normal",
-	wide: "0.05em",
-	wider: "0.1em",
-} as const;
-
-const {
-	letterSpacingTighter,
-	letterSpacingTight,
-	letterSpacingNormal,
-	letterSpacingWide,
-	letterSpacingWider,
-} = useLetterSpacing(s);
-
-// Register all utilities and generate utility classes
-const { createLetterSpacingUtility } = useUtilitiesPreset(s);
-
-createLetterSpacingUtility({
-	tighter: s.ref(letterSpacingTighter),
-	tight: s.ref(letterSpacingTight),
-	normal: s.ref(letterSpacingNormal),
-	wide: s.ref(letterSpacingWide),
-	wider: s.ref(letterSpacingWider),
-});
+// Re-export default values for display in stories
+export const letterSpacingValues = defaultLetterSpacingValues;
 
 export const letterSpacingPreview = s.recipe({
 	name: "letter-spacing-preview",
@@ -37,19 +13,19 @@ export const letterSpacingPreview = s.recipe({
 	variants: {
 		letterSpacing: {
 			tighter: {
-				letterSpacing: s.ref(letterSpacingTighter),
+				letterSpacing: s.ref(letterSpacing.letterSpacingTighter),
 			},
 			tight: {
-				letterSpacing: s.ref(letterSpacingTight),
+				letterSpacing: s.ref(letterSpacing.letterSpacingTight),
 			},
 			normal: {
-				letterSpacing: s.ref(letterSpacingNormal),
+				letterSpacing: s.ref(letterSpacing.letterSpacingNormal),
 			},
 			wide: {
-				letterSpacing: s.ref(letterSpacingWide),
+				letterSpacing: s.ref(letterSpacing.letterSpacingWide),
 			},
 			wider: {
-				letterSpacing: s.ref(letterSpacingWider),
+				letterSpacing: s.ref(letterSpacing.letterSpacingWider),
 			},
 		},
 	},

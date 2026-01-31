@@ -1,24 +1,7 @@
-import { useBorderWidth, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { borderWidth } from "../tokens.styleframe";
 
 const s = styleframe();
-
-const {
-	borderWidthNone,
-	borderWidthThin,
-	borderWidthMedium,
-	borderWidthThick,
-} = useBorderWidth(s);
-
-// Register all utilities and generate utility classes
-const { createBorderWidthUtility } = useUtilitiesPreset(s);
-
-createBorderWidthUtility({
-	none: s.ref(borderWidthNone),
-	thin: s.ref(borderWidthThin),
-	medium: s.ref(borderWidthMedium),
-	thick: s.ref(borderWidthThick),
-});
 
 export const borderWidthPreview = s.recipe({
 	name: "border-width-preview",
@@ -28,16 +11,16 @@ export const borderWidthPreview = s.recipe({
 	variants: {
 		borderWidth: {
 			none: {
-				borderWidth: s.ref(borderWidthNone),
+				borderWidth: s.ref(borderWidth.borderWidthNone),
 			},
 			thin: {
-				borderWidth: s.ref(borderWidthThin),
+				borderWidth: s.ref(borderWidth.borderWidthThin),
 			},
 			medium: {
-				borderWidth: s.ref(borderWidthMedium),
+				borderWidth: s.ref(borderWidth.borderWidthMedium),
 			},
 			thick: {
-				borderWidth: s.ref(borderWidthThick),
+				borderWidth: s.ref(borderWidth.borderWidthThick),
 			},
 		},
 	},
