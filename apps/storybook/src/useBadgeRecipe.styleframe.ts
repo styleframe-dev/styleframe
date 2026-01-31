@@ -1,0 +1,49 @@
+import {
+	useBadgeRecipe,
+	useUtilitiesPreset,
+	useDesignTokensPreset,
+} from "@styleframe/theme";
+import { styleframe } from "styleframe";
+
+const s = styleframe();
+
+// Initialize design tokens preset
+useDesignTokensPreset(s);
+
+// Initialize utilities preset
+useUtilitiesPreset(s);
+
+// Initialize badge recipe
+export const badge = useBadgeRecipe(s);
+
+// Container styles for story layout
+s.selector(".badge-grid", {
+	display: "flex",
+	flexWrap: "wrap",
+	gap: "16px",
+	padding: "16px",
+	alignItems: "center",
+});
+
+s.selector(".badge-section", {
+	display: "flex",
+	flexDirection: "column",
+	gap: "24px",
+	padding: "16px",
+});
+
+s.selector(".badge-row", {
+	display: "flex",
+	flexWrap: "wrap",
+	gap: "12px",
+	alignItems: "center",
+});
+
+s.selector(".badge-label", {
+	fontSize: "14px",
+	fontWeight: "600",
+	color: "#374151",
+	minWidth: "80px",
+});
+
+export default s;
