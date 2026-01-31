@@ -10,7 +10,7 @@
 		"storybook": "turbo run dev --filter @styleframe/storybook",
 		"ci:changeset": "changeset",
 		"ci:publish": "pnpm run ci:prepublish && changeset publish",
-		"ci:version": "changeset version",
+		"ci:version": "changeset version && pnpm install --no-frozen-lockfile",
 		"ci:prepublish": "pnpm build:nodocs",
 		"build": "turbo run build",
 		"build:nodocs": "turbo run build --filter './engine/*' --filter './tooling/*' --filter './theme'",
