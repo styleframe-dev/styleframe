@@ -646,7 +646,7 @@ importers:
   engine/styleframe:
     dependencies:
       '@styleframe/cli':
-        specifier: workspace:^2.3.2
+        specifier: workspace:^2.3.3
         version: link:../../tooling/cli
       '@styleframe/license':
         specifier: 'catalog:'
@@ -754,7 +754,7 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
       styleframe:
-        specifier: workspace:^2.5.1
+        specifier: workspace:^2.5.2
         version: link:../../engine/styleframe
       tsx:
         specifier: 'catalog:'
@@ -971,7 +971,7 @@ importers:
         specifier: workspace:^2.0.0
         version: link:../../../theme
       styleframe:
-        specifier: workspace:^2.5.1
+        specifier: workspace:^2.5.2
         version: link:../../../engine/styleframe
       vite:
         specifier: ^6.3.5

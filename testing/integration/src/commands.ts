@@ -87,10 +87,8 @@ export function installStyleframeUsingCLI(
 	cwd: string,
 	packageToTarballMap: Record<string, string>,
 ) {
-	shell.exec(`npm install -D ${packageToTarballMap["styleframe"]}`, {
-		cwd,
-	});
-
+	// Set up overrides BEFORE installing styleframe to ensure npm uses local tarballs
+	// instead of trying to resolve unpublished versions from the registry
 	const packageJSONRaw = fs.readFileSync(`${cwd}/package.json`, "utf8");
 
 	const packageJSON = JSON.parse(packageJSONRaw);
@@ -109,7 +107,8 @@ export function installStyleframeUsingCLI(
 
 	console.log(JSON.stringify(packageJSON, null, 2));
 
-	shell.exec(`npm install`, {
+	// Now install styleframe with overrides already in place
+	shell.exec(`npm install -D ${packageToTarballMap["styleframe"]}`, {
 		cwd,
 	});
 

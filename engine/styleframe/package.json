@@ -1,6 +1,6 @@
 {
 	"name": "styleframe",
-	"version": "2.5.1",
+	"version": "2.5.2",
 	"bin": {
 		"styleframe": "./dist/cli.cjs"
 	},
@@ -91,7 +91,7 @@
 		"release": "bumpp && npm publish"
 	},
 	"dependencies": {
-		"@styleframe/cli": "workspace:^2.3.2",
+		"@styleframe/cli": "workspace:^2.3.3",
 		"@styleframe/license": "catalog:"
 	},
 	"peerDependencies": {
@@ -102,7 +102,7 @@
 	},
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^2",
-		"@styleframe/cli": "workspace:^2.3.2",
+		"@styleframe/cli": "workspace:^2.3.3",
 		"@styleframe/plugin": "workspace:^2.4.0",
 		"@styleframe/core": "workspace:^2.6.0",
 		"@styleframe/loader": "workspace:^2.4.0",
