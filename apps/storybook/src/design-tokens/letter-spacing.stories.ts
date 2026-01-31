@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useLetterSpacing.styleframe?css";
-import { letterSpacingPreview } from "./useLetterSpacing.styleframe?ts";
-import { letterSpacingValues } from "./useLetterSpacing.styleframe";
+import "../components/swatch.styleframe?css";
+import "./letter-spacing.styleframe?css";
+import { letterSpacingPreview } from "./letter-spacing.styleframe?ts";
+import { letterSpacingValues } from "./letter-spacing.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const letterSpacings = Object.keys(letterSpacingValues);
 
@@ -32,7 +32,7 @@ const LetterSpacingGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Typography/useLetterSpacing",
+	title: "Design Tokens/Typography/Letter Spacing",
 	component: LetterSpacingSwatch,
 	tags: ["autodocs"],
 	argTypes: {

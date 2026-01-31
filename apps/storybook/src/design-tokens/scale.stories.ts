@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h } from "vue";
 
-import "./components/swatch.styleframe?css";
-import "./useScale.styleframe?css";
-import { scalePreview } from "./useScale.styleframe?ts";
-import { scaleValues, scaleRatios } from "./useScale.styleframe";
+import "../components/swatch.styleframe?css";
+import "./scale.styleframe?css";
+import { scalePreview } from "./scale.styleframe?ts";
+import { scaleValues, scaleRatios } from "./scale.styleframe";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const scales = Object.keys(scaleValues);
 
@@ -45,7 +45,7 @@ const ScaleGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Scales/useScale",
+	title: "Design Tokens/Scales/Scale",
 	component: ScaleSwatch,
 	tags: ["autodocs"],
 	argTypes: {

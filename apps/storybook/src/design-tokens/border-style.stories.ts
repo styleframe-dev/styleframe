@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useBorderStyle.styleframe?css";
-import { borderStylePreview } from "./useBorderStyle.styleframe?ts";
+import "../components/swatch.styleframe?css";
+import "./border-style.styleframe?css";
+import { borderStylePreview } from "./border-style.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const borderStyles = [
 	"none",
@@ -35,7 +35,7 @@ const BorderStyleGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Borders/useBorderStyle",
+	title: "Design Tokens/Borders/Border Style",
 	component: BorderStyleSwatch,
 	tags: ["autodocs"],
 	argTypes: {

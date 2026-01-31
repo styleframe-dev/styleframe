@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "./components/swatch.styleframe?css";
-import "./useColorShade.styleframe?css";
-import { colorShadePreview } from "./useColorShade.styleframe?ts";
+import "../components/swatch.styleframe?css";
+import "./color-shade.styleframe?css";
+import { colorShadePreview } from "./color-shade.styleframe?ts";
 import {
 	createSwatchComponent,
 	createGridComponent,
-} from "./components/TokenSwatch";
+} from "../components/TokenSwatch";
 
 const shades = ["base", "50", "100", "150", "200"];
 
@@ -37,7 +37,7 @@ const ColorShadeGrid = createGridComponent(
 );
 
 const meta = {
-	title: "Theme/Colors/useColorShade",
+	title: "Design Tokens/Colors/Color Shade",
 	component: ColorShadeSwatch,
 	tags: ["autodocs"],
 	argTypes: {
