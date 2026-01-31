@@ -1,35 +1,39 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import TypographySwatch from "../components/TypographySwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./letter-spacing.styleframe?css";
 import { letterSpacingPreview } from "./letter-spacing.styleframe?ts";
 import { letterSpacingValues } from "./letter-spacing.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
-const letterSpacings = Object.keys(letterSpacingValues);
+const letterSpacings = Object.keys(
+	letterSpacingValues,
+) as (keyof typeof letterSpacingValues)[];
 
-const LetterSpacingSwatch = createSwatchComponent(
-	"LetterSpacingSwatch",
-	"letterSpacing",
-	(letterSpacing) => letterSpacingPreview({ letterSpacing }),
-	{
-		layout: "text",
-		values: letterSpacingValues,
-		sampleText: "Letter Spacing",
-		previewTag: "span",
+const LetterSpacingSwatch = defineComponent({
+	name: "LetterSpacingSwatch",
+	props: {
+		letterSpacing: {
+			type: String,
+			required: true,
+		},
 	},
-);
-
-const LetterSpacingGrid = createGridComponent(
-	"LetterSpacingGrid",
-	letterSpacings,
-	LetterSpacingSwatch,
-	"letterSpacing",
-	"list",
-);
+	setup(props) {
+		return () =>
+			h(TypographySwatch, {
+				name: props.letterSpacing,
+				value:
+					letterSpacingValues[
+						props.letterSpacing as keyof typeof letterSpacingValues
+					],
+				previewClass: letterSpacingPreview({
+					letterSpacing: props.letterSpacing,
+				}),
+				sampleText: "Letter Spacing",
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Typography/Letter Spacing",
@@ -48,8 +52,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllLetterSpacings: StoryObj = {
 	render: () => ({
-		components: { LetterSpacingGrid },
-		template: "<LetterSpacingGrid />",
+		components: { LetterSpacingSwatch, StoryGrid },
+		setup() {
+			return { letterSpacings };
+		},
+		template: `
+			<StoryGrid :items="letterSpacings" layout="list" v-slot="{ item }">
+				<LetterSpacingSwatch :letter-spacing="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

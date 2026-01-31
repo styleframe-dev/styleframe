@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import ColorVariantSwatch from "../components/ColorVariantSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./color-tint.styleframe?css";
 import { colorTintPreview } from "./color-tint.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
 const tints = ["base", "50", "100", "150", "200"];
 
@@ -18,23 +16,23 @@ const tintLabels: Record<string, string> = {
 	"200": "Tint 200 (+20%)",
 };
 
-const ColorTintSwatch = createSwatchComponent(
-	"ColorTintSwatch",
-	"tint",
-	(tint) => colorTintPreview({ tint }),
-	{
-		layout: "color-variant",
-		getLabel: (tint) => tintLabels[tint],
+const ColorTintSwatch = defineComponent({
+	name: "ColorTintSwatch",
+	props: {
+		tint: {
+			type: String,
+			required: true,
+		},
 	},
-);
-
-const ColorTintGrid = createGridComponent(
-	"ColorTintGrid",
-	tints,
-	ColorTintSwatch,
-	"tint",
-	"grid",
-);
+	setup(props) {
+		return () =>
+			h(ColorVariantSwatch, {
+				name: props.tint,
+				previewClass: colorTintPreview({ tint: props.tint }),
+				label: tintLabels[props.tint],
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Colors/Color Tint",
@@ -53,8 +51,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllTints: StoryObj = {
 	render: () => ({
-		components: { ColorTintGrid },
-		template: "<ColorTintGrid />",
+		components: { ColorTintSwatch, StoryGrid },
+		setup() {
+			return { tints };
+		},
+		template: `
+			<StoryGrid :items="tints" layout="grid" v-slot="{ item }">
+				<ColorTintSwatch :tint="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

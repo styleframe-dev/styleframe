@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import ColorVariantSwatch from "../components/ColorVariantSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./color-shade.styleframe?css";
 import { colorShadePreview } from "./color-shade.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
 const shades = ["base", "50", "100", "150", "200"];
 
@@ -18,23 +16,23 @@ const shadeLabels: Record<string, string> = {
 	"200": "Shade 200 (-20%)",
 };
 
-const ColorShadeSwatch = createSwatchComponent(
-	"ColorShadeSwatch",
-	"shade",
-	(shade) => colorShadePreview({ shade }),
-	{
-		layout: "color-variant",
-		getLabel: (shade) => shadeLabels[shade],
+const ColorShadeSwatch = defineComponent({
+	name: "ColorShadeSwatch",
+	props: {
+		shade: {
+			type: String,
+			required: true,
+		},
 	},
-);
-
-const ColorShadeGrid = createGridComponent(
-	"ColorShadeGrid",
-	shades,
-	ColorShadeSwatch,
-	"shade",
-	"grid",
-);
+	setup(props) {
+		return () =>
+			h(ColorVariantSwatch, {
+				name: props.shade,
+				previewClass: colorShadePreview({ shade: props.shade }),
+				label: shadeLabels[props.shade],
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Colors/Color Shade",
@@ -53,8 +51,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllShades: StoryObj = {
 	render: () => ({
-		components: { ColorShadeGrid },
-		template: "<ColorShadeGrid />",
+		components: { ColorShadeSwatch, StoryGrid },
+		setup() {
+			return { shades };
+		},
+		template: `
+			<StoryGrid :items="shades" layout="grid" v-slot="{ item }">
+				<ColorShadeSwatch :shade="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

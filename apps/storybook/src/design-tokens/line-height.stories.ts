@@ -1,38 +1,38 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import TypographySwatch from "../components/TypographySwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./line-height.styleframe?css";
 import { lineHeightPreview } from "./line-height.styleframe?ts";
 import { lineHeightValues } from "./line-height.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
-const lineHeights = Object.keys(lineHeightValues);
+const lineHeights = Object.keys(
+	lineHeightValues,
+) as (keyof typeof lineHeightValues)[];
 
 const sampleText =
 	"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.";
 
-const LineHeightSwatch = createSwatchComponent(
-	"LineHeightSwatch",
-	"lineHeight",
-	(lineHeight) => lineHeightPreview({ lineHeight }),
-	{
-		layout: "text",
-		values: lineHeightValues,
-		sampleText,
-		previewTag: "p",
+const LineHeightSwatch = defineComponent({
+	name: "LineHeightSwatch",
+	props: {
+		lineHeight: {
+			type: String,
+			required: true,
+		},
 	},
-);
-
-const LineHeightGrid = createGridComponent(
-	"LineHeightGrid",
-	lineHeights,
-	LineHeightSwatch,
-	"lineHeight",
-	"list",
-);
+	setup(props) {
+		return () =>
+			h(TypographySwatch, {
+				name: props.lineHeight,
+				value:
+					lineHeightValues[props.lineHeight as keyof typeof lineHeightValues],
+				previewClass: lineHeightPreview({ lineHeight: props.lineHeight }),
+				sampleText,
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Typography/Line Height",
@@ -51,8 +51,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllLineHeights: StoryObj = {
 	render: () => ({
-		components: { LineHeightGrid },
-		template: "<LineHeightGrid />",
+		components: { LineHeightSwatch, StoryGrid },
+		setup() {
+			return { lineHeights };
+		},
+		template: `
+			<StoryGrid :items="lineHeights" layout="list" v-slot="{ item }">
+				<LineHeightSwatch :line-height="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

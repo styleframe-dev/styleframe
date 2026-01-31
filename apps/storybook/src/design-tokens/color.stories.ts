@@ -1,29 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "../components/swatch.styleframe?css";
-import "./color.styleframe?css";
-import { colorPreview } from "./color.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const colors = ["primary", "secondary", "info", "success", "warning", "danger"];
-
-const ColorSwatch = createSwatchComponent(
-	"ColorSwatch",
-	"color",
-	(color) => colorPreview({ color }),
-	{ layout: "box" },
-);
-
-const ColorGrid = createGridComponent(
-	"ColorGrid",
-	colors,
-	ColorSwatch,
-	"color",
-	"grid",
-);
+import ColorSwatch from "../components/ColorSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
+import { colors } from "../components/ColorSwatch.styleframe";
 
 const meta = {
 	title: "Design Tokens/Colors/Color",
@@ -42,8 +21,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllColors: StoryObj = {
 	render: () => ({
-		components: { ColorGrid },
-		template: "<ColorGrid />",
+		components: { ColorSwatch, StoryGrid },
+		setup() {
+			return { colors };
+		},
+		template: `
+			<StoryGrid :items="colors" layout="grid" v-slot="{ item }">
+				<ColorSwatch :color="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

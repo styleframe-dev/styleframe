@@ -1,49 +1,38 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h } from "vue";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import BreakpointSwatch from "../components/BreakpointSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./breakpoint.styleframe?css";
-import { breakpointPreview } from "./breakpoint.styleframe?ts";
 import { breakpointValues, breakpointWidths } from "./breakpoint.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
-const breakpoints = Object.keys(breakpointValues);
+const breakpoints = Object.keys(
+	breakpointValues,
+) as (keyof typeof breakpointValues)[];
 
-const maxBreakpoint = 1440;
-
-const BreakpointSwatch = createSwatchComponent(
-	"BreakpointSwatch",
-	"breakpoint",
-	(breakpoint) => breakpointPreview({ breakpoint }),
-	{
-		values: breakpointValues,
-		formatName: (value) => value.toUpperCase(),
-		renderPreview: (breakpoint) => {
-			const value = breakpointWidths[breakpoint] || 0;
-			const barWidth = Math.max(10, (value / maxBreakpoint) * 100);
-
-			return h("div", {
-				class: "breakpoint-bar",
-				style: { width: `${barWidth}%` },
-			});
+const BreakpointSwatchComponent = defineComponent({
+	name: "BreakpointSwatchComponent",
+	props: {
+		breakpoint: {
+			type: String,
+			required: true,
 		},
 	},
-);
-
-const BreakpointGrid = createGridComponent(
-	"BreakpointGrid",
-	breakpoints,
-	BreakpointSwatch,
-	"breakpoint",
-	"list",
-);
+	setup(props) {
+		return () =>
+			h(BreakpointSwatch, {
+				name: props.breakpoint,
+				value:
+					breakpointValues[props.breakpoint as keyof typeof breakpointValues],
+				width:
+					breakpointWidths[props.breakpoint as keyof typeof breakpointWidths],
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Layout/Breakpoint",
-	component: BreakpointSwatch,
+	component: BreakpointSwatchComponent,
 	tags: ["autodocs"],
 	argTypes: {
 		breakpoint: {
@@ -51,15 +40,22 @@ const meta = {
 			options: breakpoints,
 		},
 	},
-} satisfies Meta<typeof BreakpointSwatch>;
+} satisfies Meta<typeof BreakpointSwatchComponent>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const AllBreakpoints: StoryObj = {
 	render: () => ({
-		components: { BreakpointGrid },
-		template: "<BreakpointGrid />",
+		components: { BreakpointSwatchComponent, StoryGrid },
+		setup() {
+			return { breakpoints };
+		},
+		template: `
+			<StoryGrid :items="breakpoints" layout="list" v-slot="{ item }">
+				<BreakpointSwatchComponent :breakpoint="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

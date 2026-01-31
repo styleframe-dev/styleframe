@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import BoxShadowSwatch from "../components/BoxShadowSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./box-shadow.styleframe?css";
 import { boxShadowPreview } from "./box-shadow.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
 const boxShadows = [
 	"none",
@@ -20,24 +18,26 @@ const boxShadows = [
 	"ring",
 ];
 
-const BoxShadowSwatch = createSwatchComponent(
-	"BoxShadowSwatch",
-	"boxShadow",
-	(boxShadow) => boxShadowPreview({ boxShadow }),
-	{ layout: "box" },
-);
-
-const BoxShadowGrid = createGridComponent(
-	"BoxShadowGrid",
-	boxShadows,
-	BoxShadowSwatch,
-	"boxShadow",
-	"grid",
-);
+const BoxShadowSwatchComponent = defineComponent({
+	name: "BoxShadowSwatchComponent",
+	props: {
+		boxShadow: {
+			type: String,
+			required: true,
+		},
+	},
+	setup(props) {
+		return () =>
+			h(BoxShadowSwatch, {
+				name: props.boxShadow,
+				previewClass: boxShadowPreview({ boxShadow: props.boxShadow }),
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Shadows/Box Shadow",
-	component: BoxShadowSwatch,
+	component: BoxShadowSwatchComponent,
 	tags: ["autodocs"],
 	argTypes: {
 		boxShadow: {
@@ -45,15 +45,22 @@ const meta = {
 			options: boxShadows,
 		},
 	},
-} satisfies Meta<typeof BoxShadowSwatch>;
+} satisfies Meta<typeof BoxShadowSwatchComponent>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const AllBoxShadows: StoryObj = {
 	render: () => ({
-		components: { BoxShadowGrid },
-		template: "<BoxShadowGrid />",
+		components: { BoxShadowSwatchComponent, StoryGrid },
+		setup() {
+			return { boxShadows };
+		},
+		template: `
+			<StoryGrid :items="boxShadows" layout="grid" v-slot="{ item }">
+				<BoxShadowSwatchComponent :box-shadow="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

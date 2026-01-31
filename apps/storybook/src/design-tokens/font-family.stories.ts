@@ -1,32 +1,30 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import TypographySwatch from "../components/TypographySwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./font-family.styleframe?css";
 import { fontFamilyPreview } from "./font-family.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
 const fontFamilies = ["base", "print", "mono"];
 
-const FontFamilySwatch = createSwatchComponent(
-	"FontFamilySwatch",
-	"fontFamily",
-	(fontFamily) => fontFamilyPreview({ fontFamily }),
-	{
-		layout: "text",
-		sampleText: "The quick brown fox jumps over the lazy dog. 0123456789",
+const FontFamilySwatch = defineComponent({
+	name: "FontFamilySwatch",
+	props: {
+		fontFamily: {
+			type: String,
+			required: true,
+		},
 	},
-);
-
-const FontFamilyGrid = createGridComponent(
-	"FontFamilyGrid",
-	fontFamilies,
-	FontFamilySwatch,
-	"fontFamily",
-	"list",
-);
+	setup(props) {
+		return () =>
+			h(TypographySwatch, {
+				name: props.fontFamily,
+				previewClass: fontFamilyPreview({ fontFamily: props.fontFamily }),
+				sampleText: "The quick brown fox jumps over the lazy dog. 0123456789",
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Typography/Font Family",
@@ -45,8 +43,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllFontFamilies: StoryObj = {
 	render: () => ({
-		components: { FontFamilyGrid },
-		template: "<FontFamilyGrid />",
+		components: { FontFamilySwatch, StoryGrid },
+		setup() {
+			return { fontFamilies };
+		},
+		template: `
+			<StoryGrid :items="fontFamilies" layout="list" v-slot="{ item }">
+				<FontFamilySwatch :font-family="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

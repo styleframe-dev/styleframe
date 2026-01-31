@@ -1,35 +1,34 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import TypographySwatch from "../components/TypographySwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./font-size.styleframe?css";
 import { fontSizePreview } from "./font-size.styleframe?ts";
 import { fontSizeValues } from "./font-size.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
-const fontSizes = Object.keys(fontSizeValues);
+const fontSizes = Object.keys(
+	fontSizeValues,
+) as (keyof typeof fontSizeValues)[];
 
-const FontSizeSwatch = createSwatchComponent(
-	"FontSizeSwatch",
-	"fontSize",
-	(fontSize) => fontSizePreview({ fontSize }),
-	{
-		layout: "text",
-		values: fontSizeValues,
-		sampleText: "The quick brown fox",
-		previewTag: "span",
+const FontSizeSwatch = defineComponent({
+	name: "FontSizeSwatch",
+	props: {
+		fontSize: {
+			type: String,
+			required: true,
+		},
 	},
-);
-
-const FontSizeGrid = createGridComponent(
-	"FontSizeGrid",
-	fontSizes,
-	FontSizeSwatch,
-	"fontSize",
-	"list",
-);
+	setup(props) {
+		return () =>
+			h(TypographySwatch, {
+				name: props.fontSize,
+				value: fontSizeValues[props.fontSize as keyof typeof fontSizeValues],
+				previewClass: fontSizePreview({ fontSize: props.fontSize }),
+				sampleText: "The quick brown fox",
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Typography/Font Size",
@@ -48,8 +47,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllFontSizes: StoryObj = {
 	render: () => ({
-		components: { FontSizeGrid },
-		template: "<FontSizeGrid />",
+		components: { FontSizeSwatch, StoryGrid },
+		setup() {
+			return { fontSizes };
+		},
+		template: `
+			<StoryGrid :items="fontSizes" layout="list" v-slot="{ item }">
+				<FontSizeSwatch :font-size="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

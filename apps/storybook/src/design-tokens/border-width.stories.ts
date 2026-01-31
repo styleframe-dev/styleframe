@@ -1,29 +1,29 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import BorderSwatch from "../components/BorderSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./border-width.styleframe?css";
 import { borderWidthPreview } from "./border-width.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
 const borderWidths = ["none", "thin", "medium", "thick"];
 
-const BorderWidthSwatch = createSwatchComponent(
-	"BorderWidthSwatch",
-	"borderWidth",
-	(borderWidth) => borderWidthPreview({ borderWidth }),
-	{ layout: "box" },
-);
-
-const BorderWidthGrid = createGridComponent(
-	"BorderWidthGrid",
-	borderWidths,
-	BorderWidthSwatch,
-	"borderWidth",
-	"grid",
-);
+const BorderWidthSwatch = defineComponent({
+	name: "BorderWidthSwatch",
+	props: {
+		borderWidth: {
+			type: String,
+			required: true,
+		},
+	},
+	setup(props) {
+		return () =>
+			h(BorderSwatch, {
+				name: props.borderWidth,
+				previewClass: borderWidthPreview({ borderWidth: props.borderWidth }),
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Borders/Border Width",
@@ -42,8 +42,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllBorderWidths: StoryObj = {
 	render: () => ({
-		components: { BorderWidthGrid },
-		template: "<BorderWidthGrid />",
+		components: { BorderWidthSwatch, StoryGrid },
+		setup() {
+			return { borderWidths };
+		},
+		template: `
+			<StoryGrid :items="borderWidths" layout="grid" v-slot="{ item }">
+				<BorderWidthSwatch :border-width="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

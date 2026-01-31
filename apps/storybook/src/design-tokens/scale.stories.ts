@@ -1,52 +1,34 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h } from "vue";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import ScaleSwatch from "../components/ScaleSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./scale.styleframe?css";
-import { scalePreview } from "./scale.styleframe?ts";
 import { scaleValues, scaleRatios } from "./scale.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
-const scales = Object.keys(scaleValues);
+const scales = Object.keys(scaleValues) as (keyof typeof scaleValues)[];
 
-const ScaleSwatch = createSwatchComponent(
-	"ScaleSwatch",
-	"scale",
-	(scale) => scalePreview({ scale }),
-	{
-		values: scaleValues,
-		renderPreview: (scale) => {
-			const ratio = scaleRatios[scale] || 1;
-			const baseHeight = 10;
-
-			return h(
-				"div",
-				{ class: "scale-bars" },
-				[0, 1, 2, 3, 4].map((power) =>
-					h("div", {
-						class: "scale-bar",
-						style: { height: `${baseHeight * Math.pow(ratio, power)}px` },
-					}),
-				),
-			);
+const ScaleSwatchComponent = defineComponent({
+	name: "ScaleSwatchComponent",
+	props: {
+		scale: {
+			type: String,
+			required: true,
 		},
 	},
-);
-
-const ScaleGrid = createGridComponent(
-	"ScaleGrid",
-	scales,
-	ScaleSwatch,
-	"scale",
-	"list",
-);
+	setup(props) {
+		return () =>
+			h(ScaleSwatch, {
+				name: props.scale,
+				value: scaleValues[props.scale as keyof typeof scaleValues],
+				ratio: scaleRatios[props.scale as keyof typeof scaleRatios],
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Scales/Scale",
-	component: ScaleSwatch,
+	component: ScaleSwatchComponent,
 	tags: ["autodocs"],
 	argTypes: {
 		scale: {
@@ -54,15 +36,22 @@ const meta = {
 			options: scales,
 		},
 	},
-} satisfies Meta<typeof ScaleSwatch>;
+} satisfies Meta<typeof ScaleSwatchComponent>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const AllScales: StoryObj = {
 	render: () => ({
-		components: { ScaleGrid },
-		template: "<ScaleGrid />",
+		components: { ScaleSwatchComponent, StoryGrid },
+		setup() {
+			return { scales };
+		},
+		template: `
+			<StoryGrid :items="scales" layout="list" v-slot="{ item }">
+				<ScaleSwatchComponent :scale="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

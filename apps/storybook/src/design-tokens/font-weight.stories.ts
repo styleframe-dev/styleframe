@@ -1,35 +1,35 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import TypographySwatch from "../components/TypographySwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./font-weight.styleframe?css";
 import { fontWeightPreview } from "./font-weight.styleframe?ts";
 import { fontWeightValues } from "./font-weight.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
-const fontWeights = Object.keys(fontWeightValues);
+const fontWeights = Object.keys(
+	fontWeightValues,
+) as (keyof typeof fontWeightValues)[];
 
-const FontWeightSwatch = createSwatchComponent(
-	"FontWeightSwatch",
-	"fontWeight",
-	(fontWeight) => fontWeightPreview({ fontWeight }),
-	{
-		layout: "text",
-		values: fontWeightValues,
-		sampleText: "The quick brown fox jumps over the lazy dog",
-		previewTag: "span",
+const FontWeightSwatch = defineComponent({
+	name: "FontWeightSwatch",
+	props: {
+		fontWeight: {
+			type: String,
+			required: true,
+		},
 	},
-);
-
-const FontWeightGrid = createGridComponent(
-	"FontWeightGrid",
-	fontWeights,
-	FontWeightSwatch,
-	"fontWeight",
-	"list",
-);
+	setup(props) {
+		return () =>
+			h(TypographySwatch, {
+				name: props.fontWeight,
+				value:
+					fontWeightValues[props.fontWeight as keyof typeof fontWeightValues],
+				previewClass: fontWeightPreview({ fontWeight: props.fontWeight }),
+				sampleText: "The quick brown fox jumps over the lazy dog",
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Typography/Font Weight",
@@ -48,8 +48,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllFontWeights: StoryObj = {
 	render: () => ({
-		components: { FontWeightGrid },
-		template: "<FontWeightGrid />",
+		components: { FontWeightSwatch, StoryGrid },
+		setup() {
+			return { fontWeights };
+		},
+		template: `
+			<StoryGrid :items="fontWeights" layout="list" v-slot="{ item }">
+				<FontWeightSwatch :font-weight="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

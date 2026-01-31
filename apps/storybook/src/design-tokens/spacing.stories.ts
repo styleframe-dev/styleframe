@@ -1,30 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import "../components/swatch.styleframe?css";
-import "./spacing.styleframe?css";
-import { spacingPreview } from "./spacing.styleframe?ts";
-import { spacingValues } from "./spacing.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const spacings = Object.keys(spacingValues);
-
-const SpacingSwatch = createSwatchComponent(
-	"SpacingSwatch",
-	"spacing",
-	(spacing) => spacingPreview({ spacing }),
-	{ layout: "row", values: spacingValues },
-);
-
-const SpacingGrid = createGridComponent(
-	"SpacingGrid",
-	spacings,
-	SpacingSwatch,
-	"spacing",
-	"list",
-);
+import SpacingSwatch from "../components/SpacingSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
+import { spacings } from "../components/SpacingSwatch.styleframe";
 
 const meta = {
 	title: "Design Tokens/Spacing/Spacing",
@@ -43,8 +21,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllSpacings: StoryObj = {
 	render: () => ({
-		components: { SpacingGrid },
-		template: "<SpacingGrid />",
+		components: { SpacingSwatch, StoryGrid },
+		setup() {
+			return { spacings };
+		},
+		template: `
+			<StoryGrid :items="spacings" layout="list" v-slot="{ item }">
+				<SpacingSwatch :spacing="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

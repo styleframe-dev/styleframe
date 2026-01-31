@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import ColorVariantSwatch from "../components/ColorVariantSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./color-lightness.styleframe?css";
 import { colorLightnessPreview } from "./color-lightness.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
 const lightnessLevels = [
 	"50",
@@ -22,20 +20,22 @@ const lightnessLevels = [
 	"950",
 ];
 
-const ColorLightnessSwatch = createSwatchComponent(
-	"ColorLightnessSwatch",
-	"lightness",
-	(lightness) => colorLightnessPreview({ lightness }),
-	{ layout: "color-variant" },
-);
-
-const ColorLightnessGrid = createGridComponent(
-	"ColorLightnessGrid",
-	lightnessLevels,
-	ColorLightnessSwatch,
-	"lightness",
-	"grid",
-);
+const ColorLightnessSwatch = defineComponent({
+	name: "ColorLightnessSwatch",
+	props: {
+		lightness: {
+			type: String,
+			required: true,
+		},
+	},
+	setup(props) {
+		return () =>
+			h(ColorVariantSwatch, {
+				name: props.lightness,
+				previewClass: colorLightnessPreview({ lightness: props.lightness }),
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Colors/Color Lightness",
@@ -54,8 +54,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllLightnessLevels: StoryObj = {
 	render: () => ({
-		components: { ColorLightnessGrid },
-		template: "<ColorLightnessGrid />",
+		components: { ColorLightnessSwatch, StoryGrid },
+		setup() {
+			return { lightnessLevels };
+		},
+		template: `
+			<StoryGrid :items="lightnessLevels" layout="grid" v-slot="{ item }">
+				<ColorLightnessSwatch :lightness="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 

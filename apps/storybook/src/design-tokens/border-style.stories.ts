@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { defineComponent, h } from "vue";
 
-import "../components/swatch.styleframe?css";
+import BorderSwatch from "../components/BorderSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 import "./border-style.styleframe?css";
 import { borderStylePreview } from "./border-style.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
 
 const borderStyles = [
 	"none",
@@ -19,20 +17,22 @@ const borderStyles = [
 	"outset",
 ];
 
-const BorderStyleSwatch = createSwatchComponent(
-	"BorderStyleSwatch",
-	"borderStyle",
-	(borderStyle) => borderStylePreview({ borderStyle }),
-	{ layout: "box" },
-);
-
-const BorderStyleGrid = createGridComponent(
-	"BorderStyleGrid",
-	borderStyles,
-	BorderStyleSwatch,
-	"borderStyle",
-	"grid",
-);
+const BorderStyleSwatch = defineComponent({
+	name: "BorderStyleSwatch",
+	props: {
+		borderStyle: {
+			type: String,
+			required: true,
+		},
+	},
+	setup(props) {
+		return () =>
+			h(BorderSwatch, {
+				name: props.borderStyle,
+				previewClass: borderStylePreview({ borderStyle: props.borderStyle }),
+			});
+	},
+});
 
 const meta = {
 	title: "Design Tokens/Borders/Border Style",
@@ -51,8 +51,15 @@ type Story = StoryObj<typeof meta>;
 
 export const AllBorderStyles: StoryObj = {
 	render: () => ({
-		components: { BorderStyleGrid },
-		template: "<BorderStyleGrid />",
+		components: { BorderStyleSwatch, StoryGrid },
+		setup() {
+			return { borderStyles };
+		},
+		template: `
+			<StoryGrid :items="borderStyles" layout="grid" v-slot="{ item }">
+				<BorderStyleSwatch :border-style="item" />
+			</StoryGrid>
+		`,
 	}),
 };
 
