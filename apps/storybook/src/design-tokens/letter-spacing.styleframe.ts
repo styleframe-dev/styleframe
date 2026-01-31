@@ -33,11 +33,7 @@ createLetterSpacingUtility({
 
 export const letterSpacingPreview = s.recipe({
 	name: "letter-spacing-preview",
-	base: {
-		fontSize: "16px",
-		color: "#1e293b",
-		textTransform: "uppercase",
-	},
+	base: {},
 	variants: {
 		letterSpacing: {
 			tighter: {

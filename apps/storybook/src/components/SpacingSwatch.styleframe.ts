@@ -1,7 +1,14 @@
 import { useSpacing } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import {
+	useSwatchColors,
+	useSwatchDimensions,
+} from "./primitives/tokens.styleframe";
 
 const s = styleframe();
+
+const { swatchColorPrimary } = useSwatchColors(s);
+const { swatchBorderRadiusSm } = useSwatchDimensions(s);
 
 export const spacingValues = {
 	xs: "0.25rem",
@@ -19,32 +26,9 @@ export type Spacing = keyof typeof spacingValues;
 const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl, spacing2xl } =
 	useSpacing(s, spacingValues);
 
-s.selector(".spacing-swatch", {
-	display: "flex",
-	alignItems: "center",
-	gap: "16px",
-	padding: "12px 16px",
-	borderRadius: "8px",
-	background: "#f8fafc",
-});
-
-s.selector(".spacing-swatch__name", {
-	fontWeight: "600",
-	fontSize: "14px",
-	color: "#1E3A8A",
-	minWidth: "40px",
-});
-
-s.selector(".spacing-swatch__value", {
-	fontSize: "14px",
-	color: "#64748b",
-	fontFamily: "monospace",
-	minWidth: "60px",
-});
-
 s.selector(".spacing-swatch__preview", {
-	background: "#1E3A8A",
-	borderRadius: "4px",
+	background: s.ref(swatchColorPrimary),
+	borderRadius: s.ref(swatchBorderRadiusSm),
 });
 
 export const spacingPreview = s.recipe({

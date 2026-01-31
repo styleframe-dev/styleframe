@@ -69,11 +69,7 @@ s.utility("padding", ({ value }) => ({
 
 export const colorPreview = s.recipe({
 	name: "color-preview",
-	base: {
-		width: "100px",
-		height: "100px",
-		borderRadius: "8px",
-	},
+	base: {},
 	variants: {
 		color: {
 			primary: {

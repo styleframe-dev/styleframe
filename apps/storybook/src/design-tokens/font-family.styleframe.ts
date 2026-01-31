@@ -16,11 +16,7 @@ createFontFamilyUtility({
 
 export const fontFamilyPreview = s.recipe({
 	name: "font-family-preview",
-	base: {
-		fontSize: "18px",
-		lineHeight: "1.5",
-		color: "#1e293b",
-	},
+	base: {},
 	variants: {
 		fontFamily: {
 			base: {

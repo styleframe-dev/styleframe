@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import "./ScaleSwatch.styleframe?css";
+import SwatchRow from "./primitives/SwatchRow.vue";
+import BarChart from "./primitives/BarChart.vue";
 
 const props = defineProps<{
 	name: string;
@@ -17,16 +19,7 @@ const barHeights = computed(() =>
 </script>
 
 <template>
-	<div class="scale-swatch">
-		<div class="scale-swatch__name">{{ name }}</div>
-		<div class="scale-swatch__value">{{ value }}</div>
-		<div class="scale-swatch__bars">
-			<div
-				v-for="(height, index) in barHeights"
-				:key="index"
-				class="scale-swatch__bar"
-				:style="{ height }"
-			/>
-		</div>
-	</div>
+	<SwatchRow :name="name" :value="value">
+		<BarChart :heights="barHeights" />
+	</SwatchRow>
 </template>

@@ -32,12 +32,7 @@ createBoxShadowUtility({
 
 export const boxShadowPreview = s.recipe({
 	name: "box-shadow-preview",
-	base: {
-		width: "100px",
-		height: "100px",
-		borderRadius: "8px",
-		background: "#ffffff",
-	},
+	base: {},
 	variants: {
 		boxShadow: {
 			none: {

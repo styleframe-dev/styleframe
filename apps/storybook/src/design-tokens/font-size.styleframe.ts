@@ -42,10 +42,7 @@ createFontSizeUtility({
 
 export const fontSizePreview = s.recipe({
 	name: "font-size-preview",
-	base: {
-		color: "#1e293b",
-		lineHeight: "1.4",
-	},
+	base: {},
 	variants: {
 		fontSize: {
 			xs: {

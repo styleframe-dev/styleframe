@@ -33,14 +33,7 @@ createBorderRadiusUtility({
 
 export const borderRadiusPreview = s.recipe({
 	name: "border-radius-preview",
-	base: {
-		width: "100px",
-		height: "100px",
-		background: "#e0e7ff",
-		borderWidth: "2px",
-		borderStyle: "solid",
-		borderColor: "#1E3A8A",
-	},
+	base: {},
 	variants: {
 		borderRadius: {
 			none: {

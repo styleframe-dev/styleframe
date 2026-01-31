@@ -33,11 +33,7 @@ createLineHeightUtility({
 
 export const lineHeightPreview = s.recipe({
 	name: "line-height-preview",
-	base: {
-		fontSize: "14px",
-		color: "#1e293b",
-		maxWidth: "400px",
-	},
+	base: {},
 	variants: {
 		lineHeight: {
 			tight: {

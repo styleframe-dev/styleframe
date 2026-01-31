@@ -31,12 +31,7 @@ createBorderStyleUtility({
 export const borderStylePreview = s.recipe({
 	name: "border-style-preview",
 	base: {
-		width: "100px",
-		height: "100px",
-		borderRadius: "8px",
 		borderWidth: "3px",
-		borderColor: "#1E3A8A",
-		background: "#f8fafc",
 	},
 	variants: {
 		borderStyle: {

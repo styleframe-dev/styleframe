@@ -23,12 +23,7 @@ createBorderWidthUtility({
 export const borderWidthPreview = s.recipe({
 	name: "border-width-preview",
 	base: {
-		width: "100px",
-		height: "100px",
-		borderRadius: "8px",
 		borderStyle: "solid",
-		borderColor: "#1E3A8A",
-		background: "#f8fafc",
 	},
 	variants: {
 		borderWidth: {

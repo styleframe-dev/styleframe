@@ -39,10 +39,7 @@ createFontWeightUtility({
 
 export const fontWeightPreview = s.recipe({
 	name: "font-weight-preview",
-	base: {
-		fontSize: "18px",
-		color: "#1e293b",
-	},
+	base: {},
 	variants: {
 		fontWeight: {
 			extralight: {

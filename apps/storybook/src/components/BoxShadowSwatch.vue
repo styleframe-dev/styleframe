@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import "./BoxShadowSwatch.styleframe?css";
+import SwatchCard from "./primitives/SwatchCard.vue";
 
 defineProps<{
 	name: string;
@@ -8,8 +9,7 @@ defineProps<{
 </script>
 
 <template>
-	<div class="box-shadow-swatch">
+	<SwatchCard :name="name">
 		<div :class="['box-shadow-swatch__preview', previewClass]" />
-		<span class="box-shadow-swatch__name">{{ name }}</span>
-	</div>
+	</SwatchCard>
 </template>

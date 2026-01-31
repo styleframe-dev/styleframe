@@ -35,10 +35,7 @@ createGapUtility(spacingMap);
 
 export const spacingPreview = s.recipe({
 	name: "spacing-preview",
-	base: {
-		background: "#1E3A8A",
-		borderRadius: "4px",
-	},
+	base: {},
 	variants: {
 		spacing: {
 			xs: {

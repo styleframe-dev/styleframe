@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import "./BreakpointSwatch.styleframe?css";
+import SwatchRow from "./primitives/SwatchRow.vue";
+import ProgressBar from "./primitives/ProgressBar.vue";
 
 const props = defineProps<{
 	name: string;
@@ -10,18 +12,13 @@ const props = defineProps<{
 
 const maxBreakpoint = 1440;
 
-const barWidth = computed(() => {
-	const percentage = Math.max(10, (props.width / maxBreakpoint) * 100);
-	return `${percentage}%`;
-});
+const percentage = computed(() =>
+	Math.max(10, (props.width / maxBreakpoint) * 100),
+);
 </script>
 
 <template>
-	<div class="breakpoint-swatch">
-		<div class="breakpoint-swatch__name">{{ name }}</div>
-		<div class="breakpoint-swatch__value">{{ value }}</div>
-		<div class="breakpoint-swatch__bar-container">
-			<div class="breakpoint-swatch__bar" :style="{ width: barWidth }" />
-		</div>
-	</div>
+	<SwatchRow :name="name" :value="value" uppercase>
+		<ProgressBar :percentage="percentage" />
+	</SwatchRow>
 </template>

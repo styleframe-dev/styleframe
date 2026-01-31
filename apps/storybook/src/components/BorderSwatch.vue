@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import "./BorderSwatch.styleframe?css";
+import SwatchCard from "./primitives/SwatchCard.vue";
 
 defineProps<{
 	name: string;
@@ -8,8 +9,7 @@ defineProps<{
 </script>
 
 <template>
-	<div class="border-swatch">
+	<SwatchCard :name="name">
 		<div :class="['border-swatch__preview', previewClass]" />
-		<span class="border-swatch__name">{{ name }}</span>
-	</div>
+	</SwatchCard>
 </template>
