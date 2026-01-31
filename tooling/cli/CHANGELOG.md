@@ -1,5 +1,11 @@
 # @styleframe/cli
 
+## 2.4.0
+
+### Minor Changes
+
+- [#83](https://github.com/styleframe-dev/styleframe/pull/83) [`6deddfd`](https://github.com/styleframe-dev/styleframe/commit/6deddfd7a97df13a7fcb865dbf088995f79bd4f3) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Figma plugin for syncing Styleframe variables with Figma variables and CLI commands for Figma import/export
+
 ## 2.3.3
 
 ### Patch Changes

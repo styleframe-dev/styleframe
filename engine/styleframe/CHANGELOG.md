@@ -1,5 +1,18 @@
 # styleframe
 
+## 2.6.0
+
+### Minor Changes
+
+- [#83](https://github.com/styleframe-dev/styleframe/pull/83) [`6deddfd`](https://github.com/styleframe-dev/styleframe/commit/6deddfd7a97df13a7fcb865dbf088995f79bd4f3) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Figma plugin for syncing Styleframe variables with Figma variables and CLI commands for Figma import/export
+
+- [#105](https://github.com/styleframe-dev/styleframe/pull/105) [`b109ac1`](https://github.com/styleframe-dev/styleframe/commit/b109ac148d837ae0a060c34f0236338bf4deca36) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add multiplier support to spacing utilities (margin, padding, gap, space) with @-prefixed numeric values that generate calc() expressions based on a base spacing variable
+
+### Patch Changes
+
+- Updated dependencies [[`6deddfd`](https://github.com/styleframe-dev/styleframe/commit/6deddfd7a97df13a7fcb865dbf088995f79bd4f3)]:
+  - @styleframe/cli@2.4.0
+
 ## 2.5.2
 
 ### Patch Changes
