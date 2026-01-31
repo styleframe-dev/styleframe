@@ -1,18 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
+import { borderRadiusValues } from "@styleframe/theme";
 import BorderRadiusSwatch from "../components/BorderRadiusSwatch.vue";
 import StoryGrid from "../components/StoryGrid.vue";
-import { h } from "vue";
-import { defaultBorderRadiusValues } from "@styleframe/theme";
 
 const meta = {
 	title: "Design Tokens/Borders/Border Radius",
 	component: BorderRadiusSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		borderRadius: {
+		value: {
 			control: "select",
-			options: defaultBorderRadiusValues,
+			options: Object.keys(borderRadiusValues),
 		},
 	},
 } satisfies Meta<typeof BorderRadiusSwatch>;
@@ -23,48 +21,57 @@ type Story = StoryObj<typeof meta>;
 export const AllBorderRadiuses: StoryObj = {
 	render: () => ({
 		components: { BorderRadiusSwatch, StoryGrid },
-		setup(props) {
-			return () =>
-				h(BorderRadiusSwatch, {
-					name: props.borderRadius,
-					value: props.borderRadius,
-				});
+		setup() {
+			return { items: Object.keys(borderRadiusValues) };
 		},
+		template: `
+			<StoryGrid :items="items">
+				<template #default="{ item }">
+					<BorderRadiusSwatch :name="item" :value="item" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const None: Story = {
 	args: {
-		borderRadius: "none",
+		name: "none",
+		value: "none",
 	},
 };
 
 export const Small: Story = {
 	args: {
-		borderRadius: "sm",
+		name: "sm",
+		value: "sm",
 	},
 };
 
 export const Medium: Story = {
 	args: {
-		borderRadius: "md",
+		name: "md",
+		value: "md",
 	},
 };
 
 export const Large: Story = {
 	args: {
-		borderRadius: "lg",
+		name: "lg",
+		value: "lg",
 	},
 };
 
 export const ExtraLarge: Story = {
 	args: {
-		borderRadius: "xl",
+		name: "xl",
+		value: "xl",
 	},
 };
 
 export const Full: Story = {
 	args: {
-		borderRadius: "full",
+		name: "full",
+		value: "full",
 	},
 };

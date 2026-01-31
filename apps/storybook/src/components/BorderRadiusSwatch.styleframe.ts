@@ -3,9 +3,11 @@ import {
 	useSwatchColors,
 	useSwatchDimensions,
 } from "./primitives/tokens.styleframe";
-import { useDesignTokensPreset } from "@styleframe/theme";
+import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
+
+useUtilitiesPreset(s);
 
 const { borderRadius } = useDesignTokensPreset(s);
 const {
@@ -32,7 +34,7 @@ export const borderRadiusSwatch = s.recipe({
 	name: "border-radius-swatch",
 	base: {},
 	variants: {
-		borderRadius: {
+		variant: {
 			none: {
 				borderRadius: s.ref(borderRadiusNone),
 			},
@@ -57,7 +59,7 @@ export const borderRadiusSwatch = s.recipe({
 		},
 	},
 	defaultVariants: {
-		borderRadius: "md",
+		variant: "md",
 	},
 });
 
