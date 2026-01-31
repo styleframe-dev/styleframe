@@ -120,9 +120,8 @@ function splitByColons(str: string): string[] {
  * @returns Array of unique utility class names found
  */
 export function extractUtilityClasses(content: string): string[] {
-	// Create a new regex instance to avoid state issues with global flag
-	const pattern = new RegExp(UTILITY_CLASS_PATTERN.source, "g");
-	const matches = content.match(pattern);
+	// String.match() with global regex handles state correctly
+	const matches = content.match(UTILITY_CLASS_PATTERN);
 	return matches ? [...new Set(matches)] : [];
 }
 

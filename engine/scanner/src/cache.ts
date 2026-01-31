@@ -45,6 +45,14 @@ export function createCache(): ScannerCache {
 			return entry !== undefined && entry.hash === contentHash;
 		},
 
+		getIfValid(filePath: string, contentHash: string): FileScanResult | null {
+			const entry = entries.get(filePath);
+			if (entry && entry.hash === contentHash) {
+				return entry.result;
+			}
+			return null;
+		},
+
 		invalidate(filePath: string): void {
 			entries.delete(filePath);
 		},

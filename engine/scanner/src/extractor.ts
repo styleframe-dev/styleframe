@@ -1,6 +1,34 @@
 import type { Extractor } from "./types";
 import { extractUtilityClasses } from "./parser";
 
+// Module-level compiled regex patterns for performance
+// Patterns with 'g' flag require lastIndex reset before .exec() loops
+
+/** Matches className={...} in JSX */
+const CLASSNAME_EXPR_PATTERN = /\bclassName\s*=\s*\{/g;
+
+/** Matches class={...} in Svelte */
+const CLASS_EXPR_PATTERN = /\bclass\s*=\s*\{/g;
+
+/** Matches class="..." or class='...' in HTML */
+const CLASS_ATTR_PATTERN = /\bclass\s*=\s*["']([^"']+)["']/gi;
+
+/** Matches className="..." or className='...' in JSX */
+const CLASSNAME_STRING_PATTERN = /\bclassName\s*=\s*["']([^"']+)["']/gi;
+
+/** Matches Svelte class:_directive syntax */
+const SVELTE_CLASS_DIRECTIVE_PATTERN =
+	/\bclass:(_[a-zA-Z][a-zA-Z0-9-:[\]._]*)/g;
+
+/** Matches single-quoted strings */
+const SINGLE_QUOTE_PATTERN = /'([^'\\]*(?:\\.[^'\\]*)*)'/g;
+
+/** Matches double-quoted strings */
+const DOUBLE_QUOTE_PATTERN = /"([^"\\]*(?:\\.[^"\\]*)*)"/g;
+
+/** Matches template literal strings (without interpolation handling) */
+const TEMPLATE_LITERAL_PATTERN = /`([^`\\]*(?:\\.[^`\\]*)*)`/g;
+
 /**
  * Extract the content of a braced expression, handling nested braces.
  * Returns the content inside the outermost braces, or null if unbalanced.
@@ -36,10 +64,10 @@ function extractBracedContent(str: string): string | null {
  */
 function extractClassNameExpressions(content: string): string[] {
 	const results: string[] = [];
-	const pattern = /\bclassName\s*=\s*\{/g;
+	CLASSNAME_EXPR_PATTERN.lastIndex = 0;
 	let match: RegExpExecArray | null;
 
-	while ((match = pattern.exec(content)) !== null) {
+	while ((match = CLASSNAME_EXPR_PATTERN.exec(content)) !== null) {
 		const startIndex = match.index + match[0].length;
 		const remaining = content.slice(startIndex);
 		const bracedContent = extractBracedContent(remaining);
@@ -58,10 +86,10 @@ function extractClassNameExpressions(content: string): string[] {
  */
 function extractClassExpressions(content: string): string[] {
 	const results: string[] = [];
-	const pattern = /\bclass\s*=\s*\{/g;
+	CLASS_EXPR_PATTERN.lastIndex = 0;
 	let match: RegExpExecArray | null;
 
-	while ((match = pattern.exec(content)) !== null) {
+	while ((match = CLASS_EXPR_PATTERN.exec(content)) !== null) {
 		const startIndex = match.index + match[0].length;
 		const remaining = content.slice(startIndex);
 		const bracedContent = extractBracedContent(remaining);
@@ -82,10 +110,10 @@ function extractFromHTML(content: string): string[] {
 	const classes: string[] = [];
 
 	// Match class="..." attributes (handles both single and double quotes)
-	const classAttrPattern = /\bclass\s*=\s*["']([^"']+)["']/gi;
+	CLASS_ATTR_PATTERN.lastIndex = 0;
 	let match: RegExpExecArray | null;
 
-	while ((match = classAttrPattern.exec(content)) !== null) {
+	while ((match = CLASS_ATTR_PATTERN.exec(content)) !== null) {
 		if (match[1]) {
 			classes.push(...extractUtilityClasses(match[1]));
 		}
@@ -102,10 +130,10 @@ function extractFromJSX(content: string): string[] {
 	const classes: string[] = [];
 
 	// Match className="..." (string literals)
-	const classNameStringPattern = /\bclassName\s*=\s*["']([^"']+)["']/gi;
+	CLASSNAME_STRING_PATTERN.lastIndex = 0;
 	let match: RegExpExecArray | null;
 
-	while ((match = classNameStringPattern.exec(content)) !== null) {
+	while ((match = CLASSNAME_STRING_PATTERN.exec(content)) !== null) {
 		if (match[1]) {
 			classes.push(...extractUtilityClasses(match[1]));
 		}
@@ -164,9 +192,9 @@ function extractFromSvelte(content: string): string[] {
 
 	// Handle Svelte class:directive syntax (e.g., class:_margin-sm={condition})
 	// Matches class: followed by a utility class name (starting with _)
-	const classDirectivePattern = /\bclass:(_[a-zA-Z][a-zA-Z0-9-:[\]._]*)/g;
+	SVELTE_CLASS_DIRECTIVE_PATTERN.lastIndex = 0;
 	let match: RegExpExecArray | null;
-	while ((match = classDirectivePattern.exec(content)) !== null) {
+	while ((match = SVELTE_CLASS_DIRECTIVE_PATTERN.exec(content)) !== null) {
 		if (match[1]) {
 			classes.push(match[1]);
 		}
@@ -211,20 +239,19 @@ function extractFromAstro(content: string): string[] {
  */
 function extractFromStringLiterals(content: string): string[] {
 	const classes: string[] = [];
-
-	// Match single-quoted strings
-	const singleQuotePattern = /'([^'\\]*(?:\\.[^'\\]*)*)'/g;
 	let match: RegExpExecArray | null;
 
-	while ((match = singleQuotePattern.exec(content)) !== null) {
+	// Match single-quoted strings
+	SINGLE_QUOTE_PATTERN.lastIndex = 0;
+	while ((match = SINGLE_QUOTE_PATTERN.exec(content)) !== null) {
 		if (match[1]) {
 			classes.push(...extractUtilityClasses(match[1]));
 		}
 	}
 
 	// Match double-quoted strings
-	const doubleQuotePattern = /"([^"\\]*(?:\\.[^"\\]*)*)"/g;
-	while ((match = doubleQuotePattern.exec(content)) !== null) {
+	DOUBLE_QUOTE_PATTERN.lastIndex = 0;
+	while ((match = DOUBLE_QUOTE_PATTERN.exec(content)) !== null) {
 		if (match[1]) {
 			classes.push(...extractUtilityClasses(match[1]));
 		}
@@ -233,8 +260,8 @@ function extractFromStringLiterals(content: string): string[] {
 	// Match template literals without interpolations.
 	// Literals like `_margin:${size}` will match but ${...} appears as literal text,
 	// so only static class names before/after interpolations are extracted.
-	const templatePattern = /`([^`\\]*(?:\\.[^`\\]*)*)`/g;
-	while ((match = templatePattern.exec(content)) !== null) {
+	TEMPLATE_LITERAL_PATTERN.lastIndex = 0;
+	while ((match = TEMPLATE_LITERAL_PATTERN.exec(content)) !== null) {
 		if (match[1]) {
 			classes.push(...extractUtilityClasses(match[1]));
 		}

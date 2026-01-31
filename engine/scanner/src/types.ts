@@ -102,6 +102,8 @@ export interface ScannerCache {
 	set(filePath: string, result: FileScanResult, contentHash: string): void;
 	/** Check if a file has valid cache */
 	isValid(filePath: string, contentHash: string): boolean;
+	/** Get cached result if valid, null otherwise (single lookup) */
+	getIfValid(filePath: string, contentHash: string): FileScanResult | null;
 	/** Invalidate cache for a file */
 	invalidate(filePath: string): void;
 	/** Clear all cache entries */

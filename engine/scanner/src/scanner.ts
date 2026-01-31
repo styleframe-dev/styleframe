@@ -56,12 +56,10 @@ export function createScanner(config: ScannerConfig): Scanner {
 		const content = await readFile(filePath, "utf-8");
 		const contentHash = hashContent(content);
 
-		// Check cache
-		if (cache.isValid(filePath, contentHash)) {
-			const cached = cache.get(filePath);
-			if (cached) {
-				return cached;
-			}
+		// Check cache with single lookup
+		const cached = cache.getIfValid(filePath, contentHash);
+		if (cached) {
+			return cached;
 		}
 
 		// Extract and parse classes

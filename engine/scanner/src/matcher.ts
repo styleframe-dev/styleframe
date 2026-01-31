@@ -11,6 +11,18 @@ import type {
 } from "./types";
 
 /**
+ * Generate a normalized cache key for utility value lookup.
+ * Sorts modifiers alphabetically to ensure consistent keys regardless of order.
+ */
+function generateValueKey(value: string, modifiers: string[]): string {
+	if (modifiers.length === 0) {
+		return value;
+	}
+	const sortedModifiers = [...modifiers].sort().join(",");
+	return `${value}|${sortedModifiers}`;
+}
+
+/**
  * Match parsed utility classes against registered utilities in the root.
  *
  * @param parsed Array of parsed utility classes
@@ -24,9 +36,17 @@ export function matchUtilities(
 	// Build lookup maps for efficient matching
 	const utilityMap = new Map<string, UtilityFactory>();
 	const modifierMap = new Map<string, ModifierFactory>();
+	// Pre-compute value key sets for O(1) existence checks
+	const factoryValueSets = new Map<UtilityFactory, Set<string>>();
 
 	for (const utility of root.utilities) {
 		utilityMap.set(utility.name, utility);
+		// Build the value key set for this factory
+		const valueSet = new Set<string>();
+		for (const v of utility.values) {
+			valueSet.add(generateValueKey(v.key, v.modifiers));
+		}
+		factoryValueSets.set(utility, valueSet);
 	}
 
 	for (const modifier of root.modifiers) {
@@ -49,19 +69,16 @@ export function matchUtilities(
 			}
 		}
 
-		// Check if the value exists in the factory
+		// Check if the value exists in the factory using O(1) Set lookup
 		let exists = false;
 
 		if (factory) {
-			// Check existing values in the factory
-			const existingValue = factory.values.find(
-				(v) =>
-					v.key === parsedClass.value &&
-					v.modifiers.length === parsedClass.modifiers.length &&
-					v.modifiers.every((m) => parsedClass.modifiers.includes(m)),
+			const lookupKey = generateValueKey(
+				parsedClass.value,
+				parsedClass.modifiers,
 			);
-
-			exists = !!existingValue;
+			const valueSet = factoryValueSets.get(factory);
+			exists = valueSet?.has(lookupKey) ?? false;
 		}
 
 		matches.push({

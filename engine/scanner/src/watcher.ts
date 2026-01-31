@@ -1,6 +1,45 @@
 import type { ScanResult } from "./types";
 
 /**
+ * Cache for compiled glob patterns.
+ * Maps normalized glob pattern strings to compiled RegExp objects.
+ * Null values indicate non-glob patterns or invalid patterns.
+ */
+const compiledPatternCache = new Map<string, RegExp | null>();
+
+/**
+ * Get or compile a glob pattern to regex.
+ * Returns null if the pattern is not a glob or is invalid.
+ */
+function getCompiledPattern(pattern: string): RegExp | null {
+	const normalized = pattern.replace(/\\/g, "/");
+
+	if (compiledPatternCache.has(normalized)) {
+		return compiledPatternCache.get(normalized)!;
+	}
+
+	// Check if it's a glob pattern
+	if (
+		!normalized.includes("**") &&
+		!normalized.includes("*") &&
+		!normalized.includes("?")
+	) {
+		compiledPatternCache.set(normalized, null);
+		return null;
+	}
+
+	try {
+		const regexStr = globToRegex(normalized);
+		const regex = new RegExp(`^${regexStr}$`);
+		compiledPatternCache.set(normalized, regex);
+		return regex;
+	} catch {
+		compiledPatternCache.set(normalized, null);
+		return null;
+	}
+}
+
+/**
  * Callback type for file change events
  */
 export type WatchCallback = (result: ScanResult) => void;
@@ -114,29 +153,19 @@ export function matchesPatterns(filePath: string, patterns: string[]): boolean {
 	const normalizedPath = filePath.replace(/\\/g, "/");
 
 	for (const pattern of patterns) {
-		const normalizedPattern = pattern.replace(/\\/g, "/");
+		const compiledRegex = getCompiledPattern(pattern);
 
-		// Simple glob matching:
-		// - ** matches any path segments
-		// - * matches any characters within a segment
-		// - Exact match
-
-		if (
-			normalizedPattern.includes("**") ||
-			normalizedPattern.includes("*") ||
-			normalizedPattern.includes("?")
-		) {
-			try {
-				const regexStr = globToRegex(normalizedPattern);
-				const regex = new RegExp(`^${regexStr}$`);
-				if (regex.test(normalizedPath)) {
-					return true;
-				}
-			} catch {
-				// Invalid regex pattern, fall through to next pattern
+		if (compiledRegex !== null) {
+			// Glob pattern - use cached regex
+			if (compiledRegex.test(normalizedPath)) {
+				return true;
 			}
-		} else if (normalizedPath === normalizedPattern) {
-			return true;
+		} else {
+			// Exact match for non-glob patterns
+			const normalizedPattern = pattern.replace(/\\/g, "/");
+			if (normalizedPath === normalizedPattern) {
+				return true;
+			}
 		}
 	}
 
