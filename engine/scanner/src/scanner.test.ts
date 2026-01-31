@@ -133,11 +133,11 @@ describe("createScanner", () => {
 			);
 
 			expect(result.length).toBe(2);
-			expect(result[0].name).toBe("margin");
-			expect(result[0].value).toBe("sm");
-			expect(result[1].name).toBe("padding");
-			expect(result[1].value).toBe("lg");
-			expect(result[1].modifiers).toContain("hover");
+			expect(result[0]!.name).toBe("margin");
+			expect(result[0]!.value).toBe("sm");
+			expect(result[1]!.name).toBe("padding");
+			expect(result[1]!.value).toBe("lg");
+			expect(result[1]!.modifiers).toContain("hover");
 		});
 
 		it("should use default file path when not provided", () => {
@@ -151,7 +151,7 @@ describe("createScanner", () => {
 			);
 
 			expect(result.length).toBe(1);
-			expect(result[0].name).toBe("margin");
+			expect(result[0]!.name).toBe("margin");
 		});
 	});
 
@@ -541,10 +541,10 @@ describe("quickScan", () => {
 		);
 
 		expect(result.length).toBe(2);
-		expect(result[0].name).toBe("margin");
-		expect(result[0].value).toBe("sm");
-		expect(result[1].name).toBe("padding");
-		expect(result[1].modifiers).toContain("hover");
+		expect(result[0]!.name).toBe("margin");
+		expect(result[0]!.value).toBe("sm");
+		expect(result[1]!.name).toBe("padding");
+		expect(result[1]!.modifiers).toContain("hover");
 	});
 
 	it("should use file path hint for extractor selection", () => {
@@ -576,8 +576,8 @@ describe("createContentScanner", () => {
 		const result = scan('<div class="_margin:sm _padding:md">Content</div>');
 
 		expect(result.length).toBe(2);
-		expect(result[0].name).toBe("margin");
-		expect(result[1].name).toBe("padding");
+		expect(result[0]!.name).toBe("margin");
+		expect(result[1]!.name).toBe("padding");
 	});
 
 	it("should support custom extractors", () => {
@@ -586,7 +586,7 @@ describe("createContentScanner", () => {
 			if (!matches) return [];
 			return matches.flatMap((m) => {
 				const match = m.match(/data-class="([^"]+)"/);
-				return match ? match[1].split(" ") : [];
+				return match ? match[1]!.split(" ") : [];
 			});
 		};
 
@@ -596,8 +596,8 @@ describe("createContentScanner", () => {
 		);
 
 		expect(result.length).toBe(2);
-		expect(result[0].name).toBe("margin");
-		expect(result[1].name).toBe("padding");
+		expect(result[0]!.name).toBe("margin");
+		expect(result[1]!.name).toBe("padding");
 	});
 
 	it("should use file path for extractor selection", () => {
