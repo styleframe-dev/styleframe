@@ -1,34 +1,7 @@
-import { useColor, useColorTint, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { colors } from "../tokens.styleframe";
 
 const s = styleframe();
-
-const { colorPrimary } = useColor(s, {
-	primary: "#1E3A8A",
-} as const);
-
-const {
-	colorPrimaryTint50,
-	colorPrimaryTint100,
-	colorPrimaryTint150,
-	colorPrimaryTint200,
-} = useColorTint(s, colorPrimary, {
-	50: 5,
-	100: 10,
-	150: 15,
-	200: 20,
-});
-
-// Register all utilities and generate utility classes
-const { createBackgroundColorUtility } = useUtilitiesPreset(s);
-
-createBackgroundColorUtility({
-	primary: s.ref(colorPrimary),
-	"primary-tint-50": s.ref(colorPrimaryTint50),
-	"primary-tint-100": s.ref(colorPrimaryTint100),
-	"primary-tint-150": s.ref(colorPrimaryTint150),
-	"primary-tint-200": s.ref(colorPrimaryTint200),
-});
 
 export const colorTintPreview = s.recipe({
 	name: "color-tint-preview",
@@ -46,19 +19,19 @@ export const colorTintPreview = s.recipe({
 	variants: {
 		tint: {
 			base: {
-				background: s.ref(colorPrimary),
+				background: s.ref(colors.colorPrimary),
 			},
 			"50": {
-				background: s.ref(colorPrimaryTint50),
+				background: s.ref(colors["colorPrimary-tint-50"]),
 			},
 			"100": {
-				background: s.ref(colorPrimaryTint100),
+				background: s.ref(colors["colorPrimary-tint-100"]),
 			},
 			"150": {
-				background: s.ref(colorPrimaryTint150),
+				background: s.ref(colors["colorPrimary-tint-150"]),
 			},
 			"200": {
-				background: s.ref(colorPrimaryTint200),
+				background: s.ref(colors["colorPrimary-tint-200"]),
 			},
 		},
 	},

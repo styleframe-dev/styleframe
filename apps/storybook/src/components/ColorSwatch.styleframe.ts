@@ -1,5 +1,5 @@
-import { useColor } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { colors as designTokenColors } from "../tokens.styleframe";
 import {
 	useSwatchColors,
 	useSwatchSpacing,
@@ -13,22 +13,6 @@ const { swatchColorTertiary } = useSwatchColors(s);
 const { swatchGapSm } = useSwatchSpacing(s);
 const { swatchFontSize, swatchFontWeightNormal } = useSwatchTypography(s);
 const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
-
-const {
-	colorPrimary,
-	colorSecondary,
-	colorInfo,
-	colorSuccess,
-	colorWarning,
-	colorDanger,
-} = useColor(s, {
-	primary: "#1E3A8A",
-	secondary: "#9333EA",
-	info: "#3B82F6",
-	success: "#10B981",
-	warning: "#F59E0B",
-	danger: "#EF4444",
-} as const);
 
 export const colors = [
 	"primary",
@@ -66,22 +50,22 @@ export const colorPreview = s.recipe({
 	variants: {
 		color: {
 			primary: {
-				background: s.ref(colorPrimary),
+				background: s.ref(designTokenColors.colorPrimary),
 			},
 			secondary: {
-				background: s.ref(colorSecondary),
+				background: s.ref(designTokenColors.colorSecondary),
 			},
 			info: {
-				background: s.ref(colorInfo),
+				background: s.ref(designTokenColors.colorInfo),
 			},
 			success: {
-				background: s.ref(colorSuccess),
+				background: s.ref(designTokenColors.colorSuccess),
 			},
 			warning: {
-				background: s.ref(colorWarning),
+				background: s.ref(designTokenColors.colorWarning),
 			},
 			danger: {
-				background: s.ref(colorDanger),
+				background: s.ref(designTokenColors.colorDanger),
 			},
 		},
 	},

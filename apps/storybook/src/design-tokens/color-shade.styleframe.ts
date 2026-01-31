@@ -1,34 +1,7 @@
-import { useColor, useColorShade, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import { colors } from "../tokens.styleframe";
 
 const s = styleframe();
-
-const { colorPrimary } = useColor(s, {
-	primary: "#3B82F6",
-} as const);
-
-const {
-	colorPrimaryShade50,
-	colorPrimaryShade100,
-	colorPrimaryShade150,
-	colorPrimaryShade200,
-} = useColorShade(s, colorPrimary, {
-	50: 5,
-	100: 10,
-	150: 15,
-	200: 20,
-});
-
-// Register all utilities and generate utility classes
-const { createBackgroundColorUtility } = useUtilitiesPreset(s);
-
-createBackgroundColorUtility({
-	primary: s.ref(colorPrimary),
-	"primary-shade-50": s.ref(colorPrimaryShade50),
-	"primary-shade-100": s.ref(colorPrimaryShade100),
-	"primary-shade-150": s.ref(colorPrimaryShade150),
-	"primary-shade-200": s.ref(colorPrimaryShade200),
-});
 
 export const colorShadePreview = s.recipe({
 	name: "color-shade-preview",
@@ -46,19 +19,19 @@ export const colorShadePreview = s.recipe({
 	variants: {
 		shade: {
 			base: {
-				background: s.ref(colorPrimary),
+				background: s.ref(colors.colorPrimary),
 			},
 			"50": {
-				background: s.ref(colorPrimaryShade50),
+				background: s.ref(colors["colorPrimary-shade-50"]),
 			},
 			"100": {
-				background: s.ref(colorPrimaryShade100),
+				background: s.ref(colors["colorPrimary-shade-100"]),
 			},
 			"150": {
-				background: s.ref(colorPrimaryShade150),
+				background: s.ref(colors["colorPrimary-shade-150"]),
 			},
 			"200": {
-				background: s.ref(colorPrimaryShade200),
+				background: s.ref(colors["colorPrimary-shade-200"]),
 			},
 		},
 	},
