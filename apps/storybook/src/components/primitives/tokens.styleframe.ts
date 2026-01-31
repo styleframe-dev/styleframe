@@ -33,16 +33,24 @@ export function useSwatchColors(s: Styleframe) {
  * Shared spacing tokens for swatch primitives
  */
 export function useSwatchSpacing(s: Styleframe) {
+	const gapXs = s.variable("swatch.spacing.gap.xs", "4px", { default: true });
 	const gapSm = s.variable("swatch.spacing.gap.sm", "8px", { default: true });
 	const gapMd = s.variable("swatch.spacing.gap.md", "16px", { default: true });
+	const gapLg = s.variable("swatch.spacing.gap.lg", "24px", { default: true });
 	const paddingRow = s.variable("swatch.spacing.padding.row", "12px 16px", {
+		default: true,
+	});
+	const paddingMd = s.variable("swatch.spacing.padding.md", "16px", {
 		default: true,
 	});
 
 	return {
+		swatchGapXs: gapXs,
 		swatchGapSm: gapSm,
 		swatchGapMd: gapMd,
+		swatchGapLg: gapLg,
 		swatchPaddingRow: paddingRow,
+		swatchPaddingMd: paddingMd,
 	};
 }
 
@@ -51,6 +59,9 @@ export function useSwatchSpacing(s: Styleframe) {
  */
 export function useSwatchTypography(s: Styleframe) {
 	const fontSize = s.variable("swatch.font.size", "14px", { default: true });
+	const fontSizeSm = s.variable("swatch.font.size.sm", "12px", {
+		default: true,
+	});
 	const fontWeightNormal = s.variable("swatch.font.weight.normal", "500", {
 		default: true,
 	});
@@ -63,6 +74,7 @@ export function useSwatchTypography(s: Styleframe) {
 
 	return {
 		swatchFontSize: fontSize,
+		swatchFontSizeSm: fontSizeSm,
 		swatchFontWeightNormal: fontWeightNormal,
 		swatchFontWeightBold: fontWeightBold,
 		swatchFontFamilyMono: fontFamilyMono,
@@ -77,6 +89,9 @@ export function useSwatchDimensions(s: Styleframe) {
 		default: true,
 	});
 	const previewSizeSm = s.variable("swatch.preview.size.sm", "80px", {
+		default: true,
+	});
+	const previewHeightSm = s.variable("swatch.preview.height.sm", "60px", {
 		default: true,
 	});
 	const barHeight = s.variable("swatch.bar.height", "8px", { default: true });
@@ -96,6 +111,7 @@ export function useSwatchDimensions(s: Styleframe) {
 	return {
 		swatchPreviewSize: previewSize,
 		swatchPreviewSizeSm: previewSizeSm,
+		swatchPreviewHeightSm: previewHeightSm,
 		swatchBarHeight: barHeight,
 		swatchBorderRadius: borderRadius,
 		swatchBorderRadiusSm: borderRadiusSm,

@@ -1,7 +1,18 @@
 import { useColor } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import {
+	useSwatchColors,
+	useSwatchSpacing,
+	useSwatchTypography,
+	useSwatchDimensions,
+} from "./primitives/tokens.styleframe";
 
 const s = styleframe();
+
+const { swatchColorTertiary } = useSwatchColors(s);
+const { swatchGapSm } = useSwatchSpacing(s);
+const { swatchFontSize, swatchFontWeightNormal } = useSwatchTypography(s);
+const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
 
 const {
 	colorPrimary,
@@ -34,19 +45,19 @@ s.selector(".color-swatch", {
 	display: "flex",
 	flexDirection: "column",
 	alignItems: "center",
-	gap: "8px",
+	gap: s.ref(swatchGapSm),
 });
 
 s.selector(".color-swatch__preview", {
-	width: "100px",
-	height: "100px",
-	borderRadius: "8px",
+	width: s.ref(swatchPreviewSize),
+	height: s.ref(swatchPreviewSize),
+	borderRadius: s.ref(swatchBorderRadius),
 });
 
 s.selector(".color-swatch__name", {
-	fontSize: "14px",
-	fontWeight: "500",
-	color: "#374151",
+	fontSize: s.ref(swatchFontSize),
+	fontWeight: s.ref(swatchFontWeightNormal),
+	color: s.ref(swatchColorTertiary),
 });
 
 export const colorPreview = s.recipe({

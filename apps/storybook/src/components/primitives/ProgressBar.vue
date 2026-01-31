@@ -6,7 +6,9 @@ const props = defineProps<{
 	percentage: number;
 }>();
 
-const fillWidth = computed(() => `${Math.max(0, Math.min(100, props.percentage))}%`);
+const fillWidth = computed(
+	() => `${Math.max(0, Math.min(100, props.percentage))}%`,
+);
 </script>
 
 <template>

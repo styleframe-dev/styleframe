@@ -1,21 +1,24 @@
 import { styleframe } from "styleframe";
+import { useSwatchSpacing } from "./primitives/tokens.styleframe";
 
 const s = styleframe();
 
+const { swatchGapSm, swatchGapLg, swatchPaddingMd } = useSwatchSpacing(s);
+
 s.selector(".story-grid", {
-	padding: "16px",
+	padding: s.ref(swatchPaddingMd),
 });
 
 s.selector(".story-grid--grid", {
 	display: "flex",
 	flexWrap: "wrap",
-	gap: "24px",
+	gap: s.ref(swatchGapLg),
 });
 
 s.selector(".story-grid--list", {
 	display: "flex",
 	flexDirection: "column",
-	gap: "8px",
+	gap: s.ref(swatchGapSm),
 });
 
 export default s;

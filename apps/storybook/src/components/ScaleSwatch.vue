@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import "./ScaleSwatch.styleframe?css";
 import SwatchRow from "./primitives/SwatchRow.vue";
 import BarChart from "./primitives/BarChart.vue";
 

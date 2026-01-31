@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import "./BreakpointSwatch.styleframe?css";
 import SwatchRow from "./primitives/SwatchRow.vue";
 import ProgressBar from "./primitives/ProgressBar.vue";
 
