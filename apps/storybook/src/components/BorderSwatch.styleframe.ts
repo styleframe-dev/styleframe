@@ -6,13 +6,13 @@ import {
 
 const s = styleframe();
 
-const { swatchColorBackground } = useSwatchColors(s);
+const { swatchColorPrimary } = useSwatchColors(s);
 const { swatchPreviewSize } = useSwatchDimensions(s);
 
 s.selector(".border-swatch__preview", {
 	width: s.ref(swatchPreviewSize),
 	height: s.ref(swatchPreviewSize),
-	background: s.ref(swatchColorBackground),
+	background: s.ref(swatchColorPrimary),
 });
 
 export default s;
