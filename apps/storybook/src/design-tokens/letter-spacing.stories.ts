@@ -1,44 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
-import "../components/swatch.styleframe?css";
-import "./letter-spacing.styleframe?css";
-import { letterSpacingPreview } from "./letter-spacing.styleframe?ts";
-import { letterSpacingValues } from "./letter-spacing.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const letterSpacings = Object.keys(letterSpacingValues);
-
-const LetterSpacingSwatch = createSwatchComponent(
-	"LetterSpacingSwatch",
-	"letterSpacing",
-	(letterSpacing) => letterSpacingPreview({ letterSpacing }),
-	{
-		layout: "text",
-		values: letterSpacingValues,
-		sampleText: "Letter Spacing",
-		previewTag: "span",
-	},
-);
-
-const LetterSpacingGrid = createGridComponent(
-	"LetterSpacingGrid",
-	letterSpacings,
-	LetterSpacingSwatch,
-	"letterSpacing",
-	"list",
-);
+import { letterSpacingValues } from "@styleframe/theme";
+import LetterSpacingSwatch from "../components/LetterSpacingSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
 	title: "Design Tokens/Typography/Letter Spacing",
 	component: LetterSpacingSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		letterSpacing: {
+		value: {
 			control: "select",
-			options: letterSpacings,
+			options: Object.keys(letterSpacingValues),
 		},
 	},
 } satisfies Meta<typeof LetterSpacingSwatch>;
@@ -48,37 +20,51 @@ type Story = StoryObj<typeof meta>;
 
 export const AllLetterSpacings: StoryObj = {
 	render: () => ({
-		components: { LetterSpacingGrid },
-		template: "<LetterSpacingGrid />",
+		components: { LetterSpacingSwatch, StoryGrid },
+		setup() {
+			return { items: Object.keys(letterSpacingValues) };
+		},
+		template: `
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<LetterSpacingSwatch :name="item" :value="item" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const Tighter: Story = {
 	args: {
-		letterSpacing: "tighter",
+		name: "tighter",
+		value: "tighter",
 	},
 };
 
 export const Tight: Story = {
 	args: {
-		letterSpacing: "tight",
+		name: "tight",
+		value: "tight",
 	},
 };
 
 export const Normal: Story = {
 	args: {
-		letterSpacing: "normal",
+		name: "normal",
+		value: "normal",
 	},
 };
 
 export const Wide: Story = {
 	args: {
-		letterSpacing: "wide",
+		name: "wide",
+		value: "wide",
 	},
 };
 
 export const Wider: Story = {
 	args: {
-		letterSpacing: "wider",
+		name: "wider",
+		value: "wider",
 	},
 };

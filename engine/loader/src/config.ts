@@ -53,7 +53,10 @@ export async function loadConfiguration({
 		return styleframe();
 	}
 
-	const jiti = createJiti(path.dirname(resolvedPath), { cache: false });
+	const jiti = createJiti(path.dirname(resolvedPath), {
+		fsCache: false,
+		moduleCache: false,
+	});
 	const module = (await jiti.import(resolvedPath)) as Record<string, unknown>;
 
 	if (!module.default) {

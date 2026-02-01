@@ -42,7 +42,7 @@ export function useColorTint<
 				return 0;
 			}
 
-			return s.css`oklch(from ${s.ref(color)} calc(l + ${value / 100}) c h / a)`;
+			return s.css`oklch(from ${s.ref(color)} calc(l + ${value / 100}) c h / alpha)`;
 		},
 		delimiter: "-" as const,
 	})(s, levels, { default: isDefault });

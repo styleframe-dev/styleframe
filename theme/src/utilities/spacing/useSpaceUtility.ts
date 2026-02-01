@@ -1,37 +1,47 @@
-import { createUseUtility } from "../../utils";
+import { createUseSpacingUtility } from "../../utils";
 
 /**
- * Create space-x utility classes (horizontal space between children).
+ * Create space-x utility classes with multiplier support (horizontal space between children).
  * Uses the "lobotomized owl" selector to add margin-left to all but the first child.
  *
  * @example
  * ```typescript
  * const s = styleframe();
- * useSpaceXUtility(s, { sm: '0.5rem', md: '1rem' });
- * // Generates: ._space-x:sm > * + *, ._space-x:md > * + *
+ * const createSpaceX = useSpaceXUtility(s, { sm: '0.5rem', md: '1rem' });
+ *
+ * // Add multiplier values (with @ prefix):
+ * createSpaceX(["@1.5", "@2"]);
+ * // Generates:
+ * // ._space-x:1.5 > * + * { margin-left: calc(var(--spacing) * 1.5); }
  * ```
  */
-export const useSpaceXUtility = createUseUtility("space-x", ({ value }) => ({
-	"& > * + *": {
-		marginLeft: value,
-	},
-}));
+export const useSpaceXUtility = createUseSpacingUtility(
+	"space-x",
+	({ value }) => ({
+		"& > * + *": {
+			marginLeft: value,
+		},
+	}),
+);
 
 /**
- * Create space-y utility classes (vertical space between children).
+ * Create space-y utility classes with multiplier support (vertical space between children).
  * Uses the "lobotomized owl" selector to add margin-top to all but the first child.
  */
-export const useSpaceYUtility = createUseUtility("space-y", ({ value }) => ({
-	"& > * + *": {
-		marginTop: value,
-	},
-}));
+export const useSpaceYUtility = createUseSpacingUtility(
+	"space-y",
+	({ value }) => ({
+		"& > * + *": {
+			marginTop: value,
+		},
+	}),
+);
 
 /**
  * Create space-x-reverse utility classes.
  * Reverses the direction of horizontal spacing.
  */
-export const useSpaceXReverseUtility = createUseUtility(
+export const useSpaceXReverseUtility = createUseSpacingUtility(
 	"space-x-reverse",
 	({ value }) => ({
 		"& > * + *": {
@@ -45,7 +55,7 @@ export const useSpaceXReverseUtility = createUseUtility(
  * Create space-y-reverse utility classes.
  * Reverses the direction of vertical spacing.
  */
-export const useSpaceYReverseUtility = createUseUtility(
+export const useSpaceYReverseUtility = createUseSpacingUtility(
 	"space-y-reverse",
 	({ value }) => ({
 		"& > * + *": {

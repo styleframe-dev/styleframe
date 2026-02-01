@@ -1,10 +1,14 @@
 import { styleframe } from "styleframe";
+import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
 
-const colorPrimary = s.variable("color--primary", "blue");
-const colorSecondary = s.variable("color--secondary", "pink");
+const { colors } = useDesignTokensPreset(s);
+const { colorPrimary, colorSecondary } = colors;
 
+useUtilitiesPreset(s);
+
+// Selector for existing test
 s.selector(".h1", {
 	color: s.ref(colorPrimary),
 	background: s.ref(colorSecondary),

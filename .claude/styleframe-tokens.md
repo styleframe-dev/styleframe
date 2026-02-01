@@ -93,6 +93,28 @@ const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl } =
     });
 ```
 
+### Spacing Utilities with Multiplier Support
+
+Spacing utilities support multiplier values that generate `calc()` expressions:
+
+```ts
+import { useMarginUtility, usePaddingUtility, useGapUtility } from '@styleframe/theme';
+
+// Create utility with named values
+const createMargin = useMarginUtility(s, {
+    sm: ref(spacingSm),
+    md: ref(spacingMd),
+});
+
+// Add multiplier values using array syntax (with @ prefix)
+createMargin(["@1.5", "@2", "@0.5", "@-1"]);
+
+// Generates: _margin:1.5, _margin:2, _margin:0.5, _margin:-1
+// CSS: calc(var(--spacing) * multiplier)
+```
+
+**Note:** Multiplier values require the base `spacing` variable to be defined.
+
 ---
 
 ### Typography

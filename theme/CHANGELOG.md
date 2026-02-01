@@ -1,5 +1,11 @@
 # @styleframe/theme
 
+## 2.5.0
+
+### Minor Changes
+
+- [#105](https://github.com/styleframe-dev/styleframe/pull/105) [`b109ac1`](https://github.com/styleframe-dev/styleframe/commit/b109ac148d837ae0a060c34f0236338bf4deca36) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add multiplier support to spacing utilities (margin, padding, gap, space) with @-prefixed numeric values that generate calc() expressions based on a base spacing variable
+
 ## 2.4.0
 
 ### Minor Changes

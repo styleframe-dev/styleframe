@@ -1,5 +1,19 @@
 # @styleframe/plugin
 
+## 2.4.1
+
+### Patch Changes
+
+- [#113](https://github.com/styleframe-dev/styleframe/pull/113) [`b73095f`](https://github.com/styleframe-dev/styleframe/commit/b73095f114ef41158ab552e2784500215393b294) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Improve color previews and HMR handling
+  - Fix caching configuration in loader to use fsCache and moduleCache options
+  - Add HMR refetch handling for .styleframe.css virtual imports
+  - Update SwatchCard styling with proper footer alignment and better contrast
+
+- [#111](https://github.com/styleframe-dev/styleframe/pull/111) [`152d221`](https://github.com/styleframe-dev/styleframe/commit/152d221934ed3c86e76c31229a8925152081243c) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix HMR for virtual imports by normalizing file paths and adding fallback full-reload
+
+- Updated dependencies [[`b73095f`](https://github.com/styleframe-dev/styleframe/commit/b73095f114ef41158ab552e2784500215393b294)]:
+  - @styleframe/loader@2.4.1
+
 ## 2.4.0
 
 ### Minor Changes

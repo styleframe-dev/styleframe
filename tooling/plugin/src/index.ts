@@ -170,6 +170,14 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 			// Parse query parameters
 			const [pathPart, queryPart] = id.split("?");
 
+			// Handle HMR refetch requests for .styleframe.css files
+			// These come in as "SwatchCard.styleframe.css?t=123456"
+			if (pathPart?.endsWith(".styleframe.css")) {
+				const sourceFile = pathPart.replace(/\.css$/, ".ts");
+				const resolvedSourcePath = resolveSourcePath(sourceFile, importer);
+				return getResolvedVirtualId(resolvedSourcePath, "css");
+			}
+
 			// Only handle .styleframe files with specific queries
 			// .styleframe or .styleframe.ts
 			if (!pathPart || !/\.styleframe(\.ts)?$/.test(pathPart)) {
@@ -296,7 +304,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 
 				// Handle HMR for .styleframe.ts source files
 				if (isStyleframeSourceFile(ctx.file)) {
-					const virtualModuleIds = sourceToVirtualModules.get(ctx.file);
+					// Normalize path to match keys in sourceToVirtualModules (resolveSourcePath returns resolved absolute paths)
+					const normalizedFile = path.resolve(ctx.file);
+					const virtualModuleIds = sourceToVirtualModules.get(normalizedFile);
 
 					if (virtualModuleIds && virtualModuleIds.size > 0) {
 						const modulesToInvalidate = [];

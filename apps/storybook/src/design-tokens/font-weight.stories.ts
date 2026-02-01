@@ -1,44 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
-import "../components/swatch.styleframe?css";
-import "./font-weight.styleframe?css";
-import { fontWeightPreview } from "./font-weight.styleframe?ts";
-import { fontWeightValues } from "./font-weight.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const fontWeights = Object.keys(fontWeightValues);
-
-const FontWeightSwatch = createSwatchComponent(
-	"FontWeightSwatch",
-	"fontWeight",
-	(fontWeight) => fontWeightPreview({ fontWeight }),
-	{
-		layout: "text",
-		values: fontWeightValues,
-		sampleText: "The quick brown fox jumps over the lazy dog",
-		previewTag: "span",
-	},
-);
-
-const FontWeightGrid = createGridComponent(
-	"FontWeightGrid",
-	fontWeights,
-	FontWeightSwatch,
-	"fontWeight",
-	"list",
-);
+import { fontWeightValues } from "@styleframe/theme";
+import FontWeightSwatch from "../components/FontWeightSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
 	title: "Design Tokens/Typography/Font Weight",
 	component: FontWeightSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		fontWeight: {
+		value: {
 			control: "select",
-			options: fontWeights,
+			options: Object.keys(fontWeightValues),
 		},
 	},
 } satisfies Meta<typeof FontWeightSwatch>;
@@ -48,49 +20,65 @@ type Story = StoryObj<typeof meta>;
 
 export const AllFontWeights: StoryObj = {
 	render: () => ({
-		components: { FontWeightGrid },
-		template: "<FontWeightGrid />",
+		components: { FontWeightSwatch, StoryGrid },
+		setup() {
+			return { items: Object.keys(fontWeightValues) };
+		},
+		template: `
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<FontWeightSwatch :name="item" :value="item" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const ExtraLight: Story = {
 	args: {
-		fontWeight: "extralight",
+		name: "extralight",
+		value: "extralight",
 	},
 };
 
 export const Light: Story = {
 	args: {
-		fontWeight: "light",
+		name: "light",
+		value: "light",
 	},
 };
 
 export const Normal: Story = {
 	args: {
-		fontWeight: "normal",
+		name: "normal",
+		value: "normal",
 	},
 };
 
 export const Medium: Story = {
 	args: {
-		fontWeight: "medium",
+		name: "medium",
+		value: "medium",
 	},
 };
 
 export const Semibold: Story = {
 	args: {
-		fontWeight: "semibold",
+		name: "semibold",
+		value: "semibold",
 	},
 };
 
 export const Bold: Story = {
 	args: {
-		fontWeight: "bold",
+		name: "bold",
+		value: "bold",
 	},
 };
 
 export const Black: Story = {
 	args: {
-		fontWeight: "black",
+		name: "black",
+		value: "black",
 	},
 };

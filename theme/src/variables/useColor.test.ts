@@ -346,10 +346,10 @@ describe("integration", () => {
 
 		expect(css).toBe(`:root {
 	--color--primary: ${toOklch("#007bff")};
-	--color--primary-100: oklch(from var(--color--primary) 0.1 c h / a);
-	--color--primary-200: oklch(from var(--color--primary) 0.2 c h / a);
-	--color--primary-shade-50: oklch(from var(--color--primary) calc(l - 0.05) c h / a);
-	--color--primary-tint-50: oklch(from var(--color--primary) calc(l + 0.05) c h / a);
+	--color--primary-100: oklch(from var(--color--primary) 10% c h / alpha);
+	--color--primary-200: oklch(from var(--color--primary) 20% c h / alpha);
+	--color--primary-shade-50: oklch(from var(--color--primary) calc(l - 0.05) c h / alpha);
+	--color--primary-tint-50: oklch(from var(--color--primary) calc(l + 0.05) c h / alpha);
 }`);
 
 		// Verify all variables are present

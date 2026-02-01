@@ -1,23 +1,32 @@
-import { createUseUtility } from "../../utils";
+import { createUseSpacingUtility } from "../../utils";
 
 /**
- * Create margin utility classes.
+ * Create margin utility classes with multiplier support.
  *
  * @example
  * ```typescript
  * const s = styleframe();
- * useMarginUtility(s, { sm: '0.5rem', md: '1rem', lg: '1.5rem', auto: 'auto' });
- * // Generates: ._margin:sm, ._margin:md, ._margin:lg, ._margin:auto
+ * const createMargin = useMarginUtility(s, { sm: '0.5rem', md: '1rem', lg: '1.5rem', auto: 'auto' });
+ *
+ * // Add multiplier values (with @ prefix):
+ * createMargin(["@1.5", "@2", "@-1"]);
+ * // Generates:
+ * // ._margin:1.5 { margin: calc(var(--spacing) * 1.5); }
+ * // ._margin:2 { margin: calc(var(--spacing) * 2); }
+ * // ._margin:-1 { margin: calc(var(--spacing) * -1); }
  * ```
  */
-export const useMarginUtility = createUseUtility("margin", ({ value }) => ({
-	margin: value,
-}));
+export const useMarginUtility = createUseSpacingUtility(
+	"margin",
+	({ value }) => ({
+		margin: value,
+	}),
+);
 
 /**
  * Create horizontal margin utility classes (left and right).
  */
-export const useMarginInlineUtility = createUseUtility(
+export const useMarginInlineUtility = createUseSpacingUtility(
 	"margin-inline",
 	({ value }) => ({
 		marginLeft: value,
@@ -28,7 +37,7 @@ export const useMarginInlineUtility = createUseUtility(
 /**
  * Create vertical margin utility classes (top and bottom).
  */
-export const useMarginBlockUtility = createUseUtility(
+export const useMarginBlockUtility = createUseSpacingUtility(
 	"margin-block",
 	({ value }) => ({
 		marginTop: value,
@@ -39,7 +48,7 @@ export const useMarginBlockUtility = createUseUtility(
 /**
  * Create margin-top utility classes.
  */
-export const useMarginTopUtility = createUseUtility(
+export const useMarginTopUtility = createUseSpacingUtility(
 	"margin-top",
 	({ value }) => ({
 		marginTop: value,
@@ -49,7 +58,7 @@ export const useMarginTopUtility = createUseUtility(
 /**
  * Create margin-right utility classes.
  */
-export const useMarginRightUtility = createUseUtility(
+export const useMarginRightUtility = createUseSpacingUtility(
 	"margin-right",
 	({ value }) => ({
 		marginRight: value,
@@ -59,7 +68,7 @@ export const useMarginRightUtility = createUseUtility(
 /**
  * Create margin-bottom utility classes.
  */
-export const useMarginBottomUtility = createUseUtility(
+export const useMarginBottomUtility = createUseSpacingUtility(
 	"margin-bottom",
 	({ value }) => ({
 		marginBottom: value,
@@ -69,7 +78,7 @@ export const useMarginBottomUtility = createUseUtility(
 /**
  * Create margin-left utility classes.
  */
-export const useMarginLeftUtility = createUseUtility(
+export const useMarginLeftUtility = createUseSpacingUtility(
 	"margin-left",
 	({ value }) => ({
 		marginLeft: value,
@@ -79,7 +88,7 @@ export const useMarginLeftUtility = createUseUtility(
 /**
  * Create margin-inline-start utility classes.
  */
-export const useMarginInlineStartUtility = createUseUtility(
+export const useMarginInlineStartUtility = createUseSpacingUtility(
 	"margin-inline-start",
 	({ value }) => ({
 		marginInlineStart: value,
@@ -89,7 +98,7 @@ export const useMarginInlineStartUtility = createUseUtility(
 /**
  * Create margin-inline-end utility classes.
  */
-export const useMarginInlineEndUtility = createUseUtility(
+export const useMarginInlineEndUtility = createUseSpacingUtility(
 	"margin-inline-end",
 	({ value }) => ({
 		marginInlineEnd: value,
@@ -99,15 +108,21 @@ export const useMarginInlineEndUtility = createUseUtility(
 /**
  * Create margin-x utility classes (left and right).
  */
-export const useMarginXUtility = createUseUtility("margin-x", ({ value }) => ({
-	marginLeft: value,
-	marginRight: value,
-}));
+export const useMarginXUtility = createUseSpacingUtility(
+	"margin-x",
+	({ value }) => ({
+		marginLeft: value,
+		marginRight: value,
+	}),
+);
 
 /**
  * Create margin-y utility classes (top and bottom).
  */
-export const useMarginYUtility = createUseUtility("margin-y", ({ value }) => ({
-	marginTop: value,
-	marginBottom: value,
-}));
+export const useMarginYUtility = createUseSpacingUtility(
+	"margin-y",
+	({ value }) => ({
+		marginTop: value,
+		marginBottom: value,
+	}),
+);
