@@ -228,6 +228,10 @@ function transformDeclarationsToRuntime(
 						utilityFactory,
 						utilityValue,
 					);
+				} else {
+					console.warn(
+						`[styleframe] Utility "${utilityKey}" not found in registry. Skipping runtime generation for this declaration.`,
+					);
 				}
 			}
 			result[key] = modifierResult;
@@ -238,6 +242,10 @@ function transformDeclarationsToRuntime(
 			const utilityFactory = getUtilityFactory(root, key);
 			if (utilityFactory) {
 				result[key] = resolveRuntimeKey(utilityFactory, value);
+			} else {
+				console.warn(
+					`[styleframe] Utility "${key}" not found in registry. Skipping runtime generation for this declaration.`,
+				);
 			}
 		}
 	}

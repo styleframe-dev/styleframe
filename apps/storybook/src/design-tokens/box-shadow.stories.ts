@@ -1,48 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
-import "../components/swatch.styleframe?css";
-import "./box-shadow.styleframe?css";
-import { boxShadowPreview } from "./box-shadow.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const boxShadows = [
-	"none",
-	"xs",
-	"sm",
-	"md",
-	"lg",
-	"xl",
-	"2xl",
-	"inner",
-	"ring",
-];
-
-const BoxShadowSwatch = createSwatchComponent(
-	"BoxShadowSwatch",
-	"boxShadow",
-	(boxShadow) => boxShadowPreview({ boxShadow }),
-	{ layout: "box" },
-);
-
-const BoxShadowGrid = createGridComponent(
-	"BoxShadowGrid",
-	boxShadows,
-	BoxShadowSwatch,
-	"boxShadow",
-	"grid",
-);
+import { boxShadowValues } from "@styleframe/theme";
+import BoxShadowSwatch from "../components/BoxShadowSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
 	title: "Design Tokens/Shadows/Box Shadow",
 	component: BoxShadowSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		boxShadow: {
+		value: {
 			control: "select",
-			options: boxShadows,
+			options: Object.keys(boxShadowValues),
 		},
 	},
 } satisfies Meta<typeof BoxShadowSwatch>;
@@ -52,61 +20,79 @@ type Story = StoryObj<typeof meta>;
 
 export const AllBoxShadows: StoryObj = {
 	render: () => ({
-		components: { BoxShadowGrid },
-		template: "<BoxShadowGrid />",
+		components: { BoxShadowSwatch, StoryGrid },
+		setup() {
+			return { items: Object.keys(boxShadowValues) };
+		},
+		template: `
+			<StoryGrid :items="items">
+				<template #default="{ item }">
+					<BoxShadowSwatch :name="item" :value="item" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const None: Story = {
 	args: {
-		boxShadow: "none",
+		name: "none",
+		value: "none",
 	},
 };
 
 export const ExtraSmall: Story = {
 	args: {
-		boxShadow: "xs",
+		name: "xs",
+		value: "xs",
 	},
 };
 
 export const Small: Story = {
 	args: {
-		boxShadow: "sm",
+		name: "sm",
+		value: "sm",
 	},
 };
 
 export const Medium: Story = {
 	args: {
-		boxShadow: "md",
+		name: "md",
+		value: "md",
 	},
 };
 
 export const Large: Story = {
 	args: {
-		boxShadow: "lg",
+		name: "lg",
+		value: "lg",
 	},
 };
 
 export const ExtraLarge: Story = {
 	args: {
-		boxShadow: "xl",
+		name: "xl",
+		value: "xl",
 	},
 };
 
 export const DoubleExtraLarge: Story = {
 	args: {
-		boxShadow: "2xl",
+		name: "2xl",
+		value: "2xl",
 	},
 };
 
 export const Inner: Story = {
 	args: {
-		boxShadow: "inner",
+		name: "inner",
+		value: "inner",
 	},
 };
 
 export const Ring: Story = {
 	args: {
-		boxShadow: "ring",
+		name: "ring",
+		value: "ring",
 	},
 };

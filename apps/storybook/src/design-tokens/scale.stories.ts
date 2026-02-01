@@ -1,57 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h } from "vue";
-
-import "../components/swatch.styleframe?css";
-import "./scale.styleframe?css";
-import { scalePreview } from "./scale.styleframe?ts";
-import { scaleValues, scaleRatios } from "./scale.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const scales = Object.keys(scaleValues);
-
-const ScaleSwatch = createSwatchComponent(
-	"ScaleSwatch",
-	"scale",
-	(scale) => scalePreview({ scale }),
-	{
-		values: scaleValues,
-		renderPreview: (scale) => {
-			const ratio = scaleRatios[scale] || 1;
-			const baseHeight = 10;
-
-			return h(
-				"div",
-				{ class: "scale-bars" },
-				[0, 1, 2, 3, 4].map((power) =>
-					h("div", {
-						class: "scale-bar",
-						style: { height: `${baseHeight * Math.pow(ratio, power)}px` },
-					}),
-				),
-			);
-		},
-	},
-);
-
-const ScaleGrid = createGridComponent(
-	"ScaleGrid",
-	scales,
-	ScaleSwatch,
-	"scale",
-	"list",
-);
+import { scaleValues } from "@styleframe/theme";
+import ScaleSwatch from "../components/ScaleSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
 	title: "Design Tokens/Scales/Scale",
 	component: ScaleSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		scale: {
+		value: {
 			control: "select",
-			options: scales,
+			options: Object.keys(scaleValues),
 		},
 	},
 } satisfies Meta<typeof ScaleSwatch>;
@@ -61,55 +20,83 @@ type Story = StoryObj<typeof meta>;
 
 export const AllScales: StoryObj = {
 	render: () => ({
-		components: { ScaleGrid },
-		template: "<ScaleGrid />",
+		components: { ScaleSwatch, StoryGrid },
+		setup() {
+			return {
+				items: Object.keys(scaleValues),
+				scaleValues,
+			};
+		},
+		template: `
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<ScaleSwatch :name="item" :value="String(scaleValues[item])" :ratio="scaleValues[item]" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const MinorSecond: Story = {
 	args: {
-		scale: "minor-second",
+		name: "minor-second",
+		value: String(scaleValues["minor-second"]),
+		ratio: scaleValues["minor-second"],
 	},
 };
 
 export const MajorSecond: Story = {
 	args: {
-		scale: "major-second",
+		name: "major-second",
+		value: String(scaleValues["major-second"]),
+		ratio: scaleValues["major-second"],
 	},
 };
 
 export const MinorThird: Story = {
 	args: {
-		scale: "minor-third",
+		name: "minor-third",
+		value: String(scaleValues["minor-third"]),
+		ratio: scaleValues["minor-third"],
 	},
 };
 
 export const MajorThird: Story = {
 	args: {
-		scale: "major-third",
+		name: "major-third",
+		value: String(scaleValues["major-third"]),
+		ratio: scaleValues["major-third"],
 	},
 };
 
 export const PerfectFourth: Story = {
 	args: {
-		scale: "perfect-fourth",
+		name: "perfect-fourth",
+		value: String(scaleValues["perfect-fourth"]),
+		ratio: scaleValues["perfect-fourth"],
 	},
 };
 
 export const AugmentedFourth: Story = {
 	args: {
-		scale: "augmented-fourth",
+		name: "augmented-fourth",
+		value: String(scaleValues["augmented-fourth"]),
+		ratio: scaleValues["augmented-fourth"],
 	},
 };
 
 export const PerfectFifth: Story = {
 	args: {
-		scale: "perfect-fifth",
+		name: "perfect-fifth",
+		value: String(scaleValues["perfect-fifth"]),
+		ratio: scaleValues["perfect-fifth"],
 	},
 };
 
 export const Golden: Story = {
 	args: {
-		scale: "golden",
+		name: "golden",
+		value: String(scaleValues.golden),
+		ratio: scaleValues.golden,
 	},
 };

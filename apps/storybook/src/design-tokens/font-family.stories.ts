@@ -1,41 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
-import "../components/swatch.styleframe?css";
-import "./font-family.styleframe?css";
-import { fontFamilyPreview } from "./font-family.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const fontFamilies = ["base", "print", "mono"];
-
-const FontFamilySwatch = createSwatchComponent(
-	"FontFamilySwatch",
-	"fontFamily",
-	(fontFamily) => fontFamilyPreview({ fontFamily }),
-	{
-		layout: "text",
-		sampleText: "The quick brown fox jumps over the lazy dog. 0123456789",
-	},
-);
-
-const FontFamilyGrid = createGridComponent(
-	"FontFamilyGrid",
-	fontFamilies,
-	FontFamilySwatch,
-	"fontFamily",
-	"list",
-);
+import { fontFamilyValues } from "@styleframe/theme";
+import FontFamilySwatch from "../components/FontFamilySwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
 	title: "Design Tokens/Typography/Font Family",
 	component: FontFamilySwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		fontFamily: {
+		value: {
 			control: "select",
-			options: fontFamilies,
+			options: Object.keys(fontFamilyValues),
 		},
 	},
 } satisfies Meta<typeof FontFamilySwatch>;
@@ -45,25 +20,37 @@ type Story = StoryObj<typeof meta>;
 
 export const AllFontFamilies: StoryObj = {
 	render: () => ({
-		components: { FontFamilyGrid },
-		template: "<FontFamilyGrid />",
+		components: { FontFamilySwatch, StoryGrid },
+		setup() {
+			return { items: Object.keys(fontFamilyValues) };
+		},
+		template: `
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<FontFamilySwatch :name="item" :value="item" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const Base: Story = {
 	args: {
-		fontFamily: "base",
+		name: "base",
+		value: "base",
 	},
 };
 
 export const Print: Story = {
 	args: {
-		fontFamily: "print",
+		name: "print",
+		value: "print",
 	},
 };
 
 export const Mono: Story = {
 	args: {
-		fontFamily: "mono",
+		name: "mono",
+		value: "mono",
 	},
 };

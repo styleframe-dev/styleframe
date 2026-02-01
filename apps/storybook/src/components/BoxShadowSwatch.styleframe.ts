@@ -1,8 +1,15 @@
-import { useBoxShadow, useUtilitiesPreset } from "@styleframe/theme";
 import { styleframe } from "styleframe";
+import {
+	useSwatchColors,
+	useSwatchDimensions,
+} from "./primitives/tokens.styleframe";
+import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
 
+useUtilitiesPreset(s);
+
+const { boxShadow } = useDesignTokensPreset(s);
 const {
 	boxShadowNone,
 	boxShadowXs,
@@ -13,33 +20,23 @@ const {
 	boxShadow2xl,
 	boxShadowInner,
 	boxShadowRing,
-} = useBoxShadow(s);
+} = boxShadow;
 
-// Register all utilities and generate utility classes
-const { createBoxShadowUtility } = useUtilitiesPreset(s);
+const { swatchColorBackground } = useSwatchColors(s);
+const { swatchPreviewSize, swatchBorderRadiusSm } = useSwatchDimensions(s);
 
-createBoxShadowUtility({
-	none: s.ref(boxShadowNone),
-	xs: s.ref(boxShadowXs),
-	sm: s.ref(boxShadowSm),
-	md: s.ref(boxShadowMd),
-	lg: s.ref(boxShadowLg),
-	xl: s.ref(boxShadowXl),
-	"2xl": s.ref(boxShadow2xl),
-	inner: s.ref(boxShadowInner),
-	ring: s.ref(boxShadowRing),
+s.selector(".box-shadow-swatch__preview", {
+	width: s.ref(swatchPreviewSize),
+	height: s.ref(swatchPreviewSize),
+	background: s.ref(swatchColorBackground),
+	borderRadius: s.ref(swatchBorderRadiusSm),
 });
 
-export const boxShadowPreview = s.recipe({
-	name: "box-shadow-preview",
-	base: {
-		width: "100px",
-		height: "100px",
-		borderRadius: "8px",
-		background: "#ffffff",
-	},
+export const boxShadowSwatch = s.recipe({
+	name: "box-shadow-swatch",
+	base: {},
 	variants: {
-		boxShadow: {
+		variant: {
 			none: {
 				boxShadow: s.ref(boxShadowNone),
 			},
@@ -70,7 +67,7 @@ export const boxShadowPreview = s.recipe({
 		},
 	},
 	defaultVariants: {
-		boxShadow: "md",
+		variant: "md",
 	},
 });
 

@@ -1,54 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h } from "vue";
-
-import "../components/swatch.styleframe?css";
-import "./breakpoint.styleframe?css";
-import { breakpointPreview } from "./breakpoint.styleframe?ts";
-import { breakpointValues, breakpointWidths } from "./breakpoint.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const breakpoints = Object.keys(breakpointValues);
-
-const maxBreakpoint = 1440;
-
-const BreakpointSwatch = createSwatchComponent(
-	"BreakpointSwatch",
-	"breakpoint",
-	(breakpoint) => breakpointPreview({ breakpoint }),
-	{
-		values: breakpointValues,
-		formatName: (value) => value.toUpperCase(),
-		renderPreview: (breakpoint) => {
-			const value = breakpointWidths[breakpoint] || 0;
-			const barWidth = Math.max(10, (value / maxBreakpoint) * 100);
-
-			return h("div", {
-				class: "breakpoint-bar",
-				style: { width: `${barWidth}%` },
-			});
-		},
-	},
-);
-
-const BreakpointGrid = createGridComponent(
-	"BreakpointGrid",
-	breakpoints,
-	BreakpointSwatch,
-	"breakpoint",
-	"list",
-);
+import { breakpointValues } from "@styleframe/theme";
+import BreakpointSwatch from "../components/BreakpointSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
 	title: "Design Tokens/Layout/Breakpoint",
 	component: BreakpointSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		breakpoint: {
+		value: {
 			control: "select",
-			options: breakpoints,
+			options: Object.keys(breakpointValues),
 		},
 	},
 } satisfies Meta<typeof BreakpointSwatch>;
@@ -58,37 +20,59 @@ type Story = StoryObj<typeof meta>;
 
 export const AllBreakpoints: StoryObj = {
 	render: () => ({
-		components: { BreakpointGrid },
-		template: "<BreakpointGrid />",
+		components: { BreakpointSwatch, StoryGrid },
+		setup() {
+			return {
+				items: Object.keys(breakpointValues),
+				breakpointValues,
+			};
+		},
+		template: `
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<BreakpointSwatch :name="item" :value="breakpointValues[item] + 'px'" :width="breakpointValues[item]" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const ExtraSmall: Story = {
 	args: {
-		breakpoint: "xs",
+		name: "xs",
+		value: `${breakpointValues.xs}px`,
+		width: breakpointValues.xs,
 	},
 };
 
 export const Small: Story = {
 	args: {
-		breakpoint: "sm",
+		name: "sm",
+		value: `${breakpointValues.sm}px`,
+		width: breakpointValues.sm,
 	},
 };
 
 export const Medium: Story = {
 	args: {
-		breakpoint: "md",
+		name: "md",
+		value: `${breakpointValues.md}px`,
+		width: breakpointValues.md,
 	},
 };
 
 export const Large: Story = {
 	args: {
-		breakpoint: "lg",
+		name: "lg",
+		value: `${breakpointValues.lg}px`,
+		width: breakpointValues.lg,
 	},
 };
 
 export const ExtraLarge: Story = {
 	args: {
-		breakpoint: "xl",
+		name: "xl",
+		value: `${breakpointValues.xl}px`,
+		width: breakpointValues.xl,
 	},
 };

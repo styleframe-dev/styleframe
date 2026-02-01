@@ -1,47 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
-import "../components/swatch.styleframe?css";
-import "./border-style.styleframe?css";
-import { borderStylePreview } from "./border-style.styleframe?ts";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const borderStyles = [
-	"none",
-	"solid",
-	"dashed",
-	"dotted",
-	"double",
-	"groove",
-	"inset",
-	"outset",
-];
-
-const BorderStyleSwatch = createSwatchComponent(
-	"BorderStyleSwatch",
-	"borderStyle",
-	(borderStyle) => borderStylePreview({ borderStyle }),
-	{ layout: "box" },
-);
-
-const BorderStyleGrid = createGridComponent(
-	"BorderStyleGrid",
-	borderStyles,
-	BorderStyleSwatch,
-	"borderStyle",
-	"grid",
-);
+import { borderStyleValues } from "@styleframe/theme";
+import BorderStyleSwatch from "../components/BorderStyleSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
 	title: "Design Tokens/Borders/Border Style",
 	component: BorderStyleSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		borderStyle: {
+		value: {
 			control: "select",
-			options: borderStyles,
+			options: Object.keys(borderStyleValues),
 		},
 	},
 } satisfies Meta<typeof BorderStyleSwatch>;
@@ -51,55 +20,72 @@ type Story = StoryObj<typeof meta>;
 
 export const AllBorderStyles: StoryObj = {
 	render: () => ({
-		components: { BorderStyleGrid },
-		template: "<BorderStyleGrid />",
+		components: { BorderStyleSwatch, StoryGrid },
+		setup() {
+			return { items: Object.keys(borderStyleValues) };
+		},
+		template: `
+			<StoryGrid :items="items">
+				<template #default="{ item }">
+					<BorderStyleSwatch :name="item" :value="item" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const None: Story = {
 	args: {
-		borderStyle: "none",
+		name: "none",
+		value: "none",
 	},
 };
 
 export const Solid: Story = {
 	args: {
-		borderStyle: "solid",
+		name: "solid",
+		value: "solid",
 	},
 };
 
 export const Dashed: Story = {
 	args: {
-		borderStyle: "dashed",
+		name: "dashed",
+		value: "dashed",
 	},
 };
 
 export const Dotted: Story = {
 	args: {
-		borderStyle: "dotted",
+		name: "dotted",
+		value: "dotted",
 	},
 };
 
 export const Double: Story = {
 	args: {
-		borderStyle: "double",
+		name: "double",
+		value: "double",
 	},
 };
 
 export const Groove: Story = {
 	args: {
-		borderStyle: "groove",
+		name: "groove",
+		value: "groove",
 	},
 };
 
 export const Inset: Story = {
 	args: {
-		borderStyle: "inset",
+		name: "inset",
+		value: "inset",
 	},
 };
 
 export const Outset: Story = {
 	args: {
-		borderStyle: "outset",
+		name: "outset",
+		value: "outset",
 	},
 };

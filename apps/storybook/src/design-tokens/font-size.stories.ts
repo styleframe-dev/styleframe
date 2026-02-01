@@ -1,44 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
-import "../components/swatch.styleframe?css";
-import "./font-size.styleframe?css";
-import { fontSizePreview } from "./font-size.styleframe?ts";
-import { fontSizeValues } from "./font-size.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const fontSizes = Object.keys(fontSizeValues);
-
-const FontSizeSwatch = createSwatchComponent(
-	"FontSizeSwatch",
-	"fontSize",
-	(fontSize) => fontSizePreview({ fontSize }),
-	{
-		layout: "text",
-		values: fontSizeValues,
-		sampleText: "The quick brown fox",
-		previewTag: "span",
-	},
-);
-
-const FontSizeGrid = createGridComponent(
-	"FontSizeGrid",
-	fontSizes,
-	FontSizeSwatch,
-	"fontSize",
-	"list",
-);
+import { fontSizeValues } from "@styleframe/theme";
+import FontSizeSwatch from "../components/FontSizeSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
 	title: "Design Tokens/Typography/Font Size",
 	component: FontSizeSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		fontSize: {
+		value: {
 			control: "select",
-			options: fontSizes,
+			options: Object.keys(fontSizeValues),
 		},
 	},
 } satisfies Meta<typeof FontSizeSwatch>;
@@ -48,55 +20,72 @@ type Story = StoryObj<typeof meta>;
 
 export const AllFontSizes: StoryObj = {
 	render: () => ({
-		components: { FontSizeGrid },
-		template: "<FontSizeGrid />",
+		components: { FontSizeSwatch, StoryGrid },
+		setup() {
+			return { items: Object.keys(fontSizeValues) };
+		},
+		template: `
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<FontSizeSwatch :name="item" :value="item" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const ExtraSmall: Story = {
 	args: {
-		fontSize: "xs",
+		name: "xs",
+		value: "xs",
 	},
 };
 
 export const Small: Story = {
 	args: {
-		fontSize: "sm",
+		name: "sm",
+		value: "sm",
 	},
 };
 
 export const Medium: Story = {
 	args: {
-		fontSize: "md",
+		name: "md",
+		value: "md",
 	},
 };
 
 export const Large: Story = {
 	args: {
-		fontSize: "lg",
+		name: "lg",
+		value: "lg",
 	},
 };
 
 export const ExtraLarge: Story = {
 	args: {
-		fontSize: "xl",
+		name: "xl",
+		value: "xl",
 	},
 };
 
 export const DoubleExtraLarge: Story = {
 	args: {
-		fontSize: "2xl",
+		name: "2xl",
+		value: "2xl",
 	},
 };
 
 export const TripleExtraLarge: Story = {
 	args: {
-		fontSize: "3xl",
+		name: "3xl",
+		value: "3xl",
 	},
 };
 
 export const QuadrupleExtraLarge: Story = {
 	args: {
-		fontSize: "4xl",
+		name: "4xl",
+		value: "4xl",
 	},
 };

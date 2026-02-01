@@ -1,47 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-
-import "../components/swatch.styleframe?css";
-import "./line-height.styleframe?css";
-import { lineHeightPreview } from "./line-height.styleframe?ts";
-import { lineHeightValues } from "./line-height.styleframe";
-import {
-	createSwatchComponent,
-	createGridComponent,
-} from "../components/TokenSwatch";
-
-const lineHeights = Object.keys(lineHeightValues);
-
-const sampleText =
-	"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.";
-
-const LineHeightSwatch = createSwatchComponent(
-	"LineHeightSwatch",
-	"lineHeight",
-	(lineHeight) => lineHeightPreview({ lineHeight }),
-	{
-		layout: "text",
-		values: lineHeightValues,
-		sampleText,
-		previewTag: "p",
-	},
-);
-
-const LineHeightGrid = createGridComponent(
-	"LineHeightGrid",
-	lineHeights,
-	LineHeightSwatch,
-	"lineHeight",
-	"list",
-);
+import { lineHeightValues } from "@styleframe/theme";
+import LineHeightSwatch from "../components/LineHeightSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
 	title: "Design Tokens/Typography/Line Height",
 	component: LineHeightSwatch,
 	tags: ["autodocs"],
 	argTypes: {
-		lineHeight: {
+		value: {
 			control: "select",
-			options: lineHeights,
+			options: Object.keys(lineHeightValues),
 		},
 	},
 } satisfies Meta<typeof LineHeightSwatch>;
@@ -51,37 +20,51 @@ type Story = StoryObj<typeof meta>;
 
 export const AllLineHeights: StoryObj = {
 	render: () => ({
-		components: { LineHeightGrid },
-		template: "<LineHeightGrid />",
+		components: { LineHeightSwatch, StoryGrid },
+		setup() {
+			return { items: Object.keys(lineHeightValues) };
+		},
+		template: `
+			<StoryGrid :items="items" layout="list">
+				<template #default="{ item }">
+					<LineHeightSwatch :name="item" :value="item" />
+				</template>
+			</StoryGrid>
+		`,
 	}),
 };
 
 export const Tight: Story = {
 	args: {
-		lineHeight: "tight",
+		name: "tight",
+		value: "tight",
 	},
 };
 
 export const Snug: Story = {
 	args: {
-		lineHeight: "snug",
+		name: "snug",
+		value: "snug",
 	},
 };
 
 export const Normal: Story = {
 	args: {
-		lineHeight: "normal",
+		name: "normal",
+		value: "normal",
 	},
 };
 
 export const Relaxed: Story = {
 	args: {
-		lineHeight: "relaxed",
+		name: "relaxed",
+		value: "relaxed",
 	},
 };
 
 export const Loose: Story = {
 	args: {
-		lineHeight: "loose",
+		name: "loose",
+		value: "loose",
 	},
 };
