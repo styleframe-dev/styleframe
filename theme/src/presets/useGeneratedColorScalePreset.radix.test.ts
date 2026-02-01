@@ -488,3 +488,172 @@ describe("Lightness and Chroma Analysis", () => {
 		}
 	});
 });
+
+// =============================================================================
+// Different Base Colors Investigation
+// =============================================================================
+
+describe("Different Base Colors for Light/Dark Mode", () => {
+	// Radix uses different step 9 colors for gray in light vs dark mode
+	const lightBases: Record<string, string> = {
+		blue: "#0090ff",
+		red: "#e5484d",
+		green: "#30a46c",
+		orange: "#f76b15",
+		purple: "#8e4ec6",
+		gray: "#8d8d8d", // Light mode gray base
+	};
+
+	const darkBases: Record<string, string> = {
+		blue: "#0090ff", // Same as light
+		red: "#e5484d", // Same as light
+		green: "#30a46c", // Same as light
+		orange: "#f76b15", // Same as light
+		purple: "#8e4ec6", // Same as light
+		gray: "#6e6e6e", // DIFFERENT - Radix dark mode gray step 9
+	};
+
+	it("should compare same-base vs different-base accuracy", () => {
+		console.log("\n========================================");
+		console.log("SAME BASE vs DIFFERENT BASE COMPARISON");
+		console.log("========================================");
+
+		const results: Array<{
+			color: string;
+			sameBaseDark: number;
+			diffBaseDark: number;
+			improvement: number;
+		}> = [];
+
+		for (const scaleName of Object.keys(lightBases)) {
+			const lightBase = lightBases[scaleName]!;
+			const darkBase = darkBases[scaleName]!;
+			const darkReference = radixDarkColors[scaleName]!;
+
+			// Generate dark scale using same base as light (current approach)
+			const sameBaseScale = generateColorScale(lightBase, "dark");
+			const sameBaseDelta = calculateScaleDelta(sameBaseScale, darkReference);
+
+			// Generate dark scale using the actual Radix dark base
+			const diffBaseScale = generateColorScale(darkBase, "dark");
+			const diffBaseDelta = calculateScaleDelta(diffBaseScale, darkReference);
+
+			const improvement =
+				((sameBaseDelta.average - diffBaseDelta.average) /
+					sameBaseDelta.average) *
+				100;
+
+			results.push({
+				color: scaleName,
+				sameBaseDark: sameBaseDelta.average,
+				diffBaseDark: diffBaseDelta.average,
+				improvement,
+			});
+
+			console.log(`\n${scaleName.toUpperCase()}:`);
+			console.log(`  Light base: ${lightBase}`);
+			console.log(`  Dark base:  ${darkBase}`);
+			console.log(
+				`  Same base ΔE:  ${sameBaseDelta.average.toFixed(2)} (using light base for dark)`,
+			);
+			console.log(
+				`  Diff base ΔE:  ${diffBaseDelta.average.toFixed(2)} (using actual dark base)`,
+			);
+			console.log(
+				`  Improvement:   ${improvement > 0 ? "+" : ""}${improvement.toFixed(1)}%`,
+			);
+
+			if (lightBase !== darkBase) {
+				console.log("\n  Per-step comparison (different base):");
+				for (const step of colorScaleSteps) {
+					const sameGen = sameBaseScale[step];
+					const diffGen = diffBaseScale[step];
+					const ref = darkReference[step];
+					const sameDelta = deltaE(sameGen, ref);
+					const diffDelta = deltaE(diffGen, ref);
+					const stepImprovement = sameDelta - diffDelta;
+					console.log(
+						`    Step ${step.toString().padStart(2)}: ` +
+							`same=${sameDelta.toFixed(2).padStart(5)} ` +
+							`diff=${diffDelta.toFixed(2).padStart(5)} ` +
+							`(${stepImprovement > 0 ? "+" : ""}${stepImprovement.toFixed(2)})`,
+					);
+				}
+			}
+		}
+
+		console.log("\n========================================");
+		console.log("SUMMARY");
+		console.log("========================================");
+		let totalSame = 0;
+		let totalDiff = 0;
+		for (const r of results) {
+			totalSame += r.sameBaseDark;
+			totalDiff += r.diffBaseDark;
+		}
+		const avgSame = totalSame / results.length;
+		const avgDiff = totalDiff / results.length;
+		const totalImprovement = ((avgSame - avgDiff) / avgSame) * 100;
+		console.log(`Average with same base:      ${avgSame.toFixed(2)}`);
+		console.log(`Average with different base: ${avgDiff.toFixed(2)}`);
+		console.log(
+			`Overall improvement:         ${totalImprovement > 0 ? "+" : ""}${totalImprovement.toFixed(1)}%`,
+		);
+	});
+
+	it("should show gray dark mode improvement with correct base", () => {
+		const lightBase = "#8d8d8d";
+		const darkBase = "#6e6e6e";
+		const darkReference = radixDarkColors.gray!;
+
+		// Using same base (current approach)
+		const sameBaseScale = generateColorScale(lightBase, "dark");
+		const sameBaseDelta = calculateScaleDelta(sameBaseScale, darkReference);
+
+		// Using correct dark base
+		const diffBaseScale = generateColorScale(darkBase, "dark");
+		const diffBaseDelta = calculateScaleDelta(diffBaseScale, darkReference);
+
+		console.log("\n========================================");
+		console.log("GRAY DARK MODE - DETAILED COMPARISON");
+		console.log("========================================");
+		console.log(
+			`Using light base (${lightBase}): ΔE = ${sameBaseDelta.average.toFixed(2)}`,
+		);
+		console.log(
+			`Using dark base (${darkBase}):  ΔE = ${diffBaseDelta.average.toFixed(2)}`,
+		);
+
+		// The different base should significantly improve gray dark mode
+		expect(diffBaseDelta.average).toBeLessThan(sameBaseDelta.average);
+	});
+
+	it("should analyze Radix step 9 differences between modes", () => {
+		console.log("\n========================================");
+		console.log("RADIX STEP 9 LIGHT vs DARK COMPARISON");
+		console.log("========================================");
+
+		for (const scaleName of Object.keys(radixLightColors)) {
+			const lightStep9 = radixLightColors[scaleName]![9];
+			const darkStep9 = radixDarkColors[scaleName]![9];
+			const areSame = lightStep9.toLowerCase() === darkStep9.toLowerCase();
+
+			const lightProps = getColorProperties(lightStep9);
+			const darkProps = getColorProperties(darkStep9);
+
+			console.log(`\n${scaleName.toUpperCase()}:`);
+			console.log(
+				`  Light step 9: ${lightStep9} (L=${lightProps.lightness.toFixed(3)}, C=${lightProps.chroma.toFixed(3)})`,
+			);
+			console.log(
+				`  Dark step 9:  ${darkStep9} (L=${darkProps.lightness.toFixed(3)}, C=${darkProps.chroma.toFixed(3)})`,
+			);
+			console.log(`  Same: ${areSame ? "YES" : "NO - DIFFERENT BASE!"}`);
+
+			if (!areSame) {
+				const de = deltaE(lightStep9, darkStep9);
+				console.log(`  ΔE between bases: ${de.toFixed(2)}`);
+			}
+		}
+	});
+});

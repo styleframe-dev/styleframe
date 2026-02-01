@@ -38,7 +38,7 @@ const LIGHT_LIGHTNESS_CURVE = [
 	0.26, // step 5: active ui element
 	0.381, // step 6: subtle borders
 	0.536, // step 7: borders
-	0.72, // step 8: strong borders (reduced to match Radix better)
+	0.756, // step 8: strong borders (Radix blue reference)
 	1.0, // step 9: solid backgrounds (base)
 	1.078, // step 10: hovered solid
 	1.27, // step 11: low contrast text
@@ -252,12 +252,18 @@ function getChromaMultiplier(
 	const h = ((baseHue % 360) + 360) % 360;
 
 	if (mode === "light") {
-		// Orange/yellow range (30-80°): boost chroma for warmer tints in mid-steps
+		// Orange/yellow range (30-80°): stronger chroma boost for mid-steps
+		// Radix orange has very saturated golden tones at steps 4-6
 		if (h >= 30 && h <= 80 && step >= 3 && step <= 7) {
 			const boostCurve = [
-				0, 0, 1.15, 1.25, 1.3, 1.25, 1.15, 1.0, 1.0, 1.0, 1.0, 1.0,
+				0, 0, 1.2, 1.4, 1.5, 1.45, 1.35, 1.0, 1.0, 1.0, 1.0, 1.0,
 			];
 			return boostCurve[step - 1]!;
+		}
+
+		// Red range (0-30° or 350-360°): slight boost for steps 11-12
+		if ((h < 30 || h >= 350) && (step === 11 || step === 12)) {
+			return 1.15;
 		}
 	} else {
 		// Dark mode: boost chroma for step 11 only for greens (H ~150-165)
@@ -268,6 +274,75 @@ function getChromaMultiplier(
 	}
 
 	return 1.0;
+}
+
+/**
+ * Get a hue-specific lightness adjustment.
+ * Some hues need different lightness at specific steps to match Radix.
+ *
+ * @param baseHue - The base hue in degrees
+ * @param step - The color scale step
+ * @param mode - Light or dark mode
+ * @returns An additive adjustment to the target lightness
+ */
+function getLightnessAdjustment(
+	baseHue: number,
+	step: ColorScaleStep,
+	mode: "light" | "dark",
+): number {
+	const h = ((baseHue % 360) + 360) % 360;
+
+	if (mode === "light") {
+		// Red range: step 8 needs to be lighter (Radix red step 8 is lighter than blue)
+		if ((h < 30 || h >= 350) && step === 8) {
+			return 0.02; // Make step 8 slightly lighter for red
+		}
+
+		// Green range: step 8 needs to be slightly lighter
+		if (h >= 120 && h <= 170 && step === 8) {
+			return 0.015;
+		}
+
+		// Purple/violet range (290-330°): needs higher lightness at mid-steps
+		// Purple Radix colors are lighter and more pastel than the algorithm produces
+		if (h >= 290 && h <= 330) {
+			const boostCurve = [0, 0, 0, 0, 0.02, 0.035, 0.05, 0.06, 0, 0, 0, 0];
+			return boostCurve[step - 1]!;
+		}
+
+		// Orange range (30-80°): step 12 needs to be darker
+		// Radix orange step 12 is very dark (#582d1d, L≈0.30)
+		if (h >= 30 && h <= 80 && step === 12) {
+			return -0.05; // Push step 12 darker for orange
+		}
+
+		// Step 1: make slightly lighter to be closer to white
+		if (step === 1) {
+			return 0.003; // Small bump toward white
+		}
+	} else {
+		// Dark mode adjustments
+
+		// Purple/violet range (290-330°): needs higher lightness at steps 1-8
+		// Dark purple Radix colors are lighter than the algorithm produces
+		if (h >= 290 && h <= 330) {
+			const boostCurve = [
+				0.015, 0.02, 0.025, 0.03, 0.03, 0.035, 0.04, 0.07, 0, 0, 0, 0,
+			];
+			return boostCurve[step - 1]!;
+		}
+
+		// Orange range (30-80°): steps 4-8 need to be darker
+		// Orange dark mode Radix colors are darker/more muted
+		if (h >= 30 && h <= 80 && step >= 4 && step <= 8) {
+			const reduceCurve = [
+				0, 0, 0, -0.02, -0.03, -0.035, -0.04, -0.03, 0, 0, 0, 0,
+			];
+			return reduceCurve[step - 1]!;
+		}
+	}
+
+	return 0;
 }
 
 export type ColorScaleStep = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
@@ -291,15 +366,34 @@ const DARK_MAX_LIGHTNESS: Partial<Record<ColorScaleStep, number>> = {
 };
 
 /**
+ * Get hue-specific maximum lightness for dark mode.
+ * Some colors need different caps at specific steps.
+ */
+function getDarkMaxLightness(
+	baseHue: number,
+	step: ColorScaleStep,
+): number | undefined {
+	const h = ((baseHue % 360) + 360) % 360;
+
+	// Blue range (200-260°): step 11 needs lower cap
+	if (h > 200 && h <= 260 && step === 11) {
+		return 0.73; // Lower cap for blue step 11
+	}
+
+	return DARK_MAX_LIGHTNESS[step];
+}
+
+/**
  * Get hue-specific lightness adjustment for step 12 in light mode.
  * Some colors (like orange) need to go darker than the universal minimum.
  */
 function getStep12MinLightness(baseHue: number): number {
 	const h = ((baseHue % 360) + 360) % 360;
 
-	// Orange/warm colors (30-80°): allow darker step 12 for better contrast
+	// Orange/warm colors (30-80°): allow even darker step 12 for better contrast
+	// Radix orange step 12 is quite dark (#582d1d, L≈0.295)
 	if (h >= 30 && h <= 80) {
-		return 0.25;
+		return 0.22;
 	}
 
 	// Default minimum
@@ -329,21 +423,27 @@ export function generateColorScale(
 
 	for (let i = 1; i <= 12; i++) {
 		const step = i as ColorScaleStep;
+		const baseHue = base.h ?? 0;
+
+		// Calculate base target lightness
 		let targetL = lightEdge + lightnessCurve[i - 1]! * range;
+
+		// Apply hue-specific lightness adjustments
+		targetL += getLightnessAdjustment(baseHue, step, mode);
 
 		// Apply mode-specific lightness constraints
 		if (mode === "light") {
 			let minL = LIGHT_MIN_LIGHTNESS[step];
 			// Use hue-specific minimum for step 12
 			if (step === 12) {
-				minL = getStep12MinLightness(base.h ?? 0);
+				minL = getStep12MinLightness(baseHue);
 			}
 			if (minL !== undefined) {
 				targetL = Math.max(minL, targetL);
 			}
 			targetL = Math.max(0.05, Math.min(0.98, targetL));
 		} else {
-			const maxL = DARK_MAX_LIGHTNESS[step];
+			const maxL = getDarkMaxLightness(baseHue, step);
 			if (maxL !== undefined) {
 				targetL = Math.min(maxL, targetL);
 			}
@@ -351,7 +451,6 @@ export function generateColorScale(
 		}
 
 		// Apply hue shift and chroma adjustments based on step and mode
-		const baseHue = base.h ?? 0;
 		const chromaMultiplier = getChromaMultiplier(baseHue, step, mode);
 		const targetC = base.c * chromaCurve[i - 1]! * chromaMultiplier;
 		const targetH = applyHueShift(baseHue, step, mode);
@@ -386,22 +485,53 @@ export function getColorProperties(hex: string): {
 // =============================================================================
 
 /**
+ * A color value can be either:
+ * - A single hex string (used for both light and dark mode)
+ * - An object with separate `light` and/or `dark` base colors
+ *
+ * Using different bases for light and dark mode can significantly improve
+ * accuracy for neutral/gray colors, where Radix uses different step 9 values.
+ */
+export type ColorBaseValue =
+	| string
+	| {
+			/** Base color for light mode (step 9) */
+			light?: string;
+			/** Base color for dark mode (step 9) */
+			dark?: string;
+	  };
+
+/**
  * Configuration for generating color scales.
  */
 export interface GeneratedColorScalePresetConfig<
-	TScales extends Record<string, string> = Record<string, string>,
+	TScales extends Record<string, ColorBaseValue> = Record<
+		string,
+		ColorBaseValue
+	>,
 > {
 	/**
 	 * Base colors to generate scales from.
-	 * Keys are scale names, values are hex colors (step 9 / the primary solid color).
+	 * Keys are scale names, values can be:
+	 * - A hex color string (used for both light and dark mode)
+	 * - An object with `light` and/or `dark` properties for mode-specific bases
 	 *
-	 * @example
+	 * @example Simple (same base for both modes)
 	 * ```typescript
 	 * {
 	 *   primary: '#0090ff',
-	 *   secondary: '#8e4ec6',
 	 *   success: '#30a46c',
-	 *   danger: '#e5484d',
+	 * }
+	 * ```
+	 *
+	 * @example Different bases for light/dark (recommended for grays)
+	 * ```typescript
+	 * {
+	 *   primary: '#0090ff',
+	 *   neutral: {
+	 *     light: '#8d8d8d',
+	 *     dark: '#6e6e6e',
+	 *   },
 	 * }
 	 * ```
 	 */
@@ -434,12 +564,28 @@ export interface GeneratedColorScalePresetConfig<
 	>;
 }
 
+/**
+ * Resolve a ColorBaseValue to a hex string for a specific mode.
+ */
+function resolveColorBase(
+	value: ColorBaseValue,
+	mode: "light" | "dark",
+): string {
+	if (typeof value === "string") {
+		return value;
+	}
+	// For objects, prefer mode-specific value, fall back to the other mode
+	return mode === "light"
+		? (value.light ?? value.dark ?? "#000000")
+		: (value.dark ?? value.light ?? "#000000");
+}
+
 // Type utilities for generating result types
 // Note: Capitalize<S> is a built-in TypeScript intrinsic type (TS 4.1+)
 
 type GeneratedColorScaleResult<
 	TPrefix extends string,
-	TScales extends Record<string, string>,
+	TScales extends Record<string, ColorBaseValue>,
 > = {
 	[K in keyof TScales as K extends string
 		? `${TPrefix}${Capitalize<K>}${ColorScaleStep}`
@@ -519,10 +665,26 @@ function capitalize<T extends string>(str: T): Capitalize<T> {
  * // Variables: --c--accent--1, --c--accent--2, etc.
  * // Result keys: cAccent1, cAccent2, etc.
  * ```
+ *
+ * @example Different bases for light/dark mode (recommended for grays)
+ * ```typescript
+ * const colors = useGeneratedColorScalePreset(s, {
+ *   colors: {
+ *     primary: '#0090ff', // Same base for both modes
+ *     neutral: {
+ *       light: '#8d8d8d', // Lighter gray for light mode
+ *       dark: '#6e6e6e',  // Darker gray for dark mode
+ *     },
+ *   },
+ * });
+ * ```
  */
 export function useGeneratedColorScalePreset<
 	TPrefix extends string = "color",
-	TScales extends Record<string, string> = Record<string, string>,
+	TScales extends Record<string, ColorBaseValue> = Record<
+		string,
+		ColorBaseValue
+	>,
 >(
 	s: Styleframe,
 	config: GeneratedColorScalePresetConfig<TScales> & { prefix?: TPrefix },
@@ -539,9 +701,11 @@ export function useGeneratedColorScalePreset<
 	const lightScales: Record<string, Record<ColorScaleStep, string>> = {};
 	const darkScales: Record<string, Record<ColorScaleStep, string>> = {};
 
-	for (const [scaleName, baseColor] of Object.entries(colors)) {
-		lightScales[scaleName] = generateColorScale(baseColor, "light");
-		darkScales[scaleName] = generateColorScale(baseColor, "dark");
+	for (const [scaleName, baseValue] of Object.entries(colors)) {
+		const lightBase = resolveColorBase(baseValue, "light");
+		const darkBase = resolveColorBase(baseValue, "dark");
+		lightScales[scaleName] = generateColorScale(lightBase, "light");
+		darkScales[scaleName] = generateColorScale(darkBase, "dark");
 	}
 
 	// Create light mode variables (on :root)

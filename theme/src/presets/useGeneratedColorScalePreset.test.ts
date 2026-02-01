@@ -252,6 +252,69 @@ describe("useGeneratedColorScalePreset", () => {
 			expect(colors.colorMyBrandColor9).toBeDefined();
 			expect(colors.colorMyBrandColor9.name).toBe("color.myBrandColor.9");
 		});
+
+		it("should support different base colors for light and dark mode", () => {
+			const colors = useGeneratedColorScalePreset(s, {
+				colors: {
+					neutral: {
+						light: "#8d8d8d",
+						dark: "#6e6e6e",
+					},
+				},
+			});
+
+			const css = consumeCSS(s.root, s.options);
+
+			// Should have variables
+			expect(colors.colorNeutral9).toBeDefined();
+			expect(css).toContain("--color--neutral--9:");
+
+			// Light mode should use light base
+			// Dark mode should use different (darker) base
+			expect(css).toContain('[data-theme="dark"]');
+		});
+
+		it("should fall back to light base when only light is provided", () => {
+			useGeneratedColorScalePreset(s, {
+				colors: {
+					accent: {
+						light: "#0090ff",
+					},
+				},
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--color--accent--9:");
+		});
+
+		it("should fall back to dark base when only dark is provided", () => {
+			useGeneratedColorScalePreset(s, {
+				colors: {
+					accent: {
+						dark: "#0090ff",
+					},
+				},
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--color--accent--9:");
+		});
+
+		it("should mix string and object color values", () => {
+			const colors = useGeneratedColorScalePreset(s, {
+				colors: {
+					primary: "#0090ff", // String value
+					neutral: {
+						// Object value
+						light: "#8d8d8d",
+						dark: "#6e6e6e",
+					},
+				},
+			});
+
+			expect(colors.colorPrimary9).toBeDefined();
+			expect(colors.colorNeutral9).toBeDefined();
+		});
 	});
 
 	describe("generated scale quality", () => {

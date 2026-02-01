@@ -29,8 +29,11 @@ export const useColor = createUseVariable("color", {
 		let transformedValue = value;
 
 		if (typeof value === "string") {
-			const { l, c, h, alpha = 1 } = oklch(value);
-			transformedValue = `oklch(${l} ${c} ${h} / ${alpha})`;
+			const color = oklch(value);
+			if (color) {
+				const { l, c, h, alpha = 1 } = color;
+				transformedValue = `oklch(${l} ${c} ${h} / ${alpha})`;
+			}
 		}
 
 		return transformedValue;
