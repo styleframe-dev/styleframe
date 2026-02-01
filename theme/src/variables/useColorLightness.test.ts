@@ -28,7 +28,7 @@ describe("useColorLightness", () => {
 
 		const css = consumeCSS(levels.colorPrimary100, s.options);
 		expect(css).toBe(
-			`--color--primary-100: oklch(from var(--color--primary) 0.1 c h / a);`,
+			`--color--primary-100: oklch(from var(--color--primary) 10% c h / alpha);`,
 		);
 	});
 
@@ -45,9 +45,9 @@ describe("useColorLightness", () => {
 
 		expect(css).toBe(`:root {
 	--color--primary: #007bff;
-	--color--primary-100: oklch(from var(--color--primary) 0.1 c h / a);
-	--color--primary-200: oklch(from var(--color--primary) 0.2 c h / a);
-	--color--primary-300: oklch(from var(--color--primary) 0.3 c h / a);
+	--color--primary-100: oklch(from var(--color--primary) 10% c h / alpha);
+	--color--primary-200: oklch(from var(--color--primary) 20% c h / alpha);
+	--color--primary-300: oklch(from var(--color--primary) 30% c h / alpha);
 }`);
 	});
 
@@ -78,7 +78,7 @@ describe("useColorLightness", () => {
 
 		const css = consumeCSS(levels.colorPrimary200, s.options);
 		expect(css).toBe(
-			"--color--primary-200: oklch(from var(--color--primary) 0.2 c h / a);",
+			"--color--primary-200: oklch(from var(--color--primary) 20% c h / alpha);",
 		);
 	});
 
@@ -127,7 +127,7 @@ describe("useColorLightness", () => {
 
 		const css = consumeCSS(levels.customColor500, s.options);
 		expect(css).toBe(
-			`--custom-color-500: oklch(from var(--custom-color) 0.5 c h / a);`,
+			`--custom-color-500: oklch(from var(--custom-color) 50% c h / alpha);`,
 		);
 	});
 

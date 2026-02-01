@@ -46,7 +46,7 @@ export function useColorLightness<
 				return 0;
 			}
 
-			return s.css`oklch(from ${s.ref(color)} ${value / 100} c h / a)`;
+			return s.css`oklch(from ${s.ref(color)} ${value}% c h / alpha)`;
 		},
 		delimiter: "-" as const,
 	})(s, levels, { default: isDefault });

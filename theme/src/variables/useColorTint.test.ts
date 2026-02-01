@@ -27,7 +27,7 @@ describe("useColorTint", () => {
 
 		const css = consumeCSS(tints.colorPrimaryTint100, s.options);
 		expect(css).toBe(
-			`--color--primary-tint-100: oklch(from var(--color--primary) calc(l + 0.1) c h / a);`,
+			`--color--primary-tint-100: oklch(from var(--color--primary) calc(l + 0.1) c h / alpha);`,
 		);
 	});
 
@@ -75,8 +75,8 @@ describe("useColorTint", () => {
 
 		expect(css).toBe(`:root {
 	--color--primary: #007bff;
-	--color--primary-tint-50: oklch(from var(--color--primary) calc(l + 0.05) c h / a);
-	--color--primary-tint-100: oklch(from var(--color--primary) calc(l + 0.1) c h / a);
+	--color--primary-tint-50: oklch(from var(--color--primary) calc(l + 0.05) c h / alpha);
+	--color--primary-tint-100: oklch(from var(--color--primary) calc(l + 0.1) c h / alpha);
 }`);
 	});
 
@@ -127,7 +127,7 @@ describe("useColorTint", () => {
 
 		const css = consumeCSS(tints.customColorTint100, s.options);
 		expect(css).toBe(
-			`--custom-color-tint-100: oklch(from var(--custom-color) calc(l + 0.1) c h / a);`,
+			`--custom-color-tint-100: oklch(from var(--custom-color) calc(l + 0.1) c h / alpha);`,
 		);
 	});
 
