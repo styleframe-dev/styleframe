@@ -944,7 +944,7 @@ importers:
         specifier: 'catalog:'
         version: 2.0.2
       '@styleframe/loader':
-        specifier: workspace:^2.4.0
+        specifier: workspace:^2.4.1
         version: link:../../engine/loader
       '@styleframe/transpiler':
         specifier: workspace:^2.6.0
