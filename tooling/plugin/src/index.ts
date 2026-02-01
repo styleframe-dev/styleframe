@@ -296,7 +296,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 
 				// Handle HMR for .styleframe.ts source files
 				if (isStyleframeSourceFile(ctx.file)) {
-					const virtualModuleIds = sourceToVirtualModules.get(ctx.file);
+					// Normalize path to match keys in sourceToVirtualModules (resolveSourcePath returns resolved absolute paths)
+					const normalizedFile = path.resolve(ctx.file);
+					const virtualModuleIds = sourceToVirtualModules.get(normalizedFile);
 
 					if (virtualModuleIds && virtualModuleIds.size > 0) {
 						const modulesToInvalidate = [];
@@ -311,6 +313,10 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						if (modulesToInvalidate.length > 0) {
 							return modulesToInvalidate;
 						}
+
+						// Fall back to a full reload if virtual modules exist but couldn't be found in graph
+						ctx.server?.ws.send({ type: "full-reload" });
+						return [];
 					}
 				}
 
