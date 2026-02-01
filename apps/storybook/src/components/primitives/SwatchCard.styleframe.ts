@@ -39,6 +39,7 @@ s.selector(".swatch-card__preview", {
 s.selector(".swatch-card__footer", {
 	display: "flex",
 	flexDirection: "column",
+	alignItems: "center",
 	gap: s.ref(swatchGapXs),
 	padding: s.ref(swatchPaddingMd),
 	borderTop: s.css`1px solid ${s.ref(swatchColorBorder)}`,
