@@ -22,11 +22,7 @@ import {
 } from "./constants";
 import type { Options } from "./types";
 export type { Options } from "./types";
-import {
-	createPluginState,
-	clearFileExports,
-	type PluginGlobalState,
-} from "./state";
+import { createPluginState, type PluginGlobalState } from "./state";
 import { discoverStyleframeFiles, sortByLoadOrder } from "./discovery";
 import {
 	loadConfigFile,
@@ -130,11 +126,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	options = DEFAULT_OPTIONS,
 ) => {
 	const cwd = process.cwd();
-	const rawEntry = options.entry ?? DEFAULT_ENTRY;
-	// Normalize entry to single string (use first element if array)
-	const entry = Array.isArray(rawEntry)
-		? (rawEntry[0] ?? DEFAULT_ENTRY)
-		: rawEntry;
+	const entry = options.entry ?? DEFAULT_ENTRY;
 	const configPath = path.isAbsolute(entry) ? entry : path.resolve(cwd, entry);
 
 	// Create plugin state
@@ -352,10 +344,10 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					if (
 						isStyleframeSourceFile(file) &&
 						file !== configPath &&
-						!state.styleframeFiles.has(file)
+						!state.files.has(file)
 					) {
 						try {
-							const loadOrder = state.styleframeFiles.size;
+							const loadOrder = state.files.size;
 							await loadStyleframeFile(state, file, loadOrder);
 
 							if (!options.silent) {
@@ -394,10 +386,8 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 
 				// Watch for deleted *.styleframe.ts files
 				server.watcher.on("unlink", (file) => {
-					if (state.styleframeFiles.has(file)) {
-						// Clear exports from this file
-						clearFileExports(state, file);
-						state.styleframeFiles.delete(file);
+					if (state.files.has(file)) {
+						state.files.delete(file);
 						sourceToVirtualModules.delete(file);
 
 						if (!options.silent) {
@@ -442,7 +432,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					}
 
 					try {
-						const files = [...state.styleframeFiles.keys()];
+						const files = [...state.files.keys()];
 						await reloadAll(state, files);
 
 						// Invalidate all virtual modules
@@ -476,7 +466,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				}
 
 				// Styleframe file change → reload that file and invalidate
-				if (state.styleframeFiles.has(ctx.file)) {
+				if (state.files.has(ctx.file)) {
 					if (!options.silent) {
 						consola.info(
 							`[styleframe] File changed: ${path.relative(cwd, ctx.file)}`,
@@ -484,7 +474,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					}
 
 					try {
-						const fileInfo = state.styleframeFiles.get(ctx.file);
+						const fileInfo = state.files.get(ctx.file);
 						if (fileInfo) {
 							await loadStyleframeFile(state, ctx.file, fileInfo.loadOrder);
 						}

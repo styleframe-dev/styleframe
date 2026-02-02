@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import { generateGlobalCSS } from "../../src/generate/global-css";
-import type { PluginGlobalState } from "../../src/state";
+import { generateGlobalCSS } from "../../src/plugin/generate/global-css";
+import type { PluginGlobalState } from "../../src/plugin/state";
 import type { Styleframe } from "@styleframe/core";
 
 vi.mock("@styleframe/transpiler", () => ({
@@ -28,9 +28,13 @@ describe("generateGlobalCSS", () => {
 		globalInstance: Styleframe | null = null,
 	): PluginGlobalState => ({
 		globalInstance,
-		configPath: "/path/to/config.ts",
-		styleframeFiles: new Map(),
-		aggregatedExports: new Map(),
+		configFile: {
+			path: "/path/to/config.ts",
+			loadOrder: -1,
+			exports: new Map(),
+			lastModified: 0,
+		},
+		files: new Map(),
 		loadingFiles: new Set(),
 		initialized: false,
 	});

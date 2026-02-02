@@ -1,8 +1,8 @@
 import type { TranspileOptions } from "@styleframe/transpiler";
 
 export interface Options {
-	/** Entry file(s) for the global config (default: './styleframe.config.ts') */
-	entry?: string | string[];
+	/** Entry file for the global config (default: './styleframe.config.ts') */
+	entry?: string;
 	/** Suppress console output */
 	silent?: boolean;
 	/** Transpiler options */

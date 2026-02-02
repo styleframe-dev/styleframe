@@ -1,13 +1,17 @@
 import type { Styleframe } from "@styleframe/core";
-import { isRecipe, isSelector, isStyleframe } from "@styleframe/core";
-import { createJiti } from "jiti";
+import {
+	loadExtensionModule,
+	loadModule,
+	type ExportInfo,
+} from "@styleframe/loader";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { ExportInfo, PluginGlobalState } from "./state";
-import { clearFileExports, registerExport, resetState } from "./state";
+import type { PluginGlobalState } from "./state";
+import { findExportCollision, resetState } from "./state";
 import {
 	CircularDependencyError,
+	ExportCollisionError,
 	GlobalInstanceNotInitializedError,
 } from "./errors";
 
@@ -48,38 +52,42 @@ export default { styleframe };
 }
 
 /**
+ * Check exports for collisions and throw if found.
+ */
+function checkExportCollisions(
+	state: PluginGlobalState,
+	exports: Map<string, ExportInfo>,
+	filePath: string,
+): void {
+	for (const [name] of exports) {
+		const collision = findExportCollision(state, name, filePath);
+		if (collision) {
+			throw new ExportCollisionError(name, collision, filePath);
+		}
+	}
+}
+
+/**
  * Load the config file and initialize the global instance
  */
 export async function loadConfigFile(
 	state: PluginGlobalState,
 ): Promise<Styleframe> {
-	const jiti = createJiti(path.dirname(state.configPath), {
-		fsCache: false,
-		moduleCache: false,
-	});
-
-	const module = (await jiti.import(state.configPath)) as Record<
-		string,
-		unknown
-	>;
-
-	if (!module.default) {
-		throw new Error(
-			`Missing default export in ${state.configPath}. Expected a Styleframe instance.`,
-		);
+	if (!state.configFile) {
+		throw new Error("[styleframe] Config file not set");
 	}
 
-	if (!isStyleframe(module.default)) {
-		throw new Error(
-			`Invalid default export in ${state.configPath}. Expected a Styleframe instance created with styleframe().`,
-		);
-	}
+	const configPath = state.configFile.path;
 
-	const instance = module.default;
+	// Use shared loadModule function
+	const { instance, exports } = await loadModule(configPath);
+
+	// Check for collisions
+	checkExportCollisions(state, exports, configPath);
+
 	state.globalInstance = instance;
-
-	// Track named exports from config
-	trackModuleExports(state, module, state.configPath);
+	state.configFile.exports = exports;
+	state.configFile.lastModified = Date.now();
 
 	return instance;
 }
@@ -104,29 +112,22 @@ export async function loadStyleframeFile(
 	state.loadingFiles.add(filePath);
 
 	try {
-		// Clear previous exports from this file (for HMR)
-		clearFileExports(state, filePath);
-
 		// Set the global instance on globalThis for the extension shim to access
 		(globalThis as Record<string, unknown>)[GLOBAL_INSTANCE_KEY] =
 			state.globalInstance;
 
-		const jiti = createJiti(path.dirname(filePath), {
-			fsCache: false,
-			moduleCache: false,
+		// Use shared loadExtensionModule function with alias for virtual:styleframe
+		const { exports } = await loadExtensionModule(filePath, {
 			alias: {
 				"virtual:styleframe": getExtensionShimPath(),
 			},
 		});
 
-		const module = (await jiti.import(filePath)) as Record<string, unknown>;
-
-		// Track exports
-		trackModuleExports(state, module, filePath);
+		// Check for collisions
+		checkExportCollisions(state, exports, filePath);
 
 		// Update file info
-		const exports = extractExports(module, filePath);
-		state.styleframeFiles.set(filePath, {
+		state.files.set(filePath, {
 			path: filePath,
 			loadOrder,
 			exports,
@@ -169,55 +170,4 @@ export async function reloadAll(
 
 	// Reload all files
 	await loadAllStyleframeFiles(state, files);
-}
-
-/**
- * Track named exports from a module and register them
- */
-function trackModuleExports(
-	state: PluginGlobalState,
-	module: Record<string, unknown>,
-	filePath: string,
-): void {
-	for (const [name, value] of Object.entries(module)) {
-		if (name === "default") continue;
-
-		if (isRecipe(value)) {
-			value._exportName = name;
-			registerExport(state, {
-				name,
-				type: "recipe",
-				source: filePath,
-			});
-		} else if (isSelector(value)) {
-			value._exportName = name;
-			registerExport(state, {
-				name,
-				type: "selector",
-				source: filePath,
-			});
-		}
-	}
-}
-
-/**
- * Extract exports from a module for file info tracking
- */
-function extractExports(
-	module: Record<string, unknown>,
-	filePath: string,
-): Map<string, ExportInfo> {
-	const exports = new Map<string, ExportInfo>();
-
-	for (const [name, value] of Object.entries(module)) {
-		if (name === "default") continue;
-
-		if (isRecipe(value)) {
-			exports.set(name, { name, type: "recipe", source: filePath });
-		} else if (isSelector(value)) {
-			exports.set(name, { name, type: "selector", source: filePath });
-		}
-	}
-
-	return exports;
 }

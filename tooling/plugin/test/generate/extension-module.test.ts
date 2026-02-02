@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generateExtensionModule } from "../../src/generate/extension-module";
+import { generateExtensionModule } from "../../src/plugin/generate/extension-module";
 
 describe("generateExtensionModule", () => {
 	it("should generate module with config import", () => {

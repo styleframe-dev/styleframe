@@ -1,5 +1,5 @@
 import type { Styleframe } from "@styleframe/core";
-import { ExportCollisionError } from "./errors";
+import type { ExportInfo } from "@styleframe/loader";
 
 /**
  * Information about a discovered *.styleframe.ts file
@@ -16,29 +16,15 @@ export interface StyleframeFileInfo {
 }
 
 /**
- * Information about an exported recipe or selector
- */
-export interface ExportInfo {
-	/** Export name (e.g., "buttonRecipe") */
-	name: string;
-	/** Type of export */
-	type: "recipe" | "selector";
-	/** Source file path */
-	source: string;
-}
-
-/**
  * Global state for the plugin
  */
 export interface PluginGlobalState {
 	/** The global styleframe instance (from config) */
 	globalInstance: Styleframe | null;
-	/** Path to the config file */
-	configPath: string;
+	/** Config file info */
+	configFile: StyleframeFileInfo | null;
 	/** All discovered *.styleframe.ts files (ordered by load order) */
-	styleframeFiles: Map<string, StyleframeFileInfo>;
-	/** Aggregated exports with collision detection */
-	aggregatedExports: Map<string, ExportInfo>;
+	files: Map<string, StyleframeFileInfo>;
 	/** Files currently being loaded (for circular dependency detection) */
 	loadingFiles: Set<string>;
 	/** Whether initial discovery has completed */
@@ -51,52 +37,44 @@ export interface PluginGlobalState {
 export function createPluginState(configPath: string): PluginGlobalState {
 	return {
 		globalInstance: null,
-		configPath,
-		styleframeFiles: new Map(),
-		aggregatedExports: new Map(),
+		configFile: {
+			path: configPath,
+			loadOrder: -1,
+			exports: new Map(),
+			lastModified: 0,
+		},
+		files: new Map(),
 		loadingFiles: new Set(),
 		initialized: false,
 	};
 }
 
 /**
- * Register an export from a styleframe file.
- * Throws ExportCollisionError if the same name is exported from different files.
+ * Find if an export name is already used by another file.
+ * Returns the source file path if collision found, null otherwise.
  */
-export function registerExport(
+export function findExportCollision(
 	state: PluginGlobalState,
-	info: ExportInfo,
-): void {
-	const existing = state.aggregatedExports.get(info.name);
-
-	// Allow re-registration from the same file (for HMR)
-	if (existing && existing.source !== info.source) {
-		throw new ExportCollisionError(info.name, existing.source, info.source);
+	exportName: string,
+	excludeFile: string,
+): string | null {
+	// Check config file
+	if (
+		state.configFile &&
+		state.configFile.path !== excludeFile &&
+		state.configFile.exports.has(exportName)
+	) {
+		return state.configFile.path;
 	}
 
-	state.aggregatedExports.set(info.name, info);
-}
-
-/**
- * Clear all exports from a specific file.
- * Used during HMR to remove stale exports before reloading.
- */
-export function clearFileExports(
-	state: PluginGlobalState,
-	filePath: string,
-): void {
-	// Remove all exports from this file
-	for (const [name, info] of state.aggregatedExports) {
-		if (info.source === filePath) {
-			state.aggregatedExports.delete(name);
+	// Check other files
+	for (const [filePath, fileInfo] of state.files) {
+		if (filePath === excludeFile) continue;
+		if (fileInfo.exports.has(exportName)) {
+			return filePath;
 		}
 	}
-
-	// Clear the file's export tracking
-	const fileInfo = state.styleframeFiles.get(filePath);
-	if (fileInfo) {
-		fileInfo.exports.clear();
-	}
+	return null;
 }
 
 /**
@@ -104,8 +82,11 @@ export function clearFileExports(
  */
 export function resetState(state: PluginGlobalState): void {
 	state.globalInstance = null;
-	state.styleframeFiles.clear();
-	state.aggregatedExports.clear();
+	if (state.configFile) {
+		state.configFile.exports.clear();
+		state.configFile.lastModified = 0;
+	}
+	state.files.clear();
 	state.loadingFiles.clear();
 	state.initialized = false;
 }

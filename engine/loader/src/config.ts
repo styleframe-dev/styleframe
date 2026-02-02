@@ -1,9 +1,9 @@
 import type { Styleframe } from "@styleframe/core";
-import { isRecipe, isSelector, styleframe } from "@styleframe/core";
+import { styleframe } from "@styleframe/core";
 import { watch } from "chokidar";
-import { createJiti } from "jiti";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { loadModule } from "./module";
 
 const SUPPORTED_EXTENSIONS = [".ts", ".mts", ".cts", ".js", ".mjs", ".cjs"];
 
@@ -28,17 +28,6 @@ function resolveConfigFile(cwd: string, entry: string): string | undefined {
 	return undefined;
 }
 
-function trackNamedExports(module: Record<string, unknown>) {
-	for (const [exportName, exportValue] of Object.entries(module)) {
-		if (exportName === "default") continue;
-		if (isRecipe(exportValue)) {
-			exportValue._exportName = exportName;
-		} else if (isSelector(exportValue)) {
-			exportValue._exportName = exportName;
-		}
-	}
-}
-
 export async function loadConfiguration({
 	cwd = process.cwd(),
 	entry = "styleframe.config",
@@ -53,21 +42,8 @@ export async function loadConfiguration({
 		return styleframe();
 	}
 
-	const jiti = createJiti(path.dirname(resolvedPath), {
-		fsCache: false,
-		moduleCache: false,
-	});
-	const module = (await jiti.import(resolvedPath)) as Record<string, unknown>;
-
-	if (!module.default) {
-		throw new Error(
-			`Missing default export in ${resolvedPath}. Expected a Styleframe instance.`,
-		);
-	}
-
-	trackNamedExports(module);
-
-	return module.default as Styleframe;
+	const { instance } = await loadModule(resolvedPath);
+	return instance;
 }
 
 export async function watchConfiguration({
