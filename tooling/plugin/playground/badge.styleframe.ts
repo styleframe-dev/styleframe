@@ -1,23 +1,19 @@
-import { styleframe } from "styleframe";
+import { styleframe } from "virtual:styleframe";
 
-const s = styleframe();
+const s = styleframe(); // Returns the shared instance from styleframe.config.ts
 
-s.utility("borderRadius", ({ value }) => ({ borderRadius: value }));
-s.utility("fontSize", ({ value }) => ({ fontSize: value }));
-s.utility("fontWeight", ({ value }) => ({ fontWeight: value }));
-
-s.selector(".badge", {
+// Named export for selector
+export const badgeSelector = s.selector(".badge", {
 	background: "purple",
 	color: "white",
 	padding: "4px 8px",
 });
 
-s.recipe({
+// Named export for recipe - will be available from virtual:styleframe
+export const badge = s.recipe({
 	name: "badge",
 	base: {
-		borderRadius: "9999px",
-		fontSize: "12px",
-		fontWeight: "500",
+		display: "inline-block",
 	},
 	variants: {},
 });

@@ -14,6 +14,7 @@ import type {
 	Utility,
 	Variable,
 } from "./types";
+import type { Styleframe } from "./styleframe";
 
 export function isObject(value: unknown): value is object {
 	return typeof value === "object" && value !== null;
@@ -99,5 +100,18 @@ export function isContainer(value: unknown): value is Container {
 		"children" in value &&
 		"declarations" in value &&
 		"variables" in value
+	);
+}
+
+export function isStyleframe(value: unknown): value is Styleframe {
+	return (
+		isObject(value) &&
+		"id" in value &&
+		"root" in value &&
+		"variable" in value &&
+		"selector" in value &&
+		"recipe" in value &&
+		typeof (value as Styleframe).id === "string" &&
+		isRoot((value as Styleframe).root)
 	);
 }
