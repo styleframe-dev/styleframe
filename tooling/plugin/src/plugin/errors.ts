@@ -24,15 +24,15 @@ export class ExportCollisionError extends StyleframePluginError {
 }
 
 /**
- * Thrown when trying to use the shared instance before it's initialized
+ * Thrown when trying to use the global instance before it's initialized
  */
-export class SharedInstanceNotInitializedError extends StyleframePluginError {
+export class GlobalInstanceNotInitializedError extends StyleframePluginError {
 	constructor() {
 		super(
-			"Shared instance not initialized. " +
+			"Global instance not initialized. " +
 				"Make sure styleframe.config.ts is loaded before *.styleframe.ts files.",
 		);
-		this.name = "SharedInstanceNotInitializedError";
+		this.name = "GlobalInstanceNotInitializedError";
 	}
 }
 

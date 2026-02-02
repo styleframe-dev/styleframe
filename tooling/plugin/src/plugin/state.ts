@@ -31,8 +31,8 @@ export interface ExportInfo {
  * Global state for the plugin
  */
 export interface PluginGlobalState {
-	/** The shared styleframe instance (from config) */
-	sharedInstance: Styleframe | null;
+	/** The global styleframe instance (from config) */
+	globalInstance: Styleframe | null;
 	/** Path to the config file */
 	configPath: string;
 	/** All discovered *.styleframe.ts files (ordered by load order) */
@@ -50,7 +50,7 @@ export interface PluginGlobalState {
  */
 export function createPluginState(configPath: string): PluginGlobalState {
 	return {
-		sharedInstance: null,
+		globalInstance: null,
 		configPath,
 		styleframeFiles: new Map(),
 		aggregatedExports: new Map(),
@@ -103,7 +103,7 @@ export function clearFileExports(
  * Reset all state (used when config changes)
  */
 export function resetState(state: PluginGlobalState): void {
-	state.sharedInstance = null;
+	state.globalInstance = null;
 	state.styleframeFiles.clear();
 	state.aggregatedExports.clear();
 	state.loadingFiles.clear();

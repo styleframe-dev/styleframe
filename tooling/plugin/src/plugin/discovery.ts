@@ -1,5 +1,5 @@
 import path from "node:path";
-import fg from "fast-glob";
+import { glob } from "tinyglobby";
 import { DEFAULT_IGNORE_PATTERNS } from "./constants";
 
 export interface DiscoveryOptions {
@@ -20,7 +20,7 @@ export async function discoverStyleframeFiles(
 	const patterns =
 		options.include.length > 0 ? options.include : ["**/*.styleframe.ts"];
 
-	const files = await fg(patterns, {
+	const files = await glob(patterns, {
 		cwd: options.cwd,
 		absolute: true,
 		ignore: [...DEFAULT_IGNORE_PATTERNS, ...options.exclude],

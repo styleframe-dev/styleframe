@@ -1,0 +1,75 @@
+import { describe, expect, it, vi, beforeEach } from "vitest";
+import { generateConsumerModule } from "../../src/generate/consumer-module";
+import type { PluginGlobalState } from "../../src/state";
+import type { Styleframe } from "@styleframe/core";
+
+vi.mock("@styleframe/transpiler", () => ({
+	transpile: vi.fn(),
+}));
+
+import { transpile } from "@styleframe/transpiler";
+
+describe("generateConsumerModule", () => {
+	const createMockState = (
+		globalInstance: Styleframe | null = null,
+	): PluginGlobalState => ({
+		globalInstance,
+		configPath: "/path/to/config.ts",
+		styleframeFiles: new Map(),
+		aggregatedExports: new Map(),
+		loadingFiles: new Set(),
+		initialized: false,
+	});
+
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	it("should return comment when globalInstance is null", async () => {
+		const state = createMockState(null);
+		const result = await generateConsumerModule(state);
+
+		expect(result).toBe("// Styleframe not initialized");
+		expect(transpile).not.toHaveBeenCalled();
+	});
+
+	it("should call transpile with ts type when instance exists", async () => {
+		const mockInstance = {} as Styleframe;
+		const state = createMockState(mockInstance);
+
+		vi.mocked(transpile).mockResolvedValue({
+			files: [{ name: "index.ts", content: "export const button = {};" }],
+		});
+
+		const result = await generateConsumerModule(state);
+
+		expect(transpile).toHaveBeenCalledWith(mockInstance, { type: "ts" });
+		expect(result).toBe("export const button = {};");
+	});
+
+	it("should return empty string when index.ts not found in transpile result", async () => {
+		const mockInstance = {} as Styleframe;
+		const state = createMockState(mockInstance);
+
+		vi.mocked(transpile).mockResolvedValue({
+			files: [{ name: "other.ts", content: "some content" }],
+		});
+
+		const result = await generateConsumerModule(state);
+
+		expect(result).toBe("");
+	});
+
+	it("should return empty string when transpile returns empty files", async () => {
+		const mockInstance = {} as Styleframe;
+		const state = createMockState(mockInstance);
+
+		vi.mocked(transpile).mockResolvedValue({
+			files: [],
+		});
+
+		const result = await generateConsumerModule(state);
+
+		expect(result).toBe("");
+	});
+});

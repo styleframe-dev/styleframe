@@ -8,31 +8,31 @@ import type { ExportInfo, PluginGlobalState } from "./state";
 import { clearFileExports, registerExport, resetState } from "./state";
 import {
 	CircularDependencyError,
-	SharedInstanceNotInitializedError,
+	GlobalInstanceNotInitializedError,
 } from "./errors";
 
-// Global key for injecting the shared instance during loading
+// Global key for injecting the global instance during loading
 // This is necessary because jiti loads files in a separate context,
-// and we need a way to pass the shared instance to the provider shim
-const SHARED_INSTANCE_KEY = "__STYLEFRAME_SHARED_INSTANCE__";
+// and we need a way to pass the global instance to the extension shim
+const GLOBAL_INSTANCE_KEY = "__STYLEFRAME_GLOBAL_INSTANCE__";
 
-// Provider shim path - created once per process
-let providerShimPath: string | null = null;
+// Extension shim path - created once per process
+let extensionShimPath: string | null = null;
 
 /**
- * Get or create the provider shim file.
- * The shim reads the shared instance from globalThis and exports it.
+ * Get or create the extension shim file.
+ * The shim reads the global instance from globalThis and exports it.
  */
-function getProviderShimPath(): string {
-	if (providerShimPath && fs.existsSync(providerShimPath)) {
-		return providerShimPath;
+function getExtensionShimPath(): string {
+	if (extensionShimPath && fs.existsSync(extensionShimPath)) {
+		return extensionShimPath;
 	}
 
 	const shimContent = `
 export function styleframe() {
-	const instance = globalThis["${SHARED_INSTANCE_KEY}"];
+	const instance = globalThis["${GLOBAL_INSTANCE_KEY}"];
 	if (!instance) {
-		throw new Error('[styleframe] Shared instance not available during loading');
+		throw new Error('[styleframe] Global instance not available during loading');
 	}
 	return instance;
 }
@@ -41,14 +41,14 @@ export default { styleframe };
 `;
 
 	const tempDir = os.tmpdir();
-	providerShimPath = path.join(tempDir, `styleframe-shim-${process.pid}.mjs`);
-	fs.writeFileSync(providerShimPath, shimContent);
+	extensionShimPath = path.join(tempDir, `styleframe-shim-${process.pid}.mjs`);
+	fs.writeFileSync(extensionShimPath, shimContent);
 
-	return providerShimPath;
+	return extensionShimPath;
 }
 
 /**
- * Load the config file and initialize the shared instance
+ * Load the config file and initialize the global instance
  */
 export async function loadConfigFile(
 	state: PluginGlobalState,
@@ -76,7 +76,7 @@ export async function loadConfigFile(
 	}
 
 	const instance = module.default;
-	state.sharedInstance = instance;
+	state.globalInstance = instance;
 
 	// Track named exports from config
 	trackModuleExports(state, module, state.configPath);
@@ -85,15 +85,15 @@ export async function loadConfigFile(
 }
 
 /**
- * Load a single *.styleframe.ts file using the shared instance
+ * Load a single *.styleframe.ts file using the global instance
  */
 export async function loadStyleframeFile(
 	state: PluginGlobalState,
 	filePath: string,
 	loadOrder: number,
 ): Promise<void> {
-	if (!state.sharedInstance) {
-		throw new SharedInstanceNotInitializedError();
+	if (!state.globalInstance) {
+		throw new GlobalInstanceNotInitializedError();
 	}
 
 	// Circular dependency detection
@@ -107,15 +107,15 @@ export async function loadStyleframeFile(
 		// Clear previous exports from this file (for HMR)
 		clearFileExports(state, filePath);
 
-		// Set the shared instance on globalThis for the provider shim to access
-		(globalThis as Record<string, unknown>)[SHARED_INSTANCE_KEY] =
-			state.sharedInstance;
+		// Set the global instance on globalThis for the extension shim to access
+		(globalThis as Record<string, unknown>)[GLOBAL_INSTANCE_KEY] =
+			state.globalInstance;
 
 		const jiti = createJiti(path.dirname(filePath), {
 			fsCache: false,
 			moduleCache: false,
 			alias: {
-				"virtual:styleframe": getProviderShimPath(),
+				"virtual:styleframe": getExtensionShimPath(),
 			},
 		});
 
@@ -135,7 +135,7 @@ export async function loadStyleframeFile(
 	} finally {
 		state.loadingFiles.delete(filePath);
 		// Clean up globalThis
-		delete (globalThis as Record<string, unknown>)[SHARED_INSTANCE_KEY];
+		delete (globalThis as Record<string, unknown>)[GLOBAL_INSTANCE_KEY];
 	}
 }
 
@@ -147,7 +147,10 @@ export async function loadAllStyleframeFiles(
 	files: string[],
 ): Promise<void> {
 	for (let i = 0; i < files.length; i++) {
-		await loadStyleframeFile(state, files[i], i);
+		const file = files[i];
+		if (file) {
+			await loadStyleframeFile(state, file, i);
+		}
 	}
 }
 

@@ -13,4 +13,11 @@ export interface Options {
 	exclude?: string[];
 	/** File loading order strategy (default: 'alphabetical') */
 	loadOrder?: "alphabetical" | "depth-first";
+	/** Type declaration generation options */
+	dts?: {
+		/** Enable type declaration generation (default: true) */
+		enabled?: boolean;
+		/** Output directory for generated types (default: ".styleframe") */
+		outDir?: string;
+	};
 }
