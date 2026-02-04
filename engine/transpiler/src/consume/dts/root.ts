@@ -45,11 +45,7 @@ export function createRootConsumer(consume: ConsumeFunction) {
 
 		// Add selector exports
 		if (hasSelectors) {
-			if (hasRecipes) {
-				parts.push("");
-			} else {
-				parts.push("");
-			}
+			parts.push("");
 			const selectorDeclarations = exportedSelectors
 				.map((selector) => consume(selector, options))
 				.filter(Boolean);
