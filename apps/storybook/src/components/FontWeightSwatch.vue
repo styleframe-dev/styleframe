@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import "./FontWeightSwatch.styleframe?css";
-import { fontWeightSwatch } from "./FontWeightSwatch.styleframe?ts";
+import { fontWeightSwatch } from "virtual:styleframe";
 import SwatchCard from "./primitives/SwatchCard.vue";
 
 const props = defineProps<{

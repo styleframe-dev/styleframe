@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import "./FontFamilySwatch.styleframe?css";
-import { fontFamilySwatch } from "./FontFamilySwatch.styleframe?ts";
+import { fontFamilySwatch } from "virtual:styleframe";
 import SwatchCard from "./primitives/SwatchCard.vue";
 
 const props = defineProps<{

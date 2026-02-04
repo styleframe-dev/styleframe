@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import "./SwatchRow.styleframe?css";
 
 defineProps<{
 	name: string;

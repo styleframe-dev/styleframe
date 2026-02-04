@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import "./LineHeightSwatch.styleframe?css";
-import { lineHeightSwatch } from "./LineHeightSwatch.styleframe?ts";
+import { lineHeightSwatch } from "virtual:styleframe";
 import SwatchCard from "./primitives/SwatchCard.vue";
 
 const props = defineProps<{

@@ -5,7 +5,7 @@ import {
 	useColor,
 	useUtilitiesPreset,
 } from "@styleframe/theme";
-import { styleframe } from "styleframe";
+import { styleframe } from "virtual:styleframe";
 
 const s = styleframe();
 

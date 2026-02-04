@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import "./SwatchCard.styleframe?css";
 
 defineProps<{
 	name: string;

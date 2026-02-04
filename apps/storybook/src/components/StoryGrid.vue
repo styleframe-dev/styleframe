@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import "./StoryGrid.styleframe?css";
 
 withDefaults(
 	defineProps<{

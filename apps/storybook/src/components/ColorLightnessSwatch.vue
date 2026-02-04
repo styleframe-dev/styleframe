@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import "./ColorLightnessSwatch.styleframe?css";
-import { colorLightnessSwatch } from "./ColorLightnessSwatch.styleframe?ts";
+import { colorLightnessSwatch } from "virtual:styleframe";
 import SwatchCard from "./primitives/SwatchCard.vue";
 
 const props = defineProps<{

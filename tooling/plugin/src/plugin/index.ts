@@ -1,12 +1,7 @@
 import path from "node:path";
-import {
-	getLicenseKeyFromEnv,
-	validateInstanceLicense,
-} from "@styleframe/license";
-import { transpile } from "@styleframe/transpiler";
 import { consola } from "consola";
 import { transform as esbuildTransform } from "esbuild";
-import type { UnpluginBuildContext, UnpluginFactory } from "unplugin";
+import type { UnpluginFactory } from "unplugin";
 import { createUnplugin } from "unplugin";
 import {
 	DEFAULT_ENTRY,
@@ -16,13 +11,12 @@ import {
 	RESOLVED_VIRTUAL_TS_MODULE_ID,
 	RESOLVED_VIRTUAL_EXTENSION_ID,
 	RESOLVED_VIRTUAL_CONSUMER_ID,
-	ROLLUP_V_PREFIX,
 	VIRTUAL_CSS_MODULE_ID,
 	VIRTUAL_TS_MODULE_ID,
 } from "./constants";
 import type { Options } from "./types";
 export type { Options } from "./types";
-import { createPluginState, type PluginGlobalState } from "./state";
+import { createPluginState } from "./state";
 import { discoverStyleframeFiles, sortByLoadOrder } from "./discovery";
 import {
 	loadConfigFile,
@@ -40,84 +34,8 @@ import {
 // Matches the source file: ./button.styleframe.ts
 const STYLEFRAME_SOURCE_REGEX = /\.styleframe\.ts$/;
 
-// Virtual module prefixes for styleframe files
-const STYLEFRAME_CSS_VIRTUAL_PREFIX = `${ROLLUP_V_PREFIX}styleframe.css:`;
-const STYLEFRAME_TS_VIRTUAL_PREFIX = `${ROLLUP_V_PREFIX}styleframe.ts:`;
-
 function isStyleframeSourceFile(id: string): boolean {
 	return STYLEFRAME_SOURCE_REGEX.test(id);
-}
-
-function getResolvedVirtualId(filePath: string, type: "css" | "ts"): string {
-	const prefix =
-		type === "css"
-			? STYLEFRAME_CSS_VIRTUAL_PREFIX
-			: STYLEFRAME_TS_VIRTUAL_PREFIX;
-	// Change extension based on output type for proper handling by Vite/Rollup
-	// CSS virtual modules end in .css, TS virtual modules end in .ts
-	const outputPath =
-		type === "css" ? filePath.replace(/\.ts$/, ".css") : filePath;
-	return `${prefix}${outputPath}`;
-}
-
-function parseVirtualId(
-	id: string,
-): { type: "css" | "ts"; filePath: string } | null {
-	if (id.startsWith(STYLEFRAME_CSS_VIRTUAL_PREFIX)) {
-		return {
-			type: "css",
-			// Convert back to source .ts path
-			filePath: id
-				.slice(STYLEFRAME_CSS_VIRTUAL_PREFIX.length)
-				.replace(/\.css$/, ".ts"),
-		};
-	}
-	if (id.startsWith(STYLEFRAME_TS_VIRTUAL_PREFIX)) {
-		return {
-			type: "ts",
-			filePath: id.slice(STYLEFRAME_TS_VIRTUAL_PREFIX.length),
-		};
-	}
-	return null;
-}
-
-function resolveSourcePath(file: string, importer?: string): string {
-	if (path.isAbsolute(file)) {
-		return file;
-	}
-	if (importer) {
-		return path.resolve(path.dirname(importer), file);
-	}
-	return path.resolve(process.cwd(), file);
-}
-
-/**
- * Build entries for per-file virtual modules (legacy support)
- */
-async function buildEntry(
-	ctx: UnpluginBuildContext,
-	entry: string,
-	type: "css" | "ts",
-	options: Options,
-	isBuildCommand: boolean,
-	_state: PluginGlobalState,
-) {
-	ctx.addWatchFile(entry);
-
-	// For per-file modules, load the specific file's instance
-	const { loadModule } = await import("@styleframe/loader");
-	const { instance } = await loadModule(entry);
-
-	await validateInstanceLicense(instance, {
-		licenseKey: getLicenseKeyFromEnv() || "",
-		environment: process.env.NODE_ENV || "development",
-		isBuild: isBuildCommand,
-	});
-
-	const result = await transpile(instance, { type });
-	const code = result.files.map((f) => f.content).join("\n");
-
-	return { code };
 }
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (
@@ -131,9 +49,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	const state = createPluginState(configPath);
 
 	let isBuildCommand = false;
-
-	// Track styleframe source files and their virtual module mappings
-	const sourceToVirtualModules = new Map<string, Set<string>>();
 
 	// Debounce timeout for type generation
 	let typeGenTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -232,50 +147,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				return RESOLVED_VIRTUAL_CSS_MODULE_ID;
 			}
 
-			// Parse query parameters
-			const [pathPart, queryPart] = id.split("?");
-
-			// Handle HMR refetch requests for .styleframe.css files
-			// These come in as "SwatchCard.styleframe.css?t=123456"
-			if (pathPart?.endsWith(".styleframe.css")) {
-				const sourceFile = pathPart.replace(/\.css$/, ".ts");
-				const resolvedSourcePath = resolveSourcePath(sourceFile, importer);
-				return getResolvedVirtualId(resolvedSourcePath, "css");
-			}
-
-			// Only handle .styleframe files with specific queries
-			// .styleframe or .styleframe.ts
-			if (!pathPart || !/\.styleframe(\.ts)?$/.test(pathPart)) {
-				return null;
-			}
-
-			const isCss = queryPart === "css";
-			const isTs = queryPart === "ts";
-
-			if (!isCss && !isTs) {
-				// Pass through for default resolution (e.g. importing the instance itself)
-				return null;
-			}
-
-			// Resolve the source file path
-			let sourceFile = pathPart;
-			if (!sourceFile.endsWith(".ts")) {
-				sourceFile += ".ts";
-			}
-
-			const resolvedSourcePath = resolveSourcePath(sourceFile, importer);
-			const type = isCss ? "css" : "ts";
-			const virtualId = getResolvedVirtualId(resolvedSourcePath, type);
-
-			// Track the mapping for HMR
-			let modules = sourceToVirtualModules.get(resolvedSourcePath);
-			if (!modules) {
-				modules = new Set();
-				sourceToVirtualModules.set(resolvedSourcePath, modules);
-			}
-			modules.add(virtualId);
-
-			return virtualId;
+			return null;
 		},
 
 		async load(id) {
@@ -294,21 +166,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				return generateGlobalCSS(state, isBuildCommand, options);
 			}
 
-			// Handle .styleframe virtual modules (per-file CSS/TS)
-			const parsed = parseVirtualId(id);
-			if (parsed) {
-				const { type, filePath } = parsed;
-				const relativePath = path.relative(cwd, filePath);
-
-				if (!options.silent) {
-					const consolePath =
-						type === "css" ? relativePath.replace(".ts", ".css") : relativePath;
-					consola.info(`[styleframe] Building ${consolePath}...`);
-				}
-
-				return buildEntry(this, filePath, type, options, isBuildCommand, state);
-			}
-
 			return null;
 		},
 
@@ -318,8 +175,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				const isVirtualTsModule =
 					id === RESOLVED_VIRTUAL_TS_MODULE_ID ||
 					id === RESOLVED_VIRTUAL_EXTENSION_ID ||
-					id === RESOLVED_VIRTUAL_CONSUMER_ID ||
-					id.startsWith(STYLEFRAME_TS_VIRTUAL_PREFIX);
+					id === RESOLVED_VIRTUAL_CONSUMER_ID;
 
 				if (isVirtualTsModule) {
 					const result = await esbuildTransform(code, {
@@ -386,7 +242,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				server.watcher.on("unlink", (file) => {
 					if (state.files.has(file)) {
 						state.files.delete(file);
-						sourceToVirtualModules.delete(file);
 
 						if (!options.silent) {
 							consola.info(
@@ -492,17 +347,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						// Regenerate types
 						scheduleTypeGeneration();
 
-						// Also invalidate per-file virtual modules
-						const virtualModuleIds = sourceToVirtualModules.get(ctx.file);
-						if (virtualModuleIds) {
-							for (const virtualId of virtualModuleIds) {
-								const virtualModule = await getModuleById(virtualId);
-								if (virtualModule) {
-									modulesToInvalidate.push(virtualModule);
-								}
-							}
-						}
-
 						if (modulesToInvalidate.length > 0) {
 							return modulesToInvalidate as typeof ctx.modules;
 						}
@@ -511,28 +355,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					}
 
 					return ctx.modules;
-				}
-
-				// Handle HMR for other .styleframe.ts source files (not yet tracked)
-				if (isStyleframeSourceFile(ctx.file)) {
-					// Normalize path to match keys in sourceToVirtualModules
-					const normalizedFile = path.resolve(ctx.file);
-					const virtualModuleIds = sourceToVirtualModules.get(normalizedFile);
-
-					if (virtualModuleIds && virtualModuleIds.size > 0) {
-						const modulesToInvalidate = [];
-
-						for (const virtualId of virtualModuleIds) {
-							const virtualModule = await getModuleById(virtualId);
-							if (virtualModule) {
-								modulesToInvalidate.push(virtualModule);
-							}
-						}
-
-						if (modulesToInvalidate.length > 0) {
-							return modulesToInvalidate;
-						}
-					}
 				}
 
 				return ctx.modules;

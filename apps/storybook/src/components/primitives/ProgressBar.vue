@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import "./ProgressBar.styleframe?css";
 
 const props = defineProps<{
 	percentage: number;

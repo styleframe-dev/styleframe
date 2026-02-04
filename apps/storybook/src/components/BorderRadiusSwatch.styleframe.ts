@@ -1,4 +1,4 @@
-import { styleframe } from "styleframe";
+import { styleframe } from "virtual:styleframe";
 import {
 	useSwatchColors,
 	useSwatchDimensions,
