@@ -16,6 +16,25 @@ s.variable("color--primary", "blue");
 export default s;
 `;
 
+const styleframeIncludes = [
+	"styleframe.config.ts",
+	"*.styleframe.ts",
+	".styleframe/**/*.d.ts",
+];
+
+const tsconfigTemplate = {
+	compilerOptions: {
+		target: "ES2022",
+		module: "ESNext",
+		moduleResolution: "bundler",
+		strict: true,
+		noEmit: true,
+		skipLibCheck: true,
+		esModuleInterop: true,
+	},
+	include: styleframeIncludes,
+};
+
 export async function initializeConfigFile(cwd: string) {
 	const styleframeConfigPath = path.join(cwd, "styleframe.config.ts");
 
@@ -26,6 +45,37 @@ export async function initializeConfigFile(cwd: string) {
 	} else {
 		await writeFile(styleframeConfigPath, styleframeConfigTemplate);
 		consola.success(`Created "styleframe.config.ts".`);
+	}
+}
+
+export async function initializeTsConfig(cwd: string) {
+	const tsconfigPath = path.join(cwd, "tsconfig.json");
+
+	if (await fileExists(tsconfigPath)) {
+		const existingConfig = JSON.parse(await readFile(tsconfigPath, "utf8"));
+
+		// Add styleframe includes if not present
+		if (!existingConfig.include) {
+			existingConfig.include = [];
+		}
+
+		const added: string[] = [];
+		for (const pattern of styleframeIncludes) {
+			if (!existingConfig.include.includes(pattern)) {
+				existingConfig.include.push(pattern);
+				added.push(pattern);
+			}
+		}
+
+		if (added.length > 0) {
+			await writeFile(tsconfigPath, JSON.stringify(existingConfig, null, "\t"));
+			consola.success(
+				`Added ${added.map((p) => `"${p}"`).join(", ")} to tsconfig.json includes.`,
+			);
+		}
+	} else {
+		await writeFile(tsconfigPath, JSON.stringify(tsconfigTemplate, null, "\t"));
+		consola.success(`Created "tsconfig.json".`);
 	}
 }
 
@@ -92,6 +142,7 @@ export default defineCommand({
 		consola.info("Initializing...");
 
 		await initializeConfigFile(cwd);
+		await initializeTsConfig(cwd);
 		await addPackageJsonDependencies(cwd);
 		await initializeFrameworkFile(cwd);
 	},
