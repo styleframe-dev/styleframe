@@ -100,15 +100,13 @@ async function buildEntry(
 	type: "css" | "ts",
 	options: Options,
 	isBuildCommand: boolean,
-	state: PluginGlobalState,
+	_state: PluginGlobalState,
 ) {
 	ctx.addWatchFile(entry);
 
-	// For per-file modules, use the global instance if available
-	const instance = state.globalInstance;
-	if (!instance) {
-		throw new Error("[styleframe] Global instance not initialized");
-	}
+	// For per-file modules, load the specific file's instance
+	const { loadModule } = await import("@styleframe/loader");
+	const { instance } = await loadModule(entry);
 
 	await validateInstanceLicense(instance, {
 		licenseKey: getLicenseKeyFromEnv() || "",
