@@ -1,7 +1,6 @@
 import type { Preview } from "@storybook/vue3-vite";
 
-import "../src/global.styleframe?css";
-import "../src/tokens.styleframe?css";
+import "virtual:styleframe.css";
 
 const preview: Preview = {
 	parameters: {

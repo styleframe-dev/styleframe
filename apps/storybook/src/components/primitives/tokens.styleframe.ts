@@ -1,4 +1,4 @@
-import type { Styleframe } from "styleframe";
+import type { Styleframe } from "@styleframe/core";
 
 /**
  * Shared color tokens for swatch primitives

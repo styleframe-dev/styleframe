@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import "./BoxShadowSwatch.styleframe?css";
-import { boxShadowSwatch } from "./BoxShadowSwatch.styleframe?ts";
+import { boxShadowSwatch } from "virtual:styleframe";
 import SwatchCard from "./primitives/SwatchCard.vue";
 
 const props = defineProps<{

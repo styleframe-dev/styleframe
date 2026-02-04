@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import "./BarChart.styleframe?css";
 
 defineProps<{
 	heights: string[];

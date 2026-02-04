@@ -15,9 +15,10 @@ export type ConsumeFunction = (
 ) => string;
 
 export type TranspileOptions = {
-	type?: "css" | "ts" | "all";
+	type?: "css" | "ts" | "dts" | "all";
 	consumers?: {
 		css: ConsumeFunction;
 		ts: ConsumeFunction;
+		dts: ConsumeFunction;
 	};
 };

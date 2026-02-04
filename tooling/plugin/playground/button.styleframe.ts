@@ -1,10 +1,6 @@
-import { styleframe } from "styleframe";
+import { styleframe } from "virtual:styleframe";
 
-const s = styleframe();
-
-s.utility("borderWidth", ({ value }) => ({ borderWidth: value }));
-s.utility("borderStyle", ({ value }) => ({ borderStyle: value }));
-s.utility("borderColor", ({ value }) => ({ borderColor: value }));
+const s = styleframe(); // Returns the shared instance from styleframe.config.ts
 
 // Named export for selector - will be exported as the selector string
 export const buttonSelector = s.selector(".button", {
@@ -17,9 +13,7 @@ export const buttonSelector = s.selector(".button", {
 export const buttonRecipe = s.recipe({
 	name: "button",
 	base: {
-		borderWidth: "thin",
-		borderStyle: "solid",
-		borderColor: "blue",
+		display: "inline-block",
 	},
 	variants: {},
 });
