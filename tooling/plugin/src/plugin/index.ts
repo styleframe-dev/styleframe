@@ -239,35 +239,49 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				});
 
 				// Watch for deleted *.styleframe.ts files
-				server.watcher.on("unlink", (file) => {
+				server.watcher.on("unlink", async (file) => {
 					if (state.files.has(file)) {
-						state.files.delete(file);
-
 						if (!options.silent) {
 							consola.info(
 								`[styleframe] File removed: ${path.relative(cwd, file)}`,
 							);
 						}
 
-						// Invalidate consumer and CSS modules
-						const consumerMod = server.moduleGraph.getModuleById(
-							RESOLVED_VIRTUAL_CONSUMER_ID,
-						);
-						const cssMod = server.moduleGraph.getModuleById(
-							RESOLVED_VIRTUAL_CSS_MODULE_ID,
-						);
+						try {
+							// Collect remaining files (excluding deleted one), sorted by load order
+							const remainingFiles = [...state.files.entries()]
+								.filter(([filePath]) => filePath !== file)
+								.sort(([, a], [, b]) => a.loadOrder - b.loadOrder)
+								.map(([filePath]) => filePath);
 
-						if (consumerMod) {
-							server.moduleGraph.invalidateModule(consumerMod);
+							// Reload everything to rebuild the global instance without the deleted file's contributions
+							await reloadAll(state, remainingFiles);
+
+							// Invalidate consumer and CSS modules
+							const consumerMod = server.moduleGraph.getModuleById(
+								RESOLVED_VIRTUAL_CONSUMER_ID,
+							);
+							const cssMod = server.moduleGraph.getModuleById(
+								RESOLVED_VIRTUAL_CSS_MODULE_ID,
+							);
+
+							if (consumerMod) {
+								server.moduleGraph.invalidateModule(consumerMod);
+							}
+							if (cssMod) {
+								server.moduleGraph.invalidateModule(cssMod);
+							}
+
+							// Regenerate types
+							scheduleTypeGeneration();
+
+							server.ws.send({ type: "full-reload" });
+						} catch (error) {
+							consola.error(
+								`[styleframe] Failed to reload after file removal: ${file}`,
+								error,
+							);
 						}
-						if (cssMod) {
-							server.moduleGraph.invalidateModule(cssMod);
-						}
-
-						// Regenerate types
-						scheduleTypeGeneration();
-
-						server.ws.send({ type: "full-reload" });
 					}
 				});
 			},
@@ -318,7 +332,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					return ctx.modules;
 				}
 
-				// Styleframe file change → reload that file and invalidate
+				// Styleframe file change → reload all to rebuild global instance
 				if (state.files.has(ctx.file)) {
 					if (!options.silent) {
 						consola.info(
@@ -327,10 +341,12 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					}
 
 					try {
-						const fileInfo = state.files.get(ctx.file);
-						if (fileInfo) {
-							await loadStyleframeFile(state, ctx.file, fileInfo.loadOrder);
-						}
+						// Must reload all files because the global instance accumulates
+						// state (variables, selectors, recipes, etc.) and there's no way
+						// to undo a single file's contributions. Without a full reload,
+						// removed declarations would persist on the global instance.
+						const files = [...state.files.keys()];
+						await reloadAll(state, files);
 
 						// Invalidate CSS and consumer modules
 						const cssModule = await getModuleById(

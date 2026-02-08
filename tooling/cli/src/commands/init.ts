@@ -2,7 +2,7 @@ import consola from "consola";
 import { defineCommand } from "citty";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
-import { fileExists } from "../utils";
+import { fileExists, parseJsonc } from "../utils";
 import { initializeViteFrameworkFile } from "./init/vite";
 import { initializeNuxtFrameworkFile } from "./init/nuxt";
 import { DOCS_INSTALLATION_CUSTOM_URL } from "../constants";
@@ -52,17 +52,20 @@ export async function initializeTsConfig(cwd: string) {
 	const tsconfigPath = path.join(cwd, "tsconfig.json");
 
 	if (await fileExists(tsconfigPath)) {
-		const existingConfig = JSON.parse(await readFile(tsconfigPath, "utf8"));
+		const existingConfig = parseJsonc(
+			await readFile(tsconfigPath, "utf8"),
+		) as Record<string, string[] | unknown>;
 
 		// Add styleframe includes if not present
 		if (!existingConfig.include) {
 			existingConfig.include = [];
 		}
 
+		const includes = existingConfig.include as string[];
 		const added: string[] = [];
 		for (const pattern of styleframeIncludes) {
-			if (!existingConfig.include.includes(pattern)) {
-				existingConfig.include.push(pattern);
+			if (!includes.includes(pattern)) {
+				includes.push(pattern);
 				added.push(pattern);
 			}
 		}

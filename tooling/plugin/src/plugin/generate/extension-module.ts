@@ -4,8 +4,9 @@
  * It imports the config directly and returns the same instance.
  */
 export function generateExtensionModule(configPath: string): string {
+	const normalizedPath = configPath.replace(/\\/g, "/");
 	return `
-import config from '${configPath}';
+import config from '${normalizedPath}';
 
 export function styleframe() {
 	return config;
