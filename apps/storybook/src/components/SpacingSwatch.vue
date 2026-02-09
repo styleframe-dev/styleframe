@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import "./SpacingSwatch.styleframe?css";
-import { spacingSwatch } from "./SpacingSwatch.styleframe?ts";
+import { spacingSwatch } from "virtual:styleframe";
 import SwatchCard from "./primitives/SwatchCard.vue";
 
 const props = defineProps<{

@@ -4,6 +4,7 @@ import {
 	getInstanceLicenseValidationInfo,
 } from "@styleframe/license";
 import { consume as consumeCSS } from "./consume/css";
+import { consume as consumeDTS } from "./consume/dts";
 import { consume as consumeTS } from "./consume/ts";
 import { addLicenseWatermark } from "./license";
 import type { Output, OutputFile, TranspileOptions } from "./types";
@@ -19,7 +20,7 @@ export async function transpile(
 	instance: Styleframe,
 	{
 		type = "all",
-		consumers = { css: consumeCSS, ts: consumeTS },
+		consumers = { css: consumeCSS, ts: consumeTS, dts: consumeDTS },
 	}: TranspileOptions = {},
 ): Promise<Output> {
 	const output: Output = { files: [] };
@@ -44,6 +45,14 @@ export async function transpile(
 		const indexFile = createFile(
 			"index.ts",
 			consumers.ts(instance.root, options),
+		);
+		output.files.push(indexFile);
+	}
+
+	if (type === "dts") {
+		const indexFile = createFile(
+			"index.d.ts",
+			consumers.dts(instance.root, options),
 		);
 		output.files.push(indexFile);
 	}

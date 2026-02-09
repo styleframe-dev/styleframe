@@ -2,7 +2,7 @@ import consola from "consola";
 import { defineCommand } from "citty";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
-import { fileExists } from "../utils";
+import { fileExists, parseJsonc } from "../utils";
 import { initializeViteFrameworkFile } from "./init/vite";
 import { initializeNuxtFrameworkFile } from "./init/nuxt";
 import { DOCS_INSTALLATION_CUSTOM_URL } from "../constants";
@@ -16,6 +16,25 @@ s.variable("color--primary", "blue");
 export default s;
 `;
 
+const styleframeIncludes = [
+	"styleframe.config.ts",
+	"*.styleframe.ts",
+	".styleframe/**/*.d.ts",
+];
+
+const tsconfigTemplate = {
+	compilerOptions: {
+		target: "ES2022",
+		module: "ESNext",
+		moduleResolution: "bundler",
+		strict: true,
+		noEmit: true,
+		skipLibCheck: true,
+		esModuleInterop: true,
+	},
+	include: styleframeIncludes,
+};
+
 export async function initializeConfigFile(cwd: string) {
 	const styleframeConfigPath = path.join(cwd, "styleframe.config.ts");
 
@@ -26,6 +45,40 @@ export async function initializeConfigFile(cwd: string) {
 	} else {
 		await writeFile(styleframeConfigPath, styleframeConfigTemplate);
 		consola.success(`Created "styleframe.config.ts".`);
+	}
+}
+
+export async function initializeTsConfig(cwd: string) {
+	const tsconfigPath = path.join(cwd, "tsconfig.json");
+
+	if (await fileExists(tsconfigPath)) {
+		const existingConfig = parseJsonc(
+			await readFile(tsconfigPath, "utf8"),
+		) as Record<string, string[] | unknown>;
+
+		// Add styleframe includes if not present
+		if (!existingConfig.include) {
+			existingConfig.include = [];
+		}
+
+		const includes = existingConfig.include as string[];
+		const added: string[] = [];
+		for (const pattern of styleframeIncludes) {
+			if (!includes.includes(pattern)) {
+				includes.push(pattern);
+				added.push(pattern);
+			}
+		}
+
+		if (added.length > 0) {
+			await writeFile(tsconfigPath, JSON.stringify(existingConfig, null, "\t"));
+			consola.success(
+				`Added ${added.map((p) => `"${p}"`).join(", ")} to tsconfig.json includes.`,
+			);
+		}
+	} else {
+		await writeFile(tsconfigPath, JSON.stringify(tsconfigTemplate, null, "\t"));
+		consola.success(`Created "tsconfig.json".`);
 	}
 }
 
@@ -92,6 +145,7 @@ export default defineCommand({
 		consola.info("Initializing...");
 
 		await initializeConfigFile(cwd);
+		await initializeTsConfig(cwd);
 		await addPackageJsonDependencies(cwd);
 		await initializeFrameworkFile(cwd);
 	},

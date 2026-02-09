@@ -1,0 +1,17 @@
+{
+	"extends": "../../../config/typescript/tsconfig.json",
+	"compilerOptions": {
+		"composite": false,
+		"declaration": false,
+		"declarationMap": false,
+		"noEmit": true,
+		"tsBuildInfoFile": ".tsbuildinfo"
+	},
+	"include": [
+		"*.styleframe.ts",
+		"styleframe.config.ts",
+		"main.ts",
+		".styleframe/**/*.d.ts"
+	],
+	"exclude": ["node_modules", "dist"]
+}

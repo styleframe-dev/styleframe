@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import "./BorderRadiusSwatch.styleframe?css";
-import { borderRadiusSwatch } from "./BorderRadiusSwatch.styleframe?ts";
+import { borderRadiusSwatch } from "virtual:styleframe";
 import SwatchCard from "./primitives/SwatchCard.vue";
 
 const props = defineProps<{

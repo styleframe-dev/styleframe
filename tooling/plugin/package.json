@@ -92,6 +92,8 @@
 		"@styleframe/loader": "workspace:^2.4.1",
 		"@styleframe/transpiler": "workspace:^2.6.0",
 		"consola": "^3.4.2",
+		"tinyglobby": "catalog:",
+		"jiti": "catalog:",
 		"unplugin": "^2.3.4"
 	},
 	"devDependencies": {

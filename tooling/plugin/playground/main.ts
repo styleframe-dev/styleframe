@@ -1,9 +1,17 @@
+// Import global CSS - includes all tokens from config + all styleframe files
 import "virtual:styleframe.css";
-import "./button.styleframe?css";
-import "./badge.styleframe?css";
 
-import { h1 } from "virtual:styleframe";
-import { buttonRecipe, buttonSelector } from "./button.styleframe?ts";
-import { badge } from "./badge.styleframe?ts";
+// Import exports from virtual:styleframe (aggregated from all files)
+import {
+	h1,
+	buttonRecipe,
+	buttonSelector,
+	badge,
+	badgeSelector,
+} from "virtual:styleframe";
 
-console.log(h1(), buttonRecipe(), buttonSelector, badge());
+console.log("h1:", h1());
+console.log("buttonRecipe:", buttonRecipe());
+console.log("buttonSelector:", buttonSelector);
+console.log("badge:", badge());
+console.log("badgeSelector:", badgeSelector);

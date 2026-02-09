@@ -18,6 +18,9 @@ catalogs:
     husky:
       specifier: ^9.1.7
       version: 9.1.7
+    jiti:
+      specifier: ^2.4.2
+      version: 2.6.1
     lint-staged:
       specifier: ^16.1.2
       version: 16.1.2
@@ -27,6 +30,9 @@ catalogs:
     oxlint:
       specifier: ^1.2.0
       version: 1.2.0
+    tinyglobby:
+      specifier: ^0.2.15
+      version: 0.2.15
     tsx:
       specifier: ^4.20.6
       version: 4.20.6
@@ -955,6 +961,12 @@ importers:
       esbuild:
         specifier: '*'
         version: 0.25.10
+      jiti:
+        specifier: 'catalog:'
+        version: 2.6.1
+      tinyglobby:
+        specifier: 'catalog:'
+        version: 0.2.15
       unplugin:
         specifier: ^2.3.4
         version: 2.3.10
