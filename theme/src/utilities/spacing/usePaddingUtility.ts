@@ -20,6 +20,7 @@ export const usePaddingUtility = createUseSpacingUtility(
 	({ value }) => ({
 		padding: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -31,6 +32,7 @@ export const usePaddingInlineUtility = createUseSpacingUtility(
 		paddingLeft: value,
 		paddingRight: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -42,6 +44,7 @@ export const usePaddingBlockUtility = createUseSpacingUtility(
 		paddingTop: value,
 		paddingBottom: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -52,6 +55,7 @@ export const usePaddingTopUtility = createUseSpacingUtility(
 	({ value }) => ({
 		paddingTop: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -62,6 +66,7 @@ export const usePaddingRightUtility = createUseSpacingUtility(
 	({ value }) => ({
 		paddingRight: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -72,6 +77,7 @@ export const usePaddingBottomUtility = createUseSpacingUtility(
 	({ value }) => ({
 		paddingBottom: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -82,6 +88,7 @@ export const usePaddingLeftUtility = createUseSpacingUtility(
 	({ value }) => ({
 		paddingLeft: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -92,6 +99,7 @@ export const usePaddingInlineStartUtility = createUseSpacingUtility(
 	({ value }) => ({
 		paddingInlineStart: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -102,6 +110,7 @@ export const usePaddingInlineEndUtility = createUseSpacingUtility(
 	({ value }) => ({
 		paddingInlineEnd: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -113,6 +122,7 @@ export const usePaddingXUtility = createUseSpacingUtility(
 		paddingLeft: value,
 		paddingRight: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -124,4 +134,5 @@ export const usePaddingYUtility = createUseSpacingUtility(
 		paddingTop: value,
 		paddingBottom: value,
 	}),
+	{ namespace: "spacing" },
 );

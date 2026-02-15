@@ -306,6 +306,63 @@ describe("createMultiplierAutogenerate", () => {
 		});
 	});
 
+	it("should apply namespace to non-numeric @ values", () => {
+		const s = styleframe();
+		const autogenerate = createMultiplierAutogenerate({
+			s,
+			baseVariable: "spacing",
+			namespace: "spacing",
+		});
+
+		const result = autogenerate("@sm");
+		expect(result).toEqual({
+			sm: {
+				type: "reference",
+				name: "spacing.sm",
+			},
+		});
+	});
+
+	it("should not apply namespace to numeric multiplier values", () => {
+		const s = styleframe();
+		const autogenerate = createMultiplierAutogenerate({
+			s,
+			baseVariable: "spacing",
+			namespace: "spacing",
+		});
+
+		const result = autogenerate("@1.5");
+		expect(result).toHaveProperty("1.5");
+		expect(result["1.5"]).toEqual({
+			type: "css",
+			value: [
+				"calc(",
+				{ type: "reference", name: "spacing", fallback: undefined },
+				" * ",
+				"1.5",
+				")",
+			],
+		});
+	});
+
+	it("should work with both namespace and replacer", () => {
+		const s = styleframe();
+		const autogenerate = createMultiplierAutogenerate({
+			s,
+			baseVariable: "spacing",
+			namespace: "spacing",
+			replacer: (key) => key.toUpperCase(),
+		});
+
+		const result = autogenerate("@md");
+		expect(result).toEqual({
+			MD: {
+				type: "reference",
+				name: "spacing.md",
+			},
+		});
+	});
+
 	it("should accept custom replacer function for non-multiplier values", () => {
 		const s = styleframe();
 		const autogenerate = createMultiplierAutogenerate({

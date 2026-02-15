@@ -21,4 +21,5 @@ export const useLineHeightUtility = createUseUtility(
 	({ value }) => ({
 		lineHeight: value,
 	}),
+	{ namespace: "line-height" },
 );

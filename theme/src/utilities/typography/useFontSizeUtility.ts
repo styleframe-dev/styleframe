@@ -20,4 +20,5 @@ export const useFontSizeUtility = createUseUtility(
 	({ value }) => ({
 		fontSize: value,
 	}),
+	{ namespace: "font-size" },
 );

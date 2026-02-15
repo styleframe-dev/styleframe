@@ -15,20 +15,32 @@ import { createUseSpacingUtility } from "../../utils";
  * // ._gap:2 { gap: calc(var(--spacing) * 2); }
  * ```
  */
-export const useGapUtility = createUseSpacingUtility("gap", ({ value }) => ({
-	gap: value,
-}));
+export const useGapUtility = createUseSpacingUtility(
+	"gap",
+	({ value }) => ({
+		gap: value,
+	}),
+	{ namespace: "spacing" },
+);
 
 /**
  * Create column-gap utility classes with multiplier support.
  */
-export const useGapXUtility = createUseSpacingUtility("gap-x", ({ value }) => ({
-	columnGap: value,
-}));
+export const useGapXUtility = createUseSpacingUtility(
+	"gap-x",
+	({ value }) => ({
+		columnGap: value,
+	}),
+	{ namespace: "spacing" },
+);
 
 /**
  * Create row-gap utility classes with multiplier support.
  */
-export const useGapYUtility = createUseSpacingUtility("gap-y", ({ value }) => ({
-	rowGap: value,
-}));
+export const useGapYUtility = createUseSpacingUtility(
+	"gap-y",
+	({ value }) => ({
+		rowGap: value,
+	}),
+	{ namespace: "spacing" },
+);

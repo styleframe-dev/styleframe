@@ -1,5 +1,5 @@
 import { transformUtilityKey } from "../defaults";
-import { isModifier } from "../typeGuards";
+import { isModifier, isRef } from "../typeGuards";
 import type {
 	Container,
 	ModifierFactory,
@@ -20,14 +20,19 @@ export function createUtilityFunction(parent: Container, root: Root) {
 	return function utility<Name extends string>(
 		name: Name,
 		factory: UtilityCallbackFn,
-		options: { autogenerate?: UtilityAutogenerateFn } = {},
+		options: { autogenerate?: UtilityAutogenerateFn; namespace?: string } = {},
 	): UtilityCreatorFn {
 		const factoryInstance: UtilityFactory<Name> = {
 			type: "utility",
 			name,
 			factory,
 			values: [],
-			autogenerate: options.autogenerate ?? transformUtilityKey(),
+			autogenerate:
+				options.autogenerate ??
+				transformUtilityKey(
+					options.namespace ? { namespace: options.namespace } : undefined,
+				),
+			namespace: options.namespace,
 			create: (entries, modifiers = []) => {
 				let resolvedEntries = entries;
 
@@ -51,7 +56,14 @@ export function createUtilityFunction(parent: Container, root: Root) {
 					}
 				}
 
-				for (const [key, value] of Object.entries(resolvedEntries)) {
+				for (const [key, entryValue] of Object.entries(resolvedEntries)) {
+					const value =
+						factoryInstance.namespace &&
+						isRef(entryValue) &&
+						!root.variables.some((v) => v.name === entryValue.name)
+							? key
+							: entryValue;
+
 					const existingEntry = factoryInstance.values.find(
 						(entry) => entry.key === key && entry.modifiers.length === 0,
 					);

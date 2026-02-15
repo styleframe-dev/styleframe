@@ -23,5 +23,5 @@ export const useFontWeightUtility = createUseUtility(
 	({ value }) => ({
 		fontWeight: value,
 	}),
-	{ defaults: defaultFontWeightUtilityValues },
+	{ defaults: defaultFontWeightUtilityValues, namespace: "font-weight" },
 );

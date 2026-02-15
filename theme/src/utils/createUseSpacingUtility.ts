@@ -25,6 +25,11 @@ export interface CreateUseSpacingUtilityOptions<
 	 * Only used when baseVariable is a string. Defaults to "1rem".
 	 */
 	fallback?: string;
+	/**
+	 * Optional namespace for token references in autogenerate.
+	 * When set, "@sm" in array syntax resolves to ref("namespace.sm").
+	 */
+	namespace?: string;
 }
 
 /**
@@ -66,6 +71,7 @@ export function createUseSpacingUtility<
 		mergeDefaults = false,
 		baseVariable = "spacing",
 		fallback = "1rem",
+		namespace,
 	} = options;
 
 	return function useSpacingUtility<
@@ -81,10 +87,14 @@ export function createUseSpacingUtility<
 			s,
 			baseVariable,
 			fallback: typeof baseVariable === "string" ? fallback : undefined,
+			namespace,
 		});
 
 		// Create the utility with custom autogenerate
-		const createUtility = s.utility(utilityName, factory, { autogenerate });
+		const createUtility = s.utility(utilityName, factory, {
+			autogenerate,
+			namespace,
+		});
 
 		// Resolve values with optional merge
 		const resolvedValues = mergeDefaults

@@ -1127,6 +1127,179 @@ describe("createUtilityFunction", () => {
 			expect(root.children).toHaveLength(3);
 		});
 	});
+
+	describe("namespace variable existence check", () => {
+		test("should fall back to literal value when referenced variable does not exist", () => {
+			const createColorUtility = utility(
+				"color",
+				({ value }) => ({
+					color: value,
+				}),
+				{ namespace: "color" },
+			);
+
+			// No variables defined in root, so references fall back to literal key values
+			createColorUtility(["@primary", "@secondary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "primary", value: "primary", modifiers: [] },
+				{ key: "secondary", value: "secondary", modifiers: [] },
+			]);
+			expect(root.children).toHaveLength(2);
+
+			const primaryUtility = root.children.find(
+				(u) => isUtility(u) && u.name === "color" && u.value === "primary",
+			);
+			expect(primaryUtility).toEqual({
+				type: "utility",
+				name: "color",
+				value: "primary",
+				declarations: { color: "primary" },
+				variables: [],
+				children: [],
+				modifiers: [],
+			});
+		});
+
+		test("should use reference when variable exists in root", () => {
+			// Define variables in root
+			root.variables.push(
+				{ type: "variable", name: "color.primary", value: "#007bff" },
+				{ type: "variable", name: "color.secondary", value: "#6c757d" },
+			);
+
+			const createColorUtility = utility(
+				"color",
+				({ value }) => ({
+					color: value,
+				}),
+				{ namespace: "color" },
+			);
+
+			createColorUtility(["@primary", "@secondary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+				{
+					key: "secondary",
+					value: { type: "reference", name: "color.secondary" },
+					modifiers: [],
+				},
+			]);
+			expect(root.children).toHaveLength(2);
+		});
+
+		test("should use reference for existing variables and literal for non-existent ones", () => {
+			// Only define one variable
+			root.variables.push({
+				type: "variable",
+				name: "spacing.sm",
+				value: "0.5rem",
+			});
+
+			const createPaddingUtility = utility(
+				"padding",
+				({ value }) => ({
+					padding: value,
+				}),
+				{ namespace: "spacing" },
+			);
+
+			createPaddingUtility(["@sm", "@md", "@lg"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "sm",
+					value: { type: "reference", name: "spacing.sm" },
+					modifiers: [],
+				},
+				{ key: "md", value: "md", modifiers: [] },
+				{ key: "lg", value: "lg", modifiers: [] },
+			]);
+			expect(root.children).toHaveLength(3);
+		});
+
+		test("should not affect non-reference values when namespace is set", () => {
+			const createPaddingUtility = utility(
+				"padding",
+				({ value }) => ({
+					padding: value,
+				}),
+				{ namespace: "spacing" },
+			);
+
+			createPaddingUtility(["16px", "24px"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "[16px]", value: "16px", modifiers: [] },
+				{ key: "[24px]", value: "24px", modifiers: [] },
+			]);
+			expect(root.children).toHaveLength(2);
+		});
+
+		test("should not check variable existence when namespace is not set", () => {
+			const createColorUtility = utility("color", ({ value }) => ({
+				color: value,
+			}));
+
+			// No variables defined, but no namespace either — keeps reference as-is
+			createColorUtility(["@color.primary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "color.primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+			]);
+			expect(root.children).toHaveLength(1);
+		});
+
+		test("should fall back to literal for non-existent object entry references when namespace is set", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#007bff",
+			});
+
+			const createColorUtility = utility(
+				"color",
+				({ value }) => ({
+					color: value,
+				}),
+				{ namespace: "color" },
+			);
+
+			createColorUtility({
+				primary: { type: "reference", name: "color.primary" },
+				secondary: { type: "reference", name: "color.secondary" },
+				red: "red",
+			});
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+				{
+					key: "secondary",
+					value: "secondary",
+					modifiers: [],
+				},
+				{
+					key: "red",
+					value: "red",
+					modifiers: [],
+				},
+			]);
+			expect(root.children).toHaveLength(3);
+		});
+	});
 });
 
 describe("createModifiedUtilityFunction", () => {

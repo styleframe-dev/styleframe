@@ -20,6 +20,7 @@ export const useBorderColorUtility = createUseUtility(
 	({ value }) => ({
 		borderColor: value,
 	}),
+	{ namespace: "color" },
 );
 
 /**
@@ -31,6 +32,7 @@ export const useBorderColorXUtility = createUseUtility(
 		borderLeftColor: value,
 		borderRightColor: value,
 	}),
+	{ namespace: "color" },
 );
 
 /**
@@ -42,6 +44,7 @@ export const useBorderColorYUtility = createUseUtility(
 		borderTopColor: value,
 		borderBottomColor: value,
 	}),
+	{ namespace: "color" },
 );
 
 /**
@@ -52,6 +55,7 @@ export const useBorderColorTopUtility = createUseUtility(
 	({ value }) => ({
 		borderTopColor: value,
 	}),
+	{ namespace: "color" },
 );
 
 /**
@@ -62,6 +66,7 @@ export const useBorderColorRightUtility = createUseUtility(
 	({ value }) => ({
 		borderRightColor: value,
 	}),
+	{ namespace: "color" },
 );
 
 /**
@@ -72,6 +77,7 @@ export const useBorderColorBottomUtility = createUseUtility(
 	({ value }) => ({
 		borderBottomColor: value,
 	}),
+	{ namespace: "color" },
 );
 
 /**
@@ -82,6 +88,7 @@ export const useBorderColorLeftUtility = createUseUtility(
 	({ value }) => ({
 		borderLeftColor: value,
 	}),
+	{ namespace: "color" },
 );
 
 /**
@@ -92,6 +99,7 @@ export const useBorderColorStartUtility = createUseUtility(
 	({ value }) => ({
 		borderInlineStartColor: value,
 	}),
+	{ namespace: "color" },
 );
 
 /**
@@ -102,4 +110,5 @@ export const useBorderColorEndUtility = createUseUtility(
 	({ value }) => ({
 		borderInlineEndColor: value,
 	}),
+	{ namespace: "color" },
 );

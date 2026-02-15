@@ -22,6 +22,7 @@ export const useSpaceXUtility = createUseSpacingUtility(
 			marginLeft: value,
 		},
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -35,6 +36,7 @@ export const useSpaceYUtility = createUseSpacingUtility(
 			marginTop: value,
 		},
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -49,6 +51,7 @@ export const useSpaceXReverseUtility = createUseSpacingUtility(
 			marginLeft: 0,
 		},
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -63,4 +66,5 @@ export const useSpaceYReverseUtility = createUseSpacingUtility(
 			marginTop: 0,
 		},
 	}),
+	{ namespace: "spacing" },
 );

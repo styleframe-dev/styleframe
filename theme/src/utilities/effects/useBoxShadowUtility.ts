@@ -25,6 +25,7 @@ export const useBoxShadowUtility = createUseUtility(
 		boxShadow:
 			"var(--box-shadow-ring-offset, 0 0 #0000), var(--box-shadow-ring, 0 0 #0000), var(--box-shadow)",
 	}),
+	{ namespace: "box-shadow" },
 );
 
 /**
@@ -35,4 +36,5 @@ export const useBoxShadowColorUtility = createUseUtility(
 	({ value }) => ({
 		"--box-shadow-color": value,
 	}),
+	{ namespace: "color" },
 );

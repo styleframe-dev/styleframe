@@ -952,6 +952,9 @@ importers:
       '@styleframe/loader':
         specifier: workspace:^2.4.1
         version: link:../../engine/loader
+      '@styleframe/scanner':
+        specifier: workspace:^2.0.0
+        version: link:../../engine/scanner
       '@styleframe/transpiler':
         specifier: workspace:^2.6.0
         version: link:../../engine/transpiler

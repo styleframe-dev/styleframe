@@ -90,6 +90,7 @@
 	"dependencies": {
 		"@styleframe/license": "catalog:",
 		"@styleframe/loader": "workspace:^2.4.1",
+		"@styleframe/scanner": "workspace:^2.0.0",
 		"@styleframe/transpiler": "workspace:^2.6.0",
 		"consola": "^3.4.2",
 		"tinyglobby": "catalog:",

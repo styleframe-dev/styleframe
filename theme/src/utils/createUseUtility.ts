@@ -13,6 +13,11 @@ export interface CreateUseUtilityOptions<
 	defaults?: Defaults;
 	/** Whether to merge user values with defaults (true) or replace them (false) */
 	mergeDefaults?: boolean;
+	/**
+	 * Optional namespace for token references in autogenerate.
+	 * When set, "@sm" in array syntax resolves to ref("namespace.sm").
+	 */
+	namespace?: string;
 }
 
 /**
@@ -51,14 +56,14 @@ export function createUseUtility<
 	factory: UtilityCallbackFn,
 	options: CreateUseUtilityOptions<Defaults> = {},
 ) {
-	const { defaults, mergeDefaults = false } = options;
+	const { defaults, mergeDefaults = false, namespace } = options;
 
 	return function useUtility<T extends Record<string, TokenValue> = Defaults>(
 		s: Styleframe,
 		values?: T,
 		modifiers?: ModifierFactory[],
 	): UtilityCreatorFn {
-		const createUtility = s.utility(utilityName, factory);
+		const createUtility = s.utility(utilityName, factory, { namespace });
 
 		// Only call creator if values are provided (or defaults exist)
 		const resolvedValues = mergeDefaults

@@ -15,6 +15,10 @@ import { createUseUtility } from "../../utils";
  * });
  * ```
  */
-export const useColorUtility = createUseUtility("color", ({ value }) => ({
-	color: value,
-}));
+export const useColorUtility = createUseUtility(
+	"color",
+	({ value }) => ({
+		color: value,
+	}),
+	{ namespace: "color" },
+);
