@@ -20,5 +20,5 @@ export const useBackgroundColorUtility = createUseUtility(
 	({ value }) => ({
 		backgroundColor: value,
 	}),
-	{ namespace: "color" },
+	{ namespace: ["background-color", "color"] },
 );

@@ -36,7 +36,7 @@ export interface CreateMultiplierAutogenerateOptions {
 	/** Optional key replacer function for non-multiplier values */
 	replacer?: (key: string) => string;
 	/** Optional namespace for token references (e.g., "spacing" makes "@sm" resolve to ref("spacing.sm")) */
-	namespace?: string;
+	namespace?: string | string[];
 }
 
 /**

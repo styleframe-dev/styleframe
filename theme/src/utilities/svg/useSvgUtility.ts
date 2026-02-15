@@ -18,7 +18,7 @@ export const useFillUtility = createUseUtility(
 	({ value }) => ({
 		fill: value,
 	}),
-	{ namespace: "color" },
+	{ namespace: ["fill", "color"] },
 );
 
 /**
@@ -29,7 +29,7 @@ export const useStrokeUtility = createUseUtility(
 	({ value }) => ({
 		stroke: value,
 	}),
-	{ namespace: "color" },
+	{ namespace: ["stroke", "color"] },
 );
 
 /**

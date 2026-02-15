@@ -57,7 +57,7 @@ export const useDivideColorUtility = createUseUtility(
 			borderColor: value,
 		},
 	}),
-	{ namespace: "color" },
+	{ namespace: ["divide-color", "color"] },
 );
 
 /**

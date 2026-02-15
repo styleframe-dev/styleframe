@@ -17,7 +17,7 @@ export interface CreateUseUtilityOptions<
 	 * Optional namespace for token references in autogenerate.
 	 * When set, "@sm" in array syntax resolves to ref("namespace.sm").
 	 */
-	namespace?: string;
+	namespace?: string | string[];
 }
 
 /**

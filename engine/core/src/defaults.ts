@@ -6,7 +6,7 @@ export interface TransformUtilityKeyOptions {
 	/** Transforms the key used in the utility class name */
 	replacer?: (key: string) => string;
 	/** Namespace prepended to the reference name (e.g., "spacing" makes "@sm" resolve to ref("spacing.sm")) */
-	namespace?: string;
+	namespace?: string | string[];
 }
 
 export function transformUtilityKey(
@@ -18,6 +18,11 @@ export function transformUtilityKey(
 			: (replacerOrOptions ?? {});
 
 	const { replacer = (v) => v, namespace } = options;
+	const namespaces = Array.isArray(namespace)
+		? namespace
+		: namespace
+			? [namespace]
+			: [];
 
 	return (value: TokenValue): Record<string, TokenValue> => {
 		let resolvedValue = value;
@@ -25,9 +30,10 @@ export function transformUtilityKey(
 
 		if (typeof resolvedValue === "string" && resolvedValue[0] === "@") {
 			const variableName = resolvedValue.slice(1);
-			const referenceName = namespace
-				? `${namespace}.${variableName}`
-				: variableName;
+			const referenceName =
+				namespaces.length > 0
+					? `${namespaces[0]}.${variableName}`
+					: variableName;
 
 			resolvedKey = replacer(variableName);
 			resolvedValue = {
@@ -36,8 +42,11 @@ export function transformUtilityKey(
 			} satisfies Reference<string>;
 		} else if (isRef(resolvedValue)) {
 			let keyName = resolvedValue.name;
-			if (namespace && keyName.startsWith(`${namespace}.`)) {
-				keyName = keyName.slice(namespace.length + 1);
+			for (const ns of namespaces) {
+				if (keyName.startsWith(`${ns}.`)) {
+					keyName = keyName.slice(ns.length + 1);
+					break;
+				}
 			}
 			resolvedKey = replacer(keyName);
 		} else {

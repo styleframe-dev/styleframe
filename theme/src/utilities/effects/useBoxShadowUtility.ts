@@ -36,5 +36,5 @@ export const useBoxShadowColorUtility = createUseUtility(
 	({ value }) => ({
 		"--box-shadow-color": value,
 	}),
-	{ namespace: "color" },
+	{ namespace: ["box-shadow-color", "color"] },
 );

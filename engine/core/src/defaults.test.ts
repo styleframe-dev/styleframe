@@ -220,6 +220,96 @@ describe("transformUtilityKey", () => {
 		});
 	});
 
+	describe("with namespace array option", () => {
+		it("should use first namespace for @ string references", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+			});
+			const result = transform("@primary");
+
+			expect(result).toEqual({
+				primary: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+		});
+
+		it("should strip first matching namespace prefix from Reference objects", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+			});
+			const ref: Reference = {
+				type: "reference",
+				name: "border-color.primary",
+			};
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				primary: ref,
+			});
+		});
+
+		it("should strip second namespace prefix when first does not match", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+			});
+			const ref: Reference = {
+				type: "reference",
+				name: "color.primary",
+			};
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				primary: ref,
+			});
+		});
+
+		it("should pass through Reference without matching namespace prefix unchanged", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+			});
+			const ref: Reference = {
+				type: "reference",
+				name: "spacing.sm",
+			};
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				"spacing.sm": ref,
+			});
+		});
+
+		it("should work with single-element array (backward compat)", () => {
+			const transform = transformUtilityKey({
+				namespace: ["spacing"],
+			});
+			const result = transform("@sm");
+
+			expect(result).toEqual({
+				sm: {
+					type: "reference",
+					name: "spacing.sm",
+				},
+			});
+		});
+
+		it("should work with both namespace array and replacer", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+				replacer: (key) => key.toUpperCase(),
+			});
+			const result = transform("@primary");
+
+			expect(result).toEqual({
+				PRIMARY: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+		});
+	});
+
 	describe("edge cases", () => {
 		it("should handle @ string with empty variable name", () => {
 			const transform = transformUtilityKey();

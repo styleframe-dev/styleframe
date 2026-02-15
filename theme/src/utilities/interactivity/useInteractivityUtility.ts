@@ -19,7 +19,7 @@ export const useAccentColorUtility = createUseUtility(
 	({ value }) => ({
 		accentColor: value,
 	}),
-	{ namespace: "color" },
+	{ namespace: ["accent-color", "color"] },
 );
 
 /**
@@ -41,7 +41,7 @@ export const useCaretColorUtility = createUseUtility(
 	({ value }) => ({
 		caretColor: value,
 	}),
-	{ namespace: "color" },
+	{ namespace: ["caret-color", "color"] },
 );
 
 /**
