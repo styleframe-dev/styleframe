@@ -19,7 +19,7 @@ describe("spacing utilities in recipes", () => {
 		});
 
 		expect(instance._runtime?.base).toEqual({
-			padding: "spacing.sm",
+			padding: "sm",
 		});
 	});
 
@@ -48,9 +48,9 @@ describe("spacing utilities in recipes", () => {
 
 		expect(instance._runtime?.variants).toEqual({
 			size: {
-				sm: { padding: "spacing.sm" },
-				md: { padding: "spacing.md" },
-				lg: { padding: "spacing.lg" },
+				sm: { padding: "sm" },
+				md: { padding: "md" },
+				lg: { padding: "lg" },
 			},
 		});
 	});
@@ -116,12 +116,12 @@ describe("spacing utilities in recipes", () => {
 		});
 
 		expect(instance._runtime?.base).toEqual({
-			padding: "spacing.sm",
+			padding: "sm",
 		});
 		expect(instance._runtime?.variants).toEqual({
 			size: {
-				sm: { padding: "spacing.sm" },
-				md: { padding: "spacing.md" },
+				sm: { padding: "sm" },
+				md: { padding: "md" },
 				custom: { padding: "1.5" },
 				large: { padding: "2" },
 			},
