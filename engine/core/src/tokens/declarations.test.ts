@@ -122,6 +122,55 @@ describe("parseDeclarationsBlock", () => {
 		});
 	});
 
+	describe("keyframe selector parsing", () => {
+		it("should parse percentage-based keyframe selectors", () => {
+			const declarations = {
+				"0%": { opacity: "0", transform: "translateY(-4px)" },
+				"50%": { opacity: "0.5" },
+				"100%": { opacity: "1", transform: "translateY(0)" },
+			};
+
+			parseDeclarationsBlock(declarations, mockContext);
+
+			expect(mockContext.selector).toHaveBeenCalledTimes(3);
+			expect(mockContext.selector).toHaveBeenCalledWith("0%", {
+				opacity: "0",
+				transform: "translateY(-4px)",
+			});
+			expect(mockContext.selector).toHaveBeenCalledWith("50%", {
+				opacity: "0.5",
+			});
+			expect(mockContext.selector).toHaveBeenCalledWith("100%", {
+				opacity: "1",
+				transform: "translateY(0)",
+			});
+
+			expect(declarations).not.toHaveProperty("0%");
+			expect(declarations).not.toHaveProperty("50%");
+			expect(declarations).not.toHaveProperty("100%");
+		});
+
+		it("should parse from and to keyframe selectors", () => {
+			const declarations = {
+				from: { opacity: "0" },
+				to: { opacity: "1" },
+			};
+
+			parseDeclarationsBlock(declarations, mockContext);
+
+			expect(mockContext.selector).toHaveBeenCalledTimes(2);
+			expect(mockContext.selector).toHaveBeenCalledWith("from", {
+				opacity: "0",
+			});
+			expect(mockContext.selector).toHaveBeenCalledWith("to", {
+				opacity: "1",
+			});
+
+			expect(declarations).not.toHaveProperty("from");
+			expect(declarations).not.toHaveProperty("to");
+		});
+	});
+
 	describe("media query handling", () => {
 		it("should handle media queries", () => {
 			const declarations = {

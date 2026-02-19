@@ -27,52 +27,8 @@ const colors = [
 	"warning",
 	"danger",
 ] as const;
-type Color = (typeof colors)[number];
 
 const variants = ["solid", "outline", "soft", "subtle"] as const;
-type Variant = (typeof variants)[number];
-
-type CompoundVariant = {
-	match: { color: Color; variant: Variant };
-	css: Record<string, string>;
-};
-
-function createColorVariantCompounds(): CompoundVariant[] {
-	const compounds: CompoundVariant[] = [];
-
-	for (const color of colors) {
-		compounds.push(
-			{
-				match: { color, variant: "solid" },
-				css: { background: `@color.${color}`, color: "@color.light" },
-			},
-			{
-				match: { color, variant: "outline" },
-				css: {
-					color: `@color.${color}`,
-					boxShadow: `inset 0 0 0 1px color-mix(in oklch, var(--color--${color}) 50%, transparent)`,
-				},
-			},
-			{
-				match: { color, variant: "soft" },
-				css: {
-					background: `color-mix(in oklch, var(--color--${color}) 10%, transparent)`,
-					color: `@color.${color}`,
-				},
-			},
-			{
-				match: { color, variant: "subtle" },
-				css: {
-					background: `color-mix(in oklch, var(--color--${color}) 10%, transparent)`,
-					color: `@color.${color}`,
-					boxShadow: `inset 0 0 0 1px color-mix(in oklch, var(--color--${color}) 25%, transparent)`,
-				},
-			},
-		);
-	}
-
-	return compounds;
-}
 
 /**
  * Full badge recipe with color, variant, and size variants.
@@ -83,6 +39,9 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 		display: "inline-flex",
 		alignItems: "center",
 		fontWeight: "@font-weight.medium",
+		borderWidth: "@border-width.thin",
+		borderStyle: "@border-style.solid",
+		borderColor: "transparent",
 	},
 	variants: {
 		color: {
@@ -103,8 +62,8 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			xs: {
 				fontSize: "8px",
 				lineHeight: "12px",
-				paddingTop: "calc(var(--spacing--2xs) * 0.5)",
-				paddingBottom: "calc(var(--spacing--2xs) * 0.5)",
+				paddingTop: "@0.125",
+				paddingBottom: "@0.125",
 				paddingLeft: "@spacing.2xs",
 				paddingRight: "@spacing.2xs",
 				gap: "@spacing.2xs",
@@ -115,41 +74,68 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 				lineHeight: "12px",
 				paddingTop: "@spacing.2xs",
 				paddingBottom: "@spacing.2xs",
-				paddingLeft: "@spacing.xs",
-				paddingRight: "@spacing.xs",
+				paddingLeft: "@0.375",
+				paddingRight: "@0.375",
 				gap: "@spacing.2xs",
 				borderRadius: "@border-radius.sm",
 			},
 			md: {
 				fontSize: "@font-size.xs",
-				paddingTop: "@spacing.xs",
-				paddingBottom: "@spacing.xs",
-				paddingLeft: "@spacing.sm",
-				paddingRight: "@spacing.sm",
+				paddingTop: "@spacing.2xs",
+				paddingBottom: "@spacing.2xs",
+				paddingLeft: "@spacing.xs",
+				paddingRight: "@spacing.xs",
 				gap: "@spacing.2xs",
 				borderRadius: "@border-radius.md",
 			},
 			lg: {
 				fontSize: "@font-size.sm",
-				paddingTop: "@spacing.xs",
-				paddingBottom: "@spacing.xs",
-				paddingLeft: "@spacing.md",
-				paddingRight: "@spacing.md",
-				gap: "@spacing.xs",
+				paddingTop: "@spacing.2xs",
+				paddingBottom: "@spacing.2xs",
+				paddingLeft: "@spacing.xs",
+				paddingRight: "@spacing.xs",
+				gap: "@0.375",
 				borderRadius: "@border-radius.md",
 			},
 			xl: {
 				fontSize: "@font-size.md",
-				paddingTop: "@spacing.sm",
-				paddingBottom: "@spacing.sm",
-				paddingLeft: "@spacing.lg",
-				paddingRight: "@spacing.lg",
-				gap: "@spacing.xs",
+				paddingTop: "@spacing.2xs",
+				paddingBottom: "@spacing.2xs",
+				paddingLeft: "@0.625",
+				paddingRight: "@0.625",
+				gap: "@0.375",
 				borderRadius: "@border-radius.md",
 			},
 		},
 	},
-	compoundVariants: createColorVariantCompounds(),
+	compoundVariants: colors.flatMap((color) => [
+		{
+			match: { color, variant: "solid" as const },
+			css: { background: `@color.${color}`, color: "@color.light" },
+		},
+		{
+			match: { color, variant: "outline" as const },
+			css: {
+				color: `@color.${color}`,
+				borderColor: `@color.${color}`,
+			},
+		},
+		{
+			match: { color, variant: "soft" as const },
+			css: {
+				background: `@color.${color}-950`,
+				color: `@color.${color}`,
+			},
+		},
+		{
+			match: { color, variant: "subtle" as const },
+			css: {
+				background: `@color.${color}-950`,
+				color: `@color.${color}`,
+				borderColor: `@color.${color}-800`,
+			},
+		},
+	]),
 	defaultVariants: {
 		color: "primary",
 		variant: "solid",

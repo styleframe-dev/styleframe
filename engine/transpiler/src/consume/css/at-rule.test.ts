@@ -119,7 +119,7 @@ describe("createAtRuleConsumer", () => {
 }`);
 	});
 
-	it("should handle keyframes at-rule", () => {
+	it("should handle keyframes at-rule with callback API", () => {
 		const keyframesRule = atRule("keyframes", "fadeIn", ({ selector }) => {
 			selector("0%", {
 				opacity: "0",
@@ -143,6 +143,46 @@ describe("createAtRuleConsumer", () => {
 \t100% {
 \t\topacity: 1;
 \t\ttransform: translateY(0);
+\t}
+}`);
+	});
+
+	it("should handle keyframes at-rule with object API", () => {
+		const keyframesRule = atRule("keyframes", "fadeIn", {
+			"0%": { opacity: "0", transform: "translateY(20px)" },
+			"100%": { opacity: "1", transform: "translateY(0)" },
+		});
+
+		const result = consumeAtRule(keyframesRule, options);
+
+		expect(result).toBe(`@keyframes fadeIn {
+\t0% {
+\t\topacity: 0;
+\t\ttransform: translateY(20px);
+\t}
+\t
+\t100% {
+\t\topacity: 1;
+\t\ttransform: translateY(0);
+\t}
+}`);
+	});
+
+	it("should handle keyframes at-rule with from/to", () => {
+		const keyframesRule = atRule("keyframes", "fadeIn", {
+			from: { opacity: "0" },
+			to: { opacity: "1" },
+		});
+
+		const result = consumeAtRule(keyframesRule, options);
+
+		expect(result).toBe(`@keyframes fadeIn {
+\tfrom {
+\t\topacity: 0;
+\t}
+\t
+\tto {
+\t\topacity: 1;
 \t}
 }`);
 	});

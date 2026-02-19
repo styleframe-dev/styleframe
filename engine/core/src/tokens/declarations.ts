@@ -57,8 +57,13 @@ export function parseDeclarationsBlock(
 				context.atRule(identifier, rule, atRuleDeclarations);
 				delete declarations[key];
 			}
-		} else if (/^[.&:]/.test(key)) {
-			// If the key starts with a special character, treat it as a nested selector
+		} else if (
+			/^[.&:]/.test(key) ||
+			/^\d+%$/.test(key) ||
+			key === "from" ||
+			key === "to"
+		) {
+			// If the key starts with a special character or is a keyframe selector, treat it as a nested selector
 			const nested = declarations[key] as DeclarationsBlock;
 			if (typeof nested === "object") {
 				context.selector(key, nested);

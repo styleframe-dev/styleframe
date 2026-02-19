@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { h, defineComponent } from "vue";
 
-import "./useBadgeRecipe.styleframe?css";
-import { badge } from "./useBadgeRecipe.styleframe?ts";
+import { badge } from "virtual:styleframe";
 
 const colors = [
 	"primary",

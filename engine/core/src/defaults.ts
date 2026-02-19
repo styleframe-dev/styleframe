@@ -30,12 +30,32 @@ export function transformUtilityKey(
 
 		if (typeof resolvedValue === "string" && resolvedValue[0] === "@") {
 			const variableName = resolvedValue.slice(1);
-			const referenceName =
-				namespaces.length > 0
-					? `${namespaces[0]}.${variableName}`
-					: variableName;
 
-			resolvedKey = replacer(variableName);
+			// Check if the variable name already starts with a namespace prefix
+			// to avoid double-prepending (e.g., "@color.light" with namespace "color"
+			// should resolve to "color.light", not "color.color.light")
+			const matchedNs = namespaces.find(
+				(ns) => variableName === ns || variableName.startsWith(`${ns}.`),
+			);
+
+			let referenceName: string;
+			let keyName: string;
+
+			if (matchedNs) {
+				// Already namespace-prefixed, use as-is
+				referenceName = variableName;
+				keyName = variableName.startsWith(`${matchedNs}.`)
+					? variableName.slice(matchedNs.length + 1)
+					: variableName;
+			} else if (namespaces.length > 0) {
+				referenceName = `${namespaces[0]}.${variableName}`;
+				keyName = variableName;
+			} else {
+				referenceName = variableName;
+				keyName = variableName;
+			}
+
+			resolvedKey = replacer(keyName);
 			resolvedValue = {
 				type: "reference",
 				name: referenceName,

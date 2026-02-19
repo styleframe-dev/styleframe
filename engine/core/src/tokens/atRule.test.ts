@@ -941,22 +941,20 @@ describe("createKeyframesFunction", () => {
 			},
 		});
 
-		expect(fadeInKeyframes).toEqual({
-			type: "at-rule",
-			identifier: "keyframes",
-			rule: "fade-in",
-			children: [],
-			variables: [],
-			declarations: {
-				"0%": {
-					opacity: 0,
-					transform: "translateY(20px)",
-				},
-				"100%": {
-					opacity: 1,
-					transform: "translateY(0)",
-				},
-			},
+		expect(fadeInKeyframes.type).toBe("at-rule");
+		expect(fadeInKeyframes.identifier).toBe("keyframes");
+		expect(fadeInKeyframes.rule).toBe("fade-in");
+		expect(fadeInKeyframes.declarations).toEqual({});
+		expect(fadeInKeyframes.children).toHaveLength(2);
+		expect(fadeInKeyframes.children[0]).toMatchObject({
+			type: "selector",
+			query: "0%",
+			declarations: { opacity: 0, transform: "translateY(20px)" },
+		});
+		expect(fadeInKeyframes.children[1]).toMatchObject({
+			type: "selector",
+			query: "100%",
+			declarations: { opacity: 1, transform: "translateY(0)" },
 		});
 
 		expect(root.children).toContain(fadeInKeyframes);
@@ -986,12 +984,12 @@ describe("createKeyframesFunction", () => {
 			},
 		});
 
-		expect(Object.keys(bounceKeyframes.declarations)).toHaveLength(5);
-		expect(bounceKeyframes.declarations["0%"]).toBeDefined();
-		expect(bounceKeyframes.declarations["25%"]).toBeDefined();
-		expect(bounceKeyframes.declarations["50%"]).toBeDefined();
-		expect(bounceKeyframes.declarations["75%"]).toBeDefined();
-		expect(bounceKeyframes.declarations["100%"]).toBeDefined();
+		expect(bounceKeyframes.children).toHaveLength(5);
+		expect(bounceKeyframes.children[0]).toMatchObject({ query: "0%" });
+		expect(bounceKeyframes.children[1]).toMatchObject({ query: "25%" });
+		expect(bounceKeyframes.children[2]).toMatchObject({ query: "50%" });
+		expect(bounceKeyframes.children[3]).toMatchObject({ query: "75%" });
+		expect(bounceKeyframes.children[4]).toMatchObject({ query: "100%" });
 	});
 
 	it("should be accessible in the declarations context", () => {
@@ -1004,9 +1002,17 @@ describe("createKeyframesFunction", () => {
 			expect(fadeIn.type).toBe("at-rule");
 			expect(fadeIn.identifier).toBe("keyframes");
 			expect(fadeIn.rule).toBe("fade-in");
-			expect(fadeIn.declarations).toEqual({
-				"0%": { opacity: 0 },
-				"100%": { opacity: 1 },
+			expect(fadeIn.declarations).toEqual({});
+			expect(fadeIn.children).toHaveLength(2);
+			expect(fadeIn.children[0]).toMatchObject({
+				type: "selector",
+				query: "0%",
+				declarations: { opacity: 0 },
+			});
+			expect(fadeIn.children[1]).toMatchObject({
+				type: "selector",
+				query: "100%",
+				declarations: { opacity: 1 },
 			});
 		});
 	});
