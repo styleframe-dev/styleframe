@@ -123,6 +123,193 @@ describe("transformUtilityKey", () => {
 		});
 	});
 
+	describe("with namespace option", () => {
+		it("should prepend namespace to reference name for @ strings", () => {
+			const transform = transformUtilityKey({ namespace: "spacing" });
+			const result = transform("@sm");
+
+			expect(result).toEqual({
+				sm: {
+					type: "reference",
+					name: "spacing.sm",
+				},
+			});
+		});
+
+		it("should strip namespace prefix from key and preserve ref for Reference objects", () => {
+			const transform = transformUtilityKey({ namespace: "spacing" });
+			const ref: Reference = { type: "reference", name: "spacing.md" };
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				md: ref,
+			});
+		});
+
+		it("should pass through Reference objects without namespace prefix unchanged", () => {
+			const transform = transformUtilityKey({ namespace: "color" });
+			const ref: Reference = { type: "reference", name: "primary" };
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				primary: ref,
+			});
+		});
+
+		it("should not affect non-reference values", () => {
+			const transform = transformUtilityKey({ namespace: "spacing" });
+			const result = transform("auto");
+
+			expect(result).toEqual({
+				"[auto]": "auto",
+			});
+		});
+
+		it("should work with both namespace and replacer", () => {
+			const transform = transformUtilityKey({
+				namespace: "color",
+				replacer: (key) => key.toUpperCase(),
+			});
+			const result = transform("@primary");
+
+			expect(result).toEqual({
+				PRIMARY: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+
+		it("should preserve backward compatibility with function argument", () => {
+			const transform = transformUtilityKey((key) => `custom-${key}`);
+			const result = transform("@sm");
+
+			expect(result).toEqual({
+				"custom-sm": {
+					type: "reference",
+					name: "sm",
+				},
+			});
+		});
+
+		it("should strip namespace prefix from key and preserve fallback for Reference objects", () => {
+			const transform = transformUtilityKey({ namespace: "color" });
+			const ref: Reference = {
+				type: "reference",
+				name: "color.primary",
+				fallback: "blue",
+			};
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				primary: ref,
+			});
+		});
+
+		it("should work with both namespace and replacer for Reference objects", () => {
+			const transform = transformUtilityKey({
+				namespace: "spacing",
+				replacer: (key) => key.toUpperCase(),
+			});
+			const ref: Reference = { type: "reference", name: "spacing.md" };
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				MD: ref,
+			});
+		});
+	});
+
+	describe("with namespace array option", () => {
+		it("should use first namespace for @ string references", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+			});
+			const result = transform("@primary");
+
+			expect(result).toEqual({
+				primary: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+		});
+
+		it("should strip first matching namespace prefix from Reference objects", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+			});
+			const ref: Reference = {
+				type: "reference",
+				name: "border-color.primary",
+			};
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				primary: ref,
+			});
+		});
+
+		it("should strip second namespace prefix when first does not match", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+			});
+			const ref: Reference = {
+				type: "reference",
+				name: "color.primary",
+			};
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				primary: ref,
+			});
+		});
+
+		it("should pass through Reference without matching namespace prefix unchanged", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+			});
+			const ref: Reference = {
+				type: "reference",
+				name: "spacing.sm",
+			};
+			const result = transform(ref);
+
+			expect(result).toEqual({
+				"spacing.sm": ref,
+			});
+		});
+
+		it("should work with single-element array (backward compat)", () => {
+			const transform = transformUtilityKey({
+				namespace: ["spacing"],
+			});
+			const result = transform("@sm");
+
+			expect(result).toEqual({
+				sm: {
+					type: "reference",
+					name: "spacing.sm",
+				},
+			});
+		});
+
+		it("should work with both namespace array and replacer", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+				replacer: (key) => key.toUpperCase(),
+			});
+			const result = transform("@primary");
+
+			expect(result).toEqual({
+				PRIMARY: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+		});
+	});
+
 	describe("edge cases", () => {
 		it("should handle @ string with empty variable name", () => {
 			const transform = transformUtilityKey();

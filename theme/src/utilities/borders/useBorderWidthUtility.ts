@@ -20,6 +20,7 @@ export const useBorderWidthUtility = createUseUtility(
 	({ value }) => ({
 		borderWidth: value,
 	}),
+	{ namespace: "border-width" },
 );
 
 /**
@@ -31,6 +32,7 @@ export const useBorderWidthXUtility = createUseUtility(
 		borderLeftWidth: value,
 		borderRightWidth: value,
 	}),
+	{ namespace: "border-width" },
 );
 
 /**
@@ -42,6 +44,7 @@ export const useBorderWidthYUtility = createUseUtility(
 		borderTopWidth: value,
 		borderBottomWidth: value,
 	}),
+	{ namespace: "border-width" },
 );
 
 /**
@@ -52,6 +55,7 @@ export const useBorderWidthTopUtility = createUseUtility(
 	({ value }) => ({
 		borderTopWidth: value,
 	}),
+	{ namespace: "border-width" },
 );
 
 /**
@@ -62,6 +66,7 @@ export const useBorderWidthRightUtility = createUseUtility(
 	({ value }) => ({
 		borderRightWidth: value,
 	}),
+	{ namespace: "border-width" },
 );
 
 /**
@@ -72,6 +77,7 @@ export const useBorderWidthBottomUtility = createUseUtility(
 	({ value }) => ({
 		borderBottomWidth: value,
 	}),
+	{ namespace: "border-width" },
 );
 
 /**
@@ -82,6 +88,7 @@ export const useBorderWidthLeftUtility = createUseUtility(
 	({ value }) => ({
 		borderLeftWidth: value,
 	}),
+	{ namespace: "border-width" },
 );
 
 /**
@@ -92,6 +99,7 @@ export const useBorderWidthStartUtility = createUseUtility(
 	({ value }) => ({
 		borderInlineStartWidth: value,
 	}),
+	{ namespace: "border-width" },
 );
 
 /**
@@ -102,4 +110,5 @@ export const useBorderWidthEndUtility = createUseUtility(
 	({ value }) => ({
 		borderInlineEndWidth: value,
 	}),
+	{ namespace: "border-width" },
 );

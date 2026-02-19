@@ -20,4 +20,5 @@ export const useTextColorUtility = createUseUtility(
 	({ value }) => ({
 		color: value,
 	}),
+	{ namespace: ["text-color", "color"] },
 );

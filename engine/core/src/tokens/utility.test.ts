@@ -1127,6 +1127,571 @@ describe("createUtilityFunction", () => {
 			expect(root.children).toHaveLength(3);
 		});
 	});
+
+	describe("namespace variable existence check", () => {
+		test("should fall back to literal value when referenced variable does not exist", () => {
+			const createColorUtility = utility(
+				"color",
+				({ value }) => ({
+					color: value,
+				}),
+				{ namespace: "color" },
+			);
+
+			// No variables defined in root, so references fall back to literal key values
+			createColorUtility(["@primary", "@secondary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "primary", value: "primary", modifiers: [] },
+				{ key: "secondary", value: "secondary", modifiers: [] },
+			]);
+			expect(root.children).toHaveLength(2);
+
+			const primaryUtility = root.children.find(
+				(u) => isUtility(u) && u.name === "color" && u.value === "primary",
+			);
+			expect(primaryUtility).toEqual({
+				type: "utility",
+				name: "color",
+				value: "primary",
+				declarations: { color: "primary" },
+				variables: [],
+				children: [],
+				modifiers: [],
+			});
+		});
+
+		test("should use reference when variable exists in root", () => {
+			// Define variables in root
+			root.variables.push(
+				{ type: "variable", name: "color.primary", value: "#007bff" },
+				{ type: "variable", name: "color.secondary", value: "#6c757d" },
+			);
+
+			const createColorUtility = utility(
+				"color",
+				({ value }) => ({
+					color: value,
+				}),
+				{ namespace: "color" },
+			);
+
+			createColorUtility(["@primary", "@secondary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+				{
+					key: "secondary",
+					value: { type: "reference", name: "color.secondary" },
+					modifiers: [],
+				},
+			]);
+			expect(root.children).toHaveLength(2);
+		});
+
+		test("should use reference for existing variables and literal for non-existent ones", () => {
+			// Only define one variable
+			root.variables.push({
+				type: "variable",
+				name: "spacing.sm",
+				value: "0.5rem",
+			});
+
+			const createPaddingUtility = utility(
+				"padding",
+				({ value }) => ({
+					padding: value,
+				}),
+				{ namespace: "spacing" },
+			);
+
+			createPaddingUtility(["@sm", "@md", "@lg"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "sm",
+					value: { type: "reference", name: "spacing.sm" },
+					modifiers: [],
+				},
+				{ key: "md", value: "md", modifiers: [] },
+				{ key: "lg", value: "lg", modifiers: [] },
+			]);
+			expect(root.children).toHaveLength(3);
+		});
+
+		test("should not affect non-reference values when namespace is set", () => {
+			const createPaddingUtility = utility(
+				"padding",
+				({ value }) => ({
+					padding: value,
+				}),
+				{ namespace: "spacing" },
+			);
+
+			createPaddingUtility(["16px", "24px"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "[16px]", value: "16px", modifiers: [] },
+				{ key: "[24px]", value: "24px", modifiers: [] },
+			]);
+			expect(root.children).toHaveLength(2);
+		});
+
+		test("should not check variable existence when namespace is not set", () => {
+			const createColorUtility = utility("color", ({ value }) => ({
+				color: value,
+			}));
+
+			// No variables defined, but no namespace either — keeps reference as-is
+			createColorUtility(["@color.primary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "color.primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+			]);
+			expect(root.children).toHaveLength(1);
+		});
+
+		test("should fall back to literal for non-existent object entry references when namespace is set", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#007bff",
+			});
+
+			const createColorUtility = utility(
+				"color",
+				({ value }) => ({
+					color: value,
+				}),
+				{ namespace: "color" },
+			);
+
+			createColorUtility({
+				primary: { type: "reference", name: "color.primary" },
+				secondary: { type: "reference", name: "color.secondary" },
+				red: "red",
+			});
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+				{
+					key: "secondary",
+					value: "secondary",
+					modifiers: [],
+				},
+				{
+					key: "red",
+					value: "red",
+					modifiers: [],
+				},
+			]);
+			expect(root.children).toHaveLength(3);
+		});
+	});
+
+	describe("namespace array variable fallback", () => {
+		test("should fall back to second namespace when first namespace variable does not exist", () => {
+			// Only define color.primary, not border-color.primary
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#007bff",
+			});
+
+			const createBorderColorUtility = utility(
+				"border-color",
+				({ value }) => ({
+					borderColor: value,
+				}),
+				{ namespace: ["border-color", "color"] },
+			);
+
+			createBorderColorUtility(["@primary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+			]);
+		});
+
+		test("should use first namespace when its variable exists", () => {
+			// Define both namespaces
+			root.variables.push(
+				{
+					type: "variable",
+					name: "border-color.primary",
+					value: "#ff0000",
+				},
+				{ type: "variable", name: "color.primary", value: "#007bff" },
+			);
+
+			const createBorderColorUtility = utility(
+				"border-color",
+				({ value }) => ({
+					borderColor: value,
+				}),
+				{ namespace: ["border-color", "color"] },
+			);
+
+			createBorderColorUtility(["@primary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: {
+						type: "reference",
+						name: "border-color.primary",
+					},
+					modifiers: [],
+				},
+			]);
+		});
+
+		test("should fall back to literal when no namespace has matching variables", () => {
+			const createBorderColorUtility = utility(
+				"border-color",
+				({ value }) => ({
+					borderColor: value,
+				}),
+				{ namespace: ["border-color", "color"] },
+			);
+
+			createBorderColorUtility(["@primary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "primary", value: "primary", modifiers: [] },
+			]);
+		});
+
+		test("should handle mixed resolution across namespaces", () => {
+			root.variables.push(
+				{
+					type: "variable",
+					name: "border-color.danger",
+					value: "#dc3545",
+				},
+				{ type: "variable", name: "color.primary", value: "#007bff" },
+			);
+
+			const createBorderColorUtility = utility(
+				"border-color",
+				({ value }) => ({
+					borderColor: value,
+				}),
+				{ namespace: ["border-color", "color"] },
+			);
+
+			createBorderColorUtility(["@danger", "@primary", "@unknown"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "danger",
+					value: {
+						type: "reference",
+						name: "border-color.danger",
+					},
+					modifiers: [],
+				},
+				{
+					key: "primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+				{ key: "unknown", value: "unknown", modifiers: [] },
+			]);
+		});
+
+		test("should work with single-element namespace array", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#007bff",
+			});
+
+			const createColorUtility = utility(
+				"color",
+				({ value }) => ({
+					color: value,
+				}),
+				{ namespace: ["color"] },
+			);
+
+			createColorUtility(["@primary"]);
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+			]);
+		});
+	});
+
+	describe("namespace array autogenerate function", () => {
+		test("should resolve @ value to first namespace with defined variable", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#007bff",
+			});
+
+			utility("border-color", ({ value }) => ({ borderColor: value }), {
+				namespace: ["border-color", "color"],
+			});
+
+			const factory = root.utilities[0]!;
+			const result = factory.autogenerate("@primary");
+
+			expect(result).toEqual({
+				primary: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+
+		test("should prioritize first namespace when both have defined variables", () => {
+			root.variables.push(
+				{
+					type: "variable",
+					name: "border-color.primary",
+					value: "#ff0000",
+				},
+				{
+					type: "variable",
+					name: "color.primary",
+					value: "#007bff",
+				},
+			);
+
+			utility("border-color", ({ value }) => ({ borderColor: value }), {
+				namespace: ["border-color", "color"],
+			});
+
+			const factory = root.utilities[0]!;
+			const result = factory.autogenerate("@primary");
+
+			expect(result).toEqual({
+				primary: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+		});
+
+		test("should fall back to first namespace reference when no variable is defined", () => {
+			utility("border-color", ({ value }) => ({ borderColor: value }), {
+				namespace: ["border-color", "color"],
+			});
+
+			const factory = root.utilities[0]!;
+			const result = factory.autogenerate("@primary");
+
+			expect(result).toEqual({
+				primary: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+		});
+
+		test("should handle ref objects by stripping matching namespace prefix", () => {
+			utility("border-color", ({ value }) => ({ borderColor: value }), {
+				namespace: ["border-color", "color"],
+			});
+
+			const factory = root.utilities[0]!;
+			const ref = { type: "reference" as const, name: "color.primary" };
+			const result = factory.autogenerate(ref);
+
+			expect(result).toEqual({
+				primary: ref,
+			});
+		});
+
+		test("should handle ref objects with first namespace prefix", () => {
+			utility("border-color", ({ value }) => ({ borderColor: value }), {
+				namespace: ["border-color", "color"],
+			});
+
+			const factory = root.utilities[0]!;
+			const ref = {
+				type: "reference" as const,
+				name: "border-color.primary",
+			};
+			const result = factory.autogenerate(ref);
+
+			expect(result).toEqual({
+				primary: ref,
+			});
+		});
+
+		test("should handle arbitrary non-@ string values", () => {
+			utility("border-color", ({ value }) => ({ borderColor: value }), {
+				namespace: ["border-color", "color"],
+			});
+
+			const factory = root.utilities[0]!;
+			const result = factory.autogenerate("red");
+
+			expect(result).toEqual({
+				"[red]": "red",
+			});
+		});
+
+		test("should reflect variables added after utility creation", () => {
+			utility("border-color", ({ value }) => ({ borderColor: value }), {
+				namespace: ["border-color", "color"],
+			});
+
+			const factory = root.utilities[0]!;
+
+			// No variables defined yet — falls back to first namespace
+			const before = factory.autogenerate("@primary");
+			expect(before).toEqual({
+				primary: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+
+			// Add a variable after utility creation
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#007bff",
+			});
+
+			// Now it should resolve to the defined variable
+			const after = factory.autogenerate("@primary");
+			expect(after).toEqual({
+				primary: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+	});
+
+	describe("namespace array with object entries", () => {
+		test("should fall back to second namespace for ref objects passed directly", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#007bff",
+			});
+
+			const createBorderColorUtility = utility(
+				"border-color",
+				({ value }) => ({ borderColor: value }),
+				{ namespace: ["border-color", "color"] },
+			);
+
+			createBorderColorUtility({
+				primary: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: { type: "reference", name: "color.primary" },
+					modifiers: [],
+				},
+			]);
+		});
+
+		test("should use first namespace ref when its variable exists", () => {
+			root.variables.push({
+				type: "variable",
+				name: "border-color.primary",
+				value: "#ff0000",
+			});
+
+			const createBorderColorUtility = utility(
+				"border-color",
+				({ value }) => ({ borderColor: value }),
+				{ namespace: ["border-color", "color"] },
+			);
+
+			createBorderColorUtility({
+				primary: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: {
+						type: "reference",
+						name: "border-color.primary",
+					},
+					modifiers: [],
+				},
+			]);
+		});
+
+		test("should fall back to literal for object refs when no namespace has variable", () => {
+			const createBorderColorUtility = utility(
+				"border-color",
+				({ value }) => ({ borderColor: value }),
+				{ namespace: ["border-color", "color"] },
+			);
+
+			createBorderColorUtility({
+				primary: {
+					type: "reference",
+					name: "border-color.primary",
+				},
+			});
+
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "primary",
+					value: "primary",
+					modifiers: [],
+				},
+			]);
+		});
+
+		test("should not affect non-reference object values with namespace array", () => {
+			const createBorderColorUtility = utility(
+				"border-color",
+				({ value }) => ({ borderColor: value }),
+				{ namespace: ["border-color", "color"] },
+			);
+
+			createBorderColorUtility({
+				red: "red",
+				blue: "blue",
+			});
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "red", value: "red", modifiers: [] },
+				{ key: "blue", value: "blue", modifiers: [] },
+			]);
+		});
+	});
 });
 
 describe("createModifiedUtilityFunction", () => {

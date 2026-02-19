@@ -21,6 +21,7 @@ export const useBorderRadiusUtility = createUseUtility(
 	({ value }) => ({
 		borderRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -32,6 +33,7 @@ export const useBorderRadiusTopUtility = createUseUtility(
 		borderTopLeftRadius: value,
 		borderTopRightRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -43,6 +45,7 @@ export const useBorderRadiusRightUtility = createUseUtility(
 		borderTopRightRadius: value,
 		borderBottomRightRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -54,6 +57,7 @@ export const useBorderRadiusBottomUtility = createUseUtility(
 		borderBottomLeftRadius: value,
 		borderBottomRightRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -65,6 +69,7 @@ export const useBorderRadiusLeftUtility = createUseUtility(
 		borderTopLeftRadius: value,
 		borderBottomLeftRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -76,6 +81,7 @@ export const useBorderRadiusStartUtility = createUseUtility(
 		borderStartStartRadius: value,
 		borderEndStartRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -87,6 +93,7 @@ export const useBorderRadiusEndUtility = createUseUtility(
 		borderStartEndRadius: value,
 		borderEndEndRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -97,6 +104,7 @@ export const useBorderRadiusTopLeftUtility = createUseUtility(
 	({ value }) => ({
 		borderTopLeftRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -107,6 +115,7 @@ export const useBorderRadiusTopRightUtility = createUseUtility(
 	({ value }) => ({
 		borderTopRightRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -117,6 +126,7 @@ export const useBorderRadiusBottomRightUtility = createUseUtility(
 	({ value }) => ({
 		borderBottomRightRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -127,6 +137,7 @@ export const useBorderRadiusBottomLeftUtility = createUseUtility(
 	({ value }) => ({
 		borderBottomLeftRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -137,6 +148,7 @@ export const useBorderRadiusStartStartUtility = createUseUtility(
 	({ value }) => ({
 		borderStartStartRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -147,6 +159,7 @@ export const useBorderRadiusStartEndUtility = createUseUtility(
 	({ value }) => ({
 		borderStartEndRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -157,6 +170,7 @@ export const useBorderRadiusEndEndUtility = createUseUtility(
 	({ value }) => ({
 		borderEndEndRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );
 
 /**
@@ -167,4 +181,5 @@ export const useBorderRadiusEndStartUtility = createUseUtility(
 	({ value }) => ({
 		borderEndStartRadius: value,
 	}),
+	{ namespace: "border-radius" },
 );

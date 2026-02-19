@@ -31,6 +31,7 @@ export const useOutlineColorUtility = createUseUtility(
 	({ value }) => ({
 		outlineColor: value,
 	}),
+	{ namespace: ["outline-color", "color"] },
 );
 
 /**

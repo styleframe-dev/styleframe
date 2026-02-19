@@ -20,4 +20,6 @@ export interface Options {
 		/** Output directory for generated types (default: ".styleframe") */
 		outDir?: string;
 	};
+	/** Glob patterns for content files to scan for utility classes (Tailwind-style) */
+	content?: string[];
 }

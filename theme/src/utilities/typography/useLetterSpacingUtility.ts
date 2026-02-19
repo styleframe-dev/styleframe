@@ -21,4 +21,5 @@ export const useLetterSpacingUtility = createUseUtility(
 	({ value }) => ({
 		letterSpacing: value,
 	}),
+	{ namespace: "letter-spacing" },
 );

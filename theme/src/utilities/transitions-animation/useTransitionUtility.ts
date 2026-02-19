@@ -46,6 +46,7 @@ export const useTransitionTimingFunctionUtility = createUseUtility(
 	({ value }) => ({
 		transitionTimingFunction: value,
 	}),
+	{ namespace: "easing" },
 );
 
 /**

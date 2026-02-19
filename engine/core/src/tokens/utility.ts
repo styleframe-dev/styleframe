@@ -1,9 +1,11 @@
 import { transformUtilityKey } from "../defaults";
-import { isModifier } from "../typeGuards";
+import { isModifier, isRef } from "../typeGuards";
 import type {
 	Container,
 	ModifierFactory,
+	Reference,
 	Root,
+	TokenValue,
 	Utility,
 	UtilityAutogenerateFn,
 	UtilityCallbackFn,
@@ -16,18 +18,64 @@ import {
 } from "./declarations";
 import { applyModifiers, combineKeys } from "./modifier";
 
+/**
+ * Create an autogenerate function for namespace arrays that resolves
+ * against root.variables to pick the first namespace with a defined variable.
+ */
+function createNamespaceAutogenerate(
+	namespaces: string[],
+	root: Root,
+): UtilityAutogenerateFn {
+	const baseTransform = transformUtilityKey({ namespace: namespaces });
+
+	return (value: TokenValue): Record<string, TokenValue> => {
+		if (typeof value === "string" && value[0] === "@") {
+			const variableName = value.slice(1);
+
+			// Try each namespace and pick the first with a defined variable
+			for (const ns of namespaces) {
+				const candidateName = `${ns}.${variableName}`;
+				if (root.variables.some((v) => v.name === candidateName)) {
+					return {
+						[variableName]: {
+							type: "reference",
+							name: candidateName,
+						} satisfies Reference<string>,
+					};
+				}
+			}
+
+			// No variable found — fall back to first namespace as default
+			return baseTransform(value);
+		}
+
+		// For non-@ values (refs, arbitrary), delegate to base transform
+		return baseTransform(value);
+	};
+}
+
 export function createUtilityFunction(parent: Container, root: Root) {
 	return function utility<Name extends string>(
 		name: Name,
 		factory: UtilityCallbackFn,
-		options: { autogenerate?: UtilityAutogenerateFn } = {},
+		options: {
+			autogenerate?: UtilityAutogenerateFn;
+			namespace?: string | string[];
+		} = {},
 	): UtilityCreatorFn {
 		const factoryInstance: UtilityFactory<Name> = {
 			type: "utility",
 			name,
 			factory,
 			values: [],
-			autogenerate: options.autogenerate ?? transformUtilityKey(),
+			autogenerate:
+				options.autogenerate ??
+				(Array.isArray(options.namespace)
+					? createNamespaceAutogenerate(options.namespace, root)
+					: transformUtilityKey(
+							options.namespace ? { namespace: options.namespace } : undefined,
+						)),
+			namespace: options.namespace,
 			create: (entries, modifiers = []) => {
 				let resolvedEntries = entries;
 
@@ -51,7 +99,39 @@ export function createUtilityFunction(parent: Container, root: Root) {
 					}
 				}
 
-				for (const [key, value] of Object.entries(resolvedEntries)) {
+				for (const [key, entryValue] of Object.entries(resolvedEntries)) {
+					let value = entryValue;
+
+					if (factoryInstance.namespace && isRef(entryValue)) {
+						if (root.variables.some((v) => v.name === entryValue.name)) {
+							value = entryValue;
+						} else {
+							const namespaces = Array.isArray(factoryInstance.namespace)
+								? factoryInstance.namespace
+								: [factoryInstance.namespace];
+
+							let found = false;
+							for (const ns of namespaces) {
+								const candidateName = `${ns}.${key}`;
+								if (
+									candidateName !== entryValue.name &&
+									root.variables.some((v) => v.name === candidateName)
+								) {
+									value = {
+										type: "reference",
+										name: candidateName,
+									} satisfies Reference<string>;
+									found = true;
+									break;
+								}
+							}
+
+							if (!found) {
+								value = key;
+							}
+						}
+					}
+
 					const existingEntry = factoryInstance.values.find(
 						(entry) => entry.key === key && entry.modifiers.length === 0,
 					);

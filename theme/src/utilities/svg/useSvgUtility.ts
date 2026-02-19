@@ -13,16 +13,24 @@ import { createUseUtility } from "../../utils";
  * });
  * ```
  */
-export const useFillUtility = createUseUtility("fill", ({ value }) => ({
-	fill: value,
-}));
+export const useFillUtility = createUseUtility(
+	"fill",
+	({ value }) => ({
+		fill: value,
+	}),
+	{ namespace: ["fill", "color"] },
+);
 
 /**
  * Create stroke utility classes for SVG elements.
  */
-export const useStrokeUtility = createUseUtility("stroke", ({ value }) => ({
-	stroke: value,
-}));
+export const useStrokeUtility = createUseUtility(
+	"stroke",
+	({ value }) => ({
+		stroke: value,
+	}),
+	{ namespace: ["stroke", "color"] },
+);
 
 /**
  * Create stroke-width utility classes for SVG elements.

@@ -18,4 +18,5 @@ export const useFontFamilyUtility = createUseUtility(
 	({ value }) => ({
 		fontFamily: value,
 	}),
+	{ namespace: "font-family" },
 );

@@ -21,6 +21,7 @@ export const useMarginUtility = createUseSpacingUtility(
 	({ value }) => ({
 		margin: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -32,6 +33,7 @@ export const useMarginInlineUtility = createUseSpacingUtility(
 		marginLeft: value,
 		marginRight: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -43,6 +45,7 @@ export const useMarginBlockUtility = createUseSpacingUtility(
 		marginTop: value,
 		marginBottom: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -53,6 +56,7 @@ export const useMarginTopUtility = createUseSpacingUtility(
 	({ value }) => ({
 		marginTop: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -63,6 +67,7 @@ export const useMarginRightUtility = createUseSpacingUtility(
 	({ value }) => ({
 		marginRight: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -73,6 +78,7 @@ export const useMarginBottomUtility = createUseSpacingUtility(
 	({ value }) => ({
 		marginBottom: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -83,6 +89,7 @@ export const useMarginLeftUtility = createUseSpacingUtility(
 	({ value }) => ({
 		marginLeft: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -93,6 +100,7 @@ export const useMarginInlineStartUtility = createUseSpacingUtility(
 	({ value }) => ({
 		marginInlineStart: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -103,6 +111,7 @@ export const useMarginInlineEndUtility = createUseSpacingUtility(
 	({ value }) => ({
 		marginInlineEnd: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -114,6 +123,7 @@ export const useMarginXUtility = createUseSpacingUtility(
 		marginLeft: value,
 		marginRight: value,
 	}),
+	{ namespace: "spacing" },
 );
 
 /**
@@ -125,4 +135,5 @@ export const useMarginYUtility = createUseSpacingUtility(
 		marginTop: value,
 		marginBottom: value,
 	}),
+	{ namespace: "spacing" },
 );

@@ -30,6 +30,13 @@ import {
 	generateGlobalCSS,
 	generateTypeDeclarations,
 } from "./generate";
+import {
+	createPluginScanner,
+	scanAndRegister,
+	scanFileAndRegister,
+	isContentFile,
+	type PluginScannerState,
+} from "./scanner";
 
 // Matches the source file: ./button.styleframe.ts
 const STYLEFRAME_SOURCE_REGEX = /\.styleframe\.ts$/;
@@ -49,6 +56,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	const state = createPluginState(configPath);
 
 	let isBuildCommand = false;
+
+	// Scanner state (created if content option is provided)
+	let scannerState: PluginScannerState | null = null;
 
 	// Debounce timeout for type generation
 	let typeGenTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -101,15 +111,28 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				// 4. Load all styleframe files
 				await loadAllStyleframeFiles(state, sortedFiles);
 
-				// 5. Add watch files
+				// 5. Scan content files and auto-register utilities
+				if (options.content?.length) {
+					scannerState = createPluginScanner(options.content, cwd);
+					await scanAndRegister(state, scannerState, {
+						silent: options.silent,
+					});
+				}
+
+				// 6. Add watch files
 				this.addWatchFile(configPath);
 				for (const file of sortedFiles) {
 					this.addWatchFile(file);
 				}
+				if (scannerState) {
+					for (const file of scannerState.scannedFiles) {
+						this.addWatchFile(file);
+					}
+				}
 
 				state.initialized = true;
 
-				// 6. Generate type declarations
+				// 7. Generate type declarations
 				if (options.dts?.enabled !== false) {
 					await generateTypeDeclarations(
 						state,
@@ -210,6 +233,13 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 								);
 							}
 
+							// Re-scan content after new styleframe file
+							if (scannerState) {
+								await scanAndRegister(state, scannerState, {
+									silent: options.silent,
+								});
+							}
+
 							// Invalidate consumer and CSS modules
 							const consumerMod = server.moduleGraph.getModuleById(
 								RESOLVED_VIRTUAL_CONSUMER_ID,
@@ -257,6 +287,13 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 							// Reload everything to rebuild the global instance without the deleted file's contributions
 							await reloadAll(state, remainingFiles);
 
+							// Re-scan content after reload (scanner values were cleared)
+							if (scannerState) {
+								await scanAndRegister(state, scannerState, {
+									silent: options.silent,
+								});
+							}
+
 							// Invalidate consumer and CSS modules
 							const consumerMod = server.moduleGraph.getModuleById(
 								RESOLVED_VIRTUAL_CONSUMER_ID,
@@ -301,6 +338,13 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					try {
 						const files = [...state.files.keys()];
 						await reloadAll(state, files);
+
+						// Re-scan content after reload (scanner values were cleared)
+						if (scannerState) {
+							await scanAndRegister(state, scannerState, {
+								silent: options.silent,
+							});
+						}
 
 						// Invalidate all virtual modules
 						const cssModule = await getModuleById(
@@ -348,6 +392,13 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						const files = [...state.files.keys()];
 						await reloadAll(state, files);
 
+						// Re-scan content after reload (scanner values were cleared)
+						if (scannerState) {
+							await scanAndRegister(state, scannerState, {
+								silent: options.silent,
+							});
+						}
+
 						// Invalidate CSS and consumer modules
 						const cssModule = await getModuleById(
 							RESOLVED_VIRTUAL_CSS_MODULE_ID,
@@ -368,6 +419,34 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						}
 					} catch (error) {
 						consola.error(`[styleframe] Failed to reload: ${ctx.file}`, error);
+					}
+
+					return ctx.modules;
+				}
+
+				// Content file change → incremental scan and register new utilities
+				if (isContentFile(scannerState, ctx.file)) {
+					try {
+						const hasNewValues = await scanFileAndRegister(
+							state,
+							scannerState!,
+							ctx.file,
+						);
+
+						if (hasNewValues) {
+							const cssModule = await getModuleById(
+								RESOLVED_VIRTUAL_CSS_MODULE_ID,
+							);
+
+							if (cssModule) {
+								return [cssModule, ...ctx.modules];
+							}
+						}
+					} catch (error) {
+						consola.error(
+							`[styleframe] Failed to scan content file: ${ctx.file}`,
+							error,
+						);
 					}
 
 					return ctx.modules;

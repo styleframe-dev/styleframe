@@ -35,6 +35,8 @@ export interface CreateMultiplierAutogenerateOptions {
 	fallback?: string;
 	/** Optional key replacer function for non-multiplier values */
 	replacer?: (key: string) => string;
+	/** Optional namespace for token references (e.g., "spacing" makes "@sm" resolve to ref("spacing.sm")) */
+	namespace?: string | string[];
 }
 
 /**
@@ -66,8 +68,10 @@ export interface CreateMultiplierAutogenerateOptions {
 export function createMultiplierAutogenerate(
 	options: CreateMultiplierAutogenerateOptions,
 ): UtilityAutogenerateFn {
-	const { s, baseVariable, fallback, replacer = (v) => v } = options;
-	const defaultAutogenerate = transformUtilityKey(replacer);
+	const { s, baseVariable, fallback, replacer = (v) => v, namespace } = options;
+	const defaultAutogenerate = transformUtilityKey(
+		namespace ? { replacer, namespace } : replacer,
+	);
 
 	return (value: TokenValue): Record<string, TokenValue> => {
 		// Handle @-prefixed numeric multiplier values (e.g., "@1.5", "@2", "@-1")

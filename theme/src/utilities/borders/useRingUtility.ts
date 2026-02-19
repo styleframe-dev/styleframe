@@ -48,6 +48,7 @@ export const useRingColorUtility = createUseUtility(
 	({ value }) => ({
 		"--box-shadow-ring-color": value,
 	}),
+	{ namespace: ["ring-color", "color"] },
 );
 
 /**
@@ -68,4 +69,5 @@ export const useRingOffsetColorUtility = createUseUtility(
 	({ value }) => ({
 		"--box-shadow-ring-offset-color": value,
 	}),
+	{ namespace: ["ring-offset-color", "color"] },
 );
