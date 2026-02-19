@@ -66,7 +66,7 @@ export function createStarterVitePackage(
 	cwd: string,
 	{
 		outputDir = "tmp/vite",
-		template = "vanilla-ts",
+		template = "vue-ts",
 	}: {
 		outputDir?: string;
 		template?: string;
@@ -78,7 +78,7 @@ export function createStarterVitePackage(
 		cwd,
 	});
 
-	shell.exec("rm src/*", { cwd: targetDir });
+	shell.exec("rm -rf src/*", { cwd: targetDir });
 
 	return targetDir;
 }
@@ -107,10 +107,13 @@ export function installStyleframeUsingCLI(
 
 	console.log(JSON.stringify(packageJSON, null, 2));
 
-	// Now install styleframe with overrides already in place
-	shell.exec(`npm install -D ${packageToTarballMap["styleframe"]}`, {
-		cwd,
-	});
+	// Now install styleframe and vue-router with overrides already in place
+	shell.exec(
+		`npm install -D ${packageToTarballMap["styleframe"]} && npm install vue-router`,
+		{
+			cwd,
+		},
+	);
 
 	fs.writeFileSync(`${cwd}/vite.config.ts`, DEFAULT_VITE_CONFIG);
 
@@ -122,10 +125,11 @@ export function installStyleframeUsingCLI(
 	assert.equal(
 		viteConfigContent,
 		`import styleframe from "styleframe/plugin/vite";
+import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [styleframe()]
+  plugins: [styleframe(), vue()]
 });`,
 	);
 }
@@ -138,7 +142,7 @@ export function addStyleframeConfig(cwd: string, projectDir: string) {
 		`${projectDir}/styleframe.config.ts`,
 	);
 
-	fs.copyFileSync(`${fixturesDir}/main.ts`, `${projectDir}/src/main.ts`);
+	shell.cp("-R", `${fixturesDir}/src/*`, `${projectDir}/src/`);
 }
 
 export function buildVite(cwd: string) {

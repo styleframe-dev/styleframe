@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test("h1 element has correct class and styles", async ({ page }) => {
-	await page.goto("/");
+	await page.goto("/#/selectors");
 
 	const h1Element = page.locator("h1");
 

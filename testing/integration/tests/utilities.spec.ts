@@ -1,8 +1,11 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Utility Classes", () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto("/#/utilities");
+	});
+
 	test("margin utility applies correct spacing", async ({ page }) => {
-		await page.goto("/");
 		const element = page.locator("#test-margin");
 		const margin = await element.evaluate(
 			(el) => window.getComputedStyle(el).margin,
@@ -11,7 +14,6 @@ test.describe("Utility Classes", () => {
 	});
 
 	test("padding utility applies correct spacing", async ({ page }) => {
-		await page.goto("/");
 		const element = page.locator("#test-padding");
 		const padding = await element.evaluate(
 			(el) => window.getComputedStyle(el).padding,
@@ -20,7 +22,6 @@ test.describe("Utility Classes", () => {
 	});
 
 	test("background utility applies correct color", async ({ page }) => {
-		await page.goto("/");
 		const element = page.locator("#test-bg");
 		const bg = await element.evaluate(
 			(el) => window.getComputedStyle(el).backgroundColor,
@@ -29,7 +30,6 @@ test.describe("Utility Classes", () => {
 	});
 
 	test("text utility applies correct color", async ({ page }) => {
-		await page.goto("/");
 		const element = page.locator("#test-text");
 		const color = await element.evaluate(
 			(el) => window.getComputedStyle(el).color,
@@ -38,7 +38,6 @@ test.describe("Utility Classes", () => {
 	});
 
 	test("combined utilities all apply correctly", async ({ page }) => {
-		await page.goto("/");
 		const element = page.locator("#test-combined");
 
 		const styles = await element.evaluate((el) => {
