@@ -14,6 +14,8 @@
 	},
 	"scripts": {
 		"start": "tsx src/main.ts",
+		"setup": "tsx src/setup.ts",
+		"update": "tsx src/update.ts",
 		"dev": "vite build --watch",
 		"build": "pnpm typecheck && vite build",
 		"typecheck": "tsc --noEmit",
