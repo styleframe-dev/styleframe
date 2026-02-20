@@ -129,7 +129,7 @@ import vue from "@vitejs/plugin-vue";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [styleframe(), vue()]
+  plugins: [vue(), styleframe()],
 });`,
 	);
 }
@@ -142,11 +142,16 @@ export function addStyleframeConfig(cwd: string, projectDir: string) {
 		`${projectDir}/styleframe.config.ts`,
 	);
 
+	fs.copyFileSync(
+		`${fixturesDir}/vite.config.ts`,
+		`${projectDir}/vite.config.ts`,
+	);
+
 	shell.cp("-R", `${fixturesDir}/src/*`, `${projectDir}/src/`);
 }
 
 export function buildVite(cwd: string) {
-	shell.exec(`npm run build`, {
+	shell.exec(`npx vite build`, {
 		cwd,
 	});
 }

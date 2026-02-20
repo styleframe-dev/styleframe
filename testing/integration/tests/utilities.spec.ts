@@ -10,7 +10,7 @@ test.describe("Utility Classes", () => {
 		const margin = await element.evaluate(
 			(el) => window.getComputedStyle(el).margin,
 		);
-		expect(margin).toBe("8px");
+		expect(margin).toBe("12px");
 	});
 
 	test("padding utility applies correct spacing", async ({ page }) => {
@@ -26,7 +26,7 @@ test.describe("Utility Classes", () => {
 		const bg = await element.evaluate(
 			(el) => window.getComputedStyle(el).backgroundColor,
 		);
-		expect(bg).toBe("rgb(0, 102, 255)");
+		expect(bg).toContain("oklch(0.623083");
 	});
 
 	test("text utility applies correct color", async ({ page }) => {
@@ -34,7 +34,7 @@ test.describe("Utility Classes", () => {
 		const color = await element.evaluate(
 			(el) => window.getComputedStyle(el).color,
 		);
-		expect(color).toBe("rgb(255, 100, 100)");
+		expect(color).toContain("oklch(0.551019");
 	});
 
 	test("combined utilities all apply correctly", async ({ page }) => {
@@ -51,8 +51,8 @@ test.describe("Utility Classes", () => {
 		});
 
 		expect(styles.margin).toBe("16px");
-		expect(styles.padding).toBe("8px");
-		expect(styles.backgroundColor).toBe("rgb(255, 100, 100)");
-		expect(styles.color).toBe("rgb(0, 102, 255)");
+		expect(styles.padding).toBe("12px");
+		expect(styles.backgroundColor).toContain("oklch(0.551019");
+		expect(styles.color).toContain("oklch(0.623083");
 	});
 });

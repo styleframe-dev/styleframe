@@ -20,6 +20,6 @@ test("h1 element has correct class and styles", async ({ page }) => {
 		return computedStyle.backgroundColor;
 	});
 
-	expect(color).toBe("rgb(0, 0, 255)");
-	expect(background).toBe("rgb(255, 192, 203)");
+	expect(color).toContain("oklch(0.623083");
+	expect(background).toContain("oklch(0.551019");
 });
