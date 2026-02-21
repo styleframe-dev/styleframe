@@ -226,6 +226,107 @@ describe("parseDeclarationsBlock", () => {
 			expect(mockContext.selector).toHaveBeenCalledWith(".child", {});
 		});
 	});
+
+	describe("@ reference resolution", () => {
+		it("should resolve @-prefixed string values to references", () => {
+			const refResult = { type: "reference", name: "color.primary" };
+			mockContext.ref.mockReturnValue(refResult);
+
+			const declarations: any = {
+				color: "@color.primary",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext);
+
+			expect(mockContext.ref).toHaveBeenCalledWith("color.primary");
+			expect(declarations.color).toEqual(refResult);
+		});
+
+		it("should resolve multiple @-prefixed values", () => {
+			mockContext.ref.mockImplementation((name: string) => ({
+				type: "reference",
+				name,
+			}));
+
+			const declarations: any = {
+				gap: "@spacing.md",
+				padding: "@spacing.lg",
+				color: "@color.dark",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext);
+
+			expect(mockContext.ref).toHaveBeenCalledTimes(3);
+			expect(declarations.gap).toEqual({
+				type: "reference",
+				name: "spacing.md",
+			});
+			expect(declarations.padding).toEqual({
+				type: "reference",
+				name: "spacing.lg",
+			});
+			expect(declarations.color).toEqual({
+				type: "reference",
+				name: "color.dark",
+			});
+		});
+
+		it("should not affect regular string values", () => {
+			const declarations: any = {
+				display: "flex",
+				color: "blue",
+				fontSize: "16px",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext);
+
+			expect(mockContext.ref).not.toHaveBeenCalled();
+			expect(declarations.display).toBe("flex");
+			expect(declarations.color).toBe("blue");
+			expect(declarations.fontSize).toBe("16px");
+		});
+
+		it("should not affect non-string values", () => {
+			const declarations: any = {
+				opacity: 0.8,
+				zIndex: 10,
+			};
+
+			parseDeclarationsBlock(declarations, mockContext);
+
+			expect(mockContext.ref).not.toHaveBeenCalled();
+			expect(declarations.opacity).toBe(0.8);
+			expect(declarations.zIndex).toBe(10);
+		});
+
+		it("should handle mixed @ references and regular values", () => {
+			mockContext.ref.mockImplementation((name: string) => ({
+				type: "reference",
+				name,
+			}));
+
+			const declarations: any = {
+				display: "flex",
+				gap: "@spacing.md",
+				color: "blue",
+				fontSize: "@font-size.sm",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext);
+
+			expect(mockContext.ref).toHaveBeenCalledTimes(2);
+			expect(declarations.display).toBe("flex");
+			expect(declarations.gap).toEqual({
+				type: "reference",
+				name: "spacing.md",
+			});
+			expect(declarations.color).toBe("blue");
+			expect(declarations.fontSize).toEqual({
+				type: "reference",
+				name: "font-size.sm",
+			});
+		});
+	});
 });
 
 describe("createDeclarationsCallbackContext", () => {

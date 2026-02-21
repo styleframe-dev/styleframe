@@ -60,8 +60,8 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 		},
 		size: {
 			xs: {
-				fontSize: "8px",
-				lineHeight: "12px",
+				fontSize: "@font-size.3xs",
+				lineHeight: "@line-height.normal",
 				paddingTop: "@0.125",
 				paddingBottom: "@0.125",
 				paddingLeft: "@spacing.2xs",
@@ -70,8 +70,8 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 				borderRadius: "@border-radius.sm",
 			},
 			sm: {
-				fontSize: "10px",
-				lineHeight: "12px",
+				fontSize: "@font-size.2xs",
+				lineHeight: "@line-height.tight",
 				paddingTop: "@spacing.2xs",
 				paddingBottom: "@spacing.2xs",
 				paddingLeft: "@0.375",

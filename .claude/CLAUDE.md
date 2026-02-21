@@ -19,6 +19,7 @@ export default s;
 ### Variable Naming Convention
 - Use dot notation: `color.primary` becomes CSS `--color--primary`
 - ALWAYS use `ref()` to reference variables in declarations
+- For string references, use the `@` prefix syntax: `"@spacing.md"`, `"@color.primary"`, `"@font-size.sm"`
 - Use `{ default: true }` for variables in reusable composables
 - NEVER hardcode values that should be tokens
 
@@ -44,6 +45,7 @@ const spacing = variable('spacing', '1rem', { default: true }); // For composabl
 ```ts
 backgroundColor: ref(colorPrimary)
 color: ref('color.text', '#000') // String ref with fallback
+color: "@color.primary" // @-prefixed string ref (shorthand)
 ```
 
 ### selector(query, declarations)

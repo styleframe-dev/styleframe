@@ -20,29 +20,29 @@ export const badge = useBadgeRecipe(s);
 s.selector(".badge-grid", {
 	display: "flex",
 	flexWrap: "wrap",
-	gap: "16px",
-	padding: "16px",
+	gap: "@spacing.md",
+	padding: "@spacing.md",
 	alignItems: "center",
 });
 
 s.selector(".badge-section", {
 	display: "flex",
 	flexDirection: "column",
-	gap: "24px",
-	padding: "16px",
+	gap: "@spacing.lg",
+	padding: "@spacing.md",
 });
 
 s.selector(".badge-row", {
 	display: "flex",
 	flexWrap: "wrap",
-	gap: "12px",
+	gap: "@spacing.sm",
 	alignItems: "center",
 });
 
 s.selector(".badge-label", {
-	fontSize: "14px",
-	fontWeight: "600",
-	color: "#374151",
+	fontSize: "@font-size.sm",
+	fontWeight: "@font-weight.semibold",
+	color: "@color.dark",
 	minWidth: "80px",
 });
 

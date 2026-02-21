@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { h, defineComponent } from "vue";
 
-import { badge } from "virtual:styleframe";
+import Badge from "./components/Badge.vue";
+import BadgeGrid from "./components/BadgeGrid.vue";
+import BadgeSizeGrid from "./components/BadgeSizeGrid.vue";
 
 const colors = [
 	"primary",
@@ -13,102 +14,6 @@ const colors = [
 ] as const;
 const variants = ["solid", "outline", "soft", "subtle"] as const;
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
-
-type Color = (typeof colors)[number];
-type Variant = (typeof variants)[number];
-type Size = (typeof sizes)[number];
-
-const Badge = defineComponent({
-	name: "Badge",
-	props: {
-		color: {
-			type: String as () => Color,
-			default: "primary",
-		},
-		variant: {
-			type: String as () => Variant,
-			default: "solid",
-		},
-		size: {
-			type: String as () => Size,
-			default: "sm",
-		},
-		label: {
-			type: String,
-			default: "Badge",
-		},
-	},
-	setup(props) {
-		return () =>
-			h(
-				"span",
-				{
-					class: badge({
-						color: props.color,
-						variant: props.variant,
-						size: props.size,
-					}),
-				},
-				props.label,
-			);
-	},
-});
-
-const BadgeGrid = defineComponent({
-	name: "BadgeGrid",
-	setup() {
-		return () =>
-			h(
-				"div",
-				{ class: "badge-section" },
-				variants.map((variant) =>
-					h("div", { key: variant }, [
-						h("div", { class: "badge-label" }, variant),
-						h(
-							"div",
-							{ class: "badge-row" },
-							colors.map((color) =>
-								h(Badge, {
-									key: `${variant}-${color}`,
-									color,
-									variant,
-									label: color,
-								}),
-							),
-						),
-					]),
-				),
-			);
-	},
-});
-
-const SizeGrid = defineComponent({
-	name: "SizeGrid",
-	setup() {
-		return () =>
-			h(
-				"div",
-				{ class: "badge-section" },
-				sizes.map((size) =>
-					h("div", { key: size }, [
-						h("div", { class: "badge-label" }, size),
-						h(
-							"div",
-							{ class: "badge-row" },
-							colors.map((color) =>
-								h(Badge, {
-									key: `${size}-${color}`,
-									color,
-									size,
-									label: color,
-								}),
-							),
-						),
-					]),
-				),
-			);
-	},
-});
 
 const meta = {
 	title: "Theme/Recipes/useBadgeRecipe",
@@ -158,8 +63,8 @@ export const AllVariants: StoryObj = {
 
 export const AllSizes: StoryObj = {
 	render: () => ({
-		components: { SizeGrid },
-		template: "<SizeGrid />",
+		components: { BadgeSizeGrid },
+		template: "<BadgeSizeGrid />",
 	}),
 };
 

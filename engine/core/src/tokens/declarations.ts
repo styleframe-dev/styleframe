@@ -72,5 +72,13 @@ export function parseDeclarationsBlock(
 		}
 	}
 
+	// Resolve @-prefixed string values to variable references
+	for (const key in declarations) {
+		const value = declarations[key];
+		if (typeof value === "string" && value[0] === "@") {
+			declarations[key] = context.ref(value.slice(1));
+		}
+	}
+
 	return declarations;
 }
