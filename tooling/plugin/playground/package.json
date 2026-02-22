@@ -8,9 +8,9 @@
 		"start": "vite"
 	},
 	"devDependencies": {
-		"@styleframe/runtime": "workspace:^2.0.0",
-		"@styleframe/theme": "workspace:^2.5.0",
-		"styleframe": "workspace:^2.6.0",
+		"@styleframe/runtime": "workspace:^3.0.0",
+		"@styleframe/theme": "workspace:^3.0.0",
+		"styleframe": "workspace:^3.0.0",
 		"vite": "^6.3.5",
 		"vite-plugin-inspect": "^11.1.0"
 	}
