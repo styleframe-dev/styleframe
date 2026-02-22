@@ -1,12 +1,8 @@
+import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+const projectDir =
+	process.env.PROJECT_DIR || path.join(import.meta.dirname, ".app");
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -72,7 +68,7 @@ export default defineConfig({
 
 	/* Run your local dev server before starting the tests */
 	webServer: {
-		command: `cd ${process.env.PROJECT_DIR} && npm run preview`,
+		command: `cd ${projectDir} && npm run preview`,
 		url: "http://localhost:4173",
 		reuseExistingServer: !process.env.CI,
 		stdout: "ignore",
