@@ -234,7 +234,7 @@ function transformDeclarationsToRuntime(
 					);
 				}
 			}
-			result[key] = modifierResult;
+			result[stripSelectorPrefix(key)] = modifierResult;
 		} else if (typeof value === "boolean") {
 			result[key] = value;
 		} else {
@@ -334,6 +334,17 @@ function isModifierBlock(
 }
 
 /**
+ * Strips the leading "&:" or "&::" CSS selector prefix from a modifier block key.
+ * This allows recipe declarations to use CSS-like syntax ("&:hover")
+ * interchangeably with bare modifier names ("hover").
+ */
+function stripSelectorPrefix(key: string): string {
+	if (key.startsWith("&::")) return key.slice(3);
+	if (key.startsWith("&:")) return key.slice(2);
+	return key;
+}
+
+/**
  * Collects all values for a given utility key from a declarations block.
  * Handles modifier blocks (one level deep) by extracting compound modifier keys.
  *
@@ -359,7 +370,7 @@ function collectDeclarationsValues(
 
 	for (const [key, value] of Object.entries(declarations)) {
 		if (isModifierBlock(value)) {
-			const modifiers = key.split(":");
+			const modifiers = stripSelectorPrefix(key).split(":");
 			for (const [utilityKey, utilityValue] of Object.entries(value)) {
 				addUtilityEntry(utilityKey, utilityValue, modifiers);
 			}
