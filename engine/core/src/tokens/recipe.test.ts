@@ -686,6 +686,146 @@ describe("processRecipeUtilities", () => {
 			warnSpy.mockRestore();
 		});
 
+		test("should strip '&:' prefix and treat '&:hover' the same as 'hover' in base", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				base: {
+					background: "blue",
+					"&:hover": {
+						boxShadow: "lg",
+					},
+				},
+				variants: {},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const boxShadowUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "boxShadow",
+			);
+
+			const hoverBoxShadow = boxShadowUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBoxShadow).toBeDefined();
+		});
+
+		test("should strip '&:' prefix in compound variant modifier blocks", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				variants: {
+					color: {
+						primary: {},
+					},
+					disabled: {
+						false: {},
+					},
+				},
+				compoundVariants: [
+					{
+						match: { color: "primary", disabled: "false" },
+						css: {
+							"&:hover": {
+								background: "primary-shade-50",
+							},
+						},
+					},
+				],
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+
+			const hoverBackground = backgroundUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBackground).toBeDefined();
+		});
+
+		test("should strip '&:' prefix in variant declarations", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				variants: {
+					color: {
+						primary: {
+							background: "blue",
+							"&:hover": {
+								background: "darkblue",
+							},
+						},
+					},
+				},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+
+			const hoverBackground = backgroundUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBackground).toBeDefined();
+		});
+
+		test("should not warn about '&' modifier when using '&:' prefix syntax", () => {
+			const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+			utility("textDecoration", ({ value }) => ({
+				textDecoration: value,
+			}));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "link",
+				variants: {
+					color: {
+						primary: {},
+					},
+				},
+				compoundVariants: [
+					{
+						match: { color: "primary" },
+						css: {
+							"&:hover": {
+								textDecoration: "underline",
+							},
+						},
+					},
+				],
+			});
+
+			processRecipeUtilities(instance, root);
+
+			expect(warnSpy).not.toHaveBeenCalledWith(
+				expect.stringContaining('Modifier "&"'),
+			);
+
+			warnSpy.mockRestore();
+		});
+
 		test("should collect modifiers across multiple declarations", () => {
 			utility("background", ({ value }) => ({ background: value }));
 			utility("color", ({ value }) => ({ color: value }));
@@ -1002,6 +1142,103 @@ describe("generateRecipeRuntime", () => {
 				},
 			},
 		]);
+	});
+
+	test("should normalize '&:hover' to 'hover' in base runtime", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+
+		const instance = recipe({
+			name: "card",
+			base: {
+				boxShadow: "@shadow.md",
+				"&:hover": {
+					boxShadow: "@shadow.lg",
+				},
+			},
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			boxShadow: "shadow.md",
+			hover: {
+				boxShadow: "shadow.lg",
+			},
+		});
+	});
+
+	test("should normalize '&:hover' to 'hover' in compound variant runtime", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: { background: "@color.primary" },
+				},
+				disabled: {
+					false: {},
+				},
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary", disabled: "false" },
+					css: {
+						"&:hover": {
+							background: "@color.primary-dark",
+						},
+					},
+				},
+			],
+		});
+
+		expect(instance._runtime?.compoundVariants).toEqual([
+			{
+				match: { color: "primary", disabled: "false" },
+				css: {
+					hover: {
+						background: "color.primary-dark",
+					},
+				},
+			},
+		]);
+	});
+
+	test("should normalize '&:hover' to 'hover' in variant runtime", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: {
+						background: "@color.primary",
+						"&:hover": {
+							background: "@color.primary-dark",
+						},
+					},
+				},
+			},
+		});
+
+		expect(instance._runtime?.variants).toEqual({
+			color: {
+				primary: {
+					background: "color.primary",
+					hover: {
+						background: "color.primary-dark",
+					},
+				},
+			},
+		});
 	});
 
 	test("should use custom autogenerate function to resolve keys", () => {
