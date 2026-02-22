@@ -258,4 +258,46 @@ describe("createUseSpacingUtility", () => {
 
 		expect(s.root.children).toHaveLength(0);
 	});
+
+	describe("utilityOptions.name override", () => {
+		it("should override the utility name", () => {
+			const useMargin = createUseSpacingUtility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			const s = styleframe();
+			s.variable("spacing", "1rem");
+
+			useMargin(s, { sm: "0.5rem" }, undefined, { name: "m" });
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("._m\\:sm {");
+			expect(css).not.toContain("._margin");
+		});
+
+		it("should override the utility name for multiplier values", () => {
+			const useMargin = createUseSpacingUtility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			const s = styleframe();
+			s.variable("spacing", "1rem");
+
+			const createMargin = useMargin(s, undefined, undefined, { name: "m" });
+			createMargin(["@1.5"]);
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("._m\\:1\\.5 {");
+			expect(css).not.toContain("._margin");
+		});
+
+		it("should use default name when no override provided", () => {
+			const useMargin = createUseSpacingUtility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			const s = styleframe();
+
+			useMargin(s, { sm: "0.5rem" });
+
+			expect(s.root.utilities[0]?.name).toBe("margin");
+		});
+	});
 });

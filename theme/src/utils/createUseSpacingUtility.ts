@@ -7,6 +7,7 @@ import type {
 	Variable,
 } from "@styleframe/core";
 import { createMultiplierAutogenerate } from "./createMultiplierAutogenerate";
+import type { UseUtilityOptions } from "./createUseUtility";
 
 export interface CreateUseSpacingUtilityOptions<
 	Defaults extends Record<string, TokenValue>,
@@ -80,7 +81,10 @@ export function createUseSpacingUtility<
 		s: Styleframe,
 		values?: T,
 		modifiers?: ModifierFactory[],
+		utilityOptions?: UseUtilityOptions,
 	): UtilityCreatorFn {
+		const resolvedName = utilityOptions?.name ?? utilityName;
+
 		// Create autogenerate function with multiplier support
 		// Only use fallback when baseVariable is a string (Variable objects are always defined)
 		const autogenerate = createMultiplierAutogenerate({
@@ -91,7 +95,7 @@ export function createUseSpacingUtility<
 		});
 
 		// Create the utility with custom autogenerate
-		const createUtility = s.utility(utilityName, factory, {
+		const createUtility = s.utility(resolvedName, factory, {
 			autogenerate,
 			namespace,
 		});

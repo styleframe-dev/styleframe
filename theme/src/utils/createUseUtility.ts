@@ -6,6 +6,11 @@ import type {
 	UtilityCreatorFn,
 } from "@styleframe/core";
 
+export interface UseUtilityOptions {
+	/** Override the utility name (CSS class prefix) */
+	name?: string;
+}
+
 export interface CreateUseUtilityOptions<
 	Defaults extends Record<string, TokenValue>,
 > {
@@ -62,8 +67,10 @@ export function createUseUtility<
 		s: Styleframe,
 		values?: T,
 		modifiers?: ModifierFactory[],
+		utilityOptions?: UseUtilityOptions,
 	): UtilityCreatorFn {
-		const createUtility = s.utility(utilityName, factory, { namespace });
+		const resolvedName = utilityOptions?.name ?? utilityName;
+		const createUtility = s.utility(resolvedName, factory, { namespace });
 
 		// Only call creator if values are provided (or defaults exist)
 		const resolvedValues = mergeDefaults

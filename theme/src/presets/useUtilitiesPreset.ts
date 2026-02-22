@@ -458,6 +458,20 @@ export interface UtilitiesMetaConfig {
 export interface UtilitiesPresetConfig {
 	meta?: UtilitiesMetaConfig;
 
+	/**
+	 * Custom names for utility classes (CSS class prefix).
+	 * Keys are default utility names (kebab-case), values are custom names.
+	 *
+	 * @example
+	 * ```typescript
+	 * useUtilitiesPreset(s, {
+	 *     names: { 'margin': 'm', 'padding': 'p', 'width': 'w' }
+	 * });
+	 * // Generates: ._m:sm, ._p:md, ._w:full
+	 * ```
+	 */
+	names?: Record<string, string>;
+
 	// Accessibility
 	forcedColorAdjust?: Record<string, string> | false;
 
@@ -601,6 +615,14 @@ export function useUtilitiesPreset(
 	config: UtilitiesPresetConfig = {},
 ) {
 	const shouldMerge = config.meta?.merge === true;
+
+	/**
+	 * Helper to resolve utility options from the names config
+	 */
+	function resolveUtilityOptions(defaultName: string) {
+		const customName = config.names?.[defaultName];
+		return customName ? { name: customName } : undefined;
+	}
 
 	/**
 	 * Helper to resolve values with optional merge behavior
@@ -805,405 +827,1370 @@ export function useUtilitiesPreset(
 	const wordBreak = resolveValues(config.wordBreak, wordBreakValues);
 
 	// Register utilities with resolved values
-	const createForcedColorAdjustUtility = useForcedColorAdjustUtility(s);
+	const createForcedColorAdjustUtility = useForcedColorAdjustUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("forced-color-adjust"),
+	);
 	if (forcedColorAdjust) createForcedColorAdjustUtility(forcedColorAdjust);
 
-	const createBackgroundAttachmentUtility = useBackgroundAttachmentUtility(s);
+	const createBackgroundAttachmentUtility = useBackgroundAttachmentUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("background-attachment"),
+	);
 	if (backgroundAttachment)
 		createBackgroundAttachmentUtility(backgroundAttachment);
 
-	const createBackgroundClipUtility = useBackgroundClipUtility(s);
+	const createBackgroundClipUtility = useBackgroundClipUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("background-clip"),
+	);
 	if (backgroundClip) createBackgroundClipUtility(backgroundClip);
 
-	const createBackgroundImageUtility = useBackgroundImageUtility(s);
+	const createBackgroundImageUtility = useBackgroundImageUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("background-image"),
+	);
 	if (backgroundImage) createBackgroundImageUtility(backgroundImage);
 
-	const createBackgroundOriginUtility = useBackgroundOriginUtility(s);
+	const createBackgroundOriginUtility = useBackgroundOriginUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("background-origin"),
+	);
 	if (backgroundOrigin) createBackgroundOriginUtility(backgroundOrigin);
 
-	const createBackgroundPositionUtility = useBackgroundPositionUtility(s);
+	const createBackgroundPositionUtility = useBackgroundPositionUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("background-position"),
+	);
 	if (backgroundPosition) createBackgroundPositionUtility(backgroundPosition);
 
-	const createBackgroundRepeatUtility = useBackgroundRepeatUtility(s);
+	const createBackgroundRepeatUtility = useBackgroundRepeatUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("background-repeat"),
+	);
 	if (backgroundRepeat) createBackgroundRepeatUtility(backgroundRepeat);
 
-	const createBackgroundSizeUtility = useBackgroundSizeUtility(s);
+	const createBackgroundSizeUtility = useBackgroundSizeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("background-size"),
+	);
 	if (backgroundSize) createBackgroundSizeUtility(backgroundSize);
 
-	const createBackgroundBlendModeUtility = useBackgroundBlendModeUtility(s);
+	const createBackgroundBlendModeUtility = useBackgroundBlendModeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("background-blend-mode"),
+	);
 	if (backgroundBlendMode)
 		createBackgroundBlendModeUtility(backgroundBlendMode);
 
-	const createMixBlendModeUtility = useMixBlendModeUtility(s);
+	const createMixBlendModeUtility = useMixBlendModeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("mix-blend-mode"),
+	);
 	if (mixBlendMode) createMixBlendModeUtility(mixBlendMode);
 
-	const createDivideStyleUtility = useDivideStyleUtility(s);
+	const createDivideStyleUtility = useDivideStyleUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("divide-style"),
+	);
 	if (divideStyle) createDivideStyleUtility(divideStyle);
 
-	const createOutlineStyleUtility = useOutlineStyleUtility(s);
+	const createOutlineStyleUtility = useOutlineStyleUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("outline-style"),
+	);
 	if (outlineStyle) createOutlineStyleUtility(outlineStyle);
 
-	const createFlexUtility = useFlexUtility(s);
+	const createFlexUtility = useFlexUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("flex"),
+	);
 	if (flex) createFlexUtility(flex);
 
-	const createFlexDirectionUtility = useFlexDirectionUtility(s);
+	const createFlexDirectionUtility = useFlexDirectionUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("flex-direction"),
+	);
 	if (flexDirection) createFlexDirectionUtility(flexDirection);
 
-	const createFlexWrapUtility = useFlexWrapUtility(s);
+	const createFlexWrapUtility = useFlexWrapUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("flex-wrap"),
+	);
 	if (flexWrap) createFlexWrapUtility(flexWrap);
 
-	const createJustifyContentUtility = useJustifyContentUtility(s);
+	const createJustifyContentUtility = useJustifyContentUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("justify-content"),
+	);
 	if (justifyContent) createJustifyContentUtility(justifyContent);
 
-	const createJustifyItemsUtility = useJustifyItemsUtility(s);
+	const createJustifyItemsUtility = useJustifyItemsUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("justify-items"),
+	);
 	if (justifyItems) createJustifyItemsUtility(justifyItems);
 
-	const createJustifySelfUtility = useJustifySelfUtility(s);
+	const createJustifySelfUtility = useJustifySelfUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("justify-self"),
+	);
 	if (justifySelf) createJustifySelfUtility(justifySelf);
 
-	const createAlignContentUtility = useAlignContentUtility(s);
+	const createAlignContentUtility = useAlignContentUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("align-content"),
+	);
 	if (alignContent) createAlignContentUtility(alignContent);
 
-	const createAlignItemsUtility = useAlignItemsUtility(s);
+	const createAlignItemsUtility = useAlignItemsUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("align-items"),
+	);
 	if (alignItems) createAlignItemsUtility(alignItems);
 
-	const createAlignSelfUtility = useAlignSelfUtility(s);
+	const createAlignSelfUtility = useAlignSelfUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("align-self"),
+	);
 	if (alignSelf) createAlignSelfUtility(alignSelf);
 
-	const createPlaceContentUtility = usePlaceContentUtility(s);
+	const createPlaceContentUtility = usePlaceContentUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("place-content"),
+	);
 	if (placeContent) createPlaceContentUtility(placeContent);
 
-	const createPlaceItemsUtility = usePlaceItemsUtility(s);
+	const createPlaceItemsUtility = usePlaceItemsUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("place-items"),
+	);
 	if (placeItems) createPlaceItemsUtility(placeItems);
 
-	const createPlaceSelfUtility = usePlaceSelfUtility(s);
+	const createPlaceSelfUtility = usePlaceSelfUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("place-self"),
+	);
 	if (placeSelf) createPlaceSelfUtility(placeSelf);
 
-	const createGridAutoFlowUtility = useGridAutoFlowUtility(s);
+	const createGridAutoFlowUtility = useGridAutoFlowUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("grid-auto-flow"),
+	);
 	if (gridAutoFlow) createGridAutoFlowUtility(gridAutoFlow);
 
-	const createAppearanceUtility = useAppearanceUtility(s);
+	const createAppearanceUtility = useAppearanceUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("appearance"),
+	);
 	if (appearance) createAppearanceUtility(appearance);
 
-	const createColorSchemeUtility = useColorSchemeUtility(s);
+	const createColorSchemeUtility = useColorSchemeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("color-scheme"),
+	);
 	if (colorScheme) createColorSchemeUtility(colorScheme);
 
-	const createCursorUtility = useCursorUtility(s);
+	const createCursorUtility = useCursorUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("cursor"),
+	);
 	if (cursor) createCursorUtility(cursor);
 
-	const createPointerEventsUtility = usePointerEventsUtility(s);
+	const createPointerEventsUtility = usePointerEventsUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("pointer-events"),
+	);
 	if (pointerEvents) createPointerEventsUtility(pointerEvents);
 
-	const createResizeUtility = useResizeUtility(s);
+	const createResizeUtility = useResizeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("resize"),
+	);
 	if (resize) createResizeUtility(resize);
 
-	const createScrollBehaviorUtility = useScrollBehaviorUtility(s);
+	const createScrollBehaviorUtility = useScrollBehaviorUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("scroll-behavior"),
+	);
 	if (scrollBehavior) createScrollBehaviorUtility(scrollBehavior);
 
-	const createScrollSnapAlignUtility = useScrollSnapAlignUtility(s);
+	const createScrollSnapAlignUtility = useScrollSnapAlignUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("scroll-snap-align"),
+	);
 	if (scrollSnapAlign) createScrollSnapAlignUtility(scrollSnapAlign);
 
-	const createScrollSnapStopUtility = useScrollSnapStopUtility(s);
+	const createScrollSnapStopUtility = useScrollSnapStopUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("scroll-snap-stop"),
+	);
 	if (scrollSnapStop) createScrollSnapStopUtility(scrollSnapStop);
 
-	const createScrollSnapTypeUtility = useScrollSnapTypeUtility(s);
+	const createScrollSnapTypeUtility = useScrollSnapTypeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("scroll-snap-type"),
+	);
 	if (scrollSnapType) createScrollSnapTypeUtility(scrollSnapType);
 
-	const createTouchActionUtility = useTouchActionUtility(s);
+	const createTouchActionUtility = useTouchActionUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("touch-action"),
+	);
 	if (touchAction) createTouchActionUtility(touchAction);
 
-	const createUserSelectUtility = useUserSelectUtility(s);
+	const createUserSelectUtility = useUserSelectUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("user-select"),
+	);
 	if (userSelect) createUserSelectUtility(userSelect);
 
-	const createWillChangeUtility = useWillChangeUtility(s);
+	const createWillChangeUtility = useWillChangeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("will-change"),
+	);
 	if (willChange) createWillChangeUtility(willChange);
 
-	const createAspectRatioUtility = useAspectRatioUtility(s);
+	const createAspectRatioUtility = useAspectRatioUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("aspect-ratio"),
+	);
 	if (aspectRatio) createAspectRatioUtility(aspectRatio);
 
-	const createBoxDecorationBreakUtility = useBoxDecorationBreakUtility(s);
+	const createBoxDecorationBreakUtility = useBoxDecorationBreakUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("box-decoration-break"),
+	);
 	if (boxDecorationBreak) createBoxDecorationBreakUtility(boxDecorationBreak);
 
-	const createBoxSizingUtility = useBoxSizingUtility(s);
+	const createBoxSizingUtility = useBoxSizingUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("box-sizing"),
+	);
 	if (boxSizing) createBoxSizingUtility(boxSizing);
 
-	const createBreakAfterUtility = useBreakAfterUtility(s);
+	const createBreakAfterUtility = useBreakAfterUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("break-after"),
+	);
 	if (breakAfter) createBreakAfterUtility(breakAfter);
 
-	const createBreakBeforeUtility = useBreakBeforeUtility(s);
+	const createBreakBeforeUtility = useBreakBeforeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("break-before"),
+	);
 	if (breakBefore) createBreakBeforeUtility(breakBefore);
 
-	const createBreakInsideUtility = useBreakInsideUtility(s);
+	const createBreakInsideUtility = useBreakInsideUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("break-inside"),
+	);
 	if (breakInside) createBreakInsideUtility(breakInside);
 
-	const createClearUtility = useClearUtility(s);
+	const createClearUtility = useClearUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("clear"),
+	);
 	if (clear) createClearUtility(clear);
 
-	const createDisplayUtility = useDisplayUtility(s);
+	const createDisplayUtility = useDisplayUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("display"),
+	);
 	if (display) createDisplayUtility(display);
 
-	const createFloatUtility = useFloatUtility(s);
+	const createFloatUtility = useFloatUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("float"),
+	);
 	if (float) createFloatUtility(float);
 
-	const createIsolationUtility = useIsolationUtility(s);
+	const createIsolationUtility = useIsolationUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("isolation"),
+	);
 	if (isolation) createIsolationUtility(isolation);
 
-	const createObjectFitUtility = useObjectFitUtility(s);
+	const createObjectFitUtility = useObjectFitUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("object-fit"),
+	);
 	if (objectFit) createObjectFitUtility(objectFit);
 
-	const createObjectPositionUtility = useObjectPositionUtility(s);
+	const createObjectPositionUtility = useObjectPositionUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("object-position"),
+	);
 	if (objectPosition) createObjectPositionUtility(objectPosition);
 
-	const createOverflowUtility = useOverflowUtility(s);
+	const createOverflowUtility = useOverflowUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("overflow"),
+	);
 	if (overflow) createOverflowUtility(overflow);
 
-	const createOverscrollUtility = useOverscrollUtility(s);
+	const createOverscrollUtility = useOverscrollUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("overscroll"),
+	);
 	if (overscroll) createOverscrollUtility(overscroll);
 
-	const createPositionUtility = usePositionUtility(s);
+	const createPositionUtility = usePositionUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("position"),
+	);
 	if (position) createPositionUtility(position);
 
-	const createVisibilityUtility = useVisibilityUtility(s);
+	const createVisibilityUtility = useVisibilityUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("visibility"),
+	);
 	if (visibility) createVisibilityUtility(visibility);
 
-	const createBorderCollapseUtility = useBorderCollapseUtility(s);
+	const createBorderCollapseUtility = useBorderCollapseUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-collapse"),
+	);
 	if (borderCollapse) createBorderCollapseUtility(borderCollapse);
 
-	const createCaptionSideUtility = useCaptionSideUtility(s);
+	const createCaptionSideUtility = useCaptionSideUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("caption-side"),
+	);
 	if (captionSide) createCaptionSideUtility(captionSide);
 
-	const createTableLayoutUtility = useTableLayoutUtility(s);
+	const createTableLayoutUtility = useTableLayoutUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("table-layout"),
+	);
 	if (tableLayout) createTableLayoutUtility(tableLayout);
 
-	const createBackfaceVisibilityUtility = useBackfaceVisibilityUtility(s);
+	const createBackfaceVisibilityUtility = useBackfaceVisibilityUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("backface-visibility"),
+	);
 	if (backfaceVisibility) createBackfaceVisibilityUtility(backfaceVisibility);
 
-	const createPerspectiveOriginUtility = usePerspectiveOriginUtility(s);
+	const createPerspectiveOriginUtility = usePerspectiveOriginUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("perspective-origin"),
+	);
 	if (perspectiveOrigin) createPerspectiveOriginUtility(perspectiveOrigin);
 
-	const createTransformOriginUtility = useTransformOriginUtility(s);
+	const createTransformOriginUtility = useTransformOriginUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("transform-origin"),
+	);
 	if (transformOrigin) createTransformOriginUtility(transformOrigin);
 
-	const createTransformStyleUtility = useTransformStyleUtility(s);
+	const createTransformStyleUtility = useTransformStyleUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("transform-style"),
+	);
 	if (transformStyle) createTransformStyleUtility(transformStyle);
 
-	const createAnimationUtility = useAnimationUtility(s);
+	const createAnimationUtility = useAnimationUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("animate"),
+	);
 	if (animation) createAnimationUtility(animation);
 
-	const createTransitionBehaviorUtility = useTransitionBehaviorUtility(s);
+	const createTransitionBehaviorUtility = useTransitionBehaviorUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("transition-behavior"),
+	);
 	if (transitionBehavior) createTransitionBehaviorUtility(transitionBehavior);
 
-	const createTransitionPropertyUtility = useTransitionPropertyUtility(s);
+	const createTransitionPropertyUtility = useTransitionPropertyUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("transition-property"),
+	);
 	if (transitionProperty) createTransitionPropertyUtility(transitionProperty);
 
-	const createFontSmoothingUtility = useFontSmoothingUtility(s);
+	const createFontSmoothingUtility = useFontSmoothingUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("font-smoothing"),
+	);
 	if (fontSmoothing) createFontSmoothingUtility(fontSmoothing);
 
-	const createFontStretchUtility = useFontStretchUtility(s);
+	const createFontStretchUtility = useFontStretchUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("font-stretch"),
+	);
 	if (fontStretch) createFontStretchUtility(fontStretch);
 
-	const createFontVariantNumericUtility = useFontVariantNumericUtility(s);
+	const createFontVariantNumericUtility = useFontVariantNumericUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("font-variant-numeric"),
+	);
 	if (fontVariantNumeric) createFontVariantNumericUtility(fontVariantNumeric);
 
-	const createHyphensUtility = useHyphensUtility(s);
+	const createHyphensUtility = useHyphensUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("hyphens"),
+	);
 	if (hyphens) createHyphensUtility(hyphens);
 
-	const createListStylePositionUtility = useListStylePositionUtility(s);
+	const createListStylePositionUtility = useListStylePositionUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("list-style-position"),
+	);
 	if (listStylePosition) createListStylePositionUtility(listStylePosition);
 
-	const createListStyleTypeUtility = useListStyleTypeUtility(s);
+	const createListStyleTypeUtility = useListStyleTypeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("list-style-type"),
+	);
 	if (listStyleType) createListStyleTypeUtility(listStyleType);
 
-	const createOverflowWrapUtility = useOverflowWrapUtility(s);
+	const createOverflowWrapUtility = useOverflowWrapUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("overflow-wrap"),
+	);
 	if (overflowWrap) createOverflowWrapUtility(overflowWrap);
 
-	const createTextAlignUtility = useTextAlignUtility(s);
+	const createTextAlignUtility = useTextAlignUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("text-align"),
+	);
 	if (textAlign) createTextAlignUtility(textAlign);
 
-	const createTextDecorationLineUtility = useTextDecorationLineUtility(s);
+	const createTextDecorationLineUtility = useTextDecorationLineUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("text-decoration-line"),
+	);
 	if (textDecorationLine) createTextDecorationLineUtility(textDecorationLine);
 
-	const createTextDecorationStyleUtility = useTextDecorationStyleUtility(s);
+	const createTextDecorationStyleUtility = useTextDecorationStyleUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("text-decoration-style"),
+	);
 	if (textDecorationStyle)
 		createTextDecorationStyleUtility(textDecorationStyle);
 
-	const createTextOverflowUtility = useTextOverflowUtility(s);
+	const createTextOverflowUtility = useTextOverflowUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("text-overflow"),
+	);
 	if (textOverflow) createTextOverflowUtility(textOverflow);
 
-	const createTextTransformUtility = useTextTransformUtility(s);
+	const createTextTransformUtility = useTextTransformUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("text-transform"),
+	);
 	if (textTransform) createTextTransformUtility(textTransform);
 
-	const createTextWrapUtility = useTextWrapUtility(s);
+	const createTextWrapUtility = useTextWrapUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("text-wrap"),
+	);
 	if (textWrap) createTextWrapUtility(textWrap);
 
-	const createVerticalAlignUtility = useVerticalAlignUtility(s);
+	const createVerticalAlignUtility = useVerticalAlignUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("vertical-align"),
+	);
 	if (verticalAlign) createVerticalAlignUtility(verticalAlign);
 
-	const createWhitespaceUtility = useWhitespaceUtility(s);
+	const createWhitespaceUtility = useWhitespaceUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("whitespace"),
+	);
 	if (whitespace) createWhitespaceUtility(whitespace);
 
-	const createWordBreakUtility = useWordBreakUtility(s);
+	const createWordBreakUtility = useWordBreakUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("word-break"),
+	);
 	if (wordBreak) createWordBreakUtility(wordBreak);
 
 	return {
 		// Accessibility
 		createForcedColorAdjustUtility,
-		createNotSrOnlyUtility: useNotSrOnlyUtility(s),
-		createSrOnlyUtility: useSrOnlyUtility(s),
+		createNotSrOnlyUtility: useNotSrOnlyUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("not-sr-only"),
+		),
+		createSrOnlyUtility: useSrOnlyUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("sr-only"),
+		),
 
 		// Backgrounds
 		createBackgroundAttachmentUtility,
 		createBackgroundClipUtility,
-		createBackgroundColorUtility: useBackgroundColorUtility(s),
+		createBackgroundColorUtility: useBackgroundColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("background-color"),
+		),
 		createBackgroundImageUtility,
 		createBackgroundOriginUtility,
 		createBackgroundPositionUtility,
 		createBackgroundRepeatUtility,
 		createBackgroundSizeUtility,
-		createBackgroundUtility: useBackgroundUtility(s),
-		createGradientFromUtility: useGradientFromUtility(s),
-		createGradientToUtility: useGradientToUtility(s),
-		createGradientViaUtility: useGradientViaUtility(s),
+		createBackgroundUtility: useBackgroundUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("background"),
+		),
+		createGradientFromUtility: useGradientFromUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("gradient-from"),
+		),
+		createGradientToUtility: useGradientToUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("gradient-to"),
+		),
+		createGradientViaUtility: useGradientViaUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("gradient-via"),
+		),
 
 		// Borders
-		createBorderColorBottomUtility: useBorderColorBottomUtility(s),
-		createBorderColorEndUtility: useBorderColorEndUtility(s),
-		createBorderColorLeftUtility: useBorderColorLeftUtility(s),
-		createBorderColorRightUtility: useBorderColorRightUtility(s),
-		createBorderColorStartUtility: useBorderColorStartUtility(s),
-		createBorderColorTopUtility: useBorderColorTopUtility(s),
-		createBorderColorUtility: useBorderColorUtility(s),
-		createBorderColorXUtility: useBorderColorXUtility(s),
-		createBorderColorYUtility: useBorderColorYUtility(s),
-		createBorderRadiusBottomLeftUtility: useBorderRadiusBottomLeftUtility(s),
-		createBorderRadiusBottomRightUtility: useBorderRadiusBottomRightUtility(s),
-		createBorderRadiusBottomUtility: useBorderRadiusBottomUtility(s),
-		createBorderRadiusEndEndUtility: useBorderRadiusEndEndUtility(s),
-		createBorderRadiusEndStartUtility: useBorderRadiusEndStartUtility(s),
-		createBorderRadiusEndUtility: useBorderRadiusEndUtility(s),
-		createBorderRadiusLeftUtility: useBorderRadiusLeftUtility(s),
-		createBorderRadiusRightUtility: useBorderRadiusRightUtility(s),
-		createBorderRadiusStartEndUtility: useBorderRadiusStartEndUtility(s),
-		createBorderRadiusStartStartUtility: useBorderRadiusStartStartUtility(s),
-		createBorderRadiusStartUtility: useBorderRadiusStartUtility(s),
-		createBorderRadiusTopLeftUtility: useBorderRadiusTopLeftUtility(s),
-		createBorderRadiusTopRightUtility: useBorderRadiusTopRightUtility(s),
-		createBorderRadiusTopUtility: useBorderRadiusTopUtility(s),
-		createBorderRadiusUtility: useBorderRadiusUtility(s),
-		createBorderStyleUtility: useBorderStyleUtility(s),
-		createBorderWidthBottomUtility: useBorderWidthBottomUtility(s),
-		createBorderWidthEndUtility: useBorderWidthEndUtility(s),
-		createBorderWidthLeftUtility: useBorderWidthLeftUtility(s),
-		createBorderWidthRightUtility: useBorderWidthRightUtility(s),
-		createBorderWidthStartUtility: useBorderWidthStartUtility(s),
-		createBorderWidthTopUtility: useBorderWidthTopUtility(s),
-		createBorderWidthUtility: useBorderWidthUtility(s),
-		createBorderWidthXUtility: useBorderWidthXUtility(s),
-		createBorderWidthYUtility: useBorderWidthYUtility(s),
-		createDivideColorUtility: useDivideColorUtility(s),
+		createBorderColorBottomUtility: useBorderColorBottomUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-bottom-color"),
+		),
+		createBorderColorEndUtility: useBorderColorEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-inline-end-color"),
+		),
+		createBorderColorLeftUtility: useBorderColorLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-left-color"),
+		),
+		createBorderColorRightUtility: useBorderColorRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-right-color"),
+		),
+		createBorderColorStartUtility: useBorderColorStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-inline-start-color"),
+		),
+		createBorderColorTopUtility: useBorderColorTopUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-top-color"),
+		),
+		createBorderColorUtility: useBorderColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-color"),
+		),
+		createBorderColorXUtility: useBorderColorXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-x-color"),
+		),
+		createBorderColorYUtility: useBorderColorYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-y-color"),
+		),
+		createBorderRadiusBottomLeftUtility: useBorderRadiusBottomLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-bottom-left-radius"),
+		),
+		createBorderRadiusBottomRightUtility: useBorderRadiusBottomRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-bottom-right-radius"),
+		),
+		createBorderRadiusBottomUtility: useBorderRadiusBottomUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-radius-bottom"),
+		),
+		createBorderRadiusEndEndUtility: useBorderRadiusEndEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-end-end-radius"),
+		),
+		createBorderRadiusEndStartUtility: useBorderRadiusEndStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-end-start-radius"),
+		),
+		createBorderRadiusEndUtility: useBorderRadiusEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-radius-end"),
+		),
+		createBorderRadiusLeftUtility: useBorderRadiusLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-radius-left"),
+		),
+		createBorderRadiusRightUtility: useBorderRadiusRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-radius-right"),
+		),
+		createBorderRadiusStartEndUtility: useBorderRadiusStartEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-start-end-radius"),
+		),
+		createBorderRadiusStartStartUtility: useBorderRadiusStartStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-start-start-radius"),
+		),
+		createBorderRadiusStartUtility: useBorderRadiusStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-radius-start"),
+		),
+		createBorderRadiusTopLeftUtility: useBorderRadiusTopLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-top-left-radius"),
+		),
+		createBorderRadiusTopRightUtility: useBorderRadiusTopRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-top-right-radius"),
+		),
+		createBorderRadiusTopUtility: useBorderRadiusTopUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-radius-top"),
+		),
+		createBorderRadiusUtility: useBorderRadiusUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-radius"),
+		),
+		createBorderStyleUtility: useBorderStyleUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-style"),
+		),
+		createBorderWidthBottomUtility: useBorderWidthBottomUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-bottom-width"),
+		),
+		createBorderWidthEndUtility: useBorderWidthEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-inline-end-width"),
+		),
+		createBorderWidthLeftUtility: useBorderWidthLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-left-width"),
+		),
+		createBorderWidthRightUtility: useBorderWidthRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-right-width"),
+		),
+		createBorderWidthStartUtility: useBorderWidthStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-inline-start-width"),
+		),
+		createBorderWidthTopUtility: useBorderWidthTopUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-top-width"),
+		),
+		createBorderWidthUtility: useBorderWidthUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-width"),
+		),
+		createBorderWidthXUtility: useBorderWidthXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-x-width"),
+		),
+		createBorderWidthYUtility: useBorderWidthYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-y-width"),
+		),
+		createDivideColorUtility: useDivideColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("divide-color"),
+		),
 		createDivideStyleUtility,
-		createDivideXReverseUtility: useDivideXReverseUtility(s),
-		createDivideXUtility: useDivideXUtility(s),
-		createDivideYReverseUtility: useDivideYReverseUtility(s),
-		createDivideYUtility: useDivideYUtility(s),
-		createOutlineColorUtility: useOutlineColorUtility(s),
-		createOutlineOffsetUtility: useOutlineOffsetUtility(s),
+		createDivideXReverseUtility: useDivideXReverseUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("divide-x-reverse"),
+		),
+		createDivideXUtility: useDivideXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("divide-x"),
+		),
+		createDivideYReverseUtility: useDivideYReverseUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("divide-y-reverse"),
+		),
+		createDivideYUtility: useDivideYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("divide-y"),
+		),
+		createOutlineColorUtility: useOutlineColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("outline-color"),
+		),
+		createOutlineOffsetUtility: useOutlineOffsetUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("outline-offset"),
+		),
 		createOutlineStyleUtility,
-		createOutlineWidthUtility: useOutlineWidthUtility(s),
-		createRingColorUtility: useRingColorUtility(s),
-		createRingInsetUtility: useRingInsetUtility(s),
-		createRingOffsetColorUtility: useRingOffsetColorUtility(s),
-		createRingOffsetWidthUtility: useRingOffsetWidthUtility(s),
-		createRingWidthUtility: useRingWidthUtility(s),
+		createOutlineWidthUtility: useOutlineWidthUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("outline-width"),
+		),
+		createRingColorUtility: useRingColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("ring-color"),
+		),
+		createRingInsetUtility: useRingInsetUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("ring-inset"),
+		),
+		createRingOffsetColorUtility: useRingOffsetColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("ring-offset-color"),
+		),
+		createRingOffsetWidthUtility: useRingOffsetWidthUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("ring-offset"),
+		),
+		createRingWidthUtility: useRingWidthUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("ring"),
+		),
 
 		// Effects
 		createBackgroundBlendModeUtility,
-		createBoxShadowColorUtility: useBoxShadowColorUtility(s),
-		createBoxShadowUtility: useBoxShadowUtility(s),
+		createBoxShadowColorUtility: useBoxShadowColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("box-shadow-color"),
+		),
+		createBoxShadowUtility: useBoxShadowUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("box-shadow"),
+		),
 		createMixBlendModeUtility,
-		createOpacityUtility: useOpacityUtility(s),
-		createTextShadowColorUtility: useTextShadowColorUtility(s),
-		createTextShadowUtility: useTextShadowUtility(s),
+		createOpacityUtility: useOpacityUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("opacity"),
+		),
+		createTextShadowColorUtility: useTextShadowColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("text-shadow-color"),
+		),
+		createTextShadowUtility: useTextShadowUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("text-shadow"),
+		),
 
 		// Filters
-		createBackdropBlurUtility: useBackdropBlurUtility(s),
-		createBackdropBrightnessUtility: useBackdropBrightnessUtility(s),
-		createBackdropContrastUtility: useBackdropContrastUtility(s),
-		createBackdropGrayscaleUtility: useBackdropGrayscaleUtility(s),
-		createBackdropHueRotateUtility: useBackdropHueRotateUtility(s),
-		createBackdropInvertUtility: useBackdropInvertUtility(s),
-		createBackdropOpacityUtility: useBackdropOpacityUtility(s),
-		createBackdropSaturateUtility: useBackdropSaturateUtility(s),
-		createBackdropSepiaUtility: useBackdropSepiaUtility(s),
-		createBlurUtility: useBlurUtility(s),
-		createBrightnessUtility: useBrightnessUtility(s),
-		createContrastUtility: useContrastUtility(s),
-		createDropShadowUtility: useDropShadowUtility(s),
-		createGrayscaleUtility: useGrayscaleUtility(s),
-		createHueRotateUtility: useHueRotateUtility(s),
-		createInvertUtility: useInvertUtility(s),
-		createSaturateUtility: useSaturateUtility(s),
-		createSepiaUtility: useSepiaUtility(s),
+		createBackdropBlurUtility: useBackdropBlurUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("backdrop-blur"),
+		),
+		createBackdropBrightnessUtility: useBackdropBrightnessUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("backdrop-brightness"),
+		),
+		createBackdropContrastUtility: useBackdropContrastUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("backdrop-contrast"),
+		),
+		createBackdropGrayscaleUtility: useBackdropGrayscaleUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("backdrop-grayscale"),
+		),
+		createBackdropHueRotateUtility: useBackdropHueRotateUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("backdrop-hue-rotate"),
+		),
+		createBackdropInvertUtility: useBackdropInvertUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("backdrop-invert"),
+		),
+		createBackdropOpacityUtility: useBackdropOpacityUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("backdrop-opacity"),
+		),
+		createBackdropSaturateUtility: useBackdropSaturateUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("backdrop-saturate"),
+		),
+		createBackdropSepiaUtility: useBackdropSepiaUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("backdrop-sepia"),
+		),
+		createBlurUtility: useBlurUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("blur"),
+		),
+		createBrightnessUtility: useBrightnessUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("brightness"),
+		),
+		createContrastUtility: useContrastUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("contrast"),
+		),
+		createDropShadowUtility: useDropShadowUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("drop-shadow"),
+		),
+		createGrayscaleUtility: useGrayscaleUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grayscale"),
+		),
+		createHueRotateUtility: useHueRotateUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("hue-rotate"),
+		),
+		createInvertUtility: useInvertUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("invert"),
+		),
+		createSaturateUtility: useSaturateUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("saturate"),
+		),
+		createSepiaUtility: useSepiaUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("sepia"),
+		),
 
 		// Flexbox and Grid
 		createAlignContentUtility,
 		createAlignItemsUtility,
 		createAlignSelfUtility,
-		createFlexBasisUtility: useFlexBasisUtility(s),
+		createFlexBasisUtility: useFlexBasisUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("flex-basis"),
+		),
 		createFlexDirectionUtility,
-		createFlexGrowUtility: useFlexGrowUtility(s),
-		createFlexShrinkUtility: useFlexShrinkUtility(s),
+		createFlexGrowUtility: useFlexGrowUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("flex-grow"),
+		),
+		createFlexShrinkUtility: useFlexShrinkUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("flex-shrink"),
+		),
 		createFlexUtility,
 		createFlexWrapUtility,
-		createGapUtility: useGapUtility(s),
-		createGapXUtility: useGapXUtility(s),
-		createGapYUtility: useGapYUtility(s),
-		createGridAutoColumnsUtility: useGridAutoColumnsUtility(s),
+		createGapUtility: useGapUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("gap"),
+		),
+		createGapXUtility: useGapXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("gap-x"),
+		),
+		createGapYUtility: useGapYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("gap-y"),
+		),
+		createGridAutoColumnsUtility: useGridAutoColumnsUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-auto-columns"),
+		),
 		createGridAutoFlowUtility,
-		createGridAutoRowsUtility: useGridAutoRowsUtility(s),
-		createGridColumnEndUtility: useGridColumnEndUtility(s),
-		createGridColumnStartUtility: useGridColumnStartUtility(s),
-		createGridColumnUtility: useGridColumnUtility(s),
-		createGridRowEndUtility: useGridRowEndUtility(s),
-		createGridRowStartUtility: useGridRowStartUtility(s),
-		createGridRowUtility: useGridRowUtility(s),
-		createGridTemplateColumnsUtility: useGridTemplateColumnsUtility(s),
-		createGridTemplateRowsUtility: useGridTemplateRowsUtility(s),
+		createGridAutoRowsUtility: useGridAutoRowsUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-auto-rows"),
+		),
+		createGridColumnEndUtility: useGridColumnEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-column-end"),
+		),
+		createGridColumnStartUtility: useGridColumnStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-column-start"),
+		),
+		createGridColumnUtility: useGridColumnUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-column"),
+		),
+		createGridRowEndUtility: useGridRowEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-row-end"),
+		),
+		createGridRowStartUtility: useGridRowStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-row-start"),
+		),
+		createGridRowUtility: useGridRowUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-row"),
+		),
+		createGridTemplateColumnsUtility: useGridTemplateColumnsUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-template-columns"),
+		),
+		createGridTemplateRowsUtility: useGridTemplateRowsUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("grid-template-rows"),
+		),
 		createJustifyContentUtility,
 		createJustifyItemsUtility,
 		createJustifySelfUtility,
-		createOrderUtility: useOrderUtility(s),
+		createOrderUtility: useOrderUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("order"),
+		),
 		createPlaceContentUtility,
 		createPlaceItemsUtility,
 		createPlaceSelfUtility,
 
 		// Interactivity
-		createAccentColorUtility: useAccentColorUtility(s),
+		createAccentColorUtility: useAccentColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("accent-color"),
+		),
 		createAppearanceUtility,
-		createCaretColorUtility: useCaretColorUtility(s),
+		createCaretColorUtility: useCaretColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("caret-color"),
+		),
 		createColorSchemeUtility,
 		createCursorUtility,
 		createPointerEventsUtility,
 		createResizeUtility,
 		createScrollBehaviorUtility,
-		createScrollMarginBottomUtility: useScrollMarginBottomUtility(s),
-		createScrollMarginEndUtility: useScrollMarginEndUtility(s),
-		createScrollMarginLeftUtility: useScrollMarginLeftUtility(s),
-		createScrollMarginRightUtility: useScrollMarginRightUtility(s),
-		createScrollMarginStartUtility: useScrollMarginStartUtility(s),
-		createScrollMarginTopUtility: useScrollMarginTopUtility(s),
-		createScrollMarginUtility: useScrollMarginUtility(s),
-		createScrollMarginXUtility: useScrollMarginXUtility(s),
-		createScrollMarginYUtility: useScrollMarginYUtility(s),
-		createScrollPaddingBottomUtility: useScrollPaddingBottomUtility(s),
-		createScrollPaddingEndUtility: useScrollPaddingEndUtility(s),
-		createScrollPaddingLeftUtility: useScrollPaddingLeftUtility(s),
-		createScrollPaddingRightUtility: useScrollPaddingRightUtility(s),
-		createScrollPaddingStartUtility: useScrollPaddingStartUtility(s),
-		createScrollPaddingTopUtility: useScrollPaddingTopUtility(s),
-		createScrollPaddingUtility: useScrollPaddingUtility(s),
-		createScrollPaddingXUtility: useScrollPaddingXUtility(s),
-		createScrollPaddingYUtility: useScrollPaddingYUtility(s),
+		createScrollMarginBottomUtility: useScrollMarginBottomUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-margin-bottom"),
+		),
+		createScrollMarginEndUtility: useScrollMarginEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-margin-inline-end"),
+		),
+		createScrollMarginLeftUtility: useScrollMarginLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-margin-left"),
+		),
+		createScrollMarginRightUtility: useScrollMarginRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-margin-right"),
+		),
+		createScrollMarginStartUtility: useScrollMarginStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-margin-inline-start"),
+		),
+		createScrollMarginTopUtility: useScrollMarginTopUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-margin-top"),
+		),
+		createScrollMarginUtility: useScrollMarginUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-margin"),
+		),
+		createScrollMarginXUtility: useScrollMarginXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-margin-x"),
+		),
+		createScrollMarginYUtility: useScrollMarginYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-margin-y"),
+		),
+		createScrollPaddingBottomUtility: useScrollPaddingBottomUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-padding-bottom"),
+		),
+		createScrollPaddingEndUtility: useScrollPaddingEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-padding-inline-end"),
+		),
+		createScrollPaddingLeftUtility: useScrollPaddingLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-padding-left"),
+		),
+		createScrollPaddingRightUtility: useScrollPaddingRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-padding-right"),
+		),
+		createScrollPaddingStartUtility: useScrollPaddingStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-padding-inline-start"),
+		),
+		createScrollPaddingTopUtility: useScrollPaddingTopUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-padding-top"),
+		),
+		createScrollPaddingUtility: useScrollPaddingUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-padding"),
+		),
+		createScrollPaddingXUtility: useScrollPaddingXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-padding-x"),
+		),
+		createScrollPaddingYUtility: useScrollPaddingYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scroll-padding-y"),
+		),
 		createScrollSnapAlignUtility,
 		createScrollSnapStopUtility,
 		createScrollSnapTypeUtility,
@@ -1213,143 +2200,567 @@ export function useUtilitiesPreset(
 
 		// Layout
 		createAspectRatioUtility,
-		createBottomUtility: useBottomUtility(s),
+		createBottomUtility: useBottomUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("bottom"),
+		),
 		createBoxDecorationBreakUtility,
 		createBoxSizingUtility,
 		createBreakAfterUtility,
 		createBreakBeforeUtility,
 		createBreakInsideUtility,
 		createClearUtility,
-		createColumnsUtility: useColumnsUtility(s),
+		createColumnsUtility: useColumnsUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("columns"),
+		),
 		createDisplayUtility,
 		createFloatUtility,
-		createInsetEndUtility: useInsetEndUtility(s),
-		createInsetStartUtility: useInsetStartUtility(s),
-		createInsetUtility: useInsetUtility(s),
-		createInsetXUtility: useInsetXUtility(s),
-		createInsetYUtility: useInsetYUtility(s),
+		createInsetEndUtility: useInsetEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("inset-inline-end"),
+		),
+		createInsetStartUtility: useInsetStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("inset-inline-start"),
+		),
+		createInsetUtility: useInsetUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("inset"),
+		),
+		createInsetXUtility: useInsetXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("inset-x"),
+		),
+		createInsetYUtility: useInsetYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("inset-y"),
+		),
 		createIsolationUtility,
-		createLeftUtility: useLeftUtility(s),
+		createLeftUtility: useLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("left"),
+		),
 		createObjectFitUtility,
 		createObjectPositionUtility,
 		createOverflowUtility,
-		createOverflowXUtility: useOverflowXUtility(s),
-		createOverflowYUtility: useOverflowYUtility(s),
+		createOverflowXUtility: useOverflowXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("overflow-x"),
+		),
+		createOverflowYUtility: useOverflowYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("overflow-y"),
+		),
 		createOverscrollUtility,
-		createOverscrollXUtility: useOverscrollXUtility(s),
-		createOverscrollYUtility: useOverscrollYUtility(s),
+		createOverscrollXUtility: useOverscrollXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("overscroll-x"),
+		),
+		createOverscrollYUtility: useOverscrollYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("overscroll-y"),
+		),
 		createPositionUtility,
-		createRightUtility: useRightUtility(s),
-		createTopUtility: useTopUtility(s),
+		createRightUtility: useRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("right"),
+		),
+		createTopUtility: useTopUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("top"),
+		),
 		createVisibilityUtility,
-		createZIndexUtility: useZIndexUtility(s),
+		createZIndexUtility: useZIndexUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("z-index"),
+		),
 
 		// Sizing
-		createHeightUtility: useHeightUtility(s),
-		createMaxHeightUtility: useMaxHeightUtility(s),
-		createMaxWidthUtility: useMaxWidthUtility(s),
-		createMinHeightUtility: useMinHeightUtility(s),
-		createMinWidthUtility: useMinWidthUtility(s),
-		createSizeUtility: useSizeUtility(s),
-		createWidthUtility: useWidthUtility(s),
+		createHeightUtility: useHeightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("height"),
+		),
+		createMaxHeightUtility: useMaxHeightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("max-height"),
+		),
+		createMaxWidthUtility: useMaxWidthUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("max-width"),
+		),
+		createMinHeightUtility: useMinHeightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("min-height"),
+		),
+		createMinWidthUtility: useMinWidthUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("min-width"),
+		),
+		createSizeUtility: useSizeUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("size"),
+		),
+		createWidthUtility: useWidthUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("width"),
+		),
 
 		// Spacing
-		createMarginBlockUtility: useMarginBlockUtility(s),
-		createMarginBottomUtility: useMarginBottomUtility(s),
-		createMarginInlineEndUtility: useMarginInlineEndUtility(s),
-		createMarginInlineStartUtility: useMarginInlineStartUtility(s),
-		createMarginInlineUtility: useMarginInlineUtility(s),
-		createMarginLeftUtility: useMarginLeftUtility(s),
-		createMarginRightUtility: useMarginRightUtility(s),
-		createMarginTopUtility: useMarginTopUtility(s),
-		createMarginUtility: useMarginUtility(s),
-		createMarginXUtility: useMarginXUtility(s),
-		createMarginYUtility: useMarginYUtility(s),
-		createPaddingBlockUtility: usePaddingBlockUtility(s),
-		createPaddingBottomUtility: usePaddingBottomUtility(s),
-		createPaddingInlineEndUtility: usePaddingInlineEndUtility(s),
-		createPaddingInlineStartUtility: usePaddingInlineStartUtility(s),
-		createPaddingInlineUtility: usePaddingInlineUtility(s),
-		createPaddingLeftUtility: usePaddingLeftUtility(s),
-		createPaddingRightUtility: usePaddingRightUtility(s),
-		createPaddingTopUtility: usePaddingTopUtility(s),
-		createPaddingUtility: usePaddingUtility(s),
-		createPaddingXUtility: usePaddingXUtility(s),
-		createPaddingYUtility: usePaddingYUtility(s),
-		createSpaceXReverseUtility: useSpaceXReverseUtility(s),
-		createSpaceXUtility: useSpaceXUtility(s),
-		createSpaceYReverseUtility: useSpaceYReverseUtility(s),
-		createSpaceYUtility: useSpaceYUtility(s),
+		createMarginBlockUtility: useMarginBlockUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-block"),
+		),
+		createMarginBottomUtility: useMarginBottomUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-bottom"),
+		),
+		createMarginInlineEndUtility: useMarginInlineEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-inline-end"),
+		),
+		createMarginInlineStartUtility: useMarginInlineStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-inline-start"),
+		),
+		createMarginInlineUtility: useMarginInlineUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-inline"),
+		),
+		createMarginLeftUtility: useMarginLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-left"),
+		),
+		createMarginRightUtility: useMarginRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-right"),
+		),
+		createMarginTopUtility: useMarginTopUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-top"),
+		),
+		createMarginUtility: useMarginUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin"),
+		),
+		createMarginXUtility: useMarginXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-x"),
+		),
+		createMarginYUtility: useMarginYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("margin-y"),
+		),
+		createPaddingBlockUtility: usePaddingBlockUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-block"),
+		),
+		createPaddingBottomUtility: usePaddingBottomUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-bottom"),
+		),
+		createPaddingInlineEndUtility: usePaddingInlineEndUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-inline-end"),
+		),
+		createPaddingInlineStartUtility: usePaddingInlineStartUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-inline-start"),
+		),
+		createPaddingInlineUtility: usePaddingInlineUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-inline"),
+		),
+		createPaddingLeftUtility: usePaddingLeftUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-left"),
+		),
+		createPaddingRightUtility: usePaddingRightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-right"),
+		),
+		createPaddingTopUtility: usePaddingTopUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-top"),
+		),
+		createPaddingUtility: usePaddingUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding"),
+		),
+		createPaddingXUtility: usePaddingXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-x"),
+		),
+		createPaddingYUtility: usePaddingYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("padding-y"),
+		),
+		createSpaceXReverseUtility: useSpaceXReverseUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("space-x-reverse"),
+		),
+		createSpaceXUtility: useSpaceXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("space-x"),
+		),
+		createSpaceYReverseUtility: useSpaceYReverseUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("space-y-reverse"),
+		),
+		createSpaceYUtility: useSpaceYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("space-y"),
+		),
 
 		// SVG
-		createFillUtility: useFillUtility(s),
-		createStrokeUtility: useStrokeUtility(s),
-		createStrokeWidthUtility: useStrokeWidthUtility(s),
+		createFillUtility: useFillUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("fill"),
+		),
+		createStrokeUtility: useStrokeUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("stroke"),
+		),
+		createStrokeWidthUtility: useStrokeWidthUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("stroke-width"),
+		),
 
 		// Tables
 		createBorderCollapseUtility,
-		createBorderSpacingUtility: useBorderSpacingUtility(s),
-		createBorderSpacingXUtility: useBorderSpacingXUtility(s),
-		createBorderSpacingYUtility: useBorderSpacingYUtility(s),
+		createBorderSpacingUtility: useBorderSpacingUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-spacing"),
+		),
+		createBorderSpacingXUtility: useBorderSpacingXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-spacing-x"),
+		),
+		createBorderSpacingYUtility: useBorderSpacingYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("border-spacing-y"),
+		),
 		createCaptionSideUtility,
 		createTableLayoutUtility,
 
 		// Transforms
 		createBackfaceVisibilityUtility,
 		createPerspectiveOriginUtility,
-		createPerspectiveUtility: usePerspectiveUtility(s),
-		createRotateUtility: useRotateUtility(s),
-		createRotateXUtility: useRotateXUtility(s),
-		createRotateYUtility: useRotateYUtility(s),
-		createScaleUtility: useScaleUtility(s),
-		createScaleXUtility: useScaleXUtility(s),
-		createScaleYUtility: useScaleYUtility(s),
-		createSkewXUtility: useSkewXUtility(s),
-		createSkewYUtility: useSkewYUtility(s),
+		createPerspectiveUtility: usePerspectiveUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("perspective"),
+		),
+		createRotateUtility: useRotateUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("rotate"),
+		),
+		createRotateXUtility: useRotateXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("rotate-x"),
+		),
+		createRotateYUtility: useRotateYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("rotate-y"),
+		),
+		createScaleUtility: useScaleUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scale"),
+		),
+		createScaleXUtility: useScaleXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scale-x"),
+		),
+		createScaleYUtility: useScaleYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("scale-y"),
+		),
+		createSkewXUtility: useSkewXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("skew-x"),
+		),
+		createSkewYUtility: useSkewYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("skew-y"),
+		),
 		createTransformOriginUtility,
 		createTransformStyleUtility,
-		createTranslateUtility: useTranslateUtility(s),
-		createTranslateXUtility: useTranslateXUtility(s),
-		createTranslateYUtility: useTranslateYUtility(s),
-		createTranslateZUtility: useTranslateZUtility(s),
+		createTranslateUtility: useTranslateUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("translate"),
+		),
+		createTranslateXUtility: useTranslateXUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("translate-x"),
+		),
+		createTranslateYUtility: useTranslateYUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("translate-y"),
+		),
+		createTranslateZUtility: useTranslateZUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("translate-z"),
+		),
 
 		// Transitions and Animation
 		createAnimationUtility,
 		createTransitionBehaviorUtility,
-		createTransitionDelayUtility: useTransitionDelayUtility(s),
-		createTransitionDurationUtility: useTransitionDurationUtility(s),
+		createTransitionDelayUtility: useTransitionDelayUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("transition-delay"),
+		),
+		createTransitionDurationUtility: useTransitionDurationUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("transition-duration"),
+		),
 		createTransitionPropertyUtility,
-		createTransitionTimingFunctionUtility:
-			useTransitionTimingFunctionUtility(s),
+		createTransitionTimingFunctionUtility: useTransitionTimingFunctionUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("transition-timing-function"),
+		),
 
 		// Typography
-		createColorUtility: useColorUtility(s),
-		createContentUtility: useContentUtility(s),
-		createFontFamilyUtility: useFontFamilyUtility(s),
-		createFontSizeUtility: useFontSizeUtility(s),
+		createColorUtility: useColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("color"),
+		),
+		createContentUtility: useContentUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("content"),
+		),
+		createFontFamilyUtility: useFontFamilyUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("font-family"),
+		),
+		createFontSizeUtility: useFontSizeUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("font-size"),
+		),
 		createFontSmoothingUtility,
 		createFontStretchUtility,
-		createFontStyleUtility: useFontStyleUtility(s),
+		createFontStyleUtility: useFontStyleUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("font-style"),
+		),
 		createFontVariantNumericUtility,
-		createFontWeightUtility: useFontWeightUtility(s),
+		createFontWeightUtility: useFontWeightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("font-weight"),
+		),
 		createHyphensUtility,
-		createLetterSpacingUtility: useLetterSpacingUtility(s),
-		createLineClampUtility: useLineClampUtility(s),
-		createLineHeightUtility: useLineHeightUtility(s),
-		createListStyleImageUtility: useListStyleImageUtility(s),
+		createLetterSpacingUtility: useLetterSpacingUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("letter-spacing"),
+		),
+		createLineClampUtility: useLineClampUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("line-clamp"),
+		),
+		createLineHeightUtility: useLineHeightUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("line-height"),
+		),
+		createListStyleImageUtility: useListStyleImageUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("list-style-image"),
+		),
 		createListStylePositionUtility,
 		createListStyleTypeUtility,
 		createOverflowWrapUtility,
 		createTextAlignUtility,
-		createTextColorUtility: useTextColorUtility(s),
-		createTextDecorationColorUtility: useTextDecorationColorUtility(s),
+		createTextColorUtility: useTextColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("text-color"),
+		),
+		createTextDecorationColorUtility: useTextDecorationColorUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("text-decoration-color"),
+		),
 		createTextDecorationLineUtility,
 		createTextDecorationStyleUtility,
-		createTextDecorationThicknessUtility: useTextDecorationThicknessUtility(s),
-		createTextIndentUtility: useTextIndentUtility(s),
+		createTextDecorationThicknessUtility: useTextDecorationThicknessUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("text-decoration-thickness"),
+		),
+		createTextIndentUtility: useTextIndentUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("text-indent"),
+		),
 		createTextOverflowUtility,
 		createTextTransformUtility,
-		createTextUnderlineOffsetUtility: useTextUnderlineOffsetUtility(s),
+		createTextUnderlineOffsetUtility: useTextUnderlineOffsetUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("text-underline-offset"),
+		),
 		createTextWrapUtility,
 		createVerticalAlignUtility,
 		createWhitespaceUtility,
