@@ -6,6 +6,7 @@ import {
 import { styleframe } from "virtual:styleframe";
 
 const s = styleframe();
+const { selector } = s;
 
 // Initialize design tokens preset
 useDesignTokensPreset(s);
@@ -17,7 +18,7 @@ useUtilitiesPreset(s);
 export const badge = useBadgeRecipe(s);
 
 // Container styles for story layout
-s.selector(".badge-grid", {
+selector(".badge-grid", {
 	display: "flex",
 	flexWrap: "wrap",
 	gap: "@spacing.md",
@@ -25,21 +26,21 @@ s.selector(".badge-grid", {
 	alignItems: "center",
 });
 
-s.selector(".badge-section", {
+selector(".badge-section", {
 	display: "flex",
 	flexDirection: "column",
 	gap: "@spacing.lg",
 	padding: "@spacing.md",
 });
 
-s.selector(".badge-row", {
+selector(".badge-row", {
 	display: "flex",
 	flexWrap: "wrap",
 	gap: "@spacing.sm",
 	alignItems: "center",
 });
 
-s.selector(".badge-label", {
+selector(".badge-label", {
 	fontSize: "@font-size.sm",
 	fontWeight: "@font-weight.semibold",
 	color: "@color.dark",
