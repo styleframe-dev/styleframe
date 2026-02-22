@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/config-vite",
-	"version": "2.0.3",
+	"version": "3.0.0",
 	"description": "TypeScript configuration for styleframe projects.",
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"type": "module",

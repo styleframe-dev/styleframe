@@ -1,7 +1,7 @@
 {
 	"name": "@styleframe/plugin",
 	"type": "module",
-	"version": "2.4.1",
+	"version": "3.0.0",
 	"description": "Unplugin for Styleframe. Use it with Vite, Webpack, Astro, Nuxt, Rollup, Rspack, and more.",
 	"license": "MIT",
 	"keywords": [
@@ -89,9 +89,9 @@
 	},
 	"dependencies": {
 		"@styleframe/license": "catalog:",
-		"@styleframe/loader": "workspace:^2.4.1",
-		"@styleframe/scanner": "workspace:^2.0.0",
-		"@styleframe/transpiler": "workspace:^2.6.0",
+		"@styleframe/loader": "workspace:^3.0.0",
+		"@styleframe/scanner": "workspace:^3.0.0",
+		"@styleframe/transpiler": "workspace:^3.0.0",
 		"consola": "^3.4.2",
 		"tinyglobby": "catalog:",
 		"jiti": "catalog:",
@@ -99,8 +99,8 @@
 	},
 	"devDependencies": {
 		"@farmfe/core": "^1.7.11",
-		"@styleframe/config-typescript": "workspace:^2",
-		"@styleframe/core": "workspace:^2.5.0",
+		"@styleframe/config-typescript": "workspace:^3.0.0",
+		"@styleframe/core": "workspace:^3.0.0",
 		"@vitest/coverage-v8": "catalog:",
 		"@nuxt/kit": "catalog:nuxt",
 		"@nuxt/schema": "catalog:nuxt",

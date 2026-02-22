@@ -1,4 +1,4 @@
-# @styleframe/runtime
+# @styleframe/scanner
 
 ## 3.0.0
 
@@ -10,14 +10,3 @@
 
 - Updated dependencies [[`266f961`](https://github.com/styleframe-dev/styleframe/commit/266f96143e9ffb47e0e6326d0e5e7cc9d974ab83), [`ffe6764`](https://github.com/styleframe-dev/styleframe/commit/ffe6764a2e6c84d5b3cfdf431bf11f17a3f3f118)]:
   - @styleframe/core@3.0.0
-
-## 2.0.0
-
-### Major Changes
-
-- [#63](https://github.com/styleframe-dev/styleframe/pull/63) [`ec430e1`](https://github.com/styleframe-dev/styleframe/commit/ec430e11502b3dba69c20ee10b24f0302008883c) Thanks [@alexgrozav](https://github.com/alexgrozav)! - feat: add styleframe runtime for recipes
-
-### Patch Changes
-
-- Updated dependencies [[`ec430e1`](https://github.com/styleframe-dev/styleframe/commit/ec430e11502b3dba69c20ee10b24f0302008883c)]:
-  - @styleframe/core@2.4.0
