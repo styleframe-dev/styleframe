@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import Badge from "./Badge.vue";
 
-const colors = ["primary", "secondary", "success", "info", "warning", "danger"] as const;
+const colors = [
+	"primary",
+	"secondary",
+	"success",
+	"info",
+	"warning",
+	"danger",
+] as const;
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
 </script>
 
