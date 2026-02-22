@@ -1,5 +1,4 @@
 import type { StorybookConfig } from "@storybook/vue3-vite";
-import styleframe from "@styleframe/plugin/vite";
 
 import { dirname } from "node:path";
 
@@ -23,11 +22,5 @@ const config: StorybookConfig = {
 		getAbsolutePath("@storybook/addon-onboarding"),
 	],
 	framework: getAbsolutePath("@storybook/vue3-vite"),
-	async viteFinal(config) {
-		const { mergeConfig } = await import("vite");
-		return mergeConfig(config, {
-			plugins: [styleframe()],
-		});
-	},
 };
 export default config;

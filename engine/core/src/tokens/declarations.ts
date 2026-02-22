@@ -57,13 +57,26 @@ export function parseDeclarationsBlock(
 				context.atRule(identifier, rule, atRuleDeclarations);
 				delete declarations[key];
 			}
-		} else if (/^[.&:]/.test(key)) {
-			// If the key starts with a special character, treat it as a nested selector
+		} else if (
+			/^[.&:]/.test(key) ||
+			/^\d+%$/.test(key) ||
+			key === "from" ||
+			key === "to"
+		) {
+			// If the key starts with a special character or is a keyframe selector, treat it as a nested selector
 			const nested = declarations[key] as DeclarationsBlock;
 			if (typeof nested === "object") {
 				context.selector(key, nested);
 				delete declarations[key];
 			}
+		}
+	}
+
+	// Resolve @-prefixed string values to variable references
+	for (const key in declarations) {
+		const value = declarations[key];
+		if (typeof value === "string" && value[0] === "@") {
+			declarations[key] = context.ref(value.slice(1));
 		}
 	}
 

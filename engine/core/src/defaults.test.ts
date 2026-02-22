@@ -310,6 +310,86 @@ describe("transformUtilityKey", () => {
 		});
 	});
 
+	describe("with namespace-prefixed @ values (recipe scenario)", () => {
+		it("should not double-prepend namespace when @ value already includes it", () => {
+			const transform = transformUtilityKey({ namespace: "color" });
+			const result = transform("@color.light");
+
+			expect(result).toEqual({
+				light: {
+					type: "reference",
+					name: "color.light",
+				},
+			});
+		});
+
+		it("should handle spacing namespace with dot-separated values", () => {
+			const transform = transformUtilityKey({ namespace: "spacing" });
+			const result = transform("@spacing.2xs");
+
+			expect(result).toEqual({
+				"2xs": {
+					type: "reference",
+					name: "spacing.2xs",
+				},
+			});
+		});
+
+		it("should handle border-radius namespace with dot-separated values", () => {
+			const transform = transformUtilityKey({
+				namespace: "border-radius",
+			});
+			const result = transform("@border-radius.sm");
+
+			expect(result).toEqual({
+				sm: {
+					type: "reference",
+					name: "border-radius.sm",
+				},
+			});
+		});
+
+		it("should still prepend namespace for non-prefixed @ values", () => {
+			const transform = transformUtilityKey({ namespace: "color" });
+			const result = transform("@primary");
+
+			expect(result).toEqual({
+				primary: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+
+		it("should handle namespace array with already-prefixed @ values", () => {
+			const transform = transformUtilityKey({
+				namespace: ["border-color", "color"],
+			});
+			const result = transform("@color.primary");
+
+			expect(result).toEqual({
+				primary: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+
+		it("should handle font-weight namespace with dot-separated values", () => {
+			const transform = transformUtilityKey({
+				namespace: "font-weight",
+			});
+			const result = transform("@font-weight.medium");
+
+			expect(result).toEqual({
+				medium: {
+					type: "reference",
+					name: "font-weight.medium",
+				},
+			});
+		});
+	});
+
 	describe("edge cases", () => {
 		it("should handle @ string with empty variable name", () => {
 			const transform = transformUtilityKey();

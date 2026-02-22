@@ -407,6 +407,46 @@ describe("createSelectorFunction", () => {
 		});
 	});
 
+	describe("@ reference notation", () => {
+		it("should resolve @-prefixed values to variable references", () => {
+			const s = styleframe();
+
+			const result = s.selector(".badge", {
+				gap: "@spacing.md",
+				fontSize: "@font-size.sm",
+				color: "@color.primary",
+			});
+
+			expect(result.declarations).toEqual({
+				gap: { type: "reference", name: "spacing.md" },
+				fontSize: { type: "reference", name: "font-size.sm" },
+				color: { type: "reference", name: "color.primary" },
+			});
+		});
+
+		it("should resolve @ references in nested selectors", () => {
+			const s = styleframe();
+
+			const result = s.selector(".button", {
+				padding: "@spacing.md",
+				"&:hover": {
+					color: "@color.primary",
+				},
+			});
+
+			expect(result.declarations).toEqual({
+				padding: { type: "reference", name: "spacing.md" },
+			});
+
+			const hoverChild = result.children
+				.filter(isSelector)
+				.find((child) => child.query === "&:hover");
+			expect(hoverChild?.declarations).toEqual({
+				color: { type: "reference", name: "color.primary" },
+			});
+		});
+	});
+
 	describe("edge cases", () => {
 		it("should handle empty declarations", () => {
 			const result = selector(".empty", {});

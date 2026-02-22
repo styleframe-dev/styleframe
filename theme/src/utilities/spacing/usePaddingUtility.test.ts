@@ -314,3 +314,49 @@ describe("usePaddingYUtility", () => {
 		expect(css).toContain("padding-bottom: 24px;");
 	});
 });
+
+describe("recipe with @multiplier values", () => {
+	it("should generate calc() expressions for @0.375 values via recipe", () => {
+		const s = styleframe();
+		s.variable("spacing", "1rem");
+		usePaddingRightUtility(s);
+
+		s.recipe({
+			name: "badge",
+			variants: {
+				size: {
+					sm: {
+						paddingRight: "@0.375",
+					},
+				},
+			},
+		});
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._padding-right\\:0\\.375");
+		expect(css).toContain("calc(var(--spacing, 1rem) * 0.375)");
+		expect(css).not.toContain("[0.375]");
+	});
+
+	it("should generate calc() expressions for @0.125 values via recipe", () => {
+		const s = styleframe();
+		s.variable("spacing", "1rem");
+		usePaddingTopUtility(s);
+
+		s.recipe({
+			name: "badge",
+			variants: {
+				size: {
+					xs: {
+						paddingTop: "@0.125",
+					},
+				},
+			},
+		});
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._padding-top\\:0\\.125");
+		expect(css).toContain("calc(var(--spacing, 1rem) * 0.125)");
+		expect(css).not.toContain("[0.125]");
+	});
+});
