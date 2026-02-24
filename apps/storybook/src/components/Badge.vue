@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import { badge } from "virtual:styleframe";
 
 const props = withDefaults(
@@ -15,10 +16,18 @@ const props = withDefaults(
 		label: "Badge",
 	},
 );
+
+const classes = computed(() =>
+	badge({
+		color: props.color,
+		variant: props.variant,
+		size: props.size,
+	}),
+);
 </script>
 
 <template>
-	<span :class="badge({ color: props.color, variant: props.variant, size: props.size })">
+	<span :class="classes">
 		{{ props.label }}
 	</span>
 </template>

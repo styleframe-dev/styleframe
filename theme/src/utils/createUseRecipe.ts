@@ -28,19 +28,99 @@ export type DeepPartial<T> = {
 	[P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
 };
 
+export type FilterConfig<
+	Variants extends Record<string, Record<string, VariantDeclarationsBlock>>,
+> = {
+	[K in keyof Variants]?: Array<keyof Variants[K] & string>;
+};
+
+export type ApplyFilter<
+	V extends Record<string, Record<string, VariantDeclarationsBlock>>,
+	F,
+> = {
+	[K in keyof V]: K extends keyof F
+		? F[K] extends (infer U)[]
+			? Pick<V[K], Extract<U, keyof V[K]>>
+			: V[K]
+		: V[K];
+};
+
+function applyFilter(
+	config: RecipeConfig,
+	filter: Record<string, string[] | undefined>,
+): RecipeConfig {
+	const result = { ...config };
+
+	if (result.variants) {
+		const filteredVariants = { ...result.variants };
+		for (const axis of Object.keys(filter)) {
+			const allowedValues = filter[axis];
+			if (!allowedValues || !(axis in filteredVariants)) continue;
+
+			const allowedSet = new Set(allowedValues);
+			const original = filteredVariants[axis];
+			if (!original) continue;
+
+			const filtered: Record<string, VariantDeclarationsBlock> = {};
+			for (const [key, value] of Object.entries(original)) {
+				if (allowedSet.has(key)) {
+					filtered[key] = value;
+				}
+			}
+			filteredVariants[axis] = filtered;
+		}
+		result.variants = filteredVariants;
+	}
+
+	if (result.compoundVariants) {
+		result.compoundVariants = result.compoundVariants.filter((compound) => {
+			for (const [axis, matchValue] of Object.entries(compound.match)) {
+				const allowedValues = filter[axis];
+				if (allowedValues) {
+					const allowedSet = new Set(allowedValues);
+					if (!allowedSet.has(matchValue as string)) {
+						return false;
+					}
+				}
+			}
+			return true;
+		});
+	}
+
+	if (result.defaultVariants) {
+		const adjustedDefaults = { ...result.defaultVariants };
+		for (const axis of Object.keys(filter)) {
+			const allowedValues = filter[axis];
+			if (!allowedValues || !(axis in adjustedDefaults)) continue;
+
+			const allowedSet = new Set(allowedValues);
+			const currentDefault = (adjustedDefaults as Record<string, string>)[axis];
+			if (currentDefault && !allowedSet.has(currentDefault)) {
+				delete (adjustedDefaults as Record<string, string>)[axis];
+			}
+		}
+		result.defaultVariants = adjustedDefaults;
+	}
+
+	return result;
+}
+
 export function createUseRecipe<
 	Name extends string,
-	Variants extends Record<string, Record<string, VariantDeclarationsBlock>>,
-	Config extends RecipeConfig<Variants>,
+	const Config extends RecipeConfig,
 >(name: Name, defaults: Config) {
-	return function useRecipe(
+	type Variants = NonNullable<Config["variants"]>;
+
+	return function useRecipe<F extends FilterConfig<Variants> = {}>(
 		s: Styleframe,
-		options?: DeepPartial<Config>,
-	): Recipe<Name, Variants> {
-		const merged = defu(options ?? {}, defaults) as Config;
+		options?: DeepPartial<RecipeConfig<Variants>> & { filter?: F },
+	): Recipe<Name, ApplyFilter<Variants, F>> {
+		const { filter, ...configOverrides } = options ?? {};
+		const merged = defu(configOverrides, defaults) as RecipeConfig;
+		const filtered = filter ? applyFilter(merged, filter) : merged;
 		return s.recipe({
 			name,
-			...merged,
-		});
+			...filtered,
+		}) as Recipe<Name, ApplyFilter<Variants, F>>;
 	};
 }

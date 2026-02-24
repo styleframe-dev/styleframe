@@ -1,10 +1,21 @@
 import { createUseRecipe } from "../utils/createUseRecipe";
 
+export const colors = [
+	"primary",
+	"secondary",
+	"success",
+	"info",
+	"warning",
+	"danger",
+] as const;
+
+export const variants = ["solid", "outline", "soft", "subtle"] as const;
+
 /**
- * Base badge styling - core appearance without variants.
- * Use this when you want to define your own custom variants.
+ * Full badge recipe with color, variant, and size variants.
+ * Includes all Nuxt UI-inspired styling options.
  */
-export const useBadgeRecipeBase = createUseRecipe("badge", {
+export const useBadgeRecipe = createUseRecipe("badge", {
 	base: {
 		display: "inline-flex",
 		alignItems: "center",
@@ -16,32 +27,6 @@ export const useBadgeRecipeBase = createUseRecipe("badge", {
 		paddingLeft: "@spacing.sm",
 		paddingRight: "@spacing.sm",
 		borderRadius: "@border-radius.md",
-	},
-});
-
-const colors = [
-	"primary",
-	"secondary",
-	"success",
-	"info",
-	"warning",
-	"danger",
-] as const;
-
-const variants = ["solid", "outline", "soft", "subtle"] as const;
-
-/**
- * Full badge recipe with color, variant, and size variants.
- * Includes all Nuxt UI-inspired styling options.
- */
-export const useBadgeRecipe = createUseRecipe("badge", {
-	base: {
-		display: "inline-flex",
-		alignItems: "center",
-		fontWeight: "@font-weight.medium",
-		borderWidth: "@border-width.thin",
-		borderStyle: "@border-style.solid",
-		borderColor: "transparent",
 	},
 	variants: {
 		color: {

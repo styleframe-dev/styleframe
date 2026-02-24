@@ -86,6 +86,7 @@ import {
 	textAlignValues,
 	textDecorationLineValues,
 	textDecorationStyleValues,
+	textDecorationValues,
 	textOverflowValues,
 	textTransformValues,
 	textWrapValues,
@@ -162,6 +163,7 @@ import {
 	useOutlineColorUtility,
 	useOutlineOffsetUtility,
 	useOutlineStyleUtility,
+	useOutlineUtility,
 	useOutlineWidthUtility,
 	useRingColorUtility,
 	useRingInsetUtility,
@@ -422,6 +424,7 @@ import {
 	useTextDecorationLineUtility,
 	useTextDecorationStyleUtility,
 	useTextDecorationThicknessUtility,
+	useTextDecorationUtility,
 	useTextIndentUtility,
 	useTextOverflowUtility,
 	useTextTransformUtility,
@@ -429,6 +432,7 @@ import {
 	useTextWrapUtility,
 	useVerticalAlignUtility,
 	useWhitespaceUtility,
+	useWhiteSpaceUtility,
 	useWordBreakUtility,
 } from "../utilities/typography";
 
@@ -476,6 +480,7 @@ export interface UtilitiesPresetConfig {
 
 	// Borders utility
 	divideStyle?: Record<string, string> | false;
+	outline?: Record<string, string> | false;
 	outlineStyle?: Record<string, string> | false;
 
 	// Flexbox & Grid
@@ -550,12 +555,14 @@ export interface UtilitiesPresetConfig {
 	listStyleType?: Record<string, string> | false;
 	overflowWrap?: Record<string, string> | false;
 	textAlign?: Record<string, string> | false;
+	textDecoration?: Record<string, string> | false;
 	textDecorationLine?: Record<string, string> | false;
 	textDecorationStyle?: Record<string, string> | false;
 	textOverflow?: Record<string, string> | false;
 	textTransform?: Record<string, string> | false;
 	textWrap?: Record<string, string> | false;
 	verticalAlign?: Record<string, string> | false;
+	whiteSpace?: Record<string, string> | false;
 	whitespace?: Record<string, string> | false;
 	wordBreak?: Record<string, string> | false;
 }
@@ -783,6 +790,10 @@ export function useUtilitiesPreset(
 	);
 	const overflowWrap = resolveValues(config.overflowWrap, overflowWrapValues);
 	const textAlign = resolveValues(config.textAlign, textAlignValues);
+	const textDecoration = resolveValues(
+		config.textDecoration,
+		textDecorationValues,
+	);
 	const textDecorationLine = resolveValues(
 		config.textDecorationLine,
 		textDecorationLineValues,
@@ -801,6 +812,7 @@ export function useUtilitiesPreset(
 		config.verticalAlign,
 		verticalAlignValues,
 	);
+	const whiteSpace = resolveValues(config.whiteSpace, whitespaceValues);
 	const whitespace = resolveValues(config.whitespace, whitespaceValues);
 	const wordBreak = resolveValues(config.wordBreak, wordBreakValues);
 
@@ -839,6 +851,8 @@ export function useUtilitiesPreset(
 
 	const createDivideStyleUtility = useDivideStyleUtility(s);
 	if (divideStyle) createDivideStyleUtility(divideStyle);
+
+	const createOutlineUtility = useOutlineUtility(s);
 
 	const createOutlineStyleUtility = useOutlineStyleUtility(s);
 	if (outlineStyle) createOutlineStyleUtility(outlineStyle);
@@ -1020,6 +1034,9 @@ export function useUtilitiesPreset(
 	const createTextAlignUtility = useTextAlignUtility(s);
 	if (textAlign) createTextAlignUtility(textAlign);
 
+	const createTextDecorationUtility = useTextDecorationUtility(s);
+	if (textDecoration) createTextDecorationUtility(textDecoration);
+
 	const createTextDecorationLineUtility = useTextDecorationLineUtility(s);
 	if (textDecorationLine) createTextDecorationLineUtility(textDecorationLine);
 
@@ -1038,6 +1055,9 @@ export function useUtilitiesPreset(
 
 	const createVerticalAlignUtility = useVerticalAlignUtility(s);
 	if (verticalAlign) createVerticalAlignUtility(verticalAlign);
+
+	const createWhiteSpaceUtility = useWhiteSpaceUtility(s);
+	if (whiteSpace) createWhiteSpaceUtility(whiteSpace);
 
 	const createWhitespaceUtility = useWhitespaceUtility(s);
 	if (whitespace) createWhitespaceUtility(whitespace);
@@ -1109,6 +1129,7 @@ export function useUtilitiesPreset(
 		createOutlineColorUtility: useOutlineColorUtility(s),
 		createOutlineOffsetUtility: useOutlineOffsetUtility(s),
 		createOutlineStyleUtility,
+		createOutlineUtility,
 		createOutlineWidthUtility: useOutlineWidthUtility(s),
 		createRingColorUtility: useRingColorUtility(s),
 		createRingInsetUtility: useRingInsetUtility(s),
@@ -1345,6 +1366,7 @@ export function useUtilitiesPreset(
 		createTextDecorationColorUtility: useTextDecorationColorUtility(s),
 		createTextDecorationLineUtility,
 		createTextDecorationStyleUtility,
+		createTextDecorationUtility,
 		createTextDecorationThicknessUtility: useTextDecorationThicknessUtility(s),
 		createTextIndentUtility: useTextIndentUtility(s),
 		createTextOverflowUtility,
@@ -1352,6 +1374,7 @@ export function useUtilitiesPreset(
 		createTextUnderlineOffsetUtility: useTextUnderlineOffsetUtility(s),
 		createTextWrapUtility,
 		createVerticalAlignUtility,
+		createWhiteSpaceUtility,
 		createWhitespaceUtility,
 		createWordBreakUtility,
 	};

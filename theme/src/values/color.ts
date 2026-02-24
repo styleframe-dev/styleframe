@@ -1,10 +1,10 @@
 export const colorValues = {
-	primary: "#3b82f6",
-	secondary: "#6b7280",
-	success: "#22c55e",
-	warning: "#f59e0b",
-	danger: "#ef4444",
-	info: "#06b6d4",
+	primary: "#2563eb",
+	secondary: "#64748b",
+	success: "#0b8538",
+	warning: "#c2410c",
+	danger: "#dc2626",
+	info: "#0e7490",
 	light: "#f8fafc",
 	dark: "#1e293b",
 };
