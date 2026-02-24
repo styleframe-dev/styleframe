@@ -200,10 +200,8 @@ describe("createMultiplierAutogenerate", () => {
 
 		const result = autogenerate(" @1.5");
 		// Leading whitespace means value[0] !== "@", so falls back to arbitrary value
-		// Whitespace values are hashed instead of bracket-wrapped
-		const key = Object.keys(result)[0]!;
-		expect(key).toMatch(/^[0-9a-f]{7}$/);
-		expect(result[key]).toBe(" @1.5");
+		expect(result).toHaveProperty("[ @1.5]");
+		expect(result["[ @1.5]"]).toBe(" @1.5");
 	});
 
 	it("should fall back to default behavior for @ variable references", () => {

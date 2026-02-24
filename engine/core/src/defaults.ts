@@ -72,7 +72,7 @@ export function transformUtilityKey(
 			resolvedKey = replacer(keyName);
 		} else {
 			const stringValue = String(value);
-			if (/\s/.test(stringValue)) {
+			if (/\s/.test(stringValue.trim())) {
 				resolvedKey = hashValue(stringValue);
 			} else {
 				resolvedKey = `[${value}]`;
