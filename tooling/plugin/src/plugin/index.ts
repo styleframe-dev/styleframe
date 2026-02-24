@@ -68,7 +68,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	// Create plugin state and apply explicit alias configuration
 	const state = createPluginState(configPath);
 	if (options.resolve?.alias) {
-		Object.assign(state.alias, options.resolve.alias);
+		Object.assign(state.resolve.alias, options.resolve.alias);
 	}
 
 	let isBuildCommand = false;
@@ -346,7 +346,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				});
 
 				// Watch aliased source directories for changes
-				for (const aliasPath of Object.values(state.alias)) {
+				for (const aliasPath of Object.values(state.resolve.alias)) {
 					const resolved = path.isAbsolute(aliasPath)
 						? aliasPath
 						: path.resolve(cwd, aliasPath);
