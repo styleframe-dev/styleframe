@@ -149,6 +149,16 @@ export const listStyleTypeValues = {
 };
 
 /**
+ * Default text-decoration utility values.
+ */
+export const textDecorationValues = {
+	none: "none",
+	underline: "underline",
+	overline: "overline",
+	"line-through": "line-through",
+};
+
+/**
  * Default text-decoration-line utility values matching Tailwind CSS.
  */
 export const textDecorationLineValues = {

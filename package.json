@@ -6,7 +6,7 @@
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"scripts": {
 		"dev": "turbo run dev",
-		"dev:docs": "turbo run dev --filter @styleframe/docs",
+		"dev:docs": "turbo run dev --filter @styleframe/docs --filter @styleframe/storybook",
 		"storybook": "turbo run dev --filter @styleframe/storybook",
 		"ci:changeset": "changeset",
 		"ci:publish": "pnpm run ci:prepublish && changeset publish",

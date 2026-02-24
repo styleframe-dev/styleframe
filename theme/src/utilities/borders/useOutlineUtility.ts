@@ -2,6 +2,13 @@ import { createUseUtility } from "../../utils";
 import { outlineStyleValues } from "../../values";
 
 /**
+ * Create outline shorthand utility classes.
+ */
+export const useOutlineUtility = createUseUtility("outline", ({ value }) => ({
+	outline: value,
+}));
+
+/**
  * Create outline-width utility classes.
  *
  * @example
