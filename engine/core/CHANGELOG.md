@@ -1,5 +1,11 @@
 # @styleframe/core
 
+## 3.0.1
+
+### Patch Changes
+
+- [#120](https://github.com/styleframe-dev/styleframe/pull/120) [`fa48802`](https://github.com/styleframe-dev/styleframe/commit/fa488027d32956e20fa26dc92ee1a3b3583671ad) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add hash-based utility class names for arbitrary CSS values containing whitespace. Values like `transition: 'all 0.3s ease'` now produce valid CSS class names using a deterministic hash (e.g., `_transition:2f7a3b1`) instead of invalid bracket notation with spaces.
+
 ## 3.0.0
 
 ### Major Changes

@@ -699,7 +699,7 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/typescript
       '@styleframe/core':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.0.1
         version: link:../core
       '@styleframe/loader':
         specifier: workspace:^3.0.0
@@ -782,7 +782,7 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/vite
       '@styleframe/theme':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../theme
       '@types/node':
         specifier: 'catalog:'
@@ -800,7 +800,7 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
       styleframe:
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../engine/styleframe
       tsx:
         specifier: 'catalog:'
@@ -837,7 +837,7 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../config/vite
       '@styleframe/core':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.0.1
         version: link:../engine/core
       '@styleframe/transpiler':
         specifier: workspace:^3.0.0
@@ -1029,10 +1029,10 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../../engine/runtime
       '@styleframe/theme':
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../../theme
       styleframe:
-        specifier: workspace:^3.0.0
+        specifier: workspace:^3.1.0
         version: link:../../../engine/styleframe
       vite:
         specifier: ^6.3.5
