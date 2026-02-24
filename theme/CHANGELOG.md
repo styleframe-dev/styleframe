@@ -1,5 +1,20 @@
 # @styleframe/theme
 
+## 3.1.0
+
+### Minor Changes
+
+- [#121](https://github.com/styleframe-dev/styleframe/pull/121) [`0242bd6`](https://github.com/styleframe-dev/styleframe/commit/0242bd65028cfc9216ed56e06d52de75ceff4d4b) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add utility modifier composables with auto-registration in useUtilitiesPreset
+  - Add 68 modifiers across 8 categories: pseudo-states, form states, structural, pseudo-elements, media preferences, ARIA states, directional, and other states
+  - Each modifier is individually importable (e.g., `useHoverModifier`, `useDisabledModifier`)
+  - Grouped composables available for convenience (e.g., `usePseudoStateModifiers`)
+  - Per-category configuration to enable/disable modifier groups via `ModifiersConfig`
+
+### Patch Changes
+
+- Updated dependencies [[`fa48802`](https://github.com/styleframe-dev/styleframe/commit/fa488027d32956e20fa26dc92ee1a3b3583671ad)]:
+  - @styleframe/core@3.0.1
+
 ## 3.0.0
 
 ### Major Changes
