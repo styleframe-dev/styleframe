@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { transformUtilityKey } from "./defaults";
 import type { Reference } from "./types";
+import { hashValue } from "./utils/hash";
 
 describe("transformUtilityKey", () => {
 	describe("with default replacer", () => {
@@ -441,6 +442,86 @@ describe("transformUtilityKey", () => {
 			expect(result).toEqual({
 				"[]": "",
 			});
+		});
+	});
+
+	describe("whitespace arbitrary values", () => {
+		it("should hash string values containing spaces", () => {
+			const transform = transformUtilityKey();
+			const result = transform("all 0.3s ease");
+			const keys = Object.keys(result);
+
+			expect(keys[0]).toMatch(/^[0-9a-f]{7}$/);
+			expect(keys[0]).not.toContain("[");
+			expect(keys[0]).not.toContain(" ");
+			expect(result[keys[0]!]).toBe("all 0.3s ease");
+		});
+
+		it("should produce deterministic hashes", () => {
+			const transform = transformUtilityKey();
+			const result1 = transform("all 0.3s ease");
+			const result2 = transform("all 0.3s ease");
+			expect(Object.keys(result1)[0]).toBe(Object.keys(result2)[0]);
+		});
+
+		it("should produce the expected hash key for a known value", () => {
+			const transform = transformUtilityKey();
+			const result = transform("all 0.3s ease");
+			const expectedHash = hashValue("all 0.3s ease");
+			expect(result).toEqual({
+				[expectedHash]: "all 0.3s ease",
+			});
+		});
+
+		it("should NOT hash values without whitespace (backward compatible)", () => {
+			const transform = transformUtilityKey();
+			expect(transform("red")).toEqual({ "[red]": "red" });
+			expect(transform("1rem")).toEqual({ "[1rem]": "1rem" });
+			expect(transform("#1E3A8A")).toEqual({ "[#1E3A8A]": "#1E3A8A" });
+		});
+
+		it("should NOT hash numeric or boolean values", () => {
+			const transform = transformUtilityKey();
+			expect(transform(42)).toEqual({ "[42]": 42 });
+			expect(transform(true)).toEqual({ "[true]": true });
+			expect(transform(null)).toEqual({ "[null]": null });
+		});
+
+		it("should hash values with tabs", () => {
+			const transform = transformUtilityKey();
+			const result = transform("a\tb");
+			const keys = Object.keys(result);
+			expect(keys[0]).toMatch(/^[0-9a-f]{7}$/);
+		});
+
+		it("should hash values with newlines", () => {
+			const transform = transformUtilityKey();
+			const result = transform("a\nb");
+			const keys = Object.keys(result);
+			expect(keys[0]).toMatch(/^[0-9a-f]{7}$/);
+		});
+
+		it("should produce different hashes for different whitespace values", () => {
+			const transform = transformUtilityKey();
+			const key1 = Object.keys(transform("all 0.3s ease"))[0];
+			const key2 = Object.keys(transform("all 0.5s linear"))[0];
+			expect(key1).not.toBe(key2);
+		});
+
+		it("should hash calc expressions with spaces", () => {
+			const transform = transformUtilityKey();
+			const result = transform("calc(100% - 20px)");
+			const keys = Object.keys(result);
+			expect(keys[0]).toMatch(/^[0-9a-f]{7}$/);
+			expect(result[keys[0]!]).toBe("calc(100% - 20px)");
+		});
+
+		it("should hash multi-value CSS shorthand properties", () => {
+			const transform = transformUtilityKey();
+			const result = transform("1px solid red");
+			const keys = Object.keys(result);
+			expect(keys[0]).toMatch(/^[0-9a-f]{7}$/);
+			expect(result[keys[0]!]).toBe("1px solid red");
 		});
 	});
 });

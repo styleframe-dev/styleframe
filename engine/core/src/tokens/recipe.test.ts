@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { Root } from "../types";
+import { hashValue } from "../utils/hash";
 import { createModifierFunction } from "./modifier";
 import { createRecipeFunction, processRecipeUtilities } from "./recipe";
 import { createRoot } from "./root";
@@ -1199,6 +1200,105 @@ describe("generateRecipeRuntime", () => {
 					},
 				},
 			],
+		});
+	});
+
+	test("should hash whitespace values in base declarations", () => {
+		utility("transition", ({ value }) => ({ transition: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: { transition: "all 0.3s ease" },
+			variants: {},
+		});
+
+		const expectedHash = hashValue("all 0.3s ease");
+		expect(instance._runtime?.base).toEqual({
+			transition: expectedHash,
+		});
+	});
+
+	test("should hash whitespace values in variant declarations", () => {
+		utility("transition", ({ value }) => ({ transition: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				animation: {
+					fast: { transition: "all 0.15s ease" },
+					slow: { transition: "all 0.5s ease-in-out" },
+				},
+			},
+		});
+
+		const fastHash = hashValue("all 0.15s ease");
+		const slowHash = hashValue("all 0.5s ease-in-out");
+		expect(instance._runtime?.variants).toEqual({
+			animation: {
+				fast: { transition: fastHash },
+				slow: { transition: slowHash },
+			},
+		});
+	});
+
+	test("should hash whitespace values in compound variant declarations", () => {
+		utility("transition", ({ value }) => ({ transition: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: {},
+				},
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary" },
+					css: { transition: "all 0.3s ease" },
+				},
+			],
+		});
+
+		const expectedHash = hashValue("all 0.3s ease");
+		expect(instance._runtime?.compoundVariants?.[0]?.css).toEqual({
+			transition: expectedHash,
+		});
+	});
+
+	test("should create valid utility instances for whitespace values", () => {
+		utility("transition", ({ value }) => ({ transition: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: { transition: "all 0.3s ease" },
+			variants: {},
+		});
+
+		processRecipeUtilities(instance, root);
+
+		const transitionUtilities = root.children.filter(
+			(child) => child.type === "utility" && child.name === "transition",
+		);
+		expect(transitionUtilities.length).toBeGreaterThanOrEqual(1);
+
+		const utilityInstance = transitionUtilities[0];
+		if (utilityInstance?.type === "utility") {
+			expect(utilityInstance.value).toMatch(/^[0-9a-f]{7}$/);
+			expect(utilityInstance.value).not.toContain(" ");
+		}
+	});
+
+	test("should not hash non-whitespace arbitrary values (backward compatible)", () => {
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: { borderWidth: "thin" },
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			borderWidth: "[thin]",
 		});
 	});
 });

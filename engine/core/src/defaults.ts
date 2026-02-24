@@ -1,6 +1,7 @@
 import type { createRefFunction } from "./tokens";
 import { isRef } from "./typeGuards";
 import type { Reference, TokenValue } from "./types";
+import { hashValue } from "./utils/hash";
 
 export interface TransformUtilityKeyOptions {
 	/** Transforms the key used in the utility class name */
@@ -70,7 +71,12 @@ export function transformUtilityKey(
 			}
 			resolvedKey = replacer(keyName);
 		} else {
-			resolvedKey = `[${value}]`;
+			const trimmedValue = String(value).trim();
+			if (/\s/.test(trimmedValue)) {
+				resolvedKey = hashValue(trimmedValue);
+			} else {
+				resolvedKey = `[${trimmedValue}]`;
+			}
 		}
 
 		return {
