@@ -14,16 +14,17 @@ const dirname =
 		: path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-export default defineConfig(({ command }) => ({
-	resolve:
-		command === "serve"
-			? {
-					alias: {
-						"@styleframe/theme": path.resolve(dirname, "../../theme/src"),
-					},
-				}
-			: {},
-	plugins: [styleframe(), vue()],
+export default defineConfig({
+	plugins: [
+		styleframe({
+			resolve: {
+				alias: {
+					"@styleframe/theme": path.resolve(dirname, "../../theme/src"),
+				},
+			},
+		}),
+		vue(),
+	],
 	test: {
 		projects: [
 			{
@@ -52,4 +53,4 @@ export default defineConfig(({ command }) => ({
 			},
 		],
 	},
-}));
+});

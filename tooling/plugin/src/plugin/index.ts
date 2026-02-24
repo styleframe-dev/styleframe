@@ -65,8 +65,11 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	const entry = options.entry ?? DEFAULT_ENTRY;
 	const configPath = path.isAbsolute(entry) ? entry : path.resolve(cwd, entry);
 
-	// Create plugin state
+	// Create plugin state and apply explicit alias configuration
 	const state = createPluginState(configPath);
+	if (options.resolve?.alias) {
+		Object.assign(state.alias, options.resolve.alias);
+	}
 
 	let isBuildCommand = false;
 
@@ -258,25 +261,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 		},
 
 		vite: {
-			configResolved(config) {
-				// Pick up Vite's resolve.alias and pass it to Jiti for module resolution.
-				// Vite normalizes resolve.alias to Alias[] ({ find, replacement }).
-				// We only use entries where `find` is a string since Jiti doesn't support RegExp keys.
-				if (config.resolve?.alias) {
-					const viteAliases = Array.isArray(config.resolve.alias)
-						? config.resolve.alias
-						: Object.entries(
-								config.resolve.alias as Record<string, string>,
-							).map(([find, replacement]) => ({ find, replacement }));
-
-					for (const entry of viteAliases) {
-						if (typeof entry.find === "string") {
-							state.alias[entry.find] = entry.replacement;
-						}
-					}
-				}
-			},
-
 			async transform(code, id) {
 				// Transform TypeScript virtual modules since Vite's esbuild doesn't process them
 				const isVirtualTsModule =

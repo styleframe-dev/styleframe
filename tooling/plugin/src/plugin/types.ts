@@ -22,4 +22,9 @@ export interface Options {
 	};
 	/** Glob patterns for content files to scan for utility classes (Tailwind-style) */
 	content?: string[];
+	/** Module resolution options */
+	resolve?: {
+		/** Alias map for Jiti module resolution (e.g. { '@styleframe/theme': '/path/to/theme/src' }) */
+		alias?: Record<string, string>;
+	};
 }
