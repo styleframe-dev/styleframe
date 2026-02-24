@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { consola } from "consola";
 import { transform as esbuildTransform } from "esbuild";
@@ -45,6 +46,18 @@ function isStyleframeSourceFile(id: string): boolean {
 	return STYLEFRAME_SOURCE_REGEX.test(id);
 }
 
+// Virtual module ID groups for invalidation
+const ALL_VIRTUAL_MODULE_IDS = [
+	RESOLVED_VIRTUAL_CSS_MODULE_ID,
+	RESOLVED_VIRTUAL_EXTENSION_ID,
+	RESOLVED_VIRTUAL_CONSUMER_ID,
+];
+
+const CSS_AND_CONSUMER_MODULE_IDS = [
+	RESOLVED_VIRTUAL_CSS_MODULE_ID,
+	RESOLVED_VIRTUAL_CONSUMER_ID,
+];
+
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	options = DEFAULT_OPTIONS,
 ) => {
@@ -56,6 +69,9 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	const state = createPluginState(configPath);
 
 	let isBuildCommand = false;
+
+	// Resolved alias directories for file watching
+	const aliasDirectories: string[] = [];
 
 	// Scanner state (created if content option is provided)
 	let scannerState: PluginScannerState | null = null;
@@ -74,6 +90,55 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				consola.error(`[styleframe] Type generation failed:`, error);
 			}
 		}, 100);
+	};
+
+	// Reload all styleframe files and re-scan content
+	const reloadAndRescan = async (files: string[]) => {
+		await reloadAll(state, files);
+		if (scannerState) {
+			await scanAndRegister(state, scannerState, {
+				silent: options.silent,
+			});
+		}
+	};
+
+	// Invalidate virtual modules on the dev server and trigger a full page reload
+	const invalidateServerModules = (server: {
+		moduleGraph: {
+			getModuleById(id: string): unknown;
+			invalidateModule(mod: unknown): void;
+		};
+		ws: { send(data: { type: string }): void };
+	}) => {
+		for (const id of CSS_AND_CONSUMER_MODULE_IDS) {
+			const mod = server.moduleGraph.getModuleById(id);
+			if (mod) server.moduleGraph.invalidateModule(mod);
+		}
+		scheduleTypeGeneration();
+		server.ws.send({ type: "full-reload" });
+	};
+
+	// Full reload for handleHotUpdate: reload files, resolve virtual modules, schedule type gen.
+	// Returns the modules to invalidate, or null if reload failed.
+	const handleReload = async (
+		resolveModule: (id: string) => Promise<unknown>,
+		moduleIds: string[],
+		errorMessage: string,
+	) => {
+		try {
+			await reloadAndRescan([...state.files.keys()]);
+
+			const modulesToInvalidate = (
+				await Promise.all(moduleIds.map(resolveModule))
+			).filter(Boolean);
+
+			scheduleTypeGeneration();
+
+			return modulesToInvalidate.length > 0 ? modulesToInvalidate : null;
+		} catch (error) {
+			consola.error(errorMessage, error);
+			return null;
+		}
 	};
 
 	return {
@@ -193,6 +258,25 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 		},
 
 		vite: {
+			configResolved(config) {
+				// Pick up Vite's resolve.alias and pass it to Jiti for module resolution.
+				// Vite normalizes resolve.alias to Alias[] ({ find, replacement }).
+				// We only use entries where `find` is a string since Jiti doesn't support RegExp keys.
+				if (config.resolve?.alias) {
+					const viteAliases = Array.isArray(config.resolve.alias)
+						? config.resolve.alias
+						: Object.entries(
+								config.resolve.alias as Record<string, string>,
+							).map(([find, replacement]) => ({ find, replacement }));
+
+					for (const entry of viteAliases) {
+						if (typeof entry.find === "string") {
+							state.alias[entry.find] = entry.replacement;
+						}
+					}
+				}
+			},
+
 			async transform(code, id) {
 				// Transform TypeScript virtual modules since Vite's esbuild doesn't process them
 				const isVirtualTsModule =
@@ -240,25 +324,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 								});
 							}
 
-							// Invalidate consumer and CSS modules
-							const consumerMod = server.moduleGraph.getModuleById(
-								RESOLVED_VIRTUAL_CONSUMER_ID,
-							);
-							const cssMod = server.moduleGraph.getModuleById(
-								RESOLVED_VIRTUAL_CSS_MODULE_ID,
-							);
-
-							if (consumerMod) {
-								server.moduleGraph.invalidateModule(consumerMod);
-							}
-							if (cssMod) {
-								server.moduleGraph.invalidateModule(cssMod);
-							}
-
-							// Regenerate types
-							scheduleTypeGeneration();
-
-							server.ws.send({ type: "full-reload" });
+							invalidateServerModules(server);
 						} catch (error) {
 							consola.error(
 								`[styleframe] Failed to load new file: ${file}`,
@@ -284,35 +350,8 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 								.sort(([, a], [, b]) => a.loadOrder - b.loadOrder)
 								.map(([filePath]) => filePath);
 
-							// Reload everything to rebuild the global instance without the deleted file's contributions
-							await reloadAll(state, remainingFiles);
-
-							// Re-scan content after reload (scanner values were cleared)
-							if (scannerState) {
-								await scanAndRegister(state, scannerState, {
-									silent: options.silent,
-								});
-							}
-
-							// Invalidate consumer and CSS modules
-							const consumerMod = server.moduleGraph.getModuleById(
-								RESOLVED_VIRTUAL_CONSUMER_ID,
-							);
-							const cssMod = server.moduleGraph.getModuleById(
-								RESOLVED_VIRTUAL_CSS_MODULE_ID,
-							);
-
-							if (consumerMod) {
-								server.moduleGraph.invalidateModule(consumerMod);
-							}
-							if (cssMod) {
-								server.moduleGraph.invalidateModule(cssMod);
-							}
-
-							// Regenerate types
-							scheduleTypeGeneration();
-
-							server.ws.send({ type: "full-reload" });
+							await reloadAndRescan(remainingFiles);
+							invalidateServerModules(server);
 						} catch (error) {
 							consola.error(
 								`[styleframe] Failed to reload after file removal: ${file}`,
@@ -321,10 +360,26 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						}
 					}
 				});
+
+				// Watch aliased source directories for changes
+				for (const aliasPath of Object.values(state.alias)) {
+					const resolved = path.isAbsolute(aliasPath)
+						? aliasPath
+						: path.resolve(cwd, aliasPath);
+
+					try {
+						const stat = fs.statSync(resolved);
+						const dir = stat.isDirectory() ? resolved : path.dirname(resolved);
+						aliasDirectories.push(dir);
+						server.watcher.add(dir);
+					} catch {
+						// Path doesn't exist yet, skip
+					}
+				}
 			},
 
 			async handleHotUpdate(ctx) {
-				const getModuleById = async (id: string) => {
+				const resolveModule = async (id: string) => {
 					const mod = ctx.server?.moduleGraph.getModuleById(id);
 					return mod ?? (await ctx.server?.moduleGraph.getModuleByUrl(id));
 				};
@@ -335,45 +390,12 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						consola.info(`[styleframe] Config changed, reloading...`);
 					}
 
-					try {
-						const files = [...state.files.keys()];
-						await reloadAll(state, files);
-
-						// Re-scan content after reload (scanner values were cleared)
-						if (scannerState) {
-							await scanAndRegister(state, scannerState, {
-								silent: options.silent,
-							});
-						}
-
-						// Invalidate all virtual modules
-						const cssModule = await getModuleById(
-							RESOLVED_VIRTUAL_CSS_MODULE_ID,
-						);
-						const extensionModule = await getModuleById(
-							RESOLVED_VIRTUAL_EXTENSION_ID,
-						);
-						const consumerModule = await getModuleById(
-							RESOLVED_VIRTUAL_CONSUMER_ID,
-						);
-
-						const modulesToInvalidate = [
-							cssModule,
-							extensionModule,
-							consumerModule,
-						].filter(Boolean);
-
-						// Regenerate types
-						scheduleTypeGeneration();
-
-						if (modulesToInvalidate.length > 0) {
-							return modulesToInvalidate as typeof ctx.modules;
-						}
-					} catch (error) {
-						consola.error(`[styleframe] Reload failed:`, error);
-					}
-
-					return ctx.modules;
+					const result = await handleReload(
+						resolveModule,
+						ALL_VIRTUAL_MODULE_IDS,
+						`[styleframe] Reload failed:`,
+					);
+					return (result as typeof ctx.modules) ?? ctx.modules;
 				}
 
 				// Styleframe file change → reload all to rebuild global instance
@@ -384,44 +406,12 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						);
 					}
 
-					try {
-						// Must reload all files because the global instance accumulates
-						// state (variables, selectors, recipes, etc.) and there's no way
-						// to undo a single file's contributions. Without a full reload,
-						// removed declarations would persist on the global instance.
-						const files = [...state.files.keys()];
-						await reloadAll(state, files);
-
-						// Re-scan content after reload (scanner values were cleared)
-						if (scannerState) {
-							await scanAndRegister(state, scannerState, {
-								silent: options.silent,
-							});
-						}
-
-						// Invalidate CSS and consumer modules
-						const cssModule = await getModuleById(
-							RESOLVED_VIRTUAL_CSS_MODULE_ID,
-						);
-						const consumerModule = await getModuleById(
-							RESOLVED_VIRTUAL_CONSUMER_ID,
-						);
-
-						const modulesToInvalidate = [cssModule, consumerModule].filter(
-							Boolean,
-						);
-
-						// Regenerate types
-						scheduleTypeGeneration();
-
-						if (modulesToInvalidate.length > 0) {
-							return modulesToInvalidate as typeof ctx.modules;
-						}
-					} catch (error) {
-						consola.error(`[styleframe] Failed to reload: ${ctx.file}`, error);
-					}
-
-					return ctx.modules;
+					const result = await handleReload(
+						resolveModule,
+						CSS_AND_CONSUMER_MODULE_IDS,
+						`[styleframe] Failed to reload: ${ctx.file}`,
+					);
+					return (result as typeof ctx.modules) ?? ctx.modules;
 				}
 
 				// Content file change → incremental scan and register new utilities
@@ -434,7 +424,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						);
 
 						if (hasNewValues) {
-							const cssModule = await getModuleById(
+							const cssModule = await resolveModule(
 								RESOLVED_VIRTUAL_CSS_MODULE_ID,
 							);
 
@@ -450,6 +440,26 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					}
 
 					return ctx.modules;
+				}
+
+				// Aliased dependency change → reload everything
+				const isAliasedFile = aliasDirectories.some(
+					(dir) => ctx.file.startsWith(dir + path.sep) || ctx.file === dir,
+				);
+
+				if (isAliasedFile) {
+					if (!options.silent) {
+						consola.info(
+							`[styleframe] Aliased dependency changed: ${path.relative(cwd, ctx.file)}`,
+						);
+					}
+
+					const result = await handleReload(
+						resolveModule,
+						ALL_VIRTUAL_MODULE_IDS,
+						`[styleframe] Reload after alias change failed:`,
+					);
+					return (result as typeof ctx.modules) ?? ctx.modules;
 				}
 
 				return ctx.modules;

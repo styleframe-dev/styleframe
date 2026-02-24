@@ -80,7 +80,9 @@ export async function loadConfigFile(
 	const configPath = state.configFile.path;
 
 	// Use shared loadModule function
-	const { instance, exports } = await loadModule(configPath);
+	const { instance, exports } = await loadModule(configPath, {
+		alias: state.alias,
+	});
 
 	// Check for collisions
 	checkExportCollisions(state, exports, configPath);
@@ -119,6 +121,7 @@ export async function loadStyleframeFile(
 		// Use shared loadExtensionModule function with alias for virtual:styleframe
 		const { exports } = await loadExtensionModule(filePath, {
 			alias: {
+				...state.alias,
 				"virtual:styleframe": getExtensionShimPath(),
 			},
 		});
