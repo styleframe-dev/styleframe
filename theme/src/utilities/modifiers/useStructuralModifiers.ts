@@ -1,0 +1,93 @@
+import type { ModifierFactory, Styleframe } from "@styleframe/core";
+
+export interface StructuralModifiers {
+	first: ModifierFactory;
+	last: ModifierFactory;
+	only: ModifierFactory;
+	odd: ModifierFactory;
+	even: ModifierFactory;
+	firstOfType: ModifierFactory;
+	lastOfType: ModifierFactory;
+	onlyOfType: ModifierFactory;
+	empty: ModifierFactory;
+}
+
+export function useFirstModifier(s: Styleframe): ModifierFactory {
+	return s.modifier("first", ({ declarations }) => ({
+		"&:first-child": declarations,
+	}));
+}
+
+export function useLastModifier(s: Styleframe): ModifierFactory {
+	return s.modifier("last", ({ declarations }) => ({
+		"&:last-child": declarations,
+	}));
+}
+
+export function useOnlyModifier(s: Styleframe): ModifierFactory {
+	return s.modifier("only", ({ declarations }) => ({
+		"&:only-child": declarations,
+	}));
+}
+
+export function useOddModifier(s: Styleframe): ModifierFactory {
+	return s.modifier("odd", ({ declarations }) => ({
+		"&:nth-child(odd)": declarations,
+	}));
+}
+
+export function useEvenModifier(s: Styleframe): ModifierFactory {
+	return s.modifier("even", ({ declarations }) => ({
+		"&:nth-child(even)": declarations,
+	}));
+}
+
+export function useFirstOfTypeModifier(s: Styleframe): ModifierFactory {
+	return s.modifier("first-of-type", ({ declarations }) => ({
+		"&:first-of-type": declarations,
+	}));
+}
+
+export function useLastOfTypeModifier(s: Styleframe): ModifierFactory {
+	return s.modifier("last-of-type", ({ declarations }) => ({
+		"&:last-of-type": declarations,
+	}));
+}
+
+export function useOnlyOfTypeModifier(s: Styleframe): ModifierFactory {
+	return s.modifier("only-of-type", ({ declarations }) => ({
+		"&:only-of-type": declarations,
+	}));
+}
+
+export function useEmptyModifier(s: Styleframe): ModifierFactory {
+	return s.modifier("empty", ({ declarations }) => ({
+		"&:empty": declarations,
+	}));
+}
+
+/**
+ * Register structural pseudo-class modifiers for targeting elements by position.
+ *
+ * @example
+ * ```typescript
+ * const s = styleframe();
+ * const { first, last, odd, even } = useStructuralModifiers(s);
+ *
+ * const createBorderWidth = utility("border-width", ({ value }) => ({ borderWidth: value }));
+ * createBorderWidth({ 0: "0" }, [first, last]);
+ * ```
+ */
+export function useStructuralModifiers(s: Styleframe): StructuralModifiers {
+	return {
+		first: useFirstModifier(s),
+		last: useLastModifier(s),
+		only: useOnlyModifier(s),
+		odd: useOddModifier(s),
+		even: useEvenModifier(s),
+		firstOfType: useFirstOfTypeModifier(s),
+		lastOfType: useLastOfTypeModifier(s),
+		onlyOfType: useOnlyOfTypeModifier(s),
+		empty: useEmptyModifier(s),
+	};
+}

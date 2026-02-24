@@ -1,5 +1,25 @@
 import type { Styleframe } from "@styleframe/core";
 
+// Import modifier composables
+import {
+	type AriaStateModifiers,
+	type DirectionalModifiers,
+	type FormStateModifiers,
+	type MediaPreferenceModifiers,
+	type OtherStateModifiers,
+	type PseudoElementModifiers,
+	type PseudoStateModifiers,
+	type StructuralModifiers,
+	useAriaStateModifiers,
+	useDirectionalModifiers,
+	useFormStateModifiers,
+	useMediaPreferenceModifiers,
+	useOtherStateModifiers,
+	usePseudoElementModifiers,
+	usePseudoStateModifiers,
+	useStructuralModifiers,
+} from "../utilities/modifiers";
+
 // Import default values from centralized values folder
 import {
 	// Accessibility
@@ -448,6 +468,45 @@ export interface UtilitiesMetaConfig {
 }
 
 /**
+ * Configuration for which modifier categories to register.
+ *
+ * - Omit or set to `undefined` to enable the category (default)
+ * - Set to `false` to disable a specific category
+ */
+export interface ModifiersConfig {
+	/** Pseudo-class state modifiers (hover, focus, active, etc.) */
+	pseudoStates?: boolean;
+	/** Form state modifiers (disabled, checked, valid, etc.) */
+	formStates?: boolean;
+	/** Structural pseudo-class modifiers (first, last, odd, even, etc.) */
+	structural?: boolean;
+	/** Pseudo-element modifiers (before, after, placeholder, etc.) */
+	pseudoElements?: boolean;
+	/** Media/preference query modifiers (dark, motion-safe, print, etc.) */
+	mediaPreferences?: boolean;
+	/** ARIA state modifiers (aria-expanded, aria-disabled, etc.) */
+	ariaStates?: boolean;
+	/** Directional modifiers (rtl, ltr) */
+	directional?: boolean;
+	/** Other state modifiers (open, inert) */
+	otherStates?: boolean;
+}
+
+/**
+ * Resolved modifier instances returned by the preset.
+ */
+export interface ModifierInstances {
+	pseudoStates?: PseudoStateModifiers;
+	formStates?: FormStateModifiers;
+	structural?: StructuralModifiers;
+	pseudoElements?: PseudoElementModifiers;
+	mediaPreferences?: MediaPreferenceModifiers;
+	ariaStates?: AriaStateModifiers;
+	directional?: DirectionalModifiers;
+	otherStates?: OtherStateModifiers;
+}
+
+/**
  * Configuration options for the utilities preset.
  *
  * - Omit or set to `undefined` to use default values
@@ -457,6 +516,9 @@ export interface UtilitiesMetaConfig {
  */
 export interface UtilitiesPresetConfig {
 	meta?: UtilitiesMetaConfig;
+
+	/** Modifier configuration. Set to `false` to disable all modifiers. */
+	modifiers?: ModifiersConfig | false;
 
 	// Accessibility
 	forcedColorAdjust?: Record<string, string> | false;
@@ -601,6 +663,38 @@ export function useUtilitiesPreset(
 	config: UtilitiesPresetConfig = {},
 ) {
 	const shouldMerge = config.meta?.merge === true;
+
+	// Register modifier factories
+	const modifierInstances: ModifierInstances = {};
+
+	if (config.modifiers !== false) {
+		const mc = config.modifiers ?? {};
+
+		if (mc.pseudoStates !== false) {
+			modifierInstances.pseudoStates = usePseudoStateModifiers(s);
+		}
+		if (mc.formStates !== false) {
+			modifierInstances.formStates = useFormStateModifiers(s);
+		}
+		if (mc.structural !== false) {
+			modifierInstances.structural = useStructuralModifiers(s);
+		}
+		if (mc.pseudoElements !== false) {
+			modifierInstances.pseudoElements = usePseudoElementModifiers(s);
+		}
+		if (mc.mediaPreferences !== false) {
+			modifierInstances.mediaPreferences = useMediaPreferenceModifiers(s);
+		}
+		if (mc.ariaStates !== false) {
+			modifierInstances.ariaStates = useAriaStateModifiers(s);
+		}
+		if (mc.directional !== false) {
+			modifierInstances.directional = useDirectionalModifiers(s);
+		}
+		if (mc.otherStates !== false) {
+			modifierInstances.otherStates = useOtherStateModifiers(s);
+		}
+	}
 
 	/**
 	 * Helper to resolve values with optional merge behavior
@@ -1046,6 +1140,9 @@ export function useUtilitiesPreset(
 	if (wordBreak) createWordBreakUtility(wordBreak);
 
 	return {
+		// Modifiers
+		modifiers: modifierInstances,
+
 		// Accessibility
 		createForcedColorAdjustUtility,
 		createNotSrOnlyUtility: useNotSrOnlyUtility(s),
