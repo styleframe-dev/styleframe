@@ -6,10 +6,7 @@
 	"type": "module",
 	"main": "tsconfig.json",
 	"exports": {
-		".": {
-			"import": "./tsconfig.json",
-			"require": "./tsconfig.json"
-		}
+		".": "./tsconfig.json"
 	},
 	"files": [
 		"tsconfig.json"
