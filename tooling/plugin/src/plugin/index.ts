@@ -112,8 +112,12 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				await loadAllStyleframeFiles(state, sortedFiles);
 
 				// 5. Scan content files and auto-register utilities
-				if (options.content?.length) {
-					scannerState = createPluginScanner(options.content, cwd);
+				if (options.scanner?.content?.length) {
+					scannerState = createPluginScanner(
+						options.scanner.content,
+						cwd,
+						options.scanner.extractors,
+					);
 					await scanAndRegister(state, scannerState, {
 						silent: options.silent,
 					});
