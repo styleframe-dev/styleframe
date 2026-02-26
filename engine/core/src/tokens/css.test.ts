@@ -1,4 +1,5 @@
 import type { Root, Selector } from "../types";
+import { createAtRuleFunction, createKeyframesFunction } from "./atRule";
 import { createCssFunction } from "./css";
 import { createRefFunction } from "./ref";
 import { createRoot } from "./root";
@@ -374,6 +375,91 @@ describe("createCSSFunction", () => {
 				type: "reference",
 				name: "light-bg",
 				fallback: undefined,
+			});
+		});
+	});
+
+	describe("auto-resolve interpolation", () => {
+		it("should auto-resolve a variable to a reference", () => {
+			const spacing = variable("spacing-md", "1rem");
+			const result = css`${spacing} calc(${spacing} * 2)`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing-md", fallback: undefined },
+					" calc(",
+					{ type: "reference", name: "spacing-md", fallback: undefined },
+					" * 2)",
+				],
+			});
+		});
+
+		it("should auto-resolve multiple variables to references", () => {
+			const spacingSm = variable("spacing-sm", "0.5rem");
+			const spacingMd = variable("spacing-md", "1rem");
+
+			const result = css`${spacingSm} ${spacingMd}`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing-sm", fallback: undefined },
+					" ",
+					{ type: "reference", name: "spacing-md", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should extract the rule from a keyframes instance", () => {
+			const keyframes = createKeyframesFunction(selector, root);
+			const fadeIn = keyframes("fade-in", {
+				"0%": { opacity: 0 },
+				"100%": { opacity: 1 },
+			});
+
+			const result = css`${fadeIn} 300ms ease-in-out`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: ["", "fade-in", " 300ms ease-in-out"],
+			});
+		});
+
+		it("should extract the rule from an at-rule instance", () => {
+			const atRule = createAtRuleFunction(selector, root);
+			const layer = atRule("layer", "utilities");
+
+			const result = css`${layer}`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: ["", "utilities", ""],
+			});
+		});
+
+		it("should handle mixed variable, at-rule, and string interpolations", () => {
+			const duration = variable("duration-md", "300ms");
+			const keyframes = createKeyframesFunction(selector, root);
+			const fadeIn = keyframes("fade-in", {
+				"0%": { opacity: 0 },
+				"100%": { opacity: 1 },
+			});
+
+			const result = css`${fadeIn} ${duration} ease-in-out`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					"fade-in",
+					" ",
+					{ type: "reference", name: "duration-md", fallback: undefined },
+					" ease-in-out",
+				],
 			});
 		});
 	});
