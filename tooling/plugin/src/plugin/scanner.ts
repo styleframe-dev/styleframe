@@ -1,5 +1,6 @@
 import {
 	createScanner,
+	type Extractor,
 	type ParsedUtility,
 	type Scanner,
 	type UtilityMatch,
@@ -23,15 +24,18 @@ export interface PluginScannerState {
  *
  * @param contentPatterns Glob patterns for content files to scan
  * @param cwd Working directory for glob resolution
+ * @param extractors Custom extractor functions for unsupported file types
  * @returns Plugin scanner state
  */
 export function createPluginScanner(
 	contentPatterns: string[],
 	cwd: string,
+	extractors?: Extractor[],
 ): PluginScannerState {
 	const scanner = createScanner({
 		content: contentPatterns,
 		cwd,
+		extractors,
 	});
 
 	return {
