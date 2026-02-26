@@ -3,6 +3,7 @@ import {
 	createMultiplierAutogenerate,
 	useBadgeRecipe,
 	useDesignTokensPreset,
+	useModifiersPreset,
 	useUtilitiesPreset,
 } from "@styleframe/theme";
 
@@ -13,6 +14,7 @@ const { colors, spacing, fontSize, fontWeight, borderRadius } = tokens;
 const { colorPrimary, colorSecondary } = colors;
 
 useUtilitiesPreset(s);
+useModifiersPreset(s);
 
 // ── Existing: Selector test ─────────────────────────────────────────────────
 s.selector(".h1", {
