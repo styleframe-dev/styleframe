@@ -28,4 +28,9 @@ export interface Options {
 		/** Custom extractor functions for file types not supported by default */
 		extractors?: Extractor[];
 	};
+	/** Module resolution options */
+	resolve?: {
+		/** Alias map for Jiti module resolution (e.g. { '@styleframe/theme': '/path/to/theme/src' }) */
+		alias?: Record<string, string>;
+	};
 }
