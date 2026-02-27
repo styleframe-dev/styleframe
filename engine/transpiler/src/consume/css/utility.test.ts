@@ -595,7 +595,7 @@ describe("createUtilityConsumer", () => {
 				selector: ({ name, value, modifiers }) => {
 					const parts = [...modifiers, name];
 					if (value) parts.push(value);
-					return `.${parts.join("-")}`;
+					return parts.join("-");
 				},
 			},
 		};

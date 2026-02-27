@@ -3,7 +3,30 @@ import type {
 	Root,
 	Utility,
 	UtilityFactory,
+	UtilitySelectorFn,
+	UtilitySelectorOptions,
 } from "@styleframe/core";
+
+export type { UtilitySelectorFn, UtilitySelectorOptions };
+
+/**
+ * Function that parses a class name string into its structured components.
+ * Returns null if the string is not a valid utility class.
+ */
+export type UtilityClassParseFn = (className: string) => ParsedUtility | null;
+
+/**
+ * Configuration for custom utility class syntax.
+ * All fields are optional — defaults match the `_modifier:property:value` format.
+ */
+export interface ScannerUtilitiesConfig {
+	/** Regex pattern to extract utility class candidates from content strings. Must use the global (`g`) flag. */
+	pattern?: RegExp;
+	/** Parse a matched class name into its components (name, value, modifiers) */
+	parse?: UtilityClassParseFn;
+	/** Generate a raw class name from components (inverse of parse) */
+	selector?: UtilitySelectorFn;
+}
 
 /**
  * Configuration for the content scanner
@@ -15,6 +38,8 @@ export interface ScannerConfig {
 	extractors?: Extractor[];
 	/** Base directory for glob resolution (defaults to process.cwd()) */
 	cwd?: string;
+	/** Custom utility class syntax configuration */
+	utilities?: ScannerUtilitiesConfig;
 }
 
 /**
@@ -126,15 +151,6 @@ export interface Scanner {
 	watch(callback: (result: ScanResult) => void): () => void;
 	/** Invalidate cache for a file or all files */
 	invalidate(filePath?: string): void;
-}
-
-/**
- * Utility selector generation options
- */
-export interface UtilitySelectorOptions {
-	name: string;
-	value: string;
-	modifiers: string[];
 }
 
 /**

@@ -211,6 +211,13 @@ describe("extractFromSvelte", () => {
 		expect(result).toContain("_background:primary");
 		expect(result).toContain("_text:xl");
 	});
+
+	it("should extract custom-prefixed class from class:directive", () => {
+		const content = `<div class:sf-margin-sm={isActive}>content</div>`;
+		const result = extractFromSvelte(content);
+
+		expect(result).toContain("sf-margin-sm");
+	});
 });
 
 describe("extractFromStringLiterals", () => {
@@ -320,5 +327,23 @@ describe("extractClasses", () => {
 		const result = extractClasses(content, "test.html");
 
 		expect(result.filter((c) => c === "_margin:sm")).toHaveLength(1);
+	});
+
+	it("should use custom utility pattern", () => {
+		const content = '<div class="sf-margin-sm sf-padding-md">content</div>';
+		const pattern = /sf-[a-zA-Z][a-zA-Z0-9-]*/g;
+		const result = extractClasses(content, "test.html", undefined, pattern);
+
+		expect(result).toContain("sf-margin-sm");
+		expect(result).toContain("sf-padding-md");
+	});
+
+	it("should use custom utility pattern with JSX", () => {
+		const content = '<div className="sf-margin-sm sf-padding-md">content</div>';
+		const pattern = /sf-[a-zA-Z][a-zA-Z0-9-]*/g;
+		const result = extractClasses(content, "test.tsx", undefined, pattern);
+
+		expect(result).toContain("sf-margin-sm");
+		expect(result).toContain("sf-padding-md");
 	});
 });
