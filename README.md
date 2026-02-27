@@ -1,125 +1,177 @@
 <div align="center">
   <img src="https://www.styleframe.dev/_vercel/image?url=%2Flogotype-light.svg&w=1536&q=100" alt="Styleframe" width="320" height="120">
 
-**Type-safe, Composable CSS in TypeScript**
+**Type-safe Composable CSS in TypeScript**
 
-From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API.
+From simple UI styles to full Design Systems, write code using Styleframe's powerful TypeScript CSS API.
 
 [![npm version](https://img.shields.io/npm/v/styleframe.svg)](https://www.npmjs.com/package/styleframe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE)
 [![Discord](https://img.shields.io/discord/1395724958919032943?label=Discord&logo=discord)](https://discord.gg/KCVwuGz44M)
 
-[Homepage](https://styleframe.dev) · [Documentation](https://styleframe.dev/docs)
+[Homepage](https://styleframe.dev) · [Documentation](https://styleframe.dev/docs) · [Discord](https://discord.gg/KCVwuGz44M)
 
 </div>
 
 ---
 
-# styleframe
+## Features
 
-## ✨ Features
+- **Type-safe CSS API** — All styles are validated at compile time. No typos, no runtime surprises.
+- **Composable architecture** — Mix, match, and reuse style logic using functions, variables, and composables. Build your design system from ready-made parts.
+- **Zero-runtime by default** — CSS is generated at build time for maximum performance. An optional lightweight runtime handles [Recipes](https://styleframe.dev/docs/api/recipes) (component variants).
+- **Built-in theming** — Create light, dark, and custom themes with a few lines of code using the `data-theme` attribute.
+- **Design token composables** — 200+ utility and 50+ modifier composables from [`@styleframe/theme`](https://styleframe.dev/docs/design-tokens) for colors, spacing, typography, breakpoints, and more.
+- **Framework agnostic** — Works with React, Vue, Svelte, Solid, Astro, and any modern frontend stack.
+- **Figma sync** — Free, bidirectional design token sync between code and Figma using the [W3C DTCG format](https://styleframe.dev/docs/tooling/figma-plugin).
 
-- **🛡️ Type-safe CSS API** - Catch style bugs at compile time with full TypeScript support
-- **🧩 Composable & Modular** - Build design systems from reusable, composable functions
-- **🎨 Built-in Theming** - Create light/dark modes and custom themes effortlessly
-- **⚡ Framework Agnostic** - Works with React, Vue, Svelte, Solid, Astro, and more
-- **🔥 First-class DX** - IDE auto-complete, in-editor docs, and static analysis
+## Quick Start
 
-## 🚀 Quick Start
-
-### Installation
+Use the CLI to initialize Styleframe in your project:
 
 ```bash
-# npm
-npx styleframe init && npm install
-
 # pnpm
-pnpx styleframe init && pnpm install
+pnpx styleframe init
+pnpm install
+
+# npm
+npx styleframe init
+npm install
 
 # yarn
-yarn styleframe init && yarn install
+yarn create styleframe
+yarn install
 
 # bun
-bunx styleframe init && bun install
+bunx styleframe init
+bun install
 ```
 
-Using the CLI command above, it will:
+The CLI will:
 
-- Install `styleframe` as a development dependency to your project
-- Add the `styleframe` plugin to Vite, if possible
-- Create a new `styleframe.config.ts` file
+- Install all `styleframe` packages as dependencies
+- Create a `styleframe.config.ts` configuration file
+- Create or update `tsconfig.json` with Styleframe includes
+- Add the Styleframe plugin to Vite or Nuxt, if detected
 
-## 💡 Usage
+Then import the generated CSS in your entry file:
+
+```ts
+// main.ts
+import 'virtual:styleframe.css';
+```
+
+## Usage
 
 ```typescript
-import { styleframe } from "styleframe";
+import { styleframe } from 'styleframe';
+import { useColor } from '@styleframe/theme';
 
 const s = styleframe();
 const { variable, ref, selector, theme } = s;
 
-// Define design tokens
-const colorPrimary = variable("color--primary", "#006cff");
-const spacing = variable("spacing--md", "1rem");
+// Use design token composables
+const { colorPrimary } = useColor(s, {
+    primary: '#318fa0',
+});
 
-// Create styles
-selector(".button", {
+// Define custom tokens
+const spacing = variable('spacing', '1rem');
+
+// Create type-safe selectors
+selector('.button', {
     backgroundColor: ref(colorPrimary),
     padding: ref(spacing),
-    borderRadius: "4px",
-    color: "white",
+    borderRadius: '4px',
+    color: 'white',
 
-    "&:hover": {
+    '&:hover': {
         opacity: 0.9,
     },
 });
 
-// Add dark theme
-theme("dark", (ctx) => {
-    ctx.variable(colorPrimary, "#60a5fa");
+// Add a dark theme
+theme('dark', (ctx) => {
+    ctx.variable(colorPrimary, '#60a5fa');
 });
 
 export default s;
 ```
 
-## 📚 Documentation
+## How It Works
 
-Styleframe is extremely powerful and flexible. The code preview above is just a small example of what you can achieve with styleframe.
+Styleframe is a **transpiler-first system**. You define design tokens, selectors, utilities, and recipes in TypeScript. The transpiler generates **dual outputs**:
 
-Read the full documentation at [https://styleframe.dev](https://styleframe.dev).
+- **CSS** — Variables, selectors, utilities, themes, keyframes
+- **TypeScript** — Typed recipe functions with full IDE autocomplete
 
-## 🎯 Why styleframe?
+This architecture gives you complete type safety, IDE auto-complete, and static analysis for your CSS — while producing zero-runtime overhead for base styles.
 
-After over 10 years of working on Design Systems for successful companies, we've learned a lot about what makes a great Design System. Styleframe is built on these learnings and is designed to help you easily build your own.
+## Integrations
 
-[Read more](https://styleframe.dev/docs) about styleframe's philosophy and design principles.
+Styleframe works with any modern frontend framework and build tool.
 
-## 🔗 Framework Integration
+**Build tools** (via native plugin or [unplugin](https://github.com/unjs/unplugin)):
 
-Styleframe works seamlessly with any framework:
+| Tool | Integration |
+|------|------------|
+| Vite | Native plugin |
+| Nuxt | Native module |
+| Webpack | Via unplugin |
+| Rollup | Via unplugin |
+| esbuild | Via unplugin |
+| Rspack | Via unplugin |
+| Farm | Via unplugin |
+| Astro | Via unplugin |
 
-- **Vite** - Native plugin support
-- **React** - Perfect for component libraries
-- **Vue** - Full SFC compatibility
-- **Svelte** - Works out of the box
-- **Astro** - Static site ready
-- **Solid** - Reactive styling
+**Frameworks**: React, Vue, Svelte, Solid, Astro — any framework that consumes CSS.
 
-See the [installation guide](https://styleframe.dev/docs/getting-started/installation/vite) for framework-specific setup.
+See the [installation guide](https://styleframe.dev/docs/getting-started/installation) for setup instructions.
 
-## 📖 Documentation
+## Figma Integration
 
-- **[Getting Started](https://styleframe.dev/docs/getting-started/introduction)** - Learn the basics
-- **[API Reference](https://styleframe.dev/docs/api/variables)** - Complete API documentation
-- **[Guides](https://styleframe.dev/docs/resources/guides)** - Step-by-step tutorials
-- **[Examples](https://github.com/styleframe-dev/examples)** - Real-world examples
+Sync design tokens between your code and Figma — free, with no seat limits.
 
-## 🤝 Community
+- **Bidirectional sync** — Export tokens from code to Figma, or import Figma Variables back to TypeScript
+- **Multi-mode support** — Light, dark, and custom themes preserved as Figma modes
+- **W3C DTCG format** — Compatible with Style Dictionary, Tokens Studio, and other DTCG tools
+- **CI/CD ready** — Run `styleframe figma export` in your build pipeline to keep Figma in sync automatically
 
-- **[Discord](https://discord.gg/KCVwuGz44M)** - Chat with the community
-- **[GitHub Issues](https://github.com/styleframe-dev/styleframe/issues)** - Report bugs or request features
-- **[Discussions](https://github.com/styleframe-dev/styleframe/discussions)** - Ask questions and share ideas
+```bash
+# Export design tokens to DTCG JSON
+npx styleframe figma export \
+    --config styleframe.config.ts \
+    --output tokens.json \
+    --collection "Design Tokens"
+```
 
-## 🛠️ Development
+Learn more about the [Figma plugin](https://styleframe.dev/figma).
+
+## Documentation
+
+- **[Introduction](https://styleframe.dev/docs/getting-started/introduction)** — What Styleframe is and how it works
+- **[Installation](https://styleframe.dev/docs/getting-started/installation)** — Setup guides for Vite, Nuxt, and custom builds
+- **[API Reference](https://styleframe.dev/docs/api)** — Variables, selectors, utilities, recipes, themes, and more
+- **[Design Tokens](https://styleframe.dev/docs/design-tokens)** — Colors, spacing, typography, borders, breakpoints
+- **[Tooling](https://styleframe.dev/docs/tooling)** — Figma plugin and utility scanner
+- **[Guides](https://styleframe.dev/docs/resources/guides)** — Build a design system in under 15 minutes
+
+## Community
+
+- **[Discord](https://discord.gg/KCVwuGz44M)** — Chat with the community
+- **[GitHub Issues](https://github.com/styleframe-dev/styleframe/issues)** — Report bugs or request features
+- **[Discussions](https://github.com/styleframe-dev/styleframe/discussions)** — Ask questions and share ideas
+
+## Styleframe Pro
+
+Looking for advanced features? Check out [Styleframe Pro](https://styleframe.dev/pricing) for:
+
+- Premium composables and design tokens
+- Advanced theming capabilities
+- Priority support
+- Commercial licenses
+
+## Development
 
 ```bash
 # Clone the repository
@@ -135,21 +187,12 @@ pnpm test
 pnpm build
 ```
 
-## 📝 License
+## License
 
 Styleframe is [MIT licensed](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE).
-
-## 💎 Styleframe Pro
-
-Looking for advanced features? Check out [Styleframe Pro](https://styleframe.dev/pricing) for:
-
-- Premium composables and design tokens
-- Advanced theming capabilities
-- Priority support
-- Commercial licenses
 
 ---
 
 <div align="center">
-  <sub>Built with ❤️ by <a href="https://github.com/styleframe-dev">styleframe</a></sub>
+  <sub>Built with ❤️ by <a href="https://github.com/styleframe-dev">Styleframe</a></sub>
 </div>
