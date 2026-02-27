@@ -185,6 +185,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						options.scanner.content,
 						cwd,
 						options.scanner.extractors,
+						options.scanner.utilities,
 					);
 					await scanAndRegister(state, scannerState, {
 						silent: options.silent,

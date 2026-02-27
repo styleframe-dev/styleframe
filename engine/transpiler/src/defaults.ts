@@ -1,22 +1,9 @@
-import type {
-	ThemeSelectorFn,
-	UtilitySelectorFn,
-	VariableNameFn,
-} from "@styleframe/core";
+import type { ThemeSelectorFn, VariableNameFn } from "@styleframe/core";
+
+export { defaultUtilitySelectorFn } from "@styleframe/core";
 
 export const defaultThemeSelectorFn: ThemeSelectorFn = ({ name }) => {
 	return `[data-theme="${name}"]`;
-};
-
-export const defaultUtilitySelectorFn: UtilitySelectorFn = ({
-	name,
-	value,
-	modifiers,
-}) => {
-	return `._${[...modifiers, name, ...(value === "default" ? [] : [value])]
-		.filter(Boolean)
-		.join("\\:")
-		.replace(/[[\].#()%,]/g, "\\$&")}`;
 };
 
 export const defaultVariableNameFn: VariableNameFn = ({ name }) => {

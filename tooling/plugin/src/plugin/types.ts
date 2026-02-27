@@ -1,5 +1,5 @@
 import type { TranspileOptions } from "@styleframe/transpiler";
-import type { Extractor } from "@styleframe/scanner";
+import type { Extractor, ScannerUtilitiesConfig } from "@styleframe/scanner";
 
 export interface Options {
 	/** Entry file for the global config (default: './styleframe.config.ts') */
@@ -27,6 +27,8 @@ export interface Options {
 		content: string[];
 		/** Custom extractor functions for file types not supported by default */
 		extractors?: Extractor[];
+		/** Custom utility class syntax configuration */
+		utilities?: ScannerUtilitiesConfig;
 	};
 	/** Module resolution options */
 	resolve?: {

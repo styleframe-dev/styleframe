@@ -27,31 +27,31 @@ describe("defaultThemeSelectorFn", () => {
 });
 
 describe("defaultUtilitySelectorFn", () => {
-	test("should return a utility selector with name and value", () => {
+	test("should return a raw class name with name and value", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "text",
 			value: "lg",
 			modifiers: [],
 		});
-		expect(result).toBe("._text\\:lg");
+		expect(result).toBe("_text:lg");
 	});
 
-	test("should handle default value by excluding it from selector", () => {
+	test("should handle default value by excluding it from class name", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "hidden",
 			value: "default",
 			modifiers: [],
 		});
-		expect(result).toBe("._hidden");
+		expect(result).toBe("_hidden");
 	});
 
-	test("should include modifiers in selector", () => {
+	test("should include modifiers in class name", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "text",
 			value: "lg",
 			modifiers: ["hover"],
 		});
-		expect(result).toBe("._hover\\:text\\:lg");
+		expect(result).toBe("_hover:text:lg");
 	});
 
 	test("should handle multiple modifiers", () => {
@@ -60,7 +60,7 @@ describe("defaultUtilitySelectorFn", () => {
 			value: "primary",
 			modifiers: ["hover", "focus"],
 		});
-		expect(result).toBe("._hover\\:focus\\:bg\\:primary");
+		expect(result).toBe("_hover:focus:bg:primary");
 	});
 
 	test("should handle modifiers with default value", () => {
@@ -69,7 +69,7 @@ describe("defaultUtilitySelectorFn", () => {
 			value: "default",
 			modifiers: ["hover"],
 		});
-		expect(result).toBe("._hover\\:visible");
+		expect(result).toBe("_hover:visible");
 	});
 
 	test("should handle empty modifiers array", () => {
@@ -78,7 +78,7 @@ describe("defaultUtilitySelectorFn", () => {
 			value: "row",
 			modifiers: [],
 		});
-		expect(result).toBe("._flex\\:row");
+		expect(result).toBe("_flex:row");
 	});
 
 	test("should handle empty value", () => {
@@ -87,7 +87,7 @@ describe("defaultUtilitySelectorFn", () => {
 			value: "",
 			modifiers: [],
 		});
-		expect(result).toBe("._block");
+		expect(result).toBe("_block");
 	});
 
 	test("should handle complex modifier names", () => {
@@ -96,7 +96,7 @@ describe("defaultUtilitySelectorFn", () => {
 			value: "sm",
 			modifiers: ["sm", "md", "lg"],
 		});
-		expect(result).toBe("._sm\\:md\\:lg\\:text\\:sm");
+		expect(result).toBe("_sm:md:lg:text:sm");
 	});
 
 	test("should not filter out string '0'", () => {
@@ -105,61 +105,61 @@ describe("defaultUtilitySelectorFn", () => {
 			value: "0",
 			modifiers: [],
 		});
-		expect(result).toBe("._margin\\:0");
+		expect(result).toBe("_margin:0");
 	});
 
-	test("should escape hash character in values", () => {
+	test("should return raw class name with special characters unescaped", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "border-color",
 			value: "[#1E3A8A]",
 			modifiers: [],
 		});
-		expect(result).toBe("._border-color\\:\\[\\#1E3A8A\\]");
+		expect(result).toBe("_border-color:[#1E3A8A]");
 	});
 
-	test("should escape parentheses and commas in values", () => {
+	test("should return raw class name with parentheses and commas unescaped", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "background",
 			value: "[rgb(255,0,0)]",
 			modifiers: [],
 		});
-		expect(result).toBe("._background\\:\\[rgb\\(255\\,0\\,0\\)\\]");
+		expect(result).toBe("_background:[rgb(255,0,0)]");
 	});
 
-	test("should escape percentage in values", () => {
+	test("should return raw class name with percentage unescaped", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "width",
 			value: "[50%]",
 			modifiers: [],
 		});
-		expect(result).toBe("._width\\:\\[50\\%\\]");
+		expect(result).toBe("_width:[50%]");
 	});
 
-	test("should escape complex calc expression without spaces", () => {
+	test("should return raw class name with calc expression unescaped", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "width",
 			value: "[calc(100%-20px)]",
 			modifiers: [],
 		});
-		expect(result).toBe("._width\\:\\[calc\\(100\\%-20px\\)\\]");
+		expect(result).toBe("_width:[calc(100%-20px)]");
 	});
 
-	test("should escape rgba without spaces", () => {
+	test("should return raw class name with rgba unescaped", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "background",
 			value: "[rgba(255,0,0,0.5)]",
 			modifiers: [],
 		});
-		expect(result).toBe("._background\\:\\[rgba\\(255\\,0\\,0\\,0\\.5\\)\\]");
+		expect(result).toBe("_background:[rgba(255,0,0,0.5)]");
 	});
 
-	test("should escape hsl with percentage", () => {
+	test("should return raw class name with hsl unescaped", () => {
 		const result = defaultUtilitySelectorFn({
 			name: "color",
 			value: "[hsl(200,100%,50%)]",
 			modifiers: [],
 		});
-		expect(result).toBe("._color\\:\\[hsl\\(200\\,100\\%\\,50\\%\\)\\]");
+		expect(result).toBe("_color:[hsl(200,100%,50%)]");
 	});
 });
 

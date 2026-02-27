@@ -228,6 +228,75 @@ describe("classNameFromUtilityOptions", () => {
 
 		expect(className).toBe("_hover:margin:sm");
 	});
+
+	it("should use custom selector function", () => {
+		const customFn = ({
+			name,
+			value,
+			modifiers,
+		}: {
+			name: string;
+			value: string;
+			modifiers: string[];
+		}) => {
+			const parts = [
+				...modifiers,
+				name,
+				...(value === "default" ? [] : [value]),
+			];
+			return `sf-${parts.join("-")}`;
+		};
+
+		const className = classNameFromUtilityOptions(
+			{ name: "margin", value: "sm", modifiers: [] },
+			customFn,
+		);
+		expect(className).toBe("sf-margin-sm");
+	});
+
+	it("should use custom selector function with modifiers", () => {
+		const customFn = ({
+			name,
+			value,
+			modifiers,
+		}: {
+			name: string;
+			value: string;
+			modifiers: string[];
+		}) => {
+			const parts = [
+				...modifiers,
+				name,
+				...(value === "default" ? [] : [value]),
+			];
+			return `sf-${parts.join("-")}`;
+		};
+
+		const className = classNameFromUtilityOptions(
+			{ name: "margin", value: "sm", modifiers: ["hover"] },
+			customFn,
+		);
+		expect(className).toBe("sf-hover-margin-sm");
+	});
+});
+
+describe("generateUtilitySelector", () => {
+	it("should derive selector from custom selector function", () => {
+		const customFn = ({
+			name,
+			value,
+		}: {
+			name: string;
+			value: string;
+			modifiers: string[];
+		}) => `sf-${name}-${value}`;
+
+		const selector = generateUtilitySelector(
+			{ name: "margin", value: "sm", modifiers: [] },
+			customFn,
+		);
+		expect(selector).toBe(".sf-margin-sm");
+	});
 });
 
 describe("createUtilityFilter", () => {
@@ -274,6 +343,51 @@ describe("createUtilityFilter", () => {
 		};
 
 		expect(filter(matchingUtility)).toBe(true);
+	});
+
+	it("should use custom selector function for filtering", () => {
+		const customFn = ({
+			name,
+			value,
+			modifiers,
+		}: {
+			name: string;
+			value: string;
+			modifiers: string[];
+		}) => {
+			const parts = [
+				...modifiers,
+				name,
+				...(value === "default" ? [] : [value]),
+			];
+			return `sf-${parts.join("-")}`;
+		};
+
+		const usedClasses = new Set(["sf-margin-sm"]);
+		const filter = createUtilityFilter(usedClasses, customFn);
+
+		const matchingUtility = {
+			type: "utility" as const,
+			name: "margin",
+			value: "sm",
+			modifiers: [],
+			declarations: {},
+			variables: [],
+			children: [],
+		};
+
+		const nonMatchingUtility = {
+			type: "utility" as const,
+			name: "margin",
+			value: "lg",
+			modifiers: [],
+			declarations: {},
+			variables: [],
+			children: [],
+		};
+
+		expect(filter(matchingUtility)).toBe(true);
+		expect(filter(nonMatchingUtility)).toBe(false);
 	});
 });
 

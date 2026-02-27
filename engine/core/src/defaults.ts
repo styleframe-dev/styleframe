@@ -1,6 +1,7 @@
 import type { createRefFunction } from "./tokens";
 import { isRef } from "./typeGuards";
 import type { Reference, TokenValue } from "./types";
+import type { UtilitySelectorFn } from "./types/options";
 import { hashValue } from "./utils/hash";
 
 export interface TransformUtilityKeyOptions {
@@ -84,3 +85,17 @@ export function transformUtilityKey(
 		};
 	};
 }
+
+export const defaultUtilitySelectorFn: UtilitySelectorFn = ({
+	name,
+	value,
+	modifiers,
+}) => {
+	const parts = [
+		...modifiers,
+		name,
+		...(value === "default" ? [] : [value]),
+	].filter(Boolean);
+
+	return `_${parts.join(":")}`;
+};

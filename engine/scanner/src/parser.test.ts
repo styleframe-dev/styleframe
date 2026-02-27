@@ -216,6 +216,24 @@ describe("extractUtilityClasses", () => {
 		expect(result).not.toContain("btn");
 		expect(result).not.toContain("primary");
 	});
+
+	it("should extract using custom pattern", () => {
+		const content = "sf-margin-sm sf-hover-padding-lg btn-primary";
+		const pattern = /sf-[a-zA-Z][a-zA-Z0-9-]*/g;
+		const result = extractUtilityClasses(content, pattern);
+
+		expect(result).toContain("sf-margin-sm");
+		expect(result).toContain("sf-hover-padding-lg");
+		expect(result).not.toContain("btn-primary");
+	});
+
+	it("should deduplicate with custom pattern", () => {
+		const content = "sf-margin-sm sf-margin-sm sf-padding-md";
+		const pattern = /sf-[a-zA-Z][a-zA-Z0-9-]*/g;
+		const result = extractUtilityClasses(content, pattern);
+
+		expect(result).toHaveLength(2);
+	});
 });
 
 describe("generateUtilityClassName", () => {

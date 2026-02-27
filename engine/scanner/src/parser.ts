@@ -117,11 +117,15 @@ function splitByColons(str: string): string[] {
  * Extract all utility class names from a content string.
  *
  * @param content The content to search
+ * @param pattern Optional custom regex pattern (must use global flag). Defaults to UTILITY_CLASS_PATTERN.
  * @returns Array of unique utility class names found
  */
-export function extractUtilityClasses(content: string): string[] {
+export function extractUtilityClasses(
+	content: string,
+	pattern?: RegExp,
+): string[] {
 	// String.match() with global regex handles state correctly
-	const matches = content.match(UTILITY_CLASS_PATTERN);
+	const matches = content.match(pattern ?? UTILITY_CLASS_PATTERN);
 	return matches ? [...new Set(matches)] : [];
 }
 

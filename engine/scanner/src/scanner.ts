@@ -7,6 +7,7 @@ import type {
 	ParsedUtility,
 	Scanner,
 	ScannerConfig,
+	ScannerUtilitiesConfig,
 	ScanResult,
 	UtilityMatch,
 } from "./types";
@@ -37,6 +38,8 @@ export function createScanner(config: ScannerConfig): Scanner {
 	const cache = createCache();
 	const cwd = config.cwd ?? process.cwd();
 	const customExtractors = config.extractors;
+	const utilityPattern = config.utilities?.pattern;
+	const utilityParse = config.utilities?.parse ?? parseUtilityClass;
 
 	/**
 	 * Get all file paths matching the content patterns.
@@ -63,9 +66,14 @@ export function createScanner(config: ScannerConfig): Scanner {
 		}
 
 		// Extract and parse classes
-		const classNames = extractClasses(content, filePath, customExtractors);
+		const classNames = extractClasses(
+			content,
+			filePath,
+			customExtractors,
+			utilityPattern,
+		);
 		const parsed = classNames
-			.map(parseUtilityClass)
+			.map(utilityParse)
 			.filter((p): p is ParsedUtility => p !== null);
 
 		const result: FileScanResult = {
@@ -85,9 +93,14 @@ export function createScanner(config: ScannerConfig): Scanner {
 	 * Scan content string directly without file I/O.
 	 */
 	function scanContent(content: string, filePath = "inline"): ParsedUtility[] {
-		const classNames = extractClasses(content, filePath, customExtractors);
+		const classNames = extractClasses(
+			content,
+			filePath,
+			customExtractors,
+			utilityPattern,
+		);
 		return classNames
-			.map(parseUtilityClass)
+			.map(utilityParse)
 			.filter((p): p is ParsedUtility => p !== null);
 	}
 
@@ -192,16 +205,22 @@ export function createScanner(config: ScannerConfig): Scanner {
  *
  * @param content Content string to scan
  * @param filePath Optional file path hint for extractor selection
+ * @param utilities Optional custom utility syntax configuration
  * @returns Array of parsed utilities
  */
 export function quickScan(
 	content: string,
 	filePath = "inline.html",
+	utilities?: ScannerUtilitiesConfig,
 ): ParsedUtility[] {
-	const classNames = extractClasses(content, filePath);
-	return classNames
-		.map(parseUtilityClass)
-		.filter((p): p is ParsedUtility => p !== null);
+	const parseFn = utilities?.parse ?? parseUtilityClass;
+	const classNames = extractClasses(
+		content,
+		filePath,
+		undefined,
+		utilities?.pattern,
+	);
+	return classNames.map(parseFn).filter((p): p is ParsedUtility => p !== null);
 }
 
 /**
@@ -211,11 +230,18 @@ export function quickScan(
  */
 export function createContentScanner(
 	customExtractors?: Extractor[],
+	utilities?: ScannerUtilitiesConfig,
 ): (content: string, filePath?: string) => ParsedUtility[] {
+	const parseFn = utilities?.parse ?? parseUtilityClass;
 	return (content: string, filePath = "inline"): ParsedUtility[] => {
-		const classNames = extractClasses(content, filePath, customExtractors);
+		const classNames = extractClasses(
+			content,
+			filePath,
+			customExtractors,
+			utilities?.pattern,
+		);
 		return classNames
-			.map(parseUtilityClass)
+			.map(parseFn)
 			.filter((p): p is ParsedUtility => p !== null);
 	};
 }
