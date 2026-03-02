@@ -495,6 +495,44 @@ describe("createUseUtility", () => {
 		});
 	});
 
+	describe("utilityOptions.name override", () => {
+		it("should override the utility name", () => {
+			const useMargin = createUseUtility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			const s = styleframe();
+			useMargin(s, { sm: "8px" }, undefined, { name: "m" });
+
+			const utility = s.root.children.find(
+				(u): u is Utility => isUtility(u) && u.name === "m",
+			);
+			expect(utility).toBeDefined();
+			expect(utility?.declarations).toEqual({ margin: "8px" });
+		});
+
+		it("should generate correct CSS selector with overridden name", () => {
+			const useMargin = createUseUtility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			const s = styleframe();
+			useMargin(s, { sm: "8px" }, undefined, { name: "m" });
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("._m\\:sm {");
+			expect(css).not.toContain("._margin");
+		});
+
+		it("should use default name when no override provided", () => {
+			const useMargin = createUseUtility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			const s = styleframe();
+			useMargin(s, { sm: "8px" });
+
+			expect(s.root.utilities[0]?.name).toBe("margin");
+		});
+	});
+
 	describe("real-world use cases", () => {
 		it("should work like useMarginUtility", () => {
 			const useMarginUtility = createUseUtility("margin", ({ value }) => ({
