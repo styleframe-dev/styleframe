@@ -17,7 +17,7 @@ import {
 	usePseudoElementModifiers,
 	usePseudoStateModifiers,
 	useStructuralModifiers,
-} from "../utilities/modifiers";
+} from "../modifiers";
 
 /**
  * Configuration for which modifier categories to register.
