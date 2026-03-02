@@ -9,10 +9,12 @@ import { createUtilityFunction } from "./utility";
 describe("createRecipeFunction", () => {
 	let root: Root;
 	let recipe: ReturnType<typeof createRecipeFunction>;
+	let utility: ReturnType<typeof createUtilityFunction>;
 
 	beforeEach(() => {
 		root = createRoot();
 		recipe = createRecipeFunction(root, root);
+		utility = createUtilityFunction(root, root);
 	});
 
 	test("should create a recipe function", () => {
@@ -20,6 +22,12 @@ describe("createRecipeFunction", () => {
 	});
 
 	test("should register recipe in root.recipes only", () => {
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+		utility("borderStyle", ({ value }) => ({ borderStyle: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+
 		const instance = recipe({
 			name: "button",
 			base: { borderWidth: "thin", borderStyle: "solid" },
@@ -57,11 +65,19 @@ describe("createRecipeFunction", () => {
 		expect(root.recipes).toHaveLength(1);
 		expect(root.recipes[0]).toBe(instance);
 
-		// Ensure no selectors/variables were created
-		expect(root.children).toHaveLength(0);
+		// Ensure no selectors/variables were created (only utilities from registration)
+		const nonUtilityChildren = root.children.filter(
+			(child) => child.type !== "utility",
+		);
+		expect(nonUtilityChildren).toHaveLength(0);
 	});
 
 	test("should support options: defaultVariants and compoundVariants", () => {
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+
 		const instance = recipe({
 			name: "chip",
 			base: { borderWidth: "thin" },
@@ -259,23 +275,16 @@ describe("processRecipeUtilities", () => {
 		expect(utilityNames).toContain("fontWeight");
 	});
 
-	test("should warn and skip when utility is not found in registry", () => {
-		const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-		const instance = recipe({
-			name: "button",
-			base: { unknownUtility: "value" },
-			variants: {},
-		});
-
-		processRecipeUtilities(instance, root);
-
-		expect(warnSpy).toHaveBeenCalledWith(
-			'[styleframe] Utility "unknownUtility" not found in registry. Skipping.',
+	test("should throw when utility is not found in registry", () => {
+		expect(() =>
+			recipe({
+				name: "button",
+				base: { unknownUtility: "value" },
+				variants: {},
+			}),
+		).toThrow(
+			'[styleframe] Utility "unknownUtility" not found in registry. Make sure the utility is registered before using it in a recipe.',
 		);
-		expect(root.children).toHaveLength(0);
-
-		warnSpy.mockRestore();
 	});
 
 	test("should match camelCase recipe property to kebab-case utility", () => {
@@ -460,33 +469,19 @@ describe("processRecipeUtilities", () => {
 		expect(marginUtilities).toHaveLength(1);
 	});
 
-	test("should continue processing other utilities when one is missing", () => {
-		const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
+	test("should throw when one utility is missing from registry", () => {
 		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
 		// Note: borderStyle utility is NOT registered
 
-		const instance = recipe({
-			name: "button",
-			base: { borderWidth: "thin", borderStyle: "solid" },
-			variants: {},
-		});
-
-		processRecipeUtilities(instance, root);
-
-		// Should still create the borderWidth utility
-		expect(root.children).toHaveLength(1);
-		expect(root.children[0]).toMatchObject({
-			type: "utility",
-			name: "borderWidth",
-		});
-
-		// Should warn about missing borderStyle
-		expect(warnSpy).toHaveBeenCalledWith(
-			'[styleframe] Utility "borderStyle" not found in registry. Skipping.',
+		expect(() =>
+			recipe({
+				name: "button",
+				base: { borderWidth: "thin", borderStyle: "solid" },
+				variants: {},
+			}),
+		).toThrow(
+			'[styleframe] Utility "borderStyle" not found in registry. Make sure the utility is registered before using it in a recipe.',
 		);
-
-		warnSpy.mockRestore();
 	});
 
 	describe("modifier support", () => {
@@ -654,36 +649,23 @@ describe("processRecipeUtilities", () => {
 			expect(hoverBackground).toBeDefined();
 		});
 
-		test("should warn when modifier is not found in registry", () => {
-			const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
+		test("should throw when modifier is not found in registry", () => {
 			utility("boxShadow", ({ value }) => ({ boxShadow: value }));
 			// Note: hover modifier is NOT registered
 
-			const instance = recipe({
-				name: "button",
-				base: {
-					hover: {
-						boxShadow: "lg",
+			expect(() =>
+				recipe({
+					name: "button",
+					base: {
+						hover: {
+							boxShadow: "lg",
+						},
 					},
-				},
-				variants: {},
-			});
-
-			processRecipeUtilities(instance, root);
-
-			// Should warn about missing hover modifier
-			expect(warnSpy).toHaveBeenCalledWith(
-				'[styleframe] Modifier "hover" not found in registry. Skipping modifier for utility "boxShadow".',
+					variants: {},
+				}),
+			).toThrow(
+				'[styleframe] Modifier "hover" not found in registry. Make sure the modifier is registered before using it in a recipe.',
 			);
-
-			// Should still create the base utility without modifier
-			const boxShadowUtilities = root.children.filter(
-				(child) => child.type === "utility" && child.name === "boxShadow",
-			);
-			expect(boxShadowUtilities).toHaveLength(1);
-
-			warnSpy.mockRestore();
 		});
 
 		test("should strip '&:' prefix and treat '&:hover' the same as 'hover' in base", () => {
@@ -1281,23 +1263,21 @@ describe("generateRecipeRuntime", () => {
 		expect(instance._runtime?.compoundVariants).toBeUndefined();
 	});
 
-	test("should skip utilities not found in registry", () => {
+	test("should throw when utility in base is not found in registry", () => {
 		utility("background", ({ value }) => ({ background: value }));
 
-		const instance = recipe({
-			name: "button",
-			base: {
-				background: "@color.primary",
-				unknownUtility: "value", // This utility is not registered
-			},
-			variants: {},
-		});
-
-		// Should only include the known utility
-		expect(instance._runtime?.base).toEqual({
-			background: "color.primary",
-		});
-		expect(instance._runtime?.base).not.toHaveProperty("unknownUtility");
+		expect(() =>
+			recipe({
+				name: "button",
+				base: {
+					background: "@color.primary",
+					unknownUtility: "value", // This utility is not registered
+				},
+				variants: {},
+			}),
+		).toThrow(
+			'[styleframe] Utility "unknownUtility" not found in registry. Make sure the utility is registered before using it in a recipe.',
+		);
 	});
 
 	test("should handle compound modifiers like hover:focus", () => {

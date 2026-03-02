@@ -223,16 +223,15 @@ function transformDeclarationsToRuntime(
 			const modifierResult: RuntimeModifierDeclarationsBlock = {};
 			for (const [utilityKey, utilityValue] of Object.entries(value)) {
 				const utilityFactory = getUtilityFactory(root, utilityKey);
-				if (utilityFactory) {
-					modifierResult[utilityKey] = resolveRuntimeKey(
-						utilityFactory,
-						utilityValue,
-					);
-				} else {
-					console.warn(
-						`[styleframe] Utility "${utilityKey}" not found in registry. Skipping runtime generation for this declaration.`,
+				if (!utilityFactory) {
+					throw new Error(
+						`[styleframe] Utility "${utilityKey}" not found in registry. Make sure the utility is registered before using it in a recipe.`,
 					);
 				}
+				modifierResult[utilityKey] = resolveRuntimeKey(
+					utilityFactory,
+					utilityValue,
+				);
 			}
 			result[stripSelectorPrefix(key)] = modifierResult;
 		} else if (typeof value === "boolean") {
@@ -240,13 +239,12 @@ function transformDeclarationsToRuntime(
 		} else {
 			// Regular utility declaration
 			const utilityFactory = getUtilityFactory(root, key);
-			if (utilityFactory) {
-				result[key] = resolveRuntimeKey(utilityFactory, value);
-			} else {
-				console.warn(
-					`[styleframe] Utility "${key}" not found in registry. Skipping runtime generation for this declaration.`,
+			if (!utilityFactory) {
+				throw new Error(
+					`[styleframe] Utility "${key}" not found in registry. Make sure the utility is registered before using it in a recipe.`,
 				);
 			}
+			result[key] = resolveRuntimeKey(utilityFactory, value);
 		}
 	}
 
@@ -474,10 +472,9 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 		const utilityFactory = getUtilityFactory(root, utilityKey);
 
 		if (!utilityFactory) {
-			console.warn(
-				`[styleframe] Utility "${utilityKey}" not found in registry. Skipping.`,
+			throw new Error(
+				`[styleframe] Utility "${utilityKey}" not found in registry. Make sure the utility is registered before using it in a recipe.`,
 			);
-			continue;
 		}
 
 		for (const entry of entries) {
@@ -488,10 +485,9 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 					try {
 						modifierCache.set(modifier, getModifier(root, modifier));
 					} catch {
-						console.warn(
-							`[styleframe] Modifier "${modifier}" not found in registry. Skipping modifier for utility "${utilityKey}".`,
+						throw new Error(
+							`[styleframe] Modifier "${modifier}" not found in registry. Make sure the modifier is registered before using it in a recipe.`,
 						);
-						modifierCache.set(modifier, null);
 					}
 				}
 

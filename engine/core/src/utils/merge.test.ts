@@ -779,6 +779,18 @@ describe("merge", () => {
 
 	describe("recipes concatenation", () => {
 		it("should concatenate recipes from both instances", () => {
+			const createFontSize = base.utility("fontSize", ({ value }) => ({
+				fontSize: value,
+			}));
+			createFontSize({ "0.875rem": "0.875rem", "1.125rem": "1.125rem" });
+			const createBoxShadow = extension.utility("boxShadow", ({ value }) => ({
+				boxShadow: value,
+			}));
+			createBoxShadow({
+				"0 1px 2px rgba(0,0,0,0.1)": "0 1px 2px rgba(0,0,0,0.1)",
+				"0 4px 6px rgba(0,0,0,0.1)": "0 4px 6px rgba(0,0,0,0.1)",
+			});
+
 			base.recipe({
 				name: "button",
 				variants: {

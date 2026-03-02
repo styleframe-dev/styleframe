@@ -16,6 +16,8 @@ import {
 	backgroundBlendModeValues,
 	mixBlendModeValues,
 	// Borders utility
+	borderStyleValues,
+	borderWidthValues,
 	divideStyleValues,
 	outlineStyleValues,
 	// Flexbox & Grid
@@ -544,6 +546,10 @@ export interface UtilitiesPresetConfig {
 	position?: Record<string, string> | false;
 	visibility?: Record<string, string> | false;
 
+	// Borders
+	borderStyle?: Record<string, string> | false;
+	borderWidth?: Record<string, string> | false;
+
 	// Tables
 	borderCollapse?: Record<string, string> | false;
 	captionSide?: Record<string, string> | false;
@@ -761,6 +767,8 @@ export function useUtilitiesPreset(
 	const overscroll = resolveValues(config.overscroll, overscrollValues);
 	const position = resolveValues(config.position, positionValues);
 	const visibility = resolveValues(config.visibility, visibilityValues);
+	const borderStyle = resolveValues(config.borderStyle, borderStyleValues);
+	const borderWidth = resolveValues(config.borderWidth, borderWidthValues);
 	const borderCollapse = resolveValues(
 		config.borderCollapse,
 		borderCollapseValues,
@@ -1267,6 +1275,22 @@ export function useUtilitiesPreset(
 	);
 	if (visibility) createVisibilityUtility(visibility);
 
+	const createBorderStyleUtility = useBorderStyleUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-style"),
+	);
+	if (borderStyle) createBorderStyleUtility(borderStyle);
+
+	const createBorderWidthUtility = useBorderWidthUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-width"),
+	);
+	if (borderWidth) createBorderWidthUtility(borderWidth);
+
 	const createBorderCollapseUtility = useBorderCollapseUtility(
 		s,
 		undefined,
@@ -1682,12 +1706,7 @@ export function useUtilitiesPreset(
 			undefined,
 			resolveUtilityOptions("border-radius"),
 		),
-		createBorderStyleUtility: useBorderStyleUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("border-style"),
-		),
+		createBorderStyleUtility,
 		createBorderWidthBottomUtility: useBorderWidthBottomUtility(
 			s,
 			undefined,
@@ -1724,12 +1743,7 @@ export function useUtilitiesPreset(
 			undefined,
 			resolveUtilityOptions("border-top-width"),
 		),
-		createBorderWidthUtility: useBorderWidthUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("border-width"),
-		),
+		createBorderWidthUtility,
 		createBorderWidthXUtility: useBorderWidthXUtility(
 			s,
 			undefined,

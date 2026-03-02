@@ -1,18 +1,8 @@
-import {
-	useButtonRecipe,
-	useUtilitiesPreset,
-	useDesignTokensPreset,
-} from "@styleframe/theme";
+import { useButtonRecipe } from "@styleframe/theme";
 import { styleframe } from "virtual:styleframe";
 
 const s = styleframe();
 const { selector } = s;
-
-// Initialize design tokens preset
-useDesignTokensPreset(s);
-
-// Initialize utilities preset
-useUtilitiesPreset(s);
 
 // Initialize button recipe
 export const button = useButtonRecipe(s);

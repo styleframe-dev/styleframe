@@ -187,7 +187,9 @@ describe("createUtilityConsumer", () => {
 		const result = consumeUtility(hoverMarginUtility, options);
 
 		const expected = `._hover\\:margin\\:sm {
-	margin: 8px;
+	&:hover {
+		margin: 8px;
+	}
 }`;
 
 		expect(result).toBe(expected);
@@ -235,7 +237,13 @@ describe("createUtilityConsumer", () => {
 		const result = consumeUtility(hoverFocusMarginUtility, options);
 
 		const expected = `._focus\\:hover\\:margin\\:sm {
-	margin: 8px;
+\t&:focus {
+\t\tmargin: 8px;
+\t}
+\t
+\t&:hover {
+\t\tmargin: 8px;
+\t}
 }`;
 
 		expect(result).toBe(expected);
@@ -419,7 +427,9 @@ describe("createUtilityConsumer", () => {
 		const result = consumeUtility(groupHoverMarginUtility, options);
 
 		const expected = `._group-hover\\:margin\\:sm {
-\tmargin: 8px;
+\t.group:hover & {
+\t\tmargin: 8px;
+\t}
 }`;
 
 		expect(result).toBe(expected);
@@ -461,7 +471,9 @@ describe("createUtilityConsumer", () => {
 		if (smMarginUtility) {
 			const result = consumeUtility(smMarginUtility, options);
 			const expected = `._sm\\:margin\\:base {
-\tmargin: 8px;
+\t@media (min-width: 640px) {
+\t\tmargin: 8px;
+\t}
 }`;
 			expect(result).toBe(expected);
 		}
@@ -509,7 +521,13 @@ describe("createUtilityConsumer", () => {
 		const result = consumeUtility(combinedUtility, options);
 
 		const expected = `._hover\\:responsive\\:margin\\:sm {
-\tmargin: 8px;
+\t&:hover {
+\t\tmargin: 8px;
+\t}
+\t
+\t@media (min-width: 768px) {
+\t\tmargin: 8px;
+\t}
 }`;
 
 		expect(result).toBe(expected);

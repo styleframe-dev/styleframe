@@ -1,18 +1,8 @@
-import {
-	useBadgeRecipe,
-	useUtilitiesPreset,
-	useDesignTokensPreset,
-} from "@styleframe/theme";
+import { useBadgeRecipe } from "@styleframe/theme";
 import { styleframe } from "virtual:styleframe";
 
 const s = styleframe();
 const { selector } = s;
-
-// Initialize design tokens preset
-useDesignTokensPreset(s);
-
-// Initialize utilities preset
-useUtilitiesPreset(s);
 
 // Initialize badge recipe
 export const badge = useBadgeRecipe(s);

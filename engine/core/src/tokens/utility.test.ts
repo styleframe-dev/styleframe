@@ -509,6 +509,33 @@ describe("createUtilityFunction", () => {
 		});
 	});
 
+	test("should reuse existing factory when utility is called with the same name", () => {
+		const createColor1 = utility("color", ({ value }) => ({ color: value }));
+		const createColor2 = utility("color", ({ value }) => ({ color: value }));
+
+		expect(createColor1).toBe(createColor2);
+		expect(root.utilities).toHaveLength(1);
+	});
+
+	test("should deduplicate values across multiple utility() calls with same name", () => {
+		// Simulate first .styleframe.ts file calling useUtilitiesPreset
+		const createDivideStyle1 = utility("divide-style", ({ value }) => ({
+			borderStyle: value,
+		}));
+		createDivideStyle1({ solid: "solid", dashed: "dashed" });
+
+		// Simulate second .styleframe.ts file calling useUtilitiesPreset
+		const createDivideStyle2 = utility("divide-style", ({ value }) => ({
+			borderStyle: value,
+		}));
+		createDivideStyle2({ solid: "solid", dashed: "dashed" });
+
+		// Should only have 1 factory and 2 children (not 4)
+		expect(root.utilities).toHaveLength(1);
+		expect(root.children).toHaveLength(2);
+		expect(root.utilities[0]?.values).toHaveLength(2);
+	});
+
 	test("should preserve utility order in root utilities array", () => {
 		const createMarginUtility = utility("margin", ({ value }) => ({
 			margin: value,
@@ -1765,8 +1792,18 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.type).toBe("utility");
 		expect(result.name).toBe("margin");
 		expect(result.value).toBe("lg");
-		expect(result.declarations).toEqual({ margin: "24px" });
+		// Declarations are replaced by the modifier's return value;
+		// the "&:focus" key is parsed into a child selector, leaving declarations empty
+		expect(result.declarations).toEqual({});
+		expect(result.children).toHaveLength(1);
+		expect(result.children[0]).toMatchObject({
+			type: "selector",
+			query: "&:focus",
+			declarations: { margin: "24px" },
+		});
 		expect(result.modifiers).toEqual(["focus"]);
+		// Base utility declarations should not be mutated
+		expect(baseUtility.declarations).toEqual({ margin: "24px" });
 	});
 
 	test("should apply multiple modifiers to utility", () => {
@@ -2015,8 +2052,11 @@ describe("createModifiedUtilityFunction", () => {
 			new Map([["thick", widthModifier]]),
 		);
 
-		// The original declarations should be preserved
-		expect(result.declarations).toEqual({ borderStyle: "solid" });
+		// The modifier augments the declarations with additional properties
+		expect(result.declarations).toEqual({
+			borderStyle: "solid",
+			borderWidth: "4px",
+		});
 		expect(result.modifiers).toEqual(["thick"]);
 	});
 
@@ -2081,10 +2121,12 @@ describe("createModifiedUtilityFunction", () => {
 
 		// The instances themselves should be different
 		expect(result1).not.toBe(result2);
-		// Note: variables and children arrays are shared from baseUtility due to spread operator
-		// This is the actual behavior of the function - it mutates the arrays
-		expect(result1.variables).toBe(result2.variables);
-		expect(result1.children).toBe(result2.children);
+		// Each modified instance gets its own copy of variables and children arrays
+		expect(result1.variables).not.toBe(result2.variables);
+		expect(result1.children).not.toBe(result2.children);
+		// But they should have the same content
+		expect(result1.variables).toEqual(result2.variables);
+		expect(result1.children).toEqual(result2.children);
 	});
 
 	test("should handle complex modifier factory with multiple operations", () => {
@@ -2152,7 +2194,7 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.modifiers).toEqual(["interactive"]);
 	});
 
-	test("should mutate base utility's arrays when modifiers add items", () => {
+	test("should not mutate base utility's arrays when modifiers add items", () => {
 		const baseUtility: Utility = {
 			type: "utility",
 			name: "position",
@@ -2185,9 +2227,11 @@ describe("createModifiedUtilityFunction", () => {
 		expect(baseUtility.declarations).toEqual(originalDeclarations);
 		// The modifiers array should remain unchanged
 		expect(baseUtility.modifiers).toEqual(originalModifiers);
-		// But variables array will be mutated due to spread operator shallow copy
-		expect(baseUtility.variables).toHaveLength(1);
-		expect(baseUtility.variables[0]).toEqual({
+		// The base utility's variables should not be mutated
+		expect(baseUtility.variables).toHaveLength(0);
+		// The result should have the variable added by the modifier
+		expect(result.variables).toHaveLength(1);
+		expect(result.variables[0]).toEqual({
 			type: "variable",
 			name: "test-var",
 			value: "value",
@@ -2196,7 +2240,7 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.modifiers).toEqual(["test"]);
 	});
 
-	test("should handle modifier that returns null declarations", () => {
+	test("should handle modifier that returns empty object declarations", () => {
 		const baseUtility: Utility = {
 			type: "utility",
 			name: "display",
@@ -2219,7 +2263,8 @@ describe("createModifiedUtilityFunction", () => {
 			new Map([["null", nullModifier]]),
 		);
 
-		expect(result.declarations).toEqual({ display: "flex" });
+		// Empty object return replaces declarations
+		expect(result.declarations).toEqual({});
 		expect(result.modifiers).toEqual(["null"]);
 	});
 
@@ -2273,7 +2318,8 @@ describe("createModifiedUtilityFunction", () => {
 			new Map([["empty", emptyModifier]]),
 		);
 
-		expect(result.declarations).toEqual({ height: "100vh" });
+		// Empty object return replaces declarations
+		expect(result.declarations).toEqual({});
 		expect(result.modifiers).toEqual(["empty"]);
 	});
 
@@ -2459,7 +2505,11 @@ describe("createModifiedUtilityFunction", () => {
 			new Map([["deep", deepModifier]]),
 		);
 
-		expect(result.declarations).toEqual({ display: "grid" });
+		// The modifier's return value replaces the base declarations
+		expect(result.declarations).toEqual({
+			gridTemplateColumns: "repeat(12, 1fr)",
+			gridGap: "1rem",
+		});
 		expect(result.children).toHaveLength(2);
 		expect(result.modifiers).toEqual(["deep"]);
 	});

@@ -83,6 +83,11 @@ export function createUtilityFunction(parent: Container, root: Root) {
 			namespace?: string | string[];
 		} = {},
 	): UtilityCreatorFn {
+		const existingFactory = root.utilities.find((f) => f.name === name);
+		if (existingFactory) {
+			return existingFactory.create;
+		}
+
 		const factoryInstance: UtilityFactory<Name> = {
 			type: "utility",
 			name,
