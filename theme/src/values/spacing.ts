@@ -8,4 +8,4 @@ export const spacingValues = {
 	xl: "2rem",
 	"2xl": "3rem",
 	"3xl": "4rem",
-};
+} as const;

@@ -35,10 +35,10 @@ describe("useColorTint", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		const tints = useColorTint(s, colorPrimary, {
-			25: 2.5,
-			50: 5,
-			75: 7.5,
-			100: 10,
+			"tint-25": 2.5,
+			"tint-50": 5,
+			"tint-75": 7.5,
+			"tint-100": 10,
 		} as const);
 
 		expect(tints.colorPrimaryTint25).toEqual({
@@ -67,8 +67,8 @@ describe("useColorTint", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		useColorTint(s, colorPrimary, {
-			50: 5,
-			100: 10,
+			"tint-50": 5,
+			"tint-100": 10,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -84,8 +84,8 @@ describe("useColorTint", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		useColorTint(s, colorPrimary, {
-			50: 5,
-			100: 10,
+			"tint-50": 5,
+			"tint-100": 10,
 		} as const);
 
 		// +1 for the original color variable
@@ -96,7 +96,7 @@ describe("useColorTint", () => {
 		const s = styleframe();
 		const colorPrimaryLight = s.variable("color--primary-light", "#80bdff");
 		const tints = useColorTint(s, colorPrimaryLight, {
-			50: 5,
+			"tint-50": 5,
 		} as const);
 
 		expect(tints.colorPrimaryLightTint50.name).toBe(
@@ -116,7 +116,7 @@ describe("useColorTint", () => {
 		const s = styleframe();
 		const customColor = s.variable("custom-color", "#ff0000");
 		const tints = useColorTint(s, customColor, {
-			100: 10,
+			"tint-100": 10,
 		} as const);
 
 		expect(tints.customColorTint100).toEqual({
@@ -136,8 +136,8 @@ describe("useColorTint", () => {
 			const s = styleframe();
 			const colorPrimary = s.variable("color--primary", "#007bff");
 			const tints = useColorTint(s, colorPrimary, {
-				50: 5,
-				100: 10,
+				"tint-50": 5,
+				"tint-100": 10,
 			} as const);
 
 			const tint50: Variable<"color--primary-tint-50"> =
@@ -153,7 +153,7 @@ describe("useColorTint", () => {
 			const s = styleframe();
 			const colorSecondary = s.variable("color--secondary", "#6c757d");
 			const tints = useColorTint(s, colorSecondary, {
-				75: 7.5,
+				"tint-75": 7.5,
 			} as const);
 
 			const typed: Variable<"color--secondary-tint-75"> =

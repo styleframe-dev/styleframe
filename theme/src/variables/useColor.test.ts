@@ -12,7 +12,7 @@ function toOklch(color: string): string {
 	const result = oklch(color);
 	if (!result) return color;
 	const { l, c, h, alpha = 1 } = result;
-	return `oklch(${l} ${c} ${h} / ${alpha})`;
+	return `oklch(${l} ${c} ${h ?? 0} / ${alpha})`;
 }
 
 describe("useColor", () => {
@@ -248,14 +248,14 @@ describe("integration", () => {
 
 		// Create shade levels for secondary
 		const secondaryShades = useColorShade(s, colorSecondary, {
-			50: 5,
-			100: 10,
+			"shade-50": 5,
+			"shade-100": 10,
 		} as const);
 
 		// Create tint levels for secondary
 		const secondaryTints = useColorTint(s, colorSecondary, {
-			50: 5,
-			100: 10,
+			"tint-50": 5,
+			"tint-100": 10,
 		} as const);
 
 		// Verify all variables are created
@@ -293,11 +293,11 @@ describe("integration", () => {
 		} as const);
 
 		const shades = useColorShade(s, colorBrandPrimary, {
-			50: 5,
+			"shade-50": 5,
 		} as const);
 
 		const tints = useColorTint(s, colorBrandPrimary, {
-			50: 5,
+			"tint-50": 5,
 		} as const);
 
 		expect(colorBrandPrimary).toEqual({
@@ -335,11 +335,11 @@ describe("integration", () => {
 		});
 
 		const shades = useColorShade(s, colorPrimary, {
-			50: 5,
+			"shade-50": 5,
 		});
 
 		const tints = useColorTint(s, colorPrimary, {
-			50: 5,
+			"tint-50": 5,
 		});
 
 		const css = consumeCSS(s.root, s.options);

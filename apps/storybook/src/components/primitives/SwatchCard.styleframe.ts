@@ -56,6 +56,7 @@ s.selector(".swatch-card__label", {
 	fontSize: s.ref(swatchFontSizeSm),
 	fontWeight: s.ref(swatchFontWeightNormal),
 	color: s.ref(swatchColorTertiary),
+	textAlign: "center",
 });
 
 export default s;

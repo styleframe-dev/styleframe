@@ -1,6 +1,4 @@
-import type { Styleframe, Variable } from "@styleframe/core";
-import type { ExportKeys } from "../types";
-import { createUseVariable } from "../utils";
+import { createUseDerivedVariable } from "../utils";
 import { colorShadeValues } from "../values";
 
 export { colorShadeValues };
@@ -19,31 +17,21 @@ export { colorShadeValues };
  *   colorPrimaryShade150, // Variable<'color.primary-shade-150'>
  *   ...
  * } = useColorShadeLevels(s, colorPrimary, {
- *   50: 5,
- *   100: 10,
- *   150: 15,
+ *   "shade-50": 5,
+ *   "shade-100": 10,
+ *   "shade-150": 15,
  *   ...
  * });
  * ```
  */
-export function useColorShade<
-	Name extends string,
-	T extends Record<string | number, number>,
->(
-	s: Styleframe,
-	color: Variable<Name>,
-	levels: T,
-	{ default: isDefault = true }: { default?: boolean } = {},
-): ExportKeys<`${Name}-shade`, T, "-"> {
-	return createUseVariable(`${color.name}-shade`, {
-		defaults: colorShadeValues,
-		transform: (value) => {
-			if (typeof value !== "number") {
-				return 0;
-			}
+export const useColorShade = createUseDerivedVariable({
+	defaults: colorShadeValues,
+	delimiter: "-",
+	transform: (value: number, { s, parent }) => {
+		if (typeof value !== "number") {
+			return 0;
+		}
 
-			return s.css`oklch(from ${s.ref(color)} calc(l - ${value / 100}) c h / alpha)`;
-		},
-		delimiter: "-" as const,
-	})(s, levels, { default: isDefault });
-}
+		return s.css`oklch(from ${s.ref(parent)} calc(l - ${value / 100}) c h / alpha)`;
+	},
+});

@@ -19,4 +19,4 @@ export const boxShadowValues = {
 		"inset 0 1px 0 oklch(var(--box-shadow-color, 0 0 0) / 0.08), inset 0 0 0 1px oklch(var(--box-shadow-color, 0 0 0) / 0.06)",
 	// focus rings that still read as elevation
 	ring: "0 0 0 1px oklch(var(--box-shadow-color, 0 0 0) / 0.12), 0 1px 2px oklch(var(--box-shadow-color, 0 0 0) / 0.08)",
-};
+} as const;

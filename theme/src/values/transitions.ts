@@ -11,7 +11,7 @@ export const transitionPropertyValues = {
 	opacity: "opacity",
 	shadow: "box-shadow",
 	transform: "transform",
-};
+} as const;
 
 /**
  * Default transition-behavior utility values matching Tailwind CSS.
@@ -19,7 +19,7 @@ export const transitionPropertyValues = {
 export const transitionBehaviorValues = {
 	normal: "normal",
 	"allow-discrete": "allow-discrete",
-};
+} as const;
 
 /**
  * Default animation utility values matching Tailwind CSS.
@@ -30,4 +30,4 @@ export const animationValues = {
 	ping: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
 	pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
 	bounce: "bounce 1s infinite",
-};
+} as const;

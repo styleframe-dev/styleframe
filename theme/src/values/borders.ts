@@ -7,7 +7,7 @@ export const divideStyleValues = {
 	dotted: "dotted",
 	double: "double",
 	none: "none",
-};
+} as const;
 
 /**
  * Default outline-style utility values matching Tailwind CSS.
@@ -18,4 +18,4 @@ export const outlineStyleValues = {
 	dashed: "dashed",
 	dotted: "dotted",
 	double: "double",
-};
+} as const;

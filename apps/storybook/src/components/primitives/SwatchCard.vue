@@ -15,7 +15,9 @@ defineProps<{
 		</div>
 		<div class="swatch-card__footer">
 			<span class="swatch-card__name">{{ name }}</span>
-			<span v-if="label" class="swatch-card__label">{{ label }}</span>
+			<slot name="label">
+				<span v-if="label" class="swatch-card__label">{{ label }}</span>
+			</slot>
 		</div>
 	</div>
 </template>

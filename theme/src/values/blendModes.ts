@@ -18,7 +18,7 @@ export const backgroundBlendModeValues = {
 	saturation: "saturation",
 	color: "color",
 	luminosity: "luminosity",
-};
+} as const;
 
 /**
  * Default mix-blend-mode utility values matching Tailwind CSS.
@@ -42,4 +42,4 @@ export const mixBlendModeValues = {
 	luminosity: "luminosity",
 	"plus-darker": "plus-darker",
 	"plus-lighter": "plus-lighter",
-};
+} as const;

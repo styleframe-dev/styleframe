@@ -5,4 +5,4 @@ export const letterSpacingValues = {
 	normal: "normal",
 	wide: "0.05em",
 	wider: "0.1em",
-};
+} as const;

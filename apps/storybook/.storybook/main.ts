@@ -20,6 +20,8 @@ const config: StorybookConfig = {
 		getAbsolutePath("@storybook/addon-a11y"),
 		getAbsolutePath("@storybook/addon-docs"),
 		getAbsolutePath("@storybook/addon-onboarding"),
+		getAbsolutePath("@storybook/addon-themes"),
+		getAbsolutePath("@vueless/storybook-dark-mode"),
 	],
 	framework: getAbsolutePath("@storybook/vue3-vite"),
 };

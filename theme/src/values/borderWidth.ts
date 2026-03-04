@@ -4,4 +4,4 @@ export const borderWidthValues = {
 	thin: "thin",
 	medium: "medium",
 	thick: "thick",
-};
+} as const;

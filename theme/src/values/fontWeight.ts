@@ -10,4 +10,4 @@ export const fontWeightValues = {
 	lighter: "lighter",
 	bolder: "bolder",
 	inherit: "inherit",
-};
+} as const;

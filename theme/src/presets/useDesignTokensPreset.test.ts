@@ -3,7 +3,6 @@ import { consumeCSS } from "@styleframe/transpiler";
 import {
 	defaultColorsMetaConfig,
 	useDesignTokensPreset,
-	type DesignTokensPresetConfig,
 } from "./useDesignTokensPreset";
 
 describe("useDesignTokensPreset", () => {
@@ -421,7 +420,7 @@ describe("useDesignTokensPreset", () => {
 						generateLightness: false,
 						generateShades: true,
 						generateTints: false,
-						shadeLevels: { 50: 5, 100: 10 },
+						shadeLevels: { "shade-50": 5, "shade-100": 10 },
 					},
 				},
 			});
@@ -440,7 +439,7 @@ describe("useDesignTokensPreset", () => {
 						generateLightness: false,
 						generateShades: false,
 						generateTints: true,
-						tintLevels: { 50: 5, 100: 10 },
+						tintLevels: { "tint-50": 5, "tint-100": 10 },
 					},
 				},
 			});
@@ -876,6 +875,626 @@ describe("useDesignTokensPreset", () => {
 
 			// @ts-expect-error - lineHeightRelaxed is not in custom config
 			result.lineHeight.lineHeightRelaxed;
+		});
+	});
+
+	describe("return value keys", () => {
+		it("should return all default spacing keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.spacing.spacing;
+			result.spacing.spacing2xs;
+			result.spacing.spacingXs;
+			result.spacing.spacingSm;
+			result.spacing.spacingMd;
+			result.spacing.spacingLg;
+			result.spacing.spacingXl;
+			result.spacing.spacing2xl;
+			result.spacing.spacing3xl;
+
+			// @ts-expect-error - spacingXxl is not a default key
+			result.spacing.spacingXxl;
+		});
+
+		it("should return all default borderWidth keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.borderWidth.borderWidth;
+			result.borderWidth.borderWidthNone;
+			result.borderWidth.borderWidthThin;
+			result.borderWidth.borderWidthMedium;
+			result.borderWidth.borderWidthThick;
+
+			// @ts-expect-error - borderWidthHeavy is not a default key
+			result.borderWidth.borderWidthHeavy;
+		});
+
+		it("should return all default borderRadius keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.borderRadius.borderRadius;
+			result.borderRadius.borderRadiusNone;
+			result.borderRadius.borderRadiusSm;
+			result.borderRadius.borderRadiusMd;
+			result.borderRadius.borderRadiusLg;
+			result.borderRadius.borderRadiusXl;
+			result.borderRadius.borderRadius2xl;
+			result.borderRadius.borderRadiusFull;
+
+			// @ts-expect-error - borderRadius3xl is not a default key
+			result.borderRadius.borderRadius3xl;
+		});
+
+		it("should return all default borderStyle keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.borderStyle.borderStyle;
+			result.borderStyle.borderStyleNone;
+			result.borderStyle.borderStyleSolid;
+			result.borderStyle.borderStyleDashed;
+			result.borderStyle.borderStyleDotted;
+			result.borderStyle.borderStyleDouble;
+			result.borderStyle.borderStyleGroove;
+			result.borderStyle.borderStyleInset;
+			result.borderStyle.borderStyleOutset;
+
+			// @ts-expect-error - borderStyleRidge is not a default key
+			result.borderStyle.borderStyleRidge;
+		});
+
+		it("should return all default boxShadow keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.boxShadow.boxShadow;
+			result.boxShadow.boxShadowNone;
+			result.boxShadow.boxShadowXs;
+			result.boxShadow.boxShadowSm;
+			result.boxShadow.boxShadowMd;
+			result.boxShadow.boxShadowLg;
+			result.boxShadow.boxShadowXl;
+			result.boxShadow.boxShadow2xl;
+			result.boxShadow.boxShadowInner;
+			result.boxShadow.boxShadowRing;
+
+			// @ts-expect-error - boxShadow3xl is not a default key
+			result.boxShadow.boxShadow3xl;
+		});
+
+		it("should return all default fontFamily keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.fontFamily.fontFamily;
+			result.fontFamily.fontFamilyBase;
+			result.fontFamily.fontFamilyPrint;
+			result.fontFamily.fontFamilyMono;
+
+			// @ts-expect-error - fontFamilySans is not a default key
+			result.fontFamily.fontFamilySans;
+		});
+
+		it("should return all default fontSize keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.fontSize.fontSize;
+			result.fontSize.fontSize3xs;
+			result.fontSize.fontSize2xs;
+			result.fontSize.fontSizeXs;
+			result.fontSize.fontSizeSm;
+			result.fontSize.fontSizeMd;
+			result.fontSize.fontSizeLg;
+			result.fontSize.fontSizeXl;
+			result.fontSize.fontSize2xl;
+			result.fontSize.fontSize3xl;
+			result.fontSize.fontSize4xl;
+
+			// @ts-expect-error - fontSize5xl is not a default key
+			result.fontSize.fontSize5xl;
+		});
+
+		it("should return all default fontStyle keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.fontStyle.fontStyle;
+			result.fontStyle.fontStyleItalic;
+			result.fontStyle.fontStyleOblique;
+			result.fontStyle.fontStyleNormal;
+			result.fontStyle.fontStyleInherit;
+
+			// @ts-expect-error - fontStyleRevert is not a default key
+			result.fontStyle.fontStyleRevert;
+		});
+
+		it("should return all default fontWeight keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.fontWeight.fontWeight;
+			result.fontWeight.fontWeightExtralight;
+			result.fontWeight.fontWeightLight;
+			result.fontWeight.fontWeightNormal;
+			result.fontWeight.fontWeightMedium;
+			result.fontWeight.fontWeightSemibold;
+			result.fontWeight.fontWeightBold;
+			result.fontWeight.fontWeightBlack;
+			result.fontWeight.fontWeightLighter;
+			result.fontWeight.fontWeightBolder;
+			result.fontWeight.fontWeightInherit;
+
+			// @ts-expect-error - fontWeightThin is not a default key
+			result.fontWeight.fontWeightThin;
+		});
+
+		it("should return all default lineHeight keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.lineHeight.lineHeight;
+			result.lineHeight.lineHeightTight;
+			result.lineHeight.lineHeightSnug;
+			result.lineHeight.lineHeightNormal;
+			result.lineHeight.lineHeightRelaxed;
+			result.lineHeight.lineHeightLoose;
+
+			// @ts-expect-error - lineHeightCompact is not a default key
+			result.lineHeight.lineHeightCompact;
+		});
+
+		it("should return all default letterSpacing keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.letterSpacing.letterSpacing;
+			result.letterSpacing.letterSpacingTighter;
+			result.letterSpacing.letterSpacingTight;
+			result.letterSpacing.letterSpacingNormal;
+			result.letterSpacing.letterSpacingWide;
+			result.letterSpacing.letterSpacingWider;
+
+			// @ts-expect-error - letterSpacingWidest is not a default key
+			result.letterSpacing.letterSpacingWidest;
+		});
+
+		it("should return all default scale keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.scale.scale;
+			result.scale.scaleMinorSecond;
+			result.scale.scaleMajorSecond;
+			result.scale.scaleMinorThird;
+			result.scale.scaleMajorThird;
+			result.scale.scalePerfectFourth;
+			result.scale.scaleAugmentedFourth;
+			result.scale.scalePerfectFifth;
+			result.scale.scaleGolden;
+
+			// @ts-expect-error - scaleOctave is not a default key
+			result.scale.scaleOctave;
+		});
+
+		it("should return all default breakpoint keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.breakpoint.breakpointXs;
+			result.breakpoint.breakpointSm;
+			result.breakpoint.breakpointMd;
+			result.breakpoint.breakpointLg;
+			result.breakpoint.breakpointXl;
+
+			// @ts-expect-error - breakpoint2xl is not a default key
+			result.breakpoint.breakpoint2xl;
+		});
+
+		it("should return all default easing keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.easing.easingLinear;
+			result.easing.easingEase;
+			result.easing.easingEaseIn;
+			result.easing.easingEaseOut;
+			result.easing.easingEaseInOut;
+			result.easing.easingEaseInSine;
+			result.easing.easingEaseOutSine;
+			result.easing.easingEaseInOutSine;
+			result.easing.easingEaseInCubic;
+			result.easing.easingEaseOutCubic;
+			result.easing.easingEaseInOutCubic;
+			result.easing.easingSpring;
+			result.easing.easingBounce;
+
+			// @ts-expect-error - easingSnap is not a default key
+			result.easing.easingSnap;
+		});
+
+		it("should return all default color keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				meta: {
+					colors: {
+						generateLightness: false,
+						generateShades: false,
+						generateTints: false,
+					},
+				},
+			});
+
+			result.colors.colorPrimary;
+			result.colors.colorSecondary;
+			result.colors.colorSuccess;
+			result.colors.colorWarning;
+			result.colors.colorDanger;
+			result.colors.colorInfo;
+			// @ts-expect-error - colorBrand is not a default key
+			result.colors.colorBrand;
+		});
+
+		it("should return color lightness variation keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: { primary: "#007bff" },
+				meta: {
+					colors: {
+						generateLightness: true,
+						generateShades: false,
+						generateTints: false,
+					},
+				},
+			});
+
+			result.colors.colorPrimary;
+			result.colors.colorPrimary50;
+			result.colors.colorPrimary100;
+			result.colors.colorPrimary200;
+			result.colors.colorPrimary300;
+			result.colors.colorPrimary400;
+			result.colors.colorPrimary500;
+			result.colors.colorPrimary600;
+			result.colors.colorPrimary700;
+			result.colors.colorPrimary800;
+			result.colors.colorPrimary900;
+			result.colors.colorPrimary950;
+
+			// @ts-expect-error - colorPrimary1000 is not a valid lightness level
+			result.colors.colorPrimary1000;
+		});
+
+		it("should return color shade variation keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: { primary: "#007bff" },
+				meta: {
+					colors: {
+						generateLightness: false,
+						generateShades: true,
+						generateTints: false,
+					},
+				},
+			});
+
+			result.colors.colorPrimary;
+			result.colors.colorPrimaryShade50;
+			result.colors.colorPrimaryShade100;
+			result.colors.colorPrimaryShade150;
+			result.colors.colorPrimaryShade200;
+
+			// @ts-expect-error - colorPrimaryShade300 is not a valid shade level
+			result.colors.colorPrimaryShade300;
+		});
+
+		it("should return color tint variation keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: { primary: "#007bff" },
+				meta: {
+					colors: {
+						generateLightness: false,
+						generateShades: false,
+						generateTints: true,
+					},
+				},
+			});
+
+			result.colors.colorPrimary;
+			result.colors.colorPrimaryTint50;
+			result.colors.colorPrimaryTint100;
+			result.colors.colorPrimaryTint150;
+			result.colors.colorPrimaryTint200;
+
+			// @ts-expect-error - colorPrimaryTint300 is not a valid tint level
+			result.colors.colorPrimaryTint300;
+		});
+
+		it("should return all variation keys for multiple colors", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: { primary: "#007bff", danger: "#ef4444" },
+			});
+
+			// primary variations
+			result.colors.colorPrimary;
+			result.colors.colorPrimary500;
+			result.colors.colorPrimaryShade100;
+			result.colors.colorPrimaryTint100;
+
+			// danger variations
+			result.colors.colorDanger;
+			result.colors.colorDanger500;
+			result.colors.colorDangerShade100;
+			result.colors.colorDangerTint100;
+
+			// @ts-expect-error - colorSuccess is not in custom config
+			result.colors.colorSuccess;
+		});
+
+		it("should return scalePowers when scale is enabled", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			expect(result.scalePowers).toBeDefined();
+			expect(result.scalePowers[-2]).toBeDefined();
+			expect(result.scalePowers[-1]).toBeDefined();
+			expect(result.scalePowers[0]).toBeDefined();
+			expect(result.scalePowers[1]).toBeDefined();
+			expect(result.scalePowers[2]).toBeDefined();
+			expect(result.scalePowers[3]).toBeDefined();
+			expect(result.scalePowers[4]).toBeDefined();
+			expect(result.scalePowers[5]).toBeDefined();
+		});
+
+		it("should type scalePowers as undefined when scale is disabled", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				scale: false,
+			});
+
+			expect(result.scalePowers).toBeUndefined();
+		});
+
+		it("should type colors as undefined when colors is disabled", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: false,
+			});
+
+			expect(result.colors).toBeUndefined();
+
+			// @ts-expect-error - colors is undefined when disabled
+			const _colorsCheck: Record<string, unknown> = result.colors;
+		});
+	});
+
+	describe("themes", () => {
+		it("should create a theme block with color overrides", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				colors: { primary: "#007bff", secondary: "#6c757d" },
+				themes: {
+					dark: {
+						colors: { primary: "#60a5fa", secondary: "#cbd5e1" },
+					},
+				},
+				meta: {
+					colors: {
+						generateLightness: false,
+						generateShades: false,
+						generateTints: false,
+					},
+				},
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain(":root");
+			expect(css).toContain("--color--primary");
+			expect(css).toContain('[data-theme="dark"]');
+
+			expect(s.root.themes).toHaveLength(1);
+			expect(s.root.themes[0]!.name).toBe("dark");
+			expect(s.root.themes[0]!.variables.length).toBeGreaterThan(0);
+		});
+
+		it("should create a theme block with spacing overrides", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				spacing: { default: "1rem", sm: "0.5rem", lg: "2rem" },
+				themes: {
+					compact: {
+						spacing: { default: "0.75rem", sm: "0.25rem", lg: "1.5rem" },
+					},
+				},
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain('[data-theme="compact"]');
+			expect(s.root.themes).toHaveLength(1);
+			expect(s.root.themes[0]!.name).toBe("compact");
+		});
+
+		it("should support multiple themes", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				colors: { primary: "#007bff" },
+				themes: {
+					dark: {
+						colors: { primary: "#60a5fa" },
+					},
+					high_contrast: {
+						colors: { primary: "#0000ff" },
+					},
+				},
+				meta: {
+					colors: {
+						generateLightness: false,
+						generateShades: false,
+						generateTints: false,
+					},
+				},
+			});
+
+			expect(s.root.themes).toHaveLength(2);
+			expect(s.root.themes.map((t) => t.name)).toContain("dark");
+			expect(s.root.themes.map((t) => t.name)).toContain("high_contrast");
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain('[data-theme="dark"]');
+			expect(css).toContain('[data-theme="high_contrast"]');
+		});
+
+		it("should use themes.default to fill in undefined root-level config", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				themes: {
+					default: {
+						colors: { primary: "#ff6600", secondary: "#333" },
+						spacing: {
+							default: "0.5rem",
+							sm: "0.25rem",
+						},
+					},
+				},
+				meta: {
+					colors: {
+						generateLightness: false,
+						generateShades: false,
+						generateTints: false,
+					},
+				},
+			});
+
+			// Colors and spacing should have been created at root level
+			expect(result.colors).toBeDefined();
+			expect(result.spacing).toBeDefined();
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--color--primary");
+			expect(css).toContain("--spacing--sm");
+			// themes.default should NOT create a [data-theme="default"] block
+			expect(css).not.toContain('[data-theme="default"]');
+		});
+
+		it("should give root-level config precedence over themes.default", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: { brand: "#ff0000" },
+				themes: {
+					default: {
+						colors: { primary: "#007bff" },
+					},
+				},
+				meta: {
+					colors: {
+						generateLightness: false,
+						generateShades: false,
+						generateTints: false,
+					},
+				},
+			});
+
+			// Root-level colors should win (brand, not primary)
+			const colorKeys = Object.keys(result.colors || {});
+			expect(colorKeys).toContain("colorBrand");
+			expect(colorKeys).not.toContain("colorPrimary");
+		});
+
+		it("should not create theme blocks when themes is empty", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				themes: {},
+			});
+
+			expect(s.root.themes).toHaveLength(0);
+		});
+
+		it("should not create theme blocks when themes only has default", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				themes: {
+					default: {
+						colors: { primary: "#007bff" },
+					},
+				},
+				meta: {
+					colors: {
+						generateLightness: false,
+						generateShades: false,
+						generateTints: false,
+					},
+				},
+			});
+
+			expect(s.root.themes).toHaveLength(0);
+		});
+
+		it("should work with themes.default and additional themes together", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				themes: {
+					default: {
+						colors: {
+							primary: "#ff6600",
+							secondary: "#333",
+							accent: "#00bcd4",
+						},
+						spacing: {
+							default: "0.5rem",
+							sm: "0.25rem",
+							md: "0.5rem",
+							lg: "1rem",
+						},
+					},
+					dark: {
+						colors: {
+							primary: "#ff6600",
+							secondary: "#fff",
+							accent: "#00bcd4",
+						},
+					},
+				},
+				meta: {
+					colors: {
+						generateLightness: false,
+						generateShades: false,
+						generateTints: false,
+					},
+				},
+			});
+
+			// Root should have colors and spacing
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--color--primary");
+			expect(css).toContain("--spacing--sm");
+
+			// Dark theme should exist
+			expect(s.root.themes).toHaveLength(1);
+			expect(s.root.themes[0]!.name).toBe("dark");
+			expect(css).toContain('[data-theme="dark"]');
+		});
+
+		it("should not apply theme overrides for domains disabled at root level", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: false,
+				themes: {
+					dark: {
+						colors: { primary: "#60a5fa" },
+					},
+				},
+			});
+
+			// Colors are disabled at root level
+			expect(result.colors).toBeUndefined();
+
+			// The dark theme still exists but only has color overrides
+			expect(s.root.themes).toHaveLength(1);
 		});
 	});
 });
