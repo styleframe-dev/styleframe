@@ -16,8 +16,6 @@ const {
 	colorWarning,
 	colorDanger,
 	colorInfo,
-	colorLight,
-	colorDark,
 	colorNeutral,
 } = colors;
 
@@ -58,13 +56,6 @@ export const colorSwatch = s.recipe({
 			},
 			info: {
 				background: s.ref(colorInfo),
-			},
-			light: {
-				background: s.ref(colorLight),
-			},
-			dark: {
-				color: s.ref(colorWhite),
-				background: s.ref(colorDark),
 			},
 			neutral: {
 				background: s.ref(colorNeutral),
