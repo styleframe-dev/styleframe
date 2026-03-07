@@ -16,6 +16,7 @@ function createMockRoot(
 ): Root {
 	return {
 		type: "root",
+		id: "test-id",
 		declarations: {},
 		utilities,
 		modifiers,
@@ -306,6 +307,7 @@ describe("createUtilityFilter", () => {
 
 		const matchingUtility = {
 			type: "utility" as const,
+			id: "test-id",
 			name: "margin",
 			value: "sm",
 			modifiers: [],
@@ -316,6 +318,7 @@ describe("createUtilityFilter", () => {
 
 		const nonMatchingUtility = {
 			type: "utility" as const,
+			id: "test-id",
 			name: "margin",
 			value: "lg",
 			modifiers: [],
@@ -334,6 +337,7 @@ describe("createUtilityFilter", () => {
 
 		const matchingUtility = {
 			type: "utility" as const,
+			id: "test-id",
 			name: "margin",
 			value: "sm",
 			modifiers: ["hover"],
@@ -368,6 +372,7 @@ describe("createUtilityFilter", () => {
 
 		const matchingUtility = {
 			type: "utility" as const,
+			id: "test-id",
 			name: "margin",
 			value: "sm",
 			modifiers: [],
@@ -378,6 +383,7 @@ describe("createUtilityFilter", () => {
 
 		const nonMatchingUtility = {
 			type: "utility" as const,
+			id: "test-id",
 			name: "margin",
 			value: "lg",
 			modifiers: [],
@@ -397,6 +403,7 @@ describe("filterUtilities", () => {
 		root.children = [
 			{
 				type: "utility",
+				id: "test-id",
 				name: "margin",
 				value: "sm",
 				modifiers: [],
@@ -406,6 +413,7 @@ describe("filterUtilities", () => {
 			},
 			{
 				type: "utility",
+				id: "test-id",
 				name: "margin",
 				value: "lg",
 				modifiers: [],
@@ -430,6 +438,7 @@ describe("filterUtilities", () => {
 		root.children = [
 			{
 				type: "selector",
+				id: "test-id",
 				query: ".custom",
 				declarations: {},
 				variables: [],
@@ -437,6 +446,7 @@ describe("filterUtilities", () => {
 			},
 			{
 				type: "utility",
+				id: "test-id",
 				name: "margin",
 				value: "lg",
 				modifiers: [],

@@ -1,10 +1,12 @@
 import type { Styleframe } from "@styleframe/core";
+import { generateRandomId } from "@styleframe/core";
 
 export function addLicenseWatermark(instance: Styleframe) {
 	const index = Math.floor(Math.random() * 100);
 
 	instance.root.children.push({
 		type: "selector",
+		id: generateRandomId("sel-"),
 		query: `html:nth-of-type(${index}n+1)::after`,
 		variables: [],
 		children: [],

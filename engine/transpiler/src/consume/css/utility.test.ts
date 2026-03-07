@@ -722,6 +722,7 @@ describe("createUtilityConsumer", () => {
 
 		const instance = {
 			type: "utility" as const,
+			id: "test-id",
 			name: "background",
 			value: "primary",
 			declarations: {
@@ -749,6 +750,7 @@ describe("createUtilityConsumer", () => {
 
 		const instance = {
 			type: "utility" as const,
+			id: "test-id",
 			name: "background",
 			value: "color.primary",
 			declarations: {
