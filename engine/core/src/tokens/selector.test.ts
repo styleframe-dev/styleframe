@@ -23,6 +23,7 @@ describe("createSelectorFunction", () => {
 
 			expect(result).toEqual({
 				type: "selector",
+				id: expect.any(String),
 				query: ".button",
 				variables: [],
 				declarations: {
@@ -349,6 +350,7 @@ describe("createSelectorFunction", () => {
 		it("should work when root is a selector", () => {
 			const parentSelectorInstance: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: ".parent",
 				variables: [],
 				declarations: {},
@@ -411,6 +413,10 @@ describe("createSelectorFunction", () => {
 		it("should resolve @-prefixed values to variable references", () => {
 			const s = styleframe();
 
+			s.variable("spacing.md", "1rem");
+			s.variable("font-size.sm", "0.875rem");
+			s.variable("color.primary", "#006cff");
+
 			const result = s.selector(".badge", {
 				gap: "@spacing.md",
 				fontSize: "@font-size.sm",
@@ -426,6 +432,9 @@ describe("createSelectorFunction", () => {
 
 		it("should resolve @ references in nested selectors", () => {
 			const s = styleframe();
+
+			s.variable("spacing.md", "1rem");
+			s.variable("color.primary", "#006cff");
 
 			const result = s.selector(".button", {
 				padding: "@spacing.md",

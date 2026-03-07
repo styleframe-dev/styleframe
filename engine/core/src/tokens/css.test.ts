@@ -16,6 +16,7 @@ describe("createCSSFunction", () => {
 		root = createRoot();
 		selector = {
 			type: "selector",
+			id: "test-id",
 			query: ".test",
 			variables: [],
 			declarations: {},
@@ -247,6 +248,7 @@ describe("createCSSFunction", () => {
 		it("should work with nested selector context", () => {
 			const nestedSelector: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: "&:hover",
 				variables: [],
 				declarations: {},
@@ -469,6 +471,7 @@ describe("createCSSFunction", () => {
 			const context1 = createRoot();
 			const context2: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: ".test",
 				variables: [],
 				declarations: {},

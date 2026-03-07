@@ -143,6 +143,7 @@ describe("createUtilityFunction", () => {
 
 		expect(smUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "padding",
 			value: "sm",
 			declarations: { padding: "8px" },
@@ -152,6 +153,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(mdUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "padding",
 			value: "md",
 			declarations: { padding: "16px" },
@@ -161,6 +163,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(lgUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "padding",
 			value: "lg",
 			declarations: { padding: "24px" },
@@ -187,6 +190,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(hiddenUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "hidden",
 			value: "default",
 			declarations: { display: "none" },
@@ -238,6 +242,7 @@ describe("createUtilityFunction", () => {
 
 		expect(primaryUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "color",
 			value: "primary",
 			declarations: { color: "#007bff" },
@@ -247,6 +252,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(secondaryUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "color",
 			value: "secondary",
 			declarations: { color: "#6c757d" },
@@ -314,6 +320,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(backgroundUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "background",
 			value: "primary",
 			declarations: { background: "#007bff" },
@@ -380,6 +387,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(textUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "text",
 			value: "base",
 			declarations: { fontSize: "14px" },
@@ -424,6 +432,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(widthUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "width",
 			value: "full",
 			declarations: { width: "100%" },
@@ -450,6 +459,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(heightUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "height",
 			value: "screen",
 			declarations: { height: "100vh" },
@@ -483,6 +493,7 @@ describe("createUtilityFunction", () => {
 
 		expect(rowUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "flex",
 			value: "row",
 			declarations: {
@@ -496,6 +507,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(colUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "flex",
 			value: "col",
 			declarations: {
@@ -586,6 +598,7 @@ describe("createUtilityFunction", () => {
 
 		expect(smUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "margin",
 			value: "sm",
 			declarations: { margin: "8px" },
@@ -595,6 +608,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(mdUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "margin",
 			value: "md",
 			declarations: { margin: "16px" },
@@ -1153,6 +1167,111 @@ describe("createUtilityFunction", () => {
 
 			expect(root.children).toHaveLength(3);
 		});
+
+		test("should resolve @-prefixed values as references to sibling keys in object entries", () => {
+			const createBorderStyleUtility = utility("border-style", ({ value }) => ({
+				borderStyle: value,
+			}));
+
+			createBorderStyleUtility({
+				default: "@solid",
+				solid: "solid",
+				dashed: "dashed",
+				dotted: "dotted",
+			});
+
+			// "default" should resolve to the value of the "solid" sibling key
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "default", value: "solid", modifiers: [] },
+				{ key: "solid", value: "solid", modifiers: [] },
+				{ key: "dashed", value: "dashed", modifiers: [] },
+				{ key: "dotted", value: "dotted", modifiers: [] },
+			]);
+
+			expect(root.children).toHaveLength(4);
+
+			const defaultUtility = root.children.find(
+				(u) =>
+					isUtility(u) && u.name === "border-style" && u.value === "default",
+			);
+			expect(defaultUtility).toMatchObject({
+				type: "utility",
+				name: "border-style",
+				value: "default",
+				declarations: { borderStyle: "solid" },
+			});
+		});
+
+		test("should resolve @-prefixed values to ref objects when sibling is a ref", () => {
+			root.variables.push({
+				type: "variable",
+				name: "border-style.solid",
+				value: "solid",
+			});
+
+			const createBorderStyleUtility = utility("border-style", ({ value }) => ({
+				borderStyle: value,
+			}));
+
+			createBorderStyleUtility({
+				default: "@solid",
+				solid: {
+					type: "reference",
+					name: "border-style.solid",
+				},
+			});
+
+			// "default" should resolve to the same ref as "solid"
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "default",
+					value: { type: "reference", name: "border-style.solid" },
+					modifiers: [],
+				},
+				{
+					key: "solid",
+					value: { type: "reference", name: "border-style.solid" },
+					modifiers: [],
+				},
+			]);
+		});
+
+		test("should throw when @-prefixed value references a non-existent sibling key and variable", () => {
+			const createBorderStyleUtility = utility("border-style", ({ value }) => ({
+				borderStyle: value,
+			}));
+
+			// "@nonexistent" has no matching sibling key and no matching root variable,
+			// so parseDeclarationsBlock throws a validation error
+			expect(() =>
+				createBorderStyleUtility({
+					default: "@nonexistent",
+					solid: "solid",
+				}),
+			).toThrow('Variable "nonexistent" is not defined');
+		});
+
+		test("should resolve multiple @-prefixed values in the same object", () => {
+			const createFontUtility = utility("font", ({ value }) => ({
+				font: value,
+			}));
+
+			createFontUtility({
+				default: "@sans",
+				heading: "@serif",
+				sans: "Arial, sans-serif",
+				serif: "Georgia, serif",
+				mono: "Courier, monospace",
+			});
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "default", value: "Arial, sans-serif", modifiers: [] },
+				{ key: "heading", value: "Georgia, serif", modifiers: [] },
+				{ key: "sans", value: "Arial, sans-serif", modifiers: [] },
+				{ key: "serif", value: "Georgia, serif", modifiers: [] },
+				{ key: "mono", value: "Courier, monospace", modifiers: [] },
+			]);
+		});
 	});
 
 	describe("namespace variable existence check", () => {
@@ -1179,6 +1298,7 @@ describe("createUtilityFunction", () => {
 			);
 			expect(primaryUtility).toEqual({
 				type: "utility",
+				id: expect.any(String),
 				name: "color",
 				value: "primary",
 				declarations: { color: "primary" },
@@ -1735,6 +1855,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should return a new utility instance with modified modifiers", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "padding",
 			value: "sm",
 			declarations: { padding: "8px" },
@@ -1767,6 +1888,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should preserve base utility properties while updating modifiers", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "margin",
 			value: "lg",
 			declarations: { margin: "24px" },
@@ -1809,6 +1931,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should apply multiple modifiers to utility", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "color",
 			value: "primary",
 			declarations: { color: "#007bff" },
@@ -1848,6 +1971,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifiers that add variables", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "background",
 			value: "primary",
 			declarations: { background: "#007bff" },
@@ -1889,6 +2013,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifiers that add child selectors", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "text",
 			value: "underline",
 			declarations: { textDecoration: "underline" },
@@ -1924,6 +2049,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle empty modifiers array", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "display",
 			value: "block",
 			declarations: { display: "block" },
@@ -1942,6 +2068,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier combination with different keys", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "opacity",
 			value: "50",
 			declarations: { opacity: "0.5" },
@@ -1981,6 +2108,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should apply modifiers in order", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "transform",
 			value: "scale",
 			declarations: { transform: "scale(1)" },
@@ -2029,6 +2157,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifiers that modify existing declarations", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "border",
 			value: "solid",
 			declarations: { borderStyle: "solid" },
@@ -2063,6 +2192,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifiers with multi-key definitions", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "fontSize",
 			value: "base",
 			declarations: { fontSize: "16px" },
@@ -2091,6 +2221,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should create independent instances for each modification", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "gap",
 			value: "sm",
 			declarations: { gap: "8px" },
@@ -2132,6 +2263,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle complex modifier factory with multiple operations", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "button",
 			value: "primary",
 			declarations: { backgroundColor: "#007bff", color: "white" },
@@ -2197,6 +2329,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should not mutate base utility's arrays when modifiers add items", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "position",
 			value: "absolute",
 			declarations: { position: "absolute" },
@@ -2243,6 +2376,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier that returns empty object declarations", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "display",
 			value: "flex",
 			declarations: { display: "flex" },
@@ -2271,6 +2405,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier that returns undefined declarations", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "width",
 			value: "auto",
 			declarations: { width: "auto" },
@@ -2298,6 +2433,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier that returns empty object", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "height",
 			value: "100vh",
 			declarations: { height: "100vh" },
@@ -2326,6 +2462,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle combination array that is empty", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "overflow",
 			value: "hidden",
 			declarations: { overflow: "hidden" },
@@ -2343,6 +2480,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle nested selector creation within modifiers", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "card",
 			value: "default",
 			declarations: { padding: "1rem" },
@@ -2389,6 +2527,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier with same key appearing in combination multiple times", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "state",
 			value: "active",
 			declarations: { opacity: "1" },
@@ -2426,6 +2565,7 @@ describe("createModifiedUtilityFunction", () => {
 
 		const existingChild = {
 			type: "selector" as const,
+			id: "test-id",
 			query: ".existing",
 			declarations: { color: "red" },
 			variables: [],
@@ -2434,6 +2574,7 @@ describe("createModifiedUtilityFunction", () => {
 
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "complex",
 			value: "base",
 			declarations: { margin: "0" },
@@ -2478,6 +2619,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle deeply nested declarations from modifiers", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "grid",
 			value: "layout",
 			declarations: { display: "grid" },
@@ -2517,6 +2659,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier factory that throws an error", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "error",
 			value: "test",
 			declarations: { display: "block" },

@@ -16,6 +16,7 @@ describe("createRefFunction", () => {
 		root = createRoot();
 		selector = {
 			type: "selector",
+			id: "test-id",
 			query: ".test",
 			variables: [],
 			declarations: {},
@@ -148,6 +149,7 @@ describe("createRefFunction", () => {
 		it("should work with nested selector context", () => {
 			const nestedSelector: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: "&:hover",
 				variables: [],
 				declarations: {},
@@ -377,18 +379,12 @@ describe("createRefFunction", () => {
 	});
 
 	describe("edge cases", () => {
-		it("should handle variables with undefined names gracefully", () => {
-			// This would be a malformed variable, but we should handle it
-			const malformedVar = {
-				type: "variable" as const,
-				name: undefined as any,
-				value: "test",
-			};
+		it("should throw when passed undefined", () => {
+			expect(() => ref(undefined as any)).toThrow("ref() received undefined");
+		});
 
-			const result = ref(malformedVar as any);
-
-			expect(result.name).toBeUndefined();
-			expect(result.type).toBe("reference");
+		it("should throw when passed null", () => {
+			expect(() => ref(null as any)).toThrow("ref() received null");
 		});
 
 		it("should handle null fallback values", () => {
@@ -483,6 +479,7 @@ describe("createRefFunction", () => {
 			const context1 = createRoot();
 			const context2 = {
 				type: "selector" as const,
+				id: "test-id",
 				query: ".test",
 				variables: [],
 				declarations: {},

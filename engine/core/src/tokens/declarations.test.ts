@@ -327,6 +327,108 @@ describe("parseDeclarationsBlock", () => {
 			});
 		});
 	});
+
+	describe("@ reference validation with root", () => {
+		it("should resolve @ references when variable exists in root", () => {
+			mockContext.ref.mockImplementation((name: string) => ({
+				type: "reference",
+				name,
+			}));
+
+			const mockRoot: Root = {
+				type: "root",
+				id: "test-id",
+				declarations: {},
+				utilities: [],
+				modifiers: [],
+				recipes: [],
+				variables: [
+					{ type: "variable", name: "color.primary", value: "#006cff" },
+				],
+				children: [],
+				themes: [],
+			};
+
+			const declarations: any = {
+				color: "@color.primary",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, mockRoot);
+
+			expect(mockContext.ref).toHaveBeenCalledWith("color.primary");
+			expect(declarations.color).toEqual({
+				type: "reference",
+				name: "color.primary",
+			});
+		});
+
+		it("should throw when @ reference variable does not exist in root", () => {
+			const mockRoot: Root = {
+				type: "root",
+				id: "test-id",
+				declarations: {},
+				utilities: [],
+				modifiers: [],
+				recipes: [],
+				variables: [
+					{ type: "variable", name: "color.primary", value: "#006cff" },
+				],
+				children: [],
+				themes: [],
+			};
+
+			const declarations: any = {
+				color: "@color.doesnotexist",
+			};
+
+			expect(() =>
+				parseDeclarationsBlock(declarations, mockContext, mockRoot),
+			).toThrow(
+				'[styleframe] Variable "color.doesnotexist" is not defined. Check that the variable exists before referencing it with "@color.doesnotexist".',
+			);
+		});
+
+		it("should throw for each undefined variable independently", () => {
+			const mockRoot: Root = {
+				type: "root",
+				id: "test-id",
+				declarations: {},
+				utilities: [],
+				modifiers: [],
+				recipes: [],
+				variables: [{ type: "variable", name: "spacing.md", value: "1rem" }],
+				children: [],
+				themes: [],
+			};
+
+			const declarations: any = {
+				gap: "@spacing.md",
+				color: "@color.dark",
+			};
+
+			expect(() =>
+				parseDeclarationsBlock(declarations, mockContext, mockRoot),
+			).toThrow('Variable "color.dark" is not defined');
+		});
+
+		it("should not validate when root is not provided", () => {
+			mockContext.ref.mockImplementation((name: string) => ({
+				type: "reference",
+				name,
+			}));
+
+			const declarations: any = {
+				color: "@nonexistent.variable",
+			};
+
+			// Should not throw when root is not passed
+			expect(() =>
+				parseDeclarationsBlock(declarations, mockContext),
+			).not.toThrow();
+
+			expect(mockContext.ref).toHaveBeenCalledWith("nonexistent.variable");
+		});
+	});
 });
 
 describe("createDeclarationsCallbackContext", () => {
@@ -338,6 +440,7 @@ describe("createDeclarationsCallbackContext", () => {
 		root = createRoot();
 		selector = {
 			type: "selector",
+			id: "test-id",
 			query: ".test",
 			variables: [],
 			declarations: {},
@@ -345,6 +448,7 @@ describe("createDeclarationsCallbackContext", () => {
 		};
 		media = {
 			type: "at-rule",
+			id: "test-id",
 			identifier: "media",
 			rule: "(min-width: 768px)",
 			variables: [],
@@ -682,6 +786,7 @@ describe("createDeclarationsCallbackContext", () => {
 		it("should handle empty containers", () => {
 			const emptySelector: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: "",
 				variables: [],
 				declarations: {},
