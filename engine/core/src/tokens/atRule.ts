@@ -5,6 +5,7 @@ import type {
 	DeclarationsCallback,
 	Root,
 } from "../types";
+import { generateRandomId } from "../utils";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
@@ -18,6 +19,7 @@ export function createAtRuleFunction(parent: Container, root: Root) {
 	): AtRule {
 		const instance: AtRule = {
 			type: "at-rule",
+			id: generateRandomId("ar-"),
 			identifier,
 			rule,
 			declarations: {},
@@ -36,7 +38,7 @@ export function createAtRuleFunction(parent: Container, root: Root) {
 			instance.declarations = declarationsOrCallback;
 		}
 
-		parseDeclarationsBlock(instance.declarations, callbackContext);
+		parseDeclarationsBlock(instance.declarations, callbackContext, root);
 
 		parent.children.push(instance);
 

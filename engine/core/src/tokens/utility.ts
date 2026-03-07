@@ -12,6 +12,7 @@ import type {
 	UtilityCreatorFn,
 	UtilityFactory,
 } from "../types";
+import { generateRandomId } from "../utils";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
@@ -127,6 +128,18 @@ export function createUtilityFunction(parent: Container, root: Root) {
 				for (const [key, entryValue] of Object.entries(resolvedEntries)) {
 					let value = entryValue;
 
+					// Resolve @-prefixed string values as references to sibling keys
+					// e.g. { default: "@solid", solid: "solid" } → default resolves to "solid"
+					if (typeof entryValue === "string" && entryValue[0] === "@") {
+						const referencedKey = entryValue.slice(1);
+						if (
+							!Array.isArray(resolvedEntries) &&
+							referencedKey in resolvedEntries
+						) {
+							value = resolvedEntries[referencedKey];
+						}
+					}
+
 					if (factoryInstance.namespace && isRef(entryValue)) {
 						if (root.variables.some((v) => v.name === entryValue.name)) {
 							value = entryValue;
@@ -163,6 +176,7 @@ export function createUtilityFunction(parent: Container, root: Root) {
 
 					const instance: Utility<Name> = {
 						type: "utility",
+						id: generateRandomId("ut-"),
 						name,
 						value: key,
 						declarations: {},
@@ -182,7 +196,7 @@ export function createUtilityFunction(parent: Container, root: Root) {
 							value,
 						}) ?? {};
 
-					parseDeclarationsBlock(instance.declarations, callbackContext);
+					parseDeclarationsBlock(instance.declarations, callbackContext, root);
 
 					if (!existingEntry) {
 						factoryInstance.values.push({

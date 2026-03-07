@@ -18,6 +18,7 @@ export type Reference<Name extends string = string> = {
 
 export type Selector = {
 	type: "selector";
+	id: string;
 	query: string;
 	declarations: DeclarationsBlock;
 	variables: Variable[];
@@ -27,6 +28,7 @@ export type Selector = {
 
 export type AtRule = {
 	type: "at-rule";
+	id: string;
 	identifier: string;
 	rule: string;
 	declarations: DeclarationsBlock;
@@ -55,6 +57,7 @@ export type UtilityFactory<Name extends string = string> = {
 
 export type Utility<Name extends string = string> = {
 	type: "utility";
+	id: string;
 	name: Name;
 	value: string;
 	declarations: DeclarationsBlock;
@@ -179,6 +182,7 @@ export type ContainerChild = Variable | Selector | AtRule | Utility;
 
 export type Theme = {
 	type: "theme";
+	id: string;
 	name: string;
 	declarations: DeclarationsBlock;
 	variables: Variable[];
@@ -187,6 +191,7 @@ export type Theme = {
 
 export type Root = {
 	type: "root";
+	id: string;
 	declarations: DeclarationsBlock;
 	utilities: UtilityFactory[];
 	modifiers: ModifierFactory[];

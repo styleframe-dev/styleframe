@@ -42,6 +42,7 @@ export function createDeclarationsCallbackContext(
 export function parseDeclarationsBlock(
 	declarations: DeclarationsBlock,
 	context: DeclarationsCallbackContext,
+	root?: Root,
 ) {
 	for (const key in declarations) {
 		// If the key represents a selector or media query, remove it and add it as a separate declaration
@@ -76,7 +77,13 @@ export function parseDeclarationsBlock(
 	for (const key in declarations) {
 		const value = declarations[key];
 		if (typeof value === "string" && value[0] === "@") {
-			declarations[key] = context.ref(value.slice(1));
+			const name = value.slice(1);
+			if (root && !root.variables.some((v) => v.name === name)) {
+				throw new Error(
+					`[styleframe] Variable "${name}" is not defined. Check that the variable exists before referencing it with "${value}".`,
+				);
+			}
+			declarations[key] = context.ref(name);
 		}
 	}
 

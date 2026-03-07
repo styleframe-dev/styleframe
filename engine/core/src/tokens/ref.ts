@@ -14,6 +14,12 @@ export function createRefFunction(_parent: Container, _root: Root) {
 			};
 		}
 
+		if (variable == null) {
+			throw new Error(
+				`[styleframe] ref() received ${String(variable)}. This usually means you're referencing a variable that doesn't exist.`,
+			);
+		}
+
 		// If a string name is passed, use it directly
 		return {
 			type: "reference",

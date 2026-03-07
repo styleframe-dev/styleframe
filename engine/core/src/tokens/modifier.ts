@@ -1,5 +1,5 @@
 import type { Container, ModifierFactory, Root } from "../types";
-import { deepClone } from "../utils";
+import { deepClone, generateRandomId } from "../utils";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
@@ -49,6 +49,7 @@ export function applyModifiers<InstanceType extends Container>(
 ): InstanceType {
 	const instance: InstanceType = {
 		...baseInstance,
+		id: generateRandomId("ut-"),
 		declarations: { ...baseInstance.declarations },
 		variables: [...baseInstance.variables],
 		children: [...baseInstance.children],
@@ -78,7 +79,7 @@ export function applyModifiers<InstanceType extends Container>(
 				// Merge the modifier's output into instance declarations,
 				// then parse selector/at-rule keys into children
 				Object.assign(instance.declarations, result);
-				parseDeclarationsBlock(instance.declarations, callbackContext);
+				parseDeclarationsBlock(instance.declarations, callbackContext, root);
 			}
 		}
 	}
