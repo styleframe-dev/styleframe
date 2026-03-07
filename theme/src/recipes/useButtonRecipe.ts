@@ -130,7 +130,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 			match: { color, variant: "solid" as const },
 			css: {
 				background: `@color.${color}`,
-				color: "@color.light",
+				color: "@color.white",
 				"&:hover": {
 					background: `@color.${color}-400`,
 				},

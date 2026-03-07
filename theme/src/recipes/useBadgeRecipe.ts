@@ -99,7 +99,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 	compoundVariants: colors.flatMap((color) => [
 		{
 			match: { color, variant: "solid" as const },
-			css: { background: `@color.${color}`, color: "@color.light" },
+			css: { background: `@color.${color}`, color: "@color.white" },
 		},
 		{
 			match: { color, variant: "outline" as const },
