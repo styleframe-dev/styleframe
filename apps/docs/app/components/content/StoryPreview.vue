@@ -20,7 +20,7 @@ const iframeHeight = computed(() => props.height ?? defaultHeight.value);
 const src = computed(() =>
 	props.panel
 		? `${baseUrl}/?path=/story/${props.story}&shortcuts=false&singleStory=true`
-		: `${baseUrl}/?path=/story/${props.story}&full=1&shortcuts=false&singleStory=true`
+		: `${baseUrl}/?path=/story/${props.story}&full=1&shortcuts=false&singleStory=true`,
 );
 </script>
 

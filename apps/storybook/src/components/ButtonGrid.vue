@@ -9,7 +9,14 @@ const colors = [
 	"warning",
 	"danger",
 ] as const;
-const variants = ["solid", "outline", "soft", "subtle", "ghost", "link"] as const;
+const variants = [
+	"solid",
+	"outline",
+	"soft",
+	"subtle",
+	"ghost",
+	"link",
+] as const;
 </script>
 
 <template>
