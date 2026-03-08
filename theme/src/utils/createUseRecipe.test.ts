@@ -1,5 +1,12 @@
+import type { Styleframe } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { createUseRecipe } from "./createUseRecipe";
+
+function registerUtilities(s: Styleframe) {
+	for (const name of ["background", "borderColor", "display", "fontSize"]) {
+		s.utility(name, ({ value }) => ({ [name]: value }));
+	}
+}
 
 describe("createUseRecipe", () => {
 	it("should create a recipe with name and base styles", () => {
@@ -7,6 +14,7 @@ describe("createUseRecipe", () => {
 			base: { display: "flex" },
 		});
 		const s = styleframe();
+		registerUtilities(s);
 		const recipe = useRecipe(s);
 
 		expect(recipe.type).toBe("recipe");
@@ -26,6 +34,7 @@ describe("createUseRecipe", () => {
 			},
 		});
 		const s = styleframe();
+		registerUtilities(s);
 		const recipe = useRecipe(s);
 
 		expect(recipe.variants).toEqual({
@@ -49,6 +58,7 @@ describe("createUseRecipe", () => {
 			defaultVariants: { size: "sm" },
 		});
 		const s = styleframe();
+		registerUtilities(s);
 		const recipe = useRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({ size: "sm" });
@@ -69,6 +79,7 @@ describe("createUseRecipe", () => {
 			],
 		});
 		const s = styleframe();
+		registerUtilities(s);
 		const recipe = useRecipe(s);
 
 		expect(recipe.compoundVariants).toEqual([
@@ -89,6 +100,7 @@ describe("createUseRecipe", () => {
 			},
 		});
 		const s = styleframe();
+		registerUtilities(s);
 		const recipe = useRecipe(s, {
 			base: { fontSize: "16px" },
 		});
@@ -101,6 +113,7 @@ describe("createUseRecipe", () => {
 			base: { display: "flex" },
 		});
 		const s = styleframe();
+		registerUtilities(s);
 		const recipe = useRecipe(s);
 
 		expect(recipe.name).toBe("test");
@@ -161,6 +174,7 @@ describe("createUseRecipe filter", () => {
 	describe("variants filtering", () => {
 		it("should filter a single variant axis", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { color: ["primary"] },
 			});
@@ -180,6 +194,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should filter multiple variant axes", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: {
 					color: ["primary", "danger"],
@@ -201,6 +216,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should remove all values when filter is an empty array", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { color: [] },
 			});
@@ -210,6 +226,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should ignore filter axes that do not exist in variants", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { nonexistent: [] } as any,
 			});
@@ -224,6 +241,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should ignore filter values that do not exist in a variant axis", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { color: ["primary", "nonexistent" as any] },
 			});
@@ -235,6 +253,7 @@ describe("createUseRecipe filter", () => {
 	describe("compoundVariants pruning", () => {
 		it("should prune compoundVariants referencing excluded values", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { color: ["primary"] },
 			});
@@ -253,6 +272,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should prune compoundVariants when filtering multiple axes", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: {
 					color: ["primary"],
@@ -270,6 +290,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should keep compoundVariants when their match values are all included", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: {
 					color: ["primary", "danger"],
@@ -299,6 +320,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should remove all compoundVariants when filter is an empty array", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { color: [] },
 			});
@@ -308,6 +330,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should keep compoundVariants for unfiltered axes", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { size: ["sm"] },
 			});
@@ -319,6 +342,7 @@ describe("createUseRecipe filter", () => {
 	describe("defaultVariants adjustment", () => {
 		it("should keep defaultVariants when the default is included", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { color: ["primary"] },
 			});
@@ -328,6 +352,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should remove defaultVariants when the default is excluded", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { color: ["danger"] },
 			});
@@ -339,6 +364,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should remove defaultVariants when filter is an empty array", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { color: [] },
 			});
@@ -348,6 +374,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should not affect defaultVariants for unfiltered axes", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: { color: ["primary"] },
 			});
@@ -360,6 +387,7 @@ describe("createUseRecipe filter", () => {
 	describe("no-op cases", () => {
 		it("should not filter when filter is not provided", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s);
 
 			expect(Object.keys(recipe.variants!.color)).toEqual([
@@ -373,6 +401,7 @@ describe("createUseRecipe filter", () => {
 
 		it("should not filter when filter is an empty object", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, { filter: {} });
 
 			expect(Object.keys(recipe.variants!.color)).toEqual([
@@ -388,6 +417,7 @@ describe("createUseRecipe filter", () => {
 	describe("filter combined with config overrides", () => {
 		it("should apply overrides before filtering", () => {
 			const s = styleframe();
+			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				base: { display: "inline-flex" },
 				filter: { color: ["primary"] },
