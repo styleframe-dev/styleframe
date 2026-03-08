@@ -93,6 +93,7 @@
 		"@styleframe/scanner": "workspace:^3.0.0",
 		"@styleframe/transpiler": "workspace:^3.0.0",
 		"consola": "^3.4.2",
+		"importree": "^1.0.1",
 		"tinyglobby": "catalog:",
 		"jiti": "catalog:",
 		"unplugin": "^2.3.4"

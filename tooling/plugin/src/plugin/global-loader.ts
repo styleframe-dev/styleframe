@@ -1,6 +1,7 @@
 import type { Styleframe } from "@styleframe/core";
 import {
-	createLoader,
+	clearJitiCache,
+	createSharedJiti,
 	loadExtensionModule,
 	loadModule,
 	type ExportInfo,
@@ -82,9 +83,7 @@ export async function loadConfigFile(
 
 	const configPath = state.configFile.path;
 
-	// Use shared loadModule function
 	const { instance, exports } = await loadModule(configPath, {
-		alias: state.resolve.alias,
 		jiti: sharedJiti,
 	});
 
@@ -123,10 +122,8 @@ export async function loadStyleframeFile(
 		(globalThis as Record<string, unknown>)[GLOBAL_INSTANCE_KEY] =
 			state.globalInstance;
 
-		// Use shared loadExtensionModule function with alias for virtual:styleframe
 		const { exports } = await loadExtensionModule(filePath, {
 			alias: {
-				...state.resolve.alias,
 				"virtual:styleframe": getExtensionShimPath(),
 			},
 			jiti: sharedJiti,
@@ -166,12 +163,35 @@ export async function loadAllStyleframeFiles(
 }
 
 /**
+ * Create a persistent shared Jiti instance configured for styleframe loading.
+ * Includes the virtual:styleframe alias pointing to the extension shim.
+ * Uses moduleCache: true so unchanged dependencies stay cached across reloads.
+ */
+export function createPersistentJiti(): Jiti {
+	return createSharedJiti({
+		alias: {
+			"virtual:styleframe": getExtensionShimPath(),
+		},
+	});
+}
+
+/**
  * Reload the config and all styleframe files.
+ * Selectively clears only affected files from the Jiti cache before reloading,
+ * so unchanged dependencies remain cached and don't need re-compilation.
+ *
  * If reload fails, restores the previous state so the app continues working.
+ *
+ * @param state - Plugin global state
+ * @param files - All styleframe file paths to reload
+ * @param sharedJiti - Persistent shared Jiti instance (with moduleCache: true)
+ * @param filesToInvalidate - Files to clear from Jiti cache before reloading
  */
 export async function reloadAll(
 	state: PluginGlobalState,
 	files: string[],
+	sharedJiti?: Jiti,
+	filesToInvalidate?: string[],
 ): Promise<void> {
 	// Save current state before resetting, so we can restore on failure
 	const previousGlobalInstance = state.globalInstance;
@@ -181,22 +201,29 @@ export async function reloadAll(
 	const previousConfigLastModified = state.configFile?.lastModified ?? 0;
 	const previousFiles = new Map(state.files);
 
-	// Create a single shared Jiti instance for this reload cycle
-	// to avoid creating a new instance per file.
-	const sharedJiti = createLoader(process.cwd(), {
-		...state.resolve.alias,
-		"virtual:styleframe": getExtensionShimPath(),
-	});
+	// Use provided Jiti or create a fresh one (fallback for non-HMR usage)
+	const jiti = sharedJiti ?? createPersistentJiti();
+
+	// Always invalidate entry files (config + styleframe files) because they have
+	// side effects on the Styleframe instance that must re-run on every reload.
+	// Additionally invalidate any changed dependencies from the importree graph.
+	// Unchanged transitive dependencies (theme composables, etc.) stay cached.
+	const configPath = state.configFile?.path;
+	const entryFiles = [configPath, ...files].filter(Boolean) as string[];
+	const allFilesToInvalidate = filesToInvalidate
+		? [...new Set([...entryFiles, ...filesToInvalidate])]
+		: entryFiles;
+	clearJitiCache(jiti, ...allFilesToInvalidate);
 
 	// Clear all state except configPath
 	resetState(state);
 
 	try {
 		// Reload config
-		await loadConfigFile(state, sharedJiti);
+		await loadConfigFile(state, jiti);
 
 		// Reload all files
-		await loadAllStyleframeFiles(state, files, sharedJiti);
+		await loadAllStyleframeFiles(state, files, jiti);
 	} catch (error) {
 		// Restore previous state so the app continues working
 		state.globalInstance = previousGlobalInstance;

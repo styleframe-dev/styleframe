@@ -30,9 +30,4 @@ export interface Options {
 		/** Custom utility class syntax configuration */
 		utilities?: ScannerUtilitiesConfig;
 	};
-	/** Module resolution options */
-	resolve?: {
-		/** Alias map for Jiti module resolution (e.g. { '@styleframe/theme': '/path/to/theme/src' }) */
-		alias?: Record<string, string>;
-	};
 }
