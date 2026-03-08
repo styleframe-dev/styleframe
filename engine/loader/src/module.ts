@@ -64,9 +64,9 @@ export async function loadModule(
 	filePath: string,
 	options: LoadModuleOptions = {},
 ): Promise<LoadModuleResult> {
-	const { alias, validateInstance = true } = options;
+	const { alias, validateInstance = true, jiti: sharedJiti } = options;
 
-	const jiti = createLoader(path.dirname(filePath), alias);
+	const jiti = sharedJiti ?? createLoader(path.dirname(filePath), alias);
 	const module = (await jiti.import(filePath)) as Record<string, unknown>;
 
 	if (!module.default) {
@@ -101,9 +101,9 @@ export async function loadExtensionModule(
 	filePath: string,
 	options: Omit<LoadModuleOptions, "validateInstance"> = {},
 ): Promise<LoadExtensionModuleResult> {
-	const { alias } = options;
+	const { alias, jiti: sharedJiti } = options;
 
-	const jiti = createLoader(path.dirname(filePath), alias);
+	const jiti = sharedJiti ?? createLoader(path.dirname(filePath), alias);
 	const module = (await jiti.import(filePath)) as Record<string, unknown>;
 
 	const exports = trackExports(module);

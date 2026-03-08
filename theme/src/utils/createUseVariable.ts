@@ -1,4 +1,8 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
 import type { CamelCase } from "scule";
 import { camelCase } from "scule";
 import type { ExportKeys } from "../types";
@@ -67,9 +71,10 @@ export function createUseVariable<
 	type WithDefaults<T> = MergeDefaults extends true ? Defaults & T : T;
 
 	return function useVariable<
+		Context extends DeclarationsCallbackContext = DeclarationsCallbackContext,
 		T extends Record<string, PropertyType> = Defaults,
 	>(
-		s: Styleframe,
+		s: Context,
 		tokens?: T,
 		{ default: isDefault = true }: { default?: boolean } = {},
 	): ExportKeys<PropertyName, WithDefaults<T>, Delimiter> {

@@ -1,6 +1,4 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
-import { createUseVariable } from "../utils";
-import type { ExportKeys } from "../types";
+import { createUseDerivedVariable } from "../utils";
 
 /**
  * Create a font-size scale for use in a Styleframe instance.
@@ -32,13 +30,8 @@ import type { ExportKeys } from "../types";
  * });
  * ```
  */
-export function useMultiplier<
-	Name extends string,
-	T extends Record<string | number, TokenValue>,
->(s: Styleframe, variable: Variable<Name>, values: T): ExportKeys<Name, T> {
-	return createUseVariable(variable.name, {
-		transform: (value) => {
-			return s.css`calc(${s.ref(variable)} * ${value})`;
-		},
-	})(s, values);
-}
+export const useMultiplier = createUseDerivedVariable({
+	transform: (value, { s, parent }) => {
+		return s.css`calc(${s.ref(parent)} * ${value})`;
+	},
+});

@@ -1,5 +1,5 @@
 import type { Container, ModifierFactory, Root } from "../types";
-import { deepClone } from "../utils";
+import { deepClone, generateRandomId } from "../utils";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
@@ -49,20 +49,39 @@ export function applyModifiers<InstanceType extends Container>(
 ): InstanceType {
 	const instance: InstanceType = {
 		...baseInstance,
+		id: generateRandomId("ut-"),
+		declarations: { ...baseInstance.declarations },
+		variables: [...baseInstance.variables],
+		children: [...baseInstance.children],
 		modifiers: [...modifiers.keys()],
 	};
 
 	const callbackContext = createDeclarationsCallbackContext(instance, root);
 
-	for (const modifier of modifiers.values()) {
-		modifier.factory({
-			...callbackContext,
-			declarations: deepClone(instance.declarations),
-			variables: deepClone(instance.variables),
-			children: deepClone(instance.children),
-		});
+	if (modifiers.size > 0) {
+		const originalDeclarations = deepClone(baseInstance.declarations);
+		let hasResult = false;
 
-		parseDeclarationsBlock(instance.declarations, callbackContext);
+		for (const modifier of modifiers.values()) {
+			const result = modifier.factory({
+				...callbackContext,
+				declarations: deepClone(originalDeclarations),
+				variables: deepClone(instance.variables),
+				children: deepClone(instance.children),
+			});
+
+			if (result) {
+				if (!hasResult) {
+					instance.declarations = {};
+					hasResult = true;
+				}
+
+				// Merge the modifier's output into instance declarations,
+				// then parse selector/at-rule keys into children
+				Object.assign(instance.declarations, result);
+				parseDeclarationsBlock(instance.declarations, callbackContext, root);
+			}
+		}
 	}
 
 	return instance;

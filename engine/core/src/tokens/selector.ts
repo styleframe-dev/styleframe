@@ -6,6 +6,7 @@ import type {
 	Root,
 	Selector,
 } from "../types";
+import { generateRandomId } from "../utils";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
@@ -21,6 +22,7 @@ export function createSelectorFunction(parent: Container, root: Root) {
 	): Selector {
 		const instance: Selector = {
 			type: "selector",
+			id: generateRandomId("sel-"),
 			query,
 			declarations: {},
 			variables: [],
@@ -38,7 +40,7 @@ export function createSelectorFunction(parent: Container, root: Root) {
 			instance.declarations = declarationsOrCallback;
 		}
 
-		parseDeclarationsBlock(instance.declarations, callbackContext);
+		parseDeclarationsBlock(instance.declarations, callbackContext, root);
 
 		parent.children.push(instance);
 

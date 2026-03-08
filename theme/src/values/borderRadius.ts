@@ -7,4 +7,4 @@ export const borderRadiusValues = {
 	xl: "0.75rem",
 	"2xl": "1rem",
 	full: "9999px",
-};
+} as const;

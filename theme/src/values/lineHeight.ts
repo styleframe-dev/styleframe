@@ -5,4 +5,4 @@ export const lineHeightValues = {
 	normal: 1.5,
 	relaxed: 1.65,
 	loose: 1.9,
-};
+} as const;

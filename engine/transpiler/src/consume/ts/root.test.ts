@@ -1,18 +1,46 @@
 import type { Root, StyleframeOptions } from "@styleframe/core";
-import { createRecipeFunction, createRoot } from "@styleframe/core";
+import {
+	createRecipeFunction,
+	createRoot,
+	createUtilityFunction,
+} from "@styleframe/core";
 import { consume } from "./consume";
 import { createRootConsumer } from "./root";
 
 describe("createRootConsumer", () => {
 	let root: Root;
 	let recipe: ReturnType<typeof createRecipeFunction>;
+	let utility: ReturnType<typeof createUtilityFunction>;
 
 	const consumeRoot = createRootConsumer(consume);
 	const options: StyleframeOptions = {};
 
 	beforeEach(() => {
 		root = createRoot();
+		utility = createUtilityFunction(root, root);
 		recipe = createRecipeFunction(root, root);
+
+		// Register utilities used across tests
+		for (const name of [
+			"alignItems",
+			"background",
+			"border",
+			"borderColor",
+			"borderRadius",
+			"borderStyle",
+			"borderWidth",
+			"boxShadow",
+			"color",
+			"cursor",
+			"display",
+			"fontSize",
+			"height",
+			"margin",
+			"opacity",
+			"padding",
+		]) {
+			utility(name, ({ value }) => ({ [name]: value }));
+		}
 	});
 
 	it("should handle root with no recipes", () => {
@@ -35,16 +63,25 @@ describe("createRootConsumer", () => {
 
 		const result = consumeRoot(root, options);
 
-		// Since no utilities are registered, _runtime will have empty objects
 		expect(result).toEqual(`import { createRecipe } from '@styleframe/runtime';
 import type { RecipeRuntime } from '@styleframe/runtime';
 
 const buttonRecipe = {
-    "base": {},
+    "base": {
+        "borderWidth": "[thin]",
+        "borderStyle": "[solid]",
+        "cursor": "[pointer]"
+    },
     "variants": {
         "color": {
-            "primary": {},
-            "secondary": {}
+            "primary": {
+                "background": "[primary]",
+                "color": "[white]"
+            },
+            "secondary": {
+                "background": "[secondary]",
+                "color": "[white]"
+            }
         }
     }
 } as const satisfies RecipeRuntime;
@@ -82,11 +119,17 @@ export const button = createRecipe("button", buttonRecipe);
 import type { RecipeRuntime } from '@styleframe/runtime';
 
 const buttonRecipe = {
-    "base": {},
+    "base": {
+        "cursor": "[pointer]"
+    },
     "variants": {
         "variant": {
-            "primary": {},
-            "secondary": {}
+            "primary": {
+                "background": "[blue]"
+            },
+            "secondary": {
+                "background": "[gray]"
+            }
         }
     }
 } as const satisfies RecipeRuntime;
@@ -94,11 +137,17 @@ const buttonRecipe = {
 export const button = createRecipe("button", buttonRecipe);
 
 const cardRecipe = {
-    "base": {},
+    "base": {
+        "borderRadius": "[4px]"
+    },
     "variants": {
         "elevation": {
-            "low": {},
-            "high": {}
+            "low": {
+                "boxShadow": "b7ccc18"
+            },
+            "high": {
+                "boxShadow": "893c0e0"
+            }
         }
     }
 } as const satisfies RecipeRuntime;
@@ -130,15 +179,27 @@ export const card = createRecipe("card", cardRecipe);
 import type { RecipeRuntime } from '@styleframe/runtime';
 
 const chipRecipe = {
-    "base": {},
+    "base": {
+        "borderWidth": "[thin]"
+    },
     "variants": {
         "variant": {
-            "filled": {},
-            "outline": {}
+            "filled": {
+                "background": "[primary]",
+                "color": "[white]"
+            },
+            "outline": {
+                "background": "[transparent]",
+                "color": "[primary]"
+            }
         },
         "size": {
-            "sm": {},
-            "md": {}
+            "sm": {
+                "padding": "[0.25rem]"
+            },
+            "md": {
+                "padding": "[0.5rem]"
+            }
         }
     },
     "defaultVariants": {
@@ -179,15 +240,25 @@ export const chip = createRecipe("chip", chipRecipe);
 import type { RecipeRuntime } from '@styleframe/runtime';
 
 const badgeRecipe = {
-    "base": {},
+    "base": {
+        "display": "[inline-block]"
+    },
     "variants": {
         "variant": {
-            "solid": {},
-            "outline": {}
+            "solid": {
+                "background": "[blue]"
+            },
+            "outline": {
+                "border": "30c9639"
+            }
         },
         "size": {
-            "sm": {},
-            "lg": {}
+            "sm": {
+                "padding": "1a6f363"
+            },
+            "lg": {
+                "padding": "b463c0c"
+            }
         }
     },
     "compoundVariants": [
@@ -196,7 +267,9 @@ const badgeRecipe = {
                 "variant": "solid",
                 "size": "sm"
             },
-            "css": {}
+            "css": {
+                "fontSize": "[12px]"
+            }
         }
     ]
 } as const satisfies RecipeRuntime;
@@ -234,15 +307,25 @@ export const badge = createRecipe("badge", badgeRecipe);
 import type { RecipeRuntime } from '@styleframe/runtime';
 
 const inputRecipe = {
-    "base": {},
+    "base": {
+        "borderWidth": "[1px]"
+    },
     "variants": {
         "variant": {
-            "filled": {},
-            "outline": {}
+            "filled": {
+                "background": "[gray]"
+            },
+            "outline": {
+                "background": "[transparent]"
+            }
         },
         "size": {
-            "sm": {},
-            "lg": {}
+            "sm": {
+                "height": "[32px]"
+            },
+            "lg": {
+                "height": "[48px]"
+            }
         }
     },
     "defaultVariants": {
@@ -255,7 +338,9 @@ const inputRecipe = {
                 "variant": "filled",
                 "size": "lg"
             },
-            "css": {}
+            "css": {
+                "padding": "7a35864"
+            }
         }
     ]
 } as const satisfies RecipeRuntime;
@@ -300,12 +385,29 @@ export const input = createRecipe("input", inputRecipe);
 import type { RecipeRuntime } from '@styleframe/runtime';
 
 const alertRecipe = {
-    "base": {},
+    "base": {
+        "padding": "[1rem]",
+        "borderRadius": "[4px]",
+        "display": "[flex]",
+        "alignItems": "[center]"
+    },
     "variants": {
         "severity": {
-            "info": {},
-            "warning": {},
-            "error": {}
+            "info": {
+                "background": "[#e3f2fd]",
+                "color": "[#0288d1]",
+                "borderColor": "[#0288d1]"
+            },
+            "warning": {
+                "background": "[#fff3e0]",
+                "color": "[#f57c00]",
+                "borderColor": "[#f57c00]"
+            },
+            "error": {
+                "background": "[#ffebee]",
+                "color": "[#d32f2f]",
+                "borderColor": "[#d32f2f]"
+            }
         }
     }
 } as const satisfies RecipeRuntime;
@@ -335,8 +437,12 @@ const minimalRecipe = {
     "base": {},
     "variants": {
         "size": {
-            "sm": {},
-            "lg": {}
+            "sm": {
+                "fontSize": "[12px]"
+            },
+            "lg": {
+                "fontSize": "[16px]"
+            }
         }
     }
 } as const satisfies RecipeRuntime;
@@ -358,7 +464,10 @@ export const minimal = createRecipe("minimal", minimalRecipe);
 import type { RecipeRuntime } from '@styleframe/runtime';
 
 const simpleRecipe = {
-    "base": {},
+    "base": {
+        "padding": "[1rem]",
+        "margin": "[0]"
+    },
     "variants": {}
 } as const satisfies RecipeRuntime;
 
@@ -457,14 +566,18 @@ export const kebabCase = createRecipe("kebab-case", kebabCaseRecipe);
 import type { RecipeRuntime } from '@styleframe/runtime';
 
 const firstRecipe = {
-    "base": {},
+    "base": {
+        "padding": "[1rem]"
+    },
     "variants": {}
 } as const satisfies RecipeRuntime;
 
 export const first = createRecipe("first", firstRecipe);
 
 const secondRecipe = {
-    "base": {},
+    "base": {
+        "margin": "[1rem]"
+    },
     "variants": {}
 } as const satisfies RecipeRuntime;
 
@@ -483,7 +596,9 @@ export const second = createRecipe("second", secondRecipe);
 import type { RecipeRuntime } from '@styleframe/runtime';
 
 const customizedRecipe = {
-    "base": {},
+    "base": {
+        "display": "[flex]"
+    },
     "variants": {}
 } as const satisfies RecipeRuntime;
 

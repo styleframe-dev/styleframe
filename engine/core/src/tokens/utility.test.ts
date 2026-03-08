@@ -143,6 +143,7 @@ describe("createUtilityFunction", () => {
 
 		expect(smUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "padding",
 			value: "sm",
 			declarations: { padding: "8px" },
@@ -152,6 +153,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(mdUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "padding",
 			value: "md",
 			declarations: { padding: "16px" },
@@ -161,6 +163,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(lgUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "padding",
 			value: "lg",
 			declarations: { padding: "24px" },
@@ -187,6 +190,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(hiddenUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "hidden",
 			value: "default",
 			declarations: { display: "none" },
@@ -238,6 +242,7 @@ describe("createUtilityFunction", () => {
 
 		expect(primaryUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "color",
 			value: "primary",
 			declarations: { color: "#007bff" },
@@ -247,6 +252,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(secondaryUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "color",
 			value: "secondary",
 			declarations: { color: "#6c757d" },
@@ -314,6 +320,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(backgroundUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "background",
 			value: "primary",
 			declarations: { background: "#007bff" },
@@ -380,6 +387,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(textUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "text",
 			value: "base",
 			declarations: { fontSize: "14px" },
@@ -424,6 +432,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(widthUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "width",
 			value: "full",
 			declarations: { width: "100%" },
@@ -450,6 +459,7 @@ describe("createUtilityFunction", () => {
 		);
 		expect(heightUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "height",
 			value: "screen",
 			declarations: { height: "100vh" },
@@ -483,6 +493,7 @@ describe("createUtilityFunction", () => {
 
 		expect(rowUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "flex",
 			value: "row",
 			declarations: {
@@ -496,6 +507,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(colUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "flex",
 			value: "col",
 			declarations: {
@@ -507,6 +519,33 @@ describe("createUtilityFunction", () => {
 			children: [],
 			modifiers: [],
 		});
+	});
+
+	test("should reuse existing factory when utility is called with the same name", () => {
+		const createColor1 = utility("color", ({ value }) => ({ color: value }));
+		const createColor2 = utility("color", ({ value }) => ({ color: value }));
+
+		expect(createColor1).toBe(createColor2);
+		expect(root.utilities).toHaveLength(1);
+	});
+
+	test("should deduplicate values across multiple utility() calls with same name", () => {
+		// Simulate first .styleframe.ts file calling useUtilitiesPreset
+		const createDivideStyle1 = utility("divide-style", ({ value }) => ({
+			borderStyle: value,
+		}));
+		createDivideStyle1({ solid: "solid", dashed: "dashed" });
+
+		// Simulate second .styleframe.ts file calling useUtilitiesPreset
+		const createDivideStyle2 = utility("divide-style", ({ value }) => ({
+			borderStyle: value,
+		}));
+		createDivideStyle2({ solid: "solid", dashed: "dashed" });
+
+		// Should only have 1 factory and 2 children (not 4)
+		expect(root.utilities).toHaveLength(1);
+		expect(root.children).toHaveLength(2);
+		expect(root.utilities[0]?.values).toHaveLength(2);
 	});
 
 	test("should preserve utility order in root utilities array", () => {
@@ -559,6 +598,7 @@ describe("createUtilityFunction", () => {
 
 		expect(smUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "margin",
 			value: "sm",
 			declarations: { margin: "8px" },
@@ -568,6 +608,7 @@ describe("createUtilityFunction", () => {
 		});
 		expect(mdUtility).toEqual({
 			type: "utility",
+			id: expect.any(String),
 			name: "margin",
 			value: "md",
 			declarations: { margin: "16px" },
@@ -1126,6 +1167,111 @@ describe("createUtilityFunction", () => {
 
 			expect(root.children).toHaveLength(3);
 		});
+
+		test("should resolve @-prefixed values as references to sibling keys in object entries", () => {
+			const createBorderStyleUtility = utility("border-style", ({ value }) => ({
+				borderStyle: value,
+			}));
+
+			createBorderStyleUtility({
+				default: "@solid",
+				solid: "solid",
+				dashed: "dashed",
+				dotted: "dotted",
+			});
+
+			// "default" should resolve to the value of the "solid" sibling key
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "default", value: "solid", modifiers: [] },
+				{ key: "solid", value: "solid", modifiers: [] },
+				{ key: "dashed", value: "dashed", modifiers: [] },
+				{ key: "dotted", value: "dotted", modifiers: [] },
+			]);
+
+			expect(root.children).toHaveLength(4);
+
+			const defaultUtility = root.children.find(
+				(u) =>
+					isUtility(u) && u.name === "border-style" && u.value === "default",
+			);
+			expect(defaultUtility).toMatchObject({
+				type: "utility",
+				name: "border-style",
+				value: "default",
+				declarations: { borderStyle: "solid" },
+			});
+		});
+
+		test("should resolve @-prefixed values to ref objects when sibling is a ref", () => {
+			root.variables.push({
+				type: "variable",
+				name: "border-style.solid",
+				value: "solid",
+			});
+
+			const createBorderStyleUtility = utility("border-style", ({ value }) => ({
+				borderStyle: value,
+			}));
+
+			createBorderStyleUtility({
+				default: "@solid",
+				solid: {
+					type: "reference",
+					name: "border-style.solid",
+				},
+			});
+
+			// "default" should resolve to the same ref as "solid"
+			expect(root.utilities[0]?.values).toEqual([
+				{
+					key: "default",
+					value: { type: "reference", name: "border-style.solid" },
+					modifiers: [],
+				},
+				{
+					key: "solid",
+					value: { type: "reference", name: "border-style.solid" },
+					modifiers: [],
+				},
+			]);
+		});
+
+		test("should throw when @-prefixed value references a non-existent sibling key and variable", () => {
+			const createBorderStyleUtility = utility("border-style", ({ value }) => ({
+				borderStyle: value,
+			}));
+
+			// "@nonexistent" has no matching sibling key and no matching root variable,
+			// so parseDeclarationsBlock throws a validation error
+			expect(() =>
+				createBorderStyleUtility({
+					default: "@nonexistent",
+					solid: "solid",
+				}),
+			).toThrow('Variable "nonexistent" is not defined');
+		});
+
+		test("should resolve multiple @-prefixed values in the same object", () => {
+			const createFontUtility = utility("font", ({ value }) => ({
+				font: value,
+			}));
+
+			createFontUtility({
+				default: "@sans",
+				heading: "@serif",
+				sans: "Arial, sans-serif",
+				serif: "Georgia, serif",
+				mono: "Courier, monospace",
+			});
+
+			expect(root.utilities[0]?.values).toEqual([
+				{ key: "default", value: "Arial, sans-serif", modifiers: [] },
+				{ key: "heading", value: "Georgia, serif", modifiers: [] },
+				{ key: "sans", value: "Arial, sans-serif", modifiers: [] },
+				{ key: "serif", value: "Georgia, serif", modifiers: [] },
+				{ key: "mono", value: "Courier, monospace", modifiers: [] },
+			]);
+		});
 	});
 
 	describe("namespace variable existence check", () => {
@@ -1152,6 +1298,7 @@ describe("createUtilityFunction", () => {
 			);
 			expect(primaryUtility).toEqual({
 				type: "utility",
+				id: expect.any(String),
 				name: "color",
 				value: "primary",
 				declarations: { color: "primary" },
@@ -1708,6 +1855,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should return a new utility instance with modified modifiers", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "padding",
 			value: "sm",
 			declarations: { padding: "8px" },
@@ -1740,6 +1888,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should preserve base utility properties while updating modifiers", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "margin",
 			value: "lg",
 			declarations: { margin: "24px" },
@@ -1765,13 +1914,24 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.type).toBe("utility");
 		expect(result.name).toBe("margin");
 		expect(result.value).toBe("lg");
-		expect(result.declarations).toEqual({ margin: "24px" });
+		// Declarations are replaced by the modifier's return value;
+		// the "&:focus" key is parsed into a child selector, leaving declarations empty
+		expect(result.declarations).toEqual({});
+		expect(result.children).toHaveLength(1);
+		expect(result.children[0]).toMatchObject({
+			type: "selector",
+			query: "&:focus",
+			declarations: { margin: "24px" },
+		});
 		expect(result.modifiers).toEqual(["focus"]);
+		// Base utility declarations should not be mutated
+		expect(baseUtility.declarations).toEqual({ margin: "24px" });
 	});
 
 	test("should apply multiple modifiers to utility", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "color",
 			value: "primary",
 			declarations: { color: "#007bff" },
@@ -1811,6 +1971,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifiers that add variables", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "background",
 			value: "primary",
 			declarations: { background: "#007bff" },
@@ -1852,6 +2013,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifiers that add child selectors", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "text",
 			value: "underline",
 			declarations: { textDecoration: "underline" },
@@ -1887,6 +2049,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle empty modifiers array", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "display",
 			value: "block",
 			declarations: { display: "block" },
@@ -1905,6 +2068,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier combination with different keys", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "opacity",
 			value: "50",
 			declarations: { opacity: "0.5" },
@@ -1944,6 +2108,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should apply modifiers in order", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "transform",
 			value: "scale",
 			declarations: { transform: "scale(1)" },
@@ -1992,6 +2157,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifiers that modify existing declarations", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "border",
 			value: "solid",
 			declarations: { borderStyle: "solid" },
@@ -2015,14 +2181,18 @@ describe("createModifiedUtilityFunction", () => {
 			new Map([["thick", widthModifier]]),
 		);
 
-		// The original declarations should be preserved
-		expect(result.declarations).toEqual({ borderStyle: "solid" });
+		// The modifier augments the declarations with additional properties
+		expect(result.declarations).toEqual({
+			borderStyle: "solid",
+			borderWidth: "4px",
+		});
 		expect(result.modifiers).toEqual(["thick"]);
 	});
 
 	test("should handle modifiers with multi-key definitions", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "fontSize",
 			value: "base",
 			declarations: { fontSize: "16px" },
@@ -2051,6 +2221,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should create independent instances for each modification", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "gap",
 			value: "sm",
 			declarations: { gap: "8px" },
@@ -2081,15 +2252,18 @@ describe("createModifiedUtilityFunction", () => {
 
 		// The instances themselves should be different
 		expect(result1).not.toBe(result2);
-		// Note: variables and children arrays are shared from baseUtility due to spread operator
-		// This is the actual behavior of the function - it mutates the arrays
-		expect(result1.variables).toBe(result2.variables);
-		expect(result1.children).toBe(result2.children);
+		// Each modified instance gets its own copy of variables and children arrays
+		expect(result1.variables).not.toBe(result2.variables);
+		expect(result1.children).not.toBe(result2.children);
+		// But they should have the same content
+		expect(result1.variables).toEqual(result2.variables);
+		expect(result1.children).toEqual(result2.children);
 	});
 
 	test("should handle complex modifier factory with multiple operations", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "button",
 			value: "primary",
 			declarations: { backgroundColor: "#007bff", color: "white" },
@@ -2152,9 +2326,10 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.modifiers).toEqual(["interactive"]);
 	});
 
-	test("should mutate base utility's arrays when modifiers add items", () => {
+	test("should not mutate base utility's arrays when modifiers add items", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "position",
 			value: "absolute",
 			declarations: { position: "absolute" },
@@ -2185,9 +2360,11 @@ describe("createModifiedUtilityFunction", () => {
 		expect(baseUtility.declarations).toEqual(originalDeclarations);
 		// The modifiers array should remain unchanged
 		expect(baseUtility.modifiers).toEqual(originalModifiers);
-		// But variables array will be mutated due to spread operator shallow copy
-		expect(baseUtility.variables).toHaveLength(1);
-		expect(baseUtility.variables[0]).toEqual({
+		// The base utility's variables should not be mutated
+		expect(baseUtility.variables).toHaveLength(0);
+		// The result should have the variable added by the modifier
+		expect(result.variables).toHaveLength(1);
+		expect(result.variables[0]).toEqual({
 			type: "variable",
 			name: "test-var",
 			value: "value",
@@ -2196,9 +2373,10 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.modifiers).toEqual(["test"]);
 	});
 
-	test("should handle modifier that returns null declarations", () => {
+	test("should handle modifier that returns empty object declarations", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "display",
 			value: "flex",
 			declarations: { display: "flex" },
@@ -2219,13 +2397,15 @@ describe("createModifiedUtilityFunction", () => {
 			new Map([["null", nullModifier]]),
 		);
 
-		expect(result.declarations).toEqual({ display: "flex" });
+		// Empty object return replaces declarations
+		expect(result.declarations).toEqual({});
 		expect(result.modifiers).toEqual(["null"]);
 	});
 
 	test("should handle modifier that returns undefined declarations", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "width",
 			value: "auto",
 			declarations: { width: "auto" },
@@ -2253,6 +2433,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier that returns empty object", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "height",
 			value: "100vh",
 			declarations: { height: "100vh" },
@@ -2273,13 +2454,15 @@ describe("createModifiedUtilityFunction", () => {
 			new Map([["empty", emptyModifier]]),
 		);
 
-		expect(result.declarations).toEqual({ height: "100vh" });
+		// Empty object return replaces declarations
+		expect(result.declarations).toEqual({});
 		expect(result.modifiers).toEqual(["empty"]);
 	});
 
 	test("should handle combination array that is empty", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "overflow",
 			value: "hidden",
 			declarations: { overflow: "hidden" },
@@ -2297,6 +2480,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle nested selector creation within modifiers", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "card",
 			value: "default",
 			declarations: { padding: "1rem" },
@@ -2343,6 +2527,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier with same key appearing in combination multiple times", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "state",
 			value: "active",
 			declarations: { opacity: "1" },
@@ -2380,6 +2565,7 @@ describe("createModifiedUtilityFunction", () => {
 
 		const existingChild = {
 			type: "selector" as const,
+			id: "test-id",
 			query: ".existing",
 			declarations: { color: "red" },
 			variables: [],
@@ -2388,6 +2574,7 @@ describe("createModifiedUtilityFunction", () => {
 
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "complex",
 			value: "base",
 			declarations: { margin: "0" },
@@ -2432,6 +2619,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle deeply nested declarations from modifiers", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "grid",
 			value: "layout",
 			declarations: { display: "grid" },
@@ -2459,7 +2647,11 @@ describe("createModifiedUtilityFunction", () => {
 			new Map([["deep", deepModifier]]),
 		);
 
-		expect(result.declarations).toEqual({ display: "grid" });
+		// The modifier's return value replaces the base declarations
+		expect(result.declarations).toEqual({
+			gridTemplateColumns: "repeat(12, 1fr)",
+			gridGap: "1rem",
+		});
 		expect(result.children).toHaveLength(2);
 		expect(result.modifiers).toEqual(["deep"]);
 	});
@@ -2467,6 +2659,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle modifier factory that throws an error", () => {
 		const baseUtility: Utility = {
 			type: "utility",
+			id: "test-id",
 			name: "error",
 			value: "test",
 			declarations: { display: "block" },

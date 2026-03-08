@@ -1,25 +1,6 @@
 import { createUseRecipe } from "../utils/createUseRecipe";
 
-/**
- * Base badge styling - core appearance without variants.
- * Use this when you want to define your own custom variants.
- */
-export const useBadgeRecipeBase = createUseRecipe("badge", {
-	base: {
-		display: "inline-flex",
-		alignItems: "center",
-		fontWeight: "@font-weight.medium",
-		fontSize: "@font-size.xs",
-		lineHeight: "1",
-		paddingTop: "@spacing.xs",
-		paddingBottom: "@spacing.xs",
-		paddingLeft: "@spacing.sm",
-		paddingRight: "@spacing.sm",
-		borderRadius: "@border-radius.md",
-	},
-});
-
-const colors = [
+export const colors = [
 	"primary",
 	"secondary",
 	"success",
@@ -28,7 +9,7 @@ const colors = [
 	"danger",
 ] as const;
 
-const variants = ["solid", "outline", "soft", "subtle"] as const;
+export const variants = ["solid", "outline", "soft", "subtle"] as const;
 
 /**
  * Full badge recipe with color, variant, and size variants.
@@ -37,11 +18,18 @@ const variants = ["solid", "outline", "soft", "subtle"] as const;
 export const useBadgeRecipe = createUseRecipe("badge", {
 	base: {
 		display: "inline-flex",
-		alignItems: "center",
-		fontWeight: "@font-weight.medium",
 		borderWidth: "@border-width.thin",
 		borderStyle: "@border-style.solid",
 		borderColor: "transparent",
+		alignItems: "center",
+		fontWeight: "@font-weight.medium",
+		fontSize: "@font-size.sm",
+		lineHeight: "1",
+		paddingTop: "@0.25",
+		paddingBottom: "@0.25",
+		paddingLeft: "@0.375",
+		paddingRight: "@0.375",
+		borderRadius: "@border-radius.md",
 	},
 	variants: {
 		color: {
@@ -60,58 +48,58 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 		},
 		size: {
 			xs: {
-				fontSize: "@font-size.3xs",
+				fontSize: "@font-size.2xs",
 				lineHeight: "@line-height.normal",
 				paddingTop: "@0.125",
 				paddingBottom: "@0.125",
-				paddingLeft: "@spacing.2xs",
-				paddingRight: "@spacing.2xs",
-				gap: "@spacing.2xs",
+				paddingLeft: "@0.25",
+				paddingRight: "@0.25",
+				gap: "@0.125",
 				borderRadius: "@border-radius.sm",
 			},
 			sm: {
-				fontSize: "@font-size.2xs",
+				fontSize: "@font-size.xs",
 				lineHeight: "@line-height.tight",
-				paddingTop: "@spacing.2xs",
-				paddingBottom: "@spacing.2xs",
+				paddingTop: "@0.25",
+				paddingBottom: "@0.25",
 				paddingLeft: "@0.375",
 				paddingRight: "@0.375",
-				gap: "@spacing.2xs",
-				borderRadius: "@border-radius.sm",
+				gap: "@0.25",
+				borderRadius: "@border-radius.md",
 			},
 			md: {
-				fontSize: "@font-size.xs",
-				paddingTop: "@spacing.2xs",
-				paddingBottom: "@spacing.2xs",
-				paddingLeft: "@spacing.xs",
-				paddingRight: "@spacing.xs",
-				gap: "@spacing.2xs",
+				fontSize: "@font-size.sm",
+				paddingTop: "@0.375",
+				paddingBottom: "@0.375",
+				paddingLeft: "@0.5",
+				paddingRight: "@0.5",
+				gap: "@0.375",
 				borderRadius: "@border-radius.md",
 			},
 			lg: {
-				fontSize: "@font-size.sm",
-				paddingTop: "@spacing.2xs",
-				paddingBottom: "@spacing.2xs",
-				paddingLeft: "@spacing.xs",
-				paddingRight: "@spacing.xs",
-				gap: "@0.375",
+				fontSize: "@font-size.md",
+				paddingTop: "@0.5",
+				paddingBottom: "@0.5",
+				paddingLeft: "@0.625",
+				paddingRight: "@0.625",
+				gap: "@0.5",
 				borderRadius: "@border-radius.md",
 			},
 			xl: {
-				fontSize: "@font-size.md",
-				paddingTop: "@spacing.2xs",
-				paddingBottom: "@spacing.2xs",
-				paddingLeft: "@0.625",
-				paddingRight: "@0.625",
-				gap: "@0.375",
-				borderRadius: "@border-radius.md",
+				fontSize: "@font-size.lg",
+				paddingTop: "@0.625",
+				paddingBottom: "@0.625",
+				paddingLeft: "@0.75",
+				paddingRight: "@0.75",
+				gap: "@0.625",
+				borderRadius: "@border-radius.lg",
 			},
 		},
 	},
 	compoundVariants: colors.flatMap((color) => [
 		{
 			match: { color, variant: "solid" as const },
-			css: { background: `@color.${color}`, color: "@color.light" },
+			css: { background: `@color.${color}`, color: "@color.white" },
 		},
 		{
 			match: { color, variant: "outline" as const },
@@ -123,7 +111,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 		{
 			match: { color, variant: "soft" as const },
 			css: {
-				background: `@color.${color}-950`,
+				background: `@color.${color}-900`,
 				color: `@color.${color}`,
 			},
 		},

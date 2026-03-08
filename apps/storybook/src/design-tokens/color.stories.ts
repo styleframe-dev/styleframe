@@ -27,7 +27,7 @@ export const AllColors: StoryObj = {
 		template: `
 			<StoryGrid :items="items">
 				<template #default="{ item }">
-					<ColorSwatch :name="item" :value="item" />
+					<ColorSwatch :name="item" :value="item" :label="item" />
 				</template>
 			</StoryGrid>
 		`,
@@ -76,16 +76,9 @@ export const Danger: Story = {
 	},
 };
 
-export const Light: Story = {
+export const Neutral: Story = {
 	args: {
-		name: "light",
-		value: "light",
-	},
-};
-
-export const Dark: Story = {
-	args: {
-		name: "dark",
-		value: "dark",
+		name: "neutral",
+		value: "neutral",
 	},
 };

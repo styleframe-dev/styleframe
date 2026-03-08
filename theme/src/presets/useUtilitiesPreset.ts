@@ -16,6 +16,8 @@ import {
 	backgroundBlendModeValues,
 	mixBlendModeValues,
 	// Borders utility
+	borderStyleValues,
+	borderWidthValues,
 	divideStyleValues,
 	outlineStyleValues,
 	// Flexbox & Grid
@@ -86,6 +88,7 @@ import {
 	textAlignValues,
 	textDecorationLineValues,
 	textDecorationStyleValues,
+	textDecorationValues,
 	textOverflowValues,
 	textTransformValues,
 	textWrapValues,
@@ -162,6 +165,7 @@ import {
 	useOutlineColorUtility,
 	useOutlineOffsetUtility,
 	useOutlineStyleUtility,
+	useOutlineUtility,
 	useOutlineWidthUtility,
 	useRingColorUtility,
 	useRingInsetUtility,
@@ -422,6 +426,7 @@ import {
 	useTextDecorationLineUtility,
 	useTextDecorationStyleUtility,
 	useTextDecorationThicknessUtility,
+	useTextDecorationUtility,
 	useTextIndentUtility,
 	useTextOverflowUtility,
 	useTextTransformUtility,
@@ -429,6 +434,7 @@ import {
 	useTextWrapUtility,
 	useVerticalAlignUtility,
 	useWhitespaceUtility,
+	useWhiteSpaceUtility,
 	useWordBreakUtility,
 } from "../utilities/typography";
 
@@ -490,6 +496,7 @@ export interface UtilitiesPresetConfig {
 
 	// Borders utility
 	divideStyle?: Record<string, string> | false;
+	outline?: Record<string, string> | false;
 	outlineStyle?: Record<string, string> | false;
 
 	// Flexbox & Grid
@@ -539,6 +546,10 @@ export interface UtilitiesPresetConfig {
 	position?: Record<string, string> | false;
 	visibility?: Record<string, string> | false;
 
+	// Borders
+	borderStyle?: Record<string, string> | false;
+	borderWidth?: Record<string, string> | false;
+
 	// Tables
 	borderCollapse?: Record<string, string> | false;
 	captionSide?: Record<string, string> | false;
@@ -564,12 +575,14 @@ export interface UtilitiesPresetConfig {
 	listStyleType?: Record<string, string> | false;
 	overflowWrap?: Record<string, string> | false;
 	textAlign?: Record<string, string> | false;
+	textDecoration?: Record<string, string> | false;
 	textDecorationLine?: Record<string, string> | false;
 	textDecorationStyle?: Record<string, string> | false;
 	textOverflow?: Record<string, string> | false;
 	textTransform?: Record<string, string> | false;
 	textWrap?: Record<string, string> | false;
 	verticalAlign?: Record<string, string> | false;
+	whiteSpace?: Record<string, string> | false;
 	whitespace?: Record<string, string> | false;
 	wordBreak?: Record<string, string> | false;
 }
@@ -754,6 +767,8 @@ export function useUtilitiesPreset(
 	const overscroll = resolveValues(config.overscroll, overscrollValues);
 	const position = resolveValues(config.position, positionValues);
 	const visibility = resolveValues(config.visibility, visibilityValues);
+	const borderStyle = resolveValues(config.borderStyle, borderStyleValues);
+	const borderWidth = resolveValues(config.borderWidth, borderWidthValues);
 	const borderCollapse = resolveValues(
 		config.borderCollapse,
 		borderCollapseValues,
@@ -805,6 +820,10 @@ export function useUtilitiesPreset(
 	);
 	const overflowWrap = resolveValues(config.overflowWrap, overflowWrapValues);
 	const textAlign = resolveValues(config.textAlign, textAlignValues);
+	const textDecoration = resolveValues(
+		config.textDecoration,
+		textDecorationValues,
+	);
 	const textDecorationLine = resolveValues(
 		config.textDecorationLine,
 		textDecorationLineValues,
@@ -823,6 +842,7 @@ export function useUtilitiesPreset(
 		config.verticalAlign,
 		verticalAlignValues,
 	);
+	const whiteSpace = resolveValues(config.whiteSpace, whitespaceValues);
 	const whitespace = resolveValues(config.whitespace, whitespaceValues);
 	const wordBreak = resolveValues(config.wordBreak, wordBreakValues);
 
@@ -916,6 +936,8 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("divide-style"),
 	);
 	if (divideStyle) createDivideStyleUtility(divideStyle);
+
+	const createOutlineUtility = useOutlineUtility(s);
 
 	const createOutlineStyleUtility = useOutlineStyleUtility(
 		s,
@@ -1253,6 +1275,22 @@ export function useUtilitiesPreset(
 	);
 	if (visibility) createVisibilityUtility(visibility);
 
+	const createBorderStyleUtility = useBorderStyleUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-style"),
+	);
+	if (borderStyle) createBorderStyleUtility(borderStyle);
+
+	const createBorderWidthUtility = useBorderWidthUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-width"),
+	);
+	if (borderWidth) createBorderWidthUtility(borderWidth);
+
 	const createBorderCollapseUtility = useBorderCollapseUtility(
 		s,
 		undefined,
@@ -1397,6 +1435,9 @@ export function useUtilitiesPreset(
 	);
 	if (textAlign) createTextAlignUtility(textAlign);
 
+	const createTextDecorationUtility = useTextDecorationUtility(s);
+	if (textDecoration) createTextDecorationUtility(textDecoration);
+
 	const createTextDecorationLineUtility = useTextDecorationLineUtility(
 		s,
 		undefined,
@@ -1445,6 +1486,9 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("vertical-align"),
 	);
 	if (verticalAlign) createVerticalAlignUtility(verticalAlign);
+
+	const createWhiteSpaceUtility = useWhiteSpaceUtility(s);
+	if (whiteSpace) createWhiteSpaceUtility(whiteSpace);
 
 	const createWhitespaceUtility = useWhitespaceUtility(
 		s,
@@ -1662,12 +1706,7 @@ export function useUtilitiesPreset(
 			undefined,
 			resolveUtilityOptions("border-radius"),
 		),
-		createBorderStyleUtility: useBorderStyleUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("border-style"),
-		),
+		createBorderStyleUtility,
 		createBorderWidthBottomUtility: useBorderWidthBottomUtility(
 			s,
 			undefined,
@@ -1704,12 +1743,7 @@ export function useUtilitiesPreset(
 			undefined,
 			resolveUtilityOptions("border-top-width"),
 		),
-		createBorderWidthUtility: useBorderWidthUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("border-width"),
-		),
+		createBorderWidthUtility,
 		createBorderWidthXUtility: useBorderWidthXUtility(
 			s,
 			undefined,
@@ -1766,6 +1800,7 @@ export function useUtilitiesPreset(
 			resolveUtilityOptions("outline-offset"),
 		),
 		createOutlineStyleUtility,
+		createOutlineUtility,
 		createOutlineWidthUtility: useOutlineWidthUtility(
 			s,
 			undefined,
@@ -2741,6 +2776,7 @@ export function useUtilitiesPreset(
 		),
 		createTextDecorationLineUtility,
 		createTextDecorationStyleUtility,
+		createTextDecorationUtility,
 		createTextDecorationThicknessUtility: useTextDecorationThicknessUtility(
 			s,
 			undefined,
@@ -2763,6 +2799,7 @@ export function useUtilitiesPreset(
 		),
 		createTextWrapUtility,
 		createVerticalAlignUtility,
+		createWhiteSpaceUtility,
 		createWhitespaceUtility,
 		createWordBreakUtility,
 	};

@@ -1,6 +1,4 @@
-import type { Styleframe, Variable } from "@styleframe/core";
-import type { ExportKeys } from "../types";
-import { createUseVariable } from "../utils";
+import { createUseDerivedVariable } from "../utils";
 import { colorTintValues } from "../values";
 
 export { colorTintValues };
@@ -19,31 +17,21 @@ export { colorTintValues };
  *   colorPrimaryTint150, // Variable<'color.primary-tint-150'>
  *   ...
  * } = useColorTintLevels(s, colorPrimary, {
- *   50: 5,
- *   100: 10,
- *   150: 15,
+ *   "tint-50": 5,
+ *   "tint-100": 10,
+ *   "tint-150": 15,
  *   ...
  * });
  * ```
  */
-export function useColorTint<
-	Name extends string,
-	T extends Record<string | number, number>,
->(
-	s: Styleframe,
-	color: Variable<Name>,
-	levels: T,
-	{ default: isDefault = true }: { default?: boolean } = {},
-): ExportKeys<`${Name}-tint`, T, "-"> {
-	return createUseVariable(`${color.name}-tint`, {
-		defaults: colorTintValues,
-		transform: (value) => {
-			if (typeof value !== "number") {
-				return 0;
-			}
+export const useColorTint = createUseDerivedVariable({
+	defaults: colorTintValues,
+	delimiter: "-",
+	transform: (value: number, { s, parent }) => {
+		if (typeof value !== "number") {
+			return 0;
+		}
 
-			return s.css`oklch(from ${s.ref(color)} calc(l + ${value / 100}) c h / alpha)`;
-		},
-		delimiter: "-" as const,
-	})(s, levels, { default: isDefault });
-}
+		return s.css`oklch(from ${s.ref(parent)} calc(l + ${value / 100}) c h / alpha)`;
+	},
+});

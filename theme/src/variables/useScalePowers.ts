@@ -1,7 +1,7 @@
 import type {
 	CSS,
+	DeclarationsCallbackContext,
 	Reference,
-	Styleframe,
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
@@ -10,8 +10,11 @@ import { scalePowerValues } from "../values";
 
 export { scalePowerValues };
 
-export function useScalePowers<T extends readonly number[]>(
-	s: Styleframe,
+export function useScalePowers<
+	Context extends DeclarationsCallbackContext,
+	T extends readonly number[],
+>(
+	s: Context,
 	scale: Variable | Reference,
 	powers: T = scalePowerValues as T,
 ): Record<number, TokenValue> {

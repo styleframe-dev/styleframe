@@ -4,7 +4,7 @@
 export const appearanceValues = {
 	none: "none",
 	auto: "auto",
-};
+} as const;
 
 /**
  * Default color-scheme utility values matching Tailwind CSS.
@@ -14,7 +14,7 @@ export const colorSchemeValues = {
 	light: "light",
 	dark: "dark",
 	"light-dark": "light dark",
-};
+} as const;
 
 /**
  * Default cursor utility values matching Tailwind CSS.
@@ -56,7 +56,7 @@ export const cursorValues = {
 	"nwse-resize": "nwse-resize",
 	"zoom-in": "zoom-in",
 	"zoom-out": "zoom-out",
-};
+} as const;
 
 /**
  * Default pointer-events utility values matching Tailwind CSS.
@@ -64,7 +64,7 @@ export const cursorValues = {
 export const pointerEventsValues = {
 	none: "none",
 	auto: "auto",
-};
+} as const;
 
 /**
  * Default resize utility values matching Tailwind CSS.
@@ -74,7 +74,7 @@ export const resizeValues = {
 	y: "vertical",
 	x: "horizontal",
 	both: "both",
-};
+} as const;
 
 /**
  * Default scroll-behavior utility values matching Tailwind CSS.
@@ -82,7 +82,7 @@ export const resizeValues = {
 export const scrollBehaviorValues = {
 	auto: "auto",
 	smooth: "smooth",
-};
+} as const;
 
 /**
  * Default touch-action utility values matching Tailwind CSS.
@@ -98,7 +98,7 @@ export const touchActionValues = {
 	"pan-down": "pan-down",
 	"pinch-zoom": "pinch-zoom",
 	manipulation: "manipulation",
-};
+} as const;
 
 /**
  * Default user-select utility values matching Tailwind CSS.
@@ -108,7 +108,7 @@ export const userSelectValues = {
 	text: "text",
 	all: "all",
 	auto: "auto",
-};
+} as const;
 
 /**
  * Default will-change utility values matching Tailwind CSS.
@@ -118,7 +118,7 @@ export const willChangeValues = {
 	scroll: "scroll-position",
 	contents: "contents",
 	transform: "transform",
-};
+} as const;
 
 /**
  * Default scroll-snap-align utility values matching Tailwind CSS.
@@ -128,7 +128,7 @@ export const scrollSnapAlignValues = {
 	end: "end",
 	center: "center",
 	"align-none": "none",
-};
+} as const;
 
 /**
  * Default scroll-snap-stop utility values matching Tailwind CSS.
@@ -136,7 +136,7 @@ export const scrollSnapAlignValues = {
 export const scrollSnapStopValues = {
 	normal: "normal",
 	always: "always",
-};
+} as const;
 
 /**
  * Default scroll-snap-type utility values matching Tailwind CSS.
@@ -148,4 +148,4 @@ export const scrollSnapTypeValues = {
 	both: "both var(--tw-scroll-snap-strictness)",
 	mandatory: "mandatory",
 	proximity: "proximity",
-};
+} as const;

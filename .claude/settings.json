@@ -1,4 +1,12 @@
 {
+	"env": {
+		"ENABLE_LSP_TOOL": "1"
+	},
+	"enabledPlugins": {
+		"pyright-lsp@claude-plugins-official": true,
+		"typescript-lsp@claude-plugins-official": true,
+		"gopls-lsp@claude-plugins-official": true
+	},
 	"attribution": {
 		"commit": "",
 		"pr": ""

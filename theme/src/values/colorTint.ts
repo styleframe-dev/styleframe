@@ -1,6 +1,6 @@
 export const colorTintValues = {
-	50: 5,
-	100: 10,
-	150: 15,
-	200: 20,
+	"tint-50": 5,
+	"tint-100": 10,
+	"tint-150": 15,
+	"tint-200": 20,
 } as const;

@@ -28,6 +28,7 @@ describe("createThemeFunction", () => {
 
 			expect(result).toEqual({
 				type: "theme",
+				id: expect.any(String),
 				name: "dark",
 				declarations: {},
 				variables: [],
@@ -44,6 +45,7 @@ describe("createThemeFunction", () => {
 			expect(root.themes[0]).toBe(result);
 			expect(root.themes[0]).toEqual({
 				type: "theme",
+				id: expect.any(String),
 				name: "dark",
 				declarations: {},
 				variables: [],
@@ -103,6 +105,7 @@ describe("createThemeFunction", () => {
 		it("should return the existing theme instead of creating a new one", () => {
 			const existingTheme: Theme = {
 				type: "theme",
+				id: "test-id",
 				name: "dark",
 				declarations: {},
 				variables: [],
@@ -121,6 +124,7 @@ describe("createThemeFunction", () => {
 		it("should not add duplicate theme to root.themes array", () => {
 			const existingTheme: Theme = {
 				type: "theme",
+				id: "test-id",
 				name: "dark",
 				declarations: {},
 				variables: [],
@@ -139,6 +143,7 @@ describe("createThemeFunction", () => {
 		it("should still call the callback with existing theme", () => {
 			const existingTheme: Theme = {
 				type: "theme",
+				id: "test-id",
 				name: "dark",
 				declarations: {},
 				variables: [],
@@ -167,6 +172,7 @@ describe("createThemeFunction", () => {
 
 			expect(result).toEqual({
 				type: "theme",
+				id: expect.any(String),
 				name: "light",
 				declarations: {},
 				variables: [],
@@ -182,6 +188,7 @@ describe("createThemeFunction", () => {
 
 			expect(result).toEqual({
 				type: "theme",
+				id: expect.any(String),
 				name: "light",
 				declarations: {},
 				variables: [],
@@ -214,6 +221,7 @@ describe("createThemeFunction", () => {
 		it("should handle mixed new and existing themes", () => {
 			const existingTheme: Theme = {
 				type: "theme",
+				id: "test-id",
 				name: "existing",
 				declarations: {},
 				variables: [],
@@ -308,6 +316,7 @@ describe("createThemeFunction", () => {
 		it("should preserve existing children when theme already exists", () => {
 			const existingTheme: Theme = {
 				type: "theme",
+				id: "test-id",
 				name: "existing",
 				declarations: {},
 				variables: [

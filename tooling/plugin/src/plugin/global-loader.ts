@@ -1,9 +1,11 @@
 import type { Styleframe } from "@styleframe/core";
 import {
+	createLoader,
 	loadExtensionModule,
 	loadModule,
 	type ExportInfo,
 } from "@styleframe/loader";
+import type { Jiti } from "jiti";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -72,6 +74,7 @@ function checkExportCollisions(
  */
 export async function loadConfigFile(
 	state: PluginGlobalState,
+	sharedJiti?: Jiti,
 ): Promise<Styleframe> {
 	if (!state.configFile) {
 		throw new Error("[styleframe] Config file not set");
@@ -82,6 +85,7 @@ export async function loadConfigFile(
 	// Use shared loadModule function
 	const { instance, exports } = await loadModule(configPath, {
 		alias: state.resolve.alias,
+		jiti: sharedJiti,
 	});
 
 	// Check for collisions
@@ -101,6 +105,7 @@ export async function loadStyleframeFile(
 	state: PluginGlobalState,
 	filePath: string,
 	loadOrder: number,
+	sharedJiti?: Jiti,
 ): Promise<void> {
 	if (!state.globalInstance) {
 		throw new GlobalInstanceNotInitializedError();
@@ -124,6 +129,7 @@ export async function loadStyleframeFile(
 				...state.resolve.alias,
 				"virtual:styleframe": getExtensionShimPath(),
 			},
+			jiti: sharedJiti,
 		});
 
 		// Check for collisions
@@ -149,28 +155,60 @@ export async function loadStyleframeFile(
 export async function loadAllStyleframeFiles(
 	state: PluginGlobalState,
 	files: string[],
+	sharedJiti?: Jiti,
 ): Promise<void> {
 	for (let i = 0; i < files.length; i++) {
 		const file = files[i];
 		if (file) {
-			await loadStyleframeFile(state, file, i);
+			await loadStyleframeFile(state, file, i, sharedJiti);
 		}
 	}
 }
 
 /**
- * Reload the config and all styleframe files
+ * Reload the config and all styleframe files.
+ * If reload fails, restores the previous state so the app continues working.
  */
 export async function reloadAll(
 	state: PluginGlobalState,
 	files: string[],
 ): Promise<void> {
+	// Save current state before resetting, so we can restore on failure
+	const previousGlobalInstance = state.globalInstance;
+	const previousConfigExports = state.configFile
+		? new Map(state.configFile.exports)
+		: null;
+	const previousConfigLastModified = state.configFile?.lastModified ?? 0;
+	const previousFiles = new Map(state.files);
+
+	// Create a single shared Jiti instance for this reload cycle
+	// to avoid creating a new instance per file.
+	const sharedJiti = createLoader(process.cwd(), {
+		...state.resolve.alias,
+		"virtual:styleframe": getExtensionShimPath(),
+	});
+
 	// Clear all state except configPath
 	resetState(state);
 
-	// Reload config
-	await loadConfigFile(state);
+	try {
+		// Reload config
+		await loadConfigFile(state, sharedJiti);
 
-	// Reload all files
-	await loadAllStyleframeFiles(state, files);
+		// Reload all files
+		await loadAllStyleframeFiles(state, files, sharedJiti);
+	} catch (error) {
+		// Restore previous state so the app continues working
+		state.globalInstance = previousGlobalInstance;
+		if (state.configFile && previousConfigExports) {
+			state.configFile.exports = previousConfigExports;
+			state.configFile.lastModified = previousConfigLastModified;
+		}
+		for (const [filePath, fileInfo] of previousFiles) {
+			state.files.set(filePath, fileInfo);
+		}
+		state.initialized = previousGlobalInstance !== null;
+
+		throw error;
+	}
 }

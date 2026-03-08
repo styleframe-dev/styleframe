@@ -11,7 +11,7 @@ export const transformOriginValues = {
 	"bottom-left": "bottom left",
 	left: "left",
 	"top-left": "top left",
-};
+} as const;
 
 /**
  * Default transform-style utility values matching Tailwind CSS.
@@ -19,7 +19,7 @@ export const transformOriginValues = {
 export const transformStyleValues = {
 	flat: "flat",
 	"3d": "preserve-3d",
-};
+} as const;
 
 /**
  * Default backface-visibility utility values matching Tailwind CSS.
@@ -27,7 +27,7 @@ export const transformStyleValues = {
 export const backfaceVisibilityValues = {
 	visible: "visible",
 	hidden: "hidden",
-};
+} as const;
 
 /**
  * Default perspective-origin utility values matching Tailwind CSS.
@@ -42,4 +42,4 @@ export const perspectiveOriginValues = {
 	"bottom-left": "bottom left",
 	left: "left",
 	"top-left": "top left",
-};
+} as const;

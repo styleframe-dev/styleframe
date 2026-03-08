@@ -314,6 +314,7 @@ describe("mergeContainers", () => {
 		it("should concatenate children arrays", () => {
 			const selector1 = {
 				type: "selector" as const,
+				id: "test-id",
 				query: ".button",
 				declarations: {},
 				variables: [],
@@ -321,6 +322,7 @@ describe("mergeContainers", () => {
 			};
 			const selector2 = {
 				type: "selector" as const,
+				id: "test-id",
 				query: ".card",
 				declarations: {},
 				variables: [],
@@ -350,6 +352,7 @@ describe("mergeContainers", () => {
 		it("should merge themes on Root containers", () => {
 			const a: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [],
 				modifiers: [],
@@ -359,6 +362,7 @@ describe("mergeContainers", () => {
 				themes: [
 					{
 						type: "theme",
+						id: "test-id",
 						name: "light",
 						declarations: {},
 						variables: [],
@@ -368,6 +372,7 @@ describe("mergeContainers", () => {
 			};
 			const b: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [],
 				modifiers: [],
@@ -377,6 +382,7 @@ describe("mergeContainers", () => {
 				themes: [
 					{
 						type: "theme",
+						id: "test-id",
 						name: "dark",
 						declarations: {},
 						variables: [],
@@ -397,6 +403,7 @@ describe("mergeContainers", () => {
 			const mockCreate = () => {};
 			const a: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [
 					{
@@ -416,6 +423,7 @@ describe("mergeContainers", () => {
 			};
 			const b: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [
 					{
@@ -444,6 +452,7 @@ describe("mergeContainers", () => {
 		it("should concatenate modifiers arrays", () => {
 			const a: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [],
 				modifiers: [
@@ -460,6 +469,7 @@ describe("mergeContainers", () => {
 			};
 			const b: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [],
 				modifiers: [
@@ -485,6 +495,7 @@ describe("mergeContainers", () => {
 		it("should concatenate recipes arrays", () => {
 			const a: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [],
 				modifiers: [],
@@ -501,6 +512,7 @@ describe("mergeContainers", () => {
 			};
 			const b: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [],
 				modifiers: [],
@@ -547,6 +559,7 @@ describe("mergeContainers", () => {
 		it("should preserve non-container properties", () => {
 			const a: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [],
 				modifiers: [],
@@ -557,6 +570,7 @@ describe("mergeContainers", () => {
 			};
 			const b: Root = {
 				type: "root",
+				id: "test-id",
 				declarations: {},
 				utilities: [],
 				modifiers: [],
@@ -779,6 +793,18 @@ describe("merge", () => {
 
 	describe("recipes concatenation", () => {
 		it("should concatenate recipes from both instances", () => {
+			const createFontSize = base.utility("fontSize", ({ value }) => ({
+				fontSize: value,
+			}));
+			createFontSize({ "0.875rem": "0.875rem", "1.125rem": "1.125rem" });
+			const createBoxShadow = extension.utility("boxShadow", ({ value }) => ({
+				boxShadow: value,
+			}));
+			createBoxShadow({
+				"0 1px 2px rgba(0,0,0,0.1)": "0 1px 2px rgba(0,0,0,0.1)",
+				"0 4px 6px rgba(0,0,0,0.1)": "0 4px 6px rgba(0,0,0,0.1)",
+			});
+
 			base.recipe({
 				name: "button",
 				variants: {

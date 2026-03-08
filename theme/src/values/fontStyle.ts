@@ -4,4 +4,4 @@ export const fontStyleValues = {
 	oblique: "oblique",
 	normal: "normal",
 	inherit: "inherit",
-};
+} as const;

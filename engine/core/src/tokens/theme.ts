@@ -1,4 +1,5 @@
 import type { Container, DeclarationsCallback, Root, Theme } from "../types";
+import { generateRandomId } from "../utils";
 import { createDeclarationsCallbackContext } from "./declarations";
 
 export function createThemeFunction(_parent: Container, root: Root) {
@@ -6,6 +7,7 @@ export function createThemeFunction(_parent: Container, root: Root) {
 		const existingTheme = root.themes.find((t) => t.name === name);
 		const instance: Theme = existingTheme ?? {
 			type: "theme",
+			id: generateRandomId("th-"),
 			name,
 			declarations: {},
 			variables: [],

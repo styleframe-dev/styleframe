@@ -35,10 +35,10 @@ describe("useColorShade", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		const shades = useColorShade(s, colorPrimary, {
-			25: 2.5,
-			50: 5,
-			75: 7.5,
-			100: 10,
+			"shade-25": 2.5,
+			"shade-50": 5,
+			"shade-75": 7.5,
+			"shade-100": 10,
 		} as const);
 
 		expect(shades.colorPrimaryShade25).toEqual({
@@ -68,8 +68,8 @@ describe("useColorShade", () => {
 		const colorPrimary = s.variable("color--primary", "#007bff");
 
 		useColorShade(s, colorPrimary, {
-			50: 5,
-			100: 10,
+			"shade-50": 5,
+			"shade-100": 10,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -86,8 +86,8 @@ describe("useColorShade", () => {
 		const colorPrimary = s.variable("color--primary", "#007bff");
 
 		useColorShade(s, colorPrimary, {
-			50: 5,
-			100: 10,
+			"shade-50": 5,
+			"shade-100": 10,
 		} as const);
 
 		// +1 for the original color variable
@@ -97,7 +97,7 @@ describe("useColorShade", () => {
 	it("should handle color with kebab-case name", () => {
 		const s = styleframe();
 		const colorPrimaryDark = s.variable("color--primary-dark", "#0056b3");
-		const shades = useColorShade(s, colorPrimaryDark, { 50: 5 });
+		const shades = useColorShade(s, colorPrimaryDark, { "shade-50": 5 });
 
 		expect(shades.colorPrimaryDarkShade50).toEqual({
 			type: "variable",
@@ -118,7 +118,7 @@ describe("useColorShade", () => {
 		const s = styleframe();
 		const customColor = s.variable("custom-color", "#ff0000");
 		const shades = useColorShade(s, customColor, {
-			100: 10,
+			"shade-100": 10,
 		} as const);
 
 		expect(shades.customColorShade100).toEqual({
@@ -138,8 +138,8 @@ describe("useColorShade", () => {
 			const s = styleframe();
 			const colorPrimary = s.variable("color--primary", "#007bff");
 			const shades = useColorShade(s, colorPrimary, {
-				50: 5,
-				100: 10,
+				"shade-50": 5,
+				"shade-100": 10,
 			} as const);
 
 			const shade50: Variable<"color--primary-shade-50"> =
@@ -155,7 +155,7 @@ describe("useColorShade", () => {
 			const s = styleframe();
 			const colorSecondary = s.variable("color--secondary", "#6c757d");
 			const shades = useColorShade(s, colorSecondary, {
-				75: 7.5,
+				"shade-75": 7.5,
 			} as const);
 
 			const typed: Variable<"color--secondary-shade-75"> =
