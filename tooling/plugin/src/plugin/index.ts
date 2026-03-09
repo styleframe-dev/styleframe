@@ -1,7 +1,7 @@
-import fs from "node:fs";
 import path from "node:path";
 import { consola } from "consola";
 import { transform as esbuildTransform } from "esbuild";
+import type { Jiti } from "jiti";
 import type { UnpluginFactory } from "unplugin";
 import { createUnplugin } from "unplugin";
 import {
@@ -20,6 +20,7 @@ export type { Options } from "./types";
 import { createPluginState } from "./state";
 import { discoverStyleframeFiles, sortByLoadOrder } from "./discovery";
 import {
+	createPersistentJiti,
 	loadConfigFile,
 	loadStyleframeFile,
 	loadAllStyleframeFiles,
@@ -38,6 +39,13 @@ import {
 	isContentFile,
 	type PluginScannerState,
 } from "./scanner";
+import {
+	type DependencyGraph,
+	createDependencyGraph,
+	buildDependencyGraph,
+	getFilesToInvalidate,
+	isTrackedDependency,
+} from "./dependency-graph";
 
 // Matches the source file: ./button.styleframe.ts
 const STYLEFRAME_SOURCE_REGEX = /\.styleframe\.ts$/;
@@ -65,16 +73,16 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	const entry = options.entry ?? DEFAULT_ENTRY;
 	const configPath = path.isAbsolute(entry) ? entry : path.resolve(cwd, entry);
 
-	// Create plugin state and apply explicit alias configuration
 	const state = createPluginState(configPath);
-	if (options.resolve?.alias) {
-		Object.assign(state.resolve.alias, options.resolve.alias);
-	}
 
 	let isBuildCommand = false;
 
-	// Resolved alias directories for file watching
-	const aliasDirectories: string[] = [];
+	// Persistent shared Jiti instance with module caching enabled.
+	// Created once in buildStart, reused across all HMR reloads.
+	let persistentJiti: Jiti | null = null;
+
+	// Dependency graph built by importree for selective cache invalidation
+	let depGraph: DependencyGraph = createDependencyGraph();
 
 	// Scanner state (created if content option is provided)
 	let scannerState: PluginScannerState | null = null;
@@ -95,14 +103,27 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 		}, 100);
 	};
 
-	// Reload all styleframe files and re-scan content
-	const reloadAndRescan = async (files: string[]) => {
-		await reloadAll(state, files);
+	// Reload all styleframe files with selective cache invalidation,
+	// re-scan content, and rebuild the dependency graph.
+	const reloadAndRescan = async (
+		files: string[],
+		filesToInvalidate?: string[],
+	) => {
+		await reloadAll(
+			state,
+			files,
+			persistentJiti ?? undefined,
+			filesToInvalidate,
+		);
+
 		if (scannerState) {
 			await scanAndRegister(state, scannerState, {
 				silent: options.silent,
 			});
 		}
+
+		// Rebuild dependency graph after reload to capture any changed imports
+		depGraph = await buildDependencyGraph(configPath, files);
 	};
 
 	// Invalidate virtual modules on the dev server and trigger a full page reload
@@ -121,15 +142,17 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 		server.ws.send({ type: "full-reload" });
 	};
 
-	// Full reload for handleHotUpdate: reload files, resolve virtual modules, schedule type gen.
+	// Full reload for handleHotUpdate: reload files with selective invalidation,
+	// resolve virtual modules, schedule type gen.
 	// Returns the modules to invalidate, or null if reload failed.
 	const handleReload = async (
 		resolveModule: (id: string) => Promise<unknown>,
 		moduleIds: string[],
 		errorMessage: string,
+		filesToInvalidate?: string[],
 	) => {
 		try {
-			await reloadAndRescan([...state.files.keys()]);
+			await reloadAndRescan([...state.files.keys()], filesToInvalidate);
 
 			const modulesToInvalidate = (
 				await Promise.all(moduleIds.map(resolveModule))
@@ -157,10 +180,13 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 			}
 
 			try {
-				// 1. Load config file
-				await loadConfigFile(state);
+				// 1. Create persistent shared Jiti instance
+				persistentJiti = createPersistentJiti();
 
-				// 2. Discover all *.styleframe.ts files
+				// 2. Load config file
+				await loadConfigFile(state, persistentJiti);
+
+				// 3. Discover all *.styleframe.ts files
 				const files = await discoverStyleframeFiles({
 					cwd,
 					include: options.include ?? [],
@@ -170,16 +196,19 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				// Filter out the config file itself
 				const styleframeFiles = files.filter((f) => f !== configPath);
 
-				// 3. Sort by load order
+				// 4. Sort by load order
 				const sortedFiles = sortByLoadOrder(
 					styleframeFiles,
 					options.loadOrder ?? "alphabetical",
 				);
 
-				// 4. Load all styleframe files
-				await loadAllStyleframeFiles(state, sortedFiles);
+				// 5. Load all styleframe files
+				await loadAllStyleframeFiles(state, sortedFiles, persistentJiti);
 
-				// 5. Scan content files and auto-register utilities
+				// 6. Build dependency graph for selective cache invalidation
+				depGraph = await buildDependencyGraph(configPath, sortedFiles);
+
+				// 7. Scan content files and auto-register utilities
 				if (options.scanner?.content?.length) {
 					scannerState = createPluginScanner(
 						options.scanner.content,
@@ -192,10 +221,15 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					});
 				}
 
-				// 6. Add watch files
+				// 8. Add watch files (entry points + all tracked dependencies)
 				this.addWatchFile(configPath);
 				for (const file of sortedFiles) {
 					this.addWatchFile(file);
+				}
+				for (const trackedFile of depGraph.trackedFiles) {
+					if (trackedFile !== configPath && !state.files.has(trackedFile)) {
+						this.addWatchFile(trackedFile);
+					}
 				}
 				if (scannerState) {
 					for (const file of scannerState.scannedFiles) {
@@ -205,7 +239,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 
 				state.initialized = true;
 
-				// 7. Generate type declarations
+				// 9. Generate type declarations
 				if (options.dts?.enabled !== false) {
 					await generateTypeDeclarations(
 						state,
@@ -217,7 +251,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 
 				if (!options.silent) {
 					consola.success(
-						`[styleframe] Initialized with ${sortedFiles.length} styleframe file(s).`,
+						`[styleframe] Initialized with ${sortedFiles.length} styleframe file(s) (tracking ${depGraph.trackedFiles.size} dependencies).`,
 					);
 					console.log("");
 				}
@@ -298,12 +332,27 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					) {
 						try {
 							const loadOrder = state.files.size;
-							await loadStyleframeFile(state, file, loadOrder);
+							await loadStyleframeFile(
+								state,
+								file,
+								loadOrder,
+								persistentJiti ?? undefined,
+							);
 
 							if (!options.silent) {
 								consola.info(
 									`[styleframe] Discovered new file: ${path.relative(cwd, file)}`,
 								);
+							}
+
+							// Rebuild dependency graph to include the new file
+							depGraph = await buildDependencyGraph(configPath, [
+								...state.files.keys(),
+							]);
+
+							// Watch new dependencies discovered by importree
+							for (const trackedFile of depGraph.trackedFiles) {
+								server.watcher.add(trackedFile);
 							}
 
 							// Re-scan content after new styleframe file
@@ -349,22 +398,6 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						}
 					}
 				});
-
-				// Watch aliased source directories for changes
-				for (const aliasPath of Object.values(state.resolve.alias)) {
-					const resolved = path.isAbsolute(aliasPath)
-						? aliasPath
-						: path.resolve(cwd, aliasPath);
-
-					try {
-						const stat = fs.statSync(resolved);
-						const dir = stat.isDirectory() ? resolved : path.dirname(resolved);
-						aliasDirectories.push(dir);
-						server.watcher.add(dir);
-					} catch {
-						// Path doesn't exist yet, skip
-					}
-				}
 			},
 
 			async handleHotUpdate(ctx) {
@@ -373,21 +406,24 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					return mod ?? (await ctx.server?.moduleGraph.getModuleByUrl(id));
 				};
 
-				// Config change → reload everything
+				// Config change → reload everything with selective invalidation
 				if (ctx.file === configPath) {
 					if (!options.silent) {
 						consola.info(`[styleframe] Config changed, reloading...`);
 					}
 
+					const affected = getFilesToInvalidate(depGraph, ctx.file);
+
 					const result = await handleReload(
 						resolveModule,
 						ALL_VIRTUAL_MODULE_IDS,
 						`[styleframe] Reload failed:`,
+						affected,
 					);
 					return (result as typeof ctx.modules) ?? ctx.modules;
 				}
 
-				// Styleframe file change → reload all to rebuild global instance
+				// Styleframe file change → reload all with selective invalidation
 				if (state.files.has(ctx.file)) {
 					if (!options.silent) {
 						consola.info(
@@ -395,10 +431,13 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						);
 					}
 
+					const affected = getFilesToInvalidate(depGraph, ctx.file);
+
 					const result = await handleReload(
 						resolveModule,
 						CSS_AND_CONSUMER_MODULE_IDS,
 						`[styleframe] Failed to reload: ${ctx.file}`,
+						affected,
 					);
 					return (result as typeof ctx.modules) ?? ctx.modules;
 				}
@@ -431,22 +470,22 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					return ctx.modules;
 				}
 
-				// Aliased dependency change → reload everything
-				const isAliasedFile = aliasDirectories.some(
-					(dir) => ctx.file.startsWith(dir + path.sep) || ctx.file === dir,
-				);
-
-				if (isAliasedFile) {
+				// Deep dependency change (tracked by importree but not a config/styleframe file)
+				// e.g., shared theme composable, token utility, etc.
+				if (isTrackedDependency(depGraph, ctx.file, configPath, state.files)) {
 					if (!options.silent) {
 						consola.info(
-							`[styleframe] Aliased dependency changed: ${path.relative(cwd, ctx.file)}`,
+							`[styleframe] Dependency changed: ${path.relative(cwd, ctx.file)}`,
 						);
 					}
+
+					const affected = getFilesToInvalidate(depGraph, ctx.file);
 
 					const result = await handleReload(
 						resolveModule,
 						ALL_VIRTUAL_MODULE_IDS,
-						`[styleframe] Reload after alias change failed:`,
+						`[styleframe] Reload after dependency change failed:`,
+						affected,
 					);
 					return (result as typeof ctx.modules) ?? ctx.modules;
 				}

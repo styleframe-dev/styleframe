@@ -29,11 +29,6 @@ export interface PluginGlobalState {
 	loadingFiles: Set<string>;
 	/** Whether initial discovery has completed */
 	initialized: boolean;
-	/** Module resolution options */
-	resolve: {
-		/** Alias map for Jiti module resolution */
-		alias: Record<string, string>;
-	};
 }
 
 /**
@@ -51,7 +46,6 @@ export function createPluginState(configPath: string): PluginGlobalState {
 		files: new Map(),
 		loadingFiles: new Set(),
 		initialized: false,
-		resolve: { alias: {} },
 	};
 }
 
