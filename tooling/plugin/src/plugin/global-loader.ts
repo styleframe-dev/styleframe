@@ -167,10 +167,13 @@ export async function loadAllStyleframeFiles(
  * Includes the virtual:styleframe alias pointing to the extension shim.
  * Uses moduleCache: true so unchanged dependencies stay cached across reloads.
  */
-export function createPersistentJiti(): Jiti {
+export function createPersistentJiti(
+	userAliases?: Record<string, string>,
+): Jiti {
 	return createSharedJiti({
 		alias: {
 			"virtual:styleframe": getExtensionShimPath(),
+			...userAliases,
 		},
 	});
 }

@@ -22,13 +22,14 @@ export function createDependencyGraph(): DependencyGraph {
 export async function buildDependencyGraph(
 	configPath: string,
 	styleframeFiles: string[],
+	aliases?: Record<string, string>,
 ): Promise<DependencyGraph> {
 	const graph = createDependencyGraph();
 	const allEntries = [configPath, ...styleframeFiles];
 
 	for (const entry of allEntries) {
 		try {
-			const tree = await importree(entry);
+			const tree = await importree(entry, aliases ? { aliases } : undefined);
 			graph.entryTrees.set(entry, tree);
 
 			for (const file of tree.files) {
