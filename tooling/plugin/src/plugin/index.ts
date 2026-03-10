@@ -73,6 +73,16 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	const entry = options.entry ?? DEFAULT_ENTRY;
 	const configPath = path.isAbsolute(entry) ? entry : path.resolve(cwd, entry);
 
+	// Resolve alias paths to absolute paths relative to cwd
+	const resolvedAliases = options.resolve?.alias
+		? Object.fromEntries(
+				Object.entries(options.resolve.alias).map(([key, value]) => [
+					key,
+					path.isAbsolute(value) ? value : path.resolve(cwd, value),
+				]),
+			)
+		: undefined;
+
 	const state = createPluginState(configPath);
 
 	let isBuildCommand = false;
@@ -123,7 +133,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 		}
 
 		// Rebuild dependency graph after reload to capture any changed imports
-		depGraph = await buildDependencyGraph(configPath, files);
+		depGraph = await buildDependencyGraph(configPath, files, resolvedAliases);
 	};
 
 	// Invalidate virtual modules on the dev server and trigger a full page reload
@@ -181,7 +191,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 
 			try {
 				// 1. Create persistent shared Jiti instance
-				persistentJiti = createPersistentJiti();
+				persistentJiti = createPersistentJiti(resolvedAliases);
 
 				// 2. Load config file
 				await loadConfigFile(state, persistentJiti);
@@ -206,7 +216,11 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 				await loadAllStyleframeFiles(state, sortedFiles, persistentJiti);
 
 				// 6. Build dependency graph for selective cache invalidation
-				depGraph = await buildDependencyGraph(configPath, sortedFiles);
+				depGraph = await buildDependencyGraph(
+					configPath,
+					sortedFiles,
+					resolvedAliases,
+				);
 
 				// 7. Scan content files and auto-register utilities
 				if (options.scanner?.content?.length) {
@@ -346,9 +360,11 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 							}
 
 							// Rebuild dependency graph to include the new file
-							depGraph = await buildDependencyGraph(configPath, [
-								...state.files.keys(),
-							]);
+							depGraph = await buildDependencyGraph(
+								configPath,
+								[...state.files.keys()],
+								resolvedAliases,
+							);
 
 							// Watch new dependencies discovered by importree
 							for (const trackedFile of depGraph.trackedFiles) {

@@ -19,12 +19,17 @@ export default defineConfig({
 		styleframe({
 			resolve: {
 				alias: {
-					"@styleframe/theme": path.resolve(dirname, "../../theme/src"),
+					"@styleframe/theme": "../../theme/src/index.ts",
 				},
 			},
 		}),
 		vue(),
 	],
+	resolve: {
+		alias: {
+			"@styleframe/theme": path.resolve(dirname, "../../theme/src/index.ts"),
+		},
+	},
 	test: {
 		projects: [
 			{

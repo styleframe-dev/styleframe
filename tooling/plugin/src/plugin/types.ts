@@ -21,6 +21,11 @@ export interface Options {
 		/** Output directory for generated types (default: ".styleframe") */
 		outDir?: string;
 	};
+	/** Module resolution options */
+	resolve?: {
+		/** Path alias mappings (e.g., { '@styleframe/theme': './theme/src/index.ts' }) */
+		alias?: Record<string, string>;
+	};
 	/** Scanner options for auto-detecting utility classes in content files */
 	scanner?: {
 		/** Glob patterns for content files to scan for utility class names */
