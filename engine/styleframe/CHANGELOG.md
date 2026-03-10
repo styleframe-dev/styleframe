@@ -1,5 +1,68 @@
 # styleframe
 
+## 3.2.0
+
+### Minor Changes
+
+- [#129](https://github.com/styleframe-dev/styleframe/pull/129) [`2610041`](https://github.com/styleframe-dev/styleframe/commit/2610041beb03a8afc8de17af8857b9931f3359b0) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add custom utility syntax support and separate class name generation from CSS escaping
+  - Extract `defaultUtilitySelectorFn` to `@styleframe/core` returning raw class names; add `classNameToCssSelector` for consistent CSS escaping
+  - Add `ScannerUtilitiesConfig` with pluggable `pattern`, `parse`, and `selector` functions for custom utility naming conventions
+  - Thread custom utilities config through extractor, matcher, scanner, and plugin layers
+
+- [#135](https://github.com/styleframe-dev/styleframe/pull/135) [`228b0c0`](https://github.com/styleframe-dev/styleframe/commit/228b0c0bc36332d371dd8a7ca430ebe2be3ac046) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Implement importree-based HMR with selective cache invalidation
+  - Replace full-reload HMR with importree-powered dependency graph for selective Jiti cache invalidation
+  - Use persistent shared Jiti instance with `moduleCache: true` so unchanged dependencies stay cached across reloads
+  - Add `dependency-graph` module that builds merged forward/reverse import trees for cross-entry dependency tracking
+  - Export `createSharedJiti`, `clearJitiCache`, and `clearAllJitiCache` from `@styleframe/loader`
+  - Remove `resolve.alias` option in favor of automatic dependency detection via importree
+
+- [#137](https://github.com/styleframe-dev/styleframe/pull/137) [`8d6e731`](https://github.com/styleframe-dev/styleframe/commit/8d6e7316dff6ebd0ed5cc29a4061c50786e9e8f5) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `resolve.alias` option to plugin for custom path resolution
+  - Add `resolve.alias` option to plugin types for configuring module path alias mappings
+  - Resolve relative alias paths to absolute paths relative to the plugin working directory
+  - Pass aliases through to Jiti loader and importree dependency graph for proper module resolution and HMR tracking
+
+- [#133](https://github.com/styleframe-dev/styleframe/pull/133) [`ce62d31`](https://github.com/styleframe-dev/styleframe/commit/ce62d318275deed277d828fdd8d2500c1a9d767f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Refactor design tokens preset, add Button recipe, and improve Badge recipe
+  - Refactor `useDesignTokensPreset` with improved variable composables and `createUseDerivedVariable` utility
+  - Add `useButtonRecipe` with color, variant, and size support including compound variant styles
+  - Improve `useBadgeRecipe` sizing, contrast, and accessibility
+  - Update color references from `@color.light`/`@color.dark` to `@color.white`/`@color.black`
+  - Enhance `createUseRecipe` with better types and `@`-prefixed token reference support in recipe definitions
+
+- [#138](https://github.com/styleframe-dev/styleframe/pull/138) [`5f06459`](https://github.com/styleframe-dev/styleframe/commit/5f064599bae7a3679aeef0dbcb9bfaf0c4167355) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add sanitize.css preset with configurable normalization categories
+  - Add `useSanitizePreset` with opt-out config for base, forms, typography, and reduced motion
+  - Add `useSanitizeBaseSelectors` with cross-browser normalization (box-sizing, margins, forms, accessibility)
+  - Add `useSanitizeFormsSelectors` with form element normalization and consistent select appearance
+  - Add `useSanitizeTypographySelectors` with system font stack defaults
+  - Add `useSanitizeReduceMotionSelectors` with `prefers-reduced-motion` media query support
+
+- [#133](https://github.com/styleframe-dev/styleframe/pull/133) [`ce62d31`](https://github.com/styleframe-dev/styleframe/commit/ce62d318275deed277d828fdd8d2500c1a9d767f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add unique id to token types, validate @ references, and resolve utility sibling keys
+  - Add unique `id` field to Root, Selector, AtRule, Theme, and Utility token types for stable identity tracking
+  - Validate `@`-prefixed string references against root-level variables in `parseDeclarationsBlock`, throwing descriptive errors for undefined variables
+  - Add null/undefined guard to `ref()` with clear error messages
+  - Support `@`-prefixed values in utility entries that resolve to sibling keys (e.g., `{ default: "@solid", solid: "solid" }`)
+
+- [#130](https://github.com/styleframe-dev/styleframe/pull/130) [`7ec356a`](https://github.com/styleframe-dev/styleframe/commit/7ec356a0ff945c58df7de5740ef85c6ed781a50a) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add custom utility name support and shorthand utilities preset
+  - Add `names` config option to `useUtilitiesPreset` for custom CSS class name prefixes on any utility
+  - Add `utilityOptions` parameter to `createUseUtility` and `createUseSpacingUtility` to support name overrides
+  - Add `useShorthandUtilitiesPreset` with TailwindCSS-compatible shorthand mappings (e.g., `._m:sm` instead of `._margin:sm`)
+
+### Patch Changes
+
+- [#128](https://github.com/styleframe-dev/styleframe/pull/128) [`71009c2`](https://github.com/styleframe-dev/styleframe/commit/71009c2c0a07a0bfd240e70e61020c8b7e923edb) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add auto-resolve for variables and at-rules in `css` template literal interpolations
+  - Variables interpolated directly in `css` are automatically converted to references: `` css`${variable}` `` is equivalent to `` css`${ref(variable)}` ``
+  - AtRule and keyframes instances interpolated in `css` resolve to their rule name: `` css`${keyframeInstance}` `` is equivalent to `` css`${keyframeInstance.rule}` ``
+
+- [#126](https://github.com/styleframe-dev/styleframe/pull/126) [`3ffb881`](https://github.com/styleframe-dev/styleframe/commit/3ffb8814f9b7db1912180b2e0c53e1b6675df4d6) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Extract modifier registration from `useUtilitiesPreset` into a dedicated `useModifiersPreset` composable with independent configuration
+
+- [#130](https://github.com/styleframe-dev/styleframe/pull/130) [`7ec356a`](https://github.com/styleframe-dev/styleframe/commit/7ec356a0ff945c58df7de5740ef85c6ed781a50a) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Document custom utility names and `useShorthandUtilitiesPreset` in utilities preset docs
+  - Add `Custom Names` section documenting the `names` config option in `useUtilitiesPreset`
+  - Add `useShorthandUtilitiesPreset` section with usage examples and full shorthand name mapping table
+
+- Updated dependencies [[`71009c2`](https://github.com/styleframe-dev/styleframe/commit/71009c2c0a07a0bfd240e70e61020c8b7e923edb), [`2610041`](https://github.com/styleframe-dev/styleframe/commit/2610041beb03a8afc8de17af8857b9931f3359b0), [`228b0c0`](https://github.com/styleframe-dev/styleframe/commit/228b0c0bc36332d371dd8a7ca430ebe2be3ac046), [`8d6e731`](https://github.com/styleframe-dev/styleframe/commit/8d6e7316dff6ebd0ed5cc29a4061c50786e9e8f5), [`ce62d31`](https://github.com/styleframe-dev/styleframe/commit/ce62d318275deed277d828fdd8d2500c1a9d767f)]:
+  - @styleframe/core@3.1.0
+  - @styleframe/plugin@3.1.0
+  - @styleframe/transpiler@3.0.1
+
 ## 3.1.0
 
 ### Minor Changes
