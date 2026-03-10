@@ -1,5 +1,18 @@
 # @styleframe/transpiler
 
+## 3.0.1
+
+### Patch Changes
+
+- [#133](https://github.com/styleframe-dev/styleframe/pull/133) [`ce62d31`](https://github.com/styleframe-dev/styleframe/commit/ce62d318275deed277d828fdd8d2500c1a9d767f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add unique id to token types, validate @ references, and resolve utility sibling keys
+  - Add unique `id` field to Root, Selector, AtRule, Theme, and Utility token types for stable identity tracking
+  - Validate `@`-prefixed string references against root-level variables in `parseDeclarationsBlock`, throwing descriptive errors for undefined variables
+  - Add null/undefined guard to `ref()` with clear error messages
+  - Support `@`-prefixed values in utility entries that resolve to sibling keys (e.g., `{ default: "@solid", solid: "solid" }`)
+
+- Updated dependencies [[`71009c2`](https://github.com/styleframe-dev/styleframe/commit/71009c2c0a07a0bfd240e70e61020c8b7e923edb), [`2610041`](https://github.com/styleframe-dev/styleframe/commit/2610041beb03a8afc8de17af8857b9931f3359b0), [`ce62d31`](https://github.com/styleframe-dev/styleframe/commit/ce62d318275deed277d828fdd8d2500c1a9d767f)]:
+  - @styleframe/core@3.1.0
+
 ## 3.0.0
 
 ### Major Changes
