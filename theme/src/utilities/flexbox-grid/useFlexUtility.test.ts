@@ -96,7 +96,7 @@ describe("useFlexBasisUtility", () => {
 		useFlexBasisUtility(s, { "1/2": "50%" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._flex-basis\\:1/2 {");
+		expect(css).toContain("._flex-basis\\:1\\/2 {");
 		expect(css).toContain("flex-basis: 50%;");
 	});
 

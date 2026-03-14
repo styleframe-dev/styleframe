@@ -186,6 +186,42 @@ describe("createVariableFunction", () => {
 		});
 	});
 
+	describe("@ reference shorthand", () => {
+		it("should resolve @-prefixed value to a reference", () => {
+			const result = variable("color", "@other-var");
+
+			expect(result.value).toEqual({
+				type: "reference",
+				name: "other-var",
+			});
+		});
+
+		it("should resolve @-prefixed value with dot notation", () => {
+			const result = variable("color", "@color.primary");
+
+			expect(result.value).toEqual({
+				type: "reference",
+				name: "color.primary",
+			});
+		});
+
+		it("should not convert regular string values", () => {
+			const result = variable("color", "#ff0000");
+			expect(result.value).toBe("#ff0000");
+		});
+
+		it("should resolve @-prefixed value when updating existing variable", () => {
+			const first = variable("color", "red");
+			const updated = variable("color", "@other-color");
+
+			expect(updated).toBe(first);
+			expect(updated.value).toEqual({
+				type: "reference",
+				name: "other-color",
+			});
+		});
+	});
+
 	describe("accepting variable instance as name", () => {
 		let root: Root;
 		let variable: ReturnType<typeof createVariableFunction>;

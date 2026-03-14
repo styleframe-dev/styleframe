@@ -55,4 +55,8 @@ describe("classNameToCssSelector", () => {
 			"._hover\\:focus\\:margin\\:sm",
 		);
 	});
+
+	it("should escape forward slashes", () => {
+		expect(classNameToCssSelector("_width:1/2")).toBe("._width\\:1\\/2");
+	});
 });

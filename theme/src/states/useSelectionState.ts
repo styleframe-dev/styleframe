@@ -5,20 +5,20 @@ export const defaultSelectionValues = {
 	color: "#ffffff",
 } as const;
 
-export interface SelectionElementConfig {
+export interface SelectionStateConfig {
 	background?: TokenValue;
 	color?: string;
 }
 
-export interface SelectionElementResult {
+export interface SelectionStateResult {
 	selectionBackground: Variable<"selection.background">;
 	selectionColor: Variable<"selection.color">;
 }
 
-export function useSelectionElement(
+export function useSelectionState(
 	s: Styleframe,
-	config: SelectionElementConfig = {},
-): SelectionElementResult {
+	config: SelectionStateConfig = {},
+): SelectionStateResult {
 	const background = config.background ?? defaultSelectionValues.background;
 	const color = config.color ?? defaultSelectionValues.color;
 

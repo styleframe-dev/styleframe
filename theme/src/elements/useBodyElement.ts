@@ -19,6 +19,9 @@ export interface BodyElementConfig {
 export interface BodyElementResult {
 	bodyColor: Variable<"body.color">;
 	bodyBackground: Variable<"body.background">;
+	bodyFontFamily: Variable<"body.font-family">;
+	bodyFontSize: Variable<"body.font-size">;
+	bodyLineHeight: Variable<"body.line-height">;
 }
 
 export function useBodyElement(
@@ -27,19 +30,31 @@ export function useBodyElement(
 ): BodyElementResult {
 	const color = config.color ?? defaultBodyValues.color;
 	const background = config.background ?? defaultBodyValues.background;
+	const fontFamily = config.fontFamily ?? defaultBodyValues.fontFamily;
+	const fontSize = config.fontSize ?? defaultBodyValues.fontSize;
+	const lineHeight = config.lineHeight ?? defaultBodyValues.lineHeight;
 
 	const bodyColor = s.variable("body.color", color);
 	const bodyBackground = s.variable("body.background", background);
+	const bodyFontFamily = s.variable("body.font-family", fontFamily);
+	const bodyFontSize = s.variable("body.font-size", fontSize);
+	const bodyLineHeight = s.variable("body.line-height", lineHeight);
 
 	s.selector("body", {
-		fontFamily: config.fontFamily ?? defaultBodyValues.fontFamily,
-		fontSize: config.fontSize ?? defaultBodyValues.fontSize,
-		lineHeight: config.lineHeight ?? defaultBodyValues.lineHeight,
+		fontFamily: s.ref(bodyFontFamily),
+		fontSize: s.ref(bodyFontSize),
+		lineHeight: s.ref(bodyLineHeight),
 		color: s.ref(bodyColor),
 		background: s.ref(bodyBackground),
 		"-webkit-font-smoothing": "antialiased",
 		"-moz-osx-font-smoothing": "grayscale",
 	});
 
-	return { bodyColor, bodyBackground };
+	return {
+		bodyColor,
+		bodyBackground,
+		bodyFontFamily,
+		bodyFontSize,
+		bodyLineHeight,
+	};
 }

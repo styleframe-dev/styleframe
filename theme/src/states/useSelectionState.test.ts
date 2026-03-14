@@ -1,7 +1,7 @@
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
 import { useDesignTokensPreset } from "../presets/useDesignTokensPreset";
-import { useSelectionElement } from "./useSelectionElement";
+import { useSelectionState } from "./useSelectionState";
 
 function createInstance() {
 	const s = styleframe();
@@ -9,10 +9,10 @@ function createInstance() {
 	return s;
 }
 
-describe("useSelectionElement", () => {
+describe("useSelectionState", () => {
 	it("should create selection variables and selector", () => {
 		const s = createInstance();
-		const result = useSelectionElement(s);
+		const result = useSelectionState(s);
 
 		expect(result.selectionBackground).toBeDefined();
 		expect(result.selectionColor).toBeDefined();

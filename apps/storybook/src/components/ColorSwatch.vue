@@ -10,6 +10,7 @@ const props = defineProps<{
 
 const previewEl = vueRef<HTMLElement | null>(null);
 const contrastRatio = vueRef<number | null>(null);
+const passesAA = vueRef(false);
 const passesAAA = vueRef(false);
 
 function parseColor(color: string): [number, number, number] {
@@ -48,6 +49,7 @@ onMounted(() => {
 
 	const ratio = getContrastRatio(bgLum, fgLum);
 	contrastRatio.value = Math.round(ratio * 100) / 100;
+	passesAA.value = ratio >= 4.5;
 	passesAAA.value = ratio >= 7;
 });
 </script>
@@ -64,8 +66,8 @@ onMounted(() => {
 			<div class="swatch-card__label">
 				Contrast Ratio: {{ contrastRatio ?? '–' }}:1
 
-				<div :class="[passesAAA ? '_color:success' : '_color:danger']">
-					WCAG {{ passesAAA ? 'AAA ✓' : 'AAA ✗' }}
+				<div :class="[passesAAA ? '_color:success' : passesAA ? '_color:warning' : '_color:danger']">
+					WCAG {{ passesAAA ? 'AAA ✓' : passesAA ? 'AA ✓' : 'AA ✗' }}
 				</div>
 			</div>
 		</template>

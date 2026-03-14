@@ -373,7 +373,7 @@ describe("createUtilityConsumer", () => {
 		}
 
 		const halfResult = consumeUtility(halfUtility, options);
-		const expectedHalf = `._p\\:1/2 {
+		const expectedHalf = `._p\\:1\\/2 {
 \tpadding: 0.125rem;
 }`;
 		expect(halfResult).toBe(expectedHalf);

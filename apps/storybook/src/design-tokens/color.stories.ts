@@ -1,5 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { colorValues } from "@styleframe/theme";
+
+const textColorKeys = Object.keys(colorValues).filter((key) =>
+	key.startsWith("text"),
+);
+const baseColorKeys = Object.keys(colorValues).filter(
+	(key) => !key.startsWith("text"),
+);
 import ColorSwatch from "../components/ColorSwatch.vue";
 import StoryGrid from "../components/StoryGrid.vue";
 
@@ -22,7 +29,23 @@ export const AllColors: StoryObj = {
 	render: () => ({
 		components: { ColorSwatch, StoryGrid },
 		setup() {
-			return { items: Object.keys(colorValues) };
+			return { items: baseColorKeys };
+		},
+		template: `
+			<StoryGrid :items="items">
+				<template #default="{ item }">
+					<ColorSwatch :name="item" :value="item" :label="item" />
+				</template>
+			</StoryGrid>
+		`,
+	}),
+};
+
+export const TextColors: StoryObj = {
+	render: () => ({
+		components: { ColorSwatch, StoryGrid },
+		setup() {
+			return { items: textColorKeys };
 		},
 		template: `
 			<StoryGrid :items="items">
@@ -80,5 +103,33 @@ export const Neutral: Story = {
 	args: {
 		name: "neutral",
 		value: "neutral",
+	},
+};
+
+export const Text: Story = {
+	args: {
+		name: "text",
+		value: "text",
+	},
+};
+
+export const TextWeak: Story = {
+	args: {
+		name: "text-weak",
+		value: "text-weak",
+	},
+};
+
+export const TextWeaker: Story = {
+	args: {
+		name: "text-weaker",
+		value: "text-weaker",
+	},
+};
+
+export const TextWeakest: Story = {
+	args: {
+		name: "text-weakest",
+		value: "text-weakest",
 	},
 };

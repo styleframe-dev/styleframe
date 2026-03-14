@@ -102,7 +102,7 @@ export function getFilesToInvalidate(
 		return [changedFile];
 	}
 
-	return getAffectedFiles(depGraph.mergedTree, changedFile);
+	return [changedFile, ...getAffectedFiles(depGraph.mergedTree, changedFile)];
 }
 
 /**

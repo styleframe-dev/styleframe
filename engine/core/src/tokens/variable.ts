@@ -1,4 +1,11 @@
-import type { Container, Root, TokenValue, Variable } from "../types";
+import { isKeyReferenceValue } from "../typeGuards";
+import type {
+	Container,
+	Reference,
+	Root,
+	TokenValue,
+	Variable,
+} from "../types";
 
 export function createVariableFunction(parent: Container, _root: Root) {
 	return function variable<Name extends string>(
@@ -14,6 +21,11 @@ export function createVariableFunction(parent: Container, _root: Root) {
 			typeof nameOrInstance === "string" ? nameOrInstance : nameOrInstance.name
 		) as Name;
 
+		// Resolve @-prefixed string values to references
+		const resolvedValue: TokenValue = isKeyReferenceValue(value)
+			? ({ type: "reference", name: value.substring(1) } as Reference)
+			: value;
+
 		const existingVariable = parent.variables.find(
 			(child) => child.name === name,
 		) as Variable<Name> | undefined;
@@ -25,7 +37,7 @@ export function createVariableFunction(parent: Container, _root: Root) {
 
 		// If default is false and the variable exists, update the value
 		if (existingVariable) {
-			existingVariable.value = value;
+			existingVariable.value = resolvedValue;
 			return existingVariable;
 		}
 
@@ -33,7 +45,7 @@ export function createVariableFunction(parent: Container, _root: Root) {
 		const instance: Variable<Name> = {
 			type: "variable",
 			name,
-			value,
+			value: resolvedValue,
 		};
 
 		parent.variables.push(instance);

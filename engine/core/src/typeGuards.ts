@@ -103,6 +103,10 @@ export function isContainer(value: unknown): value is Container {
 	);
 }
 
+export function isKeyReferenceValue(value: unknown): value is `@${string}` {
+	return typeof value === "string" && value.startsWith("@");
+}
+
 export function isStyleframe(value: unknown): value is Styleframe {
 	return (
 		isObject(value) &&

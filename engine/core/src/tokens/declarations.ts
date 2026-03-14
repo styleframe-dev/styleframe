@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noConfusingVoidType: Returning declarations in callback is optional */
-import { isTokenValue } from "../typeGuards";
+import { isKeyReferenceValue, isTokenValue } from "../typeGuards";
 import type {
 	Container,
 	DeclarationsBlock,
@@ -76,7 +76,7 @@ export function parseDeclarationsBlock(
 	// Resolve @-prefixed string values to variable references
 	for (const key in declarations) {
 		const value = declarations[key];
-		if (typeof value === "string" && value[0] === "@") {
+		if (isKeyReferenceValue(value)) {
 			const name = value.slice(1);
 			if (root && !root.variables.some((v) => v.name === name)) {
 				throw new Error(

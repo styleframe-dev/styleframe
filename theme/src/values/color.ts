@@ -8,4 +8,8 @@ export const colorValues = {
 	neutral: "#f8fafc",
 	white: "#ffffff",
 	black: "#000000",
+	text: "#111111",
+	"text-weak": "#595959",
+	"text-weaker": "#767676",
+	"text-weakest": "#949494",
 } as const;
