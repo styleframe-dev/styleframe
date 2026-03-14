@@ -1,6 +1,10 @@
 import { styleframe } from "virtual:styleframe";
 import { useSwatchDimensions } from "./primitives/tokens.styleframe";
-import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
+import {
+	useBodyElement,
+	useDesignTokensPreset,
+	useUtilitiesPreset,
+} from "@styleframe/theme";
 
 const s = styleframe();
 
@@ -17,7 +21,13 @@ const {
 	colorDanger,
 	colorInfo,
 	colorNeutral,
+	colorText,
+	colorTextWeak,
+	colorTextWeaker,
+	colorTextWeakest,
 } = colors;
+
+const { bodyBackground } = useBodyElement(s);
 
 const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
 
@@ -66,6 +76,22 @@ export const colorSwatch = s.recipe({
 			black: {
 				color: s.ref(colorWhite),
 				background: s.ref(colorBlack),
+			},
+			text: {
+				color: s.ref(colorText),
+				background: s.ref(bodyBackground),
+			},
+			"text-weak": {
+				color: s.ref(colorTextWeak),
+				background: s.ref(bodyBackground),
+			},
+			"text-weaker": {
+				color: s.ref(colorTextWeaker),
+				background: s.ref(bodyBackground),
+			},
+			"text-weakest": {
+				color: s.ref(colorTextWeakest),
+				background: s.ref(bodyBackground),
 			},
 		},
 	},

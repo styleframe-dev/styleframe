@@ -15,6 +15,9 @@ import {
 	// Blend modes
 	backgroundBlendModeValues,
 	mixBlendModeValues,
+	// Sizing
+	heightValues,
+	widthValues,
 	// Borders utility
 	borderStyleValues,
 	borderWidthValues,
@@ -546,6 +549,10 @@ export interface UtilitiesPresetConfig {
 	position?: Record<string, string> | false;
 	visibility?: Record<string, string> | false;
 
+	// Sizing
+	width?: Record<string, string> | false;
+	height?: Record<string, string> | false;
+
 	// Borders
 	borderStyle?: Record<string, string> | false;
 	borderWidth?: Record<string, string> | false;
@@ -767,6 +774,8 @@ export function useUtilitiesPreset(
 	const overscroll = resolveValues(config.overscroll, overscrollValues);
 	const position = resolveValues(config.position, positionValues);
 	const visibility = resolveValues(config.visibility, visibilityValues);
+	const width = resolveValues(config.width, widthValues);
+	const height = resolveValues(config.height, heightValues);
 	const borderStyle = resolveValues(config.borderStyle, borderStyleValues);
 	const borderWidth = resolveValues(config.borderWidth, borderWidthValues);
 	const borderCollapse = resolveValues(
@@ -1274,6 +1283,22 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("visibility"),
 	);
 	if (visibility) createVisibilityUtility(visibility);
+
+	const createWidthUtility = useWidthUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("width"),
+	);
+	if (width) createWidthUtility(width);
+
+	const createHeightUtility = useHeightUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("height"),
+	);
+	if (height) createHeightUtility(height);
 
 	const createBorderStyleUtility = useBorderStyleUtility(
 		s,
@@ -2342,12 +2367,7 @@ export function useUtilitiesPreset(
 		),
 
 		// Sizing
-		createHeightUtility: useHeightUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("height"),
-		),
+		createHeightUtility,
 		createMaxHeightUtility: useMaxHeightUtility(
 			s,
 			undefined,
@@ -2378,12 +2398,7 @@ export function useUtilitiesPreset(
 			undefined,
 			resolveUtilityOptions("size"),
 		),
-		createWidthUtility: useWidthUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("width"),
-		),
+		createWidthUtility,
 
 		// Spacing
 		createMarginBlockUtility: useMarginBlockUtility(

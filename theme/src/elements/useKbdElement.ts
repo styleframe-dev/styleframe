@@ -23,6 +23,11 @@ export interface KbdElementConfig {
 export interface KbdElementResult {
 	kbdBackground: Variable<"kbd.background">;
 	kbdColor: Variable<"kbd.color">;
+	kbdFontFamily: Variable<"kbd.font-family">;
+	kbdFontSize: Variable<"kbd.font-size">;
+	kbdBorderRadius: Variable<"kbd.border-radius">;
+	kbdPaddingBlock: Variable<"kbd.padding-block">;
+	kbdPaddingInline: Variable<"kbd.padding-inline">;
 }
 
 export function useKbdElement(
@@ -31,18 +36,28 @@ export function useKbdElement(
 ): KbdElementResult {
 	const background = config.background ?? defaultKbdValues.background;
 	const color = config.color ?? defaultKbdValues.color;
+	const fontFamily = config.fontFamily ?? defaultKbdValues.fontFamily;
+	const fontSize = config.fontSize ?? defaultKbdValues.fontSize;
+	const borderRadius = config.borderRadius ?? defaultKbdValues.borderRadius;
+	const paddingBlock = config.paddingBlock ?? defaultKbdValues.paddingBlock;
+	const paddingInline = config.paddingInline ?? defaultKbdValues.paddingInline;
 
 	const kbdBackground = s.variable("kbd.background", background);
 	const kbdColor = s.variable("kbd.color", color);
+	const kbdFontFamily = s.variable("kbd.font-family", fontFamily);
+	const kbdFontSize = s.variable("kbd.font-size", fontSize);
+	const kbdBorderRadius = s.variable("kbd.border-radius", borderRadius);
+	const kbdPaddingBlock = s.variable("kbd.padding-block", paddingBlock);
+	const kbdPaddingInline = s.variable("kbd.padding-inline", paddingInline);
 
 	s.selector("kbd", {
 		background: s.ref(kbdBackground),
 		color: s.ref(kbdColor),
-		fontFamily: config.fontFamily ?? defaultKbdValues.fontFamily,
-		fontSize: config.fontSize ?? defaultKbdValues.fontSize,
-		borderRadius: config.borderRadius ?? defaultKbdValues.borderRadius,
-		paddingBlock: config.paddingBlock ?? defaultKbdValues.paddingBlock,
-		paddingInline: config.paddingInline ?? defaultKbdValues.paddingInline,
+		fontFamily: s.ref(kbdFontFamily),
+		fontSize: s.ref(kbdFontSize),
+		borderRadius: s.ref(kbdBorderRadius),
+		paddingBlock: s.ref(kbdPaddingBlock),
+		paddingInline: s.ref(kbdPaddingInline),
 		display: "inline-block",
 		"& > kbd": {
 			paddingBlock: "0",
@@ -51,5 +66,13 @@ export function useKbdElement(
 		},
 	});
 
-	return { kbdBackground, kbdColor };
+	return {
+		kbdBackground,
+		kbdColor,
+		kbdFontFamily,
+		kbdFontSize,
+		kbdBorderRadius,
+		kbdPaddingBlock,
+		kbdPaddingInline,
+	};
 }

@@ -17,6 +17,9 @@ const dirname =
 export default defineConfig({
 	plugins: [
 		styleframe({
+			scanner: {
+				content: ["./src/**/*.stories.{ts,tsx}"],
+			},
 			resolve: {
 				alias: {
 					"@styleframe/theme": "../../theme/src/index.ts",

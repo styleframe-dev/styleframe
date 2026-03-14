@@ -52,7 +52,7 @@ describe("useGlobalPreset", () => {
 			expect(css).toContain("--body--background");
 			expect(css).toContain("--heading--color");
 			expect(css).toContain("--link--color");
-			expect(css).toContain("--link--hover-color");
+			expect(css).toContain("--link--hover--color");
 			expect(css).toContain("--selection--background");
 			expect(css).toContain("--selection--color");
 			expect(css).toContain("--focus--outline-color");
@@ -63,9 +63,9 @@ describe("useGlobalPreset", () => {
 			useGlobalPreset(s);
 
 			const css = consumeCSS(s.root, s.options);
-			expect(css).toContain("var(--font-family)");
-			expect(css).toContain("var(--font-size)");
-			expect(css).toContain("var(--line-height)");
+			expect(css).toContain("var(--body--font-family)");
+			expect(css).toContain("var(--body--font-size)");
+			expect(css).toContain("var(--body--line-height)");
 			expect(css).toContain("-webkit-font-smoothing: antialiased");
 		});
 
@@ -74,14 +74,14 @@ describe("useGlobalPreset", () => {
 			useGlobalPreset(s);
 
 			const css = consumeCSS(s.root, s.options);
-			expect(css).toContain("font-weight: var(--font-weight--bold)");
-			expect(css).toContain("line-height: var(--line-height--tight)");
-			expect(css).toContain("var(--font-size--4xl)");
-			expect(css).toContain("var(--font-size--3xl)");
-			expect(css).toContain("var(--font-size--2xl)");
-			expect(css).toContain("var(--font-size--xl)");
-			expect(css).toContain("var(--font-size--lg)");
-			expect(css).toContain("var(--font-size--md)");
+			expect(css).toContain("var(--heading--font-weight)");
+			expect(css).toContain("var(--heading--line-height)");
+			expect(css).toContain("var(--heading--h1--font-size)");
+			expect(css).toContain("var(--heading--h2--font-size)");
+			expect(css).toContain("var(--heading--h3--font-size)");
+			expect(css).toContain("var(--heading--h4--font-size)");
+			expect(css).toContain("var(--heading--h5--font-size)");
+			expect(css).toContain("var(--heading--h6--font-size)");
 		});
 
 		it("should generate link selectors with hover state", () => {
@@ -90,7 +90,7 @@ describe("useGlobalPreset", () => {
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("var(--link--color)");
-			expect(css).toContain("var(--link--hover-color)");
+			expect(css).toContain("var(--link--hover--color)");
 		});
 
 		it("should generate code selectors", () => {
@@ -100,7 +100,8 @@ describe("useGlobalPreset", () => {
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("code, samp");
 			expect(css).toContain("pre");
-			expect(css).toContain("var(--font-family--mono)");
+			expect(css).toContain("var(--code--font-family)");
+			expect(css).toContain("var(--pre--font-family)");
 		});
 
 		it("should generate selection selector", () => {
@@ -201,6 +202,8 @@ describe("useGlobalPreset", () => {
 				address: false,
 				samp: false,
 				dl: false,
+				dt: false,
+				dd: false,
 				ol: false,
 				ul: false,
 				paragraph: false,
@@ -211,15 +214,25 @@ describe("useGlobalPreset", () => {
 				summary: false,
 			});
 
+			expect(result.abbr).toBeUndefined();
 			expect(result.body).toBeUndefined();
 			expect(result.heading).toBeUndefined();
 			expect(result.link).toBeUndefined();
+			expect(result.code).toBeUndefined();
 			expect(result.selection).toBeUndefined();
 			expect(result.focus).toBeUndefined();
 			expect(result.hr).toBeUndefined();
 			expect(result.kbd).toBeUndefined();
 			expect(result.mark).toBeUndefined();
 			expect(result.caption).toBeUndefined();
+			expect(result.dl).toBeUndefined();
+			expect(result.dt).toBeUndefined();
+			expect(result.dd).toBeUndefined();
+			expect(result.samp).toBeUndefined();
+			expect(result.paragraph).toBeUndefined();
+			expect(result.ol).toBeUndefined();
+			expect(result.ul).toBeUndefined();
+			expect(result.pre).toBeUndefined();
 			expect(s.root.variables).toHaveLength(0);
 			expect(s.root.children).toHaveLength(0);
 		});

@@ -27,6 +27,7 @@ export * from "./borders";
 export * from "./flexboxGrid";
 export * from "./interactivity";
 export * from "./layout";
+export * from "./sizing";
 export * from "./tables";
 export * from "./transforms";
 export * from "./transitions";

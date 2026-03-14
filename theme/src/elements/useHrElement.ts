@@ -16,6 +16,9 @@ export interface HrElementConfig {
 
 export interface HrElementResult {
 	hrBorderColor: Variable<"hr.border-color">;
+	hrBorderWidth: Variable<"hr.border-width">;
+	hrBorderStyle: Variable<"hr.border-style">;
+	hrMargin: Variable<"hr.margin">;
 }
 
 export function useHrElement(
@@ -23,18 +26,27 @@ export function useHrElement(
 	config: HrElementConfig = {},
 ): HrElementResult {
 	const borderColor = config.borderColor ?? defaultHrValues.borderColor;
+	const borderWidth = config.borderWidth ?? defaultHrValues.borderWidth;
+	const borderStyle = config.borderStyle ?? defaultHrValues.borderStyle;
+	const margin = config.margin ?? defaultHrValues.margin;
+
 	const hrBorderColor = s.variable("hr.border-color", borderColor);
+	const hrBorderWidth = s.variable("hr.border-width", borderWidth);
+	const hrBorderStyle = s.variable("hr.border-style", borderStyle);
+	const hrMargin = s.variable("hr.margin", margin);
 
 	s.selector("hr", {
-		borderWidth: "0",
-		borderTopWidth: config.borderWidth ?? defaultHrValues.borderWidth,
-		borderTopStyle: config.borderStyle ?? defaultHrValues.borderStyle,
+		borderTopWidth: s.ref(hrBorderWidth),
+		borderTopStyle: s.ref(hrBorderStyle),
 		borderTopColor: s.ref(hrBorderColor),
-		marginTop: config.margin ?? defaultHrValues.margin,
-		marginBottom: config.margin ?? defaultHrValues.margin,
+		borderRightWidth: "0",
+		borderBottomWidth: "0",
+		borderLeftWidth: "0",
+		marginTop: s.ref(hrMargin),
+		marginBottom: s.ref(hrMargin),
 		marginLeft: "0",
 		marginRight: "0",
 	});
 
-	return { hrBorderColor };
+	return { hrBorderColor, hrBorderWidth, hrBorderStyle, hrMargin };
 }
