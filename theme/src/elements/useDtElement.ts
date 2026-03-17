@@ -4,10 +4,12 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultDtConfig = {
+export const defaultDtOptions: WithThemes<DtElementConfig> = {
 	fontWeight: "@font-weight.bold",
-} as const;
+};
 
 export interface DtElementConfig {
 	fontWeight?: TokenValue;
@@ -44,9 +46,13 @@ export function useDtSelectors(
 
 export function useDtElement(
 	s: Styleframe,
-	config: DtElementConfig = {},
+	options: WithThemes<DtElementConfig> = {},
 ): DtElementResult {
-	return useDtSelectors(s, {
-		fontWeight: config.fontWeight ?? defaultDtConfig.fontWeight,
-	});
+	const { themes, ...config } = mergeElementOptions(defaultDtOptions, options);
+
+	const result = useDtSelectors(s, config as Required<DtElementConfig>);
+
+	registerElementThemes(s, themes, useDtDesignTokens);
+
+	return result;
 }

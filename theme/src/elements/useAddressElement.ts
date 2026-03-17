@@ -4,10 +4,12 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultAddressConfig = {
+export const defaultAddressOptions: WithThemes<AddressElementConfig> = {
 	marginBottom: "@spacing",
-} as const;
+};
 
 export interface AddressElementConfig {
 	marginBottom?: TokenValue;
@@ -49,9 +51,19 @@ export function useAddressSelectors(
 
 export function useAddressElement(
 	s: Styleframe,
-	config: AddressElementConfig = {},
+	options: WithThemes<AddressElementConfig> = {},
 ): AddressElementResult {
-	return useAddressSelectors(s, {
-		marginBottom: config.marginBottom ?? defaultAddressConfig.marginBottom,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultAddressOptions,
+		options,
+	);
+
+	const result = useAddressSelectors(
+		s,
+		config as Required<AddressElementConfig>,
+	);
+
+	registerElementThemes(s, themes, useAddressDesignTokens);
+
+	return result;
 }

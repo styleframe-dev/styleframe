@@ -4,8 +4,10 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultKbdConfig = {
+export const defaultKbdOptions: WithThemes<KbdElementConfig> = {
 	background: "#1e293b",
 	color: "#ffffff",
 	fontFamily: "@font-family.mono",
@@ -13,7 +15,13 @@ export const defaultKbdConfig = {
 	borderRadius: "@border-radius.sm",
 	paddingBlock: "0.1875rem",
 	paddingInline: "0.375rem",
-} as const;
+	themes: {
+		dark: {
+			background: "@color.white",
+			color: "@color.black",
+		},
+	},
+};
 
 export interface KbdElementConfig {
 	background?: TokenValue;
@@ -95,15 +103,13 @@ export function useKbdSelectors(
 
 export function useKbdElement(
 	s: Styleframe,
-	config: KbdElementConfig = {},
+	options: WithThemes<KbdElementConfig> = {},
 ): KbdElementResult {
-	return useKbdSelectors(s, {
-		background: config.background ?? defaultKbdConfig.background,
-		color: config.color ?? defaultKbdConfig.color,
-		fontFamily: config.fontFamily ?? defaultKbdConfig.fontFamily,
-		fontSize: config.fontSize ?? defaultKbdConfig.fontSize,
-		borderRadius: config.borderRadius ?? defaultKbdConfig.borderRadius,
-		paddingBlock: config.paddingBlock ?? defaultKbdConfig.paddingBlock,
-		paddingInline: config.paddingInline ?? defaultKbdConfig.paddingInline,
-	});
+	const { themes, ...config } = mergeElementOptions(defaultKbdOptions, options);
+
+	const result = useKbdSelectors(s, config as Required<KbdElementConfig>);
+
+	registerElementThemes(s, themes, useKbdDesignTokens);
+
+	return result;
 }

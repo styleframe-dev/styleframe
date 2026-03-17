@@ -4,11 +4,13 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultParagraphConfig = {
+export const defaultParagraphOptions: WithThemes<ParagraphElementConfig> = {
 	marginTop: "0",
 	marginBottom: "@spacing",
-} as const;
+};
 
 export interface ParagraphElementConfig {
 	marginTop?: TokenValue;
@@ -59,10 +61,19 @@ export function useParagraphSelectors(
 
 export function useParagraphElement(
 	s: Styleframe,
-	config: ParagraphElementConfig = {},
+	options: WithThemes<ParagraphElementConfig> = {},
 ): ParagraphElementResult {
-	return useParagraphSelectors(s, {
-		marginTop: config.marginTop ?? defaultParagraphConfig.marginTop,
-		marginBottom: config.marginBottom ?? defaultParagraphConfig.marginBottom,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultParagraphOptions,
+		options,
+	);
+
+	const result = useParagraphSelectors(
+		s,
+		config as Required<ParagraphElementConfig>,
+	);
+
+	registerElementThemes(s, themes, useParagraphDesignTokens);
+
+	return result;
 }

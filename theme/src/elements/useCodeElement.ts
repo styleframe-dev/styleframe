@@ -4,11 +4,13 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultCodeConfig = {
+export const defaultCodeOptions: WithThemes<CodeElementConfig> = {
 	fontFamily: "@font-family.mono",
 	fontSize: "0.875em",
-} as const;
+};
 
 export interface CodeElementConfig {
 	fontFamily?: TokenValue;
@@ -50,10 +52,16 @@ export function useCodeSelectors(
 
 export function useCodeElement(
 	s: Styleframe,
-	config: CodeElementConfig = {},
+	options: WithThemes<CodeElementConfig> = {},
 ): CodeElementResult {
-	return useCodeSelectors(s, {
-		fontFamily: config.fontFamily ?? defaultCodeConfig.fontFamily,
-		fontSize: config.fontSize ?? defaultCodeConfig.fontSize,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultCodeOptions,
+		options,
+	);
+
+	const result = useCodeSelectors(s, config as Required<CodeElementConfig>);
+
+	registerElementThemes(s, themes, useCodeDesignTokens);
+
+	return result;
 }

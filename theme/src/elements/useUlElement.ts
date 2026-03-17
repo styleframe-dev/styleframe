@@ -4,11 +4,13 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultUlConfig = {
+export const defaultUlOptions: WithThemes<UlElementConfig> = {
 	marginBottom: "@spacing",
 	paddingLeft: "@spacing.lg",
-} as const;
+};
 
 export interface UlElementConfig {
 	marginBottom?: TokenValue;
@@ -56,10 +58,13 @@ export function useUlSelectors(
 
 export function useUlElement(
 	s: Styleframe,
-	config: UlElementConfig = {},
+	options: WithThemes<UlElementConfig> = {},
 ): UlElementResult {
-	return useUlSelectors(s, {
-		marginBottom: config.marginBottom ?? defaultUlConfig.marginBottom,
-		paddingLeft: config.paddingLeft ?? defaultUlConfig.paddingLeft,
-	});
+	const { themes, ...config } = mergeElementOptions(defaultUlOptions, options);
+
+	const result = useUlSelectors(s, config as Required<UlElementConfig>);
+
+	registerElementThemes(s, themes, useUlDesignTokens);
+
+	return result;
 }

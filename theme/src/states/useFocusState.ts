@@ -4,13 +4,15 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultFocusConfig = {
+export const defaultFocusOptions: WithThemes<FocusStateConfig> = {
 	outlineColor: "@color.primary",
 	outlineWidth: "2px",
 	outlineStyle: "solid",
 	outlineOffset: "2px",
-} as const;
+};
 
 export interface FocusStateConfig {
 	outlineColor?: TokenValue;
@@ -74,12 +76,16 @@ export function useFocusSelectors(
 
 export function useFocusState(
 	s: Styleframe,
-	config: FocusStateConfig = {},
+	options: WithThemes<FocusStateConfig> = {},
 ): FocusStateResult {
-	return useFocusSelectors(s, {
-		outlineColor: config.outlineColor ?? defaultFocusConfig.outlineColor,
-		outlineWidth: config.outlineWidth ?? defaultFocusConfig.outlineWidth,
-		outlineStyle: config.outlineStyle ?? defaultFocusConfig.outlineStyle,
-		outlineOffset: config.outlineOffset ?? defaultFocusConfig.outlineOffset,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultFocusOptions,
+		options,
+	);
+
+	const result = useFocusSelectors(s, config as Required<FocusStateConfig>);
+
+	registerElementThemes(s, themes, useFocusDesignTokens);
+
+	return result;
 }

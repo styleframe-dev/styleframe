@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { transformUtilityKey } from "./defaults";
+import { defaultUtilitySelectorFn, transformUtilityKey } from "./defaults";
 import type { Reference } from "./types";
 import { hashValue } from "./utils/hash";
 
@@ -523,5 +523,67 @@ describe("transformUtilityKey", () => {
 			expect(keys[0]).toMatch(/^[0-9a-f]{7}$/);
 			expect(result[keys[0]!]).toBe("1px solid red");
 		});
+	});
+});
+
+describe("defaultUtilitySelectorFn", () => {
+	it("should generate a selector with name and value", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "color",
+			value: "primary",
+			modifiers: [],
+		});
+
+		expect(result).toBe("_color:primary");
+	});
+
+	it("should omit value when it is 'default'", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "display",
+			value: "default",
+			modifiers: [],
+		});
+
+		expect(result).toBe("_display");
+	});
+
+	it("should prepend modifiers before name", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "color",
+			value: "primary",
+			modifiers: ["hover", "sm"],
+		});
+
+		expect(result).toBe("_hover:sm:color:primary");
+	});
+
+	it("should handle modifiers with default value", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "flex",
+			value: "default",
+			modifiers: ["md"],
+		});
+
+		expect(result).toBe("_md:flex");
+	});
+
+	it("should handle empty name gracefully", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "",
+			value: "value",
+			modifiers: [],
+		});
+
+		expect(result).toBe("_value");
+	});
+
+	it("should filter out falsy parts", () => {
+		const result = defaultUtilitySelectorFn({
+			name: "color",
+			value: "",
+			modifiers: [],
+		});
+
+		expect(result).toBe("_color");
 	});
 });

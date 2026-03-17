@@ -4,13 +4,15 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultLinkConfig = {
+export const defaultLinkOptions: WithThemes<LinkElementConfig> = {
 	color: "@color.primary",
 	textDecoration: "none",
 	hoverColor: "@color.primary-700",
 	hoverTextDecoration: "underline",
-} as const;
+};
 
 export interface LinkElementConfig {
 	color?: TokenValue;
@@ -70,13 +72,16 @@ export function useLinkSelectors(
 
 export function useLinkElement(
 	s: Styleframe,
-	config: LinkElementConfig = {},
+	options: WithThemes<LinkElementConfig> = {},
 ): LinkElementResult {
-	return useLinkSelectors(s, {
-		color: config.color ?? defaultLinkConfig.color,
-		textDecoration: config.textDecoration ?? defaultLinkConfig.textDecoration,
-		hoverColor: config.hoverColor ?? defaultLinkConfig.hoverColor,
-		hoverTextDecoration:
-			config.hoverTextDecoration ?? defaultLinkConfig.hoverTextDecoration,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultLinkOptions,
+		options,
+	);
+
+	const result = useLinkSelectors(s, config as Required<LinkElementConfig>);
+
+	registerElementThemes(s, themes, useLinkDesignTokens);
+
+	return result;
 }

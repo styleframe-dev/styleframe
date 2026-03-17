@@ -4,13 +4,8 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
-
-export const defaultHeadingConfig = {
-	fontFamily: "inherit",
-	fontWeight: "@font-weight.bold",
-	lineHeight: "@line-height.tight",
-	color: "inherit",
-} as const;
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
 export const defaultHeadingSizeConfig = {
 	h1: "@font-size.4xl",
@@ -20,6 +15,14 @@ export const defaultHeadingSizeConfig = {
 	h5: "@font-size.lg",
 	h6: "@font-size.md",
 } as const;
+
+export const defaultHeadingOptions: WithThemes<HeadingElementConfig> = {
+	fontFamily: "inherit",
+	fontWeight: "@font-weight.bold",
+	lineHeight: "@line-height.tight",
+	color: "inherit",
+	sizes: { ...defaultHeadingSizeConfig },
+};
 
 export interface HeadingElementConfig {
 	fontFamily?: TokenValue;
@@ -126,20 +129,25 @@ export function useHeadingSelectors(
 
 export function useHeadingElement(
 	s: Styleframe,
-	config: HeadingElementConfig = {},
+	options: WithThemes<HeadingElementConfig> = {},
 ): HeadingElementResult {
-	return useHeadingSelectors(s, {
-		color: config.color ?? defaultHeadingConfig.color,
-		fontFamily: config.fontFamily ?? defaultHeadingConfig.fontFamily,
-		fontWeight: config.fontWeight ?? defaultHeadingConfig.fontWeight,
-		lineHeight: config.lineHeight ?? defaultHeadingConfig.lineHeight,
-		sizes: {
-			h1: config.sizes?.h1 ?? defaultHeadingSizeConfig.h1,
-			h2: config.sizes?.h2 ?? defaultHeadingSizeConfig.h2,
-			h3: config.sizes?.h3 ?? defaultHeadingSizeConfig.h3,
-			h4: config.sizes?.h4 ?? defaultHeadingSizeConfig.h4,
-			h5: config.sizes?.h5 ?? defaultHeadingSizeConfig.h5,
-			h6: config.sizes?.h6 ?? defaultHeadingSizeConfig.h6,
-		},
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultHeadingOptions,
+		options,
+	);
+
+	// Deep-merge sizes since mergeElementOptions does shallow spread
+	config.sizes = {
+		...defaultHeadingSizeConfig,
+		...config.sizes,
+	};
+
+	const result = useHeadingSelectors(
+		s,
+		config as Required<HeadingElementConfig>,
+	);
+
+	registerElementThemes(s, themes, useHeadingDesignTokens);
+
+	return result;
 }

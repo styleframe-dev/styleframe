@@ -4,11 +4,13 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultAbbrConfig = {
+export const defaultAbbrOptions: WithThemes<AbbrElementConfig> = {
 	cursor: "help",
 	textDecoration: "underline dotted",
-} as const;
+};
 
 export interface AbbrElementConfig {
 	cursor?: TokenValue;
@@ -54,10 +56,16 @@ export function useAbbrSelectors(
 
 export function useAbbrElement(
 	s: Styleframe,
-	config: AbbrElementConfig = {},
+	options: WithThemes<AbbrElementConfig> = {},
 ): AbbrElementResult {
-	return useAbbrSelectors(s, {
-		cursor: config.cursor ?? defaultAbbrConfig.cursor,
-		textDecoration: config.textDecoration ?? defaultAbbrConfig.textDecoration,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultAbbrOptions,
+		options,
+	);
+
+	const result = useAbbrSelectors(s, config as Required<AbbrElementConfig>);
+
+	registerElementThemes(s, themes, useAbbrDesignTokens);
+
+	return result;
 }

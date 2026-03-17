@@ -4,11 +4,13 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultOlConfig = {
+export const defaultOlOptions: WithThemes<OlElementConfig> = {
 	marginBottom: "@spacing",
 	paddingLeft: "@spacing.lg",
-} as const;
+};
 
 export interface OlElementConfig {
 	marginBottom?: TokenValue;
@@ -56,10 +58,13 @@ export function useOlSelectors(
 
 export function useOlElement(
 	s: Styleframe,
-	config: OlElementConfig = {},
+	options: WithThemes<OlElementConfig> = {},
 ): OlElementResult {
-	return useOlSelectors(s, {
-		marginBottom: config.marginBottom ?? defaultOlConfig.marginBottom,
-		paddingLeft: config.paddingLeft ?? defaultOlConfig.paddingLeft,
-	});
+	const { themes, ...config } = mergeElementOptions(defaultOlOptions, options);
+
+	const result = useOlSelectors(s, config as Required<OlElementConfig>);
+
+	registerElementThemes(s, themes, useOlDesignTokens);
+
+	return result;
 }

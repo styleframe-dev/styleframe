@@ -4,10 +4,12 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultDlConfig = {
+export const defaultDlOptions: WithThemes<DlElementConfig> = {
 	marginBottom: "@spacing",
-} as const;
+};
 
 export interface DlElementConfig {
 	marginBottom?: TokenValue;
@@ -47,9 +49,13 @@ export function useDlSelectors(
 
 export function useDlElement(
 	s: Styleframe,
-	config: DlElementConfig = {},
+	options: WithThemes<DlElementConfig> = {},
 ): DlElementResult {
-	return useDlSelectors(s, {
-		marginBottom: config.marginBottom ?? defaultDlConfig.marginBottom,
-	});
+	const { themes, ...config } = mergeElementOptions(defaultDlOptions, options);
+
+	const result = useDlSelectors(s, config as Required<DlElementConfig>);
+
+	registerElementThemes(s, themes, useDlDesignTokens);
+
+	return result;
 }

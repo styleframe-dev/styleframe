@@ -4,12 +4,14 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultPreConfig = {
+export const defaultPreOptions: WithThemes<PreElementConfig> = {
 	fontFamily: "@font-family.mono",
 	fontSize: "0.875em",
 	marginBottom: "@spacing",
-} as const;
+};
 
 export interface PreElementConfig {
 	fontFamily?: TokenValue;
@@ -67,11 +69,13 @@ export function usePreSelectors(
 
 export function usePreElement(
 	s: Styleframe,
-	config: PreElementConfig = {},
+	options: WithThemes<PreElementConfig> = {},
 ): PreElementResult {
-	return usePreSelectors(s, {
-		fontFamily: config.fontFamily ?? defaultPreConfig.fontFamily,
-		fontSize: config.fontSize ?? defaultPreConfig.fontSize,
-		marginBottom: config.marginBottom ?? defaultPreConfig.marginBottom,
-	});
+	const { themes, ...config } = mergeElementOptions(defaultPreOptions, options);
+
+	const result = usePreSelectors(s, config as Required<PreElementConfig>);
+
+	registerElementThemes(s, themes, usePreDesignTokens);
+
+	return result;
 }

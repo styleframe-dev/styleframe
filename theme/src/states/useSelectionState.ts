@@ -4,11 +4,18 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultSelectionConfig = {
+export const defaultSelectionOptions: WithThemes<SelectionStateConfig> = {
 	background: "@color.primary",
 	color: "#ffffff",
-} as const;
+	themes: {
+		dark: {
+			color: "@color.white",
+		},
+	},
+};
 
 export interface SelectionStateConfig {
 	background?: TokenValue;
@@ -53,10 +60,19 @@ export function useSelectionSelectors(
 
 export function useSelectionState(
 	s: Styleframe,
-	config: SelectionStateConfig = {},
+	options: WithThemes<SelectionStateConfig> = {},
 ): SelectionStateResult {
-	return useSelectionSelectors(s, {
-		background: config.background ?? defaultSelectionConfig.background,
-		color: config.color ?? defaultSelectionConfig.color,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultSelectionOptions,
+		options,
+	);
+
+	const result = useSelectionSelectors(
+		s,
+		config as Required<SelectionStateConfig>,
+	);
+
+	registerElementThemes(s, themes, useSelectionDesignTokens);
+
+	return result;
 }

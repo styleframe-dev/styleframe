@@ -2,6 +2,13 @@ import type { Variable } from "@styleframe/core";
 import type { CamelCase } from "scule";
 
 /**
+ * Extends a config type with an optional `themes` map for per-theme overrides.
+ */
+export type WithThemes<TConfig> = TConfig & {
+	themes?: Record<string, TConfig>;
+};
+
+/**
  * Helper type to compute the variable name for a given prefix and key
  */
 type ExportKeyVariableName<

@@ -4,14 +4,22 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultBodyConfig = {
+export const defaultBodyOptions: WithThemes<BodyElementConfig> = {
 	color: "#1e293b",
 	background: "#ffffff",
 	fontFamily: "@font-family",
 	fontSize: "@font-size",
 	lineHeight: "@line-height",
-} as const;
+	themes: {
+		dark: {
+			color: "@color.white",
+			background: "@color.black",
+		},
+	},
+};
 
 export interface BodyElementConfig {
 	color?: string;
@@ -70,13 +78,16 @@ export function useBodySelectors(
 
 export function useBodyElement(
 	s: Styleframe,
-	config: BodyElementConfig = {},
+	options: WithThemes<BodyElementConfig> = {},
 ): BodyElementResult {
-	return useBodySelectors(s, {
-		color: config.color ?? defaultBodyConfig.color,
-		background: config.background ?? defaultBodyConfig.background,
-		fontFamily: config.fontFamily ?? defaultBodyConfig.fontFamily,
-		fontSize: config.fontSize ?? defaultBodyConfig.fontSize,
-		lineHeight: config.lineHeight ?? defaultBodyConfig.lineHeight,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultBodyOptions,
+		options,
+	);
+
+	const result = useBodySelectors(s, config as Required<BodyElementConfig>);
+
+	registerElementThemes(s, themes, useBodyDesignTokens);
+
+	return result;
 }

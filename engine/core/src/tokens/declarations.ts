@@ -78,9 +78,11 @@ export function parseDeclarationsBlock(
 	const resolvePropertyValue = createPropertyValueResolver(root, root);
 	for (const key in declarations) {
 		const value = declarations[key];
-		const resolved = resolvePropertyValue(value);
-		if (resolved !== value) {
-			declarations[key] = resolved;
+		if (isTokenValue(value)) {
+			const resolved = resolvePropertyValue(value);
+			if (resolved !== value) {
+				declarations[key] = resolved;
+			}
 		}
 	}
 

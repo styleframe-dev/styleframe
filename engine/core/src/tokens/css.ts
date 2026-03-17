@@ -10,12 +10,6 @@ import { isAtRule, isVariable } from "../typeGuards";
 import { createRefFunction } from "./ref";
 import { parseAtReferences } from "./resolve";
 
-export {
-	createPropertyValueResolver,
-	parseAtReferences,
-	validateReference,
-} from "./resolve";
-
 export function createCssFunction(_parent: Container, _root: Root) {
 	const ref = createRefFunction(_parent, _root);
 
@@ -24,7 +18,7 @@ export function createCssFunction(_parent: Container, _root: Root) {
 		...interpolations: (TokenValue | Variable | AtRule)[]
 	): CSS {
 		const value = strings.reduce<TokenValue[]>((acc, str, i) => {
-			acc.push(...parseAtReferences(str, ref));
+			acc.push(...parseAtReferences(str));
 
 			if (i < interpolations.length) {
 				const interpolation = interpolations[i];

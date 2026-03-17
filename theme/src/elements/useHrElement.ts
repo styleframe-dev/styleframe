@@ -4,13 +4,15 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultHrConfig = {
+export const defaultHrOptions: WithThemes<HrElementConfig> = {
 	borderWidth: "@border-width",
 	borderStyle: "solid",
 	borderColor: "@color.gray-200",
 	margin: "@spacing.lg",
-} as const;
+};
 
 export interface HrElementConfig {
 	borderWidth?: TokenValue;
@@ -68,12 +70,13 @@ export function useHrSelectors(
 
 export function useHrElement(
 	s: Styleframe,
-	config: HrElementConfig = {},
+	options: WithThemes<HrElementConfig> = {},
 ): HrElementResult {
-	return useHrSelectors(s, {
-		borderWidth: config.borderWidth ?? defaultHrConfig.borderWidth,
-		borderStyle: config.borderStyle ?? defaultHrConfig.borderStyle,
-		borderColor: config.borderColor ?? defaultHrConfig.borderColor,
-		margin: config.margin ?? defaultHrConfig.margin,
-	});
+	const { themes, ...config } = mergeElementOptions(defaultHrOptions, options);
+
+	const result = useHrSelectors(s, config as Required<HrElementConfig>);
+
+	registerElementThemes(s, themes, useHrDesignTokens);
+
+	return result;
 }

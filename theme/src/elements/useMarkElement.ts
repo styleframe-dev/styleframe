@@ -4,15 +4,22 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultMarkConfig = {
+export const defaultMarkOptions: WithThemes<MarkElementConfig> = {
 	background: "#fef08a",
 	color: "inherit",
 	paddingTop: "0.1875rem",
 	paddingRight: "0.375rem",
 	paddingBottom: "0.1875rem",
 	paddingLeft: "0.375rem",
-} as const;
+	themes: {
+		dark: {
+			background: "@color.warning",
+		},
+	},
+};
 
 export interface MarkElementConfig {
 	background?: TokenValue;
@@ -83,14 +90,16 @@ export function useMarkSelectors(
 
 export function useMarkElement(
 	s: Styleframe,
-	config: MarkElementConfig = {},
+	options: WithThemes<MarkElementConfig> = {},
 ): MarkElementResult {
-	return useMarkSelectors(s, {
-		background: config.background ?? defaultMarkConfig.background,
-		color: config.color ?? defaultMarkConfig.color,
-		paddingTop: config.paddingTop ?? defaultMarkConfig.paddingTop,
-		paddingRight: config.paddingRight ?? defaultMarkConfig.paddingRight,
-		paddingBottom: config.paddingBottom ?? defaultMarkConfig.paddingBottom,
-		paddingLeft: config.paddingLeft ?? defaultMarkConfig.paddingLeft,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultMarkOptions,
+		options,
+	);
+
+	const result = useMarkSelectors(s, config as Required<MarkElementConfig>);
+
+	registerElementThemes(s, themes, useMarkDesignTokens);
+
+	return result;
 }

@@ -1,5 +1,5 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchColors, useSwatchDimensions } from "../../../theme/useSwatch";
+import { useSwatchDimensions } from "../../../theme/useSwatch";
 import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
@@ -18,13 +18,12 @@ const {
 	borderRadiusFull,
 } = borderRadius;
 
-const { swatchColorBackground } = useSwatchColors(s);
 const { swatchPreviewSize } = useSwatchDimensions(s);
 
 selector(".border-radius-swatch__preview", {
 	width: ref(swatchPreviewSize),
 	height: ref(swatchPreviewSize),
-	background: ref(swatchColorBackground),
+	background: css`@color.neutral`,
 	border: css`1px solid @color.primary`,
 });
 

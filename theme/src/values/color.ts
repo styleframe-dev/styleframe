@@ -15,5 +15,5 @@ export const colorValues = {
 } as const;
 
 export const darkModeColorValues = {
-	primary: "#005F85",
+	primary: "#006274",
 };

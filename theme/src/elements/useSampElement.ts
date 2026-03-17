@@ -4,10 +4,12 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultSampConfig = {
+export const defaultSampOptions: WithThemes<SampElementConfig> = {
 	fontFamily: "@font-family.mono",
-} as const;
+};
 
 export interface SampElementConfig {
 	fontFamily?: TokenValue;
@@ -44,9 +46,16 @@ export function useSampSelectors(
 
 export function useSampElement(
 	s: Styleframe,
-	config: SampElementConfig = {},
+	options: WithThemes<SampElementConfig> = {},
 ): SampElementResult {
-	return useSampSelectors(s, {
-		fontFamily: config.fontFamily ?? defaultSampConfig.fontFamily,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultSampOptions,
+		options,
+	);
+
+	const result = useSampSelectors(s, config as Required<SampElementConfig>);
+
+	registerElementThemes(s, themes, useSampDesignTokens);
+
+	return result;
 }

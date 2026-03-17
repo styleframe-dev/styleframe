@@ -4,15 +4,17 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultCaptionConfig = {
-	color: "@text.weak",
+export const defaultCaptionOptions: WithThemes<CaptionElementConfig> = {
+	color: "@color.text-weak",
 	paddingTop: "@spacing.xs",
 	paddingRight: "@spacing.sm",
 	paddingBottom: "@spacing.xs",
 	paddingLeft: "@spacing.sm",
 	textAlign: "left",
-} as const;
+};
 
 export interface CaptionElementConfig {
 	color?: TokenValue;
@@ -89,14 +91,19 @@ export function useCaptionSelectors(
 
 export function useCaptionElement(
 	s: Styleframe,
-	config: CaptionElementConfig = {},
+	options: WithThemes<CaptionElementConfig> = {},
 ): CaptionElementResult {
-	return useCaptionSelectors(s, {
-		color: config.color ?? defaultCaptionConfig.color,
-		paddingTop: config.paddingTop ?? defaultCaptionConfig.paddingTop,
-		paddingRight: config.paddingRight ?? defaultCaptionConfig.paddingRight,
-		paddingBottom: config.paddingBottom ?? defaultCaptionConfig.paddingBottom,
-		paddingLeft: config.paddingLeft ?? defaultCaptionConfig.paddingLeft,
-		textAlign: config.textAlign ?? defaultCaptionConfig.textAlign,
-	});
+	const { themes, ...config } = mergeElementOptions(
+		defaultCaptionOptions,
+		options,
+	);
+
+	const result = useCaptionSelectors(
+		s,
+		config as Required<CaptionElementConfig>,
+	);
+
+	registerElementThemes(s, themes, useCaptionDesignTokens);
+
+	return result;
 }
