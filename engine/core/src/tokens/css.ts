@@ -11,8 +11,8 @@ import { createRefFunction } from "./ref";
 import { parseAtReferences } from "./resolve";
 
 export {
+	createPropertyValueResolver,
 	parseAtReferences,
-	resolvePropertyValue,
 	validateReference,
 } from "./resolve";
 

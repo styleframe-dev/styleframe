@@ -6,25 +6,17 @@ import type {
 	TokenValue,
 	Variable,
 } from "../types";
-import { resolvePropertyValue } from "./resolve";
+import { createPropertyValueResolver } from "./resolve";
 
-export function createRefFunction(_parent: Container, _root: Root) {
+export function createRefFunction(_parent: Container, root: Root) {
 	return function ref<Name extends string>(
 		variable: Variable<Name> | Name,
 		fallback?: string,
 	): Reference<Name> {
 		// Resolve @-prefixed fallback values to references
+		const resolvePropertyValue = createPropertyValueResolver(_parent, root);
 		const resolvedFallback: TokenValue | undefined =
-			fallback != null
-				? resolvePropertyValue(
-						fallback,
-						(name) => ({
-							type: "reference",
-							name,
-						}),
-						_root,
-					)
-				: fallback;
+			fallback != null ? resolvePropertyValue(fallback) : fallback;
 
 		if (isVariable(variable)) {
 			return {

@@ -1,5 +1,6 @@
 import { isKeyReferenceValue, isRef } from "../typeGuards";
-import type { CSS, Reference, Root, TokenValue } from "../types";
+import type { CSS, Container, Reference, Root, TokenValue } from "../types";
+import { createRefFunction } from "./ref";
 
 export type RefFunction = (variable: string, fallback?: string) => Reference;
 
@@ -34,35 +35,33 @@ export function validateReference(name: string, root: Root): void {
 }
 
 /**
- * Resolves @-prefixed variable references in string values.
+ * Creates a resolver that converts @-prefixed variable references in string values.
  * - Exact match "@name" → Reference object
  * - Embedded "1px solid @name" → CSS object with mixed parts
  * - Non-string or no @ → returns value unchanged
  */
-export function resolvePropertyValue(
-	value: TokenValue,
-	ref: RefFunction,
-	root?: Root,
-): TokenValue {
-	if (typeof value !== "string" || !value.includes("@")) {
-		return value;
-	}
+export function createPropertyValueResolver(parent: Container, root: Root) {
+	const ref = createRefFunction(parent, root);
 
-	// Exact match: "@color.primary" → direct Reference (single @name, no extra content)
-	if (isKeyReferenceValue(value) && /^@[\w.-]+$/.test(value)) {
-		const name = value.slice(1);
-		if (root) {
-			validateReference(name, root);
+	return function resolvePropertyValue(value: TokenValue): TokenValue {
+		if (typeof value !== "string" || !value.includes("@")) {
+			return value;
 		}
-		return ref(name);
-	}
 
-	// Embedded: "1px solid @color.primary" → CSS object
-	const parts = parseAtReferences(value, ref);
-	const hasReferences = parts.some((p) => isRef(p));
-	if (hasReferences) {
-		return { type: "css", value: parts } as CSS;
-	}
+		// Exact match: "@color.primary" → direct Reference (single @name, no extra content)
+		if (isKeyReferenceValue(value) && /^@[\w.-]+$/.test(value)) {
+			const name = value.slice(1);
+			validateReference(name, root);
+			return ref(name);
+		}
 
-	return value;
+		// Embedded: "1px solid @color.primary" → CSS object
+		const parts = parseAtReferences(value, ref);
+		const hasReferences = parts.some((p) => isRef(p));
+		if (hasReferences) {
+			return { type: "css", value: parts } as CSS;
+		}
+
+		return value;
+	};
 }

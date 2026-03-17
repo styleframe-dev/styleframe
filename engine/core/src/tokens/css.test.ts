@@ -2,7 +2,7 @@ import type { Root, Selector } from "../types";
 import { createAtRuleFunction, createKeyframesFunction } from "./atRule";
 import { createCssFunction } from "./css";
 import { createRefFunction } from "./ref";
-import { resolvePropertyValue, validateReference } from "./resolve";
+import { createPropertyValueResolver, validateReference } from "./resolve";
 import { createRoot } from "./root";
 import { createVariableFunction } from "./variable";
 
@@ -571,8 +571,19 @@ describe("createCSSFunction", () => {
 	});
 
 	describe("resolvePropertyValue", () => {
+		let resolvePropertyValue: ReturnType<typeof createPropertyValueResolver>;
+
+		beforeEach(() => {
+			resolvePropertyValue = createPropertyValueResolver(root, root);
+		});
+
 		it("should resolve exact @reference to a Reference", () => {
-			const result = resolvePropertyValue("@color.primary", ref);
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#006cff",
+			});
+			const result = resolvePropertyValue("@color.primary");
 
 			expect(result).toEqual({
 				type: "reference",
@@ -582,7 +593,7 @@ describe("createCSSFunction", () => {
 		});
 
 		it("should resolve embedded @reference to a CSS object", () => {
-			const result = resolvePropertyValue("1px solid @color.primary", ref);
+			const result = resolvePropertyValue("1px solid @color.primary");
 
 			expect(result).toEqual({
 				type: "css",
@@ -595,7 +606,7 @@ describe("createCSSFunction", () => {
 		});
 
 		it("should resolve multiple embedded @references to a CSS object", () => {
-			const result = resolvePropertyValue("@spacing.sm @spacing.md", ref);
+			const result = resolvePropertyValue("@spacing.sm @spacing.md");
 
 			expect(result).toEqual({
 				type: "css",
@@ -610,16 +621,14 @@ describe("createCSSFunction", () => {
 		});
 
 		it("should return non-string values unchanged", () => {
-			expect(resolvePropertyValue(42, ref)).toBe(42);
-			expect(resolvePropertyValue(null, ref)).toBeNull();
-			expect(resolvePropertyValue(undefined, ref)).toBeUndefined();
+			expect(resolvePropertyValue(42)).toBe(42);
+			expect(resolvePropertyValue(null)).toBeNull();
+			expect(resolvePropertyValue(undefined)).toBeUndefined();
 		});
 
 		it("should return strings without @ unchanged", () => {
-			expect(resolvePropertyValue("1px solid blue", ref)).toBe(
-				"1px solid blue",
-			);
-			expect(resolvePropertyValue("red", ref)).toBe("red");
+			expect(resolvePropertyValue("1px solid blue")).toBe("1px solid blue");
+			expect(resolvePropertyValue("red")).toBe("red");
 		});
 	});
 

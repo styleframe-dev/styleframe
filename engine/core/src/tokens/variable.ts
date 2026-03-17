@@ -1,6 +1,5 @@
 import type { Container, Root, TokenValue, Variable } from "../types";
-import { resolvePropertyValue } from "./resolve";
-import { createRefFunction } from "./ref";
+import { createPropertyValueResolver } from "./resolve";
 
 export function createVariableFunction(parent: Container, _root: Root) {
 	return function variable<Name extends string>(
@@ -17,8 +16,8 @@ export function createVariableFunction(parent: Container, _root: Root) {
 		) as Name;
 
 		// Resolve @-prefixed string values to references
-		const ref = createRefFunction(parent, _root);
-		const resolvedValue = resolvePropertyValue(value, ref, _root);
+		const resolvePropertyValue = createPropertyValueResolver(parent, _root);
+		const resolvedValue = resolvePropertyValue(value);
 
 		const existingVariable = parent.variables.find(
 			(child) => child.name === name,
