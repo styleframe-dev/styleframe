@@ -246,7 +246,7 @@ function mergeElementThemes<T>(
  * Builds the final WithThemes options for an element, merging per-element
  * themes from the element config with transposed centralized themes.
  */
-function buildElementOptions<T extends Record<string, unknown>>(
+function buildElementOptions<T extends object>(
 	elementConfig: WithThemes<T> | undefined,
 	configThemes: Record<string, GlobalThemeOverrides> | undefined,
 	key: keyof GlobalThemeOverrides,

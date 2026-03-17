@@ -7,7 +7,7 @@ import type { WithThemes } from "../types";
  *
  * Both base config properties and per-theme properties are merged independently.
  */
-export function mergeElementOptions<T extends Record<string, unknown>>(
+export function mergeElementOptions<T extends object>(
 	defaults: WithThemes<T>,
 	overrides: WithThemes<T>,
 ): WithThemes<T> {
