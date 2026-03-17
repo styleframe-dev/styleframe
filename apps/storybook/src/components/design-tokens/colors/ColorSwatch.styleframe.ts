@@ -13,15 +13,18 @@ useUtilitiesPreset(s);
 
 const { colors } = useDesignTokensPreset(s);
 const {
-	colorBlack,
-	colorWhite,
 	colorPrimary,
 	colorSecondary,
 	colorSuccess,
 	colorWarning,
 	colorDanger,
 	colorInfo,
-	colorNeutral,
+	colorBlack,
+	colorWhite,
+	colorGray,
+	colorBackground,
+	colorSurface,
+	colorBorder,
 	colorText,
 	colorTextWeak,
 	colorTextWeaker,
@@ -68,15 +71,24 @@ export const colorSwatch = recipe({
 			info: {
 				background: ref(colorInfo),
 			},
-			neutral: {
-				background: ref(colorNeutral),
-			},
 			white: {
 				background: ref(colorWhite),
 			},
 			black: {
 				color: ref(colorWhite),
 				background: ref(colorBlack),
+			},
+			gray: {
+				background: ref(colorGray),
+			},
+			background: {
+				background: ref(colorBackground),
+			},
+			surface: {
+				background: ref(colorSurface),
+			},
+			border: {
+				background: ref(colorBorder),
 			},
 			text: {
 				color: ref(colorText),

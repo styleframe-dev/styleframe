@@ -99,10 +99,45 @@ export const Danger: Story = {
 	},
 };
 
-export const Neutral: Story = {
+export const White: Story = {
 	args: {
-		name: "neutral",
-		value: "neutral",
+		name: "white",
+		value: "white",
+	},
+};
+
+export const Black: Story = {
+	args: {
+		name: "black",
+		value: "black",
+	},
+};
+
+export const Gray: Story = {
+	args: {
+		name: "gray",
+		value: "gray",
+	},
+};
+
+export const Background: Story = {
+	args: {
+		name: "background",
+		value: "background",
+	},
+};
+
+export const Surface: Story = {
+	args: {
+		name: "surface",
+		value: "surface",
+	},
+};
+
+export const Border: Story = {
+	args: {
+		name: "border",
+		value: "border",
 	},
 };
 
