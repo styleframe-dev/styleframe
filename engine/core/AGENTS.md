@@ -222,6 +222,13 @@ width: css`calc(100% - ${ref(sidebarWidth)})`
 background: css`linear-gradient(135deg, ${ref(colorPrimary)} 0%, ${ref(colorSecondary)} 100%)`
 ```
 
+Supports `@variablename` notation inline — `@name` is automatically converted to a variable reference:
+
+```ts
+border: css`1px solid @color.primary`
+padding: css`@spacing.x @spacing.y`
+```
+
 ---
 
 ### `keyframes(name, frames)`
