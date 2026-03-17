@@ -1,6 +1,11 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
 
-export const defaultKbdValues = {
+export const defaultKbdConfig = {
 	background: "#1e293b",
 	color: "#ffffff",
 	fontFamily: "@font-family.mono",
@@ -30,34 +35,53 @@ export interface KbdElementResult {
 	kbdPaddingInline: Variable<"kbd.padding-inline">;
 }
 
-export function useKbdElement(
-	s: Styleframe,
+export function useKbdDesignTokens(
+	ctx: DeclarationsCallbackContext,
 	config: KbdElementConfig = {},
+): Partial<KbdElementResult> {
+	const result: Partial<KbdElementResult> = {};
+
+	if (config.background !== undefined)
+		result.kbdBackground = ctx.variable("kbd.background", config.background);
+	if (config.color !== undefined)
+		result.kbdColor = ctx.variable("kbd.color", config.color);
+	if (config.fontFamily !== undefined)
+		result.kbdFontFamily = ctx.variable("kbd.font-family", config.fontFamily);
+	if (config.fontSize !== undefined)
+		result.kbdFontSize = ctx.variable("kbd.font-size", config.fontSize);
+	if (config.borderRadius !== undefined)
+		result.kbdBorderRadius = ctx.variable(
+			"kbd.border-radius",
+			config.borderRadius,
+		);
+	if (config.paddingBlock !== undefined)
+		result.kbdPaddingBlock = ctx.variable(
+			"kbd.padding-block",
+			config.paddingBlock,
+		);
+	if (config.paddingInline !== undefined)
+		result.kbdPaddingInline = ctx.variable(
+			"kbd.padding-inline",
+			config.paddingInline,
+		);
+
+	return result;
+}
+
+export function useKbdSelectors(
+	ctx: DeclarationsCallbackContext,
+	config: Required<KbdElementConfig>,
 ): KbdElementResult {
-	const background = config.background ?? defaultKbdValues.background;
-	const color = config.color ?? defaultKbdValues.color;
-	const fontFamily = config.fontFamily ?? defaultKbdValues.fontFamily;
-	const fontSize = config.fontSize ?? defaultKbdValues.fontSize;
-	const borderRadius = config.borderRadius ?? defaultKbdValues.borderRadius;
-	const paddingBlock = config.paddingBlock ?? defaultKbdValues.paddingBlock;
-	const paddingInline = config.paddingInline ?? defaultKbdValues.paddingInline;
+	const result = useKbdDesignTokens(ctx, config) as KbdElementResult;
 
-	const kbdBackground = s.variable("kbd.background", background);
-	const kbdColor = s.variable("kbd.color", color);
-	const kbdFontFamily = s.variable("kbd.font-family", fontFamily);
-	const kbdFontSize = s.variable("kbd.font-size", fontSize);
-	const kbdBorderRadius = s.variable("kbd.border-radius", borderRadius);
-	const kbdPaddingBlock = s.variable("kbd.padding-block", paddingBlock);
-	const kbdPaddingInline = s.variable("kbd.padding-inline", paddingInline);
-
-	s.selector("kbd", {
-		background: s.ref(kbdBackground),
-		color: s.ref(kbdColor),
-		fontFamily: s.ref(kbdFontFamily),
-		fontSize: s.ref(kbdFontSize),
-		borderRadius: s.ref(kbdBorderRadius),
-		paddingBlock: s.ref(kbdPaddingBlock),
-		paddingInline: s.ref(kbdPaddingInline),
+	ctx.selector("kbd", {
+		background: ctx.ref(result.kbdBackground),
+		color: ctx.ref(result.kbdColor),
+		fontFamily: ctx.ref(result.kbdFontFamily),
+		fontSize: ctx.ref(result.kbdFontSize),
+		borderRadius: ctx.ref(result.kbdBorderRadius),
+		paddingBlock: ctx.ref(result.kbdPaddingBlock),
+		paddingInline: ctx.ref(result.kbdPaddingInline),
 		display: "inline-block",
 		"& > kbd": {
 			paddingBlock: "0",
@@ -66,13 +90,20 @@ export function useKbdElement(
 		},
 	});
 
-	return {
-		kbdBackground,
-		kbdColor,
-		kbdFontFamily,
-		kbdFontSize,
-		kbdBorderRadius,
-		kbdPaddingBlock,
-		kbdPaddingInline,
-	};
+	return result;
+}
+
+export function useKbdElement(
+	s: Styleframe,
+	config: KbdElementConfig = {},
+): KbdElementResult {
+	return useKbdSelectors(s, {
+		background: config.background ?? defaultKbdConfig.background,
+		color: config.color ?? defaultKbdConfig.color,
+		fontFamily: config.fontFamily ?? defaultKbdConfig.fontFamily,
+		fontSize: config.fontSize ?? defaultKbdConfig.fontSize,
+		borderRadius: config.borderRadius ?? defaultKbdConfig.borderRadius,
+		paddingBlock: config.paddingBlock ?? defaultKbdConfig.paddingBlock,
+		paddingInline: config.paddingInline ?? defaultKbdConfig.paddingInline,
+	});
 }

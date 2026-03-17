@@ -1,6 +1,11 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
 
-export const defaultSelectionValues = {
+export const defaultSelectionConfig = {
 	background: "@color.primary",
 	color: "#ffffff",
 } as const;
@@ -15,20 +20,43 @@ export interface SelectionStateResult {
 	selectionColor: Variable<"selection.color">;
 }
 
+export function useSelectionDesignTokens(
+	ctx: DeclarationsCallbackContext,
+	config: SelectionStateConfig = {},
+): Partial<SelectionStateResult> {
+	const result: Partial<SelectionStateResult> = {};
+
+	if (config.background !== undefined)
+		result.selectionBackground = ctx.variable(
+			"selection.background",
+			config.background,
+		);
+	if (config.color !== undefined)
+		result.selectionColor = ctx.variable("selection.color", config.color);
+
+	return result;
+}
+
+export function useSelectionSelectors(
+	ctx: DeclarationsCallbackContext,
+	config: Required<SelectionStateConfig>,
+): SelectionStateResult {
+	const result = useSelectionDesignTokens(ctx, config) as SelectionStateResult;
+
+	ctx.selector("::selection", {
+		background: ctx.ref(result.selectionBackground),
+		color: ctx.ref(result.selectionColor),
+	});
+
+	return result;
+}
+
 export function useSelectionState(
 	s: Styleframe,
 	config: SelectionStateConfig = {},
 ): SelectionStateResult {
-	const background = config.background ?? defaultSelectionValues.background;
-	const color = config.color ?? defaultSelectionValues.color;
-
-	const selectionBackground = s.variable("selection.background", background);
-	const selectionColor = s.variable("selection.color", color);
-
-	s.selector("::selection", {
-		background: s.ref(selectionBackground),
-		color: s.ref(selectionColor),
+	return useSelectionSelectors(s, {
+		background: config.background ?? defaultSelectionConfig.background,
+		color: config.color ?? defaultSelectionConfig.color,
 	});
-
-	return { selectionBackground, selectionColor };
 }

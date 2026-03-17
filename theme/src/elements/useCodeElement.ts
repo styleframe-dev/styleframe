@@ -1,6 +1,11 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
 
-export const defaultCodeValues = {
+export const defaultCodeConfig = {
 	fontFamily: "@font-family.mono",
 	fontSize: "0.875em",
 } as const;
@@ -15,20 +20,40 @@ export interface CodeElementResult {
 	codeFontSize: Variable<"code.font-size">;
 }
 
+export function useCodeDesignTokens(
+	ctx: DeclarationsCallbackContext,
+	config: CodeElementConfig = {},
+): Partial<CodeElementResult> {
+	const result: Partial<CodeElementResult> = {};
+
+	if (config.fontFamily !== undefined)
+		result.codeFontFamily = ctx.variable("code.font-family", config.fontFamily);
+	if (config.fontSize !== undefined)
+		result.codeFontSize = ctx.variable("code.font-size", config.fontSize);
+
+	return result;
+}
+
+export function useCodeSelectors(
+	ctx: DeclarationsCallbackContext,
+	config: Required<CodeElementConfig>,
+): CodeElementResult {
+	const result = useCodeDesignTokens(ctx, config) as CodeElementResult;
+
+	ctx.selector("code, samp", {
+		fontFamily: ctx.ref(result.codeFontFamily),
+		fontSize: ctx.ref(result.codeFontSize),
+	});
+
+	return result;
+}
+
 export function useCodeElement(
 	s: Styleframe,
 	config: CodeElementConfig = {},
 ): CodeElementResult {
-	const fontFamily = config.fontFamily ?? defaultCodeValues.fontFamily;
-	const fontSize = config.fontSize ?? defaultCodeValues.fontSize;
-
-	const codeFontFamily = s.variable("code.font-family", fontFamily);
-	const codeFontSize = s.variable("code.font-size", fontSize);
-
-	s.selector("code, samp", {
-		fontFamily: s.ref(codeFontFamily),
-		fontSize: s.ref(codeFontSize),
+	return useCodeSelectors(s, {
+		fontFamily: config.fontFamily ?? defaultCodeConfig.fontFamily,
+		fontSize: config.fontSize ?? defaultCodeConfig.fontSize,
 	});
-
-	return { codeFontFamily, codeFontSize };
 }

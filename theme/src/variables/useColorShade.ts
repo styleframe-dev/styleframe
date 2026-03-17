@@ -1,8 +1,6 @@
 import { createUseDerivedVariable } from "../utils";
 import { colorShadeValues } from "../values";
 
-export { colorShadeValues };
-
 /**
  * Create a set of relative color shade (darker) levels
  *

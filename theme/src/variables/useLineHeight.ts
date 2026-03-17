@@ -1,8 +1,6 @@
 import { createUseVariable } from "../utils";
 import { lineHeightValues } from "../values";
 
-export { lineHeightValues };
-
 /**
  * Create a set of line-height variables for use in a Styleframe instance.
  *

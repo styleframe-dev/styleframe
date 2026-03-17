@@ -1,6 +1,11 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
 
-export const defaultBodyValues = {
+export const defaultBodyConfig = {
 	color: "#1e293b",
 	background: "#ffffff",
 	fontFamily: "@font-family",
@@ -24,37 +29,54 @@ export interface BodyElementResult {
 	bodyLineHeight: Variable<"body.line-height">;
 }
 
-export function useBodyElement(
-	s: Styleframe,
+export function useBodyDesignTokens(
+	ctx: DeclarationsCallbackContext,
 	config: BodyElementConfig = {},
+): Partial<BodyElementResult> {
+	const result: Partial<BodyElementResult> = {};
+
+	if (config.color !== undefined)
+		result.bodyColor = ctx.variable("body.color", config.color);
+	if (config.background !== undefined)
+		result.bodyBackground = ctx.variable("body.background", config.background);
+	if (config.fontFamily !== undefined)
+		result.bodyFontFamily = ctx.variable("body.font-family", config.fontFamily);
+	if (config.fontSize !== undefined)
+		result.bodyFontSize = ctx.variable("body.font-size", config.fontSize);
+	if (config.lineHeight !== undefined)
+		result.bodyLineHeight = ctx.variable("body.line-height", config.lineHeight);
+
+	return result;
+}
+
+export function useBodySelectors(
+	ctx: DeclarationsCallbackContext,
+	config: Required<BodyElementConfig>,
 ): BodyElementResult {
-	const color = config.color ?? defaultBodyValues.color;
-	const background = config.background ?? defaultBodyValues.background;
-	const fontFamily = config.fontFamily ?? defaultBodyValues.fontFamily;
-	const fontSize = config.fontSize ?? defaultBodyValues.fontSize;
-	const lineHeight = config.lineHeight ?? defaultBodyValues.lineHeight;
+	const result = useBodyDesignTokens(ctx, config) as BodyElementResult;
 
-	const bodyColor = s.variable("body.color", color);
-	const bodyBackground = s.variable("body.background", background);
-	const bodyFontFamily = s.variable("body.font-family", fontFamily);
-	const bodyFontSize = s.variable("body.font-size", fontSize);
-	const bodyLineHeight = s.variable("body.line-height", lineHeight);
-
-	s.selector("body", {
-		fontFamily: s.ref(bodyFontFamily),
-		fontSize: s.ref(bodyFontSize),
-		lineHeight: s.ref(bodyLineHeight),
-		color: s.ref(bodyColor),
-		background: s.ref(bodyBackground),
+	ctx.selector("body", {
+		fontFamily: ctx.ref(result.bodyFontFamily),
+		fontSize: ctx.ref(result.bodyFontSize),
+		lineHeight: ctx.ref(result.bodyLineHeight),
+		color: ctx.ref(result.bodyColor),
+		background: ctx.ref(result.bodyBackground),
 		"-webkit-font-smoothing": "antialiased",
 		"-moz-osx-font-smoothing": "grayscale",
 	});
 
-	return {
-		bodyColor,
-		bodyBackground,
-		bodyFontFamily,
-		bodyFontSize,
-		bodyLineHeight,
-	};
+	return result;
+}
+
+export function useBodyElement(
+	s: Styleframe,
+	config: BodyElementConfig = {},
+): BodyElementResult {
+	return useBodySelectors(s, {
+		color: config.color ?? defaultBodyConfig.color,
+		background: config.background ?? defaultBodyConfig.background,
+		fontFamily: config.fontFamily ?? defaultBodyConfig.fontFamily,
+		fontSize: config.fontSize ?? defaultBodyConfig.fontSize,
+		lineHeight: config.lineHeight ?? defaultBodyConfig.lineHeight,
+	});
 }

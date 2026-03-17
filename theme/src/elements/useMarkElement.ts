@@ -1,6 +1,11 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
 
-export const defaultMarkValues = {
+export const defaultMarkConfig = {
 	background: "#fef08a",
 	color: "inherit",
 	paddingTop: "0.1875rem",
@@ -27,39 +32,65 @@ export interface MarkElementResult {
 	markPaddingLeft: Variable<"mark.padding-left">;
 }
 
+export function useMarkDesignTokens(
+	ctx: DeclarationsCallbackContext,
+	config: MarkElementConfig = {},
+): Partial<MarkElementResult> {
+	const result: Partial<MarkElementResult> = {};
+
+	if (config.background !== undefined)
+		result.markBackground = ctx.variable("mark.background", config.background);
+	if (config.color !== undefined)
+		result.markColor = ctx.variable("mark.color", config.color);
+	if (config.paddingTop !== undefined)
+		result.markPaddingTop = ctx.variable("mark.padding-top", config.paddingTop);
+	if (config.paddingRight !== undefined)
+		result.markPaddingRight = ctx.variable(
+			"mark.padding-right",
+			config.paddingRight,
+		);
+	if (config.paddingBottom !== undefined)
+		result.markPaddingBottom = ctx.variable(
+			"mark.padding-bottom",
+			config.paddingBottom,
+		);
+	if (config.paddingLeft !== undefined)
+		result.markPaddingLeft = ctx.variable(
+			"mark.padding-left",
+			config.paddingLeft,
+		);
+
+	return result;
+}
+
+export function useMarkSelectors(
+	ctx: DeclarationsCallbackContext,
+	config: Required<MarkElementConfig>,
+): MarkElementResult {
+	const result = useMarkDesignTokens(ctx, config) as MarkElementResult;
+
+	ctx.selector("mark", {
+		background: ctx.ref(result.markBackground),
+		color: ctx.ref(result.markColor),
+		paddingTop: ctx.ref(result.markPaddingTop),
+		paddingRight: ctx.ref(result.markPaddingRight),
+		paddingBottom: ctx.ref(result.markPaddingBottom),
+		paddingLeft: ctx.ref(result.markPaddingLeft),
+	});
+
+	return result;
+}
+
 export function useMarkElement(
 	s: Styleframe,
 	config: MarkElementConfig = {},
 ): MarkElementResult {
-	const background = config.background ?? defaultMarkValues.background;
-	const color = config.color ?? defaultMarkValues.color;
-	const paddingTop = config.paddingTop ?? defaultMarkValues.paddingTop;
-	const paddingRight = config.paddingRight ?? defaultMarkValues.paddingRight;
-	const paddingBottom = config.paddingBottom ?? defaultMarkValues.paddingBottom;
-	const paddingLeft = config.paddingLeft ?? defaultMarkValues.paddingLeft;
-
-	const markBackground = s.variable("mark.background", background);
-	const markColor = s.variable("mark.color", color);
-	const markPaddingTop = s.variable("mark.padding-top", paddingTop);
-	const markPaddingRight = s.variable("mark.padding-right", paddingRight);
-	const markPaddingBottom = s.variable("mark.padding-bottom", paddingBottom);
-	const markPaddingLeft = s.variable("mark.padding-left", paddingLeft);
-
-	s.selector("mark", {
-		background: s.ref(markBackground),
-		color: s.ref(markColor),
-		paddingTop: s.ref(markPaddingTop),
-		paddingRight: s.ref(markPaddingRight),
-		paddingBottom: s.ref(markPaddingBottom),
-		paddingLeft: s.ref(markPaddingLeft),
+	return useMarkSelectors(s, {
+		background: config.background ?? defaultMarkConfig.background,
+		color: config.color ?? defaultMarkConfig.color,
+		paddingTop: config.paddingTop ?? defaultMarkConfig.paddingTop,
+		paddingRight: config.paddingRight ?? defaultMarkConfig.paddingRight,
+		paddingBottom: config.paddingBottom ?? defaultMarkConfig.paddingBottom,
+		paddingLeft: config.paddingLeft ?? defaultMarkConfig.paddingLeft,
 	});
-
-	return {
-		markBackground,
-		markColor,
-		markPaddingTop,
-		markPaddingRight,
-		markPaddingBottom,
-		markPaddingLeft,
-	};
 }

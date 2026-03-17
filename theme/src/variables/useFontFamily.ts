@@ -1,8 +1,6 @@
 import { createUseVariable } from "../utils";
 import { fontFamilyValues } from "../values";
 
-export { fontFamilyValues };
-
 /**
  * Create a set of font family variables for use in a Styleframe instance.
  *

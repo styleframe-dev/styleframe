@@ -1,8 +1,6 @@
 import { createUseVariable } from "../utils";
 import { borderWidthValues } from "../values";
 
-export { borderWidthValues };
-
 /**
  * Create a set of border-width variables for use in a Styleframe instance.
  *

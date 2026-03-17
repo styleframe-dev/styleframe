@@ -13,3 +13,7 @@ export const colorValues = {
 	"text-weaker": "#767676",
 	"text-weakest": "#949494",
 } as const;
+
+export const darkModeColorValues = {
+	primary: "#005F85",
+};

@@ -1,6 +1,11 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
 
-export const defaultOlValues = {
+export const defaultOlConfig = {
 	marginBottom: "@spacing",
 	paddingLeft: "@spacing.lg",
 } as const;
@@ -15,23 +20,46 @@ export interface OlElementResult {
 	olPaddingLeft: Variable<"ol.padding-left">;
 }
 
-export function useOlElement(
-	s: Styleframe,
+export function useOlDesignTokens(
+	ctx: DeclarationsCallbackContext,
 	config: OlElementConfig = {},
+): Partial<OlElementResult> {
+	const result: Partial<OlElementResult> = {};
+
+	if (config.marginBottom !== undefined)
+		result.olMarginBottom = ctx.variable(
+			"ol.margin-bottom",
+			config.marginBottom,
+		);
+	if (config.paddingLeft !== undefined)
+		result.olPaddingLeft = ctx.variable("ol.padding-left", config.paddingLeft);
+
+	return result;
+}
+
+export function useOlSelectors(
+	ctx: DeclarationsCallbackContext,
+	config: Required<OlElementConfig>,
 ): OlElementResult {
-	const marginBottom = config.marginBottom ?? defaultOlValues.marginBottom;
-	const paddingLeft = config.paddingLeft ?? defaultOlValues.paddingLeft;
+	const result = useOlDesignTokens(ctx, config) as OlElementResult;
 
-	const olMarginBottom = s.variable("ol.margin-bottom", marginBottom);
-	const olPaddingLeft = s.variable("ol.padding-left", paddingLeft);
-
-	s.selector("ol", {
-		marginBottom: s.ref(olMarginBottom),
-		paddingLeft: s.ref(olPaddingLeft),
+	ctx.selector("ol", {
+		marginBottom: ctx.ref(result.olMarginBottom),
+		paddingLeft: ctx.ref(result.olPaddingLeft),
 		"& ol, & ul": {
 			marginBottom: "0",
 		},
 	});
 
-	return { olMarginBottom, olPaddingLeft };
+	return result;
+}
+
+export function useOlElement(
+	s: Styleframe,
+	config: OlElementConfig = {},
+): OlElementResult {
+	return useOlSelectors(s, {
+		marginBottom: config.marginBottom ?? defaultOlConfig.marginBottom,
+		paddingLeft: config.paddingLeft ?? defaultOlConfig.paddingLeft,
+	});
 }

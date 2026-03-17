@@ -1,6 +1,11 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
 
-export const defaultPreValues = {
+export const defaultPreConfig = {
 	fontFamily: "@font-family.mono",
 	fontSize: "0.875em",
 	marginBottom: "@spacing",
@@ -18,25 +23,38 @@ export interface PreElementResult {
 	preMarginBottom: Variable<"pre.margin-bottom">;
 }
 
-export function usePreElement(
-	s: Styleframe,
+export function usePreDesignTokens(
+	ctx: DeclarationsCallbackContext,
 	config: PreElementConfig = {},
+): Partial<PreElementResult> {
+	const result: Partial<PreElementResult> = {};
+
+	if (config.fontFamily !== undefined)
+		result.preFontFamily = ctx.variable("pre.font-family", config.fontFamily);
+	if (config.fontSize !== undefined)
+		result.preFontSize = ctx.variable("pre.font-size", config.fontSize);
+	if (config.marginBottom !== undefined)
+		result.preMarginBottom = ctx.variable(
+			"pre.margin-bottom",
+			config.marginBottom,
+		);
+
+	return result;
+}
+
+export function usePreSelectors(
+	ctx: DeclarationsCallbackContext,
+	config: Required<PreElementConfig>,
 ): PreElementResult {
-	const fontFamily = config.fontFamily ?? defaultPreValues.fontFamily;
-	const fontSize = config.fontSize ?? defaultPreValues.fontSize;
-	const marginBottom = config.marginBottom ?? defaultPreValues.marginBottom;
+	const result = usePreDesignTokens(ctx, config) as PreElementResult;
 
-	const preFontFamily = s.variable("pre.font-family", fontFamily);
-	const preFontSize = s.variable("pre.font-size", fontSize);
-	const preMarginBottom = s.variable("pre.margin-bottom", marginBottom);
-
-	s.selector("pre", {
-		fontFamily: s.ref(preFontFamily),
-		fontSize: s.ref(preFontSize),
+	ctx.selector("pre", {
+		fontFamily: ctx.ref(result.preFontFamily),
+		fontSize: ctx.ref(result.preFontSize),
 		display: "block",
 		overflowX: "auto",
 		marginTop: "0",
-		marginBottom: s.ref(preMarginBottom),
+		marginBottom: ctx.ref(result.preMarginBottom),
 		"& > code": {
 			background: "transparent",
 			color: "inherit",
@@ -44,5 +62,16 @@ export function usePreElement(
 		},
 	});
 
-	return { preFontFamily, preFontSize, preMarginBottom };
+	return result;
+}
+
+export function usePreElement(
+	s: Styleframe,
+	config: PreElementConfig = {},
+): PreElementResult {
+	return usePreSelectors(s, {
+		fontFamily: config.fontFamily ?? defaultPreConfig.fontFamily,
+		fontSize: config.fontSize ?? defaultPreConfig.fontSize,
+		marginBottom: config.marginBottom ?? defaultPreConfig.marginBottom,
+	});
 }

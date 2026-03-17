@@ -1,6 +1,11 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
 
-export const defaultAddressValues = {
+export const defaultAddressConfig = {
 	marginBottom: "@spacing",
 } as const;
 
@@ -12,19 +17,41 @@ export interface AddressElementResult {
 	addressMarginBottom: Variable<"address.margin-bottom">;
 }
 
-export function useAddressElement(
-	s: Styleframe,
+export function useAddressDesignTokens(
+	ctx: DeclarationsCallbackContext,
 	config: AddressElementConfig = {},
+): Partial<AddressElementResult> {
+	const result: Partial<AddressElementResult> = {};
+
+	if (config.marginBottom !== undefined)
+		result.addressMarginBottom = ctx.variable(
+			"address.margin-bottom",
+			config.marginBottom,
+		);
+
+	return result;
+}
+
+export function useAddressSelectors(
+	ctx: DeclarationsCallbackContext,
+	config: Required<AddressElementConfig>,
 ): AddressElementResult {
-	const marginBottom = config.marginBottom ?? defaultAddressValues.marginBottom;
+	const result = useAddressDesignTokens(ctx, config) as AddressElementResult;
 
-	const addressMarginBottom = s.variable("address.margin-bottom", marginBottom);
-
-	s.selector("address", {
-		marginBottom: s.ref(addressMarginBottom),
+	ctx.selector("address", {
+		marginBottom: ctx.ref(result.addressMarginBottom),
 		fontStyle: "normal",
 		lineHeight: "inherit",
 	});
 
-	return { addressMarginBottom };
+	return result;
+}
+
+export function useAddressElement(
+	s: Styleframe,
+	config: AddressElementConfig = {},
+): AddressElementResult {
+	return useAddressSelectors(s, {
+		marginBottom: config.marginBottom ?? defaultAddressConfig.marginBottom,
+	});
 }
