@@ -1315,8 +1315,9 @@ describe("useDesignTokensPreset", () => {
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain('[data-theme="compact"]');
-			expect(s.root.themes).toHaveLength(1);
-			expect(s.root.themes[0]!.name).toBe("compact");
+			expect(s.root.themes).toHaveLength(2);
+			expect(s.root.themes.map((t) => t.name)).toContain("compact");
+			expect(s.root.themes.map((t) => t.name)).toContain("dark");
 		});
 
 		it("should support multiple themes", () => {
@@ -1405,16 +1406,17 @@ describe("useDesignTokensPreset", () => {
 			expect(colorKeys).not.toContain("colorPrimary");
 		});
 
-		it("should not create theme blocks when themes is empty", () => {
+		it("should create domain-level default themes when themes is empty", () => {
 			const s = styleframe();
 			useDesignTokensPreset(s, {
 				themes: {},
 			});
 
-			expect(s.root.themes).toHaveLength(0);
+			expect(s.root.themes).toHaveLength(1);
+			expect(s.root.themes[0]!.name).toBe("dark");
 		});
 
-		it("should not create theme blocks when themes only has default", () => {
+		it("should create domain-level default themes when themes only has default", () => {
 			const s = styleframe();
 			useDesignTokensPreset(s, {
 				themes: {
@@ -1431,7 +1433,8 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(s.root.themes).toHaveLength(0);
+			expect(s.root.themes).toHaveLength(1);
+			expect(s.root.themes[0]!.name).toBe("dark");
 		});
 
 		it("should work with themes.default and additional themes together", () => {
