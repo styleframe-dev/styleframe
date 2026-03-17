@@ -466,6 +466,91 @@ describe("createCSSFunction", () => {
 		});
 	});
 
+	describe("@variable notation", () => {
+		it("should resolve @variablename to a reference", () => {
+			const result = css`@color.primary`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve @variablename with surrounding text", () => {
+			const result = css`1px solid @color.primary`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"1px solid ",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve deeply dotted @variablename", () => {
+			const result = css`@color.primary.500`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{
+						type: "reference",
+						name: "color.primary.500",
+						fallback: undefined,
+					},
+					"",
+				],
+			});
+		});
+
+		it("should resolve multiple @variablenames in one string segment", () => {
+			const result = css`@spacing.x @spacing.y`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing.x", fallback: undefined },
+					" ",
+					{ type: "reference", name: "spacing.y", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve @variablename mixed with interpolations", () => {
+			const opacity = "0.8";
+			const result = css`@color.primary ${opacity}`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					" ",
+					"0.8",
+					"",
+				],
+			});
+		});
+
+		it("should not affect strings without @ references", () => {
+			const result = css`1px solid blue`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: ["1px solid blue"],
+			});
+		});
+	});
+
 	describe("function context independence", () => {
 		it("should create independent functions for different contexts", () => {
 			const context1 = createRoot();
