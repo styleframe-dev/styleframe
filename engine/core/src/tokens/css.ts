@@ -22,7 +22,7 @@ function parseAtReferences(
 	AT_VARIABLE_REGEX.lastIndex = 0;
 	while ((match = AT_VARIABLE_REGEX.exec(str)) !== null) {
 		parts.push(str.slice(lastIndex, match.index));
-		parts.push(ref(match[1]));
+		parts.push(ref(match[1] as string));
 		lastIndex = AT_VARIABLE_REGEX.lastIndex;
 	}
 	parts.push(str.slice(lastIndex));
