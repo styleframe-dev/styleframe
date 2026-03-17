@@ -10,7 +10,11 @@ import { isAtRule, isVariable } from "../typeGuards";
 import { createRefFunction } from "./ref";
 import { parseAtReferences } from "./resolve";
 
-export { parseAtReferences, resolvePropertyValue } from "./resolve";
+export {
+	parseAtReferences,
+	resolvePropertyValue,
+	validateReference,
+} from "./resolve";
 
 export function createCssFunction(_parent: Container, _root: Root) {
 	const ref = createRefFunction(_parent, _root);

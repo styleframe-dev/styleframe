@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noConfusingVoidType: Returning declarations in callback is optional */
-import { isKeyReferenceValue, isTokenValue } from "../typeGuards";
+import { isTokenValue } from "../typeGuards";
 import type {
 	Container,
 	DeclarationsBlock,
@@ -77,21 +77,9 @@ export function parseDeclarationsBlock(
 	// Resolve @-prefixed string values to variable references
 	for (const key in declarations) {
 		const value = declarations[key];
-		if (typeof value === "string" && value.includes("@")) {
-			// Validate exact @references when root is provided
-			if (isKeyReferenceValue(value)) {
-				const name = value.slice(1);
-				if (root && !root.variables.some((v) => v.name === name)) {
-					throw new Error(
-						`[styleframe] Variable "${name}" is not defined. Check that the variable exists before referencing it with "${value}".`,
-					);
-				}
-			}
-
-			const resolved = resolvePropertyValue(value, context.ref);
-			if (resolved !== value) {
-				declarations[key] = resolved;
-			}
+		const resolved = resolvePropertyValue(value, context.ref, root);
+		if (resolved !== value) {
+			declarations[key] = resolved;
 		}
 	}
 

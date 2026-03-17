@@ -18,7 +18,7 @@ export function createVariableFunction(parent: Container, _root: Root) {
 
 		// Resolve @-prefixed string values to references
 		const ref = createRefFunction(parent, _root);
-		const resolvedValue = resolvePropertyValue(value, ref);
+		const resolvedValue = resolvePropertyValue(value, ref, _root);
 
 		const existingVariable = parent.variables.find(
 			(child) => child.name === name,

@@ -2,7 +2,7 @@ import type { Root, Selector } from "../types";
 import { createAtRuleFunction, createKeyframesFunction } from "./atRule";
 import { createCssFunction } from "./css";
 import { createRefFunction } from "./ref";
-import { resolvePropertyValue } from "./resolve";
+import { resolvePropertyValue, validateReference } from "./resolve";
 import { createRoot } from "./root";
 import { createVariableFunction } from "./variable";
 
@@ -549,6 +549,24 @@ describe("createCSSFunction", () => {
 				type: "css",
 				value: ["1px solid blue"],
 			});
+		});
+	});
+
+	describe("validateReference", () => {
+		it("should not throw when variable exists in root", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#006cff",
+			});
+
+			expect(() => validateReference("color.primary", root)).not.toThrow();
+		});
+
+		it("should throw when variable does not exist in root", () => {
+			expect(() => validateReference("color.nonexistent", root)).toThrow(
+				'[styleframe] Variable "color.nonexistent" is not defined. Check that the variable exists before referencing it with "@color.nonexistent".',
+			);
 		});
 	});
 

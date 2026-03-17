@@ -119,6 +119,11 @@ describe("createRefFunction", () => {
 		});
 
 		it("should resolve @-prefixed fallback to a reference", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#006cff",
+			});
 			const result = ref("color.text", "@color.primary");
 
 			expect(result).toEqual({
@@ -132,6 +137,11 @@ describe("createRefFunction", () => {
 		});
 
 		it("should resolve @-prefixed fallback from variable instance", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#006cff",
+			});
 			const colorText = variable("color--text", "#333");
 			const result = ref(colorText, "@color.primary");
 
@@ -146,6 +156,7 @@ describe("createRefFunction", () => {
 		});
 
 		it("should resolve embedded @reference in fallback to a CSS object", () => {
+			variable("color.primary", "#006cff");
 			const result = ref("border", "1px solid @color.primary");
 
 			expect(result).toEqual({
@@ -160,6 +171,12 @@ describe("createRefFunction", () => {
 					],
 				},
 			});
+		});
+
+		it("should throw when @-prefixed fallback references undefined variable", () => {
+			expect(() => ref("color", "@nonexistent")).toThrow(
+				'Variable "nonexistent" is not defined',
+			);
 		});
 	});
 

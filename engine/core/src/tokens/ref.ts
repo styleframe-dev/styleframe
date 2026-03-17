@@ -16,10 +16,14 @@ export function createRefFunction(_parent: Container, _root: Root) {
 		// Resolve @-prefixed fallback values to references
 		const resolvedFallback: TokenValue | undefined =
 			fallback != null
-				? resolvePropertyValue(fallback, (name) => ({
-						type: "reference",
-						name,
-					}))
+				? resolvePropertyValue(
+						fallback,
+						(name) => ({
+							type: "reference",
+							name,
+						}),
+						_root,
+					)
 				: fallback;
 
 		if (isVariable(variable)) {
