@@ -220,6 +220,34 @@ describe("createVariableFunction", () => {
 				name: "other-color",
 			});
 		});
+
+		it("should resolve embedded @reference to a CSS object", () => {
+			const result = variable("border", "1px solid @color.primary");
+
+			expect(result.value).toEqual({
+				type: "css",
+				value: [
+					"1px solid ",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve multiple embedded @references to a CSS object", () => {
+			const result = variable("padding", "@spacing.sm @spacing.md");
+
+			expect(result.value).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing.sm", fallback: undefined },
+					" ",
+					{ type: "reference", name: "spacing.md", fallback: undefined },
+					"",
+				],
+			});
+		});
 	});
 
 	describe("accepting variable instance as name", () => {

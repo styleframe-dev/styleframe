@@ -13,6 +13,7 @@ import {
 } from "./atRule";
 import { createCssFunction } from "./css";
 import { createRefFunction } from "./ref";
+import { resolvePropertyValue } from "./resolve";
 import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
 
@@ -76,14 +77,21 @@ export function parseDeclarationsBlock(
 	// Resolve @-prefixed string values to variable references
 	for (const key in declarations) {
 		const value = declarations[key];
-		if (isKeyReferenceValue(value)) {
-			const name = value.slice(1);
-			if (root && !root.variables.some((v) => v.name === name)) {
-				throw new Error(
-					`[styleframe] Variable "${name}" is not defined. Check that the variable exists before referencing it with "${value}".`,
-				);
+		if (typeof value === "string" && value.includes("@")) {
+			// Validate exact @references when root is provided
+			if (isKeyReferenceValue(value)) {
+				const name = value.slice(1);
+				if (root && !root.variables.some((v) => v.name === name)) {
+					throw new Error(
+						`[styleframe] Variable "${name}" is not defined. Check that the variable exists before referencing it with "${value}".`,
+					);
+				}
 			}
-			declarations[key] = context.ref(name);
+
+			const resolved = resolvePropertyValue(value, context.ref);
+			if (resolved !== value) {
+				declarations[key] = resolved;
+			}
 		}
 	}
 

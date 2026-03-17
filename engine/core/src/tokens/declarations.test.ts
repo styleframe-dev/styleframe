@@ -326,6 +326,48 @@ describe("parseDeclarationsBlock", () => {
 				name: "font-size.sm",
 			});
 		});
+
+		it("should resolve embedded @references to a CSS object", () => {
+			mockContext.ref.mockImplementation((name: string) => ({
+				type: "reference",
+				name,
+			}));
+
+			const declarations: any = {
+				border: "1px solid @color.primary",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext);
+
+			expect(declarations.border).toEqual({
+				type: "css",
+				value: ["1px solid ", { type: "reference", name: "color.primary" }, ""],
+			});
+		});
+
+		it("should resolve multiple embedded @references to a CSS object", () => {
+			mockContext.ref.mockImplementation((name: string) => ({
+				type: "reference",
+				name,
+			}));
+
+			const declarations: any = {
+				padding: "@spacing.sm @spacing.md",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext);
+
+			expect(declarations.padding).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing.sm" },
+					" ",
+					{ type: "reference", name: "spacing.md" },
+					"",
+				],
+			});
+		});
 	});
 
 	describe("@ reference validation with root", () => {

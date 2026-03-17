@@ -117,6 +117,50 @@ describe("createRefFunction", () => {
 				fallback: undefined,
 			});
 		});
+
+		it("should resolve @-prefixed fallback to a reference", () => {
+			const result = ref("color.text", "@color.primary");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.text",
+				fallback: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+
+		it("should resolve @-prefixed fallback from variable instance", () => {
+			const colorText = variable("color--text", "#333");
+			const result = ref(colorText, "@color.primary");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color--text",
+				fallback: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+
+		it("should resolve embedded @reference in fallback to a CSS object", () => {
+			const result = ref("border", "1px solid @color.primary");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "border",
+				fallback: {
+					type: "css",
+					value: [
+						"1px solid ",
+						{ type: "reference", name: "color.primary" },
+						"",
+					],
+				},
+			});
+		});
 	});
 
 	describe("context parameter handling", () => {

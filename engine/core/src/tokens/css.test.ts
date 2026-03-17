@@ -2,6 +2,7 @@ import type { Root, Selector } from "../types";
 import { createAtRuleFunction, createKeyframesFunction } from "./atRule";
 import { createCssFunction } from "./css";
 import { createRefFunction } from "./ref";
+import { resolvePropertyValue } from "./resolve";
 import { createRoot } from "./root";
 import { createVariableFunction } from "./variable";
 
@@ -548,6 +549,59 @@ describe("createCSSFunction", () => {
 				type: "css",
 				value: ["1px solid blue"],
 			});
+		});
+	});
+
+	describe("resolvePropertyValue", () => {
+		it("should resolve exact @reference to a Reference", () => {
+			const result = resolvePropertyValue("@color.primary", ref);
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.primary",
+				fallback: undefined,
+			});
+		});
+
+		it("should resolve embedded @reference to a CSS object", () => {
+			const result = resolvePropertyValue("1px solid @color.primary", ref);
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"1px solid ",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve multiple embedded @references to a CSS object", () => {
+			const result = resolvePropertyValue("@spacing.sm @spacing.md", ref);
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing.sm", fallback: undefined },
+					" ",
+					{ type: "reference", name: "spacing.md", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should return non-string values unchanged", () => {
+			expect(resolvePropertyValue(42, ref)).toBe(42);
+			expect(resolvePropertyValue(null, ref)).toBeNull();
+			expect(resolvePropertyValue(undefined, ref)).toBeUndefined();
+		});
+
+		it("should return strings without @ unchanged", () => {
+			expect(resolvePropertyValue("1px solid blue", ref)).toBe(
+				"1px solid blue",
+			);
+			expect(resolvePropertyValue("red", ref)).toBe("red");
 		});
 	});
 

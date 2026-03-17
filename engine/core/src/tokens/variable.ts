@@ -1,11 +1,6 @@
-import { isKeyReferenceValue } from "../typeGuards";
-import type {
-	Container,
-	Reference,
-	Root,
-	TokenValue,
-	Variable,
-} from "../types";
+import type { Container, Root, TokenValue, Variable } from "../types";
+import { resolvePropertyValue } from "./resolve";
+import { createRefFunction } from "./ref";
 
 export function createVariableFunction(parent: Container, _root: Root) {
 	return function variable<Name extends string>(
@@ -22,9 +17,8 @@ export function createVariableFunction(parent: Container, _root: Root) {
 		) as Name;
 
 		// Resolve @-prefixed string values to references
-		const resolvedValue: TokenValue = isKeyReferenceValue(value)
-			? ({ type: "reference", name: value.substring(1) } as Reference)
-			: value;
+		const ref = createRefFunction(parent, _root);
+		const resolvedValue = resolvePropertyValue(value, ref);
 
 		const existingVariable = parent.variables.find(
 			(child) => child.name === name,
