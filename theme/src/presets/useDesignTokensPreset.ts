@@ -522,6 +522,14 @@ function collectThemeNames(
 		}
 	}
 
+	for (const { themes: domainThemes } of domainRegistry) {
+		if (domainThemes) {
+			for (const name of Object.keys(domainThemes)) {
+				names.add(name);
+			}
+		}
+	}
+
 	return names;
 }
 
