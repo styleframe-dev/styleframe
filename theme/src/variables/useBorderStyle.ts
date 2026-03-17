@@ -1,6 +1,8 @@
 import { createUseVariable } from "../utils";
 import { borderStyleValues } from "../values";
 
+export { borderStyleValues };
+
 /**
  * Create a set of border-style variables for use in a Styleframe instance.
  *

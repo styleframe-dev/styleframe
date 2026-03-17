@@ -1,6 +1,8 @@
 import { createUseVariable } from "../utils";
 import { borderRadiusValues } from "../values";
 
+export { borderRadiusValues };
+
 /**
  * Create a set of border-radius variables for use in a Styleframe instance.
  *

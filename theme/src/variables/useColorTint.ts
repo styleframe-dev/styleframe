@@ -1,6 +1,8 @@
 import { createUseDerivedVariable } from "../utils";
 import { colorTintValues } from "../values";
 
+export { colorTintValues };
+
 /**
  * Create a set of relative color tint (lighter) levels
  *

@@ -1,6 +1,8 @@
 import { createUseVariable } from "../utils";
 import { easingValues } from "../values";
 
+export { easingValues };
+
 /**
  * Create a set of easing variables for use in a Styleframe instance.
  *

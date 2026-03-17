@@ -1,6 +1,8 @@
 import { createUseVariable } from "../utils";
 import { spacingValues } from "../values";
 
+export { spacingValues };
+
 /**
  * Create a set of spacing variables for use in a Styleframe instance.
  *

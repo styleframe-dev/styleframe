@@ -1,6 +1,8 @@
 import { createUseVariable } from "../utils";
 import { fontWeightValues } from "../values";
 
+export { fontWeightValues };
+
 /**
  * Create a set of font-weight variables for use in a Styleframe instance.
  *
