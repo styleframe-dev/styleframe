@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { useColorShade, colorShadeValues } from "./useColorShade";
+import { useColorShade } from "./useColorShade";
+import { colorShadeValues } from "../values";
 
 describe("useColorShade", () => {
 	it("should create shade levels with default values", () => {

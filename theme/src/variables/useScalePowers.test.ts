@@ -2,7 +2,8 @@ import type { TokenValue } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
 import { useScale } from "./useScale";
-import { useScalePowers, scalePowerValues } from "./useScalePowers";
+import { useScalePowers } from "./useScalePowers";
+import { scalePowerValues } from "../values";
 
 describe("useScalePowers", () => {
 	it("should create scale powers with default powers array", () => {

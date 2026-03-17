@@ -1,8 +1,5 @@
 import { createUseVariable } from "../utils";
 import { boxShadowValues } from "../values";
-
-export { boxShadowValues };
-
 /**
  * Create a set of box-shadow variables for use in a Styleframe instance.
  *

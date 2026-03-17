@@ -1,8 +1,5 @@
 import { createUseVariable } from "../utils";
 import { fontStyleValues } from "../values";
-
-export { fontStyleValues };
-
 /**
  * Create a set of font-style variables for use in a Styleframe instance.
  *

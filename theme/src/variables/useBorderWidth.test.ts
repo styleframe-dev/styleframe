@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { borderWidthValues, useBorderWidth } from "./useBorderWidth";
+import { useBorderWidth } from "./useBorderWidth";
+import { borderWidthValues } from "../values";
 
 describe("useBorderWidth", () => {
 	it("should create all border width variables with correct names and values", () => {

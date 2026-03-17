@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { letterSpacingValues, useLetterSpacing } from "./useLetterSpacing";
+import { useLetterSpacing } from "./useLetterSpacing";
+import { letterSpacingValues } from "../values";
 
 describe("useLetterSpacing", () => {
 	it("should create all letter spacing variables with correct names and values", () => {
