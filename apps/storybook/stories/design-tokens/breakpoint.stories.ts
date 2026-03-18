@@ -76,3 +76,11 @@ export const ExtraLarge: Story = {
 		width: breakpointValues.xl,
 	},
 };
+
+export const ExtraExtraLarge: Story = {
+	args: {
+		name: "2xl",
+		value: `${breakpointValues["2xl"]}px`,
+		width: breakpointValues["2xl"],
+	},
+};

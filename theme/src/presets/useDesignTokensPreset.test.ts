@@ -1093,8 +1093,6 @@ describe("useDesignTokensPreset", () => {
 			result.breakpoint.breakpointMd;
 			result.breakpoint.breakpointLg;
 			result.breakpoint.breakpointXl;
-
-			// @ts-expect-error - breakpoint2xl is not a default key
 			result.breakpoint.breakpoint2xl;
 		});
 

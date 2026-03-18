@@ -58,8 +58,8 @@ const fluidFontSizes = computed(() => {
 // Format viewport width display
 const viewportLabel = computed(() => {
 	if (screenWidth.value <= 576) return "Mobile";
-	if (screenWidth.value <= 992) return "Tablet";
-	if (screenWidth.value <= 1200) return "Laptop";
+	if (screenWidth.value <= 768) return "Tablet";
+	if (screenWidth.value <= 992) return "Laptop";
 	return "Desktop";
 });
 
