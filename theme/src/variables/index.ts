@@ -19,3 +19,4 @@ export * from "./useMultiplier";
 export * from "./useScale";
 export * from "./useScalePowers";
 export * from "./useSpacing";
+export * from "./useZIndex";
