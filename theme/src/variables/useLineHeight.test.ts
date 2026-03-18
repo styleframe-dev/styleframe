@@ -226,6 +226,7 @@ describe("useLineHeight", () => {
 		it("should allow customizing the default line height", () => {
 			const s = styleframe();
 			const { lineHeight } = useLineHeight(s, {
+				...lineHeightValues,
 				default: "@relaxed",
 			});
 
