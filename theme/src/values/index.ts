@@ -8,6 +8,7 @@ export * from "./color";
 export * from "./colorLightness";
 export * from "./colorShade";
 export * from "./colorTint";
+export * from "./duration";
 export * from "./easing";
 export * from "./fontFamily";
 export * from "./fontSize";
