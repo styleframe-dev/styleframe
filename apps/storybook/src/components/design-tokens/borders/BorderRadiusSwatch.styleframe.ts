@@ -23,7 +23,7 @@ const { swatchPreviewSize } = useSwatchDimensions(s);
 selector(".border-radius-swatch__preview", {
 	width: ref(swatchPreviewSize),
 	height: ref(swatchPreviewSize),
-	background: css`@color.neutral`,
+	background: css`@color.surface`,
 	border: css`1px solid @color.primary`,
 });
 
