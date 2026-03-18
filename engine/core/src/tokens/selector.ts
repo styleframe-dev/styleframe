@@ -23,11 +23,14 @@ export function createSelectorFunction(parent: Container, root: Root) {
 		const instance: Selector = {
 			type: "selector",
 			id: generateRandomId("sel-"),
+			parentId: parent.id,
 			query,
 			declarations: {},
 			variables: [],
 			children: [],
 		};
+
+		root._registry.set(instance.id, instance);
 
 		const callbackContext = createDeclarationsCallbackContext(instance, root);
 		if (typeof declarationsOrCallback === "function") {
@@ -40,7 +43,12 @@ export function createSelectorFunction(parent: Container, root: Root) {
 			instance.declarations = declarationsOrCallback;
 		}
 
-		parseDeclarationsBlock(instance.declarations, callbackContext, root);
+		parseDeclarationsBlock(
+			instance.declarations,
+			callbackContext,
+			instance,
+			root,
+		);
 
 		parent.children.push(instance);
 

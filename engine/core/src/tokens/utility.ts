@@ -177,6 +177,7 @@ export function createUtilityFunction(parent: Container, root: Root) {
 					const instance: Utility<Name> = {
 						type: "utility",
 						id: generateRandomId("ut-"),
+						parentId: parent.id,
 						name,
 						value: key,
 						declarations: {},
@@ -184,6 +185,8 @@ export function createUtilityFunction(parent: Container, root: Root) {
 						children: [],
 						modifiers: [],
 					};
+
+					root._registry.set(instance.id, instance);
 
 					const callbackContext = createDeclarationsCallbackContext(
 						instance,
@@ -196,7 +199,12 @@ export function createUtilityFunction(parent: Container, root: Root) {
 							value,
 						}) ?? {};
 
-					parseDeclarationsBlock(instance.declarations, callbackContext, root);
+					parseDeclarationsBlock(
+						instance.declarations,
+						callbackContext,
+						instance,
+						root,
+					);
 
 					if (!existingEntry) {
 						factoryInstance.values.push({

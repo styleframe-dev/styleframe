@@ -22,11 +22,41 @@ export function parseAtReferences(str: string): TokenValue[] {
 }
 
 /**
- * Validates that a variable name exists in root.variables.
+ * Checks whether a variable with the given name exists in the scope chain,
+ * walking from the given scope up through ancestors via parentId.
+ */
+export function findVariableInScope(
+	name: string,
+	scope: Container,
+	root: Root,
+): boolean {
+	let current: Container | Root | undefined = scope;
+	while (current) {
+		if (current.variables.some((v) => v.name === name)) {
+			return true;
+		}
+
+		if (current.parentId) {
+			current = root._registry.get(current.parentId);
+		} else {
+			break;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Validates that a variable name exists in the scope chain.
+ * Walks from the given scope up through ancestors to root.
  * Throws if the variable is not defined.
  */
-export function validateReference(name: string, root: Root): void {
-	if (!root.variables.some((v) => v.name === name)) {
+export function validateReference(
+	name: string,
+	scope: Container,
+	root: Root,
+): void {
+	if (!findVariableInScope(name, scope, root)) {
 		throw new Error(
 			`[styleframe] Variable "${name}" is not defined. Check that the variable exists before referencing it with "@${name}".`,
 		);
@@ -39,7 +69,7 @@ export function validateReference(name: string, root: Root): void {
  * - Embedded "1px solid @name" → CSS object with mixed parts
  * - Non-string or no @ → returns value unchanged
  */
-export function createPropertyValueResolver(_parent: Container, root: Root) {
+export function createPropertyValueResolver(parent: Container, root: Root) {
 	return function resolvePropertyValue(value: TokenValue): TokenValue {
 		if (typeof value !== "string" || !value.includes("@")) {
 			return value;
@@ -48,7 +78,7 @@ export function createPropertyValueResolver(_parent: Container, root: Root) {
 		// Exact match: "@color.primary" → direct Reference (single @name, no extra content)
 		if (isKeyReferenceValue(value) && /^@[\w.-]+$/.test(value)) {
 			const name = value.slice(1);
-			validateReference(name, root);
+			validateReference(name, parent, root);
 			return { type: "reference", name: name } as Reference;
 		}
 

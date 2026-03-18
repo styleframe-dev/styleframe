@@ -36,6 +36,7 @@ describe("createAtRuleFunction", () => {
 			expect(result).toEqual({
 				type: "at-rule",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "supports",
 				rule: "(display: grid)",
 				variables: [],
@@ -44,6 +45,7 @@ describe("createAtRuleFunction", () => {
 					{
 						type: "selector",
 						id: expect.any(String),
+						parentId: expect.any(String),
 						query: ".grid-container",
 						variables: [],
 						declarations: {
@@ -67,6 +69,7 @@ describe("createAtRuleFunction", () => {
 			expect(result).toEqual({
 				type: "at-rule",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "font-face",
 				rule: "",
 				variables: [],
@@ -86,6 +89,7 @@ describe("createAtRuleFunction", () => {
 			expect(result).toEqual({
 				type: "at-rule",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "import",
 				rule: "url('styles.css')",
 				variables: [],
@@ -142,6 +146,7 @@ describe("createAtRuleFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".modern-grid",
 				variables: [],
 				declarations: {
@@ -215,6 +220,7 @@ describe("createAtRuleFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".responsive-element",
 				variables: [],
 				declarations: {
@@ -251,6 +257,7 @@ describe("createAtRuleFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: "body",
 				variables: [],
 				declarations: {
@@ -345,6 +352,7 @@ describe("createAtRuleFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "at-rule",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(min-width: 768px)",
 				variables: [],
@@ -440,6 +448,7 @@ describe("createMediaFunction", () => {
 			expect(result).toEqual({
 				type: "at-rule",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(min-width: 768px)",
 				variables: [],
@@ -448,6 +457,7 @@ describe("createMediaFunction", () => {
 					{
 						type: "selector",
 						id: expect.any(String),
+						parentId: expect.any(String),
 						query: ".container",
 						variables: [],
 						declarations: {
@@ -480,6 +490,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".text",
 				variables: [],
 				declarations: {
@@ -498,6 +509,7 @@ describe("createMediaFunction", () => {
 			expect(result).toEqual({
 				type: "at-rule",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(max-width: 767px)",
 				variables: [],
@@ -541,6 +553,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".root-selector",
 				variables: [],
 				declarations: {
@@ -582,6 +595,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".media-selector",
 				variables: [],
 				declarations: {
@@ -601,6 +615,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "at-rule",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(orientation: landscape)",
 				variables: [],
@@ -682,6 +697,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "at-rule",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(orientation: portrait)",
 				variables: [],
@@ -708,6 +724,7 @@ describe("createMediaFunction", () => {
 			expect(nestedMedia.children[0]).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".nested-selector",
 				variables: [],
 				declarations: {
@@ -774,6 +791,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".responsive-text",
 				variables: [],
 				declarations: {
@@ -795,6 +813,7 @@ describe("createMediaFunction", () => {
 			expect(result.children[0]).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".grid",
 				variables: [],
 				declarations: {
@@ -899,6 +918,7 @@ describe("createMediaFunction", () => {
 			expect(result).toEqual({
 				type: "at-rule",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(min-width: 768px)",
 				variables: [],

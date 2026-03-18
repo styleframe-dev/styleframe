@@ -49,13 +49,17 @@ describe("mergeVariablesArray", () => {
 			expect(result).toHaveLength(2);
 			expect(result[0]).toEqual({
 				type: "variable",
+				id: expect.any(String),
 				name: "color-primary",
 				value: "#ef4444",
+				parentId: expect.any(String),
 			});
 			expect(result[1]).toEqual({
 				type: "variable",
+				id: expect.any(String),
 				name: "color-secondary",
 				value: "#64748b",
+				parentId: expect.any(String),
 			});
 		});
 
@@ -271,12 +275,18 @@ describe("mergeContainers", () => {
 	describe("basic functionality", () => {
 		it("should merge two containers", () => {
 			const a: Container = {
-				variables: [{ type: "variable", name: "var1", value: "a" }],
+				id: "a",
+				variables: [
+					{ type: "variable", id: "test-id", name: "var1", value: "a" },
+				],
 				declarations: { color: "red" },
 				children: [],
 			};
 			const b: Container = {
-				variables: [{ type: "variable", name: "var2", value: "b" }],
+				id: "b",
+				variables: [
+					{ type: "variable", id: "test-id", name: "var2", value: "b" },
+				],
 				declarations: { backgroundColor: "blue" },
 				children: [],
 			};
@@ -292,11 +302,13 @@ describe("mergeContainers", () => {
 
 		it("should merge declarations by spreading", () => {
 			const a: Container = {
+				id: "a",
 				variables: [],
 				declarations: { color: "red", padding: "10px" },
 				children: [],
 			};
 			const b: Container = {
+				id: "b",
 				variables: [],
 				declarations: { color: "blue", margin: "20px" },
 				children: [],
@@ -330,11 +342,13 @@ describe("mergeContainers", () => {
 			};
 
 			const a: Container = {
+				id: "a",
 				variables: [],
 				declarations: {},
 				children: [selector1],
 			};
 			const b: Container = {
+				id: "b",
 				variables: [],
 				declarations: {},
 				children: [selector2],
@@ -369,6 +383,7 @@ describe("mergeContainers", () => {
 						children: [],
 					},
 				],
+				_registry: new Map(),
 			};
 			const b: Root = {
 				type: "root",
@@ -389,6 +404,7 @@ describe("mergeContainers", () => {
 						children: [],
 					},
 				],
+				_registry: new Map(),
 			};
 
 			const result = mergeContainers(a, b);
@@ -420,6 +436,7 @@ describe("mergeContainers", () => {
 				variables: [],
 				children: [],
 				themes: [],
+				_registry: new Map(),
 			};
 			const b: Root = {
 				type: "root",
@@ -440,6 +457,7 @@ describe("mergeContainers", () => {
 				variables: [],
 				children: [],
 				themes: [],
+				_registry: new Map(),
 			};
 
 			const result = mergeContainers(a, b);
@@ -466,6 +484,7 @@ describe("mergeContainers", () => {
 				variables: [],
 				children: [],
 				themes: [],
+				_registry: new Map(),
 			};
 			const b: Root = {
 				type: "root",
@@ -483,6 +502,7 @@ describe("mergeContainers", () => {
 				variables: [],
 				children: [],
 				themes: [],
+				_registry: new Map(),
 			};
 
 			const result = mergeContainers(a, b);
@@ -509,6 +529,7 @@ describe("mergeContainers", () => {
 				variables: [],
 				children: [],
 				themes: [],
+				_registry: new Map(),
 			};
 			const b: Root = {
 				type: "root",
@@ -526,6 +547,7 @@ describe("mergeContainers", () => {
 				variables: [],
 				children: [],
 				themes: [],
+				_registry: new Map(),
 			};
 
 			const result = mergeContainers(a, b);
@@ -539,11 +561,13 @@ describe("mergeContainers", () => {
 	describe("edge cases", () => {
 		it("should handle empty containers", () => {
 			const a: Container = {
+				id: "a",
 				variables: [],
 				declarations: {},
 				children: [],
 			};
 			const b: Container = {
+				id: "b",
 				variables: [],
 				declarations: {},
 				children: [],
@@ -567,6 +591,7 @@ describe("mergeContainers", () => {
 				variables: [],
 				children: [],
 				themes: [],
+				_registry: new Map(),
 			};
 			const b: Root = {
 				type: "root",
@@ -578,6 +603,7 @@ describe("mergeContainers", () => {
 				variables: [],
 				children: [],
 				themes: [],
+				_registry: new Map(),
 			};
 
 			const result = mergeContainers(a, b);

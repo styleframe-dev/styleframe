@@ -97,6 +97,7 @@ export function isTokenValue(value: unknown): value is TokenValue {
 export function isContainer(value: unknown): value is Container {
 	return (
 		isObject(value) &&
+		"id" in value &&
 		"children" in value &&
 		"declarations" in value &&
 		"variables" in value

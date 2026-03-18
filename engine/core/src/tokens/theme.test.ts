@@ -29,6 +29,7 @@ describe("createThemeFunction", () => {
 			expect(result).toEqual({
 				type: "theme",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "dark",
 				declarations: {},
 				variables: [],
@@ -46,6 +47,7 @@ describe("createThemeFunction", () => {
 			expect(root.themes[0]).toEqual({
 				type: "theme",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "dark",
 				declarations: {},
 				variables: [],
@@ -173,6 +175,7 @@ describe("createThemeFunction", () => {
 			expect(result).toEqual({
 				type: "theme",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "light",
 				declarations: {},
 				variables: [],
@@ -189,6 +192,7 @@ describe("createThemeFunction", () => {
 			expect(result).toEqual({
 				type: "theme",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "light",
 				declarations: {},
 				variables: [],
@@ -322,6 +326,7 @@ describe("createThemeFunction", () => {
 				variables: [
 					{
 						type: "variable",
+						id: "test-id",
 						name: "existing-var",
 						value: "existing-value",
 					},
@@ -339,6 +344,7 @@ describe("createThemeFunction", () => {
 			expect(result.variables).toHaveLength(2);
 			expect(result.variables[0]).toEqual({
 				type: "variable",
+				id: "test-id",
 				name: "existing-var",
 				value: "existing-value",
 			});
