@@ -26,6 +26,7 @@ import {
 	scalePowerValues,
 	scaleValues,
 	spacingValues,
+	zIndexValues,
 } from "../values";
 import {
 	useBorderRadius,
@@ -47,6 +48,7 @@ import {
 	useScale,
 	useScalePowers,
 	useSpacing,
+	useZIndex,
 } from "../variables";
 
 // =============================================================================
@@ -63,6 +65,7 @@ type DomainDefaultsMap = {
 	borderRadius: typeof borderRadiusValues;
 	borderStyle: typeof borderStyleValues;
 	boxShadow: typeof boxShadowValues;
+	zIndex: typeof zIndexValues;
 	fontFamily: typeof fontFamilyValues;
 	fontSize: typeof fontSizeValues;
 	fontStyle: typeof fontStyleValues;
@@ -83,6 +86,7 @@ type DomainPrefixMap = {
 	borderRadius: "border-radius";
 	borderStyle: "border-style";
 	boxShadow: "box-shadow";
+	zIndex: "z-index";
 	fontFamily: "font-family";
 	fontSize: "font-size";
 	fontStyle: "font-style";
@@ -241,6 +245,7 @@ export interface ThemeTokenOverrides {
 	borderRadius?: Record<string, TokenValue>;
 	borderStyle?: Record<string, TokenValue>;
 	boxShadow?: Record<string, TokenValue>;
+	zIndex?: Record<string, TokenValue>;
 	colors?: Record<string, string>;
 	fontFamily?: Record<string, TokenValue>;
 	fontSize?: Record<string, TokenValue>;
@@ -267,6 +272,7 @@ export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
 	borderRadius?: Record<string, TokenValue> | false;
 	borderStyle?: Record<string, TokenValue> | false;
 	boxShadow?: Record<string, TokenValue> | false;
+	zIndex?: Record<string, TokenValue> | false;
 	colors?: Record<string, string> | false;
 	meta?: MetaConfigWithMerge<TMerge>;
 	fontFamily?: Record<string, TokenValue> | false;
@@ -403,6 +409,11 @@ const domainRegistry: DomainEntry[] = [
 		key: "boxShadow",
 		defaults: boxShadowValues,
 		process: (s, values, options) => useBoxShadow(s, values, options),
+	},
+	{
+		key: "zIndex",
+		defaults: zIndexValues,
+		process: (s, values, options) => useZIndex(s, values, options),
 	},
 	{
 		key: "fontFamily",

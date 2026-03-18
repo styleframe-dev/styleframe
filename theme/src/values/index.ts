@@ -18,6 +18,7 @@ export * from "./lineHeight";
 export * from "./scale";
 export * from "./scalePowers";
 export * from "./spacing";
+export * from "./zIndex";
 
 // Utility defaults
 export * from "./accessibility";

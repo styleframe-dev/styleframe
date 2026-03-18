@@ -155,6 +155,7 @@ describe("useDesignTokensPreset", () => {
 				borderRadius: false,
 				borderStyle: false,
 				boxShadow: false,
+				zIndex: false,
 				colors: false,
 				fontFamily: false,
 				fontSize: false,
@@ -173,6 +174,7 @@ describe("useDesignTokensPreset", () => {
 			expect(result.borderRadius).toBeUndefined();
 			expect(result.borderStyle).toBeUndefined();
 			expect(result.boxShadow).toBeUndefined();
+			expect(result.zIndex).toBeUndefined();
 			expect(result.colors).toBeUndefined();
 			expect(result.fontFamily).toBeUndefined();
 			expect(result.fontSize).toBeUndefined();
