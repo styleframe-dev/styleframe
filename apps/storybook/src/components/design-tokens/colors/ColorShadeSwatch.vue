@@ -4,6 +4,7 @@ import SwatchCard from "../../primitives/SwatchCard.vue";
 
 const props = defineProps<{
 	name: string;
+	color: string;
 	value: string;
 	label?: string;
 }>();
@@ -11,7 +12,7 @@ const props = defineProps<{
 
 <template>
 	<SwatchCard :name="name" :label="label">
-		<div :class="['color-shade-swatch__preview', colorShadeSwatch({ variant: value })]">
+		<div :class="['color-shade-swatch__preview', colorShadeSwatch({ variant: `${color}-${value}` })]">
 			{{ name }}
 		</div>
 	</SwatchCard>
