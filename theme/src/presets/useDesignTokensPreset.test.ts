@@ -164,6 +164,7 @@ describe("useDesignTokensPreset", () => {
 				letterSpacing: false,
 				breakpoint: false,
 				easing: false,
+				duration: false,
 			});
 
 			expect(result.scale).toBeUndefined();
@@ -182,6 +183,7 @@ describe("useDesignTokensPreset", () => {
 			expect(result.letterSpacing).toBeUndefined();
 			expect(result.breakpoint).toBeUndefined();
 			expect(result.easing).toBeUndefined();
+			expect(result.duration).toBeUndefined();
 
 			expect(s.root.variables).toHaveLength(0);
 		});

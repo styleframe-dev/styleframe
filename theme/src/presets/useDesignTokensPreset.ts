@@ -16,6 +16,7 @@ import {
 	colorTintValues,
 	colorValues,
 	darkModeColorValues,
+	durationValues,
 	easingValues,
 	fontFamilyValues,
 	fontSizeValues,
@@ -37,6 +38,7 @@ import {
 	useColorLightness,
 	useColorShade,
 	useColorTint,
+	useDuration,
 	useEasing,
 	useFontFamily,
 	useFontSize,
@@ -72,6 +74,7 @@ type DomainDefaultsMap = {
 	scale: typeof scaleValues;
 	breakpoint: typeof breakpointValues;
 	easing: typeof easingValues;
+	duration: typeof durationValues;
 };
 
 /**
@@ -92,6 +95,7 @@ type DomainPrefixMap = {
 	scale: "scale";
 	breakpoint: "breakpoint";
 	easing: "easing";
+	duration: "duration";
 };
 
 type SimpleDomainKey = keyof DomainPrefixMap;
@@ -251,6 +255,7 @@ export interface ThemeTokenOverrides {
 	scale?: Record<string, TokenValue>;
 	breakpoint?: Record<string, number>;
 	easing?: Record<string, TokenValue>;
+	duration?: Record<string, TokenValue>;
 }
 
 /**
@@ -279,6 +284,7 @@ export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
 	scalePowers?: readonly number[];
 	breakpoint?: Record<string, number> | false;
 	easing?: Record<string, TokenValue> | false;
+	duration?: Record<string, TokenValue> | false;
 	themes?: Record<string, ThemeTokenOverrides>;
 }
 
@@ -443,6 +449,11 @@ const domainRegistry: DomainEntry[] = [
 		key: "easing",
 		defaults: easingValues,
 		process: (s, values, options) => useEasing(s, values, options),
+	},
+	{
+		key: "duration",
+		defaults: durationValues,
+		process: (s, values, options) => useDuration(s, values, options),
 	},
 	{
 		key: "colors",
