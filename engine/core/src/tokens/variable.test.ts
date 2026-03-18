@@ -186,6 +186,82 @@ describe("createVariableFunction", () => {
 		});
 	});
 
+	describe("@ reference shorthand", () => {
+		it("should resolve @-prefixed value to a reference", () => {
+			variable("other-var", "value");
+			const result = variable("color", "@other-var");
+
+			expect(result.value).toEqual({
+				type: "reference",
+				name: "other-var",
+			});
+		});
+
+		it("should resolve @-prefixed value with dot notation", () => {
+			variable("color.primary", "#006cff");
+			const result = variable("color", "@color.primary");
+
+			expect(result.value).toEqual({
+				type: "reference",
+				name: "color.primary",
+			});
+		});
+
+		it("should not convert regular string values", () => {
+			const result = variable("color", "#ff0000");
+			expect(result.value).toBe("#ff0000");
+		});
+
+		it("should resolve @-prefixed value when updating existing variable", () => {
+			variable("other-color", "#ff0000");
+			const first = variable("color", "red");
+			const updated = variable("color", "@other-color");
+
+			expect(updated).toBe(first);
+			expect(updated.value).toEqual({
+				type: "reference",
+				name: "other-color",
+			});
+		});
+
+		it("should resolve embedded @reference to a CSS object", () => {
+			variable("color.primary", "#006cff");
+			const result = variable("border", "1px solid @color.primary");
+
+			expect(result.value).toEqual({
+				type: "css",
+				value: [
+					"1px solid ",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve multiple embedded @references to a CSS object", () => {
+			variable("spacing.sm", "0.5rem");
+			variable("spacing.md", "1rem");
+			const result = variable("padding", "@spacing.sm @spacing.md");
+
+			expect(result.value).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing.sm", fallback: undefined },
+					" ",
+					{ type: "reference", name: "spacing.md", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should throw when @-prefixed value references undefined variable", () => {
+			expect(() => variable("color", "@nonexistent")).toThrow(
+				'Variable "nonexistent" is not defined',
+			);
+		});
+	});
+
 	describe("accepting variable instance as name", () => {
 		let root: Root;
 		let variable: ReturnType<typeof createVariableFunction>;

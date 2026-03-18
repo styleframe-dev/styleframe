@@ -1,17 +1,21 @@
-import type {
-	DeclarationsCallbackContext,
-	Styleframe,
-	TokenValue,
-	Variable,
-} from "@styleframe/core";
+import type { Styleframe } from "@styleframe/core";
 import {
+	type AbbrElementConfig,
+	type AbbrElementResult,
+	type AddressElementConfig,
+	type AddressElementResult,
 	type BodyElementConfig,
 	type BodyElementResult,
 	type CaptionElementConfig,
 	type CaptionElementResult,
 	type CodeElementConfig,
-	type FocusElementConfig,
-	type FocusElementResult,
+	type CodeElementResult,
+	type DdElementConfig,
+	type DdElementResult,
+	type DlElementConfig,
+	type DlElementResult,
+	type DtElementConfig,
+	type DtElementResult,
 	type HeadingElementConfig,
 	type HeadingElementResult,
 	type HrElementConfig,
@@ -22,16 +26,24 @@ import {
 	type LinkElementResult,
 	type MarkElementConfig,
 	type MarkElementResult,
+	type OlElementConfig,
+	type OlElementResult,
+	type ParagraphElementConfig,
+	type ParagraphElementResult,
 	type PreElementConfig,
-	type SelectionElementConfig,
-	type SelectionElementResult,
+	type PreElementResult,
+	type SampElementConfig,
+	type SampElementResult,
+	type UlElementConfig,
+	type UlElementResult,
 	useAbbrElement,
 	useAddressElement,
 	useBodyElement,
 	useCaptionElement,
 	useCodeElement,
+	useDdElement,
 	useDlElement,
-	useFocusElement,
+	useDtElement,
 	useHeadingElement,
 	useHrElement,
 	useIframeElement,
@@ -45,64 +57,104 @@ import {
 	useParagraphElement,
 	usePreElement,
 	useSampElement,
-	useSelectionElement,
 	useSummaryElement,
 	useUlElement,
 } from "../elements";
+import {
+	type FocusStateConfig,
+	type FocusStateResult,
+	type SelectionStateConfig,
+	type SelectionStateResult,
+	useFocusState,
+	useSelectionState,
+} from "../states";
+import type { WithThemes } from "../types";
 
-// Re-export element defaults for backward compatibility
+// Re-export element defaults
 export {
-	defaultBodyValues,
-	defaultHeadingValues as defaultHeadingsValues,
-	defaultHeadingSizeRefs,
-	defaultLinkValues as defaultLinksValues,
-	defaultCodeValues,
-	defaultSelectionValues,
-	defaultFocusValues,
+	defaultAbbrOptions,
+	defaultAddressOptions,
+	defaultBodyOptions,
+	defaultCodeOptions,
+	defaultDdOptions,
+	defaultDlOptions,
+	defaultDtOptions,
+	defaultHeadingSizeConfig,
+	defaultHeadingOptions,
+	defaultLinkOptions,
+	defaultOlOptions,
+	defaultParagraphOptions,
+	defaultPreOptions,
+	defaultSampOptions,
+	defaultUlOptions,
+	defaultCaptionOptions,
+	defaultHrOptions,
+	defaultKbdOptions,
+	defaultMarkOptions,
 } from "../elements";
+
+// Re-export state defaults
+export { defaultFocusOptions, defaultSelectionOptions } from "../states";
 
 // =============================================================================
 // Configuration Types
 // =============================================================================
 
+export type GlobalAddressConfig = AddressElementConfig;
 export type GlobalBodyConfig = BodyElementConfig;
 export type GlobalHeadingsConfig = HeadingElementConfig;
 export type GlobalLinksConfig = LinkElementConfig;
 export type GlobalCodeConfig = CodeElementConfig;
-export type GlobalSelectionConfig = SelectionElementConfig;
-export type GlobalFocusConfig = FocusElementConfig;
+export type GlobalSelectionConfig = SelectionStateConfig;
+export type GlobalFocusConfig = FocusStateConfig;
+export type GlobalDlConfig = DlElementConfig;
+export type GlobalDtConfig = DtElementConfig;
+export type GlobalDdConfig = DdElementConfig;
 
 export interface GlobalThemeOverrides {
-	body?: Pick<BodyElementConfig, "color" | "background">;
-	heading?: Pick<HeadingElementConfig, "color">;
-	link?: Pick<LinkElementConfig, "color" | "hoverColor">;
-	selection?: SelectionElementConfig;
-	focus?: Pick<FocusElementConfig, "outlineColor">;
-	hr?: Pick<HrElementConfig, "borderColor">;
-	kbd?: Pick<KbdElementConfig, "background" | "color">;
-	mark?: Pick<MarkElementConfig, "background" | "color">;
-	caption?: Pick<CaptionElementConfig, "color">;
+	address?: AddressElementConfig;
+	body?: BodyElementConfig;
+	heading?: HeadingElementConfig;
+	link?: LinkElementConfig;
+	selection?: SelectionStateConfig;
+	focus?: FocusStateConfig;
+	hr?: HrElementConfig;
+	kbd?: KbdElementConfig;
+	mark?: MarkElementConfig;
+	caption?: CaptionElementConfig;
+	dl?: DlElementConfig;
+	dt?: DtElementConfig;
+	dd?: DdElementConfig;
+	abbr?: AbbrElementConfig;
+	samp?: SampElementConfig;
+	paragraph?: ParagraphElementConfig;
+	ol?: OlElementConfig;
+	ul?: UlElementConfig;
+	code?: CodeElementConfig;
+	pre?: PreElementConfig;
 }
 
 export interface GlobalPresetConfig {
-	body?: BodyElementConfig | false;
-	heading?: HeadingElementConfig | false;
-	link?: LinkElementConfig | false;
-	code?: CodeElementConfig | false;
-	selection?: SelectionElementConfig | false;
-	focus?: FocusElementConfig | false;
-	hr?: HrElementConfig | false;
-	kbd?: KbdElementConfig | false;
-	mark?: MarkElementConfig | false;
-	caption?: CaptionElementConfig | false;
-	pre?: PreElementConfig | false;
-	abbr?: boolean;
-	address?: boolean;
-	samp?: boolean;
-	dl?: boolean;
-	ol?: boolean;
-	ul?: boolean;
-	paragraph?: boolean;
+	address?: WithThemes<AddressElementConfig> | false;
+	body?: WithThemes<BodyElementConfig> | false;
+	heading?: WithThemes<HeadingElementConfig> | false;
+	link?: WithThemes<LinkElementConfig> | false;
+	code?: WithThemes<CodeElementConfig> | false;
+	selection?: WithThemes<SelectionStateConfig> | false;
+	focus?: WithThemes<FocusStateConfig> | false;
+	hr?: WithThemes<HrElementConfig> | false;
+	kbd?: WithThemes<KbdElementConfig> | false;
+	mark?: WithThemes<MarkElementConfig> | false;
+	caption?: WithThemes<CaptionElementConfig> | false;
+	pre?: WithThemes<PreElementConfig> | false;
+	dl?: WithThemes<DlElementConfig> | false;
+	dt?: WithThemes<DtElementConfig> | false;
+	dd?: WithThemes<DdElementConfig> | false;
+	abbr?: WithThemes<AbbrElementConfig> | false;
+	samp?: WithThemes<SampElementConfig> | false;
+	ol?: WithThemes<OlElementConfig> | false;
+	ul?: WithThemes<UlElementConfig> | false;
+	paragraph?: WithThemes<ParagraphElementConfig> | false;
 	img?: boolean;
 	iframe?: boolean;
 	output?: boolean;
@@ -116,20 +168,98 @@ export interface GlobalPresetConfig {
 // =============================================================================
 
 export interface GlobalPresetResult {
+	abbr?: AbbrElementResult;
+	address?: AddressElementResult;
 	body?: BodyElementResult;
 	heading?: HeadingElementResult;
 	link?: LinkElementResult;
-	selection?: SelectionElementResult;
-	focus?: FocusElementResult;
+	code?: CodeElementResult;
+	selection?: SelectionStateResult;
+	focus?: FocusStateResult;
 	hr?: HrElementResult;
 	kbd?: KbdElementResult;
 	mark?: MarkElementResult;
 	caption?: CaptionElementResult;
+	dl?: DlElementResult;
+	dt?: DtElementResult;
+	dd?: DdElementResult;
+	samp?: SampElementResult;
+	paragraph?: ParagraphElementResult;
+	ol?: OlElementResult;
+	ul?: UlElementResult;
+	pre?: PreElementResult;
 }
 
 // =============================================================================
 // Main Preset Function
 // =============================================================================
+
+/**
+ * Transposes centralized theme overrides into per-element theme maps.
+ *
+ * Converts `config.themes.dark.body` → `{ dark: bodyOverrides }` for use
+ * as the `themes` property in each element's `WithThemes<T>` options.
+ */
+function getElementThemes<T>(
+	configThemes: Record<string, GlobalThemeOverrides> | undefined,
+	key: keyof GlobalThemeOverrides,
+): Record<string, T> | undefined {
+	if (!configThemes) return undefined;
+	let result: Record<string, T> | undefined;
+	for (const [themeName, overrides] of Object.entries(configThemes)) {
+		const elementOverride = overrides[key];
+		if (elementOverride) {
+			result ??= {};
+			result[themeName] = elementOverride as T;
+		}
+	}
+	return result;
+}
+
+/**
+ * Merges per-element themes with transposed centralized themes.
+ * Centralized themes take precedence (more specific override).
+ */
+function mergeElementThemes<T>(
+	elementThemes: Record<string, T> | undefined,
+	centralThemes: Record<string, T> | undefined,
+): Record<string, T> | undefined {
+	if (!elementThemes && !centralThemes) return undefined;
+	if (!elementThemes) return centralThemes;
+	if (!centralThemes) return elementThemes;
+
+	const merged: Record<string, T> = {};
+	const themeNames = new Set([
+		...Object.keys(elementThemes),
+		...Object.keys(centralThemes),
+	]);
+	for (const name of themeNames) {
+		merged[name] = {
+			...elementThemes[name],
+			...centralThemes[name],
+		} as T;
+	}
+	return merged;
+}
+
+/**
+ * Builds the final WithThemes options for an element, merging per-element
+ * themes from the element config with transposed centralized themes.
+ */
+function buildElementOptions<T extends object>(
+	elementConfig: WithThemes<T> | undefined,
+	configThemes: Record<string, GlobalThemeOverrides> | undefined,
+	key: keyof GlobalThemeOverrides,
+): WithThemes<T> {
+	const config = elementConfig ?? ({} as WithThemes<T>);
+	const centralThemes = getElementThemes<T>(configThemes, key);
+	const mergedThemes = mergeElementThemes(config.themes, centralThemes);
+
+	if (mergedThemes) {
+		return { ...config, themes: mergedThemes };
+	}
+	return config;
+}
 
 export function useGlobalPreset(
 	s: Styleframe,
@@ -138,161 +268,172 @@ export function useGlobalPreset(
 	const result: GlobalPresetResult = {};
 
 	// ── Elements with variables ──
+	if (config.address !== false) {
+		result.address = useAddressElement(
+			s,
+			buildElementOptions(
+				config.address || undefined,
+				config.themes,
+				"address",
+			),
+		);
+	}
+
 	if (config.body !== false) {
 		result.body = useBodyElement(
 			s,
-			config.body === undefined ? {} : config.body,
+			buildElementOptions(config.body || undefined, config.themes, "body"),
 		);
 	}
 
 	if (config.heading !== false) {
 		result.heading = useHeadingElement(
 			s,
-			config.heading === undefined ? {} : config.heading,
+			buildElementOptions(
+				config.heading || undefined,
+				config.themes,
+				"heading",
+			),
 		);
 	}
 
 	if (config.link !== false) {
 		result.link = useLinkElement(
 			s,
-			config.link === undefined ? {} : config.link,
+			buildElementOptions(config.link || undefined, config.themes, "link"),
 		);
 	}
 
 	if (config.code !== false) {
-		useCodeElement(s, config.code === undefined ? {} : config.code);
+		result.code = useCodeElement(
+			s,
+			buildElementOptions(config.code || undefined, config.themes, "code"),
+		);
 	}
 
 	if (config.selection !== false) {
-		result.selection = useSelectionElement(
+		result.selection = useSelectionState(
 			s,
-			config.selection === undefined ? {} : config.selection,
+			buildElementOptions(
+				config.selection || undefined,
+				config.themes,
+				"selection",
+			),
 		);
 	}
 
 	if (config.focus !== false) {
-		result.focus = useFocusElement(
+		result.focus = useFocusState(
 			s,
-			config.focus === undefined ? {} : config.focus,
+			buildElementOptions(config.focus || undefined, config.themes, "focus"),
 		);
 	}
 
 	if (config.hr !== false) {
-		result.hr = useHrElement(s, config.hr === undefined ? {} : config.hr);
+		result.hr = useHrElement(
+			s,
+			buildElementOptions(config.hr || undefined, config.themes, "hr"),
+		);
 	}
 
 	if (config.kbd !== false) {
-		result.kbd = useKbdElement(s, config.kbd === undefined ? {} : config.kbd);
+		result.kbd = useKbdElement(
+			s,
+			buildElementOptions(config.kbd || undefined, config.themes, "kbd"),
+		);
 	}
 
 	if (config.mark !== false) {
 		result.mark = useMarkElement(
 			s,
-			config.mark === undefined ? {} : config.mark,
+			buildElementOptions(config.mark || undefined, config.themes, "mark"),
 		);
 	}
 
 	if (config.caption !== false) {
 		result.caption = useCaptionElement(
 			s,
-			config.caption === undefined ? {} : config.caption,
+			buildElementOptions(
+				config.caption || undefined,
+				config.themes,
+				"caption",
+			),
 		);
 	}
 
 	if (config.pre !== false) {
-		usePreElement(s, config.pre === undefined ? {} : config.pre);
+		result.pre = usePreElement(
+			s,
+			buildElementOptions(config.pre || undefined, config.themes, "pre"),
+		);
+	}
+
+	if (config.dl !== false) {
+		result.dl = useDlElement(
+			s,
+			buildElementOptions(config.dl || undefined, config.themes, "dl"),
+		);
+	}
+
+	if (config.dt !== false) {
+		result.dt = useDtElement(
+			s,
+			buildElementOptions(config.dt || undefined, config.themes, "dt"),
+		);
+	}
+
+	if (config.dd !== false) {
+		result.dd = useDdElement(
+			s,
+			buildElementOptions(config.dd || undefined, config.themes, "dd"),
+		);
+	}
+
+	if (config.abbr !== false) {
+		result.abbr = useAbbrElement(
+			s,
+			buildElementOptions(config.abbr || undefined, config.themes, "abbr"),
+		);
+	}
+
+	if (config.samp !== false) {
+		result.samp = useSampElement(
+			s,
+			buildElementOptions(config.samp || undefined, config.themes, "samp"),
+		);
+	}
+
+	if (config.ol !== false) {
+		result.ol = useOlElement(
+			s,
+			buildElementOptions(config.ol || undefined, config.themes, "ol"),
+		);
+	}
+
+	if (config.ul !== false) {
+		result.ul = useUlElement(
+			s,
+			buildElementOptions(config.ul || undefined, config.themes, "ul"),
+		);
+	}
+
+	if (config.paragraph !== false) {
+		result.paragraph = useParagraphElement(
+			s,
+			buildElementOptions(
+				config.paragraph || undefined,
+				config.themes,
+				"paragraph",
+			),
+		);
 	}
 
 	// ── Elements without variables ──
-	if (config.abbr !== false) useAbbrElement(s);
-	if (config.address !== false) useAddressElement(s);
-	if (config.samp !== false) useSampElement(s);
-	if (config.dl !== false) useDlElement(s);
-	if (config.ol !== false) useOlElement(s);
-	if (config.ul !== false) useUlElement(s);
-	if (config.paragraph !== false) useParagraphElement(s);
 	if (config.img !== false) useImgElement(s);
 	if (config.iframe !== false) useIframeElement(s);
 	if (config.output !== false) useOutputElement(s);
 	if (config.legend !== false) useLegendElement(s);
 	if (config.summary !== false) useSummaryElement(s);
-
-	// ── Themes ──
-	if (config.themes) {
-		for (const [themeName, overrides] of Object.entries(config.themes)) {
-			s.theme(themeName, (ctx: DeclarationsCallbackContext) => {
-				if (overrides.body && result.body) {
-					if (overrides.body.color) {
-						ctx.variable(result.body.bodyColor, overrides.body.color);
-					}
-					if (overrides.body.background) {
-						ctx.variable(result.body.bodyBackground, overrides.body.background);
-					}
-				}
-
-				if (overrides.heading?.color && result.heading) {
-					ctx.variable(result.heading.headingColor, overrides.heading.color);
-				}
-
-				if (overrides.link && result.link) {
-					if (overrides.link.color) {
-						ctx.variable(result.link.linkColor, overrides.link.color);
-					}
-					if (overrides.link.hoverColor) {
-						ctx.variable(result.link.linkHoverColor, overrides.link.hoverColor);
-					}
-				}
-
-				if (overrides.selection && result.selection) {
-					if (overrides.selection.background) {
-						ctx.variable(
-							result.selection.selectionBackground,
-							overrides.selection.background,
-						);
-					}
-					if (overrides.selection.color) {
-						ctx.variable(
-							result.selection.selectionColor,
-							overrides.selection.color,
-						);
-					}
-				}
-
-				if (overrides.focus?.outlineColor && result.focus) {
-					ctx.variable(
-						result.focus.focusOutlineColor,
-						overrides.focus.outlineColor,
-					);
-				}
-
-				if (overrides.hr?.borderColor && result.hr) {
-					ctx.variable(result.hr.hrBorderColor, overrides.hr.borderColor);
-				}
-
-				if (overrides.kbd && result.kbd) {
-					if (overrides.kbd.background) {
-						ctx.variable(result.kbd.kbdBackground, overrides.kbd.background);
-					}
-					if (overrides.kbd.color) {
-						ctx.variable(result.kbd.kbdColor, overrides.kbd.color);
-					}
-				}
-
-				if (overrides.mark && result.mark) {
-					if (overrides.mark.background) {
-						ctx.variable(result.mark.markBackground, overrides.mark.background);
-					}
-					if (overrides.mark.color) {
-						ctx.variable(result.mark.markColor, overrides.mark.color);
-					}
-				}
-
-				if (overrides.caption?.color && result.caption) {
-					ctx.variable(result.caption.captionColor, overrides.caption.color);
-				}
-			});
-		}
-	}
 
 	return result;
 }

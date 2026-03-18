@@ -1,8 +1,5 @@
 import { createUseVariable } from "../utils";
 import { letterSpacingValues } from "../values";
-
-export { letterSpacingValues };
-
 /**
  * Create a set of letter-spacing variables for use in a Styleframe instance.
  *

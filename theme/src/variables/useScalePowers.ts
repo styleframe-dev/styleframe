@@ -7,9 +7,6 @@ import type {
 } from "@styleframe/core";
 import { isRef } from "@styleframe/core";
 import { scalePowerValues } from "../values";
-
-export { scalePowerValues };
-
 export function useScalePowers<
 	Context extends DeclarationsCallbackContext,
 	T extends readonly number[],

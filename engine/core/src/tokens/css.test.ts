@@ -2,6 +2,7 @@ import type { Root, Selector } from "../types";
 import { createAtRuleFunction, createKeyframesFunction } from "./atRule";
 import { createCssFunction } from "./css";
 import { createRefFunction } from "./ref";
+import { createPropertyValueResolver, validateReference } from "./resolve";
 import { createRoot } from "./root";
 import { createVariableFunction } from "./variable";
 
@@ -548,6 +549,86 @@ describe("createCSSFunction", () => {
 				type: "css",
 				value: ["1px solid blue"],
 			});
+		});
+	});
+
+	describe("validateReference", () => {
+		it("should not throw when variable exists in root", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#006cff",
+			});
+
+			expect(() => validateReference("color.primary", root)).not.toThrow();
+		});
+
+		it("should throw when variable does not exist in root", () => {
+			expect(() => validateReference("color.nonexistent", root)).toThrow(
+				'[styleframe] Variable "color.nonexistent" is not defined. Check that the variable exists before referencing it with "@color.nonexistent".',
+			);
+		});
+	});
+
+	describe("resolvePropertyValue", () => {
+		let resolvePropertyValue: ReturnType<typeof createPropertyValueResolver>;
+
+		beforeEach(() => {
+			resolvePropertyValue = createPropertyValueResolver(root, root);
+		});
+
+		it("should resolve exact @reference to a Reference", () => {
+			root.variables.push({
+				type: "variable",
+				name: "color.primary",
+				value: "#006cff",
+			});
+			const result = resolvePropertyValue("@color.primary");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.primary",
+				fallback: undefined,
+			});
+		});
+
+		it("should resolve embedded @reference to a CSS object", () => {
+			const result = resolvePropertyValue("1px solid @color.primary");
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"1px solid ",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve multiple embedded @references to a CSS object", () => {
+			const result = resolvePropertyValue("@spacing.sm @spacing.md");
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing.sm", fallback: undefined },
+					" ",
+					{ type: "reference", name: "spacing.md", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should return non-string values unchanged", () => {
+			expect(resolvePropertyValue(42)).toBe(42);
+			expect(resolvePropertyValue(null)).toBeNull();
+			expect(resolvePropertyValue(undefined)).toBeUndefined();
+		});
+
+		it("should return strings without @ unchanged", () => {
+			expect(resolvePropertyValue("1px solid blue")).toBe("1px solid blue");
+			expect(resolvePropertyValue("red")).toBe("red");
 		});
 	});
 

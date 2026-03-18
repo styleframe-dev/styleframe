@@ -4,9 +4,10 @@ import {
 	useSwatchSpacing,
 	useSwatchTypography,
 	useSwatchDimensions,
-} from "./tokens.styleframe";
+} from "../../theme/useSwatch";
 
 const s = styleframe();
+const { ref, selector, css } = s;
 
 const { swatchColorTertiary, swatchColorBackground, swatchColorBorder } =
 	useSwatchColors(s);
@@ -15,47 +16,47 @@ const { swatchFontSize, swatchFontSizeSm, swatchFontWeightNormal } =
 	useSwatchTypography(s);
 const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
 
-s.selector(".swatch-card", {
+selector(".swatch-card", {
 	display: "flex",
 	flexDirection: "column",
-	borderRadius: s.ref(swatchBorderRadius),
-	border: s.css`1px solid ${s.ref(swatchColorBorder)}`,
-	background: s.ref(swatchColorBackground),
+	borderRadius: ref(swatchBorderRadius),
+	border: css`1px solid ${ref(swatchColorBorder)}`,
+	background: ref(swatchColorBackground),
 	overflow: "hidden",
 });
 
-s.selector(".swatch-card__body", {
+selector(".swatch-card__body", {
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
-	padding: s.ref(swatchPaddingMd),
+	padding: ref(swatchPaddingMd),
 });
 
-s.selector(".swatch-card__preview", {
-	width: s.ref(swatchPreviewSize),
-	height: s.ref(swatchPreviewSize),
+selector(".swatch-card__preview", {
+	width: ref(swatchPreviewSize),
+	height: ref(swatchPreviewSize),
 });
 
-s.selector(".swatch-card__footer", {
+selector(".swatch-card__footer", {
 	display: "flex",
 	flexDirection: "column",
 	alignItems: "center",
-	gap: s.ref(swatchGapXs),
-	padding: s.ref(swatchPaddingMd),
-	borderTop: s.css`1px solid ${s.ref(swatchColorBorder)}`,
-	background: s.ref(swatchColorBackground),
+	gap: ref(swatchGapXs),
+	padding: ref(swatchPaddingMd),
+	borderTop: css`1px solid ${ref(swatchColorBorder)}`,
+	background: ref(swatchColorBackground),
 });
 
-s.selector(".swatch-card__name", {
-	fontSize: s.ref(swatchFontSize),
-	fontWeight: s.ref(swatchFontWeightNormal),
-	color: s.ref(swatchColorTertiary),
+selector(".swatch-card__name", {
+	fontSize: ref(swatchFontSize),
+	fontWeight: ref(swatchFontWeightNormal),
+	color: ref(swatchColorTertiary),
 });
 
-s.selector(".swatch-card__label", {
-	fontSize: s.ref(swatchFontSizeSm),
-	fontWeight: s.ref(swatchFontWeightNormal),
-	color: s.ref(swatchColorTertiary),
+selector(".swatch-card__label", {
+	fontSize: ref(swatchFontSizeSm),
+	fontWeight: ref(swatchFontWeightNormal),
+	color: ref(swatchColorTertiary),
 	textAlign: "center",
 });
 

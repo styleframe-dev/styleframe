@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { useBorderStyle, borderStyleValues } from "./useBorderStyle";
+import { useBorderStyle } from "./useBorderStyle";
+import { borderStyleValues } from "../values";
 
 describe("useBorderStyle", () => {
 	it("should create all border style variables with correct names and values", () => {

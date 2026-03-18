@@ -10,26 +10,43 @@ function createInstance() {
 }
 
 describe("useHeadingElement", () => {
-	it("should create heading variable and selectors with defaults", () => {
+	it("should create heading variables and selectors with defaults", () => {
 		const s = createInstance();
 		const result = useHeadingElement(s);
 
 		expect(result.headingColor).toBeDefined();
+		expect(result.headingFontFamily).toBeDefined();
+		expect(result.headingFontWeight).toBeDefined();
+		expect(result.headingLineHeight).toBeDefined();
+		expect(result.headingH1FontSize).toBeDefined();
+		expect(result.headingH6FontSize).toBeDefined();
 
 		const css = consumeCSS(s.root, s.options);
 		expect(css).toContain("h1, h2, h3, h4, h5, h6");
-		expect(css).toContain("--heading--color");
-		expect(css).toContain("font-weight: var(--font-weight--bold)");
-		expect(css).toContain("line-height: var(--line-height--tight)");
-		expect(css).toContain("var(--font-size--4xl)");
-		expect(css).toContain("var(--font-size--md)");
+		expect(css).toContain("var(--heading--color)");
+		expect(css).toContain("var(--heading--font-weight)");
+		expect(css).toContain("var(--heading--line-height)");
+		expect(css).toContain("var(--heading--h1--font-size)");
+		expect(css).toContain("var(--heading--h6--font-size)");
 	});
 
 	it("should use custom heading sizes", () => {
 		const s = createInstance();
-		useHeadingElement(s, { sizes: { h1: "3rem" } });
+		const result = useHeadingElement(s, { sizes: { h1: "3rem" } });
 
-		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("3rem");
+		expect(result.headingH1FontSize.value).toBe("3rem");
+	});
+
+	it("should use custom typography values", () => {
+		const s = createInstance();
+		const result = useHeadingElement(s, {
+			fontFamily: "Georgia, serif",
+			fontWeight: "600",
+			lineHeight: "1.3",
+		});
+
+		expect(result.headingFontFamily.value).toBe("Georgia, serif");
+		expect(result.headingFontWeight.value).toBe("600");
+		expect(result.headingLineHeight.value).toBe("1.3");
 	});
 });

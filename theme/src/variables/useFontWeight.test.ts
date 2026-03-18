@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { fontWeightValues, useFontWeight } from "./useFontWeight";
+import { useFontWeight } from "./useFontWeight";
+import { fontWeightValues } from "../values";
 
 describe("useFontWeight", () => {
 	it("should create all font weight variables with correct names and values", () => {

@@ -274,7 +274,7 @@ describe("createUseUtility", () => {
 		useSpacing(s, { "1/2": "0.125rem", "2.5": "0.625rem" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._p\\:1/2 {");
+		expect(css).toContain("._p\\:1\\/2 {");
 		expect(css).toContain("._p\\:2\\.5 {");
 	});
 

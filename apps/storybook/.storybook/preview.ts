@@ -1,53 +1,21 @@
 import type { Preview } from "@storybook/vue3-vite";
 
 import "virtual:styleframe.css";
-import { Decorator } from "@storybook/vue3-vite";
-import { DecoratorHelpers } from "@storybook/addon-themes";
 import { light, dark } from "./theme";
-import { ref } from "vue";
+import { addons } from "storybook/preview-api";
+import { DARK_MODE_EVENT_NAME } from "@vueless/storybook-dark-mode";
 
-// export const withInklineTheme = ({
-// 	themes,
-// 	defaultTheme,
-// }: {
-// 	themes: Record<string, string>;
-// 	defaultTheme: string;
-// }) => {
-// 	const currentTheme = ref(defaultTheme);
-// 	const { initializeThemeState, pluckThemeFromContext, useThemeParameters } =
-// 		DecoratorHelpers;
+const channel = addons.getChannel();
 
-// 	initializeThemeState(Object.keys(themes), defaultTheme);
-
-// 	const decorator: Decorator = (story, context) => {
-// 		const selectedTheme = pluckThemeFromContext(context);
-// 		const { themeOverride } = useThemeParameters();
-
-// 		currentTheme.value = themeOverride || selectedTheme || defaultTheme;
-
-// 		return {
-// 			components: { story },
-// 			setup() {
-// 				return {};
-// 			},
-// 			template: `
-//                 <story />`,
-// 		};
-// 	};
-
-// 	return decorator;
-// };
+channel.on(DARK_MODE_EVENT_NAME, (isDark: boolean) => {
+	if (isDark) {
+		document.body.dataset.theme = "dark";
+	} else {
+		delete document.body.dataset.theme;
+	}
+});
 
 const preview: Preview = {
-	// decorators: [
-	// 	withInklineTheme({
-	// 		themes: {
-	// 			light: "light-theme",
-	// 			dark: "dark-theme",
-	// 		},
-	// 		defaultTheme: "light",
-	// 	}),
-	// ],
 	parameters: {
 		layout: "centered",
 		controls: {
@@ -69,8 +37,6 @@ const preview: Preview = {
 		darkMode: {
 			stylePreview: true,
 			current: "light",
-			darkClass: "dark-theme",
-			lightClass: "default-theme",
 			dark,
 			light,
 		},

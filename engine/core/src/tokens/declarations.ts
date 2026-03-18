@@ -13,6 +13,7 @@ import {
 } from "./atRule";
 import { createCssFunction } from "./css";
 import { createRefFunction } from "./ref";
+import { createPropertyValueResolver } from "./resolve";
 import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
 
@@ -42,7 +43,7 @@ export function createDeclarationsCallbackContext(
 export function parseDeclarationsBlock(
 	declarations: DeclarationsBlock,
 	context: DeclarationsCallbackContext,
-	root?: Root,
+	root: Root,
 ) {
 	for (const key in declarations) {
 		// If the key represents a selector or media query, remove it and add it as a separate declaration
@@ -74,16 +75,14 @@ export function parseDeclarationsBlock(
 	}
 
 	// Resolve @-prefixed string values to variable references
+	const resolvePropertyValue = createPropertyValueResolver(root, root);
 	for (const key in declarations) {
 		const value = declarations[key];
-		if (typeof value === "string" && value[0] === "@") {
-			const name = value.slice(1);
-			if (root && !root.variables.some((v) => v.name === name)) {
-				throw new Error(
-					`[styleframe] Variable "${name}" is not defined. Check that the variable exists before referencing it with "${value}".`,
-				);
+		if (isTokenValue(value)) {
+			const resolved = resolvePropertyValue(value);
+			if (resolved !== value) {
+				declarations[key] = resolved;
 			}
-			declarations[key] = context.ref(name);
 		}
 	}
 

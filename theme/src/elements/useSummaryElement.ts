@@ -1,7 +1,11 @@
-import type { Styleframe } from "@styleframe/core";
+import type { DeclarationsCallbackContext, Styleframe } from "@styleframe/core";
 
-export function useSummaryElement(s: Styleframe): void {
-	s.selector("summary", {
+export function useSummarySelectors(ctx: DeclarationsCallbackContext): void {
+	ctx.selector("summary", {
 		cursor: "pointer",
 	});
+}
+
+export function useSummaryElement(s: Styleframe): void {
+	useSummarySelectors(s);
 }

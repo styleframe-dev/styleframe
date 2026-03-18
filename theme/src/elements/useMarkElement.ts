@@ -1,40 +1,105 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
+import type { WithThemes } from "../types";
+import { mergeElementOptions, registerElementThemes } from "../utils";
 
-export const defaultMarkValues = {
+export const defaultMarkOptions: WithThemes<MarkElementConfig> = {
 	background: "#fef08a",
 	color: "inherit",
-	paddingBlock: "0.1875rem",
-	paddingInline: "0.375rem",
-} as const;
+	paddingTop: "0.1875rem",
+	paddingRight: "0.375rem",
+	paddingBottom: "0.1875rem",
+	paddingLeft: "0.375rem",
+	themes: {
+		dark: {
+			background: "@color.warning",
+		},
+	},
+};
 
 export interface MarkElementConfig {
 	background?: TokenValue;
 	color?: string;
-	paddingBlock?: TokenValue;
-	paddingInline?: TokenValue;
+	paddingTop?: TokenValue;
+	paddingRight?: TokenValue;
+	paddingBottom?: TokenValue;
+	paddingLeft?: TokenValue;
 }
 
 export interface MarkElementResult {
 	markBackground: Variable<"mark.background">;
 	markColor: Variable<"mark.color">;
+	markPaddingTop: Variable<"mark.padding-top">;
+	markPaddingRight: Variable<"mark.padding-right">;
+	markPaddingBottom: Variable<"mark.padding-bottom">;
+	markPaddingLeft: Variable<"mark.padding-left">;
+}
+
+export function useMarkDesignTokens(
+	ctx: DeclarationsCallbackContext,
+	config: MarkElementConfig = {},
+): Partial<MarkElementResult> {
+	const result: Partial<MarkElementResult> = {};
+
+	if (config.background !== undefined)
+		result.markBackground = ctx.variable("mark.background", config.background);
+	if (config.color !== undefined)
+		result.markColor = ctx.variable("mark.color", config.color);
+	if (config.paddingTop !== undefined)
+		result.markPaddingTop = ctx.variable("mark.padding-top", config.paddingTop);
+	if (config.paddingRight !== undefined)
+		result.markPaddingRight = ctx.variable(
+			"mark.padding-right",
+			config.paddingRight,
+		);
+	if (config.paddingBottom !== undefined)
+		result.markPaddingBottom = ctx.variable(
+			"mark.padding-bottom",
+			config.paddingBottom,
+		);
+	if (config.paddingLeft !== undefined)
+		result.markPaddingLeft = ctx.variable(
+			"mark.padding-left",
+			config.paddingLeft,
+		);
+
+	return result;
+}
+
+export function useMarkSelectors(
+	ctx: DeclarationsCallbackContext,
+	config: Required<MarkElementConfig>,
+): MarkElementResult {
+	const result = useMarkDesignTokens(ctx, config) as MarkElementResult;
+
+	ctx.selector("mark", {
+		background: ctx.ref(result.markBackground),
+		color: ctx.ref(result.markColor),
+		paddingTop: ctx.ref(result.markPaddingTop),
+		paddingRight: ctx.ref(result.markPaddingRight),
+		paddingBottom: ctx.ref(result.markPaddingBottom),
+		paddingLeft: ctx.ref(result.markPaddingLeft),
+	});
+
+	return result;
 }
 
 export function useMarkElement(
 	s: Styleframe,
-	config: MarkElementConfig = {},
+	options: WithThemes<MarkElementConfig> = {},
 ): MarkElementResult {
-	const background = config.background ?? defaultMarkValues.background;
-	const color = config.color ?? defaultMarkValues.color;
+	const { themes, ...config } = mergeElementOptions(
+		defaultMarkOptions,
+		options,
+	);
 
-	const markBackground = s.variable("mark.background", background);
-	const markColor = s.variable("mark.color", color);
+	const result = useMarkSelectors(s, config as Required<MarkElementConfig>);
 
-	s.selector("mark", {
-		background: s.ref(markBackground),
-		color: s.ref(markColor),
-		paddingBlock: config.paddingBlock ?? defaultMarkValues.paddingBlock,
-		paddingInline: config.paddingInline ?? defaultMarkValues.paddingInline,
-	});
+	registerElementThemes(s, themes, useMarkDesignTokens);
 
-	return { markBackground, markColor };
+	return result;
 }

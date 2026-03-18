@@ -1,8 +1,5 @@
 import { createUseDerivedVariable } from "../utils";
 import { colorLightnessValues } from "../values";
-
-export { colorLightnessValues };
-
 /**
  * Create a set of lightness levels for a color variable.
  *

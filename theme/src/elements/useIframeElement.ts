@@ -1,7 +1,11 @@
-import type { Styleframe } from "@styleframe/core";
+import type { DeclarationsCallbackContext, Styleframe } from "@styleframe/core";
 
-export function useIframeElement(s: Styleframe): void {
-	s.selector("iframe", {
+export function useIframeSelectors(ctx: DeclarationsCallbackContext): void {
+	ctx.selector("iframe", {
 		border: "0",
 	});
+}
+
+export function useIframeElement(s: Styleframe): void {
+	useIframeSelectors(s);
 }

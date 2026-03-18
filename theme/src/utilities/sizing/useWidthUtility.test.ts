@@ -70,9 +70,9 @@ describe("useWidthUtility", () => {
 		useWidthUtility(s, { "1/2": "50%", "1/3": "33.333333%" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._width\\:1/2 {");
+		expect(css).toContain("._width\\:1\\/2 {");
 		expect(css).toContain("width: 50%;");
-		expect(css).toContain("._width\\:1/3 {");
+		expect(css).toContain("._width\\:1\\/3 {");
 		expect(css).toContain("width: 33.333333%;");
 	});
 

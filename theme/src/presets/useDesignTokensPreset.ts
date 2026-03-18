@@ -15,6 +15,7 @@ import {
 	colorShadeValues,
 	colorTintValues,
 	colorValues,
+	darkModeColorValues,
 	easingValues,
 	fontFamilyValues,
 	fontSizeValues,
@@ -25,6 +26,8 @@ import {
 	scalePowerValues,
 	scaleValues,
 	spacingValues,
+} from "../values";
+import {
 	useBorderRadius,
 	useBorderStyle,
 	useBorderWidth,
@@ -444,6 +447,9 @@ const domainRegistry: DomainEntry[] = [
 	{
 		key: "colors",
 		defaults: colorValues as Record<string, TokenValue>,
+		themes: {
+			dark: darkModeColorValues,
+		},
 		process: (s, values, options, { config }) => {
 			const baseColors = useColor(s, values as Record<string, string>, options);
 			let result: Record<string, Variable> = { ...baseColors };

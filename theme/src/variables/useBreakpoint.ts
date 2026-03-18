@@ -1,8 +1,5 @@
 import { createUseVariable } from "../utils";
 import { breakpointValues } from "../values";
-
-export { breakpointValues };
-
 /**
  * Create a set of breakpoint variables for use in a Styleframe instance.
  *

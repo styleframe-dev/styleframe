@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { easingValues, useEasing } from "./useEasing";
+import { useEasing } from "./useEasing";
+import { easingValues } from "../values";
 
 describe("useEasing", () => {
 	it("should create a single easing variable with 'default' key", () => {

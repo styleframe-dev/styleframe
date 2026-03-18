@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { fontStyleValues, useFontStyle } from "./useFontStyle";
+import { useFontStyle } from "./useFontStyle";
+import { fontStyleValues } from "../values";
 
 describe("useFontStyle", () => {
 	it("should create all font style variables with correct names and values", () => {
