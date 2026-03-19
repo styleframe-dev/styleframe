@@ -12,7 +12,7 @@ export const useTransitionPropertyUtility = createUseUtility(
 	({ value }) => ({
 		transitionProperty: value,
 		transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-		transitionDuration: "150ms",
+		transitionDuration: "@duration.fast",
 	}),
 	{ defaults: transitionPropertyValues },
 );
@@ -36,6 +36,7 @@ export const useTransitionDurationUtility = createUseUtility(
 	({ value }) => ({
 		transitionDuration: value,
 	}),
+	{ namespace: "duration" },
 );
 
 /**
@@ -57,4 +58,5 @@ export const useTransitionDelayUtility = createUseUtility(
 	({ value }) => ({
 		transitionDelay: value,
 	}),
+	{ namespace: "duration" },
 );

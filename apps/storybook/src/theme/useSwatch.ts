@@ -13,7 +13,7 @@ export function useSwatchColors(s: Styleframe) {
 	const tertiary = s.variable("swatch.color.tertiary", "#374151", {
 		default: true,
 	});
-	const background = s.variable("swatch.color.background", "#ffffff", {
+	const background = s.variable("swatch.color.background", "@color.surface", {
 		default: true,
 	});
 	const border = s.variable("swatch.color.border", "#e2e8f0", {
