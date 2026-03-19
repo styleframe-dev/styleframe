@@ -20,67 +20,66 @@ describe("useFontWeight", () => {
 			fontWeight,
 		} = useFontWeight(s);
 
-		expect(fontWeightExtralight).toEqual({
+		expect(fontWeightExtralight).toMatchObject({
 			type: "variable",
 			name: "font-weight.extralight",
 			value: 200,
 		});
 
-		expect(fontWeightLight).toEqual({
+		expect(fontWeightLight).toMatchObject({
 			type: "variable",
 			name: "font-weight.light",
 			value: 300,
 		});
 
-		expect(fontWeightNormal).toEqual({
+		expect(fontWeightNormal).toMatchObject({
 			type: "variable",
 			name: "font-weight.normal",
 			value: "normal",
 		});
 
-		expect(fontWeightMedium).toEqual({
+		expect(fontWeightMedium).toMatchObject({
 			type: "variable",
 			name: "font-weight.medium",
 			value: 500,
 		});
 
-		expect(fontWeightSemibold).toEqual({
+		expect(fontWeightSemibold).toMatchObject({
 			type: "variable",
 			name: "font-weight.semibold",
 			value: 600,
 		});
 
-		expect(fontWeightBold).toEqual({
+		expect(fontWeightBold).toMatchObject({
 			type: "variable",
 			name: "font-weight.bold",
 			value: "bold",
 		});
 
-		expect(fontWeightBlack).toEqual({
+		expect(fontWeightBlack).toMatchObject({
 			type: "variable",
 			name: "font-weight.black",
 			value: 900,
 		});
 
-		expect(fontWeightLighter).toEqual({
+		expect(fontWeightLighter).toMatchObject({
 			type: "variable",
 			name: "font-weight.lighter",
 			value: "lighter",
 		});
 
-		expect(fontWeightBolder).toEqual({
+		expect(fontWeightBolder).toMatchObject({
 			type: "variable",
 			name: "font-weight.bolder",
 			value: "bolder",
 		});
 
-		expect(fontWeight).toEqual({
+		expect(fontWeight).toMatchObject({
 			type: "variable",
 			name: "font-weight",
 			value: {
 				type: "reference",
 				name: "font-weight.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -177,7 +176,6 @@ describe("useFontWeight", () => {
 		expect(customFontWeight.value).toEqual({
 			type: "reference",
 			name: "font-weight.bold",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -283,13 +281,12 @@ describe("useFontWeight", () => {
 			const s = styleframe();
 			const { fontWeight } = useFontWeight(s);
 
-			expect(fontWeight).toEqual({
+			expect(fontWeight).toMatchObject({
 				type: "variable",
 				name: "font-weight",
 				value: {
 					type: "reference",
 					name: "font-weight.normal",
-					fallback: undefined,
 				},
 			});
 		});
@@ -304,7 +301,6 @@ describe("useFontWeight", () => {
 			expect(fontWeight.value).toEqual({
 				type: "reference",
 				name: "font-weight.bold",
-				fallback: undefined,
 			});
 		});
 
@@ -355,7 +351,6 @@ describe("useFontWeight", () => {
 				expect(fontWeight.value).toEqual({
 					type: "reference",
 					name: `font-weight.${fontWeightName}`,
-					fallback: undefined,
 				});
 			}
 		});

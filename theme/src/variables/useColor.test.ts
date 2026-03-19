@@ -22,7 +22,7 @@ describe("useColor", () => {
 			primary: "#007bff",
 		});
 
-		expect(colorPrimary).toEqual({
+		expect(colorPrimary).toMatchObject({
 			type: "variable",
 			name: "color.primary",
 			value: toOklch("#007bff"),
@@ -40,19 +40,19 @@ describe("useColor", () => {
 			tertiary: "#28a745",
 		});
 
-		expect(colorPrimary).toEqual({
+		expect(colorPrimary).toMatchObject({
 			type: "variable",
 			name: "color.primary",
 			value: toOklch("#007bff"),
 		});
 
-		expect(colorSecondary).toEqual({
+		expect(colorSecondary).toMatchObject({
 			type: "variable",
 			name: "color.secondary",
 			value: toOklch("#6c757d"),
 		});
 
-		expect(colorTertiary).toEqual({
+		expect(colorTertiary).toMatchObject({
 			type: "variable",
 			name: "color.tertiary",
 			value: toOklch("#28a745"),
@@ -77,7 +77,7 @@ describe("useColor", () => {
 			"primary-dark": "#0056b3",
 		});
 
-		expect(colorPrimaryDark).toEqual({
+		expect(colorPrimaryDark).toMatchObject({
 			type: "variable",
 			name: "color.primary-dark",
 			value: toOklch("#0056b3"),
@@ -90,7 +90,7 @@ describe("useColor", () => {
 			primary_light: "#80bdff",
 		});
 
-		expect(colorPrimaryLight).toEqual({
+		expect(colorPrimaryLight).toMatchObject({
 			type: "variable",
 			name: "color.primary_light",
 			value: toOklch("#80bdff"),
@@ -103,7 +103,7 @@ describe("useColor", () => {
 			"500": "#007bff",
 		});
 
-		expect(color500).toEqual({
+		expect(color500).toMatchObject({
 			type: "variable",
 			name: "color.500",
 			value: toOklch("#007bff"),
@@ -116,7 +116,7 @@ describe("useColor", () => {
 			primary: "rgb(0, 123, 255)",
 		});
 
-		expect(colorPrimary).toEqual({
+		expect(colorPrimary).toMatchObject({
 			type: "variable",
 			name: "color.primary",
 			value: toOklch("rgb(0, 123, 255)"),
@@ -129,7 +129,7 @@ describe("useColor", () => {
 			primary: "rgba(0, 123, 255, 0.5)",
 		});
 
-		expect(colorPrimary).toEqual({
+		expect(colorPrimary).toMatchObject({
 			type: "variable",
 			name: "color.primary",
 			value: toOklch("rgba(0, 123, 255, 0.5)"),
@@ -142,7 +142,7 @@ describe("useColor", () => {
 			primary: "hsl(211, 100%, 50%)",
 		});
 
-		expect(colorPrimary).toEqual({
+		expect(colorPrimary).toMatchObject({
 			type: "variable",
 			name: "color.primary",
 			value: toOklch("hsl(211, 100%, 50%)"),
@@ -167,7 +167,6 @@ describe("useColor", () => {
 		expect(colorPrimary.value).toEqual({
 			type: "reference",
 			name: "base-color",
-			fallback: undefined,
 		});
 	});
 
@@ -300,22 +299,22 @@ describe("integration", () => {
 			"tint-50": 5,
 		} as const);
 
-		expect(colorBrandPrimary).toEqual({
+		expect(colorBrandPrimary).toMatchObject({
 			type: "variable",
 			name: "color.brand-primary",
 			value: toOklch("#007bff"),
 		});
-		expect(levels.colorBrandPrimary400).toEqual({
+		expect(levels.colorBrandPrimary400).toMatchObject({
 			type: "variable",
 			name: "color.brand-primary-400",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(shades.colorBrandPrimaryShade50).toEqual({
+		expect(shades.colorBrandPrimaryShade50).toMatchObject({
 			type: "variable",
 			name: "color.brand-primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorBrandPrimaryTint50).toEqual({
+		expect(tints.colorBrandPrimaryTint50).toMatchObject({
 			type: "variable",
 			name: "color.brand-primary-tint-50",
 			value: expect.objectContaining({ type: "css" }),

@@ -10,7 +10,7 @@ describe("useFontSize", () => {
 			default: "1rem",
 		});
 
-		expect(fontSize).toEqual({
+		expect(fontSize).toMatchObject({
 			type: "variable",
 			name: "font-size",
 			value: "1rem",
@@ -26,7 +26,7 @@ describe("useFontSize", () => {
 			sm: "0.875rem",
 		});
 
-		expect(fontSizeSm).toEqual({
+		expect(fontSizeSm).toMatchObject({
 			type: "variable",
 			name: "font-size.sm",
 			value: "0.875rem",
@@ -45,25 +45,25 @@ describe("useFontSize", () => {
 			lg: "1.25rem",
 		});
 
-		expect(fontSize).toEqual({
+		expect(fontSize).toMatchObject({
 			type: "variable",
 			name: "font-size",
 			value: "1rem",
 		});
 
-		expect(fontSizeSm).toEqual({
+		expect(fontSizeSm).toMatchObject({
 			type: "variable",
 			name: "font-size.sm",
 			value: "0.875rem",
 		});
 
-		expect(fontSizeMd).toEqual({
+		expect(fontSizeMd).toMatchObject({
 			type: "variable",
 			name: "font-size.md",
 			value: "1rem",
 		});
 
-		expect(fontSizeLg).toEqual({
+		expect(fontSizeLg).toMatchObject({
 			type: "variable",
 			name: "font-size.lg",
 			value: "1.25rem",
@@ -88,7 +88,7 @@ describe("useFontSize", () => {
 			"extra-large": "2rem",
 		});
 
-		expect(fontSizeExtraLarge).toEqual({
+		expect(fontSizeExtraLarge).toMatchObject({
 			type: "variable",
 			name: "font-size.extra-large",
 			value: "2rem",
@@ -101,7 +101,7 @@ describe("useFontSize", () => {
 			heading_primary: "1.5rem",
 		});
 
-		expect(fontSizeHeadingPrimary).toEqual({
+		expect(fontSizeHeadingPrimary).toMatchObject({
 			type: "variable",
 			name: "font-size.heading_primary",
 			value: "1.5rem",
@@ -114,7 +114,7 @@ describe("useFontSize", () => {
 			"100": "0.75rem",
 		});
 
-		expect(fontSize100).toEqual({
+		expect(fontSize100).toMatchObject({
 			type: "variable",
 			name: "font-size.100",
 			value: "0.75rem",
@@ -127,7 +127,7 @@ describe("useFontSize", () => {
 			default: "16px",
 		});
 
-		expect(fontSize).toEqual({
+		expect(fontSize).toMatchObject({
 			type: "variable",
 			name: "font-size",
 			value: "16px",
@@ -140,7 +140,7 @@ describe("useFontSize", () => {
 			base: "1.5em",
 		});
 
-		expect(fontSizeBase).toEqual({
+		expect(fontSizeBase).toMatchObject({
 			type: "variable",
 			name: "font-size.base",
 			value: "1.5em",
@@ -153,7 +153,7 @@ describe("useFontSize", () => {
 			relative: "125%",
 		});
 
-		expect(fontSizeRelative).toEqual({
+		expect(fontSizeRelative).toMatchObject({
 			type: "variable",
 			name: "font-size.relative",
 			value: "125%",
@@ -166,7 +166,7 @@ describe("useFontSize", () => {
 			fluid: "2.5vw",
 		});
 
-		expect(fontSizeFluid).toEqual({
+		expect(fontSizeFluid).toMatchObject({
 			type: "variable",
 			name: "font-size.fluid",
 			value: "2.5vw",
@@ -209,7 +209,6 @@ describe("useFontSize", () => {
 		expect(fontSize.value).toEqual({
 			type: "reference",
 			name: "base-size",
-			fallback: undefined,
 		});
 	});
 

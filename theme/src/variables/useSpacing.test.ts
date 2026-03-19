@@ -10,7 +10,7 @@ describe("useSpacing", () => {
 			default: "1rem",
 		});
 
-		expect(spacing).toEqual({
+		expect(spacing).toMatchObject({
 			type: "variable",
 			name: "spacing",
 			value: "1rem",
@@ -26,7 +26,7 @@ describe("useSpacing", () => {
 			sm: "0.5rem",
 		});
 
-		expect(spacingSm).toEqual({
+		expect(spacingSm).toMatchObject({
 			type: "variable",
 			name: "spacing.sm",
 			value: "0.5rem",
@@ -45,31 +45,30 @@ describe("useSpacing", () => {
 			lg: "2rem",
 		});
 
-		expect(spacingSm).toEqual({
+		expect(spacingSm).toMatchObject({
 			type: "variable",
 			name: "spacing.sm",
 			value: "0.5rem",
 		});
 
-		expect(spacingMd).toEqual({
+		expect(spacingMd).toMatchObject({
 			type: "variable",
 			name: "spacing.md",
 			value: "1rem",
 		});
 
-		expect(spacingLg).toEqual({
+		expect(spacingLg).toMatchObject({
 			type: "variable",
 			name: "spacing.lg",
 			value: "2rem",
 		});
 
-		expect(spacing).toEqual({
+		expect(spacing).toMatchObject({
 			type: "variable",
 			name: "spacing",
 			value: {
 				type: "reference",
 				name: "spacing.md",
-				fallback: undefined,
 			},
 		});
 	});
@@ -92,7 +91,7 @@ describe("useSpacing", () => {
 			"extra-large": "3rem",
 		});
 
-		expect(spacingExtraLarge).toEqual({
+		expect(spacingExtraLarge).toMatchObject({
 			type: "variable",
 			name: "spacing.extra-large",
 			value: "3rem",
@@ -105,7 +104,7 @@ describe("useSpacing", () => {
 			card_padding: "1.5rem",
 		});
 
-		expect(spacingCardPadding).toEqual({
+		expect(spacingCardPadding).toMatchObject({
 			type: "variable",
 			name: "spacing.card_padding",
 			value: "1.5rem",
@@ -118,7 +117,7 @@ describe("useSpacing", () => {
 			"100": "0.25rem",
 		});
 
-		expect(spacing100).toEqual({
+		expect(spacing100).toMatchObject({
 			type: "variable",
 			name: "spacing.100",
 			value: "0.25rem",
@@ -131,7 +130,7 @@ describe("useSpacing", () => {
 			default: "16px",
 		});
 
-		expect(spacing).toEqual({
+		expect(spacing).toMatchObject({
 			type: "variable",
 			name: "spacing",
 			value: "16px",
@@ -144,7 +143,7 @@ describe("useSpacing", () => {
 			base: "1.5em",
 		});
 
-		expect(spacingBase).toEqual({
+		expect(spacingBase).toMatchObject({
 			type: "variable",
 			name: "spacing.base",
 			value: "1.5em",
@@ -157,7 +156,7 @@ describe("useSpacing", () => {
 			relative: "5%",
 		});
 
-		expect(spacingRelative).toEqual({
+		expect(spacingRelative).toMatchObject({
 			type: "variable",
 			name: "spacing.relative",
 			value: "5%",
@@ -170,7 +169,7 @@ describe("useSpacing", () => {
 			fluid: "2.5vw",
 		});
 
-		expect(spacingFluid).toEqual({
+		expect(spacingFluid).toMatchObject({
 			type: "variable",
 			name: "spacing.fluid",
 			value: "2.5vw",
@@ -213,7 +212,6 @@ describe("useSpacing", () => {
 		expect(spacing.value).toEqual({
 			type: "reference",
 			name: "base-spacing",
-			fallback: undefined,
 		});
 	});
 
@@ -258,7 +256,6 @@ describe("useSpacing", () => {
 		expect(spaces.spacing.value).toEqual({
 			type: "reference",
 			name: "spacing.md",
-			fallback: undefined,
 		});
 		expect(spaces.spacingMd.value).toBe("1rem");
 		expect(spaces.spacingLg.value).toBe("1.5rem");

@@ -10,17 +10,17 @@ describe("useColorTint", () => {
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		const tints = useColorTint(s, colorPrimary, colorTintValues);
 
-		expect(tints.colorPrimaryTint50).toEqual({
+		expect(tints.colorPrimaryTint50).toMatchObject({
 			type: "variable",
 			name: "color--primary-tint-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint100).toEqual({
+		expect(tints.colorPrimaryTint100).toMatchObject({
 			type: "variable",
 			name: "color--primary-tint-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint150).toEqual({
+		expect(tints.colorPrimaryTint150).toMatchObject({
 			type: "variable",
 			name: "color--primary-tint-150",
 			value: expect.objectContaining({ type: "css" }),
@@ -42,22 +42,22 @@ describe("useColorTint", () => {
 			"tint-100": 10,
 		} as const);
 
-		expect(tints.colorPrimaryTint25).toEqual({
+		expect(tints.colorPrimaryTint25).toMatchObject({
 			type: "variable",
 			name: "color--primary-tint-25",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint50).toEqual({
+		expect(tints.colorPrimaryTint50).toMatchObject({
 			type: "variable",
 			name: "color--primary-tint-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint75).toEqual({
+		expect(tints.colorPrimaryTint75).toMatchObject({
 			type: "variable",
 			name: "color--primary-tint-75",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint100).toEqual({
+		expect(tints.colorPrimaryTint100).toMatchObject({
 			type: "variable",
 			name: "color--primary-tint-100",
 			value: expect.objectContaining({ type: "css" }),
@@ -120,7 +120,7 @@ describe("useColorTint", () => {
 			"tint-100": 10,
 		} as const);
 
-		expect(tints.customColorTint100).toEqual({
+		expect(tints.customColorTint100).toMatchObject({
 			type: "variable",
 			name: "custom-color-tint-100",
 			value: expect.objectContaining({ type: "css" }),

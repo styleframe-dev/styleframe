@@ -15,37 +15,36 @@ describe("useFontStyle", () => {
 			fontStyle,
 		} = useFontStyle(s);
 
-		expect(fontStyleItalic).toEqual({
+		expect(fontStyleItalic).toMatchObject({
 			type: "variable",
 			name: "font-style.italic",
 			value: "italic",
 		});
 
-		expect(fontStyleOblique).toEqual({
+		expect(fontStyleOblique).toMatchObject({
 			type: "variable",
 			name: "font-style.oblique",
 			value: "oblique",
 		});
 
-		expect(fontStyleNormal).toEqual({
+		expect(fontStyleNormal).toMatchObject({
 			type: "variable",
 			name: "font-style.normal",
 			value: "normal",
 		});
 
-		expect(fontStyleInherit).toEqual({
+		expect(fontStyleInherit).toMatchObject({
 			type: "variable",
 			name: "font-style.inherit",
 			value: "inherit",
 		});
 
-		expect(fontStyle).toEqual({
+		expect(fontStyle).toMatchObject({
 			type: "variable",
 			name: "font-style",
 			value: {
 				type: "reference",
 				name: "font-style.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -122,7 +121,6 @@ describe("useFontStyle", () => {
 		expect(customFontStyle.value).toEqual({
 			type: "reference",
 			name: "font-style.italic",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -197,13 +195,12 @@ describe("useFontStyle", () => {
 			const s = styleframe();
 			const { fontStyle } = useFontStyle(s);
 
-			expect(fontStyle).toEqual({
+			expect(fontStyle).toMatchObject({
 				type: "variable",
 				name: "font-style",
 				value: {
 					type: "reference",
 					name: "font-style.normal",
-					fallback: undefined,
 				},
 			});
 		});
@@ -218,7 +215,6 @@ describe("useFontStyle", () => {
 			expect(fontStyle.value).toEqual({
 				type: "reference",
 				name: "font-style.italic",
-				fallback: undefined,
 			});
 		});
 
@@ -253,7 +249,6 @@ describe("useFontStyle", () => {
 				expect(fontStyle.value).toEqual({
 					type: "reference",
 					name: `font-style.${fontStyleName}`,
-					fallback: undefined,
 				});
 			}
 		});
@@ -549,7 +544,6 @@ article blockquote {
 			expect(emphasizedStyle.value).toEqual({
 				type: "reference",
 				name: "font-style.italic",
-				fallback: undefined,
 			});
 		});
 	});

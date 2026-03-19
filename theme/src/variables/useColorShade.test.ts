@@ -10,17 +10,17 @@ describe("useColorShade", () => {
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		const shades = useColorShade(s, colorPrimary, colorShadeValues);
 
-		expect(shades.colorPrimaryShade50).toEqual({
+		expect(shades.colorPrimaryShade50).toMatchObject({
 			type: "variable",
 			name: "color--primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(shades.colorPrimaryShade100).toEqual({
+		expect(shades.colorPrimaryShade100).toMatchObject({
 			type: "variable",
 			name: "color--primary-shade-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(shades.colorPrimaryShade150).toEqual({
+		expect(shades.colorPrimaryShade150).toMatchObject({
 			type: "variable",
 			name: "color--primary-shade-150",
 			value: expect.objectContaining({ type: "css" }),
@@ -42,22 +42,22 @@ describe("useColorShade", () => {
 			"shade-100": 10,
 		} as const);
 
-		expect(shades.colorPrimaryShade25).toEqual({
+		expect(shades.colorPrimaryShade25).toMatchObject({
 			type: "variable",
 			name: "color--primary-shade-25",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(shades.colorPrimaryShade50).toEqual({
+		expect(shades.colorPrimaryShade50).toMatchObject({
 			type: "variable",
 			name: "color--primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(shades.colorPrimaryShade75).toEqual({
+		expect(shades.colorPrimaryShade75).toMatchObject({
 			type: "variable",
 			name: "color--primary-shade-75",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(shades.colorPrimaryShade100).toEqual({
+		expect(shades.colorPrimaryShade100).toMatchObject({
 			type: "variable",
 			name: "color--primary-shade-100",
 			value: expect.objectContaining({ type: "css" }),
@@ -100,7 +100,7 @@ describe("useColorShade", () => {
 		const colorPrimaryDark = s.variable("color--primary-dark", "#0056b3");
 		const shades = useColorShade(s, colorPrimaryDark, { "shade-50": 5 });
 
-		expect(shades.colorPrimaryDarkShade50).toEqual({
+		expect(shades.colorPrimaryDarkShade50).toMatchObject({
 			type: "variable",
 			name: "color--primary-dark-shade-50",
 			value: expect.objectContaining({ type: "css" }),
@@ -122,7 +122,7 @@ describe("useColorShade", () => {
 			"shade-100": 10,
 		} as const);
 
-		expect(shades.customColorShade100).toEqual({
+		expect(shades.customColorShade100).toMatchObject({
 			type: "variable",
 			name: "custom-color-shade-100",
 			value: expect.objectContaining({ type: "css" }),

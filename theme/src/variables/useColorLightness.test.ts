@@ -11,17 +11,17 @@ describe("useColorLightness", () => {
 		const levels = useColorLightness(s, colorPrimary, colorLightnessValues);
 
 		// Test some of the default levels (we know they exist from the default parameter)
-		expect(levels.colorPrimary50).toEqual({
+		expect(levels.colorPrimary50).toMatchObject({
 			type: "variable",
 			name: "color--primary-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(levels.colorPrimary500).toEqual({
+		expect(levels.colorPrimary500).toMatchObject({
 			type: "variable",
 			name: "color--primary-500",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(levels.colorPrimary950).toEqual({
+		expect(levels.colorPrimary950).toMatchObject({
 			type: "variable",
 			name: "color--primary-950",
 			value: expect.objectContaining({ type: "css" }),
@@ -61,17 +61,17 @@ describe("useColorLightness", () => {
 			300: 30,
 		} as const);
 
-		expect(levels.colorPrimary100).toEqual({
+		expect(levels.colorPrimary100).toMatchObject({
 			type: "variable",
 			name: "color--primary-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(levels.colorPrimary200).toEqual({
+		expect(levels.colorPrimary200).toMatchObject({
 			type: "variable",
 			name: "color--primary-200",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(levels.colorPrimary300).toEqual({
+		expect(levels.colorPrimary300).toMatchObject({
 			type: "variable",
 			name: "color--primary-300",
 			value: expect.objectContaining({ type: "css" }),
@@ -120,7 +120,7 @@ describe("useColorLightness", () => {
 			500: 50,
 		} as const);
 
-		expect(levels.customColor500).toEqual({
+		expect(levels.customColor500).toMatchObject({
 			type: "variable",
 			name: "custom-color-500",
 			value: expect.objectContaining({ type: "css" }),

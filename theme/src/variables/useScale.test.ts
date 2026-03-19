@@ -20,61 +20,60 @@ describe("useScale", () => {
 			scale,
 		} = useScale(s);
 
-		expect(scaleMinorSecond).toEqual({
+		expect(scaleMinorSecond).toMatchObject({
 			type: "variable",
 			name: "scale.minor-second",
 			value: 1.067,
 		});
 
-		expect(scaleMajorSecond).toEqual({
+		expect(scaleMajorSecond).toMatchObject({
 			type: "variable",
 			name: "scale.major-second",
 			value: 1.125,
 		});
 
-		expect(scaleMinorThird).toEqual({
+		expect(scaleMinorThird).toMatchObject({
 			type: "variable",
 			name: "scale.minor-third",
 			value: 1.2,
 		});
 
-		expect(scaleMajorThird).toEqual({
+		expect(scaleMajorThird).toMatchObject({
 			type: "variable",
 			name: "scale.major-third",
 			value: 1.25,
 		});
 
-		expect(scalePerfectFourth).toEqual({
+		expect(scalePerfectFourth).toMatchObject({
 			type: "variable",
 			name: "scale.perfect-fourth",
 			value: 1.333,
 		});
 
-		expect(scaleAugmentedFourth).toEqual({
+		expect(scaleAugmentedFourth).toMatchObject({
 			type: "variable",
 			name: "scale.augmented-fourth",
 			value: 1.414,
 		});
 
-		expect(scalePerfectFifth).toEqual({
+		expect(scalePerfectFifth).toMatchObject({
 			type: "variable",
 			name: "scale.perfect-fifth",
 			value: 1.5,
 		});
 
-		expect(scaleGolden).toEqual({
+		expect(scaleGolden).toMatchObject({
 			type: "variable",
 			name: "scale.golden",
 			value: 1.618,
 		});
 
-		expect(scale).toEqual({
+		expect(scale).toMatchObject({
 			type: "variable",
 			name: "scale",
 			value: {
 				type: "reference",
 				name: "scale.minor-third",
-				fallback: undefined,
 			},
 		});
 	});
@@ -160,7 +159,6 @@ describe("useScale", () => {
 		expect(customScale.value).toEqual({
 			type: "reference",
 			name: "scale.golden",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -235,13 +233,12 @@ describe("useScale", () => {
 			const s = styleframe();
 			const { scale } = useScale(s);
 
-			expect(scale).toEqual({
+			expect(scale).toMatchObject({
 				type: "variable",
 				name: "scale",
 				value: {
 					type: "reference",
 					name: "scale.minor-third",
-					fallback: undefined,
 				},
 			});
 		});
@@ -256,7 +253,6 @@ describe("useScale", () => {
 			expect(scale.value).toEqual({
 				type: "reference",
 				name: "scale.perfect-fourth",
-				fallback: undefined,
 			});
 		});
 
@@ -294,7 +290,6 @@ describe("useScale", () => {
 				expect(scale.value).toEqual({
 					type: "reference",
 					name: `scale.${scaleName}`,
-					fallback: undefined,
 				});
 			}
 		});

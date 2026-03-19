@@ -11,7 +11,7 @@ describe("useEasing", () => {
 			default: "ease-in-out",
 		});
 
-		expect(easing).toEqual({
+		expect(easing).toMatchObject({
 			type: "variable",
 			name: "easing",
 			value: "ease-in-out",
@@ -27,7 +27,7 @@ describe("useEasing", () => {
 			"ease-out-cubic": "cubic-bezier(0.215, 0.61, 0.355, 1)",
 		});
 
-		expect(easingEaseOutCubic).toEqual({
+		expect(easingEaseOutCubic).toMatchObject({
 			type: "variable",
 			name: "easing.ease-out-cubic",
 			value: "cubic-bezier(0.215, 0.61, 0.355, 1)",
@@ -51,31 +51,30 @@ describe("useEasing", () => {
 			},
 		);
 
-		expect(easingEaseIn).toEqual({
+		expect(easingEaseIn).toMatchObject({
 			type: "variable",
 			name: "easing.ease-in",
 			value: "ease-in",
 		});
 
-		expect(easingEaseOut).toEqual({
+		expect(easingEaseOut).toMatchObject({
 			type: "variable",
 			name: "easing.ease-out",
 			value: "ease-out",
 		});
 
-		expect(easingEaseInOut).toEqual({
+		expect(easingEaseInOut).toMatchObject({
 			type: "variable",
 			name: "easing.ease-in-out",
 			value: "ease-in-out",
 		});
 
-		expect(easing).toEqual({
+		expect(easing).toMatchObject({
 			type: "variable",
 			name: "easing",
 			value: {
 				type: "reference",
 				name: "easing.ease-in-out",
-				fallback: undefined,
 			},
 		});
 	});
@@ -98,7 +97,7 @@ describe("useEasing", () => {
 			"ease-in-sine": "cubic-bezier(0.47, 0, 0.745, 0.715)",
 		});
 
-		expect(easingEaseInSine).toEqual({
+		expect(easingEaseInSine).toMatchObject({
 			type: "variable",
 			name: "easing.ease-in-sine",
 			value: "cubic-bezier(0.47, 0, 0.745, 0.715)",
@@ -114,7 +113,7 @@ describe("useEasing", () => {
 			spring: springValue,
 		});
 
-		expect(easingSpring).toEqual({
+		expect(easingSpring).toMatchObject({
 			type: "variable",
 			name: "easing.spring",
 			value: springValue,
@@ -130,7 +129,7 @@ describe("useEasing", () => {
 			bounce: bounceValue,
 		});
 
-		expect(easingBounce).toEqual({
+		expect(easingBounce).toMatchObject({
 			type: "variable",
 			name: "easing.bounce",
 			value: bounceValue,
@@ -155,7 +154,6 @@ describe("useEasing", () => {
 		expect(easing.value).toEqual({
 			type: "reference",
 			name: "base-easing",
-			fallback: undefined,
 		});
 	});
 

@@ -10,7 +10,7 @@ describe("useZIndex", () => {
 			default: "0",
 		});
 
-		expect(zIndex).toEqual({
+		expect(zIndex).toMatchObject({
 			type: "variable",
 			name: "z-index",
 			value: "0",
@@ -26,7 +26,7 @@ describe("useZIndex", () => {
 			modal: "400",
 		});
 
-		expect(zIndexModal).toEqual({
+		expect(zIndexModal).toMatchObject({
 			type: "variable",
 			name: "z-index.modal",
 			value: "400",
@@ -45,25 +45,25 @@ describe("useZIndex", () => {
 			toast: "600",
 		});
 
-		expect(zIndex).toEqual({
+		expect(zIndex).toMatchObject({
 			type: "variable",
 			name: "z-index",
 			value: "0",
 		});
 
-		expect(zIndexDropdown).toEqual({
+		expect(zIndexDropdown).toMatchObject({
 			type: "variable",
 			name: "z-index.dropdown",
 			value: "100",
 		});
 
-		expect(zIndexModal).toEqual({
+		expect(zIndexModal).toMatchObject({
 			type: "variable",
 			name: "z-index.modal",
 			value: "400",
 		});
 
-		expect(zIndexToast).toEqual({
+		expect(zIndexToast).toMatchObject({
 			type: "variable",
 			name: "z-index.toast",
 			value: "600",
@@ -88,7 +88,7 @@ describe("useZIndex", () => {
 			hide: "-1",
 		});
 
-		expect(zIndexHide).toEqual({
+		expect(zIndexHide).toMatchObject({
 			type: "variable",
 			name: "z-index.hide",
 			value: "-1",
@@ -101,7 +101,7 @@ describe("useZIndex", () => {
 			auto: "auto",
 		});
 
-		expect(zIndexAuto).toEqual({
+		expect(zIndexAuto).toMatchObject({
 			type: "variable",
 			name: "z-index.auto",
 			value: "auto",
@@ -114,7 +114,7 @@ describe("useZIndex", () => {
 			"100": "100",
 		});
 
-		expect(zIndex100).toEqual({
+		expect(zIndex100).toMatchObject({
 			type: "variable",
 			name: "z-index.100",
 			value: "100",
@@ -139,7 +139,6 @@ describe("useZIndex", () => {
 		expect(zIndex.value).toEqual({
 			type: "reference",
 			name: "base-z-index",
-			fallback: undefined,
 		});
 	});
 

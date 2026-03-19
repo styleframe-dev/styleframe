@@ -114,7 +114,6 @@ describe("useBorderColor", () => {
 		expect(customBorderColor.value).toEqual({
 			type: "reference",
 			name: "border-color.primary",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -194,7 +193,6 @@ describe("useBorderColor", () => {
 			expect(borderColor.value).toEqual({
 				type: "reference",
 				name: "border-color.primary",
-				fallback: undefined,
 			});
 		});
 

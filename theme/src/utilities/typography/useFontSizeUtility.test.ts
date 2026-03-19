@@ -81,7 +81,6 @@ describe("useFontSizeUtility", () => {
 		expect(utility.declarations?.fontSize).toEqual({
 			type: "reference",
 			name: "font-size.base",
-			fallback: undefined,
 		});
 	});
 });

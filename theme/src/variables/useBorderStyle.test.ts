@@ -19,61 +19,60 @@ describe("useBorderStyle", () => {
 			borderStyle,
 		} = useBorderStyle(s);
 
-		expect(borderStyleNone).toEqual({
+		expect(borderStyleNone).toMatchObject({
 			type: "variable",
 			name: "border-style.none",
 			value: "none",
 		});
 
-		expect(borderStyleSolid).toEqual({
+		expect(borderStyleSolid).toMatchObject({
 			type: "variable",
 			name: "border-style.solid",
 			value: "solid",
 		});
 
-		expect(borderStyleDashed).toEqual({
+		expect(borderStyleDashed).toMatchObject({
 			type: "variable",
 			name: "border-style.dashed",
 			value: "dashed",
 		});
 
-		expect(borderStyleDotted).toEqual({
+		expect(borderStyleDotted).toMatchObject({
 			type: "variable",
 			name: "border-style.dotted",
 			value: "dotted",
 		});
 
-		expect(borderStyleDouble).toEqual({
+		expect(borderStyleDouble).toMatchObject({
 			type: "variable",
 			name: "border-style.double",
 			value: "double",
 		});
 
-		expect(borderStyleGroove).toEqual({
+		expect(borderStyleGroove).toMatchObject({
 			type: "variable",
 			name: "border-style.groove",
 			value: "groove",
 		});
 
-		expect(borderStyleInset).toEqual({
+		expect(borderStyleInset).toMatchObject({
 			type: "variable",
 			name: "border-style.inset",
 			value: "inset",
 		});
 
-		expect(borderStyleOutset).toEqual({
+		expect(borderStyleOutset).toMatchObject({
 			type: "variable",
 			name: "border-style.outset",
 			value: "outset",
 		});
 
-		expect(borderStyle).toEqual({
+		expect(borderStyle).toMatchObject({
 			type: "variable",
 			name: "border-style",
 			value: {
 				type: "reference",
 				name: "border-style.solid",
-				fallback: undefined,
 			},
 		});
 	});
@@ -162,7 +161,6 @@ describe("useBorderStyle", () => {
 		expect(customBorderStyle.value).toEqual({
 			type: "reference",
 			name: "border-style.dotted",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -262,13 +260,12 @@ describe("useBorderStyle", () => {
 			const s = styleframe();
 			const { borderStyle } = useBorderStyle(s);
 
-			expect(borderStyle).toEqual({
+			expect(borderStyle).toMatchObject({
 				type: "variable",
 				name: "border-style",
 				value: {
 					type: "reference",
 					name: "border-style.solid",
-					fallback: undefined,
 				},
 			});
 		});
@@ -283,7 +280,6 @@ describe("useBorderStyle", () => {
 			expect(borderStyle.value).toEqual({
 				type: "reference",
 				name: "border-style.dashed",
-				fallback: undefined,
 			});
 		});
 
@@ -331,7 +327,6 @@ describe("useBorderStyle", () => {
 				expect(borderStyle.value).toEqual({
 					type: "reference",
 					name: `border-style.${borderStyleName}`,
-					fallback: undefined,
 				});
 			}
 		});

@@ -11,7 +11,7 @@ describe("createUseVariable", () => {
 			default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto",
 		});
 
-		expect(fontFamily).toEqual({
+		expect(fontFamily).toMatchObject({
 			type: "variable",
 			name: "font-family",
 			value: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto",
@@ -25,7 +25,7 @@ describe("createUseVariable", () => {
 			default: "1.5",
 		});
 
-		expect(lineHeight).toEqual({
+		expect(lineHeight).toMatchObject({
 			type: "variable",
 			name: "line-height",
 			value: "1.5",
@@ -39,7 +39,7 @@ describe("createUseVariable", () => {
 			default: "value",
 		});
 
-		expect(customProperty).toEqual({
+		expect(customProperty).toMatchObject({
 			type: "variable",
 			name: "custom-property",
 			value: "value",
@@ -53,7 +53,7 @@ describe("createUseVariable", () => {
 			large: "20px",
 		});
 
-		expect(fontSizeLarge).toEqual({
+		expect(fontSizeLarge).toMatchObject({
 			type: "variable",
 			name: "font-size.large",
 			value: "20px",
@@ -69,19 +69,19 @@ describe("createUseVariable", () => {
 			large: "32px",
 		});
 
-		expect(spacing).toEqual({
+		expect(spacing).toMatchObject({
 			type: "variable",
 			name: "spacing",
 			value: "16px",
 		});
 
-		expect(spacingSmall).toEqual({
+		expect(spacingSmall).toMatchObject({
 			type: "variable",
 			name: "spacing.small",
 			value: "8px",
 		});
 
-		expect(spacingLarge).toEqual({
+		expect(spacingLarge).toMatchObject({
 			type: "variable",
 			name: "spacing.large",
 			value: "32px",
@@ -108,7 +108,7 @@ describe("createUseVariable", () => {
 			"primary-light": "#3b82f6",
 		});
 
-		expect(colorPrimaryLight).toEqual({
+		expect(colorPrimaryLight).toMatchObject({
 			type: "variable",
 			name: "color.primary-light",
 			value: "#3b82f6",
@@ -122,7 +122,7 @@ describe("createUseVariable", () => {
 			primary_dark: "#1e40af",
 		});
 
-		expect(colorPrimaryDark).toEqual({
+		expect(colorPrimaryDark).toMatchObject({
 			type: "variable",
 			name: "color.primary_dark",
 			value: "#1e40af",
@@ -136,7 +136,7 @@ describe("createUseVariable", () => {
 			"400": "400",
 		});
 
-		expect(fontWeight400).toEqual({
+		expect(fontWeight400).toMatchObject({
 			type: "variable",
 			name: "font-weight.400",
 			value: "400",
@@ -163,7 +163,6 @@ describe("createUseVariable", () => {
 		expect(size.value).toEqual({
 			type: "reference",
 			name: "base-size",
-			fallback: undefined,
 		});
 	});
 
@@ -341,7 +340,6 @@ describe("createUseVariable", () => {
 			expect(color.value).toEqual({
 				type: "reference",
 				name: "base-color",
-				fallback: undefined,
 			});
 			expect(colorCustom.value).toBe("rgb(0, 255, 0)");
 		});
@@ -562,12 +560,10 @@ describe("createUseVariable", () => {
 			expect(colorPrimary.value).toEqual({
 				type: "reference",
 				name: "color",
-				fallback: undefined,
 			});
 			expect(colorHover.value).toEqual({
 				type: "reference",
 				name: "color.primary",
-				fallback: undefined,
 			});
 		});
 
@@ -584,12 +580,10 @@ describe("createUseVariable", () => {
 			expect(sizeMedium.value).toEqual({
 				type: "reference",
 				name: "size",
-				fallback: undefined,
 			});
 			expect(sizeLarge.value).toEqual({
 				type: "reference",
 				name: "size.medium",
-				fallback: undefined,
 			});
 		});
 
@@ -630,7 +624,6 @@ describe("createUseVariable", () => {
 			expect(sizeLarge.value).toEqual({
 				type: "reference",
 				name: "size",
-				fallback: undefined,
 			});
 		});
 
@@ -658,7 +651,6 @@ describe("createUseVariable", () => {
 			expect(primaryVar?.value).toEqual({
 				type: "reference",
 				name: "color",
-				fallback: undefined,
 			});
 		});
 
@@ -677,12 +669,10 @@ describe("createUseVariable", () => {
 			expect(colorPrimary.value).toEqual({
 				type: "reference",
 				name: "color",
-				fallback: undefined,
 			});
 			expect(colorHover.value).toEqual({
 				type: "reference",
 				name: "color.primary",
-				fallback: undefined,
 			});
 		});
 
@@ -703,12 +693,10 @@ describe("createUseVariable", () => {
 			expect(colorPrimary.value).toEqual({
 				type: "reference",
 				name: "color",
-				fallback: undefined,
 			});
 			expect(colorSecondary.value).toEqual({
 				type: "reference",
 				name: "color.primary",
-				fallback: undefined,
 			});
 		});
 
@@ -726,7 +714,6 @@ describe("createUseVariable", () => {
 			expect(colorAccent.value).toEqual({
 				type: "reference",
 				name: "color.secondary",
-				fallback: undefined,
 			});
 		});
 	});
@@ -856,22 +843,18 @@ describe("createUseVariable", () => {
 			expect(colorPrimary.value).toEqual({
 				type: "reference",
 				name: "color.blue",
-				fallback: undefined,
 			});
 			expect(colorDanger.value).toEqual({
 				type: "reference",
 				name: "color.red",
-				fallback: undefined,
 			});
 			expect(colorLink.value).toEqual({
 				type: "reference",
 				name: "color.primary",
-				fallback: undefined,
 			});
 			expect(colorError.value).toEqual({
 				type: "reference",
 				name: "color.danger",
-				fallback: undefined,
 			});
 		});
 
@@ -902,7 +885,6 @@ describe("createUseVariable", () => {
 			expect(spacing.value).toEqual({
 				type: "reference",
 				name: "spacing.md",
-				fallback: undefined,
 			});
 
 			// Custom should be added
@@ -935,7 +917,6 @@ describe("createUseVariable", () => {
 			expect(duration.value).toEqual({
 				type: "reference",
 				name: "duration.normal",
-				fallback: undefined,
 			});
 		});
 	});

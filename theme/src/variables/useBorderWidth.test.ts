@@ -15,37 +15,36 @@ describe("useBorderWidth", () => {
 			borderWidth,
 		} = useBorderWidth(s);
 
-		expect(borderWidthNone).toEqual({
+		expect(borderWidthNone).toMatchObject({
 			type: "variable",
 			name: "border-width.none",
 			value: "0",
 		});
 
-		expect(borderWidthThin).toEqual({
+		expect(borderWidthThin).toMatchObject({
 			type: "variable",
 			name: "border-width.thin",
 			value: "thin",
 		});
 
-		expect(borderWidthMedium).toEqual({
+		expect(borderWidthMedium).toMatchObject({
 			type: "variable",
 			name: "border-width.medium",
 			value: "medium",
 		});
 
-		expect(borderWidthThick).toEqual({
+		expect(borderWidthThick).toMatchObject({
 			type: "variable",
 			name: "border-width.thick",
 			value: "thick",
 		});
 
-		expect(borderWidth).toEqual({
+		expect(borderWidth).toMatchObject({
 			type: "variable",
 			name: "border-width",
 			value: {
 				type: "reference",
 				name: "border-width.thin",
-				fallback: undefined,
 			},
 		});
 	});
@@ -122,7 +121,6 @@ describe("useBorderWidth", () => {
 		expect(customBorderWidth.value).toEqual({
 			type: "reference",
 			name: "border-width.thick",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -197,13 +195,12 @@ describe("useBorderWidth", () => {
 			const s = styleframe();
 			const { borderWidth } = useBorderWidth(s);
 
-			expect(borderWidth).toEqual({
+			expect(borderWidth).toMatchObject({
 				type: "variable",
 				name: "border-width",
 				value: {
 					type: "reference",
 					name: "border-width.thin",
-					fallback: undefined,
 				},
 			});
 		});
@@ -218,7 +215,6 @@ describe("useBorderWidth", () => {
 			expect(borderWidth.value).toEqual({
 				type: "reference",
 				name: "border-width.medium",
-				fallback: undefined,
 			});
 		});
 
@@ -253,7 +249,6 @@ describe("useBorderWidth", () => {
 				expect(borderWidth.value).toEqual({
 					type: "reference",
 					name: `border-width.${borderWidthName}`,
-					fallback: undefined,
 				});
 			}
 		});

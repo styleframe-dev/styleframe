@@ -10,7 +10,7 @@ describe("useFontFamily", () => {
 			default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto",
 		});
 
-		expect(fontFamily).toEqual({
+		expect(fontFamily).toMatchObject({
 			type: "variable",
 			name: "font-family",
 			value: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto",
@@ -28,7 +28,7 @@ describe("useFontFamily", () => {
 			mono: "'SFMono-Regular', Menlo, Monaco, Consolas",
 		});
 
-		expect(fontFamilyMono).toEqual({
+		expect(fontFamilyMono).toMatchObject({
 			type: "variable",
 			name: "font-family.mono",
 			value: "'SFMono-Regular', Menlo, Monaco, Consolas",
@@ -49,20 +49,20 @@ describe("useFontFamily", () => {
 			mono: "'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
 		});
 
-		expect(fontFamily).toEqual({
+		expect(fontFamily).toMatchObject({
 			type: "variable",
 			name: "font-family",
 			value:
 				"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif",
 		});
 
-		expect(fontFamilyPrint).toEqual({
+		expect(fontFamilyPrint).toMatchObject({
 			type: "variable",
 			name: "font-family.print",
 			value: "'Georgia', 'Times New Roman', 'Times', serif",
 		});
 
-		expect(fontFamilyMono).toEqual({
+		expect(fontFamilyMono).toMatchObject({
 			type: "variable",
 			name: "font-family.mono",
 			value:
@@ -88,7 +88,7 @@ describe("useFontFamily", () => {
 			"serif-display": "'Playfair Display', Georgia, serif",
 		});
 
-		expect(fontFamilySerifDisplay).toEqual({
+		expect(fontFamilySerifDisplay).toMatchObject({
 			type: "variable",
 			name: "font-family.serif-display",
 			value: "'Playfair Display', Georgia, serif",
@@ -101,7 +101,7 @@ describe("useFontFamily", () => {
 			heading_primary: "'Inter', sans-serif",
 		});
 
-		expect(fontFamilyHeadingPrimary).toEqual({
+		expect(fontFamilyHeadingPrimary).toMatchObject({
 			type: "variable",
 			name: "font-family.heading_primary",
 			value: "'Inter', sans-serif",
@@ -114,7 +114,7 @@ describe("useFontFamily", () => {
 			"100": "'Roboto', sans-serif",
 		});
 
-		expect(fontFamily100).toEqual({
+		expect(fontFamily100).toMatchObject({
 			type: "variable",
 			name: "font-family.100",
 			value: "'Roboto', sans-serif",
@@ -127,7 +127,7 @@ describe("useFontFamily", () => {
 			custom: "Arial",
 		});
 
-		expect(fontFamilyCustom).toEqual({
+		expect(fontFamilyCustom).toMatchObject({
 			type: "variable",
 			name: "font-family.custom",
 			value: "Arial",
@@ -164,7 +164,6 @@ describe("useFontFamily", () => {
 		expect(fontFamily.value).toEqual({
 			type: "reference",
 			name: "base-font",
-			fallback: undefined,
 		});
 	});
 

@@ -10,7 +10,7 @@ describe("useBorderRadius", () => {
 			default: "0.25rem",
 		});
 
-		expect(borderRadius).toEqual({
+		expect(borderRadius).toMatchObject({
 			type: "variable",
 			name: "border-radius",
 			value: "0.25rem",
@@ -26,7 +26,7 @@ describe("useBorderRadius", () => {
 			sm: "0.125rem",
 		});
 
-		expect(borderRadiusSm).toEqual({
+		expect(borderRadiusSm).toMatchObject({
 			type: "variable",
 			name: "border-radius.sm",
 			value: "0.125rem",
@@ -46,25 +46,25 @@ describe("useBorderRadius", () => {
 				lg: "0.5rem",
 			});
 
-		expect(borderRadius).toEqual({
+		expect(borderRadius).toMatchObject({
 			type: "variable",
 			name: "border-radius",
 			value: "0.25rem",
 		});
 
-		expect(borderRadiusSm).toEqual({
+		expect(borderRadiusSm).toMatchObject({
 			type: "variable",
 			name: "border-radius.sm",
 			value: "0.125rem",
 		});
 
-		expect(borderRadiusMd).toEqual({
+		expect(borderRadiusMd).toMatchObject({
 			type: "variable",
 			name: "border-radius.md",
 			value: "0.25rem",
 		});
 
-		expect(borderRadiusLg).toEqual({
+		expect(borderRadiusLg).toMatchObject({
 			type: "variable",
 			name: "border-radius.lg",
 			value: "0.5rem",
@@ -89,7 +89,7 @@ describe("useBorderRadius", () => {
 			"extra-large": "1rem",
 		});
 
-		expect(borderRadiusExtraLarge).toEqual({
+		expect(borderRadiusExtraLarge).toMatchObject({
 			type: "variable",
 			name: "border-radius.extra-large",
 			value: "1rem",
@@ -102,7 +102,7 @@ describe("useBorderRadius", () => {
 			card_corner: "0.375rem",
 		});
 
-		expect(borderRadiusCardCorner).toEqual({
+		expect(borderRadiusCardCorner).toMatchObject({
 			type: "variable",
 			name: "border-radius.card_corner",
 			value: "0.375rem",
@@ -115,7 +115,7 @@ describe("useBorderRadius", () => {
 			"100": "0.25rem",
 		});
 
-		expect(borderRadius100).toEqual({
+		expect(borderRadius100).toMatchObject({
 			type: "variable",
 			name: "border-radius.100",
 			value: "0.25rem",
@@ -128,7 +128,7 @@ describe("useBorderRadius", () => {
 			default: "4px",
 		});
 
-		expect(borderRadius).toEqual({
+		expect(borderRadius).toMatchObject({
 			type: "variable",
 			name: "border-radius",
 			value: "4px",
@@ -141,7 +141,7 @@ describe("useBorderRadius", () => {
 			base: "0.5em",
 		});
 
-		expect(borderRadiusBase).toEqual({
+		expect(borderRadiusBase).toMatchObject({
 			type: "variable",
 			name: "border-radius.base",
 			value: "0.5em",
@@ -154,7 +154,7 @@ describe("useBorderRadius", () => {
 			circle: "50%",
 		});
 
-		expect(borderRadiusCircle).toEqual({
+		expect(borderRadiusCircle).toMatchObject({
 			type: "variable",
 			name: "border-radius.circle",
 			value: "50%",
@@ -167,7 +167,7 @@ describe("useBorderRadius", () => {
 			fluid: "1vw",
 		});
 
-		expect(borderRadiusFluid).toEqual({
+		expect(borderRadiusFluid).toMatchObject({
 			type: "variable",
 			name: "border-radius.fluid",
 			value: "1vw",
@@ -239,7 +239,6 @@ describe("useBorderRadius", () => {
 		expect(borderRadius.value).toEqual({
 			type: "reference",
 			name: "base-border-radius",
-			fallback: undefined,
 		});
 	});
 

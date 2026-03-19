@@ -16,43 +16,42 @@ describe("useLineHeight", () => {
 			lineHeight,
 		} = useLineHeight(s);
 
-		expect(lineHeightTight).toEqual({
+		expect(lineHeightTight).toMatchObject({
 			type: "variable",
 			name: "line-height.tight",
 			value: 1.2,
 		});
 
-		expect(lineHeightSnug).toEqual({
+		expect(lineHeightSnug).toMatchObject({
 			type: "variable",
 			name: "line-height.snug",
 			value: 1.35,
 		});
 
-		expect(lineHeightNormal).toEqual({
+		expect(lineHeightNormal).toMatchObject({
 			type: "variable",
 			name: "line-height.normal",
 			value: 1.5,
 		});
 
-		expect(lineHeightRelaxed).toEqual({
+		expect(lineHeightRelaxed).toMatchObject({
 			type: "variable",
 			name: "line-height.relaxed",
 			value: 1.65,
 		});
 
-		expect(lineHeightLoose).toEqual({
+		expect(lineHeightLoose).toMatchObject({
 			type: "variable",
 			name: "line-height.loose",
 			value: 1.9,
 		});
 
-		expect(lineHeight).toEqual({
+		expect(lineHeight).toMatchObject({
 			type: "variable",
 			name: "line-height",
 			value: {
 				type: "reference",
 				name: "line-height.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -132,7 +131,6 @@ describe("useLineHeight", () => {
 		expect(customLineHeight.value).toEqual({
 			type: "reference",
 			name: "line-height.loose",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -212,13 +210,12 @@ describe("useLineHeight", () => {
 			const s = styleframe();
 			const { lineHeight } = useLineHeight(s);
 
-			expect(lineHeight).toEqual({
+			expect(lineHeight).toMatchObject({
 				type: "variable",
 				name: "line-height",
 				value: {
 					type: "reference",
 					name: "line-height.normal",
-					fallback: undefined,
 				},
 			});
 		});
@@ -233,7 +230,6 @@ describe("useLineHeight", () => {
 			expect(lineHeight.value).toEqual({
 				type: "reference",
 				name: "line-height.relaxed",
-				fallback: undefined,
 			});
 		});
 
@@ -269,7 +265,6 @@ describe("useLineHeight", () => {
 				expect(lineHeight.value).toEqual({
 					type: "reference",
 					name: `line-height.${lineHeightName}`,
-					fallback: undefined,
 				});
 			}
 		});

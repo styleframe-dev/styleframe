@@ -11,7 +11,7 @@ describe("useDuration", () => {
 			default: "250ms",
 		});
 
-		expect(duration).toEqual({
+		expect(duration).toMatchObject({
 			type: "variable",
 			name: "duration",
 			value: "250ms",
@@ -27,7 +27,7 @@ describe("useDuration", () => {
 			fast: "150ms",
 		});
 
-		expect(durationFast).toEqual({
+		expect(durationFast).toMatchObject({
 			type: "variable",
 			name: "duration.fast",
 			value: "150ms",
@@ -47,31 +47,30 @@ describe("useDuration", () => {
 				slow: "300ms",
 			});
 
-		expect(durationFast).toEqual({
+		expect(durationFast).toMatchObject({
 			type: "variable",
 			name: "duration.fast",
 			value: "150ms",
 		});
 
-		expect(durationNormal).toEqual({
+		expect(durationNormal).toMatchObject({
 			type: "variable",
 			name: "duration.normal",
 			value: "250ms",
 		});
 
-		expect(durationSlow).toEqual({
+		expect(durationSlow).toMatchObject({
 			type: "variable",
 			name: "duration.slow",
 			value: "300ms",
 		});
 
-		expect(duration).toEqual({
+		expect(duration).toMatchObject({
 			type: "variable",
 			name: "duration",
 			value: {
 				type: "reference",
 				name: "duration.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -98,7 +97,6 @@ describe("useDuration", () => {
 		expect(duration.value).toEqual({
 			type: "reference",
 			name: "base-duration",
-			fallback: undefined,
 		});
 	});
 

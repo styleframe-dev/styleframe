@@ -65,7 +65,6 @@ describe("useTextColorUtility", () => {
 		expect(utility.declarations?.color).toEqual({
 			type: "reference",
 			name: "color.primary",
-			fallback: undefined,
 		});
 	});
 });
