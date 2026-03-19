@@ -13,16 +13,22 @@ describe("useColorLightness", () => {
 		// Test some of the default levels (we know they exist from the default parameter)
 		expect(levels.colorPrimary50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(levels.colorPrimary500).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-500",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(levels.colorPrimary950).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-950",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -63,16 +69,22 @@ describe("useColorLightness", () => {
 
 		expect(levels.colorPrimary100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(levels.colorPrimary200).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-200",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(levels.colorPrimary300).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-300",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -122,6 +134,8 @@ describe("useColorLightness", () => {
 
 		expect(levels.customColor500).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "custom-color-500",
 			value: expect.objectContaining({ type: "css" }),
 		});

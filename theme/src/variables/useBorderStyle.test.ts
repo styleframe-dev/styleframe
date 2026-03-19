@@ -21,54 +21,72 @@ describe("useBorderStyle", () => {
 
 		expect(borderStyleNone).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.none",
 			value: "none",
 		});
 
 		expect(borderStyleSolid).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.solid",
 			value: "solid",
 		});
 
 		expect(borderStyleDashed).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.dashed",
 			value: "dashed",
 		});
 
 		expect(borderStyleDotted).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.dotted",
 			value: "dotted",
 		});
 
 		expect(borderStyleDouble).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.double",
 			value: "double",
 		});
 
 		expect(borderStyleGroove).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.groove",
 			value: "groove",
 		});
 
 		expect(borderStyleInset).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.inset",
 			value: "inset",
 		});
 
 		expect(borderStyleOutset).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.outset",
 			value: "outset",
 		});
 
 		expect(borderStyle).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style",
 			value: {
 				type: "reference",
@@ -264,6 +282,8 @@ describe("useBorderStyle", () => {
 
 			expect(borderStyle).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "border-style",
 				value: {
 					type: "reference",

@@ -12,6 +12,8 @@ describe("useSpacing", () => {
 
 		expect(spacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing",
 			value: "1rem",
 		});
@@ -28,6 +30,8 @@ describe("useSpacing", () => {
 
 		expect(spacingSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.sm",
 			value: "0.5rem",
 		});
@@ -47,24 +51,32 @@ describe("useSpacing", () => {
 
 		expect(spacingSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.sm",
 			value: "0.5rem",
 		});
 
 		expect(spacingMd).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.md",
 			value: "1rem",
 		});
 
 		expect(spacingLg).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.lg",
 			value: "2rem",
 		});
 
 		expect(spacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing",
 			value: {
 				type: "reference",
@@ -94,6 +106,8 @@ describe("useSpacing", () => {
 
 		expect(spacingExtraLarge).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.extra-large",
 			value: "3rem",
 		});
@@ -107,6 +121,8 @@ describe("useSpacing", () => {
 
 		expect(spacingCardPadding).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.card_padding",
 			value: "1.5rem",
 		});
@@ -120,6 +136,8 @@ describe("useSpacing", () => {
 
 		expect(spacing100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.100",
 			value: "0.25rem",
 		});
@@ -133,6 +151,8 @@ describe("useSpacing", () => {
 
 		expect(spacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing",
 			value: "16px",
 		});
@@ -146,6 +166,8 @@ describe("useSpacing", () => {
 
 		expect(spacingBase).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.base",
 			value: "1.5em",
 		});
@@ -159,6 +181,8 @@ describe("useSpacing", () => {
 
 		expect(spacingRelative).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.relative",
 			value: "5%",
 		});
@@ -172,6 +196,8 @@ describe("useSpacing", () => {
 
 		expect(spacingFluid).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.fluid",
 			value: "2.5vw",
 		});
