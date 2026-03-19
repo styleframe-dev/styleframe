@@ -12,6 +12,8 @@ describe("useDuration", () => {
 		});
 
 		expect(duration).toEqual({
+			id: expect.any(String),
+			parentId: expect.any(String),
 			type: "variable",
 			name: "duration",
 			value: "250ms",
@@ -28,6 +30,8 @@ describe("useDuration", () => {
 		});
 
 		expect(durationFast).toEqual({
+			id: expect.any(String),
+			parentId: expect.any(String),
 			type: "variable",
 			name: "duration.fast",
 			value: "150ms",
@@ -48,24 +52,32 @@ describe("useDuration", () => {
 			});
 
 		expect(durationFast).toEqual({
+			id: expect.any(String),
+			parentId: expect.any(String),
 			type: "variable",
 			name: "duration.fast",
 			value: "150ms",
 		});
 
 		expect(durationNormal).toEqual({
+			id: expect.any(String),
+			parentId: expect.any(String),
 			type: "variable",
 			name: "duration.normal",
 			value: "250ms",
 		});
 
 		expect(durationSlow).toEqual({
+			id: expect.any(String),
+			parentId: expect.any(String),
 			type: "variable",
 			name: "duration.slow",
 			value: "300ms",
 		});
 
 		expect(duration).toEqual({
+			id: expect.any(String),
+			parentId: expect.any(String),
 			type: "variable",
 			name: "duration",
 			value: {

@@ -4,7 +4,13 @@ import {
 } from "@styleframe/license";
 import type { Styleframe } from "../styleframe";
 import { isRoot } from "../typeGuards";
-import type { Container, Theme, Variable } from "../types";
+import type {
+	Container,
+	ContainerChild,
+	Root,
+	Theme,
+	Variable,
+} from "../types";
 
 export function mergeVariablesArray(a: Variable[], b: Variable[]) {
 	const variables = [...a];
@@ -67,12 +73,35 @@ export function mergeContainers<T extends Container>(a: T, b: T) {
 	);
 }
 
+function registerChildren(children: ContainerChild[], root: Root) {
+	for (const child of children) {
+		if ("id" in child && typeof child.id === "string") {
+			root._registry.set(child.id, child as Container);
+			if ("children" in child) {
+				registerChildren((child as Container).children, root);
+			}
+		}
+	}
+}
+
+export function rebuildRegistry(root: Root) {
+	root._registry = new Map();
+	root._registry.set(root.id, root);
+	registerChildren(root.children, root);
+	for (const theme of root.themes) {
+		root._registry.set(theme.id, theme);
+		registerChildren(theme.children, root);
+	}
+}
+
 export function merge(base: Styleframe, ...instances: Styleframe[]) {
 	return instances.reduce((prev, curr) => {
 		const result = {
 			...prev,
 			root: mergeContainers(prev.root, curr.root),
 		};
+
+		rebuildRegistry(result.root);
 
 		if (isInstanceLicenseRequired(prev) || isInstanceLicenseRequired(curr)) {
 			markInstanceLicenseRequired(result);

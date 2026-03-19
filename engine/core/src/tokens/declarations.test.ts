@@ -33,7 +33,7 @@ describe("parseDeclarationsBlock", () => {
 				"&::before": { content: '""' },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 			expect(mockContext.selector).toHaveBeenCalledWith("&:hover", {
@@ -56,7 +56,7 @@ describe("parseDeclarationsBlock", () => {
 				".another-child": { margin: "0.5rem" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 			expect(mockContext.selector).toHaveBeenCalledWith(".child", {
@@ -74,7 +74,7 @@ describe("parseDeclarationsBlock", () => {
 				":focus": { outline: "2px solid blue" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 			expect(mockContext.selector).toHaveBeenCalledWith(":hover", {
@@ -93,7 +93,7 @@ describe("parseDeclarationsBlock", () => {
 				backgroundColor: "#ffffff",
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).not.toHaveBeenCalled();
 			// All properties should remain
@@ -109,7 +109,7 @@ describe("parseDeclarationsBlock", () => {
 				".child": { margin: "0.5rem" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 
@@ -132,7 +132,7 @@ describe("parseDeclarationsBlock", () => {
 				"100%": { opacity: "1", transform: "translateY(0)" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(3);
 			expect(mockContext.selector).toHaveBeenCalledWith("0%", {
@@ -158,7 +158,7 @@ describe("parseDeclarationsBlock", () => {
 				to: { opacity: "1" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 			expect(mockContext.selector).toHaveBeenCalledWith("from", {
@@ -182,7 +182,7 @@ describe("parseDeclarationsBlock", () => {
 				},
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations).not.toHaveProperty("@media (min-width: 768px)");
 			expect(mockContext.atRule).toHaveBeenCalledTimes(1);
@@ -202,7 +202,7 @@ describe("parseDeclarationsBlock", () => {
 				".child": { fontSize: "14px" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			// Should only process object values
 			expect(mockContext.selector).toHaveBeenCalledTimes(1);
@@ -221,7 +221,7 @@ describe("parseDeclarationsBlock", () => {
 				".child": {},
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 			expect(mockContext.selector).toHaveBeenCalledWith("&:hover", {});
@@ -233,6 +233,7 @@ describe("parseDeclarationsBlock", () => {
 		it("should resolve @-prefixed string values to references", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#006cff",
 			});
@@ -241,7 +242,7 @@ describe("parseDeclarationsBlock", () => {
 				color: "@color.primary",
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations.color).toEqual({
 				type: "reference",
@@ -251,9 +252,14 @@ describe("parseDeclarationsBlock", () => {
 
 		it("should resolve multiple @-prefixed values", () => {
 			root.variables.push(
-				{ type: "variable", name: "spacing.md", value: "1rem" },
-				{ type: "variable", name: "spacing.lg", value: "1.5rem" },
-				{ type: "variable", name: "color.dark", value: "#333" },
+				{ type: "variable", id: "test-id", name: "spacing.md", value: "1rem" },
+				{
+					type: "variable",
+					id: "test-id",
+					name: "spacing.lg",
+					value: "1.5rem",
+				},
+				{ type: "variable", id: "test-id", name: "color.dark", value: "#333" },
 			);
 
 			const declarations: any = {
@@ -262,7 +268,7 @@ describe("parseDeclarationsBlock", () => {
 				color: "@color.dark",
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations.gap).toEqual({
 				type: "reference",
@@ -285,7 +291,7 @@ describe("parseDeclarationsBlock", () => {
 				fontSize: "16px",
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations.display).toBe("flex");
 			expect(declarations.color).toBe("blue");
@@ -298,7 +304,7 @@ describe("parseDeclarationsBlock", () => {
 				zIndex: 10,
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations.opacity).toBe(0.8);
 			expect(declarations.zIndex).toBe(10);
@@ -306,8 +312,13 @@ describe("parseDeclarationsBlock", () => {
 
 		it("should handle mixed @ references and regular values", () => {
 			root.variables.push(
-				{ type: "variable", name: "spacing.md", value: "1rem" },
-				{ type: "variable", name: "font-size.sm", value: "0.875rem" },
+				{ type: "variable", id: "test-id", name: "spacing.md", value: "1rem" },
+				{
+					type: "variable",
+					id: "test-id",
+					name: "font-size.sm",
+					value: "0.875rem",
+				},
 			);
 
 			const declarations: any = {
@@ -317,7 +328,7 @@ describe("parseDeclarationsBlock", () => {
 				fontSize: "@font-size.sm",
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations.display).toBe("flex");
 			expect(declarations.gap).toEqual({
@@ -336,7 +347,7 @@ describe("parseDeclarationsBlock", () => {
 				border: "1px solid @color.primary",
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations.border).toEqual({
 				type: "css",
@@ -349,7 +360,7 @@ describe("parseDeclarationsBlock", () => {
 				padding: "@spacing.sm @spacing.md",
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations.padding).toEqual({
 				type: "css",
@@ -368,6 +379,7 @@ describe("parseDeclarationsBlock", () => {
 		it("should resolve @ references when variable exists in root", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#006cff",
 			});
@@ -376,7 +388,7 @@ describe("parseDeclarationsBlock", () => {
 				color: "@color.primary",
 			};
 
-			parseDeclarationsBlock(declarations, mockContext, root);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations.color).toEqual({
 				type: "reference",
@@ -387,6 +399,7 @@ describe("parseDeclarationsBlock", () => {
 		it("should throw when @ reference variable does not exist in root", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#006cff",
 			});
@@ -396,7 +409,7 @@ describe("parseDeclarationsBlock", () => {
 			};
 
 			expect(() =>
-				parseDeclarationsBlock(declarations, mockContext, root),
+				parseDeclarationsBlock(declarations, mockContext, root, root),
 			).toThrow(
 				'[styleframe] Variable "color.doesnotexist" is not defined. Check that the variable exists before referencing it with "@color.doesnotexist".',
 			);
@@ -405,6 +418,7 @@ describe("parseDeclarationsBlock", () => {
 		it("should throw for each undefined variable independently", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "spacing.md",
 				value: "1rem",
 			});
@@ -415,7 +429,7 @@ describe("parseDeclarationsBlock", () => {
 			};
 
 			expect(() =>
-				parseDeclarationsBlock(declarations, mockContext, root),
+				parseDeclarationsBlock(declarations, mockContext, root, root),
 			).toThrow('Variable "color.dark" is not defined');
 		});
 	});
@@ -793,6 +807,7 @@ describe("createDeclarationsCallbackContext", () => {
 		it("should handle containers with existing children", () => {
 			const existingVar = {
 				type: "variable" as const,
+				id: "test-id",
 				name: "existing",
 				value: "value",
 			};

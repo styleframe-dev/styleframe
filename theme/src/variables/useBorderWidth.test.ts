@@ -17,30 +17,40 @@ describe("useBorderWidth", () => {
 
 		expect(borderWidthNone).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.none",
 			value: "0",
 		});
 
 		expect(borderWidthThin).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.thin",
 			value: "thin",
 		});
 
 		expect(borderWidthMedium).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.medium",
 			value: "medium",
 		});
 
 		expect(borderWidthThick).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.thick",
 			value: "thick",
 		});
 
 		expect(borderWidth).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width",
 			value: {
 				type: "reference",
@@ -199,6 +209,8 @@ describe("useBorderWidth", () => {
 
 			expect(borderWidth).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "border-width",
 				value: {
 					type: "reference",

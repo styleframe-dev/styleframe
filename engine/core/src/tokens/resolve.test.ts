@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import type { Root, Selector } from "../types";
 import {
 	createPropertyValueResolver,
+	findVariableInScope,
 	parseAtReferences,
 	validateReference,
 } from "./resolve";
@@ -73,6 +74,128 @@ describe("parseAtReferences", () => {
 	});
 });
 
+describe("findVariableInScope", () => {
+	let root: Root;
+
+	beforeEach(() => {
+		root = createRoot();
+	});
+
+	it("should find a variable in the current scope", () => {
+		const selector: Selector = {
+			type: "selector",
+			id: "sel-1",
+			parentId: root.id,
+			query: ".test",
+			variables: [
+				{
+					type: "variable",
+					id: "test-id",
+					name: "color.primary",
+					value: "#006cff",
+				},
+			],
+			declarations: {},
+			children: [],
+		};
+		root._registry.set(selector.id, selector);
+
+		expect(findVariableInScope("color.primary", selector, root)).toBe(true);
+	});
+
+	it("should find a variable in a parent scope", () => {
+		root.variables.push({
+			type: "variable",
+			id: "test-id",
+			name: "color.primary",
+			value: "#006cff",
+		});
+
+		const selector: Selector = {
+			type: "selector",
+			id: "sel-1",
+			parentId: root.id,
+			query: ".test",
+			variables: [],
+			declarations: {},
+			children: [],
+		};
+		root._registry.set(selector.id, selector);
+
+		expect(findVariableInScope("color.primary", selector, root)).toBe(true);
+	});
+
+	it("should find a variable in a grandparent scope", () => {
+		root.variables.push({
+			type: "variable",
+			id: "test-id",
+			name: "spacing.md",
+			value: "1rem",
+		});
+
+		const parent: Selector = {
+			type: "selector",
+			id: "sel-1",
+			parentId: root.id,
+			query: ".parent",
+			variables: [],
+			declarations: {},
+			children: [],
+		};
+		root._registry.set(parent.id, parent);
+
+		const child: Selector = {
+			type: "selector",
+			id: "sel-2",
+			parentId: parent.id,
+			query: "&:hover",
+			variables: [],
+			declarations: {},
+			children: [],
+		};
+		root._registry.set(child.id, child);
+
+		expect(findVariableInScope("spacing.md", child, root)).toBe(true);
+	});
+
+	it("should not find a variable defined in a sibling scope", () => {
+		const sibling: Selector = {
+			type: "selector",
+			id: "sel-1",
+			parentId: root.id,
+			query: ".sibling",
+			variables: [
+				{
+					type: "variable",
+					id: "test-id",
+					name: "color.primary",
+					value: "#006cff",
+				},
+			],
+			declarations: {},
+			children: [],
+		};
+		root._registry.set(sibling.id, sibling);
+
+		const selector: Selector = {
+			type: "selector",
+			id: "sel-2",
+			parentId: root.id,
+			query: ".test",
+			variables: [],
+			declarations: {},
+			children: [],
+		};
+		root._registry.set(selector.id, selector);
+
+		expect(findVariableInScope("color.primary", selector, root)).toBe(false);
+	});
+
+	it("should return false when variable is not defined anywhere", () => {
+		expect(findVariableInScope("nonexistent", root, root)).toBe(false);
+	});
+});
+
 describe("validateReference", () => {
 	let root: Root;
 
@@ -80,30 +203,55 @@ describe("validateReference", () => {
 		root = createRoot();
 	});
 
-	it("should not throw when variable exists", () => {
+	it("should not throw when variable exists in scope", () => {
 		root.variables.push({
 			type: "variable",
+			id: "test-id",
 			name: "color.primary",
 			value: "#006cff",
 		});
 
-		expect(() => validateReference("color.primary", root)).not.toThrow();
+		expect(() => validateReference("color.primary", root, root)).not.toThrow();
 	});
 
 	it("should throw when variable does not exist", () => {
-		expect(() => validateReference("color.primary", root)).toThrow(
+		expect(() => validateReference("color.primary", root, root)).toThrow(
 			'[styleframe] Variable "color.primary" is not defined.',
 		);
 	});
 
 	it("should include the variable name in the error message", () => {
-		expect(() => validateReference("my-var", root)).toThrow('"my-var"');
+		expect(() => validateReference("my-var", root, root)).toThrow('"my-var"');
 	});
 
 	it("should include the @ reference hint in the error message", () => {
-		expect(() => validateReference("spacing.lg", root)).toThrow(
+		expect(() => validateReference("spacing.lg", root, root)).toThrow(
 			'"@spacing.lg"',
 		);
+	});
+
+	it("should not throw when variable exists in a parent scope", () => {
+		root.variables.push({
+			type: "variable",
+			id: "test-id",
+			name: "color.primary",
+			value: "#006cff",
+		});
+
+		const selector: Selector = {
+			type: "selector",
+			id: "sel-1",
+			parentId: root.id,
+			query: ".test",
+			variables: [],
+			declarations: {},
+			children: [],
+		};
+		root._registry.set(selector.id, selector);
+
+		expect(() =>
+			validateReference("color.primary", selector, root),
+		).not.toThrow();
 	});
 });
 
@@ -117,11 +265,13 @@ describe("createPropertyValueResolver", () => {
 		selector = {
 			type: "selector",
 			id: "test-id",
+			parentId: root.id,
 			query: ".test",
 			variables: [],
 			declarations: {},
 			children: [],
 		};
+		root._registry.set(selector.id, selector);
 		resolvePropertyValue = createPropertyValueResolver(selector, root);
 	});
 
@@ -149,6 +299,7 @@ describe("createPropertyValueResolver", () => {
 		it("should resolve an exact @variable to a Reference", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#006cff",
 			});

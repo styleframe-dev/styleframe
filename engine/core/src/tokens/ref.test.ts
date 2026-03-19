@@ -17,11 +17,13 @@ describe("createRefFunction", () => {
 		selector = {
 			type: "selector",
 			id: "test-id",
+			parentId: root.id,
 			query: ".test",
 			variables: [],
 			declarations: {},
 			children: [],
 		};
+		root._registry.set(selector.id, selector);
 		ref = createRefFunction(selector, root);
 		variable = createVariableFunction(selector, root);
 		keyframes = createKeyframesFunction(selector, root);
@@ -121,6 +123,7 @@ describe("createRefFunction", () => {
 		it("should resolve @-prefixed fallback to a reference", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#006cff",
 			});
@@ -139,6 +142,7 @@ describe("createRefFunction", () => {
 		it("should resolve @-prefixed fallback from variable instance", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#006cff",
 			});

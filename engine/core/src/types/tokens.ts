@@ -6,6 +6,8 @@ import type {
 
 export type Variable<Name extends string = string> = {
 	type: "variable";
+	id: string;
+	parentId?: string;
 	name: Name;
 	value: TokenValue;
 };
@@ -19,6 +21,7 @@ export type Reference<Name extends string = string> = {
 export type Selector = {
 	type: "selector";
 	id: string;
+	parentId?: string;
 	query: string;
 	declarations: DeclarationsBlock;
 	variables: Variable[];
@@ -29,6 +32,7 @@ export type Selector = {
 export type AtRule = {
 	type: "at-rule";
 	id: string;
+	parentId?: string;
 	identifier: string;
 	rule: string;
 	declarations: DeclarationsBlock;
@@ -58,6 +62,7 @@ export type UtilityFactory<Name extends string = string> = {
 export type Utility<Name extends string = string> = {
 	type: "utility";
 	id: string;
+	parentId?: string;
 	name: Name;
 	value: string;
 	declarations: DeclarationsBlock;
@@ -173,16 +178,24 @@ export type TokenType =
 	| Root["type"];
 
 export type Container = {
+	id: string;
+	parentId?: string;
 	children: ContainerChild[];
 	variables: Variable[];
 	declarations: DeclarationsBlock;
 };
+
+export type ContainerInput = Pick<
+	Container,
+	"declarations" | "variables" | "children"
+>;
 
 export type ContainerChild = Variable | Selector | AtRule | Utility;
 
 export type Theme = {
 	type: "theme";
 	id: string;
+	parentId?: string;
 	name: string;
 	declarations: DeclarationsBlock;
 	variables: Variable[];
@@ -192,6 +205,7 @@ export type Theme = {
 export type Root = {
 	type: "root";
 	id: string;
+	parentId?: string;
 	declarations: DeclarationsBlock;
 	utilities: UtilityFactory[];
 	modifiers: ModifierFactory[];
@@ -199,4 +213,5 @@ export type Root = {
 	variables: Variable[];
 	children: ContainerChild[];
 	themes: Theme[];
+	_registry: Map<string, Container | Root | Theme>;
 };

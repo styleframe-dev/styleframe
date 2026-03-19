@@ -50,11 +50,14 @@ export function applyModifiers<InstanceType extends Container>(
 	const instance: InstanceType = {
 		...baseInstance,
 		id: generateRandomId("ut-"),
+		parentId: baseInstance.parentId,
 		declarations: { ...baseInstance.declarations },
 		variables: [...baseInstance.variables],
 		children: [...baseInstance.children],
 		modifiers: [...modifiers.keys()],
 	};
+
+	root._registry.set(instance.id, instance);
 
 	const callbackContext = createDeclarationsCallbackContext(instance, root);
 
@@ -79,7 +82,12 @@ export function applyModifiers<InstanceType extends Container>(
 				// Merge the modifier's output into instance declarations,
 				// then parse selector/at-rule keys into children
 				Object.assign(instance.declarations, result);
-				parseDeclarationsBlock(instance.declarations, callbackContext, root);
+				parseDeclarationsBlock(
+					instance.declarations,
+					callbackContext,
+					instance,
+					root,
+				);
 			}
 		}
 	}
