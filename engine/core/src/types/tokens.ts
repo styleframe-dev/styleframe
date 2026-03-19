@@ -185,6 +185,11 @@ export type Container = {
 	declarations: DeclarationsBlock;
 };
 
+export type ContainerInput = Pick<
+	Container,
+	"declarations" | "variables" | "children"
+>;
+
 export type ContainerChild = Variable | Selector | AtRule | Utility;
 
 export type Theme = {

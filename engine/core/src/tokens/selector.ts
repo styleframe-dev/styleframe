@@ -1,6 +1,7 @@
-import { isContainer } from "../typeGuards";
+import { isContainerInput } from "../typeGuards";
 import type {
 	Container,
+	ContainerInput,
 	DeclarationsBlock,
 	DeclarationsCallback,
 	Root,
@@ -17,7 +18,7 @@ export function createSelectorFunction(parent: Container, root: Root) {
 		query: string,
 		declarationsOrCallback:
 			| DeclarationsBlock
-			| Container
+			| ContainerInput
 			| DeclarationsCallback,
 	): Selector {
 		const instance: Selector = {
@@ -35,7 +36,7 @@ export function createSelectorFunction(parent: Container, root: Root) {
 		const callbackContext = createDeclarationsCallbackContext(instance, root);
 		if (typeof declarationsOrCallback === "function") {
 			instance.declarations = declarationsOrCallback(callbackContext) ?? {};
-		} else if (isContainer(declarationsOrCallback)) {
+		} else if (isContainerInput(declarationsOrCallback)) {
 			instance.variables = declarationsOrCallback.variables;
 			instance.declarations = declarationsOrCallback.declarations;
 			instance.children = declarationsOrCallback.children;

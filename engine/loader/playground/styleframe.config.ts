@@ -28,9 +28,12 @@ theme("sepia", (ctx) => {
 	ctx.variable(cardColor, "#333333");
 });
 
-const hover = modifier("hover", ({ declarations, selector }) => {
-	selector("&:hover", declarations);
-});
+const hover = modifier(
+	"hover",
+	({ declarations, variables, children, selector }) => {
+		selector("&:hover", { declarations, variables, children });
+	},
+);
 
 const createBackgroundUtility = utility("background", ({ value }) => ({
 	background: value,
