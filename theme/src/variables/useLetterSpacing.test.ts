@@ -18,36 +18,48 @@ describe("useLetterSpacing", () => {
 
 		expect(letterSpacingTighter).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.tighter",
 			value: "-0.05em",
 		});
 
 		expect(letterSpacingTight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.tight",
 			value: "-0.025em",
 		});
 
 		expect(letterSpacingNormal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.normal",
 			value: "normal",
 		});
 
 		expect(letterSpacingWide).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.wide",
 			value: "0.05em",
 		});
 
 		expect(letterSpacingWider).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.wider",
 			value: "0.1em",
 		});
 
 		expect(letterSpacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing",
 			value: {
 				type: "reference",
@@ -220,6 +232,8 @@ describe("useLetterSpacing", () => {
 
 			expect(letterSpacing).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "letter-spacing",
 				value: {
 					type: "reference",

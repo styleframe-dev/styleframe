@@ -144,6 +144,7 @@ describe("createUtilityFunction", () => {
 		expect(smUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "padding",
 			value: "sm",
 			declarations: { padding: "8px" },
@@ -154,6 +155,7 @@ describe("createUtilityFunction", () => {
 		expect(mdUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "padding",
 			value: "md",
 			declarations: { padding: "16px" },
@@ -164,6 +166,7 @@ describe("createUtilityFunction", () => {
 		expect(lgUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "padding",
 			value: "lg",
 			declarations: { padding: "24px" },
@@ -191,6 +194,7 @@ describe("createUtilityFunction", () => {
 		expect(hiddenUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "hidden",
 			value: "default",
 			declarations: { display: "none" },
@@ -243,6 +247,7 @@ describe("createUtilityFunction", () => {
 		expect(primaryUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color",
 			value: "primary",
 			declarations: { color: "#007bff" },
@@ -253,6 +258,7 @@ describe("createUtilityFunction", () => {
 		expect(secondaryUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color",
 			value: "secondary",
 			declarations: { color: "#6c757d" },
@@ -321,6 +327,7 @@ describe("createUtilityFunction", () => {
 		expect(backgroundUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "background",
 			value: "primary",
 			declarations: { background: "#007bff" },
@@ -388,6 +395,7 @@ describe("createUtilityFunction", () => {
 		expect(textUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "text",
 			value: "base",
 			declarations: { fontSize: "14px" },
@@ -433,6 +441,7 @@ describe("createUtilityFunction", () => {
 		expect(widthUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "width",
 			value: "full",
 			declarations: { width: "100%" },
@@ -460,6 +469,7 @@ describe("createUtilityFunction", () => {
 		expect(heightUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "height",
 			value: "screen",
 			declarations: { height: "100vh" },
@@ -494,6 +504,7 @@ describe("createUtilityFunction", () => {
 		expect(rowUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "flex",
 			value: "row",
 			declarations: {
@@ -508,6 +519,7 @@ describe("createUtilityFunction", () => {
 		expect(colUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "flex",
 			value: "col",
 			declarations: {
@@ -599,6 +611,7 @@ describe("createUtilityFunction", () => {
 		expect(smUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "margin",
 			value: "sm",
 			declarations: { margin: "8px" },
@@ -609,6 +622,7 @@ describe("createUtilityFunction", () => {
 		expect(mdUtility).toEqual({
 			type: "utility",
 			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "margin",
 			value: "md",
 			declarations: { margin: "16px" },
@@ -1205,6 +1219,7 @@ describe("createUtilityFunction", () => {
 		test("should resolve @-prefixed values to ref objects when sibling is a ref", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "border-style.solid",
 				value: "solid",
 			});
@@ -1299,6 +1314,7 @@ describe("createUtilityFunction", () => {
 			expect(primaryUtility).toEqual({
 				type: "utility",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "color",
 				value: "primary",
 				declarations: { color: "primary" },
@@ -1311,8 +1327,18 @@ describe("createUtilityFunction", () => {
 		test("should use reference when variable exists in root", () => {
 			// Define variables in root
 			root.variables.push(
-				{ type: "variable", name: "color.primary", value: "#007bff" },
-				{ type: "variable", name: "color.secondary", value: "#6c757d" },
+				{
+					type: "variable",
+					id: "test-id",
+					name: "color.primary",
+					value: "#007bff",
+				},
+				{
+					type: "variable",
+					id: "test-id",
+					name: "color.secondary",
+					value: "#6c757d",
+				},
 			);
 
 			const createColorUtility = utility(
@@ -1344,6 +1370,7 @@ describe("createUtilityFunction", () => {
 			// Only define one variable
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "spacing.sm",
 				value: "0.5rem",
 			});
@@ -1409,6 +1436,7 @@ describe("createUtilityFunction", () => {
 		test("should fall back to literal for non-existent object entry references when namespace is set", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#007bff",
 			});
@@ -1453,6 +1481,7 @@ describe("createUtilityFunction", () => {
 			// Only define color.primary, not border-color.primary
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#007bff",
 			});
@@ -1481,10 +1510,16 @@ describe("createUtilityFunction", () => {
 			root.variables.push(
 				{
 					type: "variable",
+					id: "test-id",
 					name: "border-color.primary",
 					value: "#ff0000",
 				},
-				{ type: "variable", name: "color.primary", value: "#007bff" },
+				{
+					type: "variable",
+					id: "test-id",
+					name: "color.primary",
+					value: "#007bff",
+				},
 			);
 
 			const createBorderColorUtility = utility(
@@ -1529,10 +1564,16 @@ describe("createUtilityFunction", () => {
 			root.variables.push(
 				{
 					type: "variable",
+					id: "test-id",
 					name: "border-color.danger",
 					value: "#dc3545",
 				},
-				{ type: "variable", name: "color.primary", value: "#007bff" },
+				{
+					type: "variable",
+					id: "test-id",
+					name: "color.primary",
+					value: "#007bff",
+				},
 			);
 
 			const createBorderColorUtility = utility(
@@ -1566,6 +1607,7 @@ describe("createUtilityFunction", () => {
 		test("should work with single-element namespace array", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#007bff",
 			});
@@ -1594,6 +1636,7 @@ describe("createUtilityFunction", () => {
 		test("should resolve @ value to first namespace with defined variable", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#007bff",
 			});
@@ -1617,11 +1660,13 @@ describe("createUtilityFunction", () => {
 			root.variables.push(
 				{
 					type: "variable",
+					id: "test-id",
 					name: "border-color.primary",
 					value: "#ff0000",
 				},
 				{
 					type: "variable",
+					id: "test-id",
 					name: "color.primary",
 					value: "#007bff",
 				},
@@ -1721,6 +1766,7 @@ describe("createUtilityFunction", () => {
 			// Add a variable after utility creation
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#007bff",
 			});
@@ -1740,6 +1786,7 @@ describe("createUtilityFunction", () => {
 		test("should fall back to second namespace for ref objects passed directly", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#007bff",
 			});
@@ -1769,6 +1816,7 @@ describe("createUtilityFunction", () => {
 		test("should use first namespace ref when its variable exists", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "border-color.primary",
 				value: "#ff0000",
 			});
@@ -2004,8 +2052,10 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.variables).toHaveLength(1);
 		expect(result.variables[0]).toEqual({
 			type: "variable",
+			id: expect.any(String),
 			name: "bg-color",
 			value: "#007bff",
+			parentId: expect.any(String),
 		});
 		expect(result.modifiers).toEqual(["var"]);
 	});
@@ -2255,8 +2305,10 @@ describe("createModifiedUtilityFunction", () => {
 		// Each modified instance gets its own copy of variables and children arrays
 		expect(result1.variables).not.toBe(result2.variables);
 		expect(result1.children).not.toBe(result2.children);
-		// But they should have the same content
-		expect(result1.variables).toEqual(result2.variables);
+		// But they should have the same content (parentId differs because each gets a new utility id)
+		expect(result1.variables.length).toEqual(result2.variables.length);
+		expect(result1.variables[0]?.name).toEqual(result2.variables[0]?.name);
+		expect(result1.variables[0]?.value).toEqual(result2.variables[0]?.value);
 		expect(result1.children).toEqual(result2.children);
 	});
 
@@ -2366,8 +2418,10 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.variables).toHaveLength(1);
 		expect(result.variables[0]).toEqual({
 			type: "variable",
+			id: expect.any(String),
 			name: "test-var",
 			value: "value",
+			parentId: expect.any(String),
 		});
 		// The result should have the combination in its modifiers
 		expect(result.modifiers).toEqual(["test"]);
@@ -2559,6 +2613,7 @@ describe("createModifiedUtilityFunction", () => {
 	test("should handle utility with pre-existing variables and children", () => {
 		const existingVar = {
 			type: "variable" as const,
+			id: "test-id",
 			name: "existing-var",
 			value: "existing-value",
 		};
@@ -2603,8 +2658,10 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.variables[0]).toEqual(existingVar);
 		expect(result.variables[1]).toEqual({
 			type: "variable",
+			id: expect.any(String),
 			name: "new-var",
 			value: "new-value",
+			parentId: expect.any(String),
 		});
 
 		expect(result.children).toHaveLength(2);

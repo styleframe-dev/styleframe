@@ -1,7 +1,8 @@
 import type { Container, Root, TokenValue, Variable } from "../types";
+import { generateRandomId } from "../utils";
 import { createPropertyValueResolver } from "./resolve";
 
-export function createVariableFunction(parent: Container, _root: Root) {
+export function createVariableFunction(parent: Container, root: Root) {
 	return function variable<Name extends string>(
 		nameOrInstance: Name | Variable<Name>,
 		value: TokenValue,
@@ -16,7 +17,7 @@ export function createVariableFunction(parent: Container, _root: Root) {
 		) as Name;
 
 		// Resolve @-prefixed string values to references
-		const resolvePropertyValue = createPropertyValueResolver(parent, _root);
+		const resolvePropertyValue = createPropertyValueResolver(parent, root);
 		const resolvedValue = resolvePropertyValue(value);
 
 		const existingVariable = parent.variables.find(
@@ -37,6 +38,8 @@ export function createVariableFunction(parent: Container, _root: Root) {
 		// Create a new variable
 		const instance: Variable<Name> = {
 			type: "variable",
+			id: generateRandomId("var-"),
+			parentId: parent.id,
 			name,
 			value: resolvedValue,
 		};

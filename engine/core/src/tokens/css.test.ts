@@ -556,15 +556,18 @@ describe("createCSSFunction", () => {
 		it("should not throw when variable exists in root", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#006cff",
 			});
 
-			expect(() => validateReference("color.primary", root)).not.toThrow();
+			expect(() =>
+				validateReference("color.primary", root, root),
+			).not.toThrow();
 		});
 
 		it("should throw when variable does not exist in root", () => {
-			expect(() => validateReference("color.nonexistent", root)).toThrow(
+			expect(() => validateReference("color.nonexistent", root, root)).toThrow(
 				'[styleframe] Variable "color.nonexistent" is not defined. Check that the variable exists before referencing it with "@color.nonexistent".',
 			);
 		});
@@ -580,6 +583,7 @@ describe("createCSSFunction", () => {
 		it("should resolve exact @reference to a Reference", () => {
 			root.variables.push({
 				type: "variable",
+				id: "test-id",
 				name: "color.primary",
 				value: "#006cff",
 			});

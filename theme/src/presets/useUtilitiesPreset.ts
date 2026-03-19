@@ -67,6 +67,7 @@ import {
 	overscrollValues,
 	positionValues,
 	visibilityValues,
+	zIndexValues,
 	// Tables
 	borderCollapseValues,
 	captionSideValues,
@@ -548,6 +549,7 @@ export interface UtilitiesPresetConfig {
 	overscroll?: Record<string, string> | false;
 	position?: Record<string, string> | false;
 	visibility?: Record<string, string> | false;
+	zIndex?: Record<string, string> | false;
 
 	// Sizing
 	width?: Record<string, string> | false;
@@ -774,6 +776,7 @@ export function useUtilitiesPreset(
 	const overscroll = resolveValues(config.overscroll, overscrollValues);
 	const position = resolveValues(config.position, positionValues);
 	const visibility = resolveValues(config.visibility, visibilityValues);
+	const zIndex = resolveValues(config.zIndex, zIndexValues);
 	const width = resolveValues(config.width, widthValues);
 	const height = resolveValues(config.height, heightValues);
 	const borderStyle = resolveValues(config.borderStyle, borderStyleValues);
@@ -1283,6 +1286,14 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("visibility"),
 	);
 	if (visibility) createVisibilityUtility(visibility);
+
+	const createZIndexUtility = useZIndexUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("z-index"),
+	);
+	if (zIndex) createZIndexUtility(zIndex);
 
 	const createWidthUtility = useWidthUtility(
 		s,
@@ -2359,12 +2370,7 @@ export function useUtilitiesPreset(
 			resolveUtilityOptions("top"),
 		),
 		createVisibilityUtility,
-		createZIndexUtility: useZIndexUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("z-index"),
-		),
+		createZIndexUtility,
 
 		// Sizing
 		createHeightUtility,

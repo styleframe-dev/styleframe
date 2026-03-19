@@ -7,9 +7,11 @@ describe("getVariable", () => {
 	describe("basic functionality", () => {
 		it("should return a variable when it exists", () => {
 			const container: Container = {
+				id: "test-id",
 				variables: [
 					{
 						type: "variable",
+						id: "test-id",
 						name: "primary-color",
 						value: "#007bff",
 					},
@@ -22,6 +24,7 @@ describe("getVariable", () => {
 
 			expect(result).toEqual({
 				type: "variable",
+				id: "test-id",
 				name: "primary-color",
 				value: "#007bff",
 			});
@@ -29,19 +32,23 @@ describe("getVariable", () => {
 
 		it("should return the correct variable when multiple exist", () => {
 			const container: Container = {
+				id: "test-id",
 				variables: [
 					{
 						type: "variable",
+						id: "test-id",
 						name: "primary-color",
 						value: "#007bff",
 					},
 					{
 						type: "variable",
+						id: "test-id",
 						name: "secondary-color",
 						value: "#6c757d",
 					},
 					{
 						type: "variable",
+						id: "test-id",
 						name: "spacing",
 						value: "1rem",
 					},
@@ -54,6 +61,7 @@ describe("getVariable", () => {
 
 			expect(result).toEqual({
 				type: "variable",
+				id: "test-id",
 				name: "secondary-color",
 				value: "#6c757d",
 			});
@@ -61,9 +69,11 @@ describe("getVariable", () => {
 
 		it("should throw an error when variable does not exist", () => {
 			const container: Container = {
+				id: "test-id",
 				variables: [
 					{
 						type: "variable",
+						id: "test-id",
 						name: "primary-color",
 						value: "#007bff",
 					},
@@ -79,6 +89,7 @@ describe("getVariable", () => {
 
 		it("should throw an error when variables array is empty", () => {
 			const container: Container = {
+				id: "test-id",
 				variables: [],
 				declarations: {},
 				children: [],
@@ -93,9 +104,11 @@ describe("getVariable", () => {
 	describe("edge cases", () => {
 		it("should handle variables with special characters in names", () => {
 			const container: Container = {
+				id: "test-id",
 				variables: [
 					{
 						type: "variable",
+						id: "test-id",
 						name: "color-primary-500",
 						value: "#007bff",
 					},
@@ -111,9 +124,11 @@ describe("getVariable", () => {
 
 		it("should be case-sensitive", () => {
 			const container: Container = {
+				id: "test-id",
 				variables: [
 					{
 						type: "variable",
+						id: "test-id",
 						name: "primaryColor",
 						value: "#007bff",
 					},

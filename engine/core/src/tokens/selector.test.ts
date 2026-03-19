@@ -24,6 +24,7 @@ describe("createSelectorFunction", () => {
 			expect(result).toEqual({
 				type: "selector",
 				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".button",
 				variables: [],
 				declarations: {

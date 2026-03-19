@@ -20,8 +20,10 @@ describe("createVariableFunction", () => {
 
 			expect(result).toEqual({
 				type: "variable",
+				id: expect.any(String),
 				name: "primary-color",
 				value: "#007bff",
+				parentId: expect.any(String),
 			});
 		});
 

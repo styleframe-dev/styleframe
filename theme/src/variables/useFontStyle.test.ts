@@ -17,30 +17,40 @@ describe("useFontStyle", () => {
 
 		expect(fontStyleItalic).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style.italic",
 			value: "italic",
 		});
 
 		expect(fontStyleOblique).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style.oblique",
 			value: "oblique",
 		});
 
 		expect(fontStyleNormal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style.normal",
 			value: "normal",
 		});
 
 		expect(fontStyleInherit).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style.inherit",
 			value: "inherit",
 		});
 
 		expect(fontStyle).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style",
 			value: {
 				type: "reference",
@@ -199,6 +209,8 @@ describe("useFontStyle", () => {
 
 			expect(fontStyle).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "font-style",
 				value: {
 					type: "reference",

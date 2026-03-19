@@ -155,6 +155,7 @@ describe("useDesignTokensPreset", () => {
 				borderRadius: false,
 				borderStyle: false,
 				boxShadow: false,
+				zIndex: false,
 				colors: false,
 				fontFamily: false,
 				fontSize: false,
@@ -164,6 +165,7 @@ describe("useDesignTokensPreset", () => {
 				letterSpacing: false,
 				breakpoint: false,
 				easing: false,
+				duration: false,
 			});
 
 			expect(result.scale).toBeUndefined();
@@ -173,6 +175,7 @@ describe("useDesignTokensPreset", () => {
 			expect(result.borderRadius).toBeUndefined();
 			expect(result.borderStyle).toBeUndefined();
 			expect(result.boxShadow).toBeUndefined();
+			expect(result.zIndex).toBeUndefined();
 			expect(result.colors).toBeUndefined();
 			expect(result.fontFamily).toBeUndefined();
 			expect(result.fontSize).toBeUndefined();
@@ -182,6 +185,7 @@ describe("useDesignTokensPreset", () => {
 			expect(result.letterSpacing).toBeUndefined();
 			expect(result.breakpoint).toBeUndefined();
 			expect(result.easing).toBeUndefined();
+			expect(result.duration).toBeUndefined();
 
 			expect(s.root.variables).toHaveLength(0);
 		});
@@ -1089,8 +1093,6 @@ describe("useDesignTokensPreset", () => {
 			result.breakpoint.breakpointMd;
 			result.breakpoint.breakpointLg;
 			result.breakpoint.breakpointXl;
-
-			// @ts-expect-error - breakpoint2xl is not a default key
 			result.breakpoint.breakpoint2xl;
 		});
 

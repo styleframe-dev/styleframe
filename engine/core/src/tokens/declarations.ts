@@ -43,6 +43,7 @@ export function createDeclarationsCallbackContext(
 export function parseDeclarationsBlock(
 	declarations: DeclarationsBlock,
 	context: DeclarationsCallbackContext,
+	parent: Container,
 	root: Root,
 ) {
 	for (const key in declarations) {
@@ -75,7 +76,7 @@ export function parseDeclarationsBlock(
 	}
 
 	// Resolve @-prefixed string values to variable references
-	const resolvePropertyValue = createPropertyValueResolver(root, root);
+	const resolvePropertyValue = createPropertyValueResolver(parent, root);
 	for (const key in declarations) {
 		const value = declarations[key];
 		if (isTokenValue(value)) {

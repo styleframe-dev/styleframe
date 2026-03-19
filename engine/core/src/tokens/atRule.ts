@@ -20,12 +20,15 @@ export function createAtRuleFunction(parent: Container, root: Root) {
 		const instance: AtRule = {
 			type: "at-rule",
 			id: generateRandomId("ar-"),
+			parentId: parent.id,
 			identifier,
 			rule,
 			declarations: {},
 			variables: [],
 			children: [],
 		};
+
+		root._registry.set(instance.id, instance);
 
 		const callbackContext = createDeclarationsCallbackContext(instance, root);
 
@@ -38,7 +41,12 @@ export function createAtRuleFunction(parent: Container, root: Root) {
 			instance.declarations = declarationsOrCallback;
 		}
 
-		parseDeclarationsBlock(instance.declarations, callbackContext, root);
+		parseDeclarationsBlock(
+			instance.declarations,
+			callbackContext,
+			instance,
+			root,
+		);
 
 		parent.children.push(instance);
 
