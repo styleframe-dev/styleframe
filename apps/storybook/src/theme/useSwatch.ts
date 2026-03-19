@@ -4,19 +4,19 @@ import type { Styleframe } from "@styleframe/core";
  * Shared color tokens for swatch primitives
  */
 export function useSwatchColors(s: Styleframe) {
-	const primary = s.variable("swatch.color.primary", "#1E3A8A", {
+	const primary = s.variable("swatch.color.primary", "@color.primary", {
 		default: true,
 	});
-	const secondary = s.variable("swatch.color.secondary", "#64748b", {
+	const secondary = s.variable("swatch.color.secondary", "@color.secondary", {
 		default: true,
 	});
-	const tertiary = s.variable("swatch.color.tertiary", "#374151", {
+	const tertiary = s.variable("swatch.color.tertiary", "@color.text-weakest", {
 		default: true,
 	});
-	const background = s.variable("swatch.color.background", "#ffffff", {
+	const background = s.variable("swatch.color.background", "@color.surface", {
 		default: true,
 	});
-	const border = s.variable("swatch.color.border", "#e2e8f0", {
+	const border = s.variable("swatch.color.border", "@color.border", {
 		default: true,
 	});
 
@@ -58,13 +58,19 @@ export function useSwatchSpacing(s: Styleframe) {
  * Shared typography tokens for swatch primitives
  */
 export function useSwatchTypography(s: Styleframe) {
-	const fontSize = s.variable("swatch.font.size", "14px", { default: true });
-	const fontSizeSm = s.variable("swatch.font.size.sm", "12px", {
+	const fontSize = s.variable("swatch.font.size", "@font-size.lg", {
 		default: true,
 	});
-	const fontWeightNormal = s.variable("swatch.font.weight.normal", "500", {
+	const fontSizeSm = s.variable("swatch.font.size.sm", "@font-size", {
 		default: true,
 	});
+	const fontWeightNormal = s.variable(
+		"swatch.font.weight.normal",
+		"@font-weight",
+		{
+			default: true,
+		},
+	);
 	const fontWeightBold = s.variable("swatch.font.weight.bold", "600", {
 		default: true,
 	});

@@ -50,19 +50,23 @@ export function useHrSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<HrElementConfig>,
 ): HrElementResult {
-	const result = useHrDesignTokens(ctx, config) as HrElementResult;
+	let result!: HrElementResult;
 
-	ctx.selector("hr", {
-		borderTopWidth: ctx.ref(result.hrBorderWidth),
-		borderTopStyle: ctx.ref(result.hrBorderStyle),
-		borderTopColor: ctx.ref(result.hrBorderColor),
-		borderRightWidth: "0",
-		borderBottomWidth: "0",
-		borderLeftWidth: "0",
-		marginTop: ctx.ref(result.hrMargin),
-		marginBottom: ctx.ref(result.hrMargin),
-		marginLeft: "0",
-		marginRight: "0",
+	ctx.selector("hr", (ctx) => {
+		result = useHrDesignTokens(ctx, config) as HrElementResult;
+
+		return {
+			borderTopWidth: ctx.ref(result.hrBorderWidth),
+			borderTopStyle: ctx.ref(result.hrBorderStyle),
+			borderTopColor: ctx.ref(result.hrBorderColor),
+			borderRightWidth: "0",
+			borderBottomWidth: "0",
+			borderLeftWidth: "0",
+			marginTop: ctx.ref(result.hrMargin),
+			marginBottom: ctx.ref(result.hrMargin),
+			marginLeft: "0",
+			marginRight: "0",
+		};
 	});
 
 	return result;

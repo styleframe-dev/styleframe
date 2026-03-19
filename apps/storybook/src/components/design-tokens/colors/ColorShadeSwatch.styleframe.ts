@@ -27,7 +27,7 @@ selector(".color-shade-swatch__preview", {
 	justifyContent: "center",
 	fontSize: "12px",
 	fontWeight: "600",
-	color: "#ffffff",
+	color: "@color.text",
 });
 
 export const colorShadeSwatch = recipe({

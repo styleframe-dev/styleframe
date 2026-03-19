@@ -35,6 +35,35 @@ const { bodyBackground } = useBodyElement(s);
 
 const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
 
+selector(".color-swatch__checks", {
+	display: "flex",
+	flexDirection: "column",
+	gap: "4px",
+	fontSize: "11px",
+});
+
+selector(".color-swatch__check", {
+	display: "flex",
+	alignItems: "center",
+	gap: "8px",
+	whiteSpace: "nowrap",
+});
+
+selector(".color-swatch__check-label", {
+	width: "52px",
+	flexShrink: "0",
+});
+
+selector(".color-swatch__check-ratio", {
+	width: "44px",
+	flexShrink: "0",
+	textAlign: "right",
+});
+
+selector(".color-swatch__check-badge", {
+	fontWeight: "600",
+});
+
 selector(".color-swatch__preview", {
 	width: ref(swatchPreviewSize),
 	height: ref(swatchPreviewSize),

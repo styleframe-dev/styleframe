@@ -43,12 +43,16 @@ export function useAbbrSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<AbbrElementConfig>,
 ): AbbrElementResult {
-	const result = useAbbrDesignTokens(ctx, config) as AbbrElementResult;
+	let result!: AbbrElementResult;
 
-	ctx.selector("abbr[title]", {
-		cursor: ctx.ref(result.abbrCursor),
-		textDecorationSkipInk: "none",
-		textDecoration: ctx.ref(result.abbrTextDecoration),
+	ctx.selector("abbr[title]", (ctx) => {
+		result = useAbbrDesignTokens(ctx, config) as AbbrElementResult;
+
+		return {
+			cursor: ctx.ref(result.abbrCursor),
+			textDecorationSkipInk: "none",
+			textDecoration: ctx.ref(result.abbrTextDecoration),
+		};
 	});
 
 	return result;

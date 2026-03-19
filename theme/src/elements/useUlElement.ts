@@ -43,14 +43,18 @@ export function useUlSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<UlElementConfig>,
 ): UlElementResult {
-	const result = useUlDesignTokens(ctx, config) as UlElementResult;
+	let result!: UlElementResult;
 
-	ctx.selector("ul", {
-		marginBottom: ctx.ref(result.ulMarginBottom),
-		paddingLeft: ctx.ref(result.ulPaddingLeft),
-		"& ol, & ul": {
-			marginBottom: "0",
-		},
+	ctx.selector("ul", (ctx) => {
+		result = useUlDesignTokens(ctx, config) as UlElementResult;
+
+		return {
+			marginBottom: ctx.ref(result.ulMarginBottom),
+			paddingLeft: ctx.ref(result.ulPaddingLeft),
+			"& ol, & ul": {
+				marginBottom: "0",
+			},
+		};
 	});
 
 	return result;

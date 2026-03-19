@@ -25,6 +25,10 @@ selector(".swatch-card", {
 	overflow: "hidden",
 });
 
+selector(".swatch-card--horizontal", {
+	flexDirection: "row",
+});
+
 selector(".swatch-card__body", {
 	display: "flex",
 	alignItems: "center",
@@ -47,10 +51,10 @@ selector(".swatch-card__footer", {
 	background: ref(swatchColorBackground),
 });
 
-selector(".swatch-card__name", {
-	fontSize: ref(swatchFontSize),
-	fontWeight: ref(swatchFontWeightNormal),
-	color: ref(swatchColorTertiary),
+selector(".swatch-card--horizontal .swatch-card__footer", {
+	justifyContent: "center",
+	borderTop: 0,
+	borderLeft: css`1px solid ${ref(swatchColorBorder)}`,
 });
 
 selector(".swatch-card__label", {

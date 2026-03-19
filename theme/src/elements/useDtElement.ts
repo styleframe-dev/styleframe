@@ -35,10 +35,14 @@ export function useDtSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<DtElementConfig>,
 ): DtElementResult {
-	const result = useDtDesignTokens(ctx, config) as DtElementResult;
+	let result!: DtElementResult;
 
-	ctx.selector("dt", {
-		fontWeight: ctx.ref(result.dtFontWeight),
+	ctx.selector("dt", (ctx) => {
+		result = useDtDesignTokens(ctx, config) as DtElementResult;
+
+		return {
+			fontWeight: ctx.ref(result.dtFontWeight),
+		};
 	});
 
 	return result;

@@ -19,18 +19,45 @@ export const colorValues = {
 
 	background: "#f8fafc",
 	surface: "#ffffff",
-	border: "#e5e5e5",
+	border: "#8B95A2",
 
 	/**
 	 * Text
 	 */
 
-	text: "#111111",
-	"text-weak": "#595959",
-	"text-weaker": "#767676",
-	"text-weakest": "#949494",
+	text: "#0F172A",
+	"text-weak": "#334155",
+	"text-weaker": "#475569",
+	"text-weakest": "#64748B",
 } as const;
 
 export const darkModeColorValues = {
-	primary: "#006274",
+	/**
+	 * Primitives
+	 */
+
+	primary: "#22D3EE",
+	secondary: "#C4B5FD",
+	success: "#4ADE80",
+	warning: "#FCD34D",
+	danger: "#FCA5A5",
+	info: "#93C5FD",
+	gray: "#374151",
+
+	/**
+	 * Surfaces
+	 */
+
+	background: "#0F172A",
+	surface: "#1E293B",
+	border: "#637384",
+
+	/**
+	 * Text
+	 */
+
+	text: "#F1F5F9",
+	"text-weak": "#CBD5E1",
+	"text-weaker": "#94A3B8",
+	"text-weakest": "#64748B",
 };
