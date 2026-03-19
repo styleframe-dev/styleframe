@@ -12,22 +12,16 @@ describe("useColorShade", () => {
 
 		expect(shades.colorPrimaryShade50).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color--primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade100).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color--primary-shade-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade150).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color--primary-shade-150",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -50,29 +44,21 @@ describe("useColorShade", () => {
 
 		expect(shades.colorPrimaryShade25).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color--primary-shade-25",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade50).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color--primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade75).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color--primary-shade-75",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade100).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color--primary-shade-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -116,8 +102,6 @@ describe("useColorShade", () => {
 
 		expect(shades.colorPrimaryDarkShade50).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color--primary-dark-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -140,8 +124,6 @@ describe("useColorShade", () => {
 
 		expect(shades.customColorShade100).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "custom-color-shade-100",
 			value: expect.objectContaining({ type: "css" }),
 		});

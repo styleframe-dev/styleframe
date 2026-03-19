@@ -1,5 +1,4 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchColors, useSwatchDimensions } from "../../../theme/useSwatch";
 import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
@@ -19,14 +18,11 @@ const {
 	borderStyleOutset,
 } = borderStyle;
 
-const { swatchColorPrimary, swatchColorBackground } = useSwatchColors(s);
-const { swatchPreviewSize } = useSwatchDimensions(s);
-
 selector(".border-style-swatch__preview", {
-	width: ref(swatchPreviewSize),
-	height: ref(swatchPreviewSize),
-	background: ref(swatchColorBackground),
-	borderColor: ref(swatchColorPrimary),
+	width: "calc(@spacing * 6)",
+	height: "calc(@spacing * 6)",
+	background: "@color.surface",
+	borderColor: "@color.primary",
 	borderWidth: "3px",
 });
 

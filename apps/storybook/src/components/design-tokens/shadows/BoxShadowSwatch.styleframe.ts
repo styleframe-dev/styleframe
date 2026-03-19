@@ -1,5 +1,4 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchColors, useSwatchDimensions } from "../../../theme/useSwatch";
 import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
@@ -20,14 +19,11 @@ const {
 	boxShadowRing,
 } = boxShadow;
 
-const { swatchColorBackground } = useSwatchColors(s);
-const { swatchPreviewSize, swatchBorderRadiusSm } = useSwatchDimensions(s);
-
 selector(".box-shadow-swatch__preview", {
-	width: ref(swatchPreviewSize),
-	height: ref(swatchPreviewSize),
-	background: ref(swatchColorBackground),
-	borderRadius: ref(swatchBorderRadiusSm),
+	width: "calc(@spacing * 6)",
+	height: "calc(@spacing * 6)",
+	background: "@color.surface",
+	borderRadius: "@border-radius",
 });
 
 export const boxShadowSwatch = recipe({

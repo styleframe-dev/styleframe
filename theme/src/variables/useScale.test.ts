@@ -22,72 +22,54 @@ describe("useScale", () => {
 
 		expect(scaleMinorSecond).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "scale.minor-second",
 			value: 1.067,
 		});
 
 		expect(scaleMajorSecond).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "scale.major-second",
 			value: 1.125,
 		});
 
 		expect(scaleMinorThird).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "scale.minor-third",
 			value: 1.2,
 		});
 
 		expect(scaleMajorThird).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "scale.major-third",
 			value: 1.25,
 		});
 
 		expect(scalePerfectFourth).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "scale.perfect-fourth",
 			value: 1.333,
 		});
 
 		expect(scaleAugmentedFourth).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "scale.augmented-fourth",
 			value: 1.414,
 		});
 
 		expect(scalePerfectFifth).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "scale.perfect-fifth",
 			value: 1.5,
 		});
 
 		expect(scaleGolden).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "scale.golden",
 			value: 1.618,
 		});
 
 		expect(scale).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "scale",
 			value: {
 				type: "reference",
@@ -255,8 +237,6 @@ describe("useScale", () => {
 
 			expect(scale).toEqual({
 				type: "variable",
-				id: expect.any(String),
-				parentId: expect.any(String),
 				name: "scale",
 				value: {
 					type: "reference",
@@ -270,7 +250,7 @@ describe("useScale", () => {
 			const s = styleframe();
 			const { scale } = useScale(s, {
 				...scaleValues,
-				default: "@perfect-fourth",
+				default: "@scale.perfect-fourth",
 			});
 
 			expect(scale.value).toEqual({
@@ -284,7 +264,7 @@ describe("useScale", () => {
 			const s = styleframe();
 			useScale(s, {
 				...scaleValues,
-				default: "@golden",
+				default: "@scale.golden",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -308,7 +288,7 @@ describe("useScale", () => {
 				const s = styleframe();
 				const { scale } = useScale(s, {
 					...scaleValues,
-					default: `@${scaleName}`,
+					default: `@scale.${scaleName}`,
 				});
 
 				expect(scale.value).toEqual({

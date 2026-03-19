@@ -1,10 +1,7 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchColors } from "../../theme/useSwatch";
 
 const s = styleframe();
 const { ref, selector, variable } = s;
-
-const { swatchColorPrimary } = useSwatchColors(s);
 
 const barWidth = variable("bar-chart.bar.width", "12px", { default: true });
 const barGap = variable("bar-chart.gap", "4px", { default: true });
@@ -24,7 +21,7 @@ selector(".bar-chart", {
 selector(".bar-chart__bar", {
 	width: ref(barWidth),
 	borderRadius: ref(barBorderRadius),
-	background: ref(swatchColorPrimary),
+	background: "@color.primary",
 });
 
 export default s;

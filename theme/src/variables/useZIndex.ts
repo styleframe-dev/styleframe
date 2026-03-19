@@ -16,7 +16,7 @@ import { zIndexValues } from "../values";
  *   zIndexModal, // Variable<'z-index.modal'>
  *   zIndexToast, // Variable<'z-index.toast'>
  * } = useZIndex(s, {
- *   default: '@base',
+ *   default: '@z-index.base',
  *   dropdown: '100',
  *   modal: '400',
  *   toast: '600',

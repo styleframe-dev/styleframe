@@ -12,8 +12,6 @@ describe("useFontFamily", () => {
 
 		expect(fontFamily).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family",
 			value: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto",
 		});
@@ -32,8 +30,6 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilyMono).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family.mono",
 			value: "'SFMono-Regular', Menlo, Monaco, Consolas",
 		});
@@ -55,8 +51,6 @@ describe("useFontFamily", () => {
 
 		expect(fontFamily).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family",
 			value:
 				"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif",
@@ -64,16 +58,12 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilyPrint).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family.print",
 			value: "'Georgia', 'Times New Roman', 'Times', serif",
 		});
 
 		expect(fontFamilyMono).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family.mono",
 			value:
 				"'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
@@ -100,8 +90,6 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilySerifDisplay).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family.serif-display",
 			value: "'Playfair Display', Georgia, serif",
 		});
@@ -115,8 +103,6 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilyHeadingPrimary).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family.heading_primary",
 			value: "'Inter', sans-serif",
 		});
@@ -130,8 +116,6 @@ describe("useFontFamily", () => {
 
 		expect(fontFamily100).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family.100",
 			value: "'Roboto', sans-serif",
 		});
@@ -145,8 +129,6 @@ describe("useFontFamily", () => {
 
 		expect(fontFamilyCustom).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family.custom",
 			value: "Arial",
 		});

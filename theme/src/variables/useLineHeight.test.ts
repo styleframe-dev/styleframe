@@ -18,48 +18,36 @@ describe("useLineHeight", () => {
 
 		expect(lineHeightTight).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "line-height.tight",
 			value: 1.2,
 		});
 
 		expect(lineHeightSnug).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "line-height.snug",
 			value: 1.35,
 		});
 
 		expect(lineHeightNormal).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "line-height.normal",
 			value: 1.5,
 		});
 
 		expect(lineHeightRelaxed).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "line-height.relaxed",
 			value: 1.65,
 		});
 
 		expect(lineHeightLoose).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "line-height.loose",
 			value: 1.9,
 		});
 
 		expect(lineHeight).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "line-height",
 			value: {
 				type: "reference",
@@ -226,8 +214,6 @@ describe("useLineHeight", () => {
 
 			expect(lineHeight).toEqual({
 				type: "variable",
-				id: expect.any(String),
-				parentId: expect.any(String),
 				name: "line-height",
 				value: {
 					type: "reference",
@@ -241,7 +227,7 @@ describe("useLineHeight", () => {
 			const s = styleframe();
 			const { lineHeight } = useLineHeight(s, {
 				...lineHeightValues,
-				default: "@relaxed",
+				default: "@line-height.relaxed",
 			});
 
 			expect(lineHeight.value).toEqual({
@@ -255,7 +241,7 @@ describe("useLineHeight", () => {
 			const s = styleframe();
 			useLineHeight(s, {
 				...lineHeightValues,
-				default: "@loose",
+				default: "@line-height.loose",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -277,7 +263,7 @@ describe("useLineHeight", () => {
 				const s = styleframe();
 				const { lineHeight } = useLineHeight(s, {
 					...lineHeightValues,
-					default: `@${lineHeightName}`,
+					default: `@line-height.${lineHeightName}`,
 				});
 
 				expect(lineHeight.value).toEqual({

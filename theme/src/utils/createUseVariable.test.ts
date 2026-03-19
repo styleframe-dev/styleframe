@@ -13,8 +13,6 @@ describe("createUseVariable", () => {
 
 		expect(fontFamily).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-family",
 			value: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto",
 		});
@@ -29,8 +27,6 @@ describe("createUseVariable", () => {
 
 		expect(lineHeight).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "line-height",
 			value: "1.5",
 		});
@@ -45,8 +41,6 @@ describe("createUseVariable", () => {
 
 		expect(customProperty).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "custom-property",
 			value: "value",
 		});
@@ -61,8 +55,6 @@ describe("createUseVariable", () => {
 
 		expect(fontSizeLarge).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-size.large",
 			value: "20px",
 		});
@@ -79,24 +71,18 @@ describe("createUseVariable", () => {
 
 		expect(spacing).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "spacing",
 			value: "16px",
 		});
 
 		expect(spacingSmall).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "spacing.small",
 			value: "8px",
 		});
 
 		expect(spacingLarge).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "spacing.large",
 			value: "32px",
 		});
@@ -124,8 +110,6 @@ describe("createUseVariable", () => {
 
 		expect(colorPrimaryLight).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.primary-light",
 			value: "#3b82f6",
 		});
@@ -140,8 +124,6 @@ describe("createUseVariable", () => {
 
 		expect(colorPrimaryDark).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.primary_dark",
 			value: "#1e40af",
 		});
@@ -156,8 +138,6 @@ describe("createUseVariable", () => {
 
 		expect(fontWeight400).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.400",
 			value: "400",
 		});
@@ -574,8 +554,8 @@ describe("createUseVariable", () => {
 			const s = styleframe();
 			const { color, colorPrimary, colorHover } = useColor(s, {
 				default: "#3b82f6",
-				primary: "@default",
-				hover: "@primary",
+				primary: "@color",
+				hover: "@color.primary",
 			});
 
 			expect(color.value).toBe("#3b82f6");
@@ -596,8 +576,8 @@ describe("createUseVariable", () => {
 			const s = styleframe();
 			const { size, sizeMedium, sizeLarge } = useSize(s, {
 				default: "16px",
-				medium: "@default",
-				large: "@medium",
+				medium: "@size",
+				large: "@size.medium",
 			});
 
 			expect(size.value).toBe("16px");
@@ -619,7 +599,7 @@ describe("createUseVariable", () => {
 			useSpacing(s, {
 				default: "16px",
 				small: "8px",
-				medium: "@default",
+				medium: "@spacing",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -643,7 +623,7 @@ describe("createUseVariable", () => {
 			const s = styleframe();
 			const { size, sizeLarge } = useSize(s, {
 				default: "16",
-				large: "@default",
+				large: "@size",
 			});
 
 			expect(size.value).toBe("16px");
@@ -658,9 +638,9 @@ describe("createUseVariable", () => {
 			const useColor = createUseVariable("color");
 			const s = styleframe();
 			useColor(s, {
-				primary: "@default",
+				primary: "@color",
 				default: "#3b82f6",
-				secondary: "@primary",
+				secondary: "@color.primary",
 				tertiary: "#8b5cf6",
 			});
 
@@ -686,8 +666,8 @@ describe("createUseVariable", () => {
 			const useColor = createUseVariable("color", {
 				defaults: {
 					default: "#3b82f6",
-					primary: "@default",
-					hover: "@primary",
+					primary: "@color",
+					hover: "@color.primary",
 				},
 			});
 			const s = styleframe();
@@ -710,13 +690,13 @@ describe("createUseVariable", () => {
 			const useColor = createUseVariable("color", {
 				defaults: {
 					default: "#3b82f6",
-					primary: "@default",
+					primary: "@color",
 				},
 				mergeDefaults: true,
 			});
 			const s = styleframe();
 			const { color, colorPrimary, colorSecondary } = useColor(s, {
-				secondary: "@primary",
+				secondary: "@color.primary",
 			});
 
 			expect(color.value).toBe("#3b82f6");
@@ -738,7 +718,7 @@ describe("createUseVariable", () => {
 			const { colorPrimary, colorSecondary, colorAccent } = useColor(s, {
 				primary: "#3b82f6",
 				secondary: "#8b5cf6",
-				accent: "@secondary",
+				accent: "@color.secondary",
 			});
 
 			expect(colorPrimary.value).toBe("#3b82f6");
@@ -855,10 +835,10 @@ describe("createUseVariable", () => {
 				defaults: {
 					blue: "#3b82f6",
 					red: "#ef4444",
-					primary: "@blue",
-					danger: "@red",
-					link: "@primary",
-					error: "@danger",
+					primary: "@color.blue",
+					danger: "@color.red",
+					link: "@color.primary",
+					error: "@color.danger",
 				},
 			});
 			const s = styleframe();
@@ -903,7 +883,7 @@ describe("createUseVariable", () => {
 					md: "16px",
 					lg: "24px",
 					xl: "32px",
-					default: "@md",
+					default: "@spacing.md",
 				},
 				mergeDefaults: true,
 			});
@@ -935,7 +915,7 @@ describe("createUseVariable", () => {
 					fast: "150",
 					normal: "300",
 					slow: "500",
-					default: "@normal",
+					default: "@duration.normal",
 				},
 				transform: (value) => {
 					// Don't transform references

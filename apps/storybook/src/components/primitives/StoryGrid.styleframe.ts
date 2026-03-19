@@ -1,25 +1,22 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchSpacing } from "../../theme/useSwatch";
 
 const s = styleframe();
-const { ref, selector } = s;
-
-const { swatchGapSm, swatchGapLg, swatchPaddingMd } = useSwatchSpacing(s);
+const { selector } = s;
 
 selector(".story-grid", {
-	padding: ref(swatchPaddingMd),
+	padding: "@spacing",
 });
 
 selector(".story-grid--grid", {
 	display: "flex",
 	flexWrap: "wrap",
-	gap: ref(swatchGapLg),
+	gap: "@spacing.lg",
 });
 
 selector(".story-grid--list", {
 	display: "flex",
 	flexDirection: "column",
-	gap: ref(swatchGapSm),
+	gap: "@spacing.xs",
 });
 
 export default s;

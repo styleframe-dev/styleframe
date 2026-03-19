@@ -1,4 +1,5 @@
 // Design token defaults
+export * from "./borderColor";
 export * from "./borderRadius";
 export * from "./borderStyle";
 export * from "./borderWidth";

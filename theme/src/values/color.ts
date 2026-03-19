@@ -19,7 +19,6 @@ export const colorValues = {
 
 	background: "#f8fafc",
 	surface: "#ffffff",
-	border: "#8B95A2",
 
 	/**
 	 * Text
@@ -50,7 +49,6 @@ export const darkModeColorValues = {
 
 	background: "#0F172A",
 	surface: "#1E293B",
-	border: "#637384",
 
 	/**
 	 * Text

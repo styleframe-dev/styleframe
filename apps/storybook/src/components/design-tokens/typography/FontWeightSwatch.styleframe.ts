@@ -1,5 +1,4 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchColors, useSwatchSpacing } from "../../../theme/useSwatch";
 import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
@@ -18,12 +17,9 @@ const {
 	fontWeightBlack,
 } = fontWeight;
 
-const { swatchColorTertiary } = useSwatchColors(s);
-const { swatchGapSm } = useSwatchSpacing(s);
-
 selector(".font-weight-swatch__preview", {
-	color: ref(swatchColorTertiary),
-	padding: ref(swatchGapSm),
+	color: "@color.text-weakest",
+	padding: "@spacing.xs",
 });
 
 export const fontWeightSwatch = recipe({

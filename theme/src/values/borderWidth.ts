@@ -1,5 +1,5 @@
 export const borderWidthValues = {
-	default: "@thin",
+	default: "@border-width.thin",
 	none: "0",
 	thin: "thin",
 	medium: "medium",

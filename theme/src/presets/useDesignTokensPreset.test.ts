@@ -14,6 +14,7 @@ describe("useDesignTokensPreset", () => {
 			expect(result.scale).toBeDefined();
 			expect(result.scalePowers).toBeDefined();
 			expect(result.spacing).toBeDefined();
+			expect(result.borderColor).toBeDefined();
 			expect(result.borderWidth).toBeDefined();
 			expect(result.borderRadius).toBeDefined();
 			expect(result.borderStyle).toBeDefined();
@@ -81,11 +82,13 @@ describe("useDesignTokensPreset", () => {
 		it("should disable border tokens when set to false", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				borderColor: false,
 				borderWidth: false,
 				borderRadius: false,
 				borderStyle: false,
 			});
 
+			expect(result.borderColor).toBeUndefined();
 			expect(result.borderWidth).toBeUndefined();
 			expect(result.borderRadius).toBeUndefined();
 			expect(result.borderStyle).toBeUndefined();
@@ -104,6 +107,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: false,
+				borderColor: false,
 			});
 
 			expect(result.colors).toBeUndefined();
@@ -151,6 +155,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				scale: false,
 				spacing: false,
+				borderColor: false,
 				borderWidth: false,
 				borderRadius: false,
 				borderStyle: false,
@@ -171,6 +176,7 @@ describe("useDesignTokensPreset", () => {
 			expect(result.scale).toBeUndefined();
 			expect(result.scalePowers).toBeUndefined();
 			expect(result.spacing).toBeUndefined();
+			expect(result.borderColor).toBeUndefined();
 			expect(result.borderWidth).toBeUndefined();
 			expect(result.borderRadius).toBeUndefined();
 			expect(result.borderStyle).toBeUndefined();
@@ -214,6 +220,7 @@ describe("useDesignTokensPreset", () => {
 					primary: "#ff6600",
 					secondary: "#333333",
 				},
+				borderColor: false,
 			});
 
 			expect(result.colors?.colorPrimary).toBeDefined();
@@ -306,6 +313,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 			});
 
 			const colorNames = Object.keys(result.colors || {});
@@ -319,6 +327,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 			});
 
 			const colorNames = Object.keys(result.colors || {});
@@ -332,6 +341,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 			});
 
 			const colorNames = Object.keys(result.colors || {});
@@ -345,6 +355,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -363,6 +374,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateShades: false,
@@ -381,6 +393,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateTints: false,
@@ -399,6 +412,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: true,
@@ -419,6 +433,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -438,6 +453,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -457,6 +473,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -503,8 +520,9 @@ describe("useDesignTokensPreset", () => {
 					primary: "#006cff",
 					secondary: "#6b7280",
 				},
+				borderColor: false,
 				spacing: {
-					default: "@md",
+					default: "@spacing.md",
 					sm: "0.5rem",
 					md: "1rem",
 					lg: "2rem",
@@ -542,6 +560,7 @@ describe("useDesignTokensPreset", () => {
 				colors: {
 					primary: "#006cff",
 				},
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -565,6 +584,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				scale: false,
+				borderColor: false,
 				borderWidth: false,
 				borderRadius: false,
 				borderStyle: false,
@@ -608,6 +628,7 @@ describe("useDesignTokensPreset", () => {
 					secondary: "#6c757d",
 					success: "#28a745",
 				},
+				borderColor: false,
 			});
 
 			// Should have base colors
@@ -650,6 +671,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				spacing: { default: "1rem" },
 				colors: { primary: "#000" },
+				borderColor: false,
 				borderRadius: { default: "4px" },
 				// scale: omitted - uses defaults
 				easing: false,
@@ -678,6 +700,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: false,
+				borderColor: false,
 				spacing: false,
 			});
 
@@ -777,6 +800,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				spacing: { sm: "0.5rem" },
+				borderColor: false,
 				borderRadius: false,
 				colors: { brand: "#ff0000" },
 				easing: false,
@@ -803,6 +827,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff", secondary: "#6c757d", accent: "#ff6600" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -839,6 +864,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 			});
 
 			// Base colors are strongly typed
@@ -899,6 +925,17 @@ describe("useDesignTokensPreset", () => {
 
 			// @ts-expect-error - spacingXxl is not a default key
 			result.spacing.spacingXxl;
+		});
+
+		it("should return all default borderColor keys", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s);
+
+			result.borderColor.borderColor;
+			result.borderColor.borderColorPrimary;
+
+			// @ts-expect-error - borderColorDanger is not a default key
+			result.borderColor.borderColorDanger;
 		});
 
 		it("should return all default borderWidth keys", () => {
@@ -1121,6 +1158,7 @@ describe("useDesignTokensPreset", () => {
 		it("should return all default color keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -1144,6 +1182,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: true,
@@ -1174,6 +1213,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -1197,6 +1237,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -1220,6 +1261,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff", danger: "#ef4444" },
+				borderColor: false,
 			});
 
 			// primary variations
@@ -1266,6 +1308,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: false,
+				borderColor: false,
 			});
 
 			expect(result.colors).toBeUndefined();
@@ -1280,6 +1323,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			useDesignTokensPreset(s, {
 				colors: { primary: "#007bff", secondary: "#6c757d" },
+				borderColor: false,
 				themes: {
 					dark: {
 						colors: { primary: "#60a5fa", secondary: "#cbd5e1" },
@@ -1326,6 +1370,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
+				borderColor: false,
 				themes: {
 					dark: {
 						colors: { primary: "#60a5fa" },
@@ -1355,6 +1400,7 @@ describe("useDesignTokensPreset", () => {
 		it("should use themes.default to fill in undefined root-level config", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				borderColor: false,
 				themes: {
 					default: {
 						colors: { primary: "#ff6600", secondary: "#333" },
@@ -1388,6 +1434,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { brand: "#ff0000" },
+				borderColor: false,
 				themes: {
 					default: {
 						colors: { primary: "#007bff" },
@@ -1421,6 +1468,7 @@ describe("useDesignTokensPreset", () => {
 		it("should create domain-level default themes when themes only has default", () => {
 			const s = styleframe();
 			useDesignTokensPreset(s, {
+				borderColor: false,
 				themes: {
 					default: {
 						colors: { primary: "#007bff" },
@@ -1442,6 +1490,7 @@ describe("useDesignTokensPreset", () => {
 		it("should work with themes.default and additional themes together", () => {
 			const s = styleframe();
 			useDesignTokensPreset(s, {
+				borderColor: false,
 				themes: {
 					default: {
 						colors: {
@@ -1488,6 +1537,7 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: false,
+				borderColor: false,
 				themes: {
 					dark: {
 						colors: { primary: "#60a5fa" },

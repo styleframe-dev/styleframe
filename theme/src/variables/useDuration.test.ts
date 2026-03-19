@@ -12,8 +12,6 @@ describe("useDuration", () => {
 		});
 
 		expect(duration).toEqual({
-			id: expect.any(String),
-			parentId: expect.any(String),
 			type: "variable",
 			name: "duration",
 			value: "250ms",
@@ -30,8 +28,6 @@ describe("useDuration", () => {
 		});
 
 		expect(durationFast).toEqual({
-			id: expect.any(String),
-			parentId: expect.any(String),
 			type: "variable",
 			name: "duration.fast",
 			value: "150ms",
@@ -45,39 +41,31 @@ describe("useDuration", () => {
 		const s = styleframe();
 		const { duration, durationFast, durationNormal, durationSlow } =
 			useDuration(s, {
-				default: "@normal",
+				default: "@duration.normal",
 				fast: "150ms",
 				normal: "250ms",
 				slow: "300ms",
 			});
 
 		expect(durationFast).toEqual({
-			id: expect.any(String),
-			parentId: expect.any(String),
 			type: "variable",
 			name: "duration.fast",
 			value: "150ms",
 		});
 
 		expect(durationNormal).toEqual({
-			id: expect.any(String),
-			parentId: expect.any(String),
 			type: "variable",
 			name: "duration.normal",
 			value: "250ms",
 		});
 
 		expect(durationSlow).toEqual({
-			id: expect.any(String),
-			parentId: expect.any(String),
 			type: "variable",
 			name: "duration.slow",
 			value: "300ms",
 		});
 
 		expect(duration).toEqual({
-			id: expect.any(String),
-			parentId: expect.any(String),
 			type: "variable",
 			name: "duration",
 			value: {
@@ -117,7 +105,7 @@ describe("useDuration", () => {
 	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useDuration(s, {
-			default: "@normal",
+			default: "@duration.normal",
 			fast: "150ms",
 			normal: "250ms",
 			slow: "300ms",

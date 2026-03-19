@@ -12,8 +12,6 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadius).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius",
 			value: "0.25rem",
 		});
@@ -30,8 +28,6 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusSm).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.sm",
 			value: "0.125rem",
 		});
@@ -52,32 +48,24 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadius).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius",
 			value: "0.25rem",
 		});
 
 		expect(borderRadiusSm).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.sm",
 			value: "0.125rem",
 		});
 
 		expect(borderRadiusMd).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.md",
 			value: "0.25rem",
 		});
 
 		expect(borderRadiusLg).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.lg",
 			value: "0.5rem",
 		});
@@ -103,8 +91,6 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusExtraLarge).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.extra-large",
 			value: "1rem",
 		});
@@ -118,8 +104,6 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusCardCorner).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.card_corner",
 			value: "0.375rem",
 		});
@@ -133,8 +117,6 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadius100).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.100",
 			value: "0.25rem",
 		});
@@ -148,8 +130,6 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadius).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius",
 			value: "4px",
 		});
@@ -163,8 +143,6 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusBase).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.base",
 			value: "0.5em",
 		});
@@ -178,8 +156,6 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusCircle).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.circle",
 			value: "50%",
 		});
@@ -193,8 +169,6 @@ describe("useBorderRadius", () => {
 
 		expect(borderRadiusFluid).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "border-radius.fluid",
 			value: "1vw",
 		});

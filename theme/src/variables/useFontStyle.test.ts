@@ -17,40 +17,30 @@ describe("useFontStyle", () => {
 
 		expect(fontStyleItalic).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-style.italic",
 			value: "italic",
 		});
 
 		expect(fontStyleOblique).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-style.oblique",
 			value: "oblique",
 		});
 
 		expect(fontStyleNormal).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-style.normal",
 			value: "normal",
 		});
 
 		expect(fontStyleInherit).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-style.inherit",
 			value: "inherit",
 		});
 
 		expect(fontStyle).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-style",
 			value: {
 				type: "reference",
@@ -209,8 +199,6 @@ describe("useFontStyle", () => {
 
 			expect(fontStyle).toEqual({
 				type: "variable",
-				id: expect.any(String),
-				parentId: expect.any(String),
 				name: "font-style",
 				value: {
 					type: "reference",
@@ -224,7 +212,7 @@ describe("useFontStyle", () => {
 			const s = styleframe();
 			const { fontStyle } = useFontStyle(s, {
 				...fontStyleValues,
-				default: "@italic",
+				default: "@font-style.italic",
 			});
 
 			expect(fontStyle.value).toEqual({
@@ -238,7 +226,7 @@ describe("useFontStyle", () => {
 			const s = styleframe();
 			useFontStyle(s, {
 				...fontStyleValues,
-				default: "@oblique",
+				default: "@font-style.oblique",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -259,7 +247,7 @@ describe("useFontStyle", () => {
 				const s = styleframe();
 				const { fontStyle } = useFontStyle(s, {
 					...fontStyleValues,
-					default: `@${fontStyleName}`,
+					default: `@font-style.${fontStyleName}`,
 				});
 
 				expect(fontStyle.value).toEqual({
@@ -492,7 +480,7 @@ article blockquote {
 		it("should work with custom font style values", () => {
 			const s = styleframe();
 			const { fontStyle, fontStyleSlanted } = useFontStyle(s, {
-				default: "@normal",
+				default: "@font-style.normal",
 				normal: "normal",
 				italic: "italic",
 				oblique: "oblique",

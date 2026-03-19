@@ -1,9 +1,4 @@
 import { styleframe } from "virtual:styleframe";
-import {
-	useSwatchColors,
-	useSwatchSpacing,
-	useSwatchDimensions,
-} from "../../../theme/useSwatch";
 import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
@@ -23,13 +18,9 @@ const {
 	fontSize4xl,
 } = fontSize;
 
-const { swatchColorTertiary } = useSwatchColors(s);
-const { swatchGapSm } = useSwatchSpacing(s);
-const { swatchBorderRadius } = useSwatchDimensions(s);
-
 selector(".font-size-swatch__preview", {
-	color: ref(swatchColorTertiary),
-	padding: ref(swatchGapSm),
+	color: "@color.text-weakest",
+	padding: "@spacing.xs",
 });
 
 export const fontSizeSwatch = recipe({

@@ -1,5 +1,5 @@
 export const boxShadowValues = {
-	default: "@md",
+	default: "@box-shadow.md",
 	none: "none",
 	// subtle card / surfaces
 	xs: "0 1px 1px oklch(var(--box-shadow-color, 0 0 0) / 0.12), 0 2px 2px -1px oklch(var(--box-shadow-color, 0 0 0) / 0.06)",

@@ -1,5 +1,4 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchDimensions } from "../../../theme/useSwatch";
 import {
 	useBodyElement,
 	useDesignTokensPreset,
@@ -24,7 +23,6 @@ const {
 	colorGray,
 	colorBackground,
 	colorSurface,
-	colorBorder,
 	colorText,
 	colorTextWeak,
 	colorTextWeaker,
@@ -33,19 +31,17 @@ const {
 
 const { bodyBackground } = useBodyElement(s);
 
-const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
-
 selector(".color-swatch__checks", {
 	display: "flex",
 	flexDirection: "column",
-	gap: "4px",
+	gap: "@spacing.2xs",
 	fontSize: "11px",
 });
 
 selector(".color-swatch__check", {
 	display: "flex",
 	alignItems: "center",
-	gap: "8px",
+	gap: "@spacing.xs",
 	whiteSpace: "nowrap",
 });
 
@@ -61,18 +57,18 @@ selector(".color-swatch__check-ratio", {
 });
 
 selector(".color-swatch__check-badge", {
-	fontWeight: "600",
+	fontWeight: "@font-weight.semibold",
 });
 
 selector(".color-swatch__preview", {
-	width: ref(swatchPreviewSize),
-	height: ref(swatchPreviewSize),
-	borderRadius: ref(swatchBorderRadius),
+	width: "calc(@spacing * 6)",
+	height: "calc(@spacing * 6)",
+	borderRadius: "@border-radius.lg",
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
 	fontSize: "12px",
-	fontWeight: "600",
+	fontWeight: "@font-weight.semibold",
 });
 
 export const colorSwatch = recipe({
@@ -115,9 +111,6 @@ export const colorSwatch = recipe({
 			},
 			surface: {
 				background: ref(colorSurface),
-			},
-			border: {
-				background: ref(colorBorder),
 			},
 			text: {
 				color: ref(colorText),

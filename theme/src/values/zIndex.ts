@@ -1,5 +1,5 @@
 export const zIndexValues = {
-	default: "@base",
+	default: "@z-index.base",
 	hide: "-1",
 	base: "0",
 	dropdown: "100",

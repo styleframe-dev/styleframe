@@ -22,80 +22,60 @@ describe("useFontWeight", () => {
 
 		expect(fontWeightExtralight).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.extralight",
 			value: 200,
 		});
 
 		expect(fontWeightLight).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.light",
 			value: 300,
 		});
 
 		expect(fontWeightNormal).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.normal",
 			value: "normal",
 		});
 
 		expect(fontWeightMedium).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.medium",
 			value: 500,
 		});
 
 		expect(fontWeightSemibold).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.semibold",
 			value: 600,
 		});
 
 		expect(fontWeightBold).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.bold",
 			value: "bold",
 		});
 
 		expect(fontWeightBlack).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.black",
 			value: 900,
 		});
 
 		expect(fontWeightLighter).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.lighter",
 			value: "lighter",
 		});
 
 		expect(fontWeightBolder).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight.bolder",
 			value: "bolder",
 		});
 
 		expect(fontWeight).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "font-weight",
 			value: {
 				type: "reference",
@@ -305,8 +285,6 @@ describe("useFontWeight", () => {
 
 			expect(fontWeight).toEqual({
 				type: "variable",
-				id: expect.any(String),
-				parentId: expect.any(String),
 				name: "font-weight",
 				value: {
 					type: "reference",
@@ -320,7 +298,7 @@ describe("useFontWeight", () => {
 			const s = styleframe();
 			const { fontWeight } = useFontWeight(s, {
 				...fontWeightValues,
-				default: "@bold",
+				default: "@font-weight.bold",
 			});
 
 			expect(fontWeight.value).toEqual({
@@ -334,7 +312,7 @@ describe("useFontWeight", () => {
 			const s = styleframe();
 			useFontWeight(s, {
 				...fontWeightValues,
-				default: "@semibold",
+				default: "@font-weight.semibold",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -371,7 +349,7 @@ describe("useFontWeight", () => {
 				const s = styleframe();
 				const { fontWeight } = useFontWeight(s, {
 					...fontWeightValues,
-					default: `@${fontWeightName}`,
+					default: `@font-weight.${fontWeightName}`,
 				});
 
 				expect(fontWeight.value).toEqual({

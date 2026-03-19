@@ -1,27 +1,14 @@
 import { styleframe } from "virtual:styleframe";
-import {
-	useSwatchColors,
-	useSwatchSpacing,
-	useSwatchTypography,
-	useSwatchDimensions,
-} from "../../theme/useSwatch";
 
 const s = styleframe();
-const { ref, selector, css } = s;
-
-const { swatchColorTertiary, swatchColorBackground, swatchColorBorder } =
-	useSwatchColors(s);
-const { swatchGapXs, swatchPaddingMd } = useSwatchSpacing(s);
-const { swatchFontSize, swatchFontSizeSm, swatchFontWeightNormal } =
-	useSwatchTypography(s);
-const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
+const { selector, css } = s;
 
 selector(".swatch-card", {
 	display: "flex",
 	flexDirection: "column",
-	borderRadius: ref(swatchBorderRadius),
-	border: css`1px solid ${ref(swatchColorBorder)}`,
-	background: ref(swatchColorBackground),
+	borderRadius: "@border-radius.lg",
+	border: css`1px solid @border-color`,
+	background: "@color.surface",
 	overflow: "hidden",
 });
 
@@ -33,34 +20,34 @@ selector(".swatch-card__body", {
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
-	padding: ref(swatchPaddingMd),
+	padding: "@spacing",
 });
 
 selector(".swatch-card__preview", {
-	width: ref(swatchPreviewSize),
-	height: ref(swatchPreviewSize),
+	width: "calc(@spacing * 6)",
+	height: "calc(@spacing * 6)",
 });
 
 selector(".swatch-card__footer", {
 	display: "flex",
 	flexDirection: "column",
 	alignItems: "center",
-	gap: ref(swatchGapXs),
-	padding: ref(swatchPaddingMd),
-	borderTop: css`1px solid ${ref(swatchColorBorder)}`,
-	background: ref(swatchColorBackground),
+	gap: "@spacing.2xs",
+	padding: "@spacing",
+	borderTop: css`1px solid @border-color`,
+	background: "@color.surface",
 });
 
 selector(".swatch-card--horizontal .swatch-card__footer", {
 	justifyContent: "center",
 	borderTop: 0,
-	borderLeft: css`1px solid ${ref(swatchColorBorder)}`,
+	borderLeft: css`1px solid @border-color`,
 });
 
 selector(".swatch-card__label", {
-	fontSize: ref(swatchFontSizeSm),
-	fontWeight: ref(swatchFontWeightNormal),
-	color: ref(swatchColorTertiary),
+	fontSize: "@font-size",
+	fontWeight: "@font-weight",
+	color: "@color.text-weakest",
 	textAlign: "center",
 });
 

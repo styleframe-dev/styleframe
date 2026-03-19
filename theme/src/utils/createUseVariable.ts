@@ -100,7 +100,7 @@ export function createUseVariable<
 				camelCase(variableName);
 
 			const variableValue = isKeyReferenceValue(value)
-				? `@${createVariableName(value.substring(1))}`
+				? (value as unknown as TokenValue)
 				: transform(value);
 
 			result[exportName] = s.variable(variableName, variableValue, {

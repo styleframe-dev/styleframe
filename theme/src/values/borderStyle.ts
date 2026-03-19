@@ -1,5 +1,5 @@
 export const borderStyleValues = {
-	default: "@solid",
+	default: "@border-style.solid",
 	none: "none",
 	solid: "solid",
 	dashed: "dashed",

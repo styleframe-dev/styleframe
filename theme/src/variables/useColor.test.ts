@@ -24,8 +24,6 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("#007bff"),
 		});
@@ -44,24 +42,18 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("#007bff"),
 		});
 
 		expect(colorSecondary).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.secondary",
 			value: toOklch("#6c757d"),
 		});
 
 		expect(colorTertiary).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.tertiary",
 			value: toOklch("#28a745"),
 		});
@@ -87,8 +79,6 @@ describe("useColor", () => {
 
 		expect(colorPrimaryDark).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.primary-dark",
 			value: toOklch("#0056b3"),
 		});
@@ -102,8 +92,6 @@ describe("useColor", () => {
 
 		expect(colorPrimaryLight).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.primary_light",
 			value: toOklch("#80bdff"),
 		});
@@ -117,8 +105,6 @@ describe("useColor", () => {
 
 		expect(color500).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.500",
 			value: toOklch("#007bff"),
 		});
@@ -132,8 +118,6 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("rgb(0, 123, 255)"),
 		});
@@ -147,8 +131,6 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("rgba(0, 123, 255, 0.5)"),
 		});
@@ -162,8 +144,6 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("hsl(211, 100%, 50%)"),
 		});
@@ -322,29 +302,21 @@ describe("integration", () => {
 
 		expect(colorBrandPrimary).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.brand-primary",
 			value: toOklch("#007bff"),
 		});
 		expect(levels.colorBrandPrimary400).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.brand-primary-400",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorBrandPrimaryShade50).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.brand-primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(tints.colorBrandPrimaryTint50).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "color.brand-primary-tint-50",
 			value: expect.objectContaining({ type: "css" }),
 		});

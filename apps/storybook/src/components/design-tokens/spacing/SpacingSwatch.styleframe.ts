@@ -1,5 +1,4 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchColors, useSwatchDimensions } from "../../../theme/useSwatch";
 import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
@@ -19,12 +18,9 @@ const {
 	spacing3xl,
 } = spacing;
 
-const { swatchColorPrimary } = useSwatchColors(s);
-const { swatchBorderRadiusSm } = useSwatchDimensions(s);
-
 selector(".spacing-swatch__preview", {
-	background: ref(swatchColorPrimary),
-	borderRadius: ref(swatchBorderRadiusSm),
+	background: "@color.primary",
+	borderRadius: "@border-radius",
 });
 
 export const spacingSwatch = recipe({

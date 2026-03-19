@@ -13,8 +13,6 @@ describe("useEasing", () => {
 
 		expect(easing).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "easing",
 			value: "ease-in-out",
 		});
@@ -31,8 +29,6 @@ describe("useEasing", () => {
 
 		expect(easingEaseOutCubic).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "easing.ease-out-cubic",
 			value: "cubic-bezier(0.215, 0.61, 0.355, 1)",
 		});
@@ -48,7 +44,7 @@ describe("useEasing", () => {
 		const { easing, easingEaseIn, easingEaseOut, easingEaseInOut } = useEasing(
 			s,
 			{
-				default: "@ease-in-out",
+				default: "@easing.ease-in-out",
 				"ease-in": "ease-in",
 				"ease-out": "ease-out",
 				"ease-in-out": "ease-in-out",
@@ -57,32 +53,24 @@ describe("useEasing", () => {
 
 		expect(easingEaseIn).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "easing.ease-in",
 			value: "ease-in",
 		});
 
 		expect(easingEaseOut).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "easing.ease-out",
 			value: "ease-out",
 		});
 
 		expect(easingEaseInOut).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "easing.ease-in-out",
 			value: "ease-in-out",
 		});
 
 		expect(easing).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "easing",
 			value: {
 				type: "reference",
@@ -112,8 +100,6 @@ describe("useEasing", () => {
 
 		expect(easingEaseInSine).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "easing.ease-in-sine",
 			value: "cubic-bezier(0.47, 0, 0.745, 0.715)",
 		});
@@ -130,8 +116,6 @@ describe("useEasing", () => {
 
 		expect(easingSpring).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "easing.spring",
 			value: springValue,
 		});
@@ -148,8 +132,6 @@ describe("useEasing", () => {
 
 		expect(easingBounce).toEqual({
 			type: "variable",
-			id: expect.any(String),
-			parentId: expect.any(String),
 			name: "easing.bounce",
 			value: bounceValue,
 		});
@@ -180,7 +162,7 @@ describe("useEasing", () => {
 	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useEasing(s, {
-			default: "@ease-out-cubic",
+			default: "@easing.ease-out-cubic",
 			"ease-in": "ease-in",
 			"ease-out": "ease-out",
 			"ease-out-cubic": "cubic-bezier(0.215, 0.61, 0.355, 1)",

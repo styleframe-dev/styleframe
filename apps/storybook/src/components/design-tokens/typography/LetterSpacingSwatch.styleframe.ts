@@ -1,5 +1,4 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchColors, useSwatchSpacing } from "../../../theme/useSwatch";
 import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
@@ -16,12 +15,9 @@ const {
 	letterSpacingWider,
 } = letterSpacing;
 
-const { swatchColorTertiary } = useSwatchColors(s);
-const { swatchGapSm } = useSwatchSpacing(s);
-
 selector(".letter-spacing-swatch__preview", {
-	color: ref(swatchColorTertiary),
-	padding: ref(swatchGapSm),
+	color: "@color.text-weakest",
+	padding: "@spacing.xs",
 });
 
 export const letterSpacingSwatch = recipe({
