@@ -1,5 +1,57 @@
 # @styleframe/theme
 
+## 3.2.0
+
+### Minor Changes
+
+- [#145](https://github.com/styleframe-dev/styleframe/pull/145) [`1597105`](https://github.com/styleframe-dev/styleframe/commit/1597105d55c1dd43adc6ec146858770a830dc1fb) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add duration design tokens for consistent animation and transition timing
+  - Add `useDuration` composable with semantic duration scale from `instant` (0ms) through `slowest` (1000ms)
+  - Add `durationValues` default token values: instant, fastest, faster, fast, normal, slow, slower, slowest
+  - Register `duration` domain in `useDesignTokensPreset` with full theming and override support
+  - Add `duration` namespace to `useTransitionDurationUtility` and `useTransitionDelayUtility` for `@token` references
+  - Replace hardcoded `150ms` with `@duration.fast` in `useTransitionPropertyUtility`
+
+- [#146](https://github.com/styleframe-dev/styleframe/pull/146) [`bff61d1`](https://github.com/styleframe-dev/styleframe/commit/bff61d104eca9b1f2a72911593abf0a7fc90ec34) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Close 416px breakpoint gap by adding 768px md breakpoint
+  - Shift default breakpoint scale to align with industry standards (Tailwind, Bootstrap, Chakra)
+  - Change md from 992px to 768px to cover the tablet range
+  - Shift lg to 992px, xl to 1200px, and add new 2xl at 1440px
+
+- [#133](https://github.com/styleframe-dev/styleframe/pull/133) [`ce62d31`](https://github.com/styleframe-dev/styleframe/commit/ce62d318275deed277d828fdd8d2500c1a9d767f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Refactor design tokens preset, add Button recipe, and improve Badge recipe
+  - Refactor `useDesignTokensPreset` with improved variable composables and `createUseDerivedVariable` utility
+  - Add `useButtonRecipe` with color, variant, and size support including compound variant styles
+  - Improve `useBadgeRecipe` sizing, contrast, and accessibility
+  - Update color references from `@color.light`/`@color.dark` to `@color.white`/`@color.black`
+  - Enhance `createUseRecipe` with better types and `@`-prefixed token reference support in recipe definitions
+
+- [#126](https://github.com/styleframe-dev/styleframe/pull/126) [`3ffb881`](https://github.com/styleframe-dev/styleframe/commit/3ffb8814f9b7db1912180b2e0c53e1b6675df4d6) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Extract modifier registration from `useUtilitiesPreset` into a dedicated `useModifiersPreset` composable with independent configuration
+
+- [#138](https://github.com/styleframe-dev/styleframe/pull/138) [`5f06459`](https://github.com/styleframe-dev/styleframe/commit/5f064599bae7a3679aeef0dbcb9bfaf0c4167355) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add sanitize.css preset with configurable normalization categories
+  - Add `useSanitizePreset` with opt-out config for base, forms, typography, and reduced motion
+  - Add `useSanitizeBaseSelectors` with cross-browser normalization (box-sizing, margins, forms, accessibility)
+  - Add `useSanitizeFormsSelectors` with form element normalization and consistent select appearance
+  - Add `useSanitizeTypographySelectors` with system font stack defaults
+  - Add `useSanitizeReduceMotionSelectors` with `prefers-reduced-motion` media query support
+
+- [#130](https://github.com/styleframe-dev/styleframe/pull/130) [`7ec356a`](https://github.com/styleframe-dev/styleframe/commit/7ec356a0ff945c58df7de5740ef85c6ed781a50a) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add custom utility name support and shorthand utilities preset
+  - Add `names` config option to `useUtilitiesPreset` for custom CSS class name prefixes on any utility
+  - Add `utilityOptions` parameter to `createUseUtility` and `createUseSpacingUtility` to support name overrides
+  - Add `useShorthandUtilitiesPreset` with TailwindCSS-compatible shorthand mappings (e.g., `._m:sm` instead of `._margin:sm`)
+
+- [#142](https://github.com/styleframe-dev/styleframe/pull/142) [`89032b8`](https://github.com/styleframe-dev/styleframe/commit/89032b86dee47538a85f10e3083d128aaf60f864) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add z-index design token with semantic stacking scale
+  - Add `useZIndex` composable with semantic layer names (base, dropdown, sticky, overlay, modal, popover, toast, max)
+  - Add `zIndexValues` defaults with 100-increment scale for consistent stacking order
+  - Integrate z-index into `useDesignTokensPreset` and `useUtilitiesPreset`
+  - Update z-index utility docs to use semantic token values instead of arbitrary numbers
+
+### Patch Changes
+
+- [#130](https://github.com/styleframe-dev/styleframe/pull/130) [`7ec356a`](https://github.com/styleframe-dev/styleframe/commit/7ec356a0ff945c58df7de5740ef85c6ed781a50a) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Document custom utility names and `useShorthandUtilitiesPreset` in utilities preset docs
+  - Add `Custom Names` section documenting the `names` config option in `useUtilitiesPreset`
+  - Add `useShorthandUtilitiesPreset` section with usage examples and full shorthand name mapping table
+
+- Updated dependencies [[`295f04e`](https://github.com/styleframe-dev/styleframe/commit/295f04e6fdd011df6437986cc179e17efd8cd1be), [`71009c2`](https://github.com/styleframe-dev/styleframe/commit/71009c2c0a07a0bfd240e70e61020c8b7e923edb), [`2610041`](https://github.com/styleframe-dev/styleframe/commit/2610041beb03a8afc8de17af8857b9931f3359b0), [`7a61df0`](https://github.com/styleframe-dev/styleframe/commit/7a61df083bc534caa9271a1ef4535f7be979d7c2), [`ce62d31`](https://github.com/styleframe-dev/styleframe/commit/ce62d318275deed277d828fdd8d2500c1a9d767f)]:
+  - @styleframe/core@3.1.0
+
 ## 3.1.0
 
 ### Minor Changes
