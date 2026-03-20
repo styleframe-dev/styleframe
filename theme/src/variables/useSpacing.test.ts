@@ -10,8 +10,10 @@ describe("useSpacing", () => {
 			default: "1rem",
 		});
 
-		expect(spacing).toMatchObject({
+		expect(spacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing",
 			value: "1rem",
 		});
@@ -26,8 +28,10 @@ describe("useSpacing", () => {
 			sm: "0.5rem",
 		});
 
-		expect(spacingSm).toMatchObject({
+		expect(spacingSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.sm",
 			value: "0.5rem",
 		});
@@ -45,26 +49,34 @@ describe("useSpacing", () => {
 			lg: "2rem",
 		});
 
-		expect(spacingSm).toMatchObject({
+		expect(spacingSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.sm",
 			value: "0.5rem",
 		});
 
-		expect(spacingMd).toMatchObject({
+		expect(spacingMd).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.md",
 			value: "1rem",
 		});
 
-		expect(spacingLg).toMatchObject({
+		expect(spacingLg).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.lg",
 			value: "2rem",
 		});
 
-		expect(spacing).toMatchObject({
+		expect(spacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing",
 			value: {
 				type: "reference",
@@ -91,8 +103,10 @@ describe("useSpacing", () => {
 			"extra-large": "3rem",
 		});
 
-		expect(spacingExtraLarge).toMatchObject({
+		expect(spacingExtraLarge).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.extra-large",
 			value: "3rem",
 		});
@@ -104,8 +118,10 @@ describe("useSpacing", () => {
 			card_padding: "1.5rem",
 		});
 
-		expect(spacingCardPadding).toMatchObject({
+		expect(spacingCardPadding).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.card_padding",
 			value: "1.5rem",
 		});
@@ -117,8 +133,10 @@ describe("useSpacing", () => {
 			"100": "0.25rem",
 		});
 
-		expect(spacing100).toMatchObject({
+		expect(spacing100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.100",
 			value: "0.25rem",
 		});
@@ -130,8 +148,10 @@ describe("useSpacing", () => {
 			default: "16px",
 		});
 
-		expect(spacing).toMatchObject({
+		expect(spacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing",
 			value: "16px",
 		});
@@ -143,8 +163,10 @@ describe("useSpacing", () => {
 			base: "1.5em",
 		});
 
-		expect(spacingBase).toMatchObject({
+		expect(spacingBase).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.base",
 			value: "1.5em",
 		});
@@ -156,8 +178,10 @@ describe("useSpacing", () => {
 			relative: "5%",
 		});
 
-		expect(spacingRelative).toMatchObject({
+		expect(spacingRelative).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.relative",
 			value: "5%",
 		});
@@ -169,8 +193,10 @@ describe("useSpacing", () => {
 			fluid: "2.5vw",
 		});
 
-		expect(spacingFluid).toMatchObject({
+		expect(spacingFluid).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.fluid",
 			value: "2.5vw",
 		});

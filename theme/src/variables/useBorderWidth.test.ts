@@ -15,32 +15,42 @@ describe("useBorderWidth", () => {
 			borderWidth,
 		} = useBorderWidth(s);
 
-		expect(borderWidthNone).toMatchObject({
+		expect(borderWidthNone).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.none",
 			value: "0",
 		});
 
-		expect(borderWidthThin).toMatchObject({
+		expect(borderWidthThin).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.thin",
 			value: "thin",
 		});
 
-		expect(borderWidthMedium).toMatchObject({
+		expect(borderWidthMedium).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.medium",
 			value: "medium",
 		});
 
-		expect(borderWidthThick).toMatchObject({
+		expect(borderWidthThick).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.thick",
 			value: "thick",
 		});
 
-		expect(borderWidth).toMatchObject({
+		expect(borderWidth).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width",
 			value: {
 				type: "reference",
@@ -195,8 +205,10 @@ describe("useBorderWidth", () => {
 			const s = styleframe();
 			const { borderWidth } = useBorderWidth(s);
 
-			expect(borderWidth).toMatchObject({
+			expect(borderWidth).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "border-width",
 				value: {
 					type: "reference",

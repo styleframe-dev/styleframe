@@ -16,38 +16,50 @@ describe("useLineHeight", () => {
 			lineHeight,
 		} = useLineHeight(s);
 
-		expect(lineHeightTight).toMatchObject({
+		expect(lineHeightTight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.tight",
 			value: 1.2,
 		});
 
-		expect(lineHeightSnug).toMatchObject({
+		expect(lineHeightSnug).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.snug",
 			value: 1.35,
 		});
 
-		expect(lineHeightNormal).toMatchObject({
+		expect(lineHeightNormal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.normal",
 			value: 1.5,
 		});
 
-		expect(lineHeightRelaxed).toMatchObject({
+		expect(lineHeightRelaxed).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.relaxed",
 			value: 1.65,
 		});
 
-		expect(lineHeightLoose).toMatchObject({
+		expect(lineHeightLoose).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.loose",
 			value: 1.9,
 		});
 
-		expect(lineHeight).toMatchObject({
+		expect(lineHeight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height",
 			value: {
 				type: "reference",
@@ -210,8 +222,10 @@ describe("useLineHeight", () => {
 			const s = styleframe();
 			const { lineHeight } = useLineHeight(s);
 
-			expect(lineHeight).toMatchObject({
+			expect(lineHeight).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "line-height",
 				value: {
 					type: "reference",

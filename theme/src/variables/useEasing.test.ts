@@ -11,8 +11,10 @@ describe("useEasing", () => {
 			default: "ease-in-out",
 		});
 
-		expect(easing).toMatchObject({
+		expect(easing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "easing",
 			value: "ease-in-out",
 		});
@@ -27,8 +29,10 @@ describe("useEasing", () => {
 			"ease-out-cubic": "cubic-bezier(0.215, 0.61, 0.355, 1)",
 		});
 
-		expect(easingEaseOutCubic).toMatchObject({
+		expect(easingEaseOutCubic).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "easing.ease-out-cubic",
 			value: "cubic-bezier(0.215, 0.61, 0.355, 1)",
 		});
@@ -51,26 +55,34 @@ describe("useEasing", () => {
 			},
 		);
 
-		expect(easingEaseIn).toMatchObject({
+		expect(easingEaseIn).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "easing.ease-in",
 			value: "ease-in",
 		});
 
-		expect(easingEaseOut).toMatchObject({
+		expect(easingEaseOut).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "easing.ease-out",
 			value: "ease-out",
 		});
 
-		expect(easingEaseInOut).toMatchObject({
+		expect(easingEaseInOut).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "easing.ease-in-out",
 			value: "ease-in-out",
 		});
 
-		expect(easing).toMatchObject({
+		expect(easing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "easing",
 			value: {
 				type: "reference",
@@ -97,8 +109,10 @@ describe("useEasing", () => {
 			"ease-in-sine": "cubic-bezier(0.47, 0, 0.745, 0.715)",
 		});
 
-		expect(easingEaseInSine).toMatchObject({
+		expect(easingEaseInSine).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "easing.ease-in-sine",
 			value: "cubic-bezier(0.47, 0, 0.745, 0.715)",
 		});
@@ -113,8 +127,10 @@ describe("useEasing", () => {
 			spring: springValue,
 		});
 
-		expect(easingSpring).toMatchObject({
+		expect(easingSpring).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "easing.spring",
 			value: springValue,
 		});
@@ -129,8 +145,10 @@ describe("useEasing", () => {
 			bounce: bounceValue,
 		});
 
-		expect(easingBounce).toMatchObject({
+		expect(easingBounce).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "easing.bounce",
 			value: bounceValue,
 		});

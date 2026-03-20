@@ -16,38 +16,50 @@ describe("useLetterSpacing", () => {
 			letterSpacing,
 		} = useLetterSpacing(s);
 
-		expect(letterSpacingTighter).toMatchObject({
+		expect(letterSpacingTighter).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.tighter",
 			value: "-0.05em",
 		});
 
-		expect(letterSpacingTight).toMatchObject({
+		expect(letterSpacingTight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.tight",
 			value: "-0.025em",
 		});
 
-		expect(letterSpacingNormal).toMatchObject({
+		expect(letterSpacingNormal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.normal",
 			value: "normal",
 		});
 
-		expect(letterSpacingWide).toMatchObject({
+		expect(letterSpacingWide).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.wide",
 			value: "0.05em",
 		});
 
-		expect(letterSpacingWider).toMatchObject({
+		expect(letterSpacingWider).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.wider",
 			value: "0.1em",
 		});
 
-		expect(letterSpacing).toMatchObject({
+		expect(letterSpacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing",
 			value: {
 				type: "reference",
@@ -216,8 +228,10 @@ describe("useLetterSpacing", () => {
 			const s = styleframe();
 			const { letterSpacing } = useLetterSpacing(s);
 
-			expect(letterSpacing).toMatchObject({
+			expect(letterSpacing).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "letter-spacing",
 				value: {
 					type: "reference",

@@ -10,8 +10,10 @@ describe("useBreakpoint", () => {
 			default: 768,
 		});
 
-		expect(breakpoint).toMatchObject({
+		expect(breakpoint).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint",
 			value: 768,
 		});
@@ -26,8 +28,10 @@ describe("useBreakpoint", () => {
 			sm: 576,
 		});
 
-		expect(breakpointSm).toMatchObject({
+		expect(breakpointSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.sm",
 			value: 576,
 		});
@@ -46,26 +50,34 @@ describe("useBreakpoint", () => {
 				lg: 992,
 			});
 
-		expect(breakpointXs).toMatchObject({
+		expect(breakpointXs).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.xs",
 			value: 0,
 		});
 
-		expect(breakpointSm).toMatchObject({
+		expect(breakpointSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.sm",
 			value: 576,
 		});
 
-		expect(breakpointMd).toMatchObject({
+		expect(breakpointMd).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.md",
 			value: 768,
 		});
 
-		expect(breakpointLg).toMatchObject({
+		expect(breakpointLg).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.lg",
 			value: 992,
 		});
@@ -89,8 +101,10 @@ describe("useBreakpoint", () => {
 			"extra-large": 1440,
 		});
 
-		expect(breakpointExtraLarge).toMatchObject({
+		expect(breakpointExtraLarge).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.extra-large",
 			value: 1440,
 		});
@@ -102,8 +116,10 @@ describe("useBreakpoint", () => {
 			tablet_portrait: 768,
 		});
 
-		expect(breakpointTabletPortrait).toMatchObject({
+		expect(breakpointTabletPortrait).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.tablet_portrait",
 			value: 768,
 		});
@@ -115,8 +131,10 @@ describe("useBreakpoint", () => {
 			"1024": 1024,
 		});
 
-		expect(breakpoint1024).toMatchObject({
+		expect(breakpoint1024).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.1024",
 			value: 1024,
 		});
@@ -128,8 +146,10 @@ describe("useBreakpoint", () => {
 			md: 768,
 		});
 
-		expect(breakpointMd).toMatchObject({
+		expect(breakpointMd).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.md",
 			value: 768,
 		});
@@ -141,8 +161,10 @@ describe("useBreakpoint", () => {
 			lg: "992px",
 		});
 
-		expect(breakpointLg).toMatchObject({
+		expect(breakpointLg).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.lg",
 			value: "992px",
 		});
@@ -154,8 +176,10 @@ describe("useBreakpoint", () => {
 			base: "48em",
 		});
 
-		expect(breakpointBase).toMatchObject({
+		expect(breakpointBase).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.base",
 			value: "48em",
 		});
@@ -167,8 +191,10 @@ describe("useBreakpoint", () => {
 			fluid: "60rem",
 		});
 
-		expect(breakpointFluid).toMatchObject({
+		expect(breakpointFluid).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.fluid",
 			value: "60rem",
 		});
@@ -180,8 +206,10 @@ describe("useBreakpoint", () => {
 			xs: 0,
 		});
 
-		expect(breakpointXs).toMatchObject({
+		expect(breakpointXs).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "breakpoint.xs",
 			value: 0,
 		});

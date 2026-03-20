@@ -19,56 +19,74 @@ describe("useBorderStyle", () => {
 			borderStyle,
 		} = useBorderStyle(s);
 
-		expect(borderStyleNone).toMatchObject({
+		expect(borderStyleNone).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.none",
 			value: "none",
 		});
 
-		expect(borderStyleSolid).toMatchObject({
+		expect(borderStyleSolid).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.solid",
 			value: "solid",
 		});
 
-		expect(borderStyleDashed).toMatchObject({
+		expect(borderStyleDashed).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.dashed",
 			value: "dashed",
 		});
 
-		expect(borderStyleDotted).toMatchObject({
+		expect(borderStyleDotted).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.dotted",
 			value: "dotted",
 		});
 
-		expect(borderStyleDouble).toMatchObject({
+		expect(borderStyleDouble).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.double",
 			value: "double",
 		});
 
-		expect(borderStyleGroove).toMatchObject({
+		expect(borderStyleGroove).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.groove",
 			value: "groove",
 		});
 
-		expect(borderStyleInset).toMatchObject({
+		expect(borderStyleInset).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.inset",
 			value: "inset",
 		});
 
-		expect(borderStyleOutset).toMatchObject({
+		expect(borderStyleOutset).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style.outset",
 			value: "outset",
 		});
 
-		expect(borderStyle).toMatchObject({
+		expect(borderStyle).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-style",
 			value: {
 				type: "reference",
@@ -260,8 +278,10 @@ describe("useBorderStyle", () => {
 			const s = styleframe();
 			const { borderStyle } = useBorderStyle(s);
 
-			expect(borderStyle).toMatchObject({
+			expect(borderStyle).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "border-style",
 				value: {
 					type: "reference",

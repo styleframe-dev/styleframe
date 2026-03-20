@@ -20,62 +20,82 @@ describe("useFontWeight", () => {
 			fontWeight,
 		} = useFontWeight(s);
 
-		expect(fontWeightExtralight).toMatchObject({
+		expect(fontWeightExtralight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.extralight",
 			value: 200,
 		});
 
-		expect(fontWeightLight).toMatchObject({
+		expect(fontWeightLight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.light",
 			value: 300,
 		});
 
-		expect(fontWeightNormal).toMatchObject({
+		expect(fontWeightNormal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.normal",
 			value: "normal",
 		});
 
-		expect(fontWeightMedium).toMatchObject({
+		expect(fontWeightMedium).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.medium",
 			value: 500,
 		});
 
-		expect(fontWeightSemibold).toMatchObject({
+		expect(fontWeightSemibold).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.semibold",
 			value: 600,
 		});
 
-		expect(fontWeightBold).toMatchObject({
+		expect(fontWeightBold).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.bold",
 			value: "bold",
 		});
 
-		expect(fontWeightBlack).toMatchObject({
+		expect(fontWeightBlack).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.black",
 			value: 900,
 		});
 
-		expect(fontWeightLighter).toMatchObject({
+		expect(fontWeightLighter).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.lighter",
 			value: "lighter",
 		});
 
-		expect(fontWeightBolder).toMatchObject({
+		expect(fontWeightBolder).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.bolder",
 			value: "bolder",
 		});
 
-		expect(fontWeight).toMatchObject({
+		expect(fontWeight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight",
 			value: {
 				type: "reference",
@@ -281,8 +301,10 @@ describe("useFontWeight", () => {
 			const s = styleframe();
 			const { fontWeight } = useFontWeight(s);
 
-			expect(fontWeight).toMatchObject({
+			expect(fontWeight).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "font-weight",
 				value: {
 					type: "reference",

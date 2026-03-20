@@ -11,8 +11,10 @@ describe("useDuration", () => {
 			default: "250ms",
 		});
 
-		expect(duration).toMatchObject({
+		expect(duration).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "duration",
 			value: "250ms",
 		});
@@ -27,8 +29,10 @@ describe("useDuration", () => {
 			fast: "150ms",
 		});
 
-		expect(durationFast).toMatchObject({
+		expect(durationFast).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "duration.fast",
 			value: "150ms",
 		});
@@ -47,26 +51,34 @@ describe("useDuration", () => {
 				slow: "300ms",
 			});
 
-		expect(durationFast).toMatchObject({
+		expect(durationFast).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "duration.fast",
 			value: "150ms",
 		});
 
-		expect(durationNormal).toMatchObject({
+		expect(durationNormal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "duration.normal",
 			value: "250ms",
 		});
 
-		expect(durationSlow).toMatchObject({
+		expect(durationSlow).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "duration.slow",
 			value: "300ms",
 		});
 
-		expect(duration).toMatchObject({
+		expect(duration).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "duration",
 			value: {
 				type: "reference",

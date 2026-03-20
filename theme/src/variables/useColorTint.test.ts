@@ -10,18 +10,24 @@ describe("useColorTint", () => {
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		const tints = useColorTint(s, colorPrimary, colorTintValues);
 
-		expect(tints.colorPrimaryTint50).toMatchObject({
+		expect(tints.colorPrimaryTint50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-tint-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint100).toMatchObject({
+		expect(tints.colorPrimaryTint100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-tint-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint150).toMatchObject({
+		expect(tints.colorPrimaryTint150).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-tint-150",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -42,23 +48,31 @@ describe("useColorTint", () => {
 			"tint-100": 10,
 		} as const);
 
-		expect(tints.colorPrimaryTint25).toMatchObject({
+		expect(tints.colorPrimaryTint25).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-tint-25",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint50).toMatchObject({
+		expect(tints.colorPrimaryTint50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-tint-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint75).toMatchObject({
+		expect(tints.colorPrimaryTint75).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-tint-75",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorPrimaryTint100).toMatchObject({
+		expect(tints.colorPrimaryTint100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-tint-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -120,8 +134,10 @@ describe("useColorTint", () => {
 			"tint-100": 10,
 		} as const);
 
-		expect(tints.customColorTint100).toMatchObject({
+		expect(tints.customColorTint100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "custom-color-tint-100",
 			value: expect.objectContaining({ type: "css" }),
 		});

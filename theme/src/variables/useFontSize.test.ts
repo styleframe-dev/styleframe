@@ -10,8 +10,10 @@ describe("useFontSize", () => {
 			default: "1rem",
 		});
 
-		expect(fontSize).toMatchObject({
+		expect(fontSize).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size",
 			value: "1rem",
 		});
@@ -26,8 +28,10 @@ describe("useFontSize", () => {
 			sm: "0.875rem",
 		});
 
-		expect(fontSizeSm).toMatchObject({
+		expect(fontSizeSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.sm",
 			value: "0.875rem",
 		});
@@ -45,26 +49,34 @@ describe("useFontSize", () => {
 			lg: "1.25rem",
 		});
 
-		expect(fontSize).toMatchObject({
+		expect(fontSize).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size",
 			value: "1rem",
 		});
 
-		expect(fontSizeSm).toMatchObject({
+		expect(fontSizeSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.sm",
 			value: "0.875rem",
 		});
 
-		expect(fontSizeMd).toMatchObject({
+		expect(fontSizeMd).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.md",
 			value: "1rem",
 		});
 
-		expect(fontSizeLg).toMatchObject({
+		expect(fontSizeLg).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.lg",
 			value: "1.25rem",
 		});
@@ -88,8 +100,10 @@ describe("useFontSize", () => {
 			"extra-large": "2rem",
 		});
 
-		expect(fontSizeExtraLarge).toMatchObject({
+		expect(fontSizeExtraLarge).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.extra-large",
 			value: "2rem",
 		});
@@ -101,8 +115,10 @@ describe("useFontSize", () => {
 			heading_primary: "1.5rem",
 		});
 
-		expect(fontSizeHeadingPrimary).toMatchObject({
+		expect(fontSizeHeadingPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.heading_primary",
 			value: "1.5rem",
 		});
@@ -114,8 +130,10 @@ describe("useFontSize", () => {
 			"100": "0.75rem",
 		});
 
-		expect(fontSize100).toMatchObject({
+		expect(fontSize100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.100",
 			value: "0.75rem",
 		});
@@ -127,8 +145,10 @@ describe("useFontSize", () => {
 			default: "16px",
 		});
 
-		expect(fontSize).toMatchObject({
+		expect(fontSize).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size",
 			value: "16px",
 		});
@@ -140,8 +160,10 @@ describe("useFontSize", () => {
 			base: "1.5em",
 		});
 
-		expect(fontSizeBase).toMatchObject({
+		expect(fontSizeBase).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.base",
 			value: "1.5em",
 		});
@@ -153,8 +175,10 @@ describe("useFontSize", () => {
 			relative: "125%",
 		});
 
-		expect(fontSizeRelative).toMatchObject({
+		expect(fontSizeRelative).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.relative",
 			value: "125%",
 		});
@@ -166,8 +190,10 @@ describe("useFontSize", () => {
 			fluid: "2.5vw",
 		});
 
-		expect(fontSizeFluid).toMatchObject({
+		expect(fontSizeFluid).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.fluid",
 			value: "2.5vw",
 		});

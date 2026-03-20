@@ -10,8 +10,10 @@ describe("useBoxShadow", () => {
 			default: "0 2px 4px rgba(0, 0, 0, 0.1)",
 		});
 
-		expect(boxShadow).toMatchObject({
+		expect(boxShadow).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow",
 			value: "0 2px 4px rgba(0, 0, 0, 0.1)",
 		});
@@ -26,8 +28,10 @@ describe("useBoxShadow", () => {
 			sm: "0 1px 2px rgba(0, 0, 0, 0.05)",
 		});
 
-		expect(boxShadowSm).toMatchObject({
+		expect(boxShadowSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow.sm",
 			value: "0 1px 2px rgba(0, 0, 0, 0.05)",
 		});
@@ -48,26 +52,34 @@ describe("useBoxShadow", () => {
 			},
 		);
 
-		expect(boxShadow).toMatchObject({
+		expect(boxShadow).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow",
 			value: "0 2px 4px rgba(0, 0, 0, 0.1)",
 		});
 
-		expect(boxShadowSm).toMatchObject({
+		expect(boxShadowSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow.sm",
 			value: "0 1px 2px rgba(0, 0, 0, 0.05)",
 		});
 
-		expect(boxShadowMd).toMatchObject({
+		expect(boxShadowMd).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow.md",
 			value: "0 4px 8px rgba(0, 0, 0, 0.1)",
 		});
 
-		expect(boxShadowLg).toMatchObject({
+		expect(boxShadowLg).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow.lg",
 			value: "0 8px 16px rgba(0, 0, 0, 0.15)",
 		});
@@ -91,8 +103,10 @@ describe("useBoxShadow", () => {
 			"extra-large": "0 20px 40px rgba(0, 0, 0, 0.2)",
 		});
 
-		expect(boxShadowExtraLarge).toMatchObject({
+		expect(boxShadowExtraLarge).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow.extra-large",
 			value: "0 20px 40px rgba(0, 0, 0, 0.2)",
 		});
@@ -104,8 +118,10 @@ describe("useBoxShadow", () => {
 			card_elevation: "0 4px 6px rgba(0, 0, 0, 0.1)",
 		});
 
-		expect(boxShadowCardElevation).toMatchObject({
+		expect(boxShadowCardElevation).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow.card_elevation",
 			value: "0 4px 6px rgba(0, 0, 0, 0.1)",
 		});
@@ -117,8 +133,10 @@ describe("useBoxShadow", () => {
 			"100": "0 1px 3px rgba(0, 0, 0, 0.12)",
 		});
 
-		expect(boxShadow100).toMatchObject({
+		expect(boxShadow100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow.100",
 			value: "0 1px 3px rgba(0, 0, 0, 0.12)",
 		});
@@ -130,8 +148,10 @@ describe("useBoxShadow", () => {
 			none: "none",
 		});
 
-		expect(boxShadowNone).toMatchObject({
+		expect(boxShadowNone).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow.none",
 			value: "none",
 		});
@@ -143,8 +163,10 @@ describe("useBoxShadow", () => {
 			inset: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
 		});
 
-		expect(boxShadowInset).toMatchObject({
+		expect(boxShadowInset).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "box-shadow.inset",
 			value: "inset 0 2px 4px rgba(0, 0, 0, 0.1)",
 		});

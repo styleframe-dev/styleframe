@@ -10,8 +10,10 @@ describe("useZIndex", () => {
 			default: "0",
 		});
 
-		expect(zIndex).toMatchObject({
+		expect(zIndex).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "z-index",
 			value: "0",
 		});
@@ -26,8 +28,10 @@ describe("useZIndex", () => {
 			modal: "400",
 		});
 
-		expect(zIndexModal).toMatchObject({
+		expect(zIndexModal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "z-index.modal",
 			value: "400",
 		});
@@ -45,26 +49,34 @@ describe("useZIndex", () => {
 			toast: "600",
 		});
 
-		expect(zIndex).toMatchObject({
+		expect(zIndex).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "z-index",
 			value: "0",
 		});
 
-		expect(zIndexDropdown).toMatchObject({
+		expect(zIndexDropdown).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "z-index.dropdown",
 			value: "100",
 		});
 
-		expect(zIndexModal).toMatchObject({
+		expect(zIndexModal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "z-index.modal",
 			value: "400",
 		});
 
-		expect(zIndexToast).toMatchObject({
+		expect(zIndexToast).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "z-index.toast",
 			value: "600",
 		});
@@ -88,8 +100,10 @@ describe("useZIndex", () => {
 			hide: "-1",
 		});
 
-		expect(zIndexHide).toMatchObject({
+		expect(zIndexHide).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "z-index.hide",
 			value: "-1",
 		});
@@ -101,8 +115,10 @@ describe("useZIndex", () => {
 			auto: "auto",
 		});
 
-		expect(zIndexAuto).toMatchObject({
+		expect(zIndexAuto).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "z-index.auto",
 			value: "auto",
 		});
@@ -114,8 +130,10 @@ describe("useZIndex", () => {
 			"100": "100",
 		});
 
-		expect(zIndex100).toMatchObject({
+		expect(zIndex100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "z-index.100",
 			value: "100",
 		});

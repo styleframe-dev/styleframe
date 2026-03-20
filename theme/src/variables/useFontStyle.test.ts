@@ -15,32 +15,42 @@ describe("useFontStyle", () => {
 			fontStyle,
 		} = useFontStyle(s);
 
-		expect(fontStyleItalic).toMatchObject({
+		expect(fontStyleItalic).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style.italic",
 			value: "italic",
 		});
 
-		expect(fontStyleOblique).toMatchObject({
+		expect(fontStyleOblique).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style.oblique",
 			value: "oblique",
 		});
 
-		expect(fontStyleNormal).toMatchObject({
+		expect(fontStyleNormal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style.normal",
 			value: "normal",
 		});
 
-		expect(fontStyleInherit).toMatchObject({
+		expect(fontStyleInherit).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style.inherit",
 			value: "inherit",
 		});
 
-		expect(fontStyle).toMatchObject({
+		expect(fontStyle).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-style",
 			value: {
 				type: "reference",
@@ -195,8 +205,10 @@ describe("useFontStyle", () => {
 			const s = styleframe();
 			const { fontStyle } = useFontStyle(s);
 
-			expect(fontStyle).toMatchObject({
+			expect(fontStyle).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "font-style",
 				value: {
 					type: "reference",

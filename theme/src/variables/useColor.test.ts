@@ -22,8 +22,10 @@ describe("useColor", () => {
 			primary: "#007bff",
 		});
 
-		expect(colorPrimary).toMatchObject({
+		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("#007bff"),
 		});
@@ -40,20 +42,26 @@ describe("useColor", () => {
 			tertiary: "#28a745",
 		});
 
-		expect(colorPrimary).toMatchObject({
+		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("#007bff"),
 		});
 
-		expect(colorSecondary).toMatchObject({
+		expect(colorSecondary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.secondary",
 			value: toOklch("#6c757d"),
 		});
 
-		expect(colorTertiary).toMatchObject({
+		expect(colorTertiary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.tertiary",
 			value: toOklch("#28a745"),
 		});
@@ -77,8 +85,10 @@ describe("useColor", () => {
 			"primary-dark": "#0056b3",
 		});
 
-		expect(colorPrimaryDark).toMatchObject({
+		expect(colorPrimaryDark).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary-dark",
 			value: toOklch("#0056b3"),
 		});
@@ -90,8 +100,10 @@ describe("useColor", () => {
 			primary_light: "#80bdff",
 		});
 
-		expect(colorPrimaryLight).toMatchObject({
+		expect(colorPrimaryLight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary_light",
 			value: toOklch("#80bdff"),
 		});
@@ -103,8 +115,10 @@ describe("useColor", () => {
 			"500": "#007bff",
 		});
 
-		expect(color500).toMatchObject({
+		expect(color500).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.500",
 			value: toOklch("#007bff"),
 		});
@@ -116,8 +130,10 @@ describe("useColor", () => {
 			primary: "rgb(0, 123, 255)",
 		});
 
-		expect(colorPrimary).toMatchObject({
+		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("rgb(0, 123, 255)"),
 		});
@@ -129,8 +145,10 @@ describe("useColor", () => {
 			primary: "rgba(0, 123, 255, 0.5)",
 		});
 
-		expect(colorPrimary).toMatchObject({
+		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("rgba(0, 123, 255, 0.5)"),
 		});
@@ -142,8 +160,10 @@ describe("useColor", () => {
 			primary: "hsl(211, 100%, 50%)",
 		});
 
-		expect(colorPrimary).toMatchObject({
+		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("hsl(211, 100%, 50%)"),
 		});
@@ -299,23 +319,31 @@ describe("integration", () => {
 			"tint-50": 5,
 		} as const);
 
-		expect(colorBrandPrimary).toMatchObject({
+		expect(colorBrandPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.brand-primary",
 			value: toOklch("#007bff"),
 		});
-		expect(levels.colorBrandPrimary400).toMatchObject({
+		expect(levels.colorBrandPrimary400).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.brand-primary-400",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(shades.colorBrandPrimaryShade50).toMatchObject({
+		expect(shades.colorBrandPrimaryShade50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.brand-primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
-		expect(tints.colorBrandPrimaryTint50).toMatchObject({
+		expect(tints.colorBrandPrimaryTint50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.brand-primary-tint-50",
 			value: expect.objectContaining({ type: "css" }),
 		});

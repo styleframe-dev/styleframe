@@ -11,8 +11,10 @@ describe("createUseVariable", () => {
 			default: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto",
 		});
 
-		expect(fontFamily).toMatchObject({
+		expect(fontFamily).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-family",
 			value: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto",
 		});
@@ -25,8 +27,10 @@ describe("createUseVariable", () => {
 			default: "1.5",
 		});
 
-		expect(lineHeight).toMatchObject({
+		expect(lineHeight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height",
 			value: "1.5",
 		});
@@ -39,8 +43,10 @@ describe("createUseVariable", () => {
 			default: "value",
 		});
 
-		expect(customProperty).toMatchObject({
+		expect(customProperty).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "custom-property",
 			value: "value",
 		});
@@ -53,8 +59,10 @@ describe("createUseVariable", () => {
 			large: "20px",
 		});
 
-		expect(fontSizeLarge).toMatchObject({
+		expect(fontSizeLarge).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.large",
 			value: "20px",
 		});
@@ -69,20 +77,26 @@ describe("createUseVariable", () => {
 			large: "32px",
 		});
 
-		expect(spacing).toMatchObject({
+		expect(spacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing",
 			value: "16px",
 		});
 
-		expect(spacingSmall).toMatchObject({
+		expect(spacingSmall).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.small",
 			value: "8px",
 		});
 
-		expect(spacingLarge).toMatchObject({
+		expect(spacingLarge).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "spacing.large",
 			value: "32px",
 		});
@@ -108,8 +122,10 @@ describe("createUseVariable", () => {
 			"primary-light": "#3b82f6",
 		});
 
-		expect(colorPrimaryLight).toMatchObject({
+		expect(colorPrimaryLight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary-light",
 			value: "#3b82f6",
 		});
@@ -122,8 +138,10 @@ describe("createUseVariable", () => {
 			primary_dark: "#1e40af",
 		});
 
-		expect(colorPrimaryDark).toMatchObject({
+		expect(colorPrimaryDark).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary_dark",
 			value: "#1e40af",
 		});
@@ -136,8 +154,10 @@ describe("createUseVariable", () => {
 			"400": "400",
 		});
 
-		expect(fontWeight400).toMatchObject({
+		expect(fontWeight400).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-weight.400",
 			value: "400",
 		});
