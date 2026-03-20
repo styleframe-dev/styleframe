@@ -92,7 +92,6 @@ describe("useScale", () => {
 			value: {
 				type: "reference",
 				name: "scale.minor-third",
-				fallback: undefined,
 			},
 		});
 	});
@@ -178,7 +177,6 @@ describe("useScale", () => {
 		expect(customScale.value).toEqual({
 			type: "reference",
 			name: "scale.golden",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -261,7 +259,6 @@ describe("useScale", () => {
 				value: {
 					type: "reference",
 					name: "scale.minor-third",
-					fallback: undefined,
 				},
 			});
 		});
@@ -270,13 +267,12 @@ describe("useScale", () => {
 			const s = styleframe();
 			const { scale } = useScale(s, {
 				...scaleValues,
-				default: "@perfect-fourth",
+				default: "@scale.perfect-fourth",
 			});
 
 			expect(scale.value).toEqual({
 				type: "reference",
 				name: "scale.perfect-fourth",
-				fallback: undefined,
 			});
 		});
 
@@ -284,7 +280,7 @@ describe("useScale", () => {
 			const s = styleframe();
 			useScale(s, {
 				...scaleValues,
-				default: "@golden",
+				default: "@scale.golden",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -308,13 +304,12 @@ describe("useScale", () => {
 				const s = styleframe();
 				const { scale } = useScale(s, {
 					...scaleValues,
-					default: `@${scaleName}`,
+					default: `@scale.${scaleName}`,
 				});
 
 				expect(scale.value).toEqual({
 					type: "reference",
 					name: `scale.${scaleName}`,
-					fallback: undefined,
 				});
 			}
 		});

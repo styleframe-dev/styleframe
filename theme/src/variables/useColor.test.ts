@@ -187,7 +187,6 @@ describe("useColor", () => {
 		expect(colorPrimary.value).toEqual({
 			type: "reference",
 			name: "base-color",
-			fallback: undefined,
 		});
 	});
 

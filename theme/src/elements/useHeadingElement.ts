@@ -109,13 +109,17 @@ export function useHeadingSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<HeadingElementConfig>,
 ): HeadingElementResult {
-	const result = useHeadingDesignTokens(ctx, config) as HeadingElementResult;
+	let result!: HeadingElementResult;
 
-	ctx.selector("h1, h2, h3, h4, h5, h6", {
-		fontFamily: ctx.ref(result.headingFontFamily),
-		fontWeight: ctx.ref(result.headingFontWeight),
-		lineHeight: ctx.ref(result.headingLineHeight),
-		color: ctx.ref(result.headingColor),
+	ctx.selector("h1, h2, h3, h4, h5, h6", (ctx) => {
+		result = useHeadingDesignTokens(ctx, config) as HeadingElementResult;
+
+		return {
+			fontFamily: ctx.ref(result.headingFontFamily),
+			fontWeight: ctx.ref(result.headingFontWeight),
+			lineHeight: ctx.ref(result.headingLineHeight),
+			color: ctx.ref(result.headingColor),
+		};
 	});
 
 	for (const tag of ["h1", "h2", "h3", "h4", "h5", "h6"] as const) {

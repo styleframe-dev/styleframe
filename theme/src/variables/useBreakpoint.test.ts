@@ -251,7 +251,6 @@ describe("useBreakpoint", () => {
 		expect(breakpoint.value).toEqual({
 			type: "reference",
 			name: "base-breakpoint",
-			fallback: undefined,
 		});
 	});
 

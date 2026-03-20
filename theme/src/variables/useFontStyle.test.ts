@@ -55,7 +55,6 @@ describe("useFontStyle", () => {
 			value: {
 				type: "reference",
 				name: "font-style.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -132,7 +131,6 @@ describe("useFontStyle", () => {
 		expect(customFontStyle.value).toEqual({
 			type: "reference",
 			name: "font-style.italic",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -215,7 +213,6 @@ describe("useFontStyle", () => {
 				value: {
 					type: "reference",
 					name: "font-style.normal",
-					fallback: undefined,
 				},
 			});
 		});
@@ -224,13 +221,12 @@ describe("useFontStyle", () => {
 			const s = styleframe();
 			const { fontStyle } = useFontStyle(s, {
 				...fontStyleValues,
-				default: "@italic",
+				default: "@font-style.italic",
 			});
 
 			expect(fontStyle.value).toEqual({
 				type: "reference",
 				name: "font-style.italic",
-				fallback: undefined,
 			});
 		});
 
@@ -238,7 +234,7 @@ describe("useFontStyle", () => {
 			const s = styleframe();
 			useFontStyle(s, {
 				...fontStyleValues,
-				default: "@oblique",
+				default: "@font-style.oblique",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -259,13 +255,12 @@ describe("useFontStyle", () => {
 				const s = styleframe();
 				const { fontStyle } = useFontStyle(s, {
 					...fontStyleValues,
-					default: `@${fontStyleName}`,
+					default: `@font-style.${fontStyleName}`,
 				});
 
 				expect(fontStyle.value).toEqual({
 					type: "reference",
 					name: `font-style.${fontStyleName}`,
-					fallback: undefined,
 				});
 			}
 		});
@@ -492,7 +487,7 @@ article blockquote {
 		it("should work with custom font style values", () => {
 			const s = styleframe();
 			const { fontStyle, fontStyleSlanted } = useFontStyle(s, {
-				default: "@normal",
+				default: "@font-style.normal",
 				normal: "normal",
 				italic: "italic",
 				oblique: "oblique",
@@ -561,7 +556,6 @@ article blockquote {
 			expect(emphasizedStyle.value).toEqual({
 				type: "reference",
 				name: "font-style.italic",
-				fallback: undefined,
 			});
 		});
 	});

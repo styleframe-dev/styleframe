@@ -40,11 +40,15 @@ export function useCodeSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<CodeElementConfig>,
 ): CodeElementResult {
-	const result = useCodeDesignTokens(ctx, config) as CodeElementResult;
+	let result!: CodeElementResult;
 
-	ctx.selector("code, samp", {
-		fontFamily: ctx.ref(result.codeFontFamily),
-		fontSize: ctx.ref(result.codeFontSize),
+	ctx.selector("code, samp", (ctx) => {
+		result = useCodeDesignTokens(ctx, config) as CodeElementResult;
+
+		return {
+			fontFamily: ctx.ref(result.codeFontFamily),
+			fontSize: ctx.ref(result.codeFontSize),
+		};
 	});
 
 	return result;

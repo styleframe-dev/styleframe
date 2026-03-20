@@ -1,5 +1,5 @@
 export const letterSpacingValues = {
-	default: "@normal",
+	default: "@letter-spacing.normal",
 	tighter: "-0.05em",
 	tight: "-0.025em",
 	normal: "normal",

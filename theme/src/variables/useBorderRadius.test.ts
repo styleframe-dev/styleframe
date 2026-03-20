@@ -265,7 +265,6 @@ describe("useBorderRadius", () => {
 		expect(borderRadius.value).toEqual({
 			type: "reference",
 			name: "base-border-radius",
-			fallback: undefined,
 		});
 	});
 

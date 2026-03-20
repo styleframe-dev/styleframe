@@ -91,7 +91,6 @@ describe("useBorderStyle", () => {
 			value: {
 				type: "reference",
 				name: "border-style.solid",
-				fallback: undefined,
 			},
 		});
 	});
@@ -180,7 +179,6 @@ describe("useBorderStyle", () => {
 		expect(customBorderStyle.value).toEqual({
 			type: "reference",
 			name: "border-style.dotted",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -288,7 +286,6 @@ describe("useBorderStyle", () => {
 				value: {
 					type: "reference",
 					name: "border-style.solid",
-					fallback: undefined,
 				},
 			});
 		});
@@ -297,13 +294,12 @@ describe("useBorderStyle", () => {
 			const s = styleframe();
 			const { borderStyle } = useBorderStyle(s, {
 				...borderStyleValues,
-				default: "@dashed",
+				default: "@border-style.dashed",
 			});
 
 			expect(borderStyle.value).toEqual({
 				type: "reference",
 				name: "border-style.dashed",
-				fallback: undefined,
 			});
 		});
 
@@ -311,7 +307,7 @@ describe("useBorderStyle", () => {
 			const s = styleframe();
 			useBorderStyle(s, {
 				...borderStyleValues,
-				default: "@dotted",
+				default: "@border-style.dotted",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -345,13 +341,12 @@ describe("useBorderStyle", () => {
 				const s = styleframe();
 				const { borderStyle } = useBorderStyle(s, {
 					...borderStyleValues,
-					default: `@${borderStyleName}`,
+					default: `@border-style.${borderStyleName}`,
 				});
 
 				expect(borderStyle.value).toEqual({
 					type: "reference",
 					name: `border-style.${borderStyleName}`,
-					fallback: undefined,
 				});
 			}
 		});

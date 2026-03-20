@@ -103,7 +103,6 @@ describe("useMarginUtility", () => {
 		expect(utility.declarations?.margin).toEqual({
 			type: "reference",
 			name: "spacing.sm",
-			fallback: undefined,
 		});
 	});
 

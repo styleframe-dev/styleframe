@@ -74,15 +74,19 @@ export function useMarkSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<MarkElementConfig>,
 ): MarkElementResult {
-	const result = useMarkDesignTokens(ctx, config) as MarkElementResult;
+	let result!: MarkElementResult;
 
-	ctx.selector("mark", {
-		background: ctx.ref(result.markBackground),
-		color: ctx.ref(result.markColor),
-		paddingTop: ctx.ref(result.markPaddingTop),
-		paddingRight: ctx.ref(result.markPaddingRight),
-		paddingBottom: ctx.ref(result.markPaddingBottom),
-		paddingLeft: ctx.ref(result.markPaddingLeft),
+	ctx.selector("mark", (ctx) => {
+		result = useMarkDesignTokens(ctx, config) as MarkElementResult;
+
+		return {
+			background: ctx.ref(result.markBackground),
+			color: ctx.ref(result.markColor),
+			paddingTop: ctx.ref(result.markPaddingTop),
+			paddingRight: ctx.ref(result.markPaddingRight),
+			paddingBottom: ctx.ref(result.markPaddingBottom),
+			paddingLeft: ctx.ref(result.markPaddingLeft),
+		};
 	});
 
 	return result;

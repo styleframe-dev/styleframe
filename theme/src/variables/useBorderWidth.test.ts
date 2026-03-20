@@ -55,7 +55,6 @@ describe("useBorderWidth", () => {
 			value: {
 				type: "reference",
 				name: "border-width.thin",
-				fallback: undefined,
 			},
 		});
 	});
@@ -132,7 +131,6 @@ describe("useBorderWidth", () => {
 		expect(customBorderWidth.value).toEqual({
 			type: "reference",
 			name: "border-width.thick",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -215,7 +213,6 @@ describe("useBorderWidth", () => {
 				value: {
 					type: "reference",
 					name: "border-width.thin",
-					fallback: undefined,
 				},
 			});
 		});
@@ -224,13 +221,12 @@ describe("useBorderWidth", () => {
 			const s = styleframe();
 			const { borderWidth } = useBorderWidth(s, {
 				...borderWidthValues,
-				default: "@medium",
+				default: "@border-width.medium",
 			});
 
 			expect(borderWidth.value).toEqual({
 				type: "reference",
 				name: "border-width.medium",
-				fallback: undefined,
 			});
 		});
 
@@ -238,7 +234,7 @@ describe("useBorderWidth", () => {
 			const s = styleframe();
 			useBorderWidth(s, {
 				...borderWidthValues,
-				default: "@thick",
+				default: "@border-width.thick",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -259,13 +255,12 @@ describe("useBorderWidth", () => {
 				const s = styleframe();
 				const { borderWidth } = useBorderWidth(s, {
 					...borderWidthValues,
-					default: `@${borderWidthName}`,
+					default: `@border-width.${borderWidthName}`,
 				});
 
 				expect(borderWidth.value).toEqual({
 					type: "reference",
 					name: `border-width.${borderWidthName}`,
-					fallback: undefined,
 				});
 			}
 		});

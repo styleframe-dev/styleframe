@@ -9,9 +9,11 @@ const props = defineProps<{
 }>();
 
 const previewEl = vueRef<HTMLElement | null>(null);
-const contrastRatio = vueRef<number | null>(null);
-const passesAA = vueRef(false);
-const passesAAA = vueRef(false);
+const textContrastRatio = vueRef<number | null>(null);
+const textPassesAA = vueRef(false);
+const textPassesAAA = vueRef(false);
+const adjacentContrastRatio = vueRef<number | null>(null);
+const adjacentPassesAA = vueRef(false);
 
 function parseColor(color: string): [number, number, number] {
 	const ctx = document.createElement("canvas").getContext("2d")!;
@@ -40,17 +42,20 @@ onMounted(() => {
 
 	const bg = getComputedStyle(previewEl.value).backgroundColor;
 	const fg = getComputedStyle(previewEl.value).color;
+	const pageBg = getComputedStyle(document.body).backgroundColor;
 
-	const [br, bg2, bb] = parseColor(bg);
-	const [fr, fg2, fb] = parseColor(fg);
+	const bgLum = relativeLuminance(...parseColor(bg));
+	const fgLum = relativeLuminance(...parseColor(fg));
+	const pageBgLum = relativeLuminance(...parseColor(pageBg));
 
-	const bgLum = relativeLuminance(br, bg2, bb);
-	const fgLum = relativeLuminance(fr, fg2, fb);
+	const textRatio = getContrastRatio(bgLum, fgLum);
+	textContrastRatio.value = Math.round(textRatio * 100) / 100;
+	textPassesAA.value = textRatio >= 4.5;
+	textPassesAAA.value = textRatio >= 7;
 
-	const ratio = getContrastRatio(bgLum, fgLum);
-	contrastRatio.value = Math.round(ratio * 100) / 100;
-	passesAA.value = ratio >= 4.5;
-	passesAAA.value = ratio >= 7;
+	const adjacentRatio = getContrastRatio(bgLum, pageBgLum);
+	adjacentContrastRatio.value = Math.round(adjacentRatio * 100) / 100;
+	adjacentPassesAA.value = adjacentRatio >= 3;
 });
 </script>
 
@@ -63,11 +68,20 @@ onMounted(() => {
 			{{ name }}
 		</div>
 		<template #label>
-			<div class="swatch-card__label">
-				Contrast Ratio: {{ contrastRatio ?? '–' }}:1
-
-				<div :class="[passesAAA ? '_color:success' : passesAA ? '_color:warning' : '_color:danger']">
-					WCAG {{ passesAAA ? 'AAA ✓' : passesAA ? 'AA ✓' : 'AA ✗' }}
+			<div class="color-swatch__checks">
+				<div class="color-swatch__check">
+					<span class="color-swatch__check-label">Text</span>
+					<span class="color-swatch__check-ratio">{{ textContrastRatio ?? '–' }}:1</span>
+					<span :class="['color-swatch__check-badge', textPassesAAA || textPassesAA ? '_color:success' : '_color:danger']">
+						{{ textPassesAAA ? 'AAA ✓' : textPassesAA ? 'AA ✓' : 'AA ✗' }}
+					</span>
+				</div>
+				<div class="color-swatch__check">
+					<span class="color-swatch__check-label">Adjacent</span>
+					<span class="color-swatch__check-ratio">{{ adjacentContrastRatio ?? '–' }}:1</span>
+					<span :class="['color-swatch__check-badge', adjacentPassesAA ? '_color:success' : '_color:danger']">
+						{{ adjacentPassesAA ? 'AA ✓' : 'AA ✗' }}
+					</span>
 				</div>
 			</div>
 		</template>

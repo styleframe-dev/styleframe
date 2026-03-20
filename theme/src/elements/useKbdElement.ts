@@ -80,22 +80,26 @@ export function useKbdSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<KbdElementConfig>,
 ): KbdElementResult {
-	const result = useKbdDesignTokens(ctx, config) as KbdElementResult;
+	let result!: KbdElementResult;
 
-	ctx.selector("kbd", {
-		background: ctx.ref(result.kbdBackground),
-		color: ctx.ref(result.kbdColor),
-		fontFamily: ctx.ref(result.kbdFontFamily),
-		fontSize: ctx.ref(result.kbdFontSize),
-		borderRadius: ctx.ref(result.kbdBorderRadius),
-		paddingBlock: ctx.ref(result.kbdPaddingBlock),
-		paddingInline: ctx.ref(result.kbdPaddingInline),
-		display: "inline-block",
-		"& > kbd": {
-			paddingBlock: "0",
-			paddingInline: "0",
-			fontSize: "1em",
-		},
+	ctx.selector("kbd", (ctx) => {
+		result = useKbdDesignTokens(ctx, config) as KbdElementResult;
+
+		return {
+			background: ctx.ref(result.kbdBackground),
+			color: ctx.ref(result.kbdColor),
+			fontFamily: ctx.ref(result.kbdFontFamily),
+			fontSize: ctx.ref(result.kbdFontSize),
+			borderRadius: ctx.ref(result.kbdBorderRadius),
+			paddingBlock: ctx.ref(result.kbdPaddingBlock),
+			paddingInline: ctx.ref(result.kbdPaddingInline),
+			display: "inline-block",
+			"& > kbd": {
+				paddingBlock: "0",
+				paddingInline: "0",
+				fontSize: "1em",
+			},
+		};
 	});
 
 	return result;

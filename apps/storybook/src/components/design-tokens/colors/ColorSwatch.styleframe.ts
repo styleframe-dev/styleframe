@@ -1,5 +1,4 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchDimensions } from "../../../theme/useSwatch";
 import {
 	useBodyElement,
 	useDesignTokensPreset,
@@ -24,7 +23,6 @@ const {
 	colorGray,
 	colorBackground,
 	colorSurface,
-	colorBorder,
 	colorText,
 	colorTextWeak,
 	colorTextWeaker,
@@ -33,17 +31,44 @@ const {
 
 const { bodyBackground } = useBodyElement(s);
 
-const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
+selector(".color-swatch__checks", {
+	display: "flex",
+	flexDirection: "column",
+	gap: "@spacing.2xs",
+	fontSize: "11px",
+});
+
+selector(".color-swatch__check", {
+	display: "flex",
+	alignItems: "center",
+	gap: "@spacing.xs",
+	whiteSpace: "nowrap",
+});
+
+selector(".color-swatch__check-label", {
+	width: "52px",
+	flexShrink: "0",
+});
+
+selector(".color-swatch__check-ratio", {
+	width: "44px",
+	flexShrink: "0",
+	textAlign: "right",
+});
+
+selector(".color-swatch__check-badge", {
+	fontWeight: "@font-weight.semibold",
+});
 
 selector(".color-swatch__preview", {
-	width: ref(swatchPreviewSize),
-	height: ref(swatchPreviewSize),
-	borderRadius: ref(swatchBorderRadius),
+	width: "calc(@spacing * 6)",
+	height: "calc(@spacing * 6)",
+	borderRadius: "@border-radius.lg",
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
 	fontSize: "12px",
-	fontWeight: "600",
+	fontWeight: "@font-weight.semibold",
 });
 
 export const colorSwatch = recipe({
@@ -86,9 +111,6 @@ export const colorSwatch = recipe({
 			},
 			surface: {
 				background: ref(colorSurface),
-			},
-			border: {
-				background: ref(colorBorder),
 			},
 			text: {
 				color: ref(colorText),

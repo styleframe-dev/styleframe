@@ -235,7 +235,6 @@ describe("useFontSize", () => {
 		expect(fontSize.value).toEqual({
 			type: "reference",
 			name: "base-size",
-			fallback: undefined,
 		});
 	});
 

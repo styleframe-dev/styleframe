@@ -1,5 +1,4 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchDimensions } from "../../../theme/useSwatch";
 import { useDesignTokensPreset, useUtilitiesPreset } from "@styleframe/theme";
 
 const s = styleframe();
@@ -22,17 +21,15 @@ const {
 	colorPrimary950,
 } = colors;
 
-const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
-
 selector(".color-lightness-swatch__preview", {
-	width: ref(swatchPreviewSize),
-	height: ref(swatchPreviewSize),
-	borderRadius: ref(swatchBorderRadius),
+	width: "calc(@spacing * 6)",
+	height: "calc(@spacing * 6)",
+	borderRadius: "@border-radius.lg",
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
 	fontSize: "12px",
-	fontWeight: "600",
+	fontWeight: "@font-weight.semibold",
 });
 
 export const colorLightnessSwatch = recipe({

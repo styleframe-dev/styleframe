@@ -1,5 +1,5 @@
 export const borderRadiusValues = {
-	default: "@md",
+	default: "@border-radius.md",
 	none: "0",
 	sm: "0.125rem",
 	md: "0.25rem",

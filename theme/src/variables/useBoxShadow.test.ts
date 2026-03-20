@@ -249,7 +249,6 @@ describe("useBoxShadow", () => {
 		expect(boxShadow.value).toEqual({
 			type: "reference",
 			name: "base-box-shadow",
-			fallback: undefined,
 		});
 	});
 

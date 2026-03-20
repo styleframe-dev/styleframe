@@ -4,8 +4,11 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
+import type { CamelCase } from "scule";
+import { camelCase } from "scule";
 import type { ExportKeys } from "../types";
 import {
+	borderColorValues,
 	borderRadiusValues,
 	borderStyleValues,
 	borderWidthValues,
@@ -15,6 +18,7 @@ import {
 	colorShadeValues,
 	colorTintValues,
 	colorValues,
+	darkModeBorderColorValues,
 	darkModeColorValues,
 	durationValues,
 	easingValues,
@@ -30,6 +34,7 @@ import {
 	zIndexValues,
 } from "../values";
 import {
+	useBorderColor,
 	useBorderRadius,
 	useBorderStyle,
 	useBorderWidth,
@@ -54,55 +59,216 @@ import {
 } from "../variables";
 
 // =============================================================================
-// Domain Maps (single source of truth for types and runtime)
+// Domain Registry (single source of truth for types and runtime)
 // =============================================================================
 
+interface DomainProcessContext {
+	result: Record<string, Record<string, Variable | TokenValue> | undefined>;
+	config: DesignTokensPresetConfig<boolean>;
+}
+
+type DomainComposable = (
+	s: DeclarationsCallbackContext,
+	values: Record<string, TokenValue>,
+	options: { default: boolean },
+	context: DomainProcessContext,
+) => Record<string, Variable | TokenValue> | undefined;
+
+interface Domain<
+	K extends string = string,
+	D extends Record<string, TokenValue> = Record<string, TokenValue>,
+	C extends boolean | undefined = boolean | undefined,
+> {
+	key: K;
+	defaults: D;
+	composable: DomainComposable;
+	themes?: Record<string, Record<string, TokenValue>>;
+	configurable: C;
+}
+
 /**
- * Maps each simple domain key to its default values type.
- * Colors are excluded — they have special result handling (ColorResult).
+ * Defines a domain entry, preserving literal types for `key`, `defaults`,
+ * and `configurable` while widening `composable` to `DomainComposable`.
  */
+function defineDomain<
+	K extends string,
+	D extends Record<string, TokenValue>,
+	C extends boolean | undefined = undefined,
+>(domain: {
+	key: K;
+	defaults: D;
+	composable: DomainComposable;
+	themes?: Record<string, Record<string, TokenValue>>;
+	configurable?: C;
+}): Domain<K, D, C> {
+	return domain as Domain<K, D, C>;
+}
+
+/**
+ * Registry of all domains in application order.
+ * Order matters — domains that reference variables from other domains
+ * (e.g., border-color references color variables) must come after them.
+ *
+ * Each domain's `key` is a kebab-case identifier. The camelCase config/result
+ * key is derived at runtime via `camelCase(key)`.
+ */
+const domains = [
+	defineDomain({ key: "scale", defaults: scaleValues, composable: useScale }),
+	defineDomain({
+		key: "spacing",
+		defaults: spacingValues,
+		composable: useSpacing,
+	}),
+	defineDomain({
+		key: "border-width",
+		defaults: borderWidthValues,
+		composable: useBorderWidth,
+	}),
+	defineDomain({
+		key: "border-radius",
+		defaults: borderRadiusValues,
+		composable: useBorderRadius,
+	}),
+	defineDomain({
+		key: "border-style",
+		defaults: borderStyleValues,
+		composable: useBorderStyle,
+	}),
+	defineDomain({
+		key: "box-shadow",
+		defaults: boxShadowValues,
+		composable: useBoxShadow,
+	}),
+	defineDomain({
+		key: "z-index",
+		defaults: zIndexValues,
+		composable: useZIndex,
+	}),
+	defineDomain({
+		key: "font-family",
+		defaults: fontFamilyValues,
+		composable: useFontFamily,
+	}),
+	defineDomain({
+		key: "font-size",
+		defaults: fontSizeValues,
+		composable: useFontSize,
+	}),
+	defineDomain({
+		key: "font-style",
+		defaults: fontStyleValues,
+		composable: useFontStyle,
+	}),
+	defineDomain({
+		key: "font-weight",
+		defaults: fontWeightValues,
+		composable: useFontWeight,
+	}),
+	defineDomain({
+		key: "line-height",
+		defaults: lineHeightValues,
+		composable: useLineHeight,
+	}),
+	defineDomain({
+		key: "letter-spacing",
+		defaults: letterSpacingValues,
+		composable: useLetterSpacing,
+	}),
+	defineDomain({
+		key: "breakpoint",
+		defaults: breakpointValues,
+		composable: useBreakpoint,
+	}),
+	defineDomain({
+		key: "easing",
+		defaults: easingValues,
+		composable: useEasing,
+	}),
+	defineDomain({
+		key: "duration",
+		defaults: durationValues,
+		composable: useDuration,
+	}),
+	defineDomain({
+		key: "colors",
+		defaults: colorValues as Record<string, TokenValue>,
+		themes: { dark: darkModeColorValues },
+		composable: (s, values, options, { config }) => {
+			const baseColors = useColor(s, values as Record<string, string>, options);
+			let result: Record<string, Variable> = { ...baseColors };
+
+			const meta = { ...defaultColorsMetaConfig, ...config.meta?.colors };
+
+			for (const colorVariable of Object.values(
+				baseColors,
+			) as Variable<string>[]) {
+				if (meta.generateLightness) {
+					result = {
+						...result,
+						...useColorLightness(
+							s,
+							colorVariable,
+							meta.lightnessLevels,
+							options,
+						),
+					};
+				}
+
+				if (meta.generateShades) {
+					result = {
+						...result,
+						...useColorShade(s, colorVariable, meta.shadeLevels, options),
+					};
+				}
+
+				if (meta.generateTints) {
+					result = {
+						...result,
+						...useColorTint(s, colorVariable, meta.tintLevels, options),
+					};
+				}
+			}
+
+			return result;
+		},
+	}),
+	defineDomain({
+		key: "border-color",
+		defaults: borderColorValues,
+		composable: useBorderColor,
+		themes: { dark: darkModeBorderColorValues },
+	}),
+	defineDomain({
+		key: "scale-powers",
+		defaults: {} as Record<string, TokenValue>,
+		configurable: false,
+		composable: (s, _values, _options, { result, config }) => {
+			const scaleVar = result.scale?.["scale"];
+			if (!scaleVar) return undefined;
+			return useScalePowers(
+				s,
+				scaleVar as Variable,
+				config.scalePowers ?? scalePowerValues,
+			);
+		},
+	}),
+];
+
+// =============================================================================
+// Domain Type Maps (derived from the domains tuple)
+// =============================================================================
+
+type Domains = typeof domains;
+type AllDomains = Domains[number];
+type ConfigurableDomain = Exclude<AllDomains, { configurable: false }>;
+type SimpleDomain = Exclude<ConfigurableDomain, { key: "colors" }>;
+type SimpleDomainKey = SimpleDomain["key"];
+type DomainByKey<K extends string> = Extract<SimpleDomain, { key: K }>;
+
+/** Maps each simple domain key to its default values type. */
 type DomainDefaultsMap = {
-	spacing: typeof spacingValues;
-	borderWidth: typeof borderWidthValues;
-	borderRadius: typeof borderRadiusValues;
-	borderStyle: typeof borderStyleValues;
-	boxShadow: typeof boxShadowValues;
-	zIndex: typeof zIndexValues;
-	fontFamily: typeof fontFamilyValues;
-	fontSize: typeof fontSizeValues;
-	fontStyle: typeof fontStyleValues;
-	fontWeight: typeof fontWeightValues;
-	lineHeight: typeof lineHeightValues;
-	letterSpacing: typeof letterSpacingValues;
-	scale: typeof scaleValues;
-	breakpoint: typeof breakpointValues;
-	easing: typeof easingValues;
-	duration: typeof durationValues;
+	[K in SimpleDomainKey]: DomainByKey<K>["defaults"];
 };
-
-/**
- * Maps each simple domain key to its CSS property prefix.
- */
-type DomainPrefixMap = {
-	spacing: "spacing";
-	borderWidth: "border-width";
-	borderRadius: "border-radius";
-	borderStyle: "border-style";
-	boxShadow: "box-shadow";
-	zIndex: "z-index";
-	fontFamily: "font-family";
-	fontSize: "font-size";
-	fontStyle: "font-style";
-	fontWeight: "font-weight";
-	lineHeight: "line-height";
-	letterSpacing: "letter-spacing";
-	scale: "scale";
-	breakpoint: "breakpoint";
-	easing: "easing";
-	duration: "duration";
-};
-
-type SimpleDomainKey = keyof DomainPrefixMap;
 
 // =============================================================================
 // Helper Types
@@ -184,6 +350,18 @@ type AllColorVariations<TColors extends Record<string, string>> =
 	UnionToIntersection<ColorVariationsForKey<keyof TColors>>;
 
 /**
+ * Resolves which color record to use based on config and merge flag.
+ */
+type ResolvedColors<TColors, TMerge extends boolean> = TColors extends Record<
+	string,
+	string
+>
+	? TMerge extends true
+		? Omit<DefaultColors, keyof TColors> & TColors
+		: TColors
+	: DefaultColors;
+
+/**
  * Color result type that strongly types base colors and all variations.
  */
 type ColorResult<
@@ -191,13 +369,8 @@ type ColorResult<
 	TMerge extends boolean = false,
 > = TColors extends false
 	? undefined
-	: TColors extends Record<string, string>
-		? TMerge extends true
-			? ExportKeys<"color", Omit<DefaultColors, keyof TColors> & TColors, "."> &
-					AllColorVariations<Omit<DefaultColors, keyof TColors> & TColors>
-			: ExportKeys<"color", TColors, "."> & AllColorVariations<TColors>
-		: ExportKeys<"color", DefaultColors, "."> &
-				AllColorVariations<DefaultColors>;
+	: ExportKeys<"color", ResolvedColors<TColors, TMerge>, "."> &
+			AllColorVariations<ResolvedColors<TColors, TMerge>>;
 
 // =============================================================================
 // Configuration Types
@@ -238,32 +411,6 @@ export type MetaConfigWithMerge<TMerge extends boolean = false> = Omit<
 };
 
 /**
- * Per-theme token overrides. Unlike DesignTokensPresetConfig:
- * - No `false` values (themes override, not disable)
- * - No `meta` or `scalePowers` (shared config, not per-theme)
- * - No generic type parameters (theme overrides don't affect the return type)
- */
-export interface ThemeTokenOverrides {
-	spacing?: Record<string, TokenValue>;
-	borderWidth?: Record<string, TokenValue>;
-	borderRadius?: Record<string, TokenValue>;
-	borderStyle?: Record<string, TokenValue>;
-	boxShadow?: Record<string, TokenValue>;
-	zIndex?: Record<string, TokenValue>;
-	colors?: Record<string, string>;
-	fontFamily?: Record<string, TokenValue>;
-	fontSize?: Record<string, TokenValue>;
-	fontStyle?: Record<string, TokenValue>;
-	fontWeight?: Record<string, TokenValue>;
-	lineHeight?: Record<string, TokenValue>;
-	letterSpacing?: Record<string, TokenValue>;
-	scale?: Record<string, TokenValue>;
-	breakpoint?: Record<string, number>;
-	easing?: Record<string, TokenValue>;
-	duration?: Record<string, TokenValue>;
-}
-
-/**
  * Configuration options for the default design tokens preset.
  *
  * - Omit or set to `undefined` to use default values
@@ -273,6 +420,7 @@ export interface ThemeTokenOverrides {
  */
 export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
 	spacing?: Record<string, TokenValue> | false;
+	borderColor?: Record<string, TokenValue> | false;
 	borderWidth?: Record<string, TokenValue> | false;
 	borderRadius?: Record<string, TokenValue> | false;
 	borderStyle?: Record<string, TokenValue> | false;
@@ -294,17 +442,32 @@ export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
 	themes?: Record<string, ThemeTokenOverrides>;
 }
 
+/**
+ * Per-theme token overrides derived from DesignTokensPresetConfig:
+ * - No `false` values (themes override, not disable)
+ * - No `meta`, `scalePowers`, or `themes` (shared config, not per-theme)
+ */
+type ConfigurableDomainKeys = Exclude<
+	keyof DesignTokensPresetConfig,
+	"meta" | "scalePowers" | "themes"
+>;
+
+export type ThemeTokenOverrides = {
+	[K in ConfigurableDomainKeys]?: Exclude<DesignTokensPresetConfig[K], false>;
+};
+
 // =============================================================================
 // Result Type (mapped over domain maps)
 // =============================================================================
 
 /**
- * Result for simple domains, generated via mapped type over DomainPrefixMap.
+ * Result for simple domains, generated via mapped type over the domains tuple.
+ * Maps kebab-case domain keys to camelCase result keys.
  */
 type SimpleDomainResults<TConfig, TMerge extends boolean> = {
-	[K in SimpleDomainKey]: TokenResult<
-		GetDomainConfig<TConfig, K, DomainDefaultsMap[K]>,
-		DomainPrefixMap[K],
+	[K in SimpleDomainKey as CamelCase<K>]: TokenResult<
+		GetDomainConfig<TConfig, CamelCase<K>, DomainDefaultsMap[K]>,
+		K,
 		DomainDefaultsMap[K],
 		TMerge
 	>;
@@ -332,7 +495,7 @@ export type DesignTokensPresetResult<
 };
 
 // =============================================================================
-// Runtime Domain Registry
+// Runtime Helpers
 // =============================================================================
 
 /**
@@ -346,189 +509,6 @@ export const defaultColorsMetaConfig: Required<ColorsMetaConfig> = {
 	shadeLevels: colorShadeValues,
 	tintLevels: colorTintValues,
 };
-
-interface DomainProcessContext {
-	result: Record<string, Record<string, Variable | TokenValue> | undefined>;
-	config: DesignTokensPresetConfig<boolean>;
-}
-
-interface DomainEntry {
-	key: string;
-	defaults: Record<string, TokenValue>;
-	themes?: Record<string, Record<string, TokenValue>>;
-	/**
-	 * Process this domain. For simple domains, wraps the composable.
-	 * For complex domains, encapsulates the full pipeline.
-	 */
-	process: (
-		s: DeclarationsCallbackContext,
-		values: Record<string, TokenValue>,
-		options: { default: boolean },
-		context: DomainProcessContext,
-	) => Record<string, Variable | TokenValue> | undefined;
-	/**
-	 * Optional: simpler theme override behavior.
-	 * When provided, used for theme application instead of `process`.
-	 */
-	applyTheme?: (
-		ctx: DeclarationsCallbackContext,
-		values: Record<string, TokenValue>,
-	) => void;
-	/**
-	 * If false, this domain is not user-configurable.
-	 * It derives its values from other domains (e.g., scalePowers from scale).
-	 */
-	configurable?: boolean;
-}
-
-/**
- * Registry mapping domain keys to their processing function and default values.
- * Used by both the main function and theme application to avoid repetition.
- */
-const domainRegistry: DomainEntry[] = [
-	{
-		key: "scale",
-		defaults: scaleValues,
-		process: (s, values, options) => useScale(s, values, options),
-	},
-	{
-		key: "spacing",
-		defaults: spacingValues,
-		process: (s, values, options) => useSpacing(s, values, options),
-	},
-	{
-		key: "borderWidth",
-		defaults: borderWidthValues,
-		process: (s, values, options) => useBorderWidth(s, values, options),
-	},
-	{
-		key: "borderRadius",
-		defaults: borderRadiusValues,
-		process: (s, values, options) => useBorderRadius(s, values, options),
-	},
-	{
-		key: "borderStyle",
-		defaults: borderStyleValues,
-		process: (s, values, options) => useBorderStyle(s, values, options),
-	},
-	{
-		key: "boxShadow",
-		defaults: boxShadowValues,
-		process: (s, values, options) => useBoxShadow(s, values, options),
-	},
-	{
-		key: "zIndex",
-		defaults: zIndexValues,
-		process: (s, values, options) => useZIndex(s, values, options),
-	},
-	{
-		key: "fontFamily",
-		defaults: fontFamilyValues,
-		process: (s, values, options) => useFontFamily(s, values, options),
-	},
-	{
-		key: "fontSize",
-		defaults: fontSizeValues,
-		process: (s, values, options) => useFontSize(s, values, options),
-	},
-	{
-		key: "fontStyle",
-		defaults: fontStyleValues,
-		process: (s, values, options) => useFontStyle(s, values, options),
-	},
-	{
-		key: "fontWeight",
-		defaults: fontWeightValues,
-		process: (s, values, options) => useFontWeight(s, values, options),
-	},
-	{
-		key: "lineHeight",
-		defaults: lineHeightValues,
-		process: (s, values, options) => useLineHeight(s, values, options),
-	},
-	{
-		key: "letterSpacing",
-		defaults: letterSpacingValues,
-		process: (s, values, options) => useLetterSpacing(s, values, options),
-	},
-	{
-		key: "breakpoint",
-		defaults: breakpointValues,
-		process: (s, values, options) => useBreakpoint(s, values, options),
-	},
-	{
-		key: "easing",
-		defaults: easingValues,
-		process: (s, values, options) => useEasing(s, values, options),
-	},
-	{
-		key: "duration",
-		defaults: durationValues,
-		process: (s, values, options) => useDuration(s, values, options),
-	},
-	{
-		key: "colors",
-		defaults: colorValues as Record<string, TokenValue>,
-		themes: {
-			dark: darkModeColorValues,
-		},
-		process: (s, values, options, { config }) => {
-			const baseColors = useColor(s, values as Record<string, string>, options);
-			let result: Record<string, Variable> = { ...baseColors };
-
-			const meta = { ...defaultColorsMetaConfig, ...config.meta?.colors };
-
-			for (const colorVariable of Object.values(
-				baseColors,
-			) as Variable<string>[]) {
-				if (meta.generateLightness) {
-					result = {
-						...result,
-						...useColorLightness(
-							s,
-							colorVariable,
-							meta.lightnessLevels,
-							options,
-						),
-					};
-				}
-
-				if (meta.generateShades) {
-					result = {
-						...result,
-						...useColorShade(s, colorVariable, meta.shadeLevels, options),
-					};
-				}
-
-				if (meta.generateTints) {
-					result = {
-						...result,
-						...useColorTint(s, colorVariable, meta.tintLevels, options),
-					};
-				}
-			}
-
-			return result;
-		},
-		applyTheme: (ctx, values) => {
-			useColor(ctx, values as Record<string, string>, { default: false });
-		},
-	},
-	{
-		key: "scalePowers",
-		defaults: {},
-		configurable: false,
-		process: (s, _values, _options, { result, config }) => {
-			const scaleVar = result.scale?.["scale"];
-			if (!scaleVar) return undefined;
-			return useScalePowers(
-				s,
-				scaleVar as Variable,
-				config.scalePowers ?? scalePowerValues,
-			);
-		},
-	},
-];
 
 /**
  * Collect all unique non-default theme names from config and domain-level defaults.
@@ -544,7 +524,7 @@ function collectThemeNames(
 		}
 	}
 
-	for (const { themes: domainThemes } of domainRegistry) {
+	for (const { themes: domainThemes } of domains) {
 		if (domainThemes) {
 			for (const name of Object.keys(domainThemes)) {
 				names.add(name);
@@ -616,26 +596,31 @@ export function useDesignTokensPreset(
 	const shouldMerge = config.meta?.merge === true;
 	const defaultThemeOverrides = config.themes?.default;
 
-	// Process all domains via the unified registry
 	const result: Record<
 		string,
 		Record<string, Variable | TokenValue> | undefined
 	> = {};
 	const context: DomainProcessContext = { result, config };
 
-	for (const entry of domainRegistry) {
+	for (const entry of domains) {
+		const configKey = camelCase(entry.key);
+
 		if (entry.configurable === false) {
-			// Non-configurable domains derive from other domains
-			result[entry.key] = entry.process(s, {}, { default: true }, context);
+			result[configKey] = entry.composable(
+				s,
+				entry.defaults,
+				{ default: true },
+				context,
+			);
 			continue;
 		}
 
 		const configValue =
-			(config as Record<string, unknown>)[entry.key] ??
-			defaultThemeOverrides?.[entry.key as keyof ThemeTokenOverrides];
+			(config as Record<string, unknown>)[configKey] ??
+			defaultThemeOverrides?.[configKey as keyof ThemeTokenOverrides];
 
 		if (configValue === false) {
-			result[entry.key] = undefined;
+			result[configKey] = undefined;
 			continue;
 		}
 
@@ -649,7 +634,7 @@ export function useDesignTokensPreset(
 					: (configValue as Record<string, TokenValue>)
 				: entry.defaults;
 
-		result[entry.key] = entry.process(s, values, { default: true }, context);
+		result[configKey] = entry.composable(s, values, { default: true }, context);
 	}
 
 	// Apply non-default themes (from both config and domain-level defaults)
@@ -659,24 +644,21 @@ export function useDesignTokensPreset(
 			const userOverrides =
 				config.themes?.[themeName] ?? ({} as ThemeTokenOverrides);
 
-			for (const entry of domainRegistry) {
+			for (const entry of domains) {
 				if (entry.configurable === false) continue;
 
+				const configKey = camelCase(entry.key);
 				const themeValues =
-					userOverrides[entry.key as keyof ThemeTokenOverrides] ??
+					userOverrides[configKey as keyof ThemeTokenOverrides] ??
 					entry.themes?.[themeName];
 
 				if (themeValues) {
-					if (entry.applyTheme) {
-						entry.applyTheme(ctx, themeValues as Record<string, TokenValue>);
-					} else {
-						entry.process(
-							ctx,
-							themeValues as Record<string, TokenValue>,
-							{ default: false },
-							{ result: {}, config },
-						);
-					}
+					entry.composable(
+						ctx,
+						themeValues as Record<string, TokenValue>,
+						{ default: false },
+						{ result: {}, config },
+					);
 				}
 			}
 		});

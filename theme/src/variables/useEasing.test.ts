@@ -48,7 +48,7 @@ describe("useEasing", () => {
 		const { easing, easingEaseIn, easingEaseOut, easingEaseInOut } = useEasing(
 			s,
 			{
-				default: "@ease-in-out",
+				default: "@easing.ease-in-out",
 				"ease-in": "ease-in",
 				"ease-out": "ease-out",
 				"ease-in-out": "ease-in-out",
@@ -87,7 +87,6 @@ describe("useEasing", () => {
 			value: {
 				type: "reference",
 				name: "easing.ease-in-out",
-				fallback: undefined,
 			},
 		});
 	});
@@ -173,14 +172,13 @@ describe("useEasing", () => {
 		expect(easing.value).toEqual({
 			type: "reference",
 			name: "base-easing",
-			fallback: undefined,
 		});
 	});
 
 	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useEasing(s, {
-			default: "@ease-out-cubic",
+			default: "@easing.ease-out-cubic",
 			"ease-in": "ease-in",
 			"ease-out": "ease-out",
 			"ease-out-cubic": "cubic-bezier(0.215, 0.61, 0.355, 1)",

@@ -100,7 +100,6 @@ describe("useFontWeight", () => {
 			value: {
 				type: "reference",
 				name: "font-weight.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -197,7 +196,6 @@ describe("useFontWeight", () => {
 		expect(customFontWeight.value).toEqual({
 			type: "reference",
 			name: "font-weight.bold",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -311,7 +309,6 @@ describe("useFontWeight", () => {
 				value: {
 					type: "reference",
 					name: "font-weight.normal",
-					fallback: undefined,
 				},
 			});
 		});
@@ -320,13 +317,12 @@ describe("useFontWeight", () => {
 			const s = styleframe();
 			const { fontWeight } = useFontWeight(s, {
 				...fontWeightValues,
-				default: "@bold",
+				default: "@font-weight.bold",
 			});
 
 			expect(fontWeight.value).toEqual({
 				type: "reference",
 				name: "font-weight.bold",
-				fallback: undefined,
 			});
 		});
 
@@ -334,7 +330,7 @@ describe("useFontWeight", () => {
 			const s = styleframe();
 			useFontWeight(s, {
 				...fontWeightValues,
-				default: "@semibold",
+				default: "@font-weight.semibold",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -371,13 +367,12 @@ describe("useFontWeight", () => {
 				const s = styleframe();
 				const { fontWeight } = useFontWeight(s, {
 					...fontWeightValues,
-					default: `@${fontWeightName}`,
+					default: `@font-weight.${fontWeightName}`,
 				});
 
 				expect(fontWeight.value).toEqual({
 					type: "reference",
 					name: `font-weight.${fontWeightName}`,
-					fallback: undefined,
 				});
 			}
 		});

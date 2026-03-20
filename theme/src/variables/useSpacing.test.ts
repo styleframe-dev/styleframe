@@ -43,7 +43,7 @@ describe("useSpacing", () => {
 	it("should create multiple spacing variables", () => {
 		const s = styleframe();
 		const { spacing, spacingSm, spacingMd, spacingLg } = useSpacing(s, {
-			default: "@md",
+			default: "@spacing.md",
 			sm: "0.5rem",
 			md: "1rem",
 			lg: "2rem",
@@ -81,7 +81,6 @@ describe("useSpacing", () => {
 			value: {
 				type: "reference",
 				name: "spacing.md",
-				fallback: undefined,
 			},
 		});
 	});
@@ -239,14 +238,13 @@ describe("useSpacing", () => {
 		expect(spacing.value).toEqual({
 			type: "reference",
 			name: "base-spacing",
-			fallback: undefined,
 		});
 	});
 
 	it("should compile to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		useSpacing(s, {
-			default: "@md",
+			default: "@spacing.md",
 			xs: "0.25rem",
 			sm: "0.5rem",
 			md: "1rem",
@@ -270,7 +268,7 @@ describe("useSpacing", () => {
 			"0": "0",
 			xs: "0.25rem",
 			sm: "0.5rem",
-			default: "@md",
+			default: "@spacing.md",
 			md: "1rem",
 			lg: "1.5rem",
 			xl: "2rem",
@@ -284,7 +282,6 @@ describe("useSpacing", () => {
 		expect(spaces.spacing.value).toEqual({
 			type: "reference",
 			name: "spacing.md",
-			fallback: undefined,
 		});
 		expect(spaces.spacingMd.value).toBe("1rem");
 		expect(spaces.spacingLg.value).toBe("1.5rem");

@@ -106,7 +106,6 @@ describe("useWidthUtility", () => {
 		expect(utility.declarations?.width).toEqual({
 			type: "reference",
 			name: "width.full",
-			fallback: undefined,
 		});
 	});
 

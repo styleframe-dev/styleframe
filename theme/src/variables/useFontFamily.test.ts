@@ -182,7 +182,6 @@ describe("useFontFamily", () => {
 		expect(fontFamily.value).toEqual({
 			type: "reference",
 			name: "base-font",
-			fallback: undefined,
 		});
 	});
 

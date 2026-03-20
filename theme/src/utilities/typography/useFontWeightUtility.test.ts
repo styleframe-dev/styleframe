@@ -49,7 +49,6 @@ describe("useFontWeightUtility", () => {
 		expect(utility.declarations?.fontWeight).toEqual({
 			type: "reference",
 			name: "font-weight.bold",
-			fallback: undefined,
 		});
 	});
 });

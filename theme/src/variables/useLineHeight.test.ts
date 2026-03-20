@@ -64,7 +64,6 @@ describe("useLineHeight", () => {
 			value: {
 				type: "reference",
 				name: "line-height.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -144,7 +143,6 @@ describe("useLineHeight", () => {
 		expect(customLineHeight.value).toEqual({
 			type: "reference",
 			name: "line-height.loose",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -232,7 +230,6 @@ describe("useLineHeight", () => {
 				value: {
 					type: "reference",
 					name: "line-height.normal",
-					fallback: undefined,
 				},
 			});
 		});
@@ -241,13 +238,12 @@ describe("useLineHeight", () => {
 			const s = styleframe();
 			const { lineHeight } = useLineHeight(s, {
 				...lineHeightValues,
-				default: "@relaxed",
+				default: "@line-height.relaxed",
 			});
 
 			expect(lineHeight.value).toEqual({
 				type: "reference",
 				name: "line-height.relaxed",
-				fallback: undefined,
 			});
 		});
 
@@ -255,7 +251,7 @@ describe("useLineHeight", () => {
 			const s = styleframe();
 			useLineHeight(s, {
 				...lineHeightValues,
-				default: "@loose",
+				default: "@line-height.loose",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -277,13 +273,12 @@ describe("useLineHeight", () => {
 				const s = styleframe();
 				const { lineHeight } = useLineHeight(s, {
 					...lineHeightValues,
-					default: `@${lineHeightName}`,
+					default: `@line-height.${lineHeightName}`,
 				});
 
 				expect(lineHeight.value).toEqual({
 					type: "reference",
 					name: `line-height.${lineHeightName}`,
-					fallback: undefined,
 				});
 			}
 		});

@@ -87,7 +87,6 @@ describe("createUseUtility", () => {
 		expect(utility?.declarations?.backgroundColor).toEqual({
 			type: "reference",
 			name: "color.primary",
-			fallback: undefined,
 		});
 	});
 

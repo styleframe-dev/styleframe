@@ -56,15 +56,19 @@ export function useLinkSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<LinkElementConfig>,
 ): LinkElementResult {
-	const result = useLinkDesignTokens(ctx, config) as LinkElementResult;
+	let result!: LinkElementResult;
 
-	ctx.selector("a", {
-		color: ctx.ref(result.linkColor),
-		textDecoration: ctx.ref(result.linkTextDecoration),
-		"&:hover": {
-			color: ctx.ref(result.linkHoverColor),
-			textDecoration: ctx.ref(result.linkHoverTextDecoration),
-		},
+	ctx.selector("a", (ctx) => {
+		result = useLinkDesignTokens(ctx, config) as LinkElementResult;
+
+		return {
+			color: ctx.ref(result.linkColor),
+			textDecoration: ctx.ref(result.linkTextDecoration),
+			"&:hover": {
+				color: ctx.ref(result.linkHoverColor),
+				textDecoration: ctx.ref(result.linkHoverTextDecoration),
+			},
+		};
 	});
 
 	return result;

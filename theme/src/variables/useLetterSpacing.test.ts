@@ -64,7 +64,6 @@ describe("useLetterSpacing", () => {
 			value: {
 				type: "reference",
 				name: "letter-spacing.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -146,7 +145,6 @@ describe("useLetterSpacing", () => {
 		expect(customLetterSpacing.value).toEqual({
 			type: "reference",
 			name: "letter-spacing.wider",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -238,7 +236,6 @@ describe("useLetterSpacing", () => {
 				value: {
 					type: "reference",
 					name: "letter-spacing.normal",
-					fallback: undefined,
 				},
 			});
 		});
@@ -247,13 +244,12 @@ describe("useLetterSpacing", () => {
 			const s = styleframe();
 			const { letterSpacing } = useLetterSpacing(s, {
 				...letterSpacingValues,
-				default: "@wide",
+				default: "@letter-spacing.wide",
 			});
 
 			expect(letterSpacing.value).toEqual({
 				type: "reference",
 				name: "letter-spacing.wide",
-				fallback: undefined,
 			});
 		});
 
@@ -261,7 +257,7 @@ describe("useLetterSpacing", () => {
 			const s = styleframe();
 			useLetterSpacing(s, {
 				...letterSpacingValues,
-				default: "@wider",
+				default: "@letter-spacing.wider",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -283,13 +279,12 @@ describe("useLetterSpacing", () => {
 				const s = styleframe();
 				const { letterSpacing } = useLetterSpacing(s, {
 					...letterSpacingValues,
-					default: `@${letterSpacingName}`,
+					default: `@letter-spacing.${letterSpacingName}`,
 				});
 
 				expect(letterSpacing.value).toEqual({
 					type: "reference",
 					name: `letter-spacing.${letterSpacingName}`,
-					fallback: undefined,
 				});
 			}
 		});

@@ -97,7 +97,6 @@ describe("usePaddingUtility", () => {
 		expect(utility.declarations?.padding).toEqual({
 			type: "reference",
 			name: "spacing.md",
-			fallback: undefined,
 		});
 	});
 
