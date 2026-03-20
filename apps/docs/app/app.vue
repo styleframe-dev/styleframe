@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { PageCollections } from "@nuxt/content";
 import * as nuxtUiLocales from "@nuxt/ui/locale";
+import { flattenNavigation } from "~/utils/flattenNavigation";
 
 const { seo } = useAppConfig();
 const site = useSiteConfig();
@@ -53,10 +54,11 @@ const { data: navigation } = await useAsyncData(
 			const rootResult =
 				data.find((item) => item.path === "/docs")?.children || data || [];
 
-			return (
+			const result =
 				rootResult.find((item) => item.path === `/${locale.value}`)?.children ||
-				rootResult
-			);
+				rootResult;
+
+			return flattenNavigation(result);
 		},
 		watch: [locale],
 	},

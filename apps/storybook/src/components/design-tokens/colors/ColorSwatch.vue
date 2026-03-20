@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref as vueRef, onMounted } from "vue";
+import { ref as vueRef, onMounted, onUnmounted } from "vue";
 import { colorSwatch } from "virtual:styleframe";
 import SwatchCard from "../../primitives/SwatchCard.vue";
+import { themeEventBus } from "../../../utils/themeEventBus";
 
 const props = defineProps<{
 	name: string;
@@ -37,7 +38,7 @@ function getContrastRatio(l1: number, l2: number): number {
 	return (lighter + 0.05) / (darker + 0.05);
 }
 
-onMounted(() => {
+function updateContrastRatios() {
 	if (!previewEl.value) return;
 
 	const bg = getComputedStyle(previewEl.value).backgroundColor;
@@ -56,6 +57,15 @@ onMounted(() => {
 	const adjacentRatio = getContrastRatio(bgLum, pageBgLum);
 	adjacentContrastRatio.value = Math.round(adjacentRatio * 100) / 100;
 	adjacentPassesAA.value = adjacentRatio >= 3;
+}
+
+onMounted(() => {
+	updateContrastRatios();
+	themeEventBus.on("theme-change", updateContrastRatios);
+});
+
+onUnmounted(() => {
+	themeEventBus.off("theme-change", updateContrastRatios);
 });
 </script>
 

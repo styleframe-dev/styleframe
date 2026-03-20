@@ -8,15 +8,15 @@ import type { WithThemes } from "../types";
 import { mergeElementOptions, registerElementThemes } from "../utils";
 
 export const defaultBodyOptions: WithThemes<BodyElementConfig> = {
-	color: "#1e293b",
-	background: "#ffffff",
+	color: "@color.text",
+	background: "@color.background",
 	fontFamily: "@font-family",
 	fontSize: "@font-size",
 	lineHeight: "@line-height",
 	themes: {
 		dark: {
-			color: "@color.white",
-			background: "@color.black",
+			color: "@color.text",
+			background: "@color.background",
 		},
 	},
 };

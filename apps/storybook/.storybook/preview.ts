@@ -1,9 +1,15 @@
 import type { Preview } from "@storybook/vue3-vite";
+import React from "react";
 
 import "virtual:styleframe.css";
+import "./docs.css";
 import { light, dark } from "./theme";
 import { addons } from "storybook/preview-api";
-import { DARK_MODE_EVENT_NAME } from "@vueless/storybook-dark-mode";
+import {
+	DARK_MODE_EVENT_NAME,
+	useDarkMode,
+} from "@vueless/storybook-dark-mode";
+import { DocsContainer } from "@storybook/addon-docs/blocks";
 
 const channel = addons.getChannel();
 
@@ -14,6 +20,14 @@ channel.on(DARK_MODE_EVENT_NAME, (isDark: boolean) => {
 		delete document.body.dataset.theme;
 	}
 });
+
+const ThemedDocsContainer: typeof DocsContainer = (props) => {
+	const isDark = useDarkMode();
+	return React.createElement(DocsContainer, {
+		...props,
+		theme: isDark ? dark : light,
+	});
+};
 
 const preview: Preview = {
 	parameters: {
@@ -45,6 +59,7 @@ const preview: Preview = {
 			source: {
 				type: "code",
 			},
+			container: ThemedDocsContainer,
 		},
 	},
 };
