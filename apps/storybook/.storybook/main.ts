@@ -1,5 +1,4 @@
 import type { StorybookConfig } from "@storybook/vue3-vite";
-import styleframe from "@styleframe/plugin/vite";
 
 import { dirname } from "node:path";
 
@@ -14,20 +13,19 @@ function getAbsolutePath(value: string): string {
 }
 
 const config: StorybookConfig = {
-	stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+	stories: [
+		"../stories/**/*.mdx",
+		"../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+	],
 	addons: [
 		getAbsolutePath("@chromatic-com/storybook"),
 		getAbsolutePath("@storybook/addon-vitest"),
 		getAbsolutePath("@storybook/addon-a11y"),
 		getAbsolutePath("@storybook/addon-docs"),
 		getAbsolutePath("@storybook/addon-onboarding"),
+		getAbsolutePath("@storybook/addon-themes"),
+		getAbsolutePath("@vueless/storybook-dark-mode"),
 	],
 	framework: getAbsolutePath("@storybook/vue3-vite"),
-	async viteFinal(config) {
-		const { mergeConfig } = await import("vite");
-		return mergeConfig(config, {
-			plugins: [styleframe()],
-		});
-	},
 };
 export default config;

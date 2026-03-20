@@ -568,6 +568,46 @@ describe("quickScan", () => {
 
 		expect(result.length).toBe(0);
 	});
+
+	it("should scan with custom utility syntax", () => {
+		const result = quickScan(
+			'<div class="sf-margin-sm sf-hover-padding-lg">Content</div>',
+			"page.html",
+			{
+				pattern: /sf-[a-zA-Z][a-zA-Z0-9-]*/g,
+				parse: (className) => {
+					if (!className.startsWith("sf-")) return null;
+					const parts = className.slice(3).split("-");
+					if (parts.length < 2) {
+						return {
+							raw: className,
+							name: parts[0]!,
+							value: "default",
+							modifiers: [],
+							isArbitrary: false,
+						};
+					}
+					const value = parts[parts.length - 1]!;
+					const name = parts[parts.length - 2]!;
+					const modifiers = parts.slice(0, -2);
+					return {
+						raw: className,
+						name,
+						value,
+						modifiers,
+						isArbitrary: false,
+					};
+				},
+			},
+		);
+
+		expect(result.length).toBe(2);
+		expect(result[0]!.name).toBe("margin");
+		expect(result[0]!.value).toBe("sm");
+		expect(result[1]!.name).toBe("padding");
+		expect(result[1]!.value).toBe("lg");
+		expect(result[1]!.modifiers).toContain("hover");
+	});
 });
 
 describe("createContentScanner", () => {
@@ -613,5 +653,141 @@ describe("createContentScanner", () => {
 		// Default/HTML should use class extractor
 		const htmlResult = scan('<div class="_margin:sm">Content</div>');
 		expect(htmlResult.length).toBe(1);
+	});
+
+	it("should support custom utility syntax", () => {
+		const scan = createContentScanner(undefined, {
+			pattern: /sf-[a-zA-Z][a-zA-Z0-9-]*/g,
+			parse: (className) => {
+				if (!className.startsWith("sf-")) return null;
+				const parts = className.slice(3).split("-");
+				if (parts.length < 2) {
+					return {
+						raw: className,
+						name: parts[0]!,
+						value: "default",
+						modifiers: [],
+						isArbitrary: false,
+					};
+				}
+				const value = parts[parts.length - 1]!;
+				const name = parts[parts.length - 2]!;
+				const modifiers = parts.slice(0, -2);
+				return {
+					raw: className,
+					name,
+					value,
+					modifiers,
+					isArbitrary: false,
+				};
+			},
+		});
+
+		const result = scan(
+			'<div class="sf-margin-sm sf-padding-md">Content</div>',
+		);
+		expect(result.length).toBe(2);
+		expect(result[0]!.name).toBe("margin");
+		expect(result[0]!.value).toBe("sm");
+		expect(result[1]!.name).toBe("padding");
+		expect(result[1]!.value).toBe("md");
+	});
+});
+
+describe("createScanner with custom utilities", () => {
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
+
+	it("should scanContent with custom utility syntax", () => {
+		const customUtilities = {
+			pattern: /sf-[a-zA-Z][a-zA-Z0-9-]*/g,
+			parse: (className: string) => {
+				if (!className.startsWith("sf-")) return null;
+				const parts = className.slice(3).split("-");
+				if (parts.length < 2) {
+					return {
+						raw: className,
+						name: parts[0]!,
+						value: "default",
+						modifiers: [] as string[],
+						isArbitrary: false,
+					};
+				}
+				const value = parts[parts.length - 1]!;
+				const name = parts[parts.length - 2]!;
+				const modifiers = parts.slice(0, -2);
+				return {
+					raw: className,
+					name,
+					value,
+					modifiers,
+					isArbitrary: false,
+				};
+			},
+		};
+
+		const scanner = createScanner({
+			content: ["./src/**/*.html"],
+			cwd: "/project",
+			utilities: customUtilities,
+		});
+
+		const parsed = scanner.scanContent(
+			'<div class="sf-margin-sm sf-hover-padding-lg">Content</div>',
+			"page.html",
+		);
+
+		expect(parsed.length).toBe(2);
+		expect(parsed[0]!.name).toBe("margin");
+		expect(parsed[0]!.value).toBe("sm");
+		expect(parsed[1]!.name).toBe("padding");
+		expect(parsed[1]!.value).toBe("lg");
+		expect(parsed[1]!.modifiers).toContain("hover");
+	});
+
+	it("should scan files with custom utility syntax", async () => {
+		mockFg.mockResolvedValue(["/project/src/page.html"]);
+		mockReadFile.mockResolvedValue(
+			'<div class="sf-margin-sm sf-hover-padding-lg">Content</div>',
+		);
+
+		const scanner = createScanner({
+			content: ["./src/**/*.html"],
+			cwd: "/project",
+			utilities: {
+				pattern: /sf-[a-zA-Z][a-zA-Z0-9-]*/g,
+				parse: (className: string) => {
+					if (!className.startsWith("sf-")) return null;
+					const parts = className.slice(3).split("-");
+					if (parts.length < 2) {
+						return {
+							raw: className,
+							name: parts[0]!,
+							value: "default",
+							modifiers: [] as string[],
+							isArbitrary: false,
+						};
+					}
+					const value = parts[parts.length - 1]!;
+					const name = parts[parts.length - 2]!;
+					const modifiers = parts.slice(0, -2);
+					return {
+						raw: className,
+						name,
+						value,
+						modifiers,
+						isArbitrary: false,
+					};
+				},
+			},
+		});
+
+		const result = await scanner.scan();
+
+		expect(result.files.size).toBe(1);
+		expect(result.allClasses.size).toBeGreaterThan(0);
+		expect(result.allClasses.has("sf-margin-sm")).toBe(true);
+		expect(result.allParsed.length).toBe(2);
 	});
 });

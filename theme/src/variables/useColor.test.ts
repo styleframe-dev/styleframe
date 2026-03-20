@@ -12,7 +12,7 @@ function toOklch(color: string): string {
 	const result = oklch(color);
 	if (!result) return color;
 	const { l, c, h, alpha = 1 } = result;
-	return `oklch(${l} ${c} ${h} / ${alpha})`;
+	return `oklch(${l} ${c} ${h ?? 0} / ${alpha})`;
 }
 
 describe("useColor", () => {
@@ -24,6 +24,8 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("#007bff"),
 		});
@@ -42,18 +44,24 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("#007bff"),
 		});
 
 		expect(colorSecondary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.secondary",
 			value: toOklch("#6c757d"),
 		});
 
 		expect(colorTertiary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.tertiary",
 			value: toOklch("#28a745"),
 		});
@@ -79,6 +87,8 @@ describe("useColor", () => {
 
 		expect(colorPrimaryDark).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary-dark",
 			value: toOklch("#0056b3"),
 		});
@@ -92,6 +102,8 @@ describe("useColor", () => {
 
 		expect(colorPrimaryLight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary_light",
 			value: toOklch("#80bdff"),
 		});
@@ -105,6 +117,8 @@ describe("useColor", () => {
 
 		expect(color500).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.500",
 			value: toOklch("#007bff"),
 		});
@@ -118,6 +132,8 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("rgb(0, 123, 255)"),
 		});
@@ -131,6 +147,8 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("rgba(0, 123, 255, 0.5)"),
 		});
@@ -144,6 +162,8 @@ describe("useColor", () => {
 
 		expect(colorPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.primary",
 			value: toOklch("hsl(211, 100%, 50%)"),
 		});
@@ -167,7 +187,6 @@ describe("useColor", () => {
 		expect(colorPrimary.value).toEqual({
 			type: "reference",
 			name: "base-color",
-			fallback: undefined,
 		});
 	});
 
@@ -248,14 +267,14 @@ describe("integration", () => {
 
 		// Create shade levels for secondary
 		const secondaryShades = useColorShade(s, colorSecondary, {
-			50: 5,
-			100: 10,
+			"shade-50": 5,
+			"shade-100": 10,
 		} as const);
 
 		// Create tint levels for secondary
 		const secondaryTints = useColorTint(s, colorSecondary, {
-			50: 5,
-			100: 10,
+			"tint-50": 5,
+			"tint-100": 10,
 		} as const);
 
 		// Verify all variables are created
@@ -293,30 +312,38 @@ describe("integration", () => {
 		} as const);
 
 		const shades = useColorShade(s, colorBrandPrimary, {
-			50: 5,
+			"shade-50": 5,
 		} as const);
 
 		const tints = useColorTint(s, colorBrandPrimary, {
-			50: 5,
+			"tint-50": 5,
 		} as const);
 
 		expect(colorBrandPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.brand-primary",
 			value: toOklch("#007bff"),
 		});
 		expect(levels.colorBrandPrimary400).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.brand-primary-400",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorBrandPrimaryShade50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.brand-primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(tints.colorBrandPrimaryTint50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color.brand-primary-tint-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -335,11 +362,11 @@ describe("integration", () => {
 		});
 
 		const shades = useColorShade(s, colorPrimary, {
-			50: 5,
+			"shade-50": 5,
 		});
 
 		const tints = useColorTint(s, colorPrimary, {
-			50: 5,
+			"tint-50": 5,
 		});
 
 		const css = consumeCSS(s.root, s.options);

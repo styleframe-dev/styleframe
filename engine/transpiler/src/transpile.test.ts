@@ -532,7 +532,6 @@ describe("transpile", () => {
 			const content = output.files[0]!.content;
 
 			// This is a complex test that validates the structure is correct
-			// TODO: Fix keyframes output - currently outputs as [object Object] instead of proper CSS properties
 			// Note: The order of items matters - atRules and keyframes come before themes in the output
 			expect(content).toEqual(`:root {
 \t--primary-color: #006cff;
@@ -705,13 +704,25 @@ body {
 }
 
 @keyframes fadeIn {
-\t0%: [object Object];
-\t100%: [object Object];
+\t0% {
+\t\topacity: 0;
+\t}
+\t
+\t100% {
+\t\topacity: 1;
+\t}
 }
 
 @keyframes slideUp {
-\t0%: [object Object];
-\t100%: [object Object];
+\t0% {
+\t\ttransform: translateY(20px);
+\t\topacity: 0;
+\t}
+\t
+\t100% {
+\t\ttransform: translateY(0);
+\t\topacity: 1;
+\t}
 }
 
 .fade-in {

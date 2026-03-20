@@ -1,61 +1,54 @@
 import { styleframe } from "virtual:styleframe";
-import {
-	useSwatchColors,
-	useSwatchSpacing,
-	useSwatchTypography,
-	useSwatchDimensions,
-} from "./tokens.styleframe";
 
 const s = styleframe();
+const { selector, css } = s;
 
-const { swatchColorTertiary, swatchColorBackground, swatchColorBorder } =
-	useSwatchColors(s);
-const { swatchGapXs, swatchPaddingMd } = useSwatchSpacing(s);
-const { swatchFontSize, swatchFontSizeSm, swatchFontWeightNormal } =
-	useSwatchTypography(s);
-const { swatchPreviewSize, swatchBorderRadius } = useSwatchDimensions(s);
-
-s.selector(".swatch-card", {
+selector(".swatch-card", {
 	display: "flex",
 	flexDirection: "column",
-	borderRadius: s.ref(swatchBorderRadius),
-	border: s.css`1px solid ${s.ref(swatchColorBorder)}`,
-	background: s.ref(swatchColorBackground),
+	borderRadius: "@border-radius.lg",
+	border: css`1px solid @border-color`,
+	background: "@color.surface",
 	overflow: "hidden",
 });
 
-s.selector(".swatch-card__body", {
+selector(".swatch-card--horizontal", {
+	flexDirection: "row",
+});
+
+selector(".swatch-card__body", {
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
-	padding: s.ref(swatchPaddingMd),
+	padding: "@spacing",
 });
 
-s.selector(".swatch-card__preview", {
-	width: s.ref(swatchPreviewSize),
-	height: s.ref(swatchPreviewSize),
+selector(".swatch-card__preview", {
+	width: "calc(@spacing * 6)",
+	height: "calc(@spacing * 6)",
 });
 
-s.selector(".swatch-card__footer", {
+selector(".swatch-card__footer", {
 	display: "flex",
 	flexDirection: "column",
 	alignItems: "center",
-	gap: s.ref(swatchGapXs),
-	padding: s.ref(swatchPaddingMd),
-	borderTop: s.css`1px solid ${s.ref(swatchColorBorder)}`,
-	background: s.ref(swatchColorBackground),
+	gap: "@spacing.2xs",
+	padding: "@spacing",
+	borderTop: css`1px solid @border-color`,
+	background: "@color.surface",
 });
 
-s.selector(".swatch-card__name", {
-	fontSize: s.ref(swatchFontSize),
-	fontWeight: s.ref(swatchFontWeightNormal),
-	color: s.ref(swatchColorTertiary),
+selector(".swatch-card--horizontal .swatch-card__footer", {
+	justifyContent: "center",
+	borderTop: 0,
+	borderLeft: css`1px solid @border-color`,
 });
 
-s.selector(".swatch-card__label", {
-	fontSize: s.ref(swatchFontSizeSm),
-	fontWeight: s.ref(swatchFontWeightNormal),
-	color: s.ref(swatchColorTertiary),
+selector(".swatch-card__label", {
+	fontSize: "@font-size",
+	fontWeight: "@font-weight",
+	color: "@color.text-weakest",
+	textAlign: "center",
 });
 
 export default s;

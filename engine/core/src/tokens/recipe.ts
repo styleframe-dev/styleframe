@@ -223,30 +223,28 @@ function transformDeclarationsToRuntime(
 			const modifierResult: RuntimeModifierDeclarationsBlock = {};
 			for (const [utilityKey, utilityValue] of Object.entries(value)) {
 				const utilityFactory = getUtilityFactory(root, utilityKey);
-				if (utilityFactory) {
-					modifierResult[utilityKey] = resolveRuntimeKey(
-						utilityFactory,
-						utilityValue,
-					);
-				} else {
-					console.warn(
-						`[styleframe] Utility "${utilityKey}" not found in registry. Skipping runtime generation for this declaration.`,
+				if (!utilityFactory) {
+					throw new Error(
+						`[styleframe] Utility "${utilityKey}" not found in registry. Make sure the utility is registered before using it in a recipe.`,
 					);
 				}
+				modifierResult[utilityKey] = resolveRuntimeKey(
+					utilityFactory,
+					utilityValue,
+				);
 			}
-			result[key] = modifierResult;
+			result[stripSelectorPrefix(key)] = modifierResult;
 		} else if (typeof value === "boolean") {
 			result[key] = value;
 		} else {
 			// Regular utility declaration
 			const utilityFactory = getUtilityFactory(root, key);
-			if (utilityFactory) {
-				result[key] = resolveRuntimeKey(utilityFactory, value);
-			} else {
-				console.warn(
-					`[styleframe] Utility "${key}" not found in registry. Skipping runtime generation for this declaration.`,
+			if (!utilityFactory) {
+				throw new Error(
+					`[styleframe] Utility "${key}" not found in registry. Make sure the utility is registered before using it in a recipe.`,
 				);
 			}
+			result[key] = resolveRuntimeKey(utilityFactory, value);
 		}
 	}
 
@@ -334,6 +332,17 @@ function isModifierBlock(
 }
 
 /**
+ * Strips the leading "&:" or "&::" CSS selector prefix from a modifier block key.
+ * This allows recipe declarations to use CSS-like syntax ("&:hover")
+ * interchangeably with bare modifier names ("hover").
+ */
+function stripSelectorPrefix(key: string): string {
+	if (key.startsWith("&::")) return key.slice(3);
+	if (key.startsWith("&:")) return key.slice(2);
+	return key;
+}
+
+/**
  * Collects all values for a given utility key from a declarations block.
  * Handles modifier blocks (one level deep) by extracting compound modifier keys.
  *
@@ -359,7 +368,7 @@ function collectDeclarationsValues(
 
 	for (const [key, value] of Object.entries(declarations)) {
 		if (isModifierBlock(value)) {
-			const modifiers = key.split(":");
+			const modifiers = stripSelectorPrefix(key).split(":");
 			for (const [utilityKey, utilityValue] of Object.entries(value)) {
 				addUtilityEntry(utilityKey, utilityValue, modifiers);
 			}
@@ -463,10 +472,9 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 		const utilityFactory = getUtilityFactory(root, utilityKey);
 
 		if (!utilityFactory) {
-			console.warn(
-				`[styleframe] Utility "${utilityKey}" not found in registry. Skipping.`,
+			throw new Error(
+				`[styleframe] Utility "${utilityKey}" not found in registry. Make sure the utility is registered before using it in a recipe.`,
 			);
-			continue;
 		}
 
 		for (const entry of entries) {
@@ -477,10 +485,9 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 					try {
 						modifierCache.set(modifier, getModifier(root, modifier));
 					} catch {
-						console.warn(
-							`[styleframe] Modifier "${modifier}" not found in registry. Skipping modifier for utility "${utilityKey}".`,
+						throw new Error(
+							`[styleframe] Modifier "${modifier}" not found in registry. Make sure the modifier is registered before using it in a recipe.`,
 						);
-						modifierCache.set(modifier, null);
 					}
 				}
 

@@ -10,8 +10,10 @@ import { createVariableFunction } from "./variable";
 
 describe("parseDeclarationsBlock", () => {
 	let mockContext: any;
+	let root: Root;
 
 	beforeEach(() => {
+		root = createRoot();
 		mockContext = {
 			selector: vi.fn(),
 			variable: vi.fn(),
@@ -31,7 +33,7 @@ describe("parseDeclarationsBlock", () => {
 				"&::before": { content: '""' },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 			expect(mockContext.selector).toHaveBeenCalledWith("&:hover", {
@@ -54,7 +56,7 @@ describe("parseDeclarationsBlock", () => {
 				".another-child": { margin: "0.5rem" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 			expect(mockContext.selector).toHaveBeenCalledWith(".child", {
@@ -72,7 +74,7 @@ describe("parseDeclarationsBlock", () => {
 				":focus": { outline: "2px solid blue" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 			expect(mockContext.selector).toHaveBeenCalledWith(":hover", {
@@ -91,7 +93,7 @@ describe("parseDeclarationsBlock", () => {
 				backgroundColor: "#ffffff",
 			};
 
-			parseDeclarationsBlock(declarations, mockContext);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).not.toHaveBeenCalled();
 			// All properties should remain
@@ -107,7 +109,7 @@ describe("parseDeclarationsBlock", () => {
 				".child": { margin: "0.5rem" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 
@@ -122,6 +124,55 @@ describe("parseDeclarationsBlock", () => {
 		});
 	});
 
+	describe("keyframe selector parsing", () => {
+		it("should parse percentage-based keyframe selectors", () => {
+			const declarations = {
+				"0%": { opacity: "0", transform: "translateY(-4px)" },
+				"50%": { opacity: "0.5" },
+				"100%": { opacity: "1", transform: "translateY(0)" },
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(mockContext.selector).toHaveBeenCalledTimes(3);
+			expect(mockContext.selector).toHaveBeenCalledWith("0%", {
+				opacity: "0",
+				transform: "translateY(-4px)",
+			});
+			expect(mockContext.selector).toHaveBeenCalledWith("50%", {
+				opacity: "0.5",
+			});
+			expect(mockContext.selector).toHaveBeenCalledWith("100%", {
+				opacity: "1",
+				transform: "translateY(0)",
+			});
+
+			expect(declarations).not.toHaveProperty("0%");
+			expect(declarations).not.toHaveProperty("50%");
+			expect(declarations).not.toHaveProperty("100%");
+		});
+
+		it("should parse from and to keyframe selectors", () => {
+			const declarations = {
+				from: { opacity: "0" },
+				to: { opacity: "1" },
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(mockContext.selector).toHaveBeenCalledTimes(2);
+			expect(mockContext.selector).toHaveBeenCalledWith("from", {
+				opacity: "0",
+			});
+			expect(mockContext.selector).toHaveBeenCalledWith("to", {
+				opacity: "1",
+			});
+
+			expect(declarations).not.toHaveProperty("from");
+			expect(declarations).not.toHaveProperty("to");
+		});
+	});
+
 	describe("media query handling", () => {
 		it("should handle media queries", () => {
 			const declarations = {
@@ -131,7 +182,7 @@ describe("parseDeclarationsBlock", () => {
 				},
 			};
 
-			parseDeclarationsBlock(declarations, mockContext);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(declarations).not.toHaveProperty("@media (min-width: 768px)");
 			expect(mockContext.atRule).toHaveBeenCalledTimes(1);
@@ -151,7 +202,7 @@ describe("parseDeclarationsBlock", () => {
 				".child": { fontSize: "14px" },
 			};
 
-			parseDeclarationsBlock(declarations, mockContext);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			// Should only process object values
 			expect(mockContext.selector).toHaveBeenCalledTimes(1);
@@ -170,11 +221,216 @@ describe("parseDeclarationsBlock", () => {
 				".child": {},
 			};
 
-			parseDeclarationsBlock(declarations, mockContext);
+			parseDeclarationsBlock(declarations, mockContext, root, root);
 
 			expect(mockContext.selector).toHaveBeenCalledTimes(2);
 			expect(mockContext.selector).toHaveBeenCalledWith("&:hover", {});
 			expect(mockContext.selector).toHaveBeenCalledWith(".child", {});
+		});
+	});
+
+	describe("@ reference resolution", () => {
+		it("should resolve @-prefixed string values to references", () => {
+			root.variables.push({
+				type: "variable",
+				id: "test-id",
+				name: "color.primary",
+				value: "#006cff",
+			});
+
+			const declarations: any = {
+				color: "@color.primary",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(declarations.color).toEqual({
+				type: "reference",
+				name: "color.primary",
+			});
+		});
+
+		it("should resolve multiple @-prefixed values", () => {
+			root.variables.push(
+				{ type: "variable", id: "test-id", name: "spacing.md", value: "1rem" },
+				{
+					type: "variable",
+					id: "test-id",
+					name: "spacing.lg",
+					value: "1.5rem",
+				},
+				{ type: "variable", id: "test-id", name: "color.dark", value: "#333" },
+			);
+
+			const declarations: any = {
+				gap: "@spacing.md",
+				padding: "@spacing.lg",
+				color: "@color.dark",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(declarations.gap).toEqual({
+				type: "reference",
+				name: "spacing.md",
+			});
+			expect(declarations.padding).toEqual({
+				type: "reference",
+				name: "spacing.lg",
+			});
+			expect(declarations.color).toEqual({
+				type: "reference",
+				name: "color.dark",
+			});
+		});
+
+		it("should not affect regular string values", () => {
+			const declarations: any = {
+				display: "flex",
+				color: "blue",
+				fontSize: "16px",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(declarations.display).toBe("flex");
+			expect(declarations.color).toBe("blue");
+			expect(declarations.fontSize).toBe("16px");
+		});
+
+		it("should not affect non-string values", () => {
+			const declarations: any = {
+				opacity: 0.8,
+				zIndex: 10,
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(declarations.opacity).toBe(0.8);
+			expect(declarations.zIndex).toBe(10);
+		});
+
+		it("should handle mixed @ references and regular values", () => {
+			root.variables.push(
+				{ type: "variable", id: "test-id", name: "spacing.md", value: "1rem" },
+				{
+					type: "variable",
+					id: "test-id",
+					name: "font-size.sm",
+					value: "0.875rem",
+				},
+			);
+
+			const declarations: any = {
+				display: "flex",
+				gap: "@spacing.md",
+				color: "blue",
+				fontSize: "@font-size.sm",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(declarations.display).toBe("flex");
+			expect(declarations.gap).toEqual({
+				type: "reference",
+				name: "spacing.md",
+			});
+			expect(declarations.color).toBe("blue");
+			expect(declarations.fontSize).toEqual({
+				type: "reference",
+				name: "font-size.sm",
+			});
+		});
+
+		it("should resolve embedded @references to a CSS object", () => {
+			const declarations: any = {
+				border: "1px solid @color.primary",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(declarations.border).toEqual({
+				type: "css",
+				value: ["1px solid ", { type: "reference", name: "color.primary" }, ""],
+			});
+		});
+
+		it("should resolve multiple embedded @references to a CSS object", () => {
+			const declarations: any = {
+				padding: "@spacing.sm @spacing.md",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(declarations.padding).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing.sm" },
+					" ",
+					{ type: "reference", name: "spacing.md" },
+					"",
+				],
+			});
+		});
+	});
+
+	describe("@ reference validation", () => {
+		it("should resolve @ references when variable exists in root", () => {
+			root.variables.push({
+				type: "variable",
+				id: "test-id",
+				name: "color.primary",
+				value: "#006cff",
+			});
+
+			const declarations: any = {
+				color: "@color.primary",
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(declarations.color).toEqual({
+				type: "reference",
+				name: "color.primary",
+			});
+		});
+
+		it("should throw when @ reference variable does not exist in root", () => {
+			root.variables.push({
+				type: "variable",
+				id: "test-id",
+				name: "color.primary",
+				value: "#006cff",
+			});
+
+			const declarations: any = {
+				color: "@color.doesnotexist",
+			};
+
+			expect(() =>
+				parseDeclarationsBlock(declarations, mockContext, root, root),
+			).toThrow(
+				'[styleframe] Variable "color.doesnotexist" is not defined. Check that the variable exists before referencing it with "@color.doesnotexist".',
+			);
+		});
+
+		it("should throw for each undefined variable independently", () => {
+			root.variables.push({
+				type: "variable",
+				id: "test-id",
+				name: "spacing.md",
+				value: "1rem",
+			});
+
+			const declarations: any = {
+				gap: "@spacing.md",
+				color: "@color.dark",
+			};
+
+			expect(() =>
+				parseDeclarationsBlock(declarations, mockContext, root, root),
+			).toThrow('Variable "color.dark" is not defined');
 		});
 	});
 });
@@ -188,6 +444,7 @@ describe("createDeclarationsCallbackContext", () => {
 		root = createRoot();
 		selector = {
 			type: "selector",
+			id: "test-id",
 			query: ".test",
 			variables: [],
 			declarations: {},
@@ -195,6 +452,7 @@ describe("createDeclarationsCallbackContext", () => {
 		};
 		media = {
 			type: "at-rule",
+			id: "test-id",
 			identifier: "media",
 			rule: "(min-width: 768px)",
 			variables: [],
@@ -532,6 +790,7 @@ describe("createDeclarationsCallbackContext", () => {
 		it("should handle empty containers", () => {
 			const emptySelector: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: "",
 				variables: [],
 				declarations: {},
@@ -548,6 +807,7 @@ describe("createDeclarationsCallbackContext", () => {
 		it("should handle containers with existing children", () => {
 			const existingVar = {
 				type: "variable" as const,
+				id: "test-id",
 				name: "existing",
 				value: "value",
 			};

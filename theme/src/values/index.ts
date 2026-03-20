@@ -1,4 +1,5 @@
 // Design token defaults
+export * from "./borderColor";
 export * from "./borderRadius";
 export * from "./borderStyle";
 export * from "./borderWidth";
@@ -8,6 +9,7 @@ export * from "./color";
 export * from "./colorLightness";
 export * from "./colorShade";
 export * from "./colorTint";
+export * from "./duration";
 export * from "./easing";
 export * from "./fontFamily";
 export * from "./fontSize";
@@ -18,6 +20,7 @@ export * from "./lineHeight";
 export * from "./scale";
 export * from "./scalePowers";
 export * from "./spacing";
+export * from "./zIndex";
 
 // Utility defaults
 export * from "./accessibility";
@@ -27,6 +30,7 @@ export * from "./borders";
 export * from "./flexboxGrid";
 export * from "./interactivity";
 export * from "./layout";
+export * from "./sizing";
 export * from "./tables";
 export * from "./transforms";
 export * from "./transitions";

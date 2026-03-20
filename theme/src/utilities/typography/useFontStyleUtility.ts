@@ -1,5 +1,5 @@
 import { createUseUtility } from "../../utils";
-import { fontStyleValues } from "../../variables/useFontStyle";
+import { fontStyleValues } from "../../values";
 
 /**
  * Create font-style utility classes.

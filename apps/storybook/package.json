@@ -16,23 +16,25 @@
 		"vue": "catalog:nuxt"
 	},
 	"devDependencies": {
+		"@chromatic-com/storybook": "^4.1.3",
+		"@storybook/addon-a11y": "^10.2.13",
+		"@storybook/addon-docs": "^10.2.13",
+		"@storybook/addon-onboarding": "^10.2.13",
+		"@storybook/addon-themes": "^10.2.13",
+		"@storybook/addon-vitest": "^10.2.13",
+		"@storybook/vue3-vite": "^10.2.13",
 		"@types/node": "catalog:",
 		"@vitejs/plugin-vue": "catalog:nuxt",
+		"@vitest/browser-playwright": "^4.0.16",
+		"@vitest/coverage-v8": "catalog:",
 		"@vue/tsconfig": "catalog:nuxt",
+		"playwright": "^1.57.0",
+		"storybook": "^10.2.13",
+		"@vueless/storybook-dark-mode": "^10.0.7",
 		"typescript": "catalog:",
 		"vite": "catalog:nuxt",
-		"vue-tsc": "catalog:nuxt",
-		"storybook": "^10.1.11",
-		"@storybook/vue3-vite": "^10.1.11",
-		"@chromatic-com/storybook": "^4.1.3",
-		"@storybook/addon-vitest": "^10.1.11",
-		"@storybook/addon-a11y": "^10.1.11",
-		"@storybook/addon-docs": "^10.1.11",
-		"@storybook/addon-onboarding": "^10.1.11",
 		"vitest": "catalog:",
-		"playwright": "^1.57.0",
-		"@vitest/browser-playwright": "^4.0.16",
-		"@vitest/coverage-v8": "catalog:"
+		"vue-tsc": "catalog:nuxt"
 	},
 	"pnpm": {
 		"overrides": {

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { Root } from "../types";
+import { hashValue } from "../utils/hash";
 import { createModifierFunction } from "./modifier";
 import { createRecipeFunction, processRecipeUtilities } from "./recipe";
 import { createRoot } from "./root";
@@ -8,10 +9,12 @@ import { createUtilityFunction } from "./utility";
 describe("createRecipeFunction", () => {
 	let root: Root;
 	let recipe: ReturnType<typeof createRecipeFunction>;
+	let utility: ReturnType<typeof createUtilityFunction>;
 
 	beforeEach(() => {
 		root = createRoot();
 		recipe = createRecipeFunction(root, root);
+		utility = createUtilityFunction(root, root);
 	});
 
 	test("should create a recipe function", () => {
@@ -19,6 +22,12 @@ describe("createRecipeFunction", () => {
 	});
 
 	test("should register recipe in root.recipes only", () => {
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+		utility("borderStyle", ({ value }) => ({ borderStyle: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+
 		const instance = recipe({
 			name: "button",
 			base: { borderWidth: "thin", borderStyle: "solid" },
@@ -56,11 +65,19 @@ describe("createRecipeFunction", () => {
 		expect(root.recipes).toHaveLength(1);
 		expect(root.recipes[0]).toBe(instance);
 
-		// Ensure no selectors/variables were created
-		expect(root.children).toHaveLength(0);
+		// Ensure no selectors/variables were created (only utilities from registration)
+		const nonUtilityChildren = root.children.filter(
+			(child) => child.type !== "utility",
+		);
+		expect(nonUtilityChildren).toHaveLength(0);
 	});
 
 	test("should support options: defaultVariants and compoundVariants", () => {
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+		utility("background", ({ value }) => ({ background: value }));
+		utility("color", ({ value }) => ({ color: value }));
+		utility("padding", ({ value }) => ({ padding: value }));
+
 		const instance = recipe({
 			name: "chip",
 			base: { borderWidth: "thin" },
@@ -258,23 +275,16 @@ describe("processRecipeUtilities", () => {
 		expect(utilityNames).toContain("fontWeight");
 	});
 
-	test("should warn and skip when utility is not found in registry", () => {
-		const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
-		const instance = recipe({
-			name: "button",
-			base: { unknownUtility: "value" },
-			variants: {},
-		});
-
-		processRecipeUtilities(instance, root);
-
-		expect(warnSpy).toHaveBeenCalledWith(
-			'[styleframe] Utility "unknownUtility" not found in registry. Skipping.',
+	test("should throw when utility is not found in registry", () => {
+		expect(() =>
+			recipe({
+				name: "button",
+				base: { unknownUtility: "value" },
+				variants: {},
+			}),
+		).toThrow(
+			'[styleframe] Utility "unknownUtility" not found in registry. Make sure the utility is registered before using it in a recipe.',
 		);
-		expect(root.children).toHaveLength(0);
-
-		warnSpy.mockRestore();
 	});
 
 	test("should match camelCase recipe property to kebab-case utility", () => {
@@ -459,33 +469,19 @@ describe("processRecipeUtilities", () => {
 		expect(marginUtilities).toHaveLength(1);
 	});
 
-	test("should continue processing other utilities when one is missing", () => {
-		const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
+	test("should throw when one utility is missing from registry", () => {
 		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
 		// Note: borderStyle utility is NOT registered
 
-		const instance = recipe({
-			name: "button",
-			base: { borderWidth: "thin", borderStyle: "solid" },
-			variants: {},
-		});
-
-		processRecipeUtilities(instance, root);
-
-		// Should still create the borderWidth utility
-		expect(root.children).toHaveLength(1);
-		expect(root.children[0]).toMatchObject({
-			type: "utility",
-			name: "borderWidth",
-		});
-
-		// Should warn about missing borderStyle
-		expect(warnSpy).toHaveBeenCalledWith(
-			'[styleframe] Utility "borderStyle" not found in registry. Skipping.',
+		expect(() =>
+			recipe({
+				name: "button",
+				base: { borderWidth: "thin", borderStyle: "solid" },
+				variants: {},
+			}),
+		).toThrow(
+			'[styleframe] Utility "borderStyle" not found in registry. Make sure the utility is registered before using it in a recipe.',
 		);
-
-		warnSpy.mockRestore();
 	});
 
 	describe("modifier support", () => {
@@ -653,16 +649,37 @@ describe("processRecipeUtilities", () => {
 			expect(hoverBackground).toBeDefined();
 		});
 
-		test("should warn when modifier is not found in registry", () => {
-			const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-
+		test("should throw when modifier is not found in registry", () => {
 			utility("boxShadow", ({ value }) => ({ boxShadow: value }));
 			// Note: hover modifier is NOT registered
+
+			expect(() =>
+				recipe({
+					name: "button",
+					base: {
+						hover: {
+							boxShadow: "lg",
+						},
+					},
+					variants: {},
+				}),
+			).toThrow(
+				'[styleframe] Modifier "hover" not found in registry. Make sure the modifier is registered before using it in a recipe.',
+			);
+		});
+
+		test("should strip '&:' prefix and treat '&:hover' the same as 'hover' in base", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
 
 			const instance = recipe({
 				name: "button",
 				base: {
-					hover: {
+					background: "blue",
+					"&:hover": {
 						boxShadow: "lg",
 					},
 				},
@@ -671,16 +688,262 @@ describe("processRecipeUtilities", () => {
 
 			processRecipeUtilities(instance, root);
 
-			// Should warn about missing hover modifier
-			expect(warnSpy).toHaveBeenCalledWith(
-				'[styleframe] Modifier "hover" not found in registry. Skipping modifier for utility "boxShadow".',
-			);
-
-			// Should still create the base utility without modifier
 			const boxShadowUtilities = root.children.filter(
 				(child) => child.type === "utility" && child.name === "boxShadow",
 			);
-			expect(boxShadowUtilities).toHaveLength(1);
+
+			const hoverBoxShadow = boxShadowUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBoxShadow).toBeDefined();
+		});
+
+		test("should strip '&:' prefix in compound variant modifier blocks", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				variants: {
+					color: {
+						primary: {},
+					},
+					disabled: {
+						false: {},
+					},
+				},
+				compoundVariants: [
+					{
+						match: { color: "primary", disabled: "false" },
+						css: {
+							"&:hover": {
+								background: "primary-shade-50",
+							},
+						},
+					},
+				],
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+
+			const hoverBackground = backgroundUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBackground).toBeDefined();
+		});
+
+		test("should strip '&:' prefix in variant declarations", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				variants: {
+					color: {
+						primary: {
+							background: "blue",
+							"&:hover": {
+								background: "darkblue",
+							},
+						},
+					},
+				},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+
+			const hoverBackground = backgroundUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBackground).toBeDefined();
+		});
+
+		test("should not warn about '&' modifier when using '&:' prefix syntax", () => {
+			const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+			utility("textDecoration", ({ value }) => ({
+				textDecoration: value,
+			}));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "link",
+				variants: {
+					color: {
+						primary: {},
+					},
+				},
+				compoundVariants: [
+					{
+						match: { color: "primary" },
+						css: {
+							"&:hover": {
+								textDecoration: "underline",
+							},
+						},
+					},
+				],
+			});
+
+			processRecipeUtilities(instance, root);
+
+			expect(warnSpy).not.toHaveBeenCalledWith(
+				expect.stringContaining('Modifier "&"'),
+			);
+
+			warnSpy.mockRestore();
+		});
+
+		test("should strip '&:' prefix and treat '&:hover' the same as 'hover' in base", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				base: {
+					background: "blue",
+					"&:hover": {
+						boxShadow: "lg",
+					},
+				},
+				variants: {},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const boxShadowUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "boxShadow",
+			);
+
+			const hoverBoxShadow = boxShadowUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBoxShadow).toBeDefined();
+		});
+
+		test("should strip '&:' prefix in compound variant modifier blocks", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				variants: {
+					color: {
+						primary: {},
+					},
+					disabled: {
+						false: {},
+					},
+				},
+				compoundVariants: [
+					{
+						match: { color: "primary", disabled: "false" },
+						css: {
+							"&:hover": {
+								background: "primary-shade-50",
+							},
+						},
+					},
+				],
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+
+			const hoverBackground = backgroundUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBackground).toBeDefined();
+		});
+
+		test("should strip '&:' prefix in variant declarations", () => {
+			utility("background", ({ value }) => ({ background: value }));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "button",
+				variants: {
+					color: {
+						primary: {
+							background: "blue",
+							"&:hover": {
+								background: "darkblue",
+							},
+						},
+					},
+				},
+			});
+
+			processRecipeUtilities(instance, root);
+
+			const backgroundUtilities = root.children.filter(
+				(child) => child.type === "utility" && child.name === "background",
+			);
+
+			const hoverBackground = backgroundUtilities.find(
+				(u) => u.type === "utility" && u.modifiers?.includes("hover"),
+			);
+			expect(hoverBackground).toBeDefined();
+		});
+
+		test("should not warn about '&' modifier when using '&:' prefix syntax", () => {
+			const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+			utility("textDecoration", ({ value }) => ({
+				textDecoration: value,
+			}));
+			modifier("hover", ({ selector }) => {
+				selector("&:hover", {});
+			});
+
+			const instance = recipe({
+				name: "link",
+				variants: {
+					color: {
+						primary: {},
+					},
+				},
+				compoundVariants: [
+					{
+						match: { color: "primary" },
+						css: {
+							"&:hover": {
+								textDecoration: "underline",
+							},
+						},
+					},
+				],
+			});
+
+			processRecipeUtilities(instance, root);
+
+			expect(warnSpy).not.toHaveBeenCalledWith(
+				expect.stringContaining('Modifier "&"'),
+			);
 
 			warnSpy.mockRestore();
 		});
@@ -1003,6 +1266,103 @@ describe("generateRecipeRuntime", () => {
 		]);
 	});
 
+	test("should normalize '&:hover' to 'hover' in base runtime", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("boxShadow", ({ value }) => ({ boxShadow: value }));
+
+		const instance = recipe({
+			name: "card",
+			base: {
+				boxShadow: "@shadow.md",
+				"&:hover": {
+					boxShadow: "@shadow.lg",
+				},
+			},
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			boxShadow: "shadow.md",
+			hover: {
+				boxShadow: "shadow.lg",
+			},
+		});
+	});
+
+	test("should normalize '&:hover' to 'hover' in compound variant runtime", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: { background: "@color.primary" },
+				},
+				disabled: {
+					false: {},
+				},
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary", disabled: "false" },
+					css: {
+						"&:hover": {
+							background: "@color.primary-dark",
+						},
+					},
+				},
+			],
+		});
+
+		expect(instance._runtime?.compoundVariants).toEqual([
+			{
+				match: { color: "primary", disabled: "false" },
+				css: {
+					hover: {
+						background: "color.primary-dark",
+					},
+				},
+			},
+		]);
+	});
+
+	test("should normalize '&:hover' to 'hover' in variant runtime", () => {
+		modifier("hover", ({ selector }) => {
+			selector("&:hover", {});
+		});
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: {
+						background: "@color.primary",
+						"&:hover": {
+							background: "@color.primary-dark",
+						},
+					},
+				},
+			},
+		});
+
+		expect(instance._runtime?.variants).toEqual({
+			color: {
+				primary: {
+					background: "color.primary",
+					hover: {
+						background: "color.primary-dark",
+					},
+				},
+			},
+		});
+	});
+
 	test("should use custom autogenerate function to resolve keys", () => {
 		utility("background", ({ value }) => ({ background: value }), {
 			autogenerate: (value) => {
@@ -1043,23 +1403,21 @@ describe("generateRecipeRuntime", () => {
 		expect(instance._runtime?.compoundVariants).toBeUndefined();
 	});
 
-	test("should skip utilities not found in registry", () => {
+	test("should throw when utility in base is not found in registry", () => {
 		utility("background", ({ value }) => ({ background: value }));
 
-		const instance = recipe({
-			name: "button",
-			base: {
-				background: "@color.primary",
-				unknownUtility: "value", // This utility is not registered
-			},
-			variants: {},
-		});
-
-		// Should only include the known utility
-		expect(instance._runtime?.base).toEqual({
-			background: "color.primary",
-		});
-		expect(instance._runtime?.base).not.toHaveProperty("unknownUtility");
+		expect(() =>
+			recipe({
+				name: "button",
+				base: {
+					background: "@color.primary",
+					unknownUtility: "value", // This utility is not registered
+				},
+				variants: {},
+			}),
+		).toThrow(
+			'[styleframe] Utility "unknownUtility" not found in registry. Make sure the utility is registered before using it in a recipe.',
+		);
 	});
 
 	test("should handle compound modifiers like hover:focus", () => {
@@ -1199,6 +1557,105 @@ describe("generateRecipeRuntime", () => {
 					},
 				},
 			],
+		});
+	});
+
+	test("should hash whitespace values in base declarations", () => {
+		utility("transition", ({ value }) => ({ transition: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: { transition: "all 0.3s ease" },
+			variants: {},
+		});
+
+		const expectedHash = hashValue("all 0.3s ease");
+		expect(instance._runtime?.base).toEqual({
+			transition: expectedHash,
+		});
+	});
+
+	test("should hash whitespace values in variant declarations", () => {
+		utility("transition", ({ value }) => ({ transition: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				animation: {
+					fast: { transition: "all 0.15s ease" },
+					slow: { transition: "all 0.5s ease-in-out" },
+				},
+			},
+		});
+
+		const fastHash = hashValue("all 0.15s ease");
+		const slowHash = hashValue("all 0.5s ease-in-out");
+		expect(instance._runtime?.variants).toEqual({
+			animation: {
+				fast: { transition: fastHash },
+				slow: { transition: slowHash },
+			},
+		});
+	});
+
+	test("should hash whitespace values in compound variant declarations", () => {
+		utility("transition", ({ value }) => ({ transition: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: {},
+				},
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary" },
+					css: { transition: "all 0.3s ease" },
+				},
+			],
+		});
+
+		const expectedHash = hashValue("all 0.3s ease");
+		expect(instance._runtime?.compoundVariants?.[0]?.css).toEqual({
+			transition: expectedHash,
+		});
+	});
+
+	test("should create valid utility instances for whitespace values", () => {
+		utility("transition", ({ value }) => ({ transition: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: { transition: "all 0.3s ease" },
+			variants: {},
+		});
+
+		processRecipeUtilities(instance, root);
+
+		const transitionUtilities = root.children.filter(
+			(child) => child.type === "utility" && child.name === "transition",
+		);
+		expect(transitionUtilities.length).toBeGreaterThanOrEqual(1);
+
+		const utilityInstance = transitionUtilities[0];
+		if (utilityInstance?.type === "utility") {
+			expect(utilityInstance.value).toMatch(/^[0-9a-f]{7}$/);
+			expect(utilityInstance.value).not.toContain(" ");
+		}
+	});
+
+	test("should not hash non-whitespace arbitrary values (backward compatible)", () => {
+		utility("borderWidth", ({ value }) => ({ borderWidth: value }));
+
+		const instance = recipe({
+			name: "button",
+			base: { borderWidth: "thin" },
+			variants: {},
+		});
+
+		expect(instance._runtime?.base).toEqual({
+			borderWidth: "[thin]",
 		});
 	});
 });

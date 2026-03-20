@@ -95,7 +95,6 @@ describe("useHeightUtility", () => {
 		expect(utility.declarations?.height).toEqual({
 			type: "reference",
 			name: "height.full",
-			fallback: undefined,
 		});
 	});
 

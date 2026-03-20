@@ -72,6 +72,7 @@ describe("createSelectorConsumer", () => {
 	it("should handle selector with newlines in query", () => {
 		const instance: Selector = {
 			type: "selector",
+			id: "test-id",
 			query: ".button,\n.link",
 			declarations: {},
 			variables: [],
@@ -91,6 +92,7 @@ describe("createSelectorConsumer", () => {
 	it("should handle selector with backslashes in query", () => {
 		const instance: Selector = {
 			type: "selector",
+			id: "test-id",
 			query: ".icon\\:home",
 			declarations: {},
 			variables: [],
@@ -145,6 +147,7 @@ describe("createSelectorConsumer", () => {
 	it("should handle empty query string", () => {
 		const instance: Selector = {
 			type: "selector",
+			id: "test-id",
 			query: "",
 			declarations: {},
 			variables: [],
@@ -175,6 +178,7 @@ describe("createSelectorConsumer", () => {
 	it("should handle attribute selector with single quotes", () => {
 		const instance: Selector = {
 			type: "selector",
+			id: "test-id",
 			query: "[data-theme='dark']",
 			declarations: {},
 			variables: [],

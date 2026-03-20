@@ -3,5 +3,6 @@
 	"compilerOptions": {
 		"tsBuildInfoFile": ".tsbuildinfo"
 	},
-	"include": ["src/**/*.ts", "tsdown.config.ts", "vite.config.ts"]
+	"include": ["src/**/*.ts", "tsdown.config.ts", "vite.config.ts"],
+	"exclude": ["src/fixtures/**"]
 }

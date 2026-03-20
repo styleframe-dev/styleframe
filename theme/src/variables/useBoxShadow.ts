@@ -1,8 +1,5 @@
 import { createUseVariable } from "../utils";
 import { boxShadowValues } from "../values";
-
-export { boxShadowValues };
-
 /**
  * Create a set of box-shadow variables for use in a Styleframe instance.
  *
@@ -22,7 +19,7 @@ export { boxShadowValues };
  *   boxShadowMd, // Variable<'box-shadow.md'>
  *   boxShadowLg, // Variable<'box-shadow.lg'>
  * } = useBoxShadow(s, {
- *   default: '@md',
+ *   default: '@box-shadow.md',
  *   sm: css`0 1px 2px oklcha(${ref(boxShadowColor)} / 0.05)`,
  *   md: css`0 4px 8px oklcha(${ref(boxShadowColor)} / 0.1)`,
  *   lg: css`0 8px 16px oklcha(${ref(boxShadowColor)} / 0.15)`,

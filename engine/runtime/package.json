@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/runtime",
-	"version": "2.0.0",
+	"version": "3.0.0",
 	"type": "module",
 	"types": "./dist/runtime.d.ts",
 	"module": "./dist/runtime.js",
@@ -26,9 +26,9 @@
 		"test:dev": "vitest --watch"
 	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:^2",
-		"@styleframe/config-vite": "workspace:^2",
-		"@styleframe/core": "workspace:^2.4.0",
+		"@styleframe/config-typescript": "workspace:^3.0.0",
+		"@styleframe/config-vite": "workspace:^3.0.0",
+		"@styleframe/core": "workspace:^3.0.0",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
@@ -36,7 +36,7 @@
 		"vite-plugin-dts": "catalog:"
 	},
 	"peerDependencies": {
-		"@styleframe/core": "workspace:^2.4.0"
+		"@styleframe/core": "workspace:^3.0.0"
 	},
 	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
 	"bugs": {

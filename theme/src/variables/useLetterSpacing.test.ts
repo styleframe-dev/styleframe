@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { letterSpacingValues, useLetterSpacing } from "./useLetterSpacing";
+import { useLetterSpacing } from "./useLetterSpacing";
+import { letterSpacingValues } from "../values";
 
 describe("useLetterSpacing", () => {
 	it("should create all letter spacing variables with correct names and values", () => {
@@ -17,41 +18,52 @@ describe("useLetterSpacing", () => {
 
 		expect(letterSpacingTighter).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.tighter",
 			value: "-0.05em",
 		});
 
 		expect(letterSpacingTight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.tight",
 			value: "-0.025em",
 		});
 
 		expect(letterSpacingNormal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.normal",
 			value: "normal",
 		});
 
 		expect(letterSpacingWide).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.wide",
 			value: "0.05em",
 		});
 
 		expect(letterSpacingWider).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing.wider",
 			value: "0.1em",
 		});
 
 		expect(letterSpacing).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "letter-spacing",
 			value: {
 				type: "reference",
 				name: "letter-spacing.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -133,7 +145,6 @@ describe("useLetterSpacing", () => {
 		expect(customLetterSpacing.value).toEqual({
 			type: "reference",
 			name: "letter-spacing.wider",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -219,11 +230,12 @@ describe("useLetterSpacing", () => {
 
 			expect(letterSpacing).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "letter-spacing",
 				value: {
 					type: "reference",
 					name: "letter-spacing.normal",
-					fallback: undefined,
 				},
 			});
 		});
@@ -232,13 +244,12 @@ describe("useLetterSpacing", () => {
 			const s = styleframe();
 			const { letterSpacing } = useLetterSpacing(s, {
 				...letterSpacingValues,
-				default: "@wide",
+				default: "@letter-spacing.wide",
 			});
 
 			expect(letterSpacing.value).toEqual({
 				type: "reference",
 				name: "letter-spacing.wide",
-				fallback: undefined,
 			});
 		});
 
@@ -246,7 +257,7 @@ describe("useLetterSpacing", () => {
 			const s = styleframe();
 			useLetterSpacing(s, {
 				...letterSpacingValues,
-				default: "@wider",
+				default: "@letter-spacing.wider",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -268,13 +279,12 @@ describe("useLetterSpacing", () => {
 				const s = styleframe();
 				const { letterSpacing } = useLetterSpacing(s, {
 					...letterSpacingValues,
-					default: `@${letterSpacingName}`,
+					default: `@letter-spacing.${letterSpacingName}`,
 				});
 
 				expect(letterSpacing.value).toEqual({
 					type: "reference",
 					name: `letter-spacing.${letterSpacingName}`,
-					fallback: undefined,
 				});
 			}
 		});

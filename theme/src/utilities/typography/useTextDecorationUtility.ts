@@ -2,7 +2,19 @@ import { createUseUtility } from "../../utils";
 import {
 	textDecorationLineValues,
 	textDecorationStyleValues,
+	textDecorationValues,
 } from "../../values";
+
+/**
+ * Create text-decoration shorthand utility classes.
+ */
+export const useTextDecorationUtility = createUseUtility(
+	"text-decoration",
+	({ value }) => ({
+		textDecoration: value,
+	}),
+	{ defaults: textDecorationValues },
+);
 
 /**
  * Create text-decoration-line utility classes.

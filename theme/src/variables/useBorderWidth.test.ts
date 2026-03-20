@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { borderWidthValues, useBorderWidth } from "./useBorderWidth";
+import { useBorderWidth } from "./useBorderWidth";
+import { borderWidthValues } from "../values";
 
 describe("useBorderWidth", () => {
 	it("should create all border width variables with correct names and values", () => {
@@ -16,35 +17,44 @@ describe("useBorderWidth", () => {
 
 		expect(borderWidthNone).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.none",
-			value: 0,
+			value: "0",
 		});
 
 		expect(borderWidthThin).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.thin",
 			value: "thin",
 		});
 
 		expect(borderWidthMedium).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.medium",
 			value: "medium",
 		});
 
 		expect(borderWidthThick).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width.thick",
 			value: "thick",
 		});
 
 		expect(borderWidth).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "border-width",
 			value: {
 				type: "reference",
 				name: "border-width.thin",
-				fallback: undefined,
 			},
 		});
 	});
@@ -121,7 +131,6 @@ describe("useBorderWidth", () => {
 		expect(customBorderWidth.value).toEqual({
 			type: "reference",
 			name: "border-width.thick",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -183,7 +192,7 @@ describe("useBorderWidth", () => {
 			const s = styleframe();
 			const borderWidths = useBorderWidth(s);
 
-			expect(typeof borderWidths.borderWidthNone.value).toBe("number");
+			expect(typeof borderWidths.borderWidthNone.value).toBe("string");
 			expect(typeof borderWidths.borderWidthThin.value).toBe("string");
 			expect(typeof borderWidths.borderWidthMedium.value).toBe("string");
 			expect(typeof borderWidths.borderWidthThick.value).toBe("string");
@@ -198,11 +207,12 @@ describe("useBorderWidth", () => {
 
 			expect(borderWidth).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "border-width",
 				value: {
 					type: "reference",
 					name: "border-width.thin",
-					fallback: undefined,
 				},
 			});
 		});
@@ -211,13 +221,12 @@ describe("useBorderWidth", () => {
 			const s = styleframe();
 			const { borderWidth } = useBorderWidth(s, {
 				...borderWidthValues,
-				default: "@medium",
+				default: "@border-width.medium",
 			});
 
 			expect(borderWidth.value).toEqual({
 				type: "reference",
 				name: "border-width.medium",
-				fallback: undefined,
 			});
 		});
 
@@ -225,7 +234,7 @@ describe("useBorderWidth", () => {
 			const s = styleframe();
 			useBorderWidth(s, {
 				...borderWidthValues,
-				default: "@thick",
+				default: "@border-width.thick",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -246,13 +255,12 @@ describe("useBorderWidth", () => {
 				const s = styleframe();
 				const { borderWidth } = useBorderWidth(s, {
 					...borderWidthValues,
-					default: `@${borderWidthName}`,
+					default: `@border-width.${borderWidthName}`,
 				});
 
 				expect(borderWidth.value).toEqual({
 					type: "reference",
 					name: `border-width.${borderWidthName}`,
-					fallback: undefined,
 				});
 			}
 		});
@@ -268,7 +276,7 @@ describe("useBorderWidth", () => {
 				borderWidthThick,
 			} = useBorderWidth(s);
 
-			expect(borderWidthNone.value).toBe(0);
+			expect(borderWidthNone.value).toBe("0");
 			expect(borderWidthThin.value).toBe("thin");
 			expect(borderWidthMedium.value).toBe("medium");
 			expect(borderWidthThick.value).toBe("thick");
@@ -284,7 +292,7 @@ describe("useBorderWidth", () => {
 				borderWidths.borderWidthThick.value,
 			];
 
-			const expectedValues = [0, "thin", "medium", "thick"];
+			const expectedValues = ["0", "thin", "medium", "thick"];
 
 			expect(values).toEqual(expectedValues);
 		});
@@ -293,8 +301,8 @@ describe("useBorderWidth", () => {
 			const s = styleframe();
 			const { borderWidthNone } = useBorderWidth(s);
 
-			expect(borderWidthNone.value).toBe(0);
-			expect(typeof borderWidthNone.value).toBe("number");
+			expect(borderWidthNone.value).toBe("0");
+			expect(typeof borderWidthNone.value).toBe("string");
 		});
 	});
 
@@ -513,7 +521,7 @@ describe("useBorderWidth", () => {
 			const s = styleframe();
 			const { borderWidthNone } = useBorderWidth(s);
 
-			expect(borderWidthNone.value).toBe(0);
+			expect(borderWidthNone.value).toBe("0");
 		});
 
 		it("should have semantic progression from thin to thick", () => {

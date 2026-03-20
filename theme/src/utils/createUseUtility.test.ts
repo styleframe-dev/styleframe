@@ -87,7 +87,6 @@ describe("createUseUtility", () => {
 		expect(utility?.declarations?.backgroundColor).toEqual({
 			type: "reference",
 			name: "color.primary",
-			fallback: undefined,
 		});
 	});
 
@@ -274,7 +273,7 @@ describe("createUseUtility", () => {
 		useSpacing(s, { "1/2": "0.125rem", "2.5": "0.625rem" });
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("._p\\:1/2 {");
+		expect(css).toContain("._p\\:1\\/2 {");
 		expect(css).toContain("._p\\:2\\.5 {");
 	});
 
@@ -492,6 +491,44 @@ describe("createUseUtility", () => {
 				display: "flex",
 				flexDirection: "column",
 			});
+		});
+	});
+
+	describe("utilityOptions.name override", () => {
+		it("should override the utility name", () => {
+			const useMargin = createUseUtility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			const s = styleframe();
+			useMargin(s, { sm: "8px" }, undefined, { name: "m" });
+
+			const utility = s.root.children.find(
+				(u): u is Utility => isUtility(u) && u.name === "m",
+			);
+			expect(utility).toBeDefined();
+			expect(utility?.declarations).toEqual({ margin: "8px" });
+		});
+
+		it("should generate correct CSS selector with overridden name", () => {
+			const useMargin = createUseUtility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			const s = styleframe();
+			useMargin(s, { sm: "8px" }, undefined, { name: "m" });
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("._m\\:sm {");
+			expect(css).not.toContain("._margin");
+		});
+
+		it("should use default name when no override provided", () => {
+			const useMargin = createUseUtility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			const s = styleframe();
+			useMargin(s, { sm: "8px" });
+
+			expect(s.root.utilities[0]?.name).toBe("margin");
 		});
 	});
 

@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/cli",
-	"version": "2.4.0",
+	"version": "3.0.0",
 	"description": "A command-line interface for styleframe.",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -30,21 +30,21 @@
 		"playground:build": "tsx playground/build.ts"
 	},
 	"dependencies": {
-		"@styleframe/figma": "workspace:^1.0.0",
+		"@styleframe/figma": "workspace:^1.0.1",
 		"citty": "^0.1.6",
 		"consola": "^3.0.0-2",
 		"magicast": "^0.5.0"
 	},
 	"peerDependencies": {
-		"@styleframe/loader": "workspace:^2.4.0"
+		"@styleframe/loader": "workspace:^3.0.0"
 	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:^2",
-		"@styleframe/config-vite": "workspace:^2",
-		"@styleframe/core": "workspace:^2.6.0",
+		"@styleframe/config-typescript": "workspace:^3.0.0",
+		"@styleframe/config-vite": "workspace:^3.0.0",
+		"@styleframe/core": "workspace:^3.0.0",
 		"@styleframe/license": "catalog:",
-		"@styleframe/theme": "workspace:^2.5.0",
-		"@styleframe/loader": "workspace:^2.4.0",
+		"@styleframe/theme": "workspace:^3.0.0",
+		"@styleframe/loader": "workspace:^3.0.0",
 		"@vitest/coverage-v8": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",

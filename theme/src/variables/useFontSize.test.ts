@@ -12,6 +12,8 @@ describe("useFontSize", () => {
 
 		expect(fontSize).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size",
 			value: "1rem",
 		});
@@ -28,6 +30,8 @@ describe("useFontSize", () => {
 
 		expect(fontSizeSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.sm",
 			value: "0.875rem",
 		});
@@ -47,24 +51,32 @@ describe("useFontSize", () => {
 
 		expect(fontSize).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size",
 			value: "1rem",
 		});
 
 		expect(fontSizeSm).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.sm",
 			value: "0.875rem",
 		});
 
 		expect(fontSizeMd).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.md",
 			value: "1rem",
 		});
 
 		expect(fontSizeLg).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.lg",
 			value: "1.25rem",
 		});
@@ -90,6 +102,8 @@ describe("useFontSize", () => {
 
 		expect(fontSizeExtraLarge).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.extra-large",
 			value: "2rem",
 		});
@@ -103,6 +117,8 @@ describe("useFontSize", () => {
 
 		expect(fontSizeHeadingPrimary).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.heading_primary",
 			value: "1.5rem",
 		});
@@ -116,6 +132,8 @@ describe("useFontSize", () => {
 
 		expect(fontSize100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.100",
 			value: "0.75rem",
 		});
@@ -129,6 +147,8 @@ describe("useFontSize", () => {
 
 		expect(fontSize).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size",
 			value: "16px",
 		});
@@ -142,6 +162,8 @@ describe("useFontSize", () => {
 
 		expect(fontSizeBase).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.base",
 			value: "1.5em",
 		});
@@ -155,6 +177,8 @@ describe("useFontSize", () => {
 
 		expect(fontSizeRelative).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.relative",
 			value: "125%",
 		});
@@ -168,6 +192,8 @@ describe("useFontSize", () => {
 
 		expect(fontSizeFluid).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "font-size.fluid",
 			value: "2.5vw",
 		});
@@ -209,7 +235,6 @@ describe("useFontSize", () => {
 		expect(fontSize.value).toEqual({
 			type: "reference",
 			name: "base-size",
-			fallback: undefined,
 		});
 	});
 

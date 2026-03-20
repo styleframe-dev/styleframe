@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { isTokenValue } from "./typeGuards";
+import { isKeyReferenceValue, isTokenValue } from "./typeGuards";
 import type { Reference, CSS } from "./types";
 
 describe("isTokenValue", () => {
@@ -29,5 +29,26 @@ describe("isTokenValue", () => {
 	it("should return false for invalid values", () => {
 		expect(isTokenValue({})).toBe(false);
 		expect(isTokenValue(["foo", {}])).toBe(false);
+	});
+});
+
+describe("isKeyReferenceValue", () => {
+	it("should return true for strings starting with @", () => {
+		expect(isKeyReferenceValue("@color.primary")).toBe(true);
+		expect(isKeyReferenceValue("@spacing")).toBe(true);
+		expect(isKeyReferenceValue("@")).toBe(true);
+	});
+
+	it("should return false for strings not starting with @", () => {
+		expect(isKeyReferenceValue("color.primary")).toBe(false);
+		expect(isKeyReferenceValue("email@example.com")).toBe(false);
+		expect(isKeyReferenceValue("")).toBe(false);
+	});
+
+	it("should return false for non-string values", () => {
+		expect(isKeyReferenceValue(42)).toBe(false);
+		expect(isKeyReferenceValue(null)).toBe(false);
+		expect(isKeyReferenceValue(undefined)).toBe(false);
+		expect(isKeyReferenceValue({ type: "reference" })).toBe(false);
 	});
 });

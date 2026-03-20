@@ -23,6 +23,8 @@ describe("createRoot", () => {
 
 			expect(root).toEqual({
 				type: "root",
+				id: expect.any(String),
+				_registry: expect.any(Map),
 				declarations: {},
 				utilities: [],
 				modifiers: [],

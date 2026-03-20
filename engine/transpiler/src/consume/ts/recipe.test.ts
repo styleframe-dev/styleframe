@@ -996,8 +996,10 @@ export const matrix = createRecipe("matrix", matrixRecipe);
 	});
 
 	it("should handle recipe without _runtime by outputting empty object", () => {
-		// Create a recipe without registered utilities
+		// Create a recipe, then remove _runtime to test fallback
 		const bareRoot = createRoot();
+		const bareUtility = createUtilityFunction(bareRoot, bareRoot);
+		bareUtility("display", ({ value }) => ({ display: value }));
 		const bareRecipe = createRecipeFunction(bareRoot, bareRoot);
 
 		const instance = bareRecipe({

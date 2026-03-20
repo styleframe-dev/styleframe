@@ -5,7 +5,7 @@ export const backgroundAttachmentValues = {
 	fixed: "fixed",
 	local: "local",
 	scroll: "scroll",
-};
+} as const;
 
 /**
  * Default background-clip utility values matching Tailwind CSS.
@@ -15,7 +15,7 @@ export const backgroundClipValues = {
 	padding: "padding-box",
 	content: "content-box",
 	text: "text",
-};
+} as const;
 
 /**
  * Default background-origin utility values matching Tailwind CSS.
@@ -24,7 +24,7 @@ export const backgroundOriginValues = {
 	border: "border-box",
 	padding: "padding-box",
 	content: "content-box",
-};
+} as const;
 
 /**
  * Default background-position utility values matching Tailwind CSS.
@@ -39,7 +39,7 @@ export const backgroundPositionValues = {
 	"right-bottom": "right bottom",
 	"right-top": "right top",
 	top: "top",
-};
+} as const;
 
 /**
  * Default background-repeat utility values matching Tailwind CSS.
@@ -51,7 +51,7 @@ export const backgroundRepeatValues = {
 	"repeat-y": "repeat-y",
 	round: "round",
 	space: "space",
-};
+} as const;
 
 /**
  * Default background-size utility values matching Tailwind CSS.
@@ -60,7 +60,7 @@ export const backgroundSizeValues = {
 	auto: "auto",
 	cover: "cover",
 	contain: "contain",
-};
+} as const;
 
 /**
  * Default background-image utility values matching Tailwind CSS.
@@ -76,4 +76,4 @@ export const backgroundImageValues = {
 	"gradient-to-bl": "linear-gradient(to bottom left, var(--tw-gradient-stops))",
 	"gradient-to-l": "linear-gradient(to left, var(--tw-gradient-stops))",
 	"gradient-to-tl": "linear-gradient(to top left, var(--tw-gradient-stops))",
-};
+} as const;

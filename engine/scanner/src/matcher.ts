@@ -3,12 +3,14 @@ import type {
 	Root,
 	Utility,
 	UtilityFactory,
-} from "@styleframe/core";
-import type {
-	ParsedUtility,
-	UtilityMatch,
+	UtilitySelectorFn,
 	UtilitySelectorOptions,
-} from "./types";
+} from "@styleframe/core";
+import {
+	classNameToCssSelector,
+	defaultUtilitySelectorFn,
+} from "@styleframe/core";
+import type { ParsedUtility, UtilityMatch } from "./types";
 
 /**
  * Generate a normalized cache key for utility value lookup.
@@ -95,20 +97,14 @@ export function matchUtilities(
 /**
  * Generate the CSS selector for a utility instance.
  *
- * This mirrors the logic from @styleframe/transpiler/defaults.ts
+ * Derives the selector from the class name by adding a `.` prefix and escaping special characters.
  */
 export function generateUtilitySelector(
 	options: UtilitySelectorOptions,
+	selectorFn?: UtilitySelectorFn,
 ): string {
-	const { name, value, modifiers } = options;
-
-	const parts = [
-		...modifiers,
-		name,
-		...(value === "default" ? [] : [value]),
-	].filter(Boolean);
-
-	return `._${parts.join("\\:").replace(/[[\].#()%,]/g, "\\$&")}`;
+	const className = classNameFromUtilityOptions(options, selectorFn);
+	return classNameToCssSelector(className);
 }
 
 /**
@@ -116,33 +112,31 @@ export function generateUtilitySelector(
  */
 export function classNameFromUtilityOptions(
 	options: UtilitySelectorOptions,
+	selectorFn?: UtilitySelectorFn,
 ): string {
-	const { name, value, modifiers } = options;
-
-	const parts = [
-		...modifiers,
-		name,
-		...(value === "default" ? [] : [value]),
-	].filter(Boolean);
-
-	return `_${parts.join(":")}`;
+	return (selectorFn ?? defaultUtilitySelectorFn)(options);
 }
 
 /**
  * Create a filter function that checks if a utility is in the used set.
  *
  * @param usedClasses Set of used utility class names
+ * @param selectorFn Optional custom selector function
  * @returns Filter function for utilities
  */
 export function createUtilityFilter(
 	usedClasses: Set<string>,
+	selectorFn?: UtilitySelectorFn,
 ): (utility: Utility) => boolean {
 	return (utility: Utility) => {
-		const className = classNameFromUtilityOptions({
-			name: utility.name,
-			value: utility.value,
-			modifiers: utility.modifiers,
-		});
+		const className = classNameFromUtilityOptions(
+			{
+				name: utility.name,
+				value: utility.value,
+				modifiers: utility.modifiers,
+			},
+			selectorFn,
+		);
 		return usedClasses.has(className);
 	};
 }
@@ -152,13 +146,15 @@ export function createUtilityFilter(
  *
  * @param root The Styleframe root instance
  * @param usedClasses Set of used utility class names
+ * @param selectorFn Optional custom selector function
  * @returns Array of used children (utilities are filtered, other types pass through)
  */
 export function filterUtilities(
 	root: Root,
 	usedClasses: Set<string>,
+	selectorFn?: UtilitySelectorFn,
 ): Root["children"] {
-	const filter = createUtilityFilter(usedClasses);
+	const filter = createUtilityFilter(usedClasses, selectorFn);
 
 	return root.children.filter((child) => {
 		// Non-utility children always pass through

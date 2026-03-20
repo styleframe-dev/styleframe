@@ -12,6 +12,7 @@ import type {
 	UtilityCreatorFn,
 	UtilityFactory,
 } from "../types";
+import { generateRandomId } from "../utils";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
@@ -32,16 +33,36 @@ function createNamespaceAutogenerate(
 		if (typeof value === "string" && value[0] === "@") {
 			const variableName = value.slice(1);
 
-			// Try each namespace and pick the first with a defined variable
-			for (const ns of namespaces) {
-				const candidateName = `${ns}.${variableName}`;
-				if (root.variables.some((v) => v.name === candidateName)) {
+			// Check if variable already starts with a namespace prefix
+			// to avoid double-prepending (e.g., "@color.light" with namespace "color")
+			const matchedNs = namespaces.find(
+				(ns) => variableName === ns || variableName.startsWith(`${ns}.`),
+			);
+
+			if (matchedNs) {
+				const keyName =
+					variableName.slice(matchedNs.length + 1) || variableName;
+				if (root.variables.some((v) => v.name === variableName)) {
 					return {
-						[variableName]: {
+						[keyName]: {
 							type: "reference",
-							name: candidateName,
+							name: variableName,
 						} satisfies Reference<string>,
 					};
+				}
+				// Variable not found with namespace prefix, fall through to baseTransform
+			} else {
+				// Try each namespace and pick the first with a defined variable
+				for (const ns of namespaces) {
+					const candidateName = `${ns}.${variableName}`;
+					if (root.variables.some((v) => v.name === candidateName)) {
+						return {
+							[variableName]: {
+								type: "reference",
+								name: candidateName,
+							} satisfies Reference<string>,
+						};
+					}
 				}
 			}
 
@@ -63,6 +84,11 @@ export function createUtilityFunction(parent: Container, root: Root) {
 			namespace?: string | string[];
 		} = {},
 	): UtilityCreatorFn {
+		const existingFactory = root.utilities.find((f) => f.name === name);
+		if (existingFactory) {
+			return existingFactory.create;
+		}
+
 		const factoryInstance: UtilityFactory<Name> = {
 			type: "utility",
 			name,
@@ -102,6 +128,18 @@ export function createUtilityFunction(parent: Container, root: Root) {
 				for (const [key, entryValue] of Object.entries(resolvedEntries)) {
 					let value = entryValue;
 
+					// Resolve @-prefixed string values as references to sibling keys
+					// e.g. { default: "@solid", solid: "solid" } → default resolves to "solid"
+					if (typeof entryValue === "string" && entryValue[0] === "@") {
+						const referencedKey = entryValue.slice(1);
+						if (
+							!Array.isArray(resolvedEntries) &&
+							referencedKey in resolvedEntries
+						) {
+							value = resolvedEntries[referencedKey];
+						}
+					}
+
 					if (factoryInstance.namespace && isRef(entryValue)) {
 						if (root.variables.some((v) => v.name === entryValue.name)) {
 							value = entryValue;
@@ -138,6 +176,8 @@ export function createUtilityFunction(parent: Container, root: Root) {
 
 					const instance: Utility<Name> = {
 						type: "utility",
+						id: generateRandomId("ut-"),
+						parentId: parent.id,
 						name,
 						value: key,
 						declarations: {},
@@ -145,6 +185,8 @@ export function createUtilityFunction(parent: Container, root: Root) {
 						children: [],
 						modifiers: [],
 					};
+
+					root._registry.set(instance.id, instance);
 
 					const callbackContext = createDeclarationsCallbackContext(
 						instance,
@@ -157,7 +199,12 @@ export function createUtilityFunction(parent: Container, root: Root) {
 							value,
 						}) ?? {};
 
-					parseDeclarationsBlock(instance.declarations, callbackContext);
+					parseDeclarationsBlock(
+						instance.declarations,
+						callbackContext,
+						instance,
+						root,
+					);
 
 					if (!existingEntry) {
 						factoryInstance.values.push({

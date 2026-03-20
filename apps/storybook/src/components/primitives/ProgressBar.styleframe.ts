@@ -1,23 +1,20 @@
 import { styleframe } from "virtual:styleframe";
-import { useSwatchColors, useSwatchDimensions } from "./tokens.styleframe";
 
 const s = styleframe();
+const { selector } = s;
 
-const { swatchColorPrimary, swatchColorBorder } = useSwatchColors(s);
-const { swatchBarHeight, swatchBorderRadiusSm } = useSwatchDimensions(s);
-
-s.selector(".progress-bar", {
+selector(".progress-bar", {
 	flex: "1",
-	height: s.ref(swatchBarHeight),
-	background: s.ref(swatchColorBorder),
-	borderRadius: s.ref(swatchBorderRadiusSm),
+	height: "@spacing.xs",
+	background: "@border-color",
+	borderRadius: "@border-radius",
 	overflow: "hidden",
 });
 
-s.selector(".progress-bar__fill", {
+selector(".progress-bar__fill", {
 	height: "100%",
-	borderRadius: s.ref(swatchBorderRadiusSm),
-	background: s.ref(swatchColorPrimary),
+	borderRadius: "@border-radius",
+	background: "@color.primary",
 	transition: "width 0.3s ease",
 });
 

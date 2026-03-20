@@ -1,7 +1,9 @@
 import {
 	createScanner,
+	type Extractor,
 	type ParsedUtility,
 	type Scanner,
+	type ScannerUtilitiesConfig,
 	type UtilityMatch,
 } from "@styleframe/scanner";
 import type { ModifierFactory, UtilityFactory } from "@styleframe/core";
@@ -23,15 +25,21 @@ export interface PluginScannerState {
  *
  * @param contentPatterns Glob patterns for content files to scan
  * @param cwd Working directory for glob resolution
+ * @param extractors Custom extractor functions for unsupported file types
+ * @param utilities Custom utility class syntax configuration
  * @returns Plugin scanner state
  */
 export function createPluginScanner(
 	contentPatterns: string[],
 	cwd: string,
+	extractors?: Extractor[],
+	utilities?: ScannerUtilitiesConfig,
 ): PluginScannerState {
 	const scanner = createScanner({
 		content: contentPatterns,
 		cwd,
+		extractors,
+		utilities,
 	});
 
 	return {

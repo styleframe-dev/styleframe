@@ -1,6 +1,14 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import type {
+	DeclarationsCallbackContext,
+	Styleframe,
+	TokenValue,
+	Variable,
+} from "@styleframe/core";
+import type { CamelCase } from "scule";
+import { camelCase } from "scule";
 import type { ExportKeys } from "../types";
 import {
+	borderColorValues,
 	borderRadiusValues,
 	borderStyleValues,
 	borderWidthValues,
@@ -10,6 +18,9 @@ import {
 	colorShadeValues,
 	colorTintValues,
 	colorValues,
+	darkModeBorderColorValues,
+	darkModeColorValues,
+	durationValues,
 	easingValues,
 	fontFamilyValues,
 	fontSizeValues,
@@ -20,6 +31,10 @@ import {
 	scalePowerValues,
 	scaleValues,
 	spacingValues,
+	zIndexValues,
+} from "../values";
+import {
+	useBorderColor,
 	useBorderRadius,
 	useBorderStyle,
 	useBorderWidth,
@@ -29,6 +44,7 @@ import {
 	useColorLightness,
 	useColorShade,
 	useColorTint,
+	useDuration,
 	useEasing,
 	useFontFamily,
 	useFontSize,
@@ -39,36 +55,234 @@ import {
 	useScale,
 	useScalePowers,
 	useSpacing,
+	useZIndex,
 } from "../variables";
 
 // =============================================================================
-// Default Value Type Aliases
+// Domain Registry (single source of truth for types and runtime)
 // =============================================================================
 
-type DefaultSpacing = typeof spacingValues;
-type DefaultBorderWidth = typeof borderWidthValues;
-type DefaultBorderRadius = typeof borderRadiusValues;
-type DefaultBorderStyle = typeof borderStyleValues;
-type DefaultBoxShadow = typeof boxShadowValues;
-type DefaultColors = typeof colorValues;
-type DefaultFontFamily = typeof fontFamilyValues;
-type DefaultFontSize = typeof fontSizeValues;
-type DefaultFontStyle = typeof fontStyleValues;
-type DefaultFontWeight = typeof fontWeightValues;
-type DefaultLineHeight = typeof lineHeightValues;
-type DefaultLetterSpacing = typeof letterSpacingValues;
-type DefaultScale = typeof scaleValues;
-type DefaultBreakpoint = typeof breakpointValues;
-type DefaultEasing = typeof easingValues;
+interface DomainProcessContext {
+	result: Record<string, Record<string, Variable | TokenValue> | undefined>;
+	config: DesignTokensPresetConfig<boolean>;
+}
 
-// Variation level types
-type DefaultLightnessLevels = typeof colorLightnessValues;
-type DefaultShadeLevels = typeof colorShadeValues;
-type DefaultTintLevels = typeof colorTintValues;
+type DomainComposable = (
+	s: DeclarationsCallbackContext,
+	values: Record<string, TokenValue>,
+	options: { default: boolean },
+	context: DomainProcessContext,
+) => Record<string, Variable | TokenValue> | undefined;
+
+interface Domain<
+	K extends string = string,
+	D extends Record<string, TokenValue> = Record<string, TokenValue>,
+	C extends boolean | undefined = boolean | undefined,
+> {
+	key: K;
+	defaults: D;
+	composable: DomainComposable;
+	themes?: Record<string, Record<string, TokenValue>>;
+	configurable: C;
+}
+
+/**
+ * Defines a domain entry, preserving literal types for `key`, `defaults`,
+ * and `configurable` while widening `composable` to `DomainComposable`.
+ */
+function defineDomain<
+	K extends string,
+	D extends Record<string, TokenValue>,
+	C extends boolean | undefined = undefined,
+>(domain: {
+	key: K;
+	defaults: D;
+	composable: DomainComposable;
+	themes?: Record<string, Record<string, TokenValue>>;
+	configurable?: C;
+}): Domain<K, D, C> {
+	return domain as Domain<K, D, C>;
+}
+
+/**
+ * Registry of all domains in application order.
+ * Order matters — domains that reference variables from other domains
+ * (e.g., border-color references color variables) must come after them.
+ *
+ * Each domain's `key` is a kebab-case identifier. The camelCase config/result
+ * key is derived at runtime via `camelCase(key)`.
+ */
+const domains = [
+	defineDomain({ key: "scale", defaults: scaleValues, composable: useScale }),
+	defineDomain({
+		key: "spacing",
+		defaults: spacingValues,
+		composable: useSpacing,
+	}),
+	defineDomain({
+		key: "border-width",
+		defaults: borderWidthValues,
+		composable: useBorderWidth,
+	}),
+	defineDomain({
+		key: "border-radius",
+		defaults: borderRadiusValues,
+		composable: useBorderRadius,
+	}),
+	defineDomain({
+		key: "border-style",
+		defaults: borderStyleValues,
+		composable: useBorderStyle,
+	}),
+	defineDomain({
+		key: "box-shadow",
+		defaults: boxShadowValues,
+		composable: useBoxShadow,
+	}),
+	defineDomain({
+		key: "z-index",
+		defaults: zIndexValues,
+		composable: useZIndex,
+	}),
+	defineDomain({
+		key: "font-family",
+		defaults: fontFamilyValues,
+		composable: useFontFamily,
+	}),
+	defineDomain({
+		key: "font-size",
+		defaults: fontSizeValues,
+		composable: useFontSize,
+	}),
+	defineDomain({
+		key: "font-style",
+		defaults: fontStyleValues,
+		composable: useFontStyle,
+	}),
+	defineDomain({
+		key: "font-weight",
+		defaults: fontWeightValues,
+		composable: useFontWeight,
+	}),
+	defineDomain({
+		key: "line-height",
+		defaults: lineHeightValues,
+		composable: useLineHeight,
+	}),
+	defineDomain({
+		key: "letter-spacing",
+		defaults: letterSpacingValues,
+		composable: useLetterSpacing,
+	}),
+	defineDomain({
+		key: "breakpoint",
+		defaults: breakpointValues,
+		composable: useBreakpoint,
+	}),
+	defineDomain({
+		key: "easing",
+		defaults: easingValues,
+		composable: useEasing,
+	}),
+	defineDomain({
+		key: "duration",
+		defaults: durationValues,
+		composable: useDuration,
+	}),
+	defineDomain({
+		key: "colors",
+		defaults: colorValues as Record<string, TokenValue>,
+		themes: { dark: darkModeColorValues },
+		composable: (s, values, options, { config }) => {
+			const baseColors = useColor(s, values as Record<string, string>, options);
+			let result: Record<string, Variable> = { ...baseColors };
+
+			const meta = { ...defaultColorsMetaConfig, ...config.meta?.colors };
+
+			for (const colorVariable of Object.values(
+				baseColors,
+			) as Variable<string>[]) {
+				if (meta.generateLightness) {
+					result = {
+						...result,
+						...useColorLightness(
+							s,
+							colorVariable,
+							meta.lightnessLevels,
+							options,
+						),
+					};
+				}
+
+				if (meta.generateShades) {
+					result = {
+						...result,
+						...useColorShade(s, colorVariable, meta.shadeLevels, options),
+					};
+				}
+
+				if (meta.generateTints) {
+					result = {
+						...result,
+						...useColorTint(s, colorVariable, meta.tintLevels, options),
+					};
+				}
+			}
+
+			return result;
+		},
+	}),
+	defineDomain({
+		key: "border-color",
+		defaults: borderColorValues,
+		composable: useBorderColor,
+		themes: { dark: darkModeBorderColorValues },
+	}),
+	defineDomain({
+		key: "scale-powers",
+		defaults: {} as Record<string, TokenValue>,
+		configurable: false,
+		composable: (s, _values, _options, { result, config }) => {
+			const scaleVar = result.scale?.["scale"];
+			if (!scaleVar) return undefined;
+			return useScalePowers(
+				s,
+				scaleVar as Variable,
+				config.scalePowers ?? scalePowerValues,
+			);
+		},
+	}),
+];
 
 // =============================================================================
-// Helper Types for Conditional Result Inference
+// Domain Type Maps (derived from the domains tuple)
 // =============================================================================
+
+type Domains = typeof domains;
+type AllDomains = Domains[number];
+type ConfigurableDomain = Exclude<AllDomains, { configurable: false }>;
+type SimpleDomain = Exclude<ConfigurableDomain, { key: "colors" }>;
+type SimpleDomainKey = SimpleDomain["key"];
+type DomainByKey<K extends string> = Extract<SimpleDomain, { key: K }>;
+
+/** Maps each simple domain key to its default values type. */
+type DomainDefaultsMap = {
+	[K in SimpleDomainKey]: DomainByKey<K>["defaults"];
+};
+
+// =============================================================================
+// Helper Types
+// =============================================================================
+
+/**
+ * Extracts a domain's config type from TConfig, falling back to TDefault
+ * when the key is not present in TConfig.
+ */
+type GetDomainConfig<
+	TConfig,
+	K extends string,
+	TDefault,
+> = K extends keyof TConfig ? TConfig[K] : TDefault;
 
 /**
  * Resolves which value record to use based on config:
@@ -114,13 +328,19 @@ type UnionToIntersection<U> = (
 	? I
 	: never;
 
+// Variation level types
+type DefaultLightnessLevels = typeof colorLightnessValues;
+type DefaultShadeLevels = typeof colorShadeValues;
+type DefaultTintLevels = typeof colorTintValues;
+type DefaultColors = typeof colorValues;
+
 /**
  * Generates all variation keys for a single color name (distributive over K)
  */
 type ColorVariationsForKey<K> = K extends string
 	? ExportKeys<`color.${K}`, DefaultLightnessLevels, "-"> &
-			ExportKeys<`color.${K}-shade`, DefaultShadeLevels, "-"> &
-			ExportKeys<`color.${K}-tint`, DefaultTintLevels, "-">
+			ExportKeys<`color.${K}`, DefaultShadeLevels, "-"> &
+			ExportKeys<`color.${K}`, DefaultTintLevels, "-">
 	: never;
 
 /**
@@ -130,20 +350,27 @@ type AllColorVariations<TColors extends Record<string, string>> =
 	UnionToIntersection<ColorVariationsForKey<keyof TColors>>;
 
 /**
+ * Resolves which color record to use based on config and merge flag.
+ */
+type ResolvedColors<TColors, TMerge extends boolean> = TColors extends Record<
+	string,
+	string
+>
+	? TMerge extends true
+		? Omit<DefaultColors, keyof TColors> & TColors
+		: TColors
+	: DefaultColors;
+
+/**
  * Color result type that strongly types base colors and all variations.
  */
 type ColorResult<
-	TColors extends Record<string, string> | false,
+	TColors,
 	TMerge extends boolean = false,
 > = TColors extends false
 	? undefined
-	: TColors extends Record<string, string>
-		? TMerge extends true
-			? ExportKeys<"color", Omit<DefaultColors, keyof TColors> & TColors, "."> &
-					AllColorVariations<Omit<DefaultColors, keyof TColors> & TColors>
-			: ExportKeys<"color", TColors, "."> & AllColorVariations<TColors>
-		: ExportKeys<"color", DefaultColors, "."> &
-				AllColorVariations<DefaultColors>;
+	: ExportKeys<"color", ResolvedColors<TColors, TMerge>, "."> &
+			AllColorVariations<ResolvedColors<TColors, TMerge>>;
 
 // =============================================================================
 // Configuration Types
@@ -185,132 +412,91 @@ export type MetaConfigWithMerge<TMerge extends boolean = false> = Omit<
 
 /**
  * Configuration options for the default design tokens preset.
- * Generic type parameters capture the shape of each domain's configuration.
  *
  * - Omit or set to `undefined` to use default values
  * - Set to `false` to disable the domain entirely
  * - Provide a custom record to use custom values
  * - Set `meta.merge` to `true` to merge custom values with defaults
  */
-export interface DesignTokensPresetConfig<
-	TSpacing extends Record<string, TokenValue> | false = DefaultSpacing,
-	TBorderWidth extends Record<string, TokenValue> | false = DefaultBorderWidth,
-	TBorderRadius extends
-		| Record<string, TokenValue>
-		| false = DefaultBorderRadius,
-	TBorderStyle extends Record<string, TokenValue> | false = DefaultBorderStyle,
-	TBoxShadow extends Record<string, TokenValue> | false = DefaultBoxShadow,
-	TColors extends Record<string, string> | false = DefaultColors,
-	TFontFamily extends Record<string, TokenValue> | false = DefaultFontFamily,
-	TFontSize extends Record<string, TokenValue> | false = DefaultFontSize,
-	TFontStyle extends Record<string, TokenValue> | false = DefaultFontStyle,
-	TFontWeight extends Record<string, TokenValue> | false = DefaultFontWeight,
-	TLineHeight extends Record<string, TokenValue> | false = DefaultLineHeight,
-	TLetterSpacing extends
-		| Record<string, TokenValue>
-		| false = DefaultLetterSpacing,
-	TScale extends Record<string, TokenValue> | false = DefaultScale,
-	TBreakpoint extends Record<string, number> | false = DefaultBreakpoint,
-	TEasing extends Record<string, TokenValue> | false = DefaultEasing,
-	TMerge extends boolean = false,
-> {
-	spacing?: TSpacing;
-	borderWidth?: TBorderWidth;
-	borderRadius?: TBorderRadius;
-	borderStyle?: TBorderStyle;
-	boxShadow?: TBoxShadow;
-	colors?: TColors;
+export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
+	spacing?: Record<string, TokenValue> | false;
+	borderColor?: Record<string, TokenValue> | false;
+	borderWidth?: Record<string, TokenValue> | false;
+	borderRadius?: Record<string, TokenValue> | false;
+	borderStyle?: Record<string, TokenValue> | false;
+	boxShadow?: Record<string, TokenValue> | false;
+	zIndex?: Record<string, TokenValue> | false;
+	colors?: Record<string, string> | false;
 	meta?: MetaConfigWithMerge<TMerge>;
-	fontFamily?: TFontFamily;
-	fontSize?: TFontSize;
-	fontStyle?: TFontStyle;
-	fontWeight?: TFontWeight;
-	lineHeight?: TLineHeight;
-	letterSpacing?: TLetterSpacing;
-	scale?: TScale;
+	fontFamily?: Record<string, TokenValue> | false;
+	fontSize?: Record<string, TokenValue> | false;
+	fontStyle?: Record<string, TokenValue> | false;
+	fontWeight?: Record<string, TokenValue> | false;
+	lineHeight?: Record<string, TokenValue> | false;
+	letterSpacing?: Record<string, TokenValue> | false;
+	scale?: Record<string, TokenValue> | false;
 	scalePowers?: readonly number[];
-	breakpoint?: TBreakpoint;
-	easing?: TEasing;
+	breakpoint?: Record<string, number> | false;
+	easing?: Record<string, TokenValue> | false;
+	duration?: Record<string, TokenValue> | false;
+	themes?: Record<string, ThemeTokenOverrides>;
 }
 
 /**
- * Result structure for the default design tokens preset.
- * The result type reflects the exact structure based on config generics.
+ * Per-theme token overrides derived from DesignTokensPresetConfig:
+ * - No `false` values (themes override, not disable)
+ * - No `meta`, `scalePowers`, or `themes` (shared config, not per-theme)
  */
-export interface DesignTokensPresetResult<
-	TSpacing extends Record<string, TokenValue> | false = DefaultSpacing,
-	TBorderWidth extends Record<string, TokenValue> | false = DefaultBorderWidth,
-	TBorderRadius extends
-		| Record<string, TokenValue>
-		| false = DefaultBorderRadius,
-	TBorderStyle extends Record<string, TokenValue> | false = DefaultBorderStyle,
-	TBoxShadow extends Record<string, TokenValue> | false = DefaultBoxShadow,
-	TColors extends Record<string, string> | false = DefaultColors,
-	TFontFamily extends Record<string, TokenValue> | false = DefaultFontFamily,
-	TFontSize extends Record<string, TokenValue> | false = DefaultFontSize,
-	TFontStyle extends Record<string, TokenValue> | false = DefaultFontStyle,
-	TFontWeight extends Record<string, TokenValue> | false = DefaultFontWeight,
-	TLineHeight extends Record<string, TokenValue> | false = DefaultLineHeight,
-	TLetterSpacing extends
-		| Record<string, TokenValue>
-		| false = DefaultLetterSpacing,
-	TScale extends Record<string, TokenValue> | false = DefaultScale,
-	TBreakpoint extends Record<string, number> | false = DefaultBreakpoint,
-	TEasing extends Record<string, TokenValue> | false = DefaultEasing,
+type ConfigurableDomainKeys = Exclude<
+	keyof DesignTokensPresetConfig,
+	"meta" | "scalePowers" | "themes"
+>;
+
+export type ThemeTokenOverrides = {
+	[K in ConfigurableDomainKeys]?: Exclude<DesignTokensPresetConfig[K], false>;
+};
+
+// =============================================================================
+// Result Type (mapped over domain maps)
+// =============================================================================
+
+/**
+ * Result for simple domains, generated via mapped type over the domains tuple.
+ * Maps kebab-case domain keys to camelCase result keys.
+ */
+type SimpleDomainResults<TConfig, TMerge extends boolean> = {
+	[K in SimpleDomainKey as CamelCase<K>]: TokenResult<
+		GetDomainConfig<TConfig, CamelCase<K>, DomainDefaultsMap[K]>,
+		K,
+		DomainDefaultsMap[K],
+		TMerge
+	>;
+};
+
+/**
+ * Result structure for the default design tokens preset.
+ * Uses mapped types for simple domains, with special handling for colors and scalePowers.
+ */
+export type DesignTokensPresetResult<
+	TConfig = {},
 	TMerge extends boolean = false,
-> {
-	spacing: TokenResult<TSpacing, "spacing", DefaultSpacing, TMerge>;
-	borderWidth: TokenResult<
-		TBorderWidth,
-		"border-width",
-		DefaultBorderWidth,
+> = SimpleDomainResults<TConfig, TMerge> & {
+	colors: ColorResult<
+		GetDomainConfig<TConfig, "colors", DefaultColors>,
 		TMerge
 	>;
-	borderRadius: TokenResult<
-		TBorderRadius,
-		"border-radius",
-		DefaultBorderRadius,
-		TMerge
-	>;
-	borderStyle: TokenResult<
-		TBorderStyle,
-		"border-style",
-		DefaultBorderStyle,
-		TMerge
-	>;
-	boxShadow: TokenResult<TBoxShadow, "box-shadow", DefaultBoxShadow, TMerge>;
-	colors: ColorResult<TColors, TMerge>;
-	fontFamily: TokenResult<
-		TFontFamily,
-		"font-family",
-		DefaultFontFamily,
-		TMerge
-	>;
-	fontSize: TokenResult<TFontSize, "font-size", DefaultFontSize, TMerge>;
-	fontStyle: TokenResult<TFontStyle, "font-style", DefaultFontStyle, TMerge>;
-	fontWeight: TokenResult<
-		TFontWeight,
-		"font-weight",
-		DefaultFontWeight,
-		TMerge
-	>;
-	lineHeight: TokenResult<
-		TLineHeight,
-		"line-height",
-		DefaultLineHeight,
-		TMerge
-	>;
-	letterSpacing: TokenResult<
-		TLetterSpacing,
-		"letter-spacing",
-		DefaultLetterSpacing,
-		TMerge
-	>;
-	scale: TokenResult<TScale, "scale", DefaultScale, TMerge>;
-	scalePowers: TScale extends false ? undefined : Record<number, TokenValue>;
-	breakpoint: TokenResult<TBreakpoint, "breakpoint", DefaultBreakpoint, TMerge>;
-	easing: TokenResult<TEasing, "easing", DefaultEasing, TMerge>;
-}
+	scalePowers: GetDomainConfig<
+		TConfig,
+		"scale",
+		typeof scaleValues
+	> extends false
+		? undefined
+		: Record<number, TokenValue>;
+};
+
+// =============================================================================
+// Runtime Helpers
+// =============================================================================
 
 /**
  * Default colors meta configuration
@@ -325,17 +511,40 @@ export const defaultColorsMetaConfig: Required<ColorsMetaConfig> = {
 };
 
 /**
+ * Collect all unique non-default theme names from config and domain-level defaults.
+ */
+function collectThemeNames(
+	configThemes: Record<string, ThemeTokenOverrides> | undefined,
+): Set<string> {
+	const names = new Set<string>();
+
+	if (configThemes) {
+		for (const name of Object.keys(configThemes)) {
+			if (name !== "default") names.add(name);
+		}
+	}
+
+	for (const { themes: domainThemes } of domains) {
+		if (domainThemes) {
+			for (const name of Object.keys(domainThemes)) {
+				names.add(name);
+			}
+		}
+	}
+
+	return names;
+}
+
+// =============================================================================
+// Main Preset Function
+// =============================================================================
+
+/**
  * Create a complete design token system with sensible defaults.
  *
  * @param s - The Styleframe instance
  * @param config - Configuration options for customizing the preset
  * @returns An object containing all generated design token variables
- *
- * @remarks
- * **Scale Powers**: The `scalePowers` result is only generated when the `scale` config
- * includes a key named `scale` (either via defaults or a custom config with `{ default: "@scale", scale: "1.2" }`).
- * If you provide a custom scale config without a `scale` key (e.g., `{ ratio: "1.25" }`),
- * `scalePowers` will be `undefined`.
  *
  * @example
  * ```typescript
@@ -373,322 +582,87 @@ export const defaultColorsMetaConfig: Required<ColorsMetaConfig> = {
  * });
  * ```
  */
-export function useDesignTokensPreset<
-	TSpacing extends Record<string, TokenValue> | false = DefaultSpacing,
-	TBorderWidth extends Record<string, TokenValue> | false = DefaultBorderWidth,
-	TBorderRadius extends
-		| Record<string, TokenValue>
-		| false = DefaultBorderRadius,
-	TBorderStyle extends Record<string, TokenValue> | false = DefaultBorderStyle,
-	TBoxShadow extends Record<string, TokenValue> | false = DefaultBoxShadow,
-	TColors extends Record<string, string> | false = DefaultColors,
-	TFontFamily extends Record<string, TokenValue> | false = DefaultFontFamily,
-	TFontSize extends Record<string, TokenValue> | false = DefaultFontSize,
-	TFontStyle extends Record<string, TokenValue> | false = DefaultFontStyle,
-	TFontWeight extends Record<string, TokenValue> | false = DefaultFontWeight,
-	TLineHeight extends Record<string, TokenValue> | false = DefaultLineHeight,
-	TLetterSpacing extends
-		| Record<string, TokenValue>
-		| false = DefaultLetterSpacing,
-	TScale extends Record<string, TokenValue> | false = DefaultScale,
-	TBreakpoint extends Record<string, number> | false = DefaultBreakpoint,
-	TEasing extends Record<string, TokenValue> | false = DefaultEasing,
-	TMerge extends boolean = false,
->(
+export function useDesignTokensPreset(
 	s: Styleframe,
-	config: DesignTokensPresetConfig<
-		TSpacing,
-		TBorderWidth,
-		TBorderRadius,
-		TBorderStyle,
-		TBoxShadow,
-		TColors,
-		TFontFamily,
-		TFontSize,
-		TFontStyle,
-		TFontWeight,
-		TLineHeight,
-		TLetterSpacing,
-		TScale,
-		TBreakpoint,
-		TEasing,
-		TMerge
-	> = {} as DesignTokensPresetConfig<
-		TSpacing,
-		TBorderWidth,
-		TBorderRadius,
-		TBorderStyle,
-		TBoxShadow,
-		TColors,
-		TFontFamily,
-		TFontSize,
-		TFontStyle,
-		TFontWeight,
-		TLineHeight,
-		TLetterSpacing,
-		TScale,
-		TBreakpoint,
-		TEasing,
-		TMerge
-	>,
-): DesignTokensPresetResult<
-	TSpacing,
-	TBorderWidth,
-	TBorderRadius,
-	TBorderStyle,
-	TBoxShadow,
-	TColors,
-	TFontFamily,
-	TFontSize,
-	TFontStyle,
-	TFontWeight,
-	TLineHeight,
-	TLetterSpacing,
-	TScale,
-	TBreakpoint,
-	TEasing,
-	TMerge
-> {
+): DesignTokensPresetResult<{}, false>;
+export function useDesignTokensPreset<
+	TConfig extends DesignTokensPresetConfig<TMerge>,
+	TMerge extends boolean = false,
+>(s: Styleframe, config: TConfig): DesignTokensPresetResult<TConfig, TMerge>;
+export function useDesignTokensPreset(
+	s: Styleframe,
+	config: DesignTokensPresetConfig<boolean> = {},
+): DesignTokensPresetResult {
 	const shouldMerge = config.meta?.merge === true;
+	const defaultThemeOverrides = config.themes?.default;
 
-	/**
-	 * Helper to resolve values with optional merge behavior
-	 */
-	function resolveValues<
-		TDefault extends Record<string, TokenValue | string | number>,
-		TConfig extends Record<string, TokenValue | string | number>,
-	>(
-		configValue: TConfig | false | undefined,
-		defaultValue: TDefault,
-	): TDefault | TConfig | (TDefault & TConfig) | undefined {
-		if (configValue === false) {
-			return undefined;
-		}
+	const result: Record<
+		string,
+		Record<string, Variable | TokenValue> | undefined
+	> = {};
+	const context: DomainProcessContext = { result, config };
 
-		if (configValue === undefined) {
-			return defaultValue;
-		}
+	for (const entry of domains) {
+		const configKey = camelCase(entry.key);
 
-		if (shouldMerge) {
-			return { ...defaultValue, ...configValue } as TDefault & TConfig;
-		}
-
-		return configValue;
-	}
-
-	// 1. Scale + ScalePowers
-	let scale: Record<string, Variable> | undefined;
-	let scalePowers: Record<number, TokenValue> | undefined;
-
-	const resolvedScaleValues = resolveValues(config.scale, scaleValues);
-	if (resolvedScaleValues !== undefined) {
-		const scaleResult = useScale(s, resolvedScaleValues, { default: true });
-		scale = scaleResult;
-
-		if ("scale" in scaleResult) {
-			scalePowers = useScalePowers(
+		if (entry.configurable === false) {
+			result[configKey] = entry.composable(
 				s,
-				scaleResult.scale as Variable,
-				config.scalePowers ?? scalePowerValues,
+				entry.defaults,
+				{ default: true },
+				context,
 			);
+			continue;
 		}
+
+		const configValue =
+			(config as Record<string, unknown>)[configKey] ??
+			defaultThemeOverrides?.[configKey as keyof ThemeTokenOverrides];
+
+		if (configValue === false) {
+			result[configKey] = undefined;
+			continue;
+		}
+
+		const values =
+			configValue != null
+				? shouldMerge
+					? {
+							...entry.defaults,
+							...(configValue as Record<string, TokenValue>),
+						}
+					: (configValue as Record<string, TokenValue>)
+				: entry.defaults;
+
+		result[configKey] = entry.composable(s, values, { default: true }, context);
 	}
 
-	// 2. Spacing
-	const resolvedSpacingValues = resolveValues(config.spacing, spacingValues);
-	const spacing =
-		resolvedSpacingValues !== undefined
-			? useSpacing(s, resolvedSpacingValues, { default: true })
-			: undefined;
+	// Apply non-default themes (from both config and domain-level defaults)
+	const allThemeNames = collectThemeNames(config.themes);
+	for (const themeName of allThemeNames) {
+		s.theme(themeName, (ctx) => {
+			const userOverrides =
+				config.themes?.[themeName] ?? ({} as ThemeTokenOverrides);
 
-	// 3. Border tokens
-	const resolvedBorderWidthValues = resolveValues(
-		config.borderWidth,
-		borderWidthValues,
-	);
-	const borderWidth =
-		resolvedBorderWidthValues !== undefined
-			? useBorderWidth(s, resolvedBorderWidthValues, { default: true })
-			: undefined;
+			for (const entry of domains) {
+				if (entry.configurable === false) continue;
 
-	const resolvedBorderRadiusValues = resolveValues(
-		config.borderRadius,
-		borderRadiusValues,
-	);
-	const borderRadius =
-		resolvedBorderRadiusValues !== undefined
-			? useBorderRadius(s, resolvedBorderRadiusValues, { default: true })
-			: undefined;
+				const configKey = camelCase(entry.key);
+				const themeValues =
+					userOverrides[configKey as keyof ThemeTokenOverrides] ??
+					entry.themes?.[themeName];
 
-	const resolvedBorderStyleValues = resolveValues(
-		config.borderStyle,
-		borderStyleValues,
-	);
-	const borderStyle =
-		resolvedBorderStyleValues !== undefined
-			? useBorderStyle(s, resolvedBorderStyleValues, { default: true })
-			: undefined;
-
-	// 4. Box shadow
-	const resolvedBoxShadowValues = resolveValues(
-		config.boxShadow,
-		boxShadowValues,
-	);
-	const boxShadow =
-		resolvedBoxShadowValues !== undefined
-			? useBoxShadow(s, resolvedBoxShadowValues, { default: true })
-			: undefined;
-
-	// 5. Colors
-	let colors: Record<string, Variable> | undefined;
-	if (config.colors !== false) {
-		const resolvedColorValues = resolveValues(
-			config.colors,
-			colorValues,
-		) as Record<string, string>;
-		const colorsMetaConfig = {
-			...defaultColorsMetaConfig,
-			...config.meta?.colors,
-		};
-
-		const baseColors = useColor(s, resolvedColorValues, { default: true });
-		colors = { ...baseColors };
-
-		for (const colorVariable of Object.values(baseColors) as Variable[]) {
-			if (colorsMetaConfig.generateLightness) {
-				const lightnessVars = useColorLightness(
-					s,
-					colorVariable,
-					colorsMetaConfig.lightnessLevels,
-					{ default: true },
-				);
-				colors = { ...colors, ...lightnessVars };
+				if (themeValues) {
+					entry.composable(
+						ctx,
+						themeValues as Record<string, TokenValue>,
+						{ default: false },
+						{ result: {}, config },
+					);
+				}
 			}
-
-			if (colorsMetaConfig.generateShades) {
-				const shadeVars = useColorShade(
-					s,
-					colorVariable,
-					colorsMetaConfig.shadeLevels,
-					{ default: true },
-				);
-				colors = { ...colors, ...shadeVars };
-			}
-
-			if (colorsMetaConfig.generateTints) {
-				const tintVars = useColorTint(
-					s,
-					colorVariable,
-					colorsMetaConfig.tintLevels,
-					{ default: true },
-				);
-				colors = { ...colors, ...tintVars };
-			}
-		}
+		});
 	}
 
-	// 6. Typography
-	const resolvedFontFamilyValues = resolveValues(
-		config.fontFamily,
-		fontFamilyValues,
-	);
-	const fontFamily =
-		resolvedFontFamilyValues !== undefined
-			? useFontFamily(s, resolvedFontFamilyValues, { default: true })
-			: undefined;
-
-	const resolvedFontSizeValues = resolveValues(config.fontSize, fontSizeValues);
-	const fontSize =
-		resolvedFontSizeValues !== undefined
-			? useFontSize(s, resolvedFontSizeValues, { default: true })
-			: undefined;
-
-	const resolvedFontStyleValues = resolveValues(
-		config.fontStyle,
-		fontStyleValues,
-	);
-	const fontStyle =
-		resolvedFontStyleValues !== undefined
-			? useFontStyle(s, resolvedFontStyleValues, { default: true })
-			: undefined;
-
-	const resolvedFontWeightValues = resolveValues(
-		config.fontWeight,
-		fontWeightValues,
-	);
-	const fontWeight =
-		resolvedFontWeightValues !== undefined
-			? useFontWeight(s, resolvedFontWeightValues, { default: true })
-			: undefined;
-
-	const resolvedLineHeightValues = resolveValues(
-		config.lineHeight,
-		lineHeightValues,
-	);
-	const lineHeight =
-		resolvedLineHeightValues !== undefined
-			? useLineHeight(s, resolvedLineHeightValues, { default: true })
-			: undefined;
-
-	const resolvedLetterSpacingValues = resolveValues(
-		config.letterSpacing,
-		letterSpacingValues,
-	);
-	const letterSpacing =
-		resolvedLetterSpacingValues !== undefined
-			? useLetterSpacing(s, resolvedLetterSpacingValues, { default: true })
-			: undefined;
-
-	// 7. Breakpoints
-	const resolvedBreakpointValues = resolveValues(
-		config.breakpoint,
-		breakpointValues,
-	);
-	const breakpoint =
-		resolvedBreakpointValues !== undefined
-			? useBreakpoint(s, resolvedBreakpointValues, { default: true })
-			: undefined;
-
-	// 8. Easing
-	const resolvedEasingValues = resolveValues(config.easing, easingValues);
-	const easing =
-		resolvedEasingValues !== undefined
-			? useEasing(s, resolvedEasingValues, { default: true })
-			: undefined;
-
-	return {
-		scale,
-		scalePowers,
-		spacing,
-		borderWidth,
-		borderRadius,
-		borderStyle,
-		boxShadow,
-		colors,
-		fontFamily,
-		fontSize,
-		fontStyle,
-		fontWeight,
-		lineHeight,
-		letterSpacing,
-		breakpoint,
-		easing,
-	} as DesignTokensPresetResult<
-		TSpacing,
-		TBorderWidth,
-		TBorderRadius,
-		TBorderStyle,
-		TBoxShadow,
-		TColors,
-		TFontFamily,
-		TFontSize,
-		TFontStyle,
-		TFontWeight,
-		TLineHeight,
-		TLetterSpacing,
-		TScale,
-		TBreakpoint,
-		TEasing,
-		TMerge
-	>;
+	return result as DesignTokensPresetResult;
 }

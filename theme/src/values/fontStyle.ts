@@ -1,7 +1,7 @@
 export const fontStyleValues = {
-	default: "@normal",
+	default: "@font-style.normal",
 	italic: "italic",
 	oblique: "oblique",
 	normal: "normal",
 	inherit: "inherit",
-};
+} as const;

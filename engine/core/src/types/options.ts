@@ -1,10 +1,12 @@
 export type VariableNameFn = (options: { name: string }) => string;
 
-export type UtilitySelectorFn = (options: {
+export interface UtilitySelectorOptions {
 	name: string;
 	value: string;
 	modifiers: string[];
-}) => string;
+}
+
+export type UtilitySelectorFn = (options: UtilitySelectorOptions) => string;
 
 export type ThemeSelectorFn = (options: { name: string }) => string;
 

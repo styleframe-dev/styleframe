@@ -15,7 +15,24 @@ const dirname =
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
-	plugins: [styleframe(), vue()],
+	plugins: [
+		styleframe({
+			scanner: {
+				content: ["./src/**/*.stories.{ts,tsx}"],
+			},
+			resolve: {
+				alias: {
+					"@styleframe/theme": "../../theme/src/index.ts",
+				},
+			},
+		}),
+		vue(),
+	],
+	resolve: {
+		alias: {
+			"@styleframe/theme": path.resolve(dirname, "../../theme/src/index.ts"),
+		},
+	},
 	test: {
 		projects: [
 			{

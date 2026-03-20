@@ -1,5 +1,5 @@
 export const spacingValues = {
-	default: "@md",
+	default: "@spacing.md",
 	"2xs": "0.25rem",
 	xs: "0.5rem",
 	sm: "0.75rem",
@@ -8,4 +8,4 @@ export const spacingValues = {
 	xl: "2rem",
 	"2xl": "3rem",
 	"3xl": "4rem",
-};
+} as const;

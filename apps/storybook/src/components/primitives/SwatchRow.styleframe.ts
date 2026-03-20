@@ -1,49 +1,36 @@
 import { styleframe } from "virtual:styleframe";
-import {
-	useSwatchColors,
-	useSwatchSpacing,
-	useSwatchTypography,
-	useSwatchDimensions,
-} from "./tokens.styleframe";
 
 const s = styleframe();
+const { selector } = s;
 
-const { swatchColorPrimary, swatchColorSecondary, swatchColorBackground } =
-	useSwatchColors(s);
-const { swatchGapMd, swatchPaddingRow } = useSwatchSpacing(s);
-const { swatchFontSize, swatchFontWeightBold, swatchFontFamilyMono } =
-	useSwatchTypography(s);
-const { swatchBorderRadius, swatchNameMinWidth, swatchValueMinWidth } =
-	useSwatchDimensions(s);
-
-s.selector(".swatch-row", {
+selector(".swatch-row", {
 	display: "flex",
 	alignItems: "center",
-	gap: s.ref(swatchGapMd),
-	padding: s.ref(swatchPaddingRow),
-	borderRadius: s.ref(swatchBorderRadius),
-	background: s.ref(swatchColorBackground),
+	gap: "@spacing",
+	padding: "@spacing.sm @spacing",
+	borderRadius: "@border-radius.lg",
+	background: "@color.surface",
 });
 
-s.selector(".swatch-row__name", {
-	fontWeight: s.ref(swatchFontWeightBold),
-	fontSize: s.ref(swatchFontSize),
-	color: s.ref(swatchColorPrimary),
-	minWidth: s.ref(swatchNameMinWidth),
+selector(".swatch-row__name", {
+	fontWeight: "@font-weight.semibold",
+	fontSize: "@font-size.lg",
+	color: "@color.primary",
+	minWidth: "calc(@spacing * 3)",
 });
 
-s.selector(".swatch-row__name--uppercase", {
+selector(".swatch-row__name--uppercase", {
 	textTransform: "uppercase",
 });
 
-s.selector(".swatch-row__value", {
-	fontSize: s.ref(swatchFontSize),
-	color: s.ref(swatchColorSecondary),
-	fontFamily: s.ref(swatchFontFamilyMono),
-	minWidth: s.ref(swatchValueMinWidth),
+selector(".swatch-row__value", {
+	fontSize: "@font-size.lg",
+	color: "@color.secondary",
+	fontFamily: "@font-family.mono",
+	minWidth: "calc(@spacing * 4)",
 });
 
-s.selector(".swatch-row__content", {
+selector(".swatch-row__content", {
 	flex: "1",
 	display: "flex",
 	alignItems: "center",

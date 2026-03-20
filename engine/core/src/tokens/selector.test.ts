@@ -23,6 +23,8 @@ describe("createSelectorFunction", () => {
 
 			expect(result).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".button",
 				variables: [],
 				declarations: {
@@ -349,6 +351,7 @@ describe("createSelectorFunction", () => {
 		it("should work when root is a selector", () => {
 			const parentSelectorInstance: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: ".parent",
 				variables: [],
 				declarations: {},
@@ -403,6 +406,53 @@ describe("createSelectorFunction", () => {
 					name: "primary",
 					fallback: undefined,
 				},
+			});
+		});
+	});
+
+	describe("@ reference notation", () => {
+		it("should resolve @-prefixed values to variable references", () => {
+			const s = styleframe();
+
+			s.variable("spacing.md", "1rem");
+			s.variable("font-size.sm", "0.875rem");
+			s.variable("color.primary", "#006cff");
+
+			const result = s.selector(".badge", {
+				gap: "@spacing.md",
+				fontSize: "@font-size.sm",
+				color: "@color.primary",
+			});
+
+			expect(result.declarations).toEqual({
+				gap: { type: "reference", name: "spacing.md" },
+				fontSize: { type: "reference", name: "font-size.sm" },
+				color: { type: "reference", name: "color.primary" },
+			});
+		});
+
+		it("should resolve @ references in nested selectors", () => {
+			const s = styleframe();
+
+			s.variable("spacing.md", "1rem");
+			s.variable("color.primary", "#006cff");
+
+			const result = s.selector(".button", {
+				padding: "@spacing.md",
+				"&:hover": {
+					color: "@color.primary",
+				},
+			});
+
+			expect(result.declarations).toEqual({
+				padding: { type: "reference", name: "spacing.md" },
+			});
+
+			const hoverChild = result.children
+				.filter(isSelector)
+				.find((child) => child.query === "&:hover");
+			expect(hoverChild?.declarations).toEqual({
+				color: { type: "reference", name: "color.primary" },
 			});
 		});
 	});

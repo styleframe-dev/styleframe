@@ -18,6 +18,8 @@ export interface LoadModuleOptions {
 	alias?: Record<string, string>;
 	/** Whether to validate that default export is a Styleframe instance (default: true) */
 	validateInstance?: boolean;
+	/** Optional shared jiti instance to reuse across multiple loads */
+	jiti?: import("jiti").Jiti;
 }
 
 /**

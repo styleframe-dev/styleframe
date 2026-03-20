@@ -4,4 +4,4 @@
 export const forcedColorAdjustValues = {
 	auto: "auto",
 	none: "none",
-};
+} as const;

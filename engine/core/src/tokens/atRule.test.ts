@@ -35,6 +35,8 @@ describe("createAtRuleFunction", () => {
 
 			expect(result).toEqual({
 				type: "at-rule",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "supports",
 				rule: "(display: grid)",
 				variables: [],
@@ -42,6 +44,8 @@ describe("createAtRuleFunction", () => {
 				children: [
 					{
 						type: "selector",
+						id: expect.any(String),
+						parentId: expect.any(String),
 						query: ".grid-container",
 						variables: [],
 						declarations: {
@@ -64,6 +68,8 @@ describe("createAtRuleFunction", () => {
 
 			expect(result).toEqual({
 				type: "at-rule",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "font-face",
 				rule: "",
 				variables: [],
@@ -82,6 +88,8 @@ describe("createAtRuleFunction", () => {
 
 			expect(result).toEqual({
 				type: "at-rule",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "import",
 				rule: "url('styles.css')",
 				variables: [],
@@ -137,6 +145,8 @@ describe("createAtRuleFunction", () => {
 			expect(result.rule).toBe("(display: grid) and (gap: 1rem)");
 			expect(result.children[0]).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".modern-grid",
 				variables: [],
 				declarations: {
@@ -209,6 +219,8 @@ describe("createAtRuleFunction", () => {
 			expect(result.rule).toBe("");
 			expect(result.children[0]).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".responsive-element",
 				variables: [],
 				declarations: {
@@ -244,6 +256,8 @@ describe("createAtRuleFunction", () => {
 			expect(result.rule).toBe("base");
 			expect(result.children[0]).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: "body",
 				variables: [],
 				declarations: {
@@ -337,6 +351,8 @@ describe("createAtRuleFunction", () => {
 
 			expect(result.children[0]).toEqual({
 				type: "at-rule",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(min-width: 768px)",
 				variables: [],
@@ -411,6 +427,7 @@ describe("createMediaFunction", () => {
 		root = createRoot();
 		selector = {
 			type: "selector",
+			id: "test-id",
 			query: ".test",
 			variables: [],
 			declarations: {},
@@ -430,6 +447,8 @@ describe("createMediaFunction", () => {
 
 			expect(result).toEqual({
 				type: "at-rule",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(min-width: 768px)",
 				variables: [],
@@ -437,6 +456,8 @@ describe("createMediaFunction", () => {
 				children: [
 					{
 						type: "selector",
+						id: expect.any(String),
+						parentId: expect.any(String),
 						query: ".container",
 						variables: [],
 						declarations: {
@@ -468,6 +489,8 @@ describe("createMediaFunction", () => {
 			expect(result.children).toHaveLength(1);
 			expect(result.children[0]).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".text",
 				variables: [],
 				declarations: {
@@ -485,6 +508,8 @@ describe("createMediaFunction", () => {
 
 			expect(result).toEqual({
 				type: "at-rule",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(max-width: 767px)",
 				variables: [],
@@ -527,6 +552,8 @@ describe("createMediaFunction", () => {
 
 			expect(result.children[0]).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".root-selector",
 				variables: [],
 				declarations: {
@@ -567,6 +594,8 @@ describe("createMediaFunction", () => {
 
 			expect(result.children[0]).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".media-selector",
 				variables: [],
 				declarations: {
@@ -585,6 +614,8 @@ describe("createMediaFunction", () => {
 
 			expect(result.children[0]).toEqual({
 				type: "at-rule",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(orientation: landscape)",
 				variables: [],
@@ -665,6 +696,8 @@ describe("createMediaFunction", () => {
 
 			expect(result.children[0]).toEqual({
 				type: "at-rule",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(orientation: portrait)",
 				variables: [],
@@ -690,6 +723,8 @@ describe("createMediaFunction", () => {
 			expect(nestedMedia.rule).toBe("(max-width: 1023px)");
 			expect(nestedMedia.children[0]).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".nested-selector",
 				variables: [],
 				declarations: {
@@ -755,6 +790,8 @@ describe("createMediaFunction", () => {
 
 			expect(result.children[0]).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".responsive-text",
 				variables: [],
 				declarations: {
@@ -775,6 +812,8 @@ describe("createMediaFunction", () => {
 
 			expect(result.children[0]).toEqual({
 				type: "selector",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				query: ".grid",
 				variables: [],
 				declarations: {
@@ -878,6 +917,8 @@ describe("createMediaFunction", () => {
 
 			expect(result).toEqual({
 				type: "at-rule",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				identifier: "media",
 				rule: "(min-width: 768px)",
 				variables: [],
@@ -900,6 +941,7 @@ describe("createMediaFunction", () => {
 			const context1 = createRoot();
 			const context2: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: ".different",
 				variables: [],
 				declarations: {},
@@ -941,22 +983,20 @@ describe("createKeyframesFunction", () => {
 			},
 		});
 
-		expect(fadeInKeyframes).toEqual({
-			type: "at-rule",
-			identifier: "keyframes",
-			rule: "fade-in",
-			children: [],
-			variables: [],
-			declarations: {
-				"0%": {
-					opacity: 0,
-					transform: "translateY(20px)",
-				},
-				"100%": {
-					opacity: 1,
-					transform: "translateY(0)",
-				},
-			},
+		expect(fadeInKeyframes.type).toBe("at-rule");
+		expect(fadeInKeyframes.identifier).toBe("keyframes");
+		expect(fadeInKeyframes.rule).toBe("fade-in");
+		expect(fadeInKeyframes.declarations).toEqual({});
+		expect(fadeInKeyframes.children).toHaveLength(2);
+		expect(fadeInKeyframes.children[0]).toMatchObject({
+			type: "selector",
+			query: "0%",
+			declarations: { opacity: 0, transform: "translateY(20px)" },
+		});
+		expect(fadeInKeyframes.children[1]).toMatchObject({
+			type: "selector",
+			query: "100%",
+			declarations: { opacity: 1, transform: "translateY(0)" },
 		});
 
 		expect(root.children).toContain(fadeInKeyframes);
@@ -986,12 +1026,12 @@ describe("createKeyframesFunction", () => {
 			},
 		});
 
-		expect(Object.keys(bounceKeyframes.declarations)).toHaveLength(5);
-		expect(bounceKeyframes.declarations["0%"]).toBeDefined();
-		expect(bounceKeyframes.declarations["25%"]).toBeDefined();
-		expect(bounceKeyframes.declarations["50%"]).toBeDefined();
-		expect(bounceKeyframes.declarations["75%"]).toBeDefined();
-		expect(bounceKeyframes.declarations["100%"]).toBeDefined();
+		expect(bounceKeyframes.children).toHaveLength(5);
+		expect(bounceKeyframes.children[0]).toMatchObject({ query: "0%" });
+		expect(bounceKeyframes.children[1]).toMatchObject({ query: "25%" });
+		expect(bounceKeyframes.children[2]).toMatchObject({ query: "50%" });
+		expect(bounceKeyframes.children[3]).toMatchObject({ query: "75%" });
+		expect(bounceKeyframes.children[4]).toMatchObject({ query: "100%" });
 	});
 
 	it("should be accessible in the declarations context", () => {
@@ -1004,9 +1044,17 @@ describe("createKeyframesFunction", () => {
 			expect(fadeIn.type).toBe("at-rule");
 			expect(fadeIn.identifier).toBe("keyframes");
 			expect(fadeIn.rule).toBe("fade-in");
-			expect(fadeIn.declarations).toEqual({
-				"0%": { opacity: 0 },
-				"100%": { opacity: 1 },
+			expect(fadeIn.declarations).toEqual({});
+			expect(fadeIn.children).toHaveLength(2);
+			expect(fadeIn.children[0]).toMatchObject({
+				type: "selector",
+				query: "0%",
+				declarations: { opacity: 0 },
+			});
+			expect(fadeIn.children[1]).toMatchObject({
+				type: "selector",
+				query: "100%",
+				declarations: { opacity: 1 },
 			});
 		});
 	});

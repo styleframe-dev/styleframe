@@ -1,6 +1,8 @@
 import type { createRefFunction } from "./tokens";
 import { isRef } from "./typeGuards";
 import type { Reference, TokenValue } from "./types";
+import type { UtilitySelectorFn } from "./types/options";
+import { hashValue } from "./utils/hash";
 
 export interface TransformUtilityKeyOptions {
 	/** Transforms the key used in the utility class name */
@@ -30,12 +32,32 @@ export function transformUtilityKey(
 
 		if (typeof resolvedValue === "string" && resolvedValue[0] === "@") {
 			const variableName = resolvedValue.slice(1);
-			const referenceName =
-				namespaces.length > 0
-					? `${namespaces[0]}.${variableName}`
-					: variableName;
 
-			resolvedKey = replacer(variableName);
+			// Check if the variable name already starts with a namespace prefix
+			// to avoid double-prepending (e.g., "@color.light" with namespace "color"
+			// should resolve to "color.light", not "color.color.light")
+			const matchedNs = namespaces.find(
+				(ns) => variableName === ns || variableName.startsWith(`${ns}.`),
+			);
+
+			let referenceName: string;
+			let keyName: string;
+
+			if (matchedNs) {
+				// Already namespace-prefixed, use as-is
+				referenceName = variableName;
+				keyName = variableName.startsWith(`${matchedNs}.`)
+					? variableName.slice(matchedNs.length + 1)
+					: variableName;
+			} else if (namespaces.length > 0) {
+				referenceName = `${namespaces[0]}.${variableName}`;
+				keyName = variableName;
+			} else {
+				referenceName = variableName;
+				keyName = variableName;
+			}
+
+			resolvedKey = replacer(keyName);
 			resolvedValue = {
 				type: "reference",
 				name: referenceName,
@@ -50,7 +72,12 @@ export function transformUtilityKey(
 			}
 			resolvedKey = replacer(keyName);
 		} else {
-			resolvedKey = `[${value}]`;
+			const trimmedValue = String(value).trim();
+			if (/\s/.test(trimmedValue)) {
+				resolvedKey = hashValue(trimmedValue);
+			} else {
+				resolvedKey = `[${trimmedValue}]`;
+			}
 		}
 
 		return {
@@ -58,3 +85,17 @@ export function transformUtilityKey(
 		};
 	};
 }
+
+export const defaultUtilitySelectorFn: UtilitySelectorFn = ({
+	name,
+	value,
+	modifiers,
+}) => {
+	const parts = [
+		...modifiers,
+		name,
+		...(value === "default" ? [] : [value]),
+	].filter(Boolean);
+
+	return `_${parts.join(":")}`;
+};

@@ -13,6 +13,7 @@ import {
 } from "./atRule";
 import { createCssFunction } from "./css";
 import { createRefFunction } from "./ref";
+import { createPropertyValueResolver } from "./resolve";
 import { createSelectorFunction } from "./selector";
 import { createVariableFunction } from "./variable";
 
@@ -42,6 +43,8 @@ export function createDeclarationsCallbackContext(
 export function parseDeclarationsBlock(
 	declarations: DeclarationsBlock,
 	context: DeclarationsCallbackContext,
+	parent: Container,
+	root: Root,
 ) {
 	for (const key in declarations) {
 		// If the key represents a selector or media query, remove it and add it as a separate declaration
@@ -57,12 +60,29 @@ export function parseDeclarationsBlock(
 				context.atRule(identifier, rule, atRuleDeclarations);
 				delete declarations[key];
 			}
-		} else if (/^[.&:]/.test(key)) {
-			// If the key starts with a special character, treat it as a nested selector
+		} else if (
+			/^[.&:]/.test(key) ||
+			/^\d+%$/.test(key) ||
+			key === "from" ||
+			key === "to"
+		) {
+			// If the key starts with a special character or is a keyframe selector, treat it as a nested selector
 			const nested = declarations[key] as DeclarationsBlock;
 			if (typeof nested === "object") {
 				context.selector(key, nested);
 				delete declarations[key];
+			}
+		}
+	}
+
+	// Resolve @-prefixed string values to variable references
+	const resolvePropertyValue = createPropertyValueResolver(parent, root);
+	for (const key in declarations) {
+		const value = declarations[key];
+		if (isTokenValue(value)) {
+			const resolved = resolvePropertyValue(value);
+			if (resolved !== value) {
+				declarations[key] = resolved;
 			}
 		}
 	}

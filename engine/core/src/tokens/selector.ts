@@ -1,11 +1,13 @@
-import { isContainer } from "../typeGuards";
+import { isContainerInput } from "../typeGuards";
 import type {
 	Container,
+	ContainerInput,
 	DeclarationsBlock,
 	DeclarationsCallback,
 	Root,
 	Selector,
 } from "../types";
+import { generateRandomId } from "../utils";
 import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
@@ -16,21 +18,25 @@ export function createSelectorFunction(parent: Container, root: Root) {
 		query: string,
 		declarationsOrCallback:
 			| DeclarationsBlock
-			| Container
+			| ContainerInput
 			| DeclarationsCallback,
 	): Selector {
 		const instance: Selector = {
 			type: "selector",
+			id: generateRandomId("sel-"),
+			parentId: parent.id,
 			query,
 			declarations: {},
 			variables: [],
 			children: [],
 		};
 
+		root._registry.set(instance.id, instance);
+
 		const callbackContext = createDeclarationsCallbackContext(instance, root);
 		if (typeof declarationsOrCallback === "function") {
 			instance.declarations = declarationsOrCallback(callbackContext) ?? {};
-		} else if (isContainer(declarationsOrCallback)) {
+		} else if (isContainerInput(declarationsOrCallback)) {
 			instance.variables = declarationsOrCallback.variables;
 			instance.declarations = declarationsOrCallback.declarations;
 			instance.children = declarationsOrCallback.children;
@@ -38,7 +44,12 @@ export function createSelectorFunction(parent: Container, root: Root) {
 			instance.declarations = declarationsOrCallback;
 		}
 
-		parseDeclarationsBlock(instance.declarations, callbackContext);
+		parseDeclarationsBlock(
+			instance.declarations,
+			callbackContext,
+			instance,
+			root,
+		);
 
 		parent.children.push(instance);
 

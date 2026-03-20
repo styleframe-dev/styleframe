@@ -1,10 +1,5 @@
-import type { Styleframe, Variable } from "@styleframe/core";
-import type { ExportKeys } from "../types";
-import { createUseVariable } from "../utils";
+import { createUseDerivedVariable } from "../utils";
 import { colorLightnessValues } from "../values";
-
-export { colorLightnessValues };
-
 /**
  * Create a set of lightness levels for a color variable.
  *
@@ -30,24 +25,14 @@ export { colorLightnessValues };
  * });
  * ```
  */
-export function useColorLightness<
-	Name extends string,
-	T extends Record<string | number, number>,
->(
-	s: Styleframe,
-	color: Variable<Name>,
-	levels: T,
-	{ default: isDefault = true }: { default?: boolean } = {},
-): ExportKeys<Name, T, "-"> {
-	return createUseVariable(color.name, {
-		defaults: colorLightnessValues,
-		transform: (value) => {
-			if (typeof value !== "number") {
-				return 0;
-			}
+export const useColorLightness = createUseDerivedVariable({
+	defaults: colorLightnessValues,
+	delimiter: "-",
+	transform: (value: number, { s, parent }) => {
+		if (typeof value !== "number") {
+			return 0;
+		}
 
-			return s.css`oklch(from ${s.ref(color)} ${value}% c h / alpha)`;
-		},
-		delimiter: "-" as const,
-	})(s, levels, { default: isDefault });
-}
+		return s.css`oklch(from ${s.ref(parent)} ${value}% c h / alpha)`;
+	},
+});

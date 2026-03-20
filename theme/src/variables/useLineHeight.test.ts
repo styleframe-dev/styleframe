@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { lineHeightValues, useLineHeight } from "./useLineHeight";
+import { useLineHeight } from "./useLineHeight";
+import { lineHeightValues } from "../values";
 
 describe("useLineHeight", () => {
 	it("should create all line height variables with correct names and values", () => {
@@ -17,41 +18,52 @@ describe("useLineHeight", () => {
 
 		expect(lineHeightTight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.tight",
 			value: 1.2,
 		});
 
 		expect(lineHeightSnug).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.snug",
 			value: 1.35,
 		});
 
 		expect(lineHeightNormal).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.normal",
 			value: 1.5,
 		});
 
 		expect(lineHeightRelaxed).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.relaxed",
 			value: 1.65,
 		});
 
 		expect(lineHeightLoose).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height.loose",
 			value: 1.9,
 		});
 
 		expect(lineHeight).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "line-height",
 			value: {
 				type: "reference",
 				name: "line-height.normal",
-				fallback: undefined,
 			},
 		});
 	});
@@ -131,7 +143,6 @@ describe("useLineHeight", () => {
 		expect(customLineHeight.value).toEqual({
 			type: "reference",
 			name: "line-height.loose",
-			fallback: undefined,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -213,11 +224,12 @@ describe("useLineHeight", () => {
 
 			expect(lineHeight).toEqual({
 				type: "variable",
+				id: expect.any(String),
+				parentId: expect.any(String),
 				name: "line-height",
 				value: {
 					type: "reference",
 					name: "line-height.normal",
-					fallback: undefined,
 				},
 			});
 		});
@@ -225,13 +237,13 @@ describe("useLineHeight", () => {
 		it("should allow customizing the default line height", () => {
 			const s = styleframe();
 			const { lineHeight } = useLineHeight(s, {
-				default: "@relaxed",
+				...lineHeightValues,
+				default: "@line-height.relaxed",
 			});
 
 			expect(lineHeight.value).toEqual({
 				type: "reference",
 				name: "line-height.relaxed",
-				fallback: undefined,
 			});
 		});
 
@@ -239,7 +251,7 @@ describe("useLineHeight", () => {
 			const s = styleframe();
 			useLineHeight(s, {
 				...lineHeightValues,
-				default: "@loose",
+				default: "@line-height.loose",
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -261,13 +273,12 @@ describe("useLineHeight", () => {
 				const s = styleframe();
 				const { lineHeight } = useLineHeight(s, {
 					...lineHeightValues,
-					default: `@${lineHeightName}`,
+					default: `@line-height.${lineHeightName}`,
 				});
 
 				expect(lineHeight.value).toEqual({
 					type: "reference",
 					name: `line-height.${lineHeightName}`,
-					fallback: undefined,
 				});
 			}
 		});

@@ -1,5 +1,38 @@
 # @styleframe/theme
 
+## 3.1.0
+
+### Minor Changes
+
+- [#121](https://github.com/styleframe-dev/styleframe/pull/121) [`0242bd6`](https://github.com/styleframe-dev/styleframe/commit/0242bd65028cfc9216ed56e06d52de75ceff4d4b) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add utility modifier composables with auto-registration in useUtilitiesPreset
+  - Add 68 modifiers across 8 categories: pseudo-states, form states, structural, pseudo-elements, media preferences, ARIA states, directional, and other states
+  - Each modifier is individually importable (e.g., `useHoverModifier`, `useDisabledModifier`)
+  - Grouped composables available for convenience (e.g., `usePseudoStateModifiers`)
+  - Per-category configuration to enable/disable modifier groups via `ModifiersConfig`
+
+### Patch Changes
+
+- Updated dependencies [[`fa48802`](https://github.com/styleframe-dev/styleframe/commit/fa488027d32956e20fa26dc92ee1a3b3583671ad)]:
+  - @styleframe/core@3.0.1
+
+## 3.0.0
+
+### Major Changes
+
+- [#117](https://github.com/styleframe-dev/styleframe/pull/117) [`ffe6764`](https://github.com/styleframe-dev/styleframe/commit/ffe6764a2e6c84d5b3cfdf431bf11f17a3f3f118) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Introduce global Styleframe single-instance architecture. Extension files (`*.styleframe.ts`) now share the same instance created in `styleframe.config.ts` instead of creating independent instances. This is a breaking change that affects how styles are imported and composed across files.
+
+### Minor Changes
+
+- [#81](https://github.com/styleframe-dev/styleframe/pull/81) [`266f961`](https://github.com/styleframe-dev/styleframe/commit/266f96143e9ffb47e0e6326d0e5e7cc9d974ab83) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Badge recipe with createUseRecipe factory
+  - Add `useBadgeRecipe` and `useBadgeRecipeBase` recipe composables with color, variant, and size variants
+  - Add `createUseRecipe` factory utility for building reusable, customizable recipe presets
+  - Add `3xs` and `2xs` font-size values
+
+### Patch Changes
+
+- Updated dependencies [[`266f961`](https://github.com/styleframe-dev/styleframe/commit/266f96143e9ffb47e0e6326d0e5e7cc9d974ab83), [`ffe6764`](https://github.com/styleframe-dev/styleframe/commit/ffe6764a2e6c84d5b3cfdf431bf11f17a3f3f118)]:
+  - @styleframe/core@3.0.0
+
 ## 2.5.0
 
 ### Minor Changes

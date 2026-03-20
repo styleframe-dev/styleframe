@@ -99,7 +99,6 @@ describe("useSizeUtility", () => {
 		const expectedRef = {
 			type: "reference",
 			name: "size.full",
-			fallback: undefined,
 		};
 		expect(utility.declarations?.width).toEqual(expectedRef);
 		expect(utility.declarations?.height).toEqual(expectedRef);

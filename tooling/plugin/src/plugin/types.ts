@@ -1,4 +1,5 @@
 import type { TranspileOptions } from "@styleframe/transpiler";
+import type { Extractor, ScannerUtilitiesConfig } from "@styleframe/scanner";
 
 export interface Options {
 	/** Entry file for the global config (default: './styleframe.config.ts') */
@@ -20,6 +21,18 @@ export interface Options {
 		/** Output directory for generated types (default: ".styleframe") */
 		outDir?: string;
 	};
-	/** Glob patterns for content files to scan for utility classes (Tailwind-style) */
-	content?: string[];
+	/** Module resolution options */
+	resolve?: {
+		/** Path alias mappings (e.g., { '@styleframe/theme': './theme/src/index.ts' }) */
+		alias?: Record<string, string>;
+	};
+	/** Scanner options for auto-detecting utility classes in content files */
+	scanner?: {
+		/** Glob patterns for content files to scan for utility class names */
+		content: string[];
+		/** Custom extractor functions for file types not supported by default */
+		extractors?: Extractor[];
+		/** Custom utility class syntax configuration */
+		utilities?: ScannerUtilitiesConfig;
+	};
 }

@@ -16,11 +16,14 @@ describe("createRefFunction", () => {
 		root = createRoot();
 		selector = {
 			type: "selector",
+			id: "test-id",
+			parentId: root.id,
 			query: ".test",
 			variables: [],
 			declarations: {},
 			children: [],
 		};
+		root._registry.set(selector.id, selector);
 		ref = createRefFunction(selector, root);
 		variable = createVariableFunction(selector, root);
 		keyframes = createKeyframesFunction(selector, root);
@@ -116,6 +119,69 @@ describe("createRefFunction", () => {
 				fallback: undefined,
 			});
 		});
+
+		it("should resolve @-prefixed fallback to a reference", () => {
+			root.variables.push({
+				type: "variable",
+				id: "test-id",
+				name: "color.primary",
+				value: "#006cff",
+			});
+			const result = ref("color.text", "@color.primary");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.text",
+				fallback: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+
+		it("should resolve @-prefixed fallback from variable instance", () => {
+			root.variables.push({
+				type: "variable",
+				id: "test-id",
+				name: "color.primary",
+				value: "#006cff",
+			});
+			const colorText = variable("color--text", "#333");
+			const result = ref(colorText, "@color.primary");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color--text",
+				fallback: {
+					type: "reference",
+					name: "color.primary",
+				},
+			});
+		});
+
+		it("should resolve embedded @reference in fallback to a CSS object", () => {
+			variable("color.primary", "#006cff");
+			const result = ref("border", "1px solid @color.primary");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "border",
+				fallback: {
+					type: "css",
+					value: [
+						"1px solid ",
+						{ type: "reference", name: "color.primary" },
+						"",
+					],
+				},
+			});
+		});
+
+		it("should throw when @-prefixed fallback references undefined variable", () => {
+			expect(() => ref("color", "@nonexistent")).toThrow(
+				'Variable "nonexistent" is not defined',
+			);
+		});
 	});
 
 	describe("context parameter handling", () => {
@@ -148,6 +214,7 @@ describe("createRefFunction", () => {
 		it("should work with nested selector context", () => {
 			const nestedSelector: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: "&:hover",
 				variables: [],
 				declarations: {},
@@ -377,18 +444,12 @@ describe("createRefFunction", () => {
 	});
 
 	describe("edge cases", () => {
-		it("should handle variables with undefined names gracefully", () => {
-			// This would be a malformed variable, but we should handle it
-			const malformedVar = {
-				type: "variable" as const,
-				name: undefined as any,
-				value: "test",
-			};
+		it("should throw when passed undefined", () => {
+			expect(() => ref(undefined as any)).toThrow("ref() received undefined");
+		});
 
-			const result = ref(malformedVar as any);
-
-			expect(result.name).toBeUndefined();
-			expect(result.type).toBe("reference");
+		it("should throw when passed null", () => {
+			expect(() => ref(null as any)).toThrow("ref() received null");
 		});
 
 		it("should handle null fallback values", () => {
@@ -483,6 +544,7 @@ describe("createRefFunction", () => {
 			const context1 = createRoot();
 			const context2 = {
 				type: "selector" as const,
+				id: "test-id",
 				query: ".test",
 				variables: [],
 				declarations: {},

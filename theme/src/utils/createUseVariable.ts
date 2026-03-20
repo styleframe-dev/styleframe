@@ -1,11 +1,12 @@
-import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
+import {
+	isKeyReferenceValue,
+	type DeclarationsCallbackContext,
+	type TokenValue,
+	type Variable,
+} from "@styleframe/core";
 import type { CamelCase } from "scule";
 import { camelCase } from "scule";
 import type { ExportKeys } from "../types";
-
-export function isKeyReferenceValue(value: unknown): value is `@${string}` {
-	return typeof value === "string" && value.startsWith("@");
-}
 
 /**
  * Creates a generic composable function for a CSS property.
@@ -67,9 +68,10 @@ export function createUseVariable<
 	type WithDefaults<T> = MergeDefaults extends true ? Defaults & T : T;
 
 	return function useVariable<
+		Context extends DeclarationsCallbackContext = DeclarationsCallbackContext,
 		T extends Record<string, PropertyType> = Defaults,
 	>(
-		s: Styleframe,
+		s: Context,
 		tokens?: T,
 		{ default: isDefault = true }: { default?: boolean } = {},
 	): ExportKeys<PropertyName, WithDefaults<T>, Delimiter> {
@@ -98,7 +100,7 @@ export function createUseVariable<
 				camelCase(variableName);
 
 			const variableValue = isKeyReferenceValue(value)
-				? s.ref(createVariableName(value.substring(1)))
+				? (value as unknown as TokenValue)
 				: transform(value);
 
 			result[exportName] = s.variable(variableName, variableValue, {

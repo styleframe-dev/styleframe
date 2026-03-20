@@ -1,6 +1,8 @@
 import type { Root, Selector } from "../types";
+import { createAtRuleFunction, createKeyframesFunction } from "./atRule";
 import { createCssFunction } from "./css";
 import { createRefFunction } from "./ref";
+import { createPropertyValueResolver, validateReference } from "./resolve";
 import { createRoot } from "./root";
 import { createVariableFunction } from "./variable";
 
@@ -15,6 +17,7 @@ describe("createCSSFunction", () => {
 		root = createRoot();
 		selector = {
 			type: "selector",
+			id: "test-id",
 			query: ".test",
 			variables: [],
 			declarations: {},
@@ -246,6 +249,7 @@ describe("createCSSFunction", () => {
 		it("should work with nested selector context", () => {
 			const nestedSelector: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: "&:hover",
 				variables: [],
 				declarations: {},
@@ -378,11 +382,266 @@ describe("createCSSFunction", () => {
 		});
 	});
 
+	describe("auto-resolve interpolation", () => {
+		it("should auto-resolve a variable to a reference", () => {
+			const spacing = variable("spacing-md", "1rem");
+			const result = css`${spacing} calc(${spacing} * 2)`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing-md", fallback: undefined },
+					" calc(",
+					{ type: "reference", name: "spacing-md", fallback: undefined },
+					" * 2)",
+				],
+			});
+		});
+
+		it("should auto-resolve multiple variables to references", () => {
+			const spacingSm = variable("spacing-sm", "0.5rem");
+			const spacingMd = variable("spacing-md", "1rem");
+
+			const result = css`${spacingSm} ${spacingMd}`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing-sm", fallback: undefined },
+					" ",
+					{ type: "reference", name: "spacing-md", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should extract the rule from a keyframes instance", () => {
+			const keyframes = createKeyframesFunction(selector, root);
+			const fadeIn = keyframes("fade-in", {
+				"0%": { opacity: 0 },
+				"100%": { opacity: 1 },
+			});
+
+			const result = css`${fadeIn} 300ms ease-in-out`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: ["", "fade-in", " 300ms ease-in-out"],
+			});
+		});
+
+		it("should extract the rule from an at-rule instance", () => {
+			const atRule = createAtRuleFunction(selector, root);
+			const layer = atRule("layer", "utilities");
+
+			const result = css`${layer}`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: ["", "utilities", ""],
+			});
+		});
+
+		it("should handle mixed variable, at-rule, and string interpolations", () => {
+			const duration = variable("duration-md", "300ms");
+			const keyframes = createKeyframesFunction(selector, root);
+			const fadeIn = keyframes("fade-in", {
+				"0%": { opacity: 0 },
+				"100%": { opacity: 1 },
+			});
+
+			const result = css`${fadeIn} ${duration} ease-in-out`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					"fade-in",
+					" ",
+					{ type: "reference", name: "duration-md", fallback: undefined },
+					" ease-in-out",
+				],
+			});
+		});
+	});
+
+	describe("@variable notation", () => {
+		it("should resolve @variablename to a reference", () => {
+			const result = css`@color.primary`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve @variablename with surrounding text", () => {
+			const result = css`1px solid @color.primary`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"1px solid ",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve deeply dotted @variablename", () => {
+			const result = css`@color.primary.500`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{
+						type: "reference",
+						name: "color.primary.500",
+						fallback: undefined,
+					},
+					"",
+				],
+			});
+		});
+
+		it("should resolve multiple @variablenames in one string segment", () => {
+			const result = css`@spacing.x @spacing.y`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing.x", fallback: undefined },
+					" ",
+					{ type: "reference", name: "spacing.y", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve @variablename mixed with interpolations", () => {
+			const opacity = "0.8";
+			const result = css`@color.primary ${opacity}`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					" ",
+					"0.8",
+					"",
+				],
+			});
+		});
+
+		it("should not affect strings without @ references", () => {
+			const result = css`1px solid blue`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: ["1px solid blue"],
+			});
+		});
+	});
+
+	describe("validateReference", () => {
+		it("should not throw when variable exists in root", () => {
+			root.variables.push({
+				type: "variable",
+				id: "test-id",
+				name: "color.primary",
+				value: "#006cff",
+			});
+
+			expect(() =>
+				validateReference("color.primary", root, root),
+			).not.toThrow();
+		});
+
+		it("should throw when variable does not exist in root", () => {
+			expect(() => validateReference("color.nonexistent", root, root)).toThrow(
+				'[styleframe] Variable "color.nonexistent" is not defined. Check that the variable exists before referencing it with "@color.nonexistent".',
+			);
+		});
+	});
+
+	describe("resolvePropertyValue", () => {
+		let resolvePropertyValue: ReturnType<typeof createPropertyValueResolver>;
+
+		beforeEach(() => {
+			resolvePropertyValue = createPropertyValueResolver(root, root);
+		});
+
+		it("should resolve exact @reference to a Reference", () => {
+			root.variables.push({
+				type: "variable",
+				id: "test-id",
+				name: "color.primary",
+				value: "#006cff",
+			});
+			const result = resolvePropertyValue("@color.primary");
+
+			expect(result).toEqual({
+				type: "reference",
+				name: "color.primary",
+				fallback: undefined,
+			});
+		});
+
+		it("should resolve embedded @reference to a CSS object", () => {
+			const result = resolvePropertyValue("1px solid @color.primary");
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"1px solid ",
+					{ type: "reference", name: "color.primary", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should resolve multiple embedded @references to a CSS object", () => {
+			const result = resolvePropertyValue("@spacing.sm @spacing.md");
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"",
+					{ type: "reference", name: "spacing.sm", fallback: undefined },
+					" ",
+					{ type: "reference", name: "spacing.md", fallback: undefined },
+					"",
+				],
+			});
+		});
+
+		it("should return non-string values unchanged", () => {
+			expect(resolvePropertyValue(42)).toBe(42);
+			expect(resolvePropertyValue(null)).toBeNull();
+			expect(resolvePropertyValue(undefined)).toBeUndefined();
+		});
+
+		it("should return strings without @ unchanged", () => {
+			expect(resolvePropertyValue("1px solid blue")).toBe("1px solid blue");
+			expect(resolvePropertyValue("red")).toBe("red");
+		});
+	});
+
 	describe("function context independence", () => {
 		it("should create independent functions for different contexts", () => {
 			const context1 = createRoot();
 			const context2: Selector = {
 				type: "selector",
+				id: "test-id",
 				query: ".test",
 				variables: [],
 				declarations: {},

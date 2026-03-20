@@ -1,5 +1,5 @@
 export const borderRadiusValues = {
-	default: "@md",
+	default: "@border-radius.md",
 	none: "0",
 	sm: "0.125rem",
 	md: "0.25rem",
@@ -7,4 +7,4 @@ export const borderRadiusValues = {
 	xl: "0.75rem",
 	"2xl": "1rem",
 	full: "9999px",
-};
+} as const;

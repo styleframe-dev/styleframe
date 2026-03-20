@@ -1,7 +1,8 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { useColorShade, colorShadeValues } from "./useColorShade";
+import { useColorShade } from "./useColorShade";
+import { colorShadeValues } from "../values";
 
 describe("useColorShade", () => {
 	it("should create shade levels with default values", () => {
@@ -11,16 +12,22 @@ describe("useColorShade", () => {
 
 		expect(shades.colorPrimaryShade50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-shade-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade150).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-shade-150",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -35,29 +42,37 @@ describe("useColorShade", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		const shades = useColorShade(s, colorPrimary, {
-			25: 2.5,
-			50: 5,
-			75: 7.5,
-			100: 10,
+			"shade-25": 2.5,
+			"shade-50": 5,
+			"shade-75": 7.5,
+			"shade-100": 10,
 		} as const);
 
 		expect(shades.colorPrimaryShade25).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-shade-25",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade75).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-shade-75",
 			value: expect.objectContaining({ type: "css" }),
 		});
 		expect(shades.colorPrimaryShade100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-shade-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -68,8 +83,8 @@ describe("useColorShade", () => {
 		const colorPrimary = s.variable("color--primary", "#007bff");
 
 		useColorShade(s, colorPrimary, {
-			50: 5,
-			100: 10,
+			"shade-50": 5,
+			"shade-100": 10,
 		});
 
 		const css = consumeCSS(s.root, s.options);
@@ -86,8 +101,8 @@ describe("useColorShade", () => {
 		const colorPrimary = s.variable("color--primary", "#007bff");
 
 		useColorShade(s, colorPrimary, {
-			50: 5,
-			100: 10,
+			"shade-50": 5,
+			"shade-100": 10,
 		} as const);
 
 		// +1 for the original color variable
@@ -97,10 +112,12 @@ describe("useColorShade", () => {
 	it("should handle color with kebab-case name", () => {
 		const s = styleframe();
 		const colorPrimaryDark = s.variable("color--primary-dark", "#0056b3");
-		const shades = useColorShade(s, colorPrimaryDark, { 50: 5 });
+		const shades = useColorShade(s, colorPrimaryDark, { "shade-50": 5 });
 
 		expect(shades.colorPrimaryDarkShade50).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "color--primary-dark-shade-50",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -118,11 +135,13 @@ describe("useColorShade", () => {
 		const s = styleframe();
 		const customColor = s.variable("custom-color", "#ff0000");
 		const shades = useColorShade(s, customColor, {
-			100: 10,
+			"shade-100": 10,
 		} as const);
 
 		expect(shades.customColorShade100).toEqual({
 			type: "variable",
+			id: expect.any(String),
+			parentId: expect.any(String),
 			name: "custom-color-shade-100",
 			value: expect.objectContaining({ type: "css" }),
 		});
@@ -138,8 +157,8 @@ describe("useColorShade", () => {
 			const s = styleframe();
 			const colorPrimary = s.variable("color--primary", "#007bff");
 			const shades = useColorShade(s, colorPrimary, {
-				50: 5,
-				100: 10,
+				"shade-50": 5,
+				"shade-100": 10,
 			} as const);
 
 			const shade50: Variable<"color--primary-shade-50"> =
@@ -155,7 +174,7 @@ describe("useColorShade", () => {
 			const s = styleframe();
 			const colorSecondary = s.variable("color--secondary", "#6c757d");
 			const shades = useColorShade(s, colorSecondary, {
-				75: 7.5,
+				"shade-75": 7.5,
 			} as const);
 
 			const typed: Variable<"color--secondary-shade-75"> =

@@ -435,6 +435,72 @@ Easily create and manage themes for your design system using styleframe's native
 ::
 
 <!--
+Scanner Section ----------------------------------------------------------------------------------------------
+-->
+
+::u-page-section{class="border-t border-default"}
+---
+orientation: horizontal
+---
+
+::browser-frame
+---
+title: Component
+---
+
+```html
+<!-- Write utility classes in your markup -->
+<div class="_padding:lg _display:flex _gap:[1rem]">
+    <button class="_background:primary _hover:background:secondary _padding:md">
+        Click me
+    </button>
+</div>
+```
+
+::
+
+#title
+Write Markup, [Skip the CSS]{.text-primary}
+
+#description
+Our Utility Scanner is like Tailwind JIT, but type-safe and built on your own design system. Write utility classes directly in your markup - the scanner detects them and generates only the CSS you actually use at build time. Zero waste.
+
+#features
+    :::u-page-feature
+    ---
+    icon: i-lucide-zap
+    ---
+    #title
+    [Automatic]{.text-primary} Detection & Generation
+
+    #description
+    Use utility classes in your markup without pre-defining every value. The scanner matches class names against registered factories, resolves design tokens, and generates the CSS.
+    :::
+
+    :::u-page-feature
+    ---
+    icon: i-lucide-heart-handshake
+    ---
+    #title
+    [Framework]{.text-primary} Agnostic
+
+    #description
+    Built-in extractors for HTML, Vue, React, Svelte, Astro, MDX, and more. Add custom extractors for any file type.
+    :::
+
+#links
+    :::u-button
+    ---
+    color: neutral
+    icon: i-lucide-view
+    to: /scanner
+    variant: outline
+    ---
+    Learn more about the Scanner
+    :::
+::
+
+<!--
 Figma Section ----------------------------------------------------------------------------------------------
 -->
 
