@@ -1,5 +1,32 @@
 # @styleframe/plugin
 
+## 3.1.0
+
+### Minor Changes
+
+- [#129](https://github.com/styleframe-dev/styleframe/pull/129) [`2610041`](https://github.com/styleframe-dev/styleframe/commit/2610041beb03a8afc8de17af8857b9931f3359b0) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add custom utility syntax support and separate class name generation from CSS escaping
+  - Extract `defaultUtilitySelectorFn` to `@styleframe/core` returning raw class names; add `classNameToCssSelector` for consistent CSS escaping
+  - Add `ScannerUtilitiesConfig` with pluggable `pattern`, `parse`, and `selector` functions for custom utility naming conventions
+  - Thread custom utilities config through extractor, matcher, scanner, and plugin layers
+
+- [#135](https://github.com/styleframe-dev/styleframe/pull/135) [`228b0c0`](https://github.com/styleframe-dev/styleframe/commit/228b0c0bc36332d371dd8a7ca430ebe2be3ac046) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Implement importree-based HMR with selective cache invalidation
+  - Replace full-reload HMR with importree-powered dependency graph for selective Jiti cache invalidation
+  - Use persistent shared Jiti instance with `moduleCache: true` so unchanged dependencies stay cached across reloads
+  - Add `dependency-graph` module that builds merged forward/reverse import trees for cross-entry dependency tracking
+  - Export `createSharedJiti`, `clearJitiCache`, and `clearAllJitiCache` from `@styleframe/loader`
+  - Remove `resolve.alias` option in favor of automatic dependency detection via importree
+
+- [#137](https://github.com/styleframe-dev/styleframe/pull/137) [`8d6e731`](https://github.com/styleframe-dev/styleframe/commit/8d6e7316dff6ebd0ed5cc29a4061c50786e9e8f5) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `resolve.alias` option to plugin for custom path resolution
+  - Add `resolve.alias` option to plugin types for configuring module path alias mappings
+  - Resolve relative alias paths to absolute paths relative to the plugin working directory
+  - Pass aliases through to Jiti loader and importree dependency graph for proper module resolution and HMR tracking
+
+### Patch Changes
+
+- Updated dependencies [[`2610041`](https://github.com/styleframe-dev/styleframe/commit/2610041beb03a8afc8de17af8857b9931f3359b0), [`ce62d31`](https://github.com/styleframe-dev/styleframe/commit/ce62d318275deed277d828fdd8d2500c1a9d767f)]:
+  - @styleframe/scanner@3.1.0
+  - @styleframe/transpiler@3.0.1
+
 ## 3.0.0
 
 ### Major Changes
