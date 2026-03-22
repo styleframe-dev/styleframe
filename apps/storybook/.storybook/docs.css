@@ -1,0 +1,14 @@
+.sbdocs.sbdocs-wrapper {
+	background: var(--body--background);
+}
+
+.sbdocs.sbdocs-content {
+	color: var(--body--color);
+}
+
+.sbdocs.sbdocs-preview {
+	background: var(--color--surface);
+	border-color: var(--border-color);
+	box-shadow: var(--box-shadow--sm);
+	border-radius: var(--border-radius);
+}

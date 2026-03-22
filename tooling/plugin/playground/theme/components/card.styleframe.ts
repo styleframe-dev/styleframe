@@ -4,15 +4,24 @@ import { useTokens } from "../useTokens";
 const s = styleframe();
 const { ref, selector, css } = s;
 
-const { tokens, colorBackground, colorText, colorTextMuted, colorBorder } =
-	useTokens(s);
-const { spacingXs, spacingSm, spacingMd, spacingLg } = tokens.spacing;
-const { borderRadiusLg } = tokens.borderRadius;
-const { borderWidthThin } = tokens.borderWidth;
-const { boxShadowSm } = tokens.boxShadow;
-const { fontSizeSm, fontSizeLg } = tokens.fontSize;
-const { fontWeightSemibold } = tokens.fontWeight;
-const { lineHeightTight, lineHeightNormal } = tokens.lineHeight;
+const {
+	colorBackground,
+	colorText,
+	colorTextMuted,
+	colorBorder,
+	spacingXs,
+	spacingSm,
+	spacingMd,
+	spacingLg,
+	borderRadiusLg,
+	borderWidthThin,
+	boxShadowSm,
+	fontSizeSm,
+	fontSizeLg,
+	fontWeightSemibold,
+	lineHeightTight,
+	lineHeightNormal,
+} = useTokens(s);
 
 export const cardSelector = selector(".card", {
 	display: "flex",

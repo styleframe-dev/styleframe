@@ -4,11 +4,17 @@ import { useTokens } from "../useTokens";
 const s = styleframe();
 const { ref, selector, css } = s;
 
-const { tokens, colorBackground } = useTokens(s);
-const { colorPrimary } = tokens.colors;
-const { borderRadiusFull, borderRadiusMd } = tokens.borderRadius;
-const { fontWeightSemibold } = tokens.fontWeight;
-const { fontSizeXs, fontSizeSm, fontSizeMd, fontSizeLg } = tokens.fontSize;
+const {
+	colorBackground,
+	colorPrimary,
+	borderRadiusFull,
+	borderRadiusMd,
+	fontWeightSemibold,
+	fontSizeXs,
+	fontSizeSm,
+	fontSizeMd,
+	fontSizeLg,
+} = useTokens(s);
 
 // Avatar structure
 selector(".avatar", {

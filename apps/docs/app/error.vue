@@ -2,6 +2,7 @@
 import type { NuxtError } from "#app";
 import type { PageCollections } from "@nuxt/content";
 import * as nuxtUiLocales from "@nuxt/ui/locale";
+import { flattenNavigation } from "~/utils/flattenNavigation";
 
 const props = defineProps<{
 	error: NuxtError;
@@ -58,10 +59,11 @@ const { data: navigation } = await useAsyncData(
 			const rootResult =
 				data.find((item) => item.path === "/docs")?.children || data || [];
 
-			return (
+			const result =
 				rootResult.find((item) => item.path === `/${locale.value}`)?.children ||
-				rootResult
-			);
+				rootResult;
+
+			return flattenNavigation(result);
 		},
 		watch: [locale],
 	},

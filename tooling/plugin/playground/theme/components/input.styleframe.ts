@@ -4,15 +4,24 @@ import { useTokens } from "../useTokens";
 const s = styleframe();
 const { ref, selector, css } = s;
 
-const { tokens, colorBackground, colorText, colorTextMuted, colorBorder } =
-	useTokens(s);
-const { colorPrimary, colorDanger } = tokens.colors;
-const { spacingXs, spacingSm, spacingMd } = tokens.spacing;
-const { borderRadiusMd } = tokens.borderRadius;
-const { borderWidthThin } = tokens.borderWidth;
-const { fontSizeXs, fontSizeSm, fontSizeMd } = tokens.fontSize;
-const { fontWeightMedium } = tokens.fontWeight;
-const { lineHeightNormal } = tokens.lineHeight;
+const {
+	colorBackground,
+	colorText,
+	colorTextMuted,
+	colorBorder,
+	colorPrimary,
+	colorDanger,
+	spacingXs,
+	spacingSm,
+	spacingMd,
+	borderRadiusMd,
+	borderWidthThin,
+	fontSizeXs,
+	fontSizeSm,
+	fontSizeMd,
+	fontWeightMedium,
+	lineHeightNormal,
+} = useTokens(s);
 
 // Input group structure
 selector(".input-group", {

@@ -6,7 +6,6 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { boxShadow } = useDesignTokensPreset(s);
 const {
 	boxShadowNone,
 	boxShadowXs,
@@ -17,7 +16,7 @@ const {
 	boxShadow2xl,
 	boxShadowInner,
 	boxShadowRing,
-} = boxShadow;
+} = useDesignTokensPreset(s);
 
 selector(".box-shadow-swatch__preview", {
 	width: "calc(@spacing * 6)",

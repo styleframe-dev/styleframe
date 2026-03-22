@@ -674,6 +674,38 @@ describe("createUseVariable", () => {
 			});
 		});
 
+		it("should sort key references to be processed last even without default key", () => {
+			const useColor = createUseVariable("color");
+			const s = styleframe();
+			useColor(s, {
+				accent: "@color.primary",
+				primary: "#3b82f6",
+				secondary: "#8b5cf6",
+				hover: "@color.secondary",
+			});
+
+			// Verify all variables were created
+			expect(s.root.variables).toHaveLength(4);
+
+			// Non-reference variables should be created before references
+			const primaryVar = s.root.variables.find(
+				(v) => v.name === "color.primary",
+			);
+			expect(primaryVar?.value).toBe("#3b82f6");
+
+			const accentVar = s.root.variables.find((v) => v.name === "color.accent");
+			expect(accentVar?.value).toEqual({
+				type: "reference",
+				name: "color.primary",
+			});
+
+			const hoverVar = s.root.variables.find((v) => v.name === "color.hover");
+			expect(hoverVar?.value).toEqual({
+				type: "reference",
+				name: "color.secondary",
+			});
+		});
+
 		it("should work with key references in defaults", () => {
 			const useColor = createUseVariable("color", {
 				defaults: {

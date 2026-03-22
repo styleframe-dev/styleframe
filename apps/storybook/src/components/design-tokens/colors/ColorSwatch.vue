@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ref as vueRef, onMounted } from "vue";
+import { ref as vueRef, onMounted, onUnmounted } from "vue";
 import { colorSwatch } from "virtual:styleframe";
 import SwatchCard from "../../primitives/SwatchCard.vue";
+import { themeEventBus } from "../../../utils/themeEventBus";
 
 const props = defineProps<{
 	name: string;
 	value: string;
+	label?: string;
+	interactive?: boolean;
 }>();
 
 const previewEl = vueRef<HTMLElement | null>(null);
@@ -37,7 +40,11 @@ function getContrastRatio(l1: number, l2: number): number {
 	return (lighter + 0.05) / (darker + 0.05);
 }
 
-onMounted(() => {
+function deferredUpdateContrastRatios() {
+	requestAnimationFrame(updateContrastRatios);
+}
+
+function updateContrastRatios() {
 	if (!previewEl.value) return;
 
 	const bg = getComputedStyle(previewEl.value).backgroundColor;
@@ -56,14 +63,46 @@ onMounted(() => {
 	const adjacentRatio = getContrastRatio(bgLum, pageBgLum);
 	adjacentContrastRatio.value = Math.round(adjacentRatio * 100) / 100;
 	adjacentPassesAA.value = adjacentRatio >= 3;
+}
+
+const interactionEvents = [
+	"mouseenter",
+	"mouseleave",
+	"focus",
+	"blur",
+	"mousedown",
+	"mouseup",
+	"transitionend",
+] as const;
+
+onMounted(() => {
+	updateContrastRatios();
+	themeEventBus.on("theme-change", updateContrastRatios);
+
+	if (props.interactive && previewEl.value) {
+		for (const event of interactionEvents) {
+			previewEl.value.addEventListener(event, deferredUpdateContrastRatios);
+		}
+	}
+});
+
+onUnmounted(() => {
+	themeEventBus.off("theme-change", updateContrastRatios);
+
+	if (props.interactive && previewEl.value) {
+		for (const event of interactionEvents) {
+			previewEl.value.removeEventListener(event, deferredUpdateContrastRatios);
+		}
+	}
 });
 </script>
 
 <template>
-	<SwatchCard :name="name">
+	<SwatchCard :name="name" :label="label">
 		<div
 			ref="previewEl"
-			:class="['color-swatch__preview', colorSwatch({ variant: value })]"
+			:tabindex="interactive ? 0 : undefined"
+			:class="['color-swatch__preview', colorSwatch({ variant: value, interactive })]"
 		>
 			{{ name }}
 		</div>

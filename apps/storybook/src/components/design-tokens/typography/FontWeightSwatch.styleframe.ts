@@ -6,7 +6,6 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { fontWeight } = useDesignTokensPreset(s);
 const {
 	fontWeightExtralight,
 	fontWeightLight,
@@ -15,7 +14,7 @@ const {
 	fontWeightSemibold,
 	fontWeightBold,
 	fontWeightBlack,
-} = fontWeight;
+} = useDesignTokensPreset(s);
 
 selector(".font-weight-swatch__preview", {
 	color: "@color.text-weakest",

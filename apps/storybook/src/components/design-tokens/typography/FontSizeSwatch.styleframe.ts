@@ -6,7 +6,6 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { fontSize } = useDesignTokensPreset(s);
 const {
 	fontSizeXs,
 	fontSizeSm,
@@ -16,7 +15,7 @@ const {
 	fontSize2xl,
 	fontSize3xl,
 	fontSize4xl,
-} = fontSize;
+} = useDesignTokensPreset(s);
 
 selector(".font-size-swatch__preview", {
 	color: "@color.text-weakest",

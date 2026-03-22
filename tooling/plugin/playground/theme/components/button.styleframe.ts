@@ -5,15 +5,25 @@ const s = styleframe();
 const { ref, selector } = s;
 
 // Register tokens so recipe can reference them
-const { tokens, colorWhite } = useTokens(s);
-const { colorPrimary, colorSecondary, colorSuccess, colorDanger } =
-	tokens.colors;
-const { spacingXs, spacingSm, spacingMd, spacingLg } = tokens.spacing;
-const { borderWidthThin } = tokens.borderWidth;
-const { borderRadiusMd } = tokens.borderRadius;
-const { fontSizeSm, fontSizeMd, fontSizeLg } = tokens.fontSize;
-const { fontWeightMedium, fontWeightSemibold } = tokens.fontWeight;
-const { lineHeightSnug } = tokens.lineHeight;
+const {
+	colorWhite,
+	colorPrimary,
+	colorSecondary,
+	colorSuccess,
+	colorDanger,
+	spacingXs,
+	spacingSm,
+	spacingMd,
+	spacingLg,
+	borderWidthThin,
+	borderRadiusMd,
+	fontSizeSm,
+	fontSizeMd,
+	fontSizeLg,
+	fontWeightMedium,
+	fontWeightSemibold,
+	lineHeightSnug,
+} = useTokens(s);
 
 // Smooth transitions for interactive states
 selector(".button", {

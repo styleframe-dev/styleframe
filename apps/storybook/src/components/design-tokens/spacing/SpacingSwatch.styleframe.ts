@@ -6,7 +6,6 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { spacing } = useDesignTokensPreset(s);
 const {
 	spacing2xs,
 	spacingXs,
@@ -16,7 +15,7 @@ const {
 	spacingXl,
 	spacing2xl,
 	spacing3xl,
-} = spacing;
+} = useDesignTokensPreset(s);
 
 selector(".spacing-swatch__preview", {
 	background: "@color.primary",
