@@ -6,7 +6,6 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { colors } = useDesignTokensPreset(s);
 const {
 	colorPrimary50,
 	colorPrimary100,
@@ -19,7 +18,7 @@ const {
 	colorPrimary800,
 	colorPrimary900,
 	colorPrimary950,
-} = colors;
+} = useDesignTokensPreset(s);
 
 selector(".color-lightness-swatch__preview", {
 	width: "calc(@spacing * 6)",

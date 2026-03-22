@@ -5,21 +5,26 @@ const s = styleframe();
 const { ref } = s;
 
 // Register tokens so recipe can reference them
-const { tokens, colorWhite } = useTokens(s);
 const {
+	colorWhite,
 	colorPrimary,
 	colorSecondary,
 	colorSuccess,
 	colorWarning,
 	colorDanger,
 	colorInfo,
-} = tokens.colors;
-const { spacing2xs, spacingXs, spacingSm } = tokens.spacing;
-const { borderWidthThin } = tokens.borderWidth;
-const { borderRadiusFull } = tokens.borderRadius;
-const { fontSizeXs, fontSizeSm, fontSizeMd } = tokens.fontSize;
-const { fontWeightMedium, fontWeightSemibold } = tokens.fontWeight;
-const { lineHeightTight } = tokens.lineHeight;
+	spacing2xs,
+	spacingXs,
+	spacingSm,
+	borderWidthThin,
+	borderRadiusFull,
+	fontSizeXs,
+	fontSizeSm,
+	fontSizeMd,
+	fontWeightMedium,
+	fontWeightSemibold,
+	lineHeightTight,
+} = useTokens(s);
 
 export const badgeRecipe = s.recipe({
 	name: "badge",

@@ -82,14 +82,11 @@ export function createUseVariable<
 			: ((tokens ?? defaults ?? {}) as T);
 		const pairs = Object.entries(resolvedTokens);
 
-		const hasDefaultKey = "default" in resolvedTokens;
-		if (hasDefaultKey) {
-			pairs.sort(([_aKey, aValue], [_bKey, bValue]) => {
-				if (isKeyReferenceValue(aValue)) return 1;
-				if (isKeyReferenceValue(bValue)) return -1;
-				return 0;
-			});
-		}
+		pairs.sort(([_aKey, aValue], [_bKey, bValue]) => {
+			if (isKeyReferenceValue(aValue)) return 1;
+			if (isKeyReferenceValue(bValue)) return -1;
+			return 0;
+		});
 
 		const createVariableName = (key: string) =>
 			`${propertyName}${key === "default" ? "" : `${delimiter}${key}`}` as const;

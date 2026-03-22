@@ -149,7 +149,7 @@ title: styleframe.config.ts
 ```ts
 import { styleframe } from 'styleframe';
 import { useFluidViewport, useFluidClamp } from '@styleframe/pro';
-import { useSpacing } from '@styleframe/theme';
+import { useSpacingDesignTokens } from '@styleframe/theme';
 
 const s = styleframe();
 
@@ -160,7 +160,7 @@ useFluidViewport(s, {
 });
 
 // Create fluid spacing that scales smoothly
-const { spacingSm, spacingMd, spacingLg } = useSpacing(s, {
+const { spacingSm, spacingMd, spacingLg } = useSpacingDesignTokens(s, {
     sm: useFluidClamp(s, { min: 8, max: 16 }),
     md: useFluidClamp(s, { min: 16, max: 32 }),
     lg: useFluidClamp(s, { min: 24, max: 48 }),

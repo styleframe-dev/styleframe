@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import { colorValues } from "@styleframe/theme";
 
-const textColorKeys = Object.keys(colorValues).filter((key) =>
-	key.startsWith("text"),
+const isInteractiveState = (key: string) => key.includes(".");
+const textColorKeys = Object.keys(colorValues).filter(
+	(key) => key.startsWith("text") && !isInteractiveState(key),
 );
 const baseColorKeys = Object.keys(colorValues).filter(
-	(key) => !key.startsWith("text"),
+	(key) => !key.startsWith("text") && !isInteractiveState(key),
 );
 import ColorSwatch from "../../src/components/design-tokens/colors/ColorSwatch.vue";
 import StoryGrid from "../../src/components/primitives/StoryGrid.vue";

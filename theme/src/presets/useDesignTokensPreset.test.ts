@@ -11,23 +11,25 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
+			// scale has a default key → produces 'scale' in flat result
 			expect(result.scale).toBeDefined();
 			expect(result.scalePowers).toBeDefined();
+			// spacing has a default key → produces 'spacing' in flat result
 			expect(result.spacing).toBeDefined();
 			expect(result.borderColor).toBeDefined();
 			expect(result.borderWidth).toBeDefined();
 			expect(result.borderRadius).toBeDefined();
 			expect(result.borderStyle).toBeDefined();
 			expect(result.boxShadow).toBeDefined();
-			expect(result.colors).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
 			expect(result.fontFamily).toBeDefined();
 			expect(result.fontSize).toBeDefined();
 			expect(result.fontStyle).toBeDefined();
 			expect(result.fontWeight).toBeDefined();
 			expect(result.lineHeight).toBeDefined();
 			expect(result.letterSpacing).toBeDefined();
-			expect(result.breakpoint).toBeDefined();
-			expect(result.easing).toBeDefined();
+			expect(result.breakpointSm).toBeDefined();
+			expect(result.easingLinear).toBeDefined();
 		});
 
 		it("should create all default design tokens when called with empty config", () => {
@@ -36,7 +38,7 @@ describe("useDesignTokensPreset", () => {
 
 			expect(result.scale).toBeDefined();
 			expect(result.spacing).toBeDefined();
-			expect(result.colors).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
 			expect(result.fontFamily).toBeDefined();
 		});
 
@@ -66,56 +68,61 @@ describe("useDesignTokensPreset", () => {
 				scale: false,
 			});
 
-			expect(result.scale).toBeUndefined();
-			expect(result.scalePowers).toBeUndefined();
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--scale");
+			expect((result as Record<string, unknown>).scalePowers).toBeUndefined();
 		});
 
 		it("should disable spacing when spacing is false", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, {
+			useDesignTokensPreset(s, {
 				spacing: false,
 			});
 
-			expect(result.spacing).toBeUndefined();
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--spacing");
 		});
 
 		it("should disable border tokens when set to false", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, {
+			useDesignTokensPreset(s, {
 				borderColor: false,
 				borderWidth: false,
 				borderRadius: false,
 				borderStyle: false,
 			});
 
-			expect(result.borderColor).toBeUndefined();
-			expect(result.borderWidth).toBeUndefined();
-			expect(result.borderRadius).toBeUndefined();
-			expect(result.borderStyle).toBeUndefined();
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--border-color");
+			expect(css).not.toContain("--border-width");
+			expect(css).not.toContain("--border-radius");
+			expect(css).not.toContain("--border-style");
 		});
 
 		it("should disable boxShadow when boxShadow is false", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, {
+			useDesignTokensPreset(s, {
 				boxShadow: false,
 			});
 
-			expect(result.boxShadow).toBeUndefined();
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--box-shadow");
 		});
 
 		it("should disable colors when colors is false", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, {
+			useDesignTokensPreset(s, {
 				colors: false,
 				borderColor: false,
 			});
 
-			expect(result.colors).toBeUndefined();
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--color--primary");
 		});
 
 		it("should disable typography tokens when set to false", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, {
+			useDesignTokensPreset(s, {
 				fontFamily: false,
 				fontSize: false,
 				fontStyle: false,
@@ -124,35 +131,38 @@ describe("useDesignTokensPreset", () => {
 				letterSpacing: false,
 			});
 
-			expect(result.fontFamily).toBeUndefined();
-			expect(result.fontSize).toBeUndefined();
-			expect(result.fontStyle).toBeUndefined();
-			expect(result.fontWeight).toBeUndefined();
-			expect(result.lineHeight).toBeUndefined();
-			expect(result.letterSpacing).toBeUndefined();
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--font-family");
+			expect(css).not.toContain("--font-size");
+			expect(css).not.toContain("--font-style");
+			expect(css).not.toContain("--font-weight");
+			expect(css).not.toContain("--line-height");
+			expect(css).not.toContain("--letter-spacing");
 		});
 
 		it("should disable breakpoint when breakpoint is false", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, {
+			useDesignTokensPreset(s, {
 				breakpoint: false,
 			});
 
-			expect(result.breakpoint).toBeUndefined();
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--breakpoint");
 		});
 
 		it("should disable easing when easing is false", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, {
+			useDesignTokensPreset(s, {
 				easing: false,
 			});
 
-			expect(result.easing).toBeUndefined();
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--easing");
 		});
 
 		it("should disable all domains when all set to false", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, {
+			useDesignTokensPreset(s, {
 				scale: false,
 				spacing: false,
 				borderColor: false,
@@ -173,26 +183,6 @@ describe("useDesignTokensPreset", () => {
 				duration: false,
 			});
 
-			expect(result.scale).toBeUndefined();
-			expect(result.scalePowers).toBeUndefined();
-			expect(result.spacing).toBeUndefined();
-			expect(result.borderColor).toBeUndefined();
-			expect(result.borderWidth).toBeUndefined();
-			expect(result.borderRadius).toBeUndefined();
-			expect(result.borderStyle).toBeUndefined();
-			expect(result.boxShadow).toBeUndefined();
-			expect(result.zIndex).toBeUndefined();
-			expect(result.colors).toBeUndefined();
-			expect(result.fontFamily).toBeUndefined();
-			expect(result.fontSize).toBeUndefined();
-			expect(result.fontStyle).toBeUndefined();
-			expect(result.fontWeight).toBeUndefined();
-			expect(result.lineHeight).toBeUndefined();
-			expect(result.letterSpacing).toBeUndefined();
-			expect(result.breakpoint).toBeUndefined();
-			expect(result.easing).toBeUndefined();
-			expect(result.duration).toBeUndefined();
-
 			expect(s.root.variables).toHaveLength(0);
 		});
 	});
@@ -208,9 +198,9 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(result.spacing?.spacing).toBeDefined();
-			expect(result.spacing?.spacingSm).toBeDefined();
-			expect(result.spacing?.spacingLg).toBeDefined();
+			expect(result.spacing).toBeDefined();
+			expect(result.spacingSm).toBeDefined();
+			expect(result.spacingLg).toBeDefined();
 		});
 
 		it("should use custom color values", () => {
@@ -223,8 +213,8 @@ describe("useDesignTokensPreset", () => {
 				borderColor: false,
 			});
 
-			expect(result.colors?.colorPrimary).toBeDefined();
-			expect(result.colors?.colorSecondary).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
+			expect(result.colorSecondary).toBeDefined();
 		});
 
 		it("should use custom borderRadius values", () => {
@@ -237,9 +227,9 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(result.borderRadius?.borderRadius).toBeDefined();
-			expect(result.borderRadius?.borderRadiusSm).toBeDefined();
-			expect(result.borderRadius?.borderRadiusLg).toBeDefined();
+			expect(result.borderRadius).toBeDefined();
+			expect(result.borderRadiusSm).toBeDefined();
+			expect(result.borderRadiusLg).toBeDefined();
 		});
 
 		it("should use custom fontSize values", () => {
@@ -252,9 +242,9 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(result.fontSize?.fontSize).toBeDefined();
-			expect(result.fontSize?.fontSizeSm).toBeDefined();
-			expect(result.fontSize?.fontSizeLg).toBeDefined();
+			expect(result.fontSize).toBeDefined();
+			expect(result.fontSizeSm).toBeDefined();
+			expect(result.fontSizeLg).toBeDefined();
 		});
 
 		it("should use custom breakpoint values", () => {
@@ -267,9 +257,9 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(result.breakpoint?.breakpointSm).toBeDefined();
-			expect(result.breakpoint?.breakpointMd).toBeDefined();
-			expect(result.breakpoint?.breakpointLg).toBeDefined();
+			expect(result.breakpointSm).toBeDefined();
+			expect(result.breakpointMd).toBeDefined();
+			expect(result.breakpointLg).toBeDefined();
 		});
 
 		it("should use custom scale values", () => {
@@ -280,7 +270,7 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(result.scale?.scale).toBeDefined();
+			expect(result.scale).toBeDefined();
 		});
 
 		it("should use custom scalePowers", () => {
@@ -290,8 +280,8 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			expect(result.scalePowers).toBeDefined();
-			expect(Object.keys(result.scalePowers!)).toContain("-2");
-			expect(Object.keys(result.scalePowers!)).toContain("2");
+			expect(Object.keys(result.scalePowers)).toContain("-2");
+			expect(Object.keys(result.scalePowers)).toContain("2");
 		});
 
 		it("should use custom easing values", () => {
@@ -303,8 +293,8 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(result.easing?.easing).toBeDefined();
-			expect(result.easing?.easingLinear).toBeDefined();
+			expect(result.easing).toBeDefined();
+			expect(result.easingLinear).toBeDefined();
 		});
 	});
 
@@ -314,13 +304,13 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			const lightnessVariations = colorNames.filter((name) =>
+			const colorKeys = Object.keys(result).filter((name) =>
 				/colorPrimary\d+/.test(name),
 			);
-			expect(lightnessVariations.length).toBeGreaterThan(0);
+			expect(colorKeys.length).toBeGreaterThan(0);
 		});
 
 		it("should generate color shades by default", () => {
@@ -328,13 +318,13 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			const shadeVariations = colorNames.filter((name) =>
+			const shadeKeys = Object.keys(result).filter((name) =>
 				/colorPrimaryShade/.test(name),
 			);
-			expect(shadeVariations.length).toBeGreaterThan(0);
+			expect(shadeKeys.length).toBeGreaterThan(0);
 		});
 
 		it("should generate color tints by default", () => {
@@ -342,13 +332,13 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			const tintVariations = colorNames.filter((name) =>
+			const tintKeys = Object.keys(result).filter((name) =>
 				/colorPrimaryTint/.test(name),
 			);
-			expect(tintVariations.length).toBeGreaterThan(0);
+			expect(tintKeys.length).toBeGreaterThan(0);
 		});
 
 		it("should not generate lightness when generateLightness is false", () => {
@@ -356,6 +346,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -363,11 +354,10 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			const lightnessVariations = colorNames.filter((name) =>
+			const lightnessKeys = Object.keys(result).filter((name) =>
 				/colorPrimary\d+/.test(name),
 			);
-			expect(lightnessVariations.length).toBe(0);
+			expect(lightnessKeys.length).toBe(0);
 		});
 
 		it("should not generate shades when generateShades is false", () => {
@@ -375,6 +365,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateShades: false,
@@ -382,11 +373,10 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			const shadeVariations = colorNames.filter((name) =>
+			const shadeKeys = Object.keys(result).filter((name) =>
 				/colorPrimaryShade/.test(name),
 			);
-			expect(shadeVariations.length).toBe(0);
+			expect(shadeKeys.length).toBe(0);
 		});
 
 		it("should not generate tints when generateTints is false", () => {
@@ -394,6 +384,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateTints: false,
@@ -401,11 +392,10 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			const tintVariations = colorNames.filter((name) =>
+			const tintKeys = Object.keys(result).filter((name) =>
 				/colorPrimaryTint/.test(name),
 			);
-			expect(tintVariations.length).toBe(0);
+			expect(tintKeys.length).toBe(0);
 		});
 
 		it("should use custom lightness levels", () => {
@@ -413,6 +403,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: true,
@@ -423,10 +414,10 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			expect(colorNames).toContain("colorPrimary100");
-			expect(colorNames).toContain("colorPrimary500");
-			expect(colorNames).toContain("colorPrimary900");
+			const resultKeys = Object.keys(result);
+			expect(resultKeys).toContain("colorPrimary100");
+			expect(resultKeys).toContain("colorPrimary500");
+			expect(resultKeys).toContain("colorPrimary900");
 		});
 
 		it("should use custom shade levels", () => {
@@ -434,6 +425,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -444,9 +436,9 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			expect(colorNames).toContain("colorPrimaryShade50");
-			expect(colorNames).toContain("colorPrimaryShade100");
+			const resultKeys = Object.keys(result);
+			expect(resultKeys).toContain("colorPrimaryShade50");
+			expect(resultKeys).toContain("colorPrimaryShade100");
 		});
 
 		it("should use custom tint levels", () => {
@@ -454,6 +446,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -464,9 +457,9 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			expect(colorNames).toContain("colorPrimaryTint50");
-			expect(colorNames).toContain("colorPrimaryTint100");
+			const resultKeys = Object.keys(result);
+			expect(resultKeys).toContain("colorPrimaryTint50");
+			expect(resultKeys).toContain("colorPrimaryTint100");
 		});
 
 		it("should disable all color variations", () => {
@@ -474,6 +467,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -483,8 +477,10 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			const colorNames = Object.keys(result.colors || {});
-			expect(colorNames).toEqual(["colorPrimary"]);
+			const colorKeys = Object.keys(result).filter((k) =>
+				k.startsWith("color"),
+			);
+			expect(colorKeys).toEqual(["colorPrimary"]);
 		});
 	});
 
@@ -496,7 +492,7 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			expect(result.spacing).toBeDefined();
-			expect(result.colors).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
 			expect(result.scale).toBeDefined();
 		});
 	});
@@ -521,6 +517,7 @@ describe("useDesignTokensPreset", () => {
 					secondary: "#6b7280",
 				},
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				spacing: {
 					default: "@spacing.md",
 					sm: "0.5rem",
@@ -536,11 +533,11 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(result.colors?.colorPrimary).toBeDefined();
-			expect(result.colors?.colorSecondary).toBeDefined();
-			expect(result.spacing?.spacingSm).toBeDefined();
-			expect(result.spacing?.spacingMd).toBeDefined();
-			expect(result.spacing?.spacingLg).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
+			expect(result.colorSecondary).toBeDefined();
+			expect(result.spacingSm).toBeDefined();
+			expect(result.spacingMd).toBeDefined();
+			expect(result.spacingLg).toBeDefined();
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("--color--primary");
@@ -561,6 +558,7 @@ describe("useDesignTokensPreset", () => {
 					primary: "#006cff",
 				},
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -571,8 +569,8 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			s.selector(".button", {
-				padding: s.ref(result.spacing.spacingMd),
-				backgroundColor: s.ref(result.colors.colorPrimary),
+				padding: s.ref(result.spacingMd),
+				backgroundColor: s.ref(result.colorPrimary),
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -599,6 +597,7 @@ describe("useDesignTokensPreset", () => {
 				spacing: { default: "1rem" },
 				colors: { primary: "#000" },
 				fontSize: { default: "1rem" },
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -609,7 +608,7 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			expect(result.spacing).toBeDefined();
-			expect(result.colors).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
 			expect(result.fontSize).toBeDefined();
 
 			const css = consumeCSS(s.root, s.options);
@@ -632,15 +631,15 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			// Should have base colors
-			expect(result.colors?.colorPrimary).toBeDefined();
-			expect(result.colors?.colorSecondary).toBeDefined();
-			expect(result.colors?.colorSuccess).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
+			expect(result.colorSecondary).toBeDefined();
+			expect(result.colorSuccess).toBeDefined();
 
 			// Should have variations for each
-			const colorNames = Object.keys(result.colors || {});
-			expect(colorNames.some((n) => n.startsWith("colorPrimary"))).toBe(true);
-			expect(colorNames.some((n) => n.startsWith("colorSecondary"))).toBe(true);
-			expect(colorNames.some((n) => n.startsWith("colorSuccess"))).toBe(true);
+			const resultKeys = Object.keys(result);
+			expect(resultKeys.some((n) => n.startsWith("colorPrimary"))).toBe(true);
+			expect(resultKeys.some((n) => n.startsWith("colorSecondary"))).toBe(true);
+			expect(resultKeys.some((n) => n.startsWith("colorSuccess"))).toBe(true);
 		});
 
 		it("should handle empty custom values object", () => {
@@ -649,7 +648,11 @@ describe("useDesignTokensPreset", () => {
 				spacing: {},
 			});
 
-			expect(result.spacing).toEqual({});
+			// No spacing keys should exist since config was empty
+			const spacingKeys = Object.keys(result).filter((k) =>
+				k.startsWith("spacing"),
+			);
+			expect(spacingKeys).toEqual([]);
 		});
 
 		it("should not create scalePowers when scale doesn't include scale variable", () => {
@@ -660,8 +663,8 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(result.scale?.scaleBase).toBeDefined();
-			expect(result.scalePowers).toBeUndefined();
+			expect(result.scaleBase).toBeDefined();
+			expect((result as Record<string, unknown>).scalePowers).toBeUndefined();
 		});
 	});
 
@@ -672,6 +675,7 @@ describe("useDesignTokensPreset", () => {
 				spacing: { default: "1rem" },
 				colors: { primary: "#000" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				borderRadius: { default: "4px" },
 				// scale: omitted - uses defaults
 				easing: false,
@@ -689,14 +693,14 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			// These should compile and exist
-			expect(result.spacing.spacingSm).toBeDefined();
-			expect(result.spacing.spacingMd).toBeDefined();
+			expect(result.spacingSm).toBeDefined();
+			expect(result.spacingMd).toBeDefined();
 
 			// @ts-expect-error - spacingLg is not in custom config
-			result.spacing.spacingLg;
+			result.spacingLg;
 		});
 
-		it("should type disabled domains as undefined", () => {
+		it("should type disabled domains correctly", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: false,
@@ -704,16 +708,11 @@ describe("useDesignTokensPreset", () => {
 				spacing: false,
 			});
 
-			// Type checks - these lines verify the type is undefined
-			// @ts-expect-error - colors is undefined when disabled
-			const _colorsCheck: Record<string, unknown> = result.colors;
+			// @ts-expect-error - colorPrimary doesn't exist when colors is disabled
+			result.colorPrimary;
 
-			// @ts-expect-error - spacing is undefined when disabled
-			const _spacingCheck: Record<string, unknown> = result.spacing;
-
-			// Runtime checks
-			expect(result.colors).toBeUndefined();
-			expect(result.spacing).toBeUndefined();
+			// @ts-expect-error - spacingMd doesn't exist when spacing is disabled
+			result.spacingMd;
 		});
 
 		it("should include default keys when domain is omitted", () => {
@@ -721,12 +720,12 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s);
 
 			// All default keys should be present for all domains
-			expect(result.spacing.spacing).toBeDefined();
-			expect(result.spacing.spacingMd).toBeDefined();
-			expect(result.borderRadius.borderRadius).toBeDefined();
-			expect(result.borderRadius.borderRadiusMd).toBeDefined();
-			expect(result.fontSize.fontSize).toBeDefined();
-			expect(result.fontSize.fontSizeMd).toBeDefined();
+			expect(result.spacing).toBeDefined();
+			expect(result.spacingMd).toBeDefined();
+			expect(result.borderRadius).toBeDefined();
+			expect(result.borderRadiusMd).toBeDefined();
+			expect(result.fontSize).toBeDefined();
+			expect(result.fontSizeMd).toBeDefined();
 		});
 
 		it("should infer custom borderRadius keys", () => {
@@ -735,12 +734,12 @@ describe("useDesignTokensPreset", () => {
 				borderRadius: { none: "0", sm: "2px", xl: "16px" },
 			});
 
-			expect(result.borderRadius.borderRadiusNone).toBeDefined();
-			expect(result.borderRadius.borderRadiusSm).toBeDefined();
-			expect(result.borderRadius.borderRadiusXl).toBeDefined();
+			expect(result.borderRadiusNone).toBeDefined();
+			expect(result.borderRadiusSm).toBeDefined();
+			expect(result.borderRadiusXl).toBeDefined();
 
 			// @ts-expect-error - borderRadiusMd is not in custom config
-			result.borderRadius.borderRadiusMd;
+			result.borderRadiusMd;
 		});
 
 		it("should infer custom fontSize keys", () => {
@@ -749,11 +748,11 @@ describe("useDesignTokensPreset", () => {
 				fontSize: { xs: "0.75rem", base: "1rem" },
 			});
 
-			expect(result.fontSize.fontSizeXs).toBeDefined();
-			expect(result.fontSize.fontSizeBase).toBeDefined();
+			expect(result.fontSizeXs).toBeDefined();
+			expect(result.fontSizeBase).toBeDefined();
 
 			// @ts-expect-error - fontSizeLg is not in custom config
-			result.fontSize.fontSizeLg;
+			result.fontSizeLg;
 		});
 
 		it("should infer custom breakpoint keys", () => {
@@ -762,12 +761,12 @@ describe("useDesignTokensPreset", () => {
 				breakpoint: { mobile: 480, tablet: 768, desktop: 1024 },
 			});
 
-			expect(result.breakpoint.breakpointMobile).toBeDefined();
-			expect(result.breakpoint.breakpointTablet).toBeDefined();
-			expect(result.breakpoint.breakpointDesktop).toBeDefined();
+			expect(result.breakpointMobile).toBeDefined();
+			expect(result.breakpointTablet).toBeDefined();
+			expect(result.breakpointDesktop).toBeDefined();
 
 			// @ts-expect-error - breakpointSm is not in custom config
-			result.breakpoint.breakpointSm;
+			result.breakpointSm;
 		});
 
 		it("should infer custom easing keys", () => {
@@ -779,11 +778,11 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			expect(result.easing.easingLinear).toBeDefined();
-			expect(result.easing.easingBounce).toBeDefined();
+			expect(result.easingLinear).toBeDefined();
+			expect(result.easingBounce).toBeDefined();
 
 			// @ts-expect-error - easingEaseIn is not in custom config
-			result.easing.easingEaseIn;
+			result.easingEaseIn;
 		});
 
 		it("should type scalePowers as undefined when scale is false", () => {
@@ -792,8 +791,10 @@ describe("useDesignTokensPreset", () => {
 				scale: false,
 			});
 
-			expect(result.scale).toBeUndefined();
-			expect(result.scalePowers).toBeUndefined();
+			// @ts-expect-error - scale doesn't exist when disabled
+			result.scale;
+			// @ts-expect-error - scalePowers doesn't exist when scale is disabled
+			result.scalePowers;
 		});
 
 		it("should allow mixed disabled and custom domains", () => {
@@ -807,27 +808,34 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			// Custom spacing works
-			expect(result.spacing.spacingSm).toBeDefined();
+			expect(result.spacingSm).toBeDefined();
 			// @ts-expect-error - spacingMd is not in custom config
-			result.spacing.spacingMd;
+			result.spacingMd;
 
-			// borderRadius is disabled - type check
-			expect(result.borderRadius).toBeUndefined();
+			// borderRadius is disabled
+			// @ts-expect-error - borderRadiusMd doesn't exist when disabled
+			result.borderRadiusMd;
 
 			// colors is strongly typed for base colors
-			expect(result.colors.colorBrand).toBeDefined();
+			expect(result.colorBrand).toBeDefined();
 			// @ts-expect-error - colorPrimary is not in custom config
-			result.colors.colorPrimary;
+			result.colorPrimary;
 
-			// easing is disabled - type check
-			expect(result.easing).toBeUndefined();
+			// easing is disabled
+			// @ts-expect-error - easingLinear doesn't exist when disabled
+			result.easingLinear;
 		});
 
 		it("should infer custom colors keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
-				colors: { primary: "#007bff", secondary: "#6c757d", accent: "#ff6600" },
+				colors: {
+					primary: "#007bff",
+					secondary: "#6c757d",
+					accent: "#ff6600",
+				},
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -838,12 +846,12 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			// Base colors are strongly typed
-			expect(result.colors.colorPrimary).toBeDefined();
-			expect(result.colors.colorSecondary).toBeDefined();
-			expect(result.colors.colorAccent).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
+			expect(result.colorSecondary).toBeDefined();
+			expect(result.colorAccent).toBeDefined();
 
 			// @ts-expect-error - colorBrand is not in custom config
-			result.colors.colorBrand;
+			result.colorBrand;
 		});
 
 		it("should include default color keys when colors is omitted", () => {
@@ -853,11 +861,11 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			// Default color keys should exist
-			expect(result.colors.colorPrimary).toBeDefined();
-			expect(result.colors.colorSecondary).toBeDefined();
-			expect(result.colors.colorSuccess).toBeDefined();
-			expect(result.colors.colorWarning).toBeDefined();
-			expect(result.colors.colorDanger).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
+			expect(result.colorSecondary).toBeDefined();
+			expect(result.colorSuccess).toBeDefined();
+			expect(result.colorWarning).toBeDefined();
+			expect(result.colorDanger).toBeDefined();
 		});
 
 		it("should allow access to color variations via type assertion", () => {
@@ -865,18 +873,18 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 			});
 
 			// Base colors are strongly typed
-			expect(result.colors.colorPrimary).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
 
-			const colorsWithVariations = result.colors;
-			expect(colorsWithVariations.colorPrimary100).toBeDefined();
-			expect(colorsWithVariations.colorPrimaryShade50).toBeDefined();
-			expect(colorsWithVariations.colorPrimaryTint50).toBeDefined();
+			expect(result.colorPrimary100).toBeDefined();
+			expect(result.colorPrimaryShade50).toBeDefined();
+			expect(result.colorPrimaryTint50).toBeDefined();
 
 			// @ts-expect-error 1500 is not a valid tint
-			expect(colorsWithVariations.colorPrimaryTint1500).not.toBeDefined();
+			expect(result.colorPrimaryTint1500).not.toBeDefined();
 		});
 
 		it("should infer custom fontWeight keys", () => {
@@ -885,12 +893,12 @@ describe("useDesignTokensPreset", () => {
 				fontWeight: { light: "300", regular: "400", bold: "700" },
 			});
 
-			expect(result.fontWeight.fontWeightLight).toBeDefined();
-			expect(result.fontWeight.fontWeightRegular).toBeDefined();
-			expect(result.fontWeight.fontWeightBold).toBeDefined();
+			expect(result.fontWeightLight).toBeDefined();
+			expect(result.fontWeightRegular).toBeDefined();
+			expect(result.fontWeightBold).toBeDefined();
 
 			// @ts-expect-error - fontWeightMedium is not in custom config
-			result.fontWeight.fontWeightMedium;
+			result.fontWeightMedium;
 		});
 
 		it("should infer custom lineHeight keys", () => {
@@ -899,12 +907,12 @@ describe("useDesignTokensPreset", () => {
 				lineHeight: { tight: "1.25", normal: "1.5", loose: "2" },
 			});
 
-			expect(result.lineHeight.lineHeightTight).toBeDefined();
-			expect(result.lineHeight.lineHeightNormal).toBeDefined();
-			expect(result.lineHeight.lineHeightLoose).toBeDefined();
+			expect(result.lineHeightTight).toBeDefined();
+			expect(result.lineHeightNormal).toBeDefined();
+			expect(result.lineHeightLoose).toBeDefined();
 
 			// @ts-expect-error - lineHeightRelaxed is not in custom config
-			result.lineHeight.lineHeightRelaxed;
+			result.lineHeightRelaxed;
 		});
 	});
 
@@ -913,269 +921,260 @@ describe("useDesignTokensPreset", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.spacing.spacing;
-			result.spacing.spacing2xs;
-			result.spacing.spacingXs;
-			result.spacing.spacingSm;
-			result.spacing.spacingMd;
-			result.spacing.spacingLg;
-			result.spacing.spacingXl;
-			result.spacing.spacing2xl;
-			result.spacing.spacing3xl;
+			result.spacing;
+			result.spacing2xs;
+			result.spacingXs;
+			result.spacingSm;
+			result.spacingMd;
+			result.spacingLg;
+			result.spacingXl;
+			result.spacing2xl;
+			result.spacing3xl;
 
 			// @ts-expect-error - spacingXxl is not a default key
-			result.spacing.spacingXxl;
+			result.spacingXxl;
 		});
 
 		it("should return all default borderColor keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.borderColor.borderColor;
-			result.borderColor.borderColorPrimary;
+			result.borderColor;
+			result.borderColorPrimary;
 
-			// @ts-expect-error - borderColorDanger is not a default key
-			result.borderColor.borderColorDanger;
+			// @ts-expect-error - borderColorOther is not a default key
+			result.borderColorOther;
 		});
 
 		it("should return all default borderWidth keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.borderWidth.borderWidth;
-			result.borderWidth.borderWidthNone;
-			result.borderWidth.borderWidthThin;
-			result.borderWidth.borderWidthMedium;
-			result.borderWidth.borderWidthThick;
+			result.borderWidth;
+			result.borderWidthNone;
+			result.borderWidthThin;
+			result.borderWidthMedium;
+			result.borderWidthThick;
 
 			// @ts-expect-error - borderWidthHeavy is not a default key
-			result.borderWidth.borderWidthHeavy;
+			result.borderWidthHeavy;
 		});
 
 		it("should return all default borderRadius keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.borderRadius.borderRadius;
-			result.borderRadius.borderRadiusNone;
-			result.borderRadius.borderRadiusSm;
-			result.borderRadius.borderRadiusMd;
-			result.borderRadius.borderRadiusLg;
-			result.borderRadius.borderRadiusXl;
-			result.borderRadius.borderRadius2xl;
-			result.borderRadius.borderRadiusFull;
+			result.borderRadius;
+			result.borderRadiusNone;
+			result.borderRadiusSm;
+			result.borderRadiusMd;
+			result.borderRadiusLg;
+			result.borderRadiusXl;
+			result.borderRadius2xl;
+			result.borderRadiusFull;
 
 			// @ts-expect-error - borderRadius3xl is not a default key
-			result.borderRadius.borderRadius3xl;
+			result.borderRadius3xl;
 		});
 
 		it("should return all default borderStyle keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.borderStyle.borderStyle;
-			result.borderStyle.borderStyleNone;
-			result.borderStyle.borderStyleSolid;
-			result.borderStyle.borderStyleDashed;
-			result.borderStyle.borderStyleDotted;
-			result.borderStyle.borderStyleDouble;
-			result.borderStyle.borderStyleGroove;
-			result.borderStyle.borderStyleInset;
-			result.borderStyle.borderStyleOutset;
+			result.borderStyle;
+			result.borderStyleNone;
+			result.borderStyleSolid;
+			result.borderStyleDashed;
+			result.borderStyleDotted;
+			result.borderStyleDouble;
+			result.borderStyleGroove;
+			result.borderStyleInset;
+			result.borderStyleOutset;
 
 			// @ts-expect-error - borderStyleRidge is not a default key
-			result.borderStyle.borderStyleRidge;
+			result.borderStyleRidge;
 		});
 
 		it("should return all default boxShadow keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.boxShadow.boxShadow;
-			result.boxShadow.boxShadowNone;
-			result.boxShadow.boxShadowXs;
-			result.boxShadow.boxShadowSm;
-			result.boxShadow.boxShadowMd;
-			result.boxShadow.boxShadowLg;
-			result.boxShadow.boxShadowXl;
-			result.boxShadow.boxShadow2xl;
-			result.boxShadow.boxShadowInner;
-			result.boxShadow.boxShadowRing;
+			result.boxShadow;
+			result.boxShadowNone;
+			result.boxShadowXs;
+			result.boxShadowSm;
+			result.boxShadowMd;
+			result.boxShadowLg;
+			result.boxShadowXl;
+			result.boxShadow2xl;
+			result.boxShadowInner;
+			result.boxShadowRing;
 
 			// @ts-expect-error - boxShadow3xl is not a default key
-			result.boxShadow.boxShadow3xl;
+			result.boxShadow3xl;
 		});
 
 		it("should return all default fontFamily keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.fontFamily.fontFamily;
-			result.fontFamily.fontFamilyBase;
-			result.fontFamily.fontFamilyPrint;
-			result.fontFamily.fontFamilyMono;
+			result.fontFamily;
+			result.fontFamilyBase;
+			result.fontFamilyPrint;
+			result.fontFamilyMono;
 
 			// @ts-expect-error - fontFamilySans is not a default key
-			result.fontFamily.fontFamilySans;
+			result.fontFamilySans;
 		});
 
 		it("should return all default fontSize keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.fontSize.fontSize;
-			result.fontSize.fontSize3xs;
-			result.fontSize.fontSize2xs;
-			result.fontSize.fontSizeXs;
-			result.fontSize.fontSizeSm;
-			result.fontSize.fontSizeMd;
-			result.fontSize.fontSizeLg;
-			result.fontSize.fontSizeXl;
-			result.fontSize.fontSize2xl;
-			result.fontSize.fontSize3xl;
-			result.fontSize.fontSize4xl;
+			result.fontSize;
+			result.fontSize3xs;
+			result.fontSize2xs;
+			result.fontSizeXs;
+			result.fontSizeSm;
+			result.fontSizeMd;
+			result.fontSizeLg;
+			result.fontSizeXl;
+			result.fontSize2xl;
+			result.fontSize3xl;
+			result.fontSize4xl;
 
 			// @ts-expect-error - fontSize5xl is not a default key
-			result.fontSize.fontSize5xl;
+			result.fontSize5xl;
 		});
 
 		it("should return all default fontStyle keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.fontStyle.fontStyle;
-			result.fontStyle.fontStyleItalic;
-			result.fontStyle.fontStyleOblique;
-			result.fontStyle.fontStyleNormal;
-			result.fontStyle.fontStyleInherit;
+			result.fontStyle;
+			result.fontStyleItalic;
+			result.fontStyleOblique;
+			result.fontStyleNormal;
+			result.fontStyleInherit;
 
 			// @ts-expect-error - fontStyleRevert is not a default key
-			result.fontStyle.fontStyleRevert;
+			result.fontStyleRevert;
 		});
 
 		it("should return all default fontWeight keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.fontWeight.fontWeight;
-			result.fontWeight.fontWeightExtralight;
-			result.fontWeight.fontWeightLight;
-			result.fontWeight.fontWeightNormal;
-			result.fontWeight.fontWeightMedium;
-			result.fontWeight.fontWeightSemibold;
-			result.fontWeight.fontWeightBold;
-			result.fontWeight.fontWeightBlack;
-			result.fontWeight.fontWeightLighter;
-			result.fontWeight.fontWeightBolder;
-			result.fontWeight.fontWeightInherit;
+			result.fontWeight;
+			result.fontWeightExtralight;
+			result.fontWeightLight;
+			result.fontWeightNormal;
+			result.fontWeightMedium;
+			result.fontWeightSemibold;
+			result.fontWeightBold;
+			result.fontWeightBlack;
+			result.fontWeightLighter;
+			result.fontWeightBolder;
+			result.fontWeightInherit;
 
 			// @ts-expect-error - fontWeightThin is not a default key
-			result.fontWeight.fontWeightThin;
+			result.fontWeightThin;
 		});
 
 		it("should return all default lineHeight keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.lineHeight.lineHeight;
-			result.lineHeight.lineHeightTight;
-			result.lineHeight.lineHeightSnug;
-			result.lineHeight.lineHeightNormal;
-			result.lineHeight.lineHeightRelaxed;
-			result.lineHeight.lineHeightLoose;
+			result.lineHeight;
+			result.lineHeightTight;
+			result.lineHeightSnug;
+			result.lineHeightNormal;
+			result.lineHeightRelaxed;
+			result.lineHeightLoose;
 
 			// @ts-expect-error - lineHeightCompact is not a default key
-			result.lineHeight.lineHeightCompact;
+			result.lineHeightCompact;
 		});
 
 		it("should return all default letterSpacing keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.letterSpacing.letterSpacing;
-			result.letterSpacing.letterSpacingTighter;
-			result.letterSpacing.letterSpacingTight;
-			result.letterSpacing.letterSpacingNormal;
-			result.letterSpacing.letterSpacingWide;
-			result.letterSpacing.letterSpacingWider;
+			result.letterSpacing;
+			result.letterSpacingTighter;
+			result.letterSpacingTight;
+			result.letterSpacingNormal;
+			result.letterSpacingWide;
+			result.letterSpacingWider;
 
 			// @ts-expect-error - letterSpacingWidest is not a default key
-			result.letterSpacing.letterSpacingWidest;
+			result.letterSpacingWidest;
 		});
 
 		it("should return all default scale keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.scale.scale;
-			result.scale.scaleMinorSecond;
-			result.scale.scaleMajorSecond;
-			result.scale.scaleMinorThird;
-			result.scale.scaleMajorThird;
-			result.scale.scalePerfectFourth;
-			result.scale.scaleAugmentedFourth;
-			result.scale.scalePerfectFifth;
-			result.scale.scaleGolden;
+			result.scale;
+			result.scaleMinorSecond;
+			result.scaleMajorSecond;
+			result.scaleMinorThird;
+			result.scaleMajorThird;
+			result.scalePerfectFourth;
+			result.scaleAugmentedFourth;
+			result.scalePerfectFifth;
+			result.scaleGolden;
 
 			// @ts-expect-error - scaleOctave is not a default key
-			result.scale.scaleOctave;
+			result.scaleOctave;
 		});
 
 		it("should return all default breakpoint keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.breakpoint.breakpointXs;
-			result.breakpoint.breakpointSm;
-			result.breakpoint.breakpointMd;
-			result.breakpoint.breakpointLg;
-			result.breakpoint.breakpointXl;
-			result.breakpoint.breakpoint2xl;
+			result.breakpointXs;
+			result.breakpointSm;
+			result.breakpointMd;
+			result.breakpointLg;
+			result.breakpointXl;
+			result.breakpoint2xl;
 		});
 
 		it("should return all default easing keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s);
 
-			result.easing.easingLinear;
-			result.easing.easingEase;
-			result.easing.easingEaseIn;
-			result.easing.easingEaseOut;
-			result.easing.easingEaseInOut;
-			result.easing.easingEaseInSine;
-			result.easing.easingEaseOutSine;
-			result.easing.easingEaseInOutSine;
-			result.easing.easingEaseInCubic;
-			result.easing.easingEaseOutCubic;
-			result.easing.easingEaseInOutCubic;
-			result.easing.easingSpring;
-			result.easing.easingBounce;
+			result.easingLinear;
+			result.easingEase;
+			result.easingEaseIn;
+			result.easingEaseOut;
+			result.easingEaseInOut;
+			result.easingEaseInSine;
+			result.easingEaseOutSine;
+			result.easingEaseInOutSine;
+			result.easingEaseInCubic;
+			result.easingEaseOutCubic;
+			result.easingEaseInOutCubic;
+			result.easingSpring;
+			result.easingBounce;
 
 			// @ts-expect-error - easingSnap is not a default key
-			result.easing.easingSnap;
+			result.easingSnap;
 		});
 
 		it("should return all default color keys", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, {
-				borderColor: false,
-				meta: {
-					colors: {
-						generateLightness: false,
-						generateShades: false,
-						generateTints: false,
-					},
-				},
-			});
+			const result = useDesignTokensPreset(s);
 
-			result.colors.colorPrimary;
-			result.colors.colorSecondary;
-			result.colors.colorSuccess;
-			result.colors.colorWarning;
-			result.colors.colorDanger;
-			result.colors.colorInfo;
+			result.colorPrimary;
+			result.colorSecondary;
+			result.colorSuccess;
+			result.colorWarning;
+			result.colorDanger;
+			result.colorInfo;
 			// @ts-expect-error - colorBrand is not a default key
-			result.colors.colorBrand;
+			result.colorBrand;
 		});
 
 		it("should return color lightness variation keys", () => {
@@ -1183,6 +1182,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: true,
@@ -1192,21 +1192,21 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			result.colors.colorPrimary;
-			result.colors.colorPrimary50;
-			result.colors.colorPrimary100;
-			result.colors.colorPrimary200;
-			result.colors.colorPrimary300;
-			result.colors.colorPrimary400;
-			result.colors.colorPrimary500;
-			result.colors.colorPrimary600;
-			result.colors.colorPrimary700;
-			result.colors.colorPrimary800;
-			result.colors.colorPrimary900;
-			result.colors.colorPrimary950;
+			result.colorPrimary;
+			result.colorPrimary50;
+			result.colorPrimary100;
+			result.colorPrimary200;
+			result.colorPrimary300;
+			result.colorPrimary400;
+			result.colorPrimary500;
+			result.colorPrimary600;
+			result.colorPrimary700;
+			result.colorPrimary800;
+			result.colorPrimary900;
+			result.colorPrimary950;
 
 			// @ts-expect-error - colorPrimary1000 is not a valid lightness level
-			result.colors.colorPrimary1000;
+			result.colorPrimary1000;
 		});
 
 		it("should return color shade variation keys", () => {
@@ -1214,6 +1214,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -1223,14 +1224,14 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			result.colors.colorPrimary;
-			result.colors.colorPrimaryShade50;
-			result.colors.colorPrimaryShade100;
-			result.colors.colorPrimaryShade150;
-			result.colors.colorPrimaryShade200;
+			result.colorPrimary;
+			result.colorPrimaryShade50;
+			result.colorPrimaryShade100;
+			result.colorPrimaryShade150;
+			result.colorPrimaryShade200;
 
 			// @ts-expect-error - colorPrimaryShade300 is not a valid shade level
-			result.colors.colorPrimaryShade300;
+			result.colorPrimaryShade300;
 		});
 
 		it("should return color tint variation keys", () => {
@@ -1238,6 +1239,7 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
 				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
 						generateLightness: false,
@@ -1247,14 +1249,14 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			result.colors.colorPrimary;
-			result.colors.colorPrimaryTint50;
-			result.colors.colorPrimaryTint100;
-			result.colors.colorPrimaryTint150;
-			result.colors.colorPrimaryTint200;
+			result.colorPrimary;
+			result.colorPrimaryTint50;
+			result.colorPrimaryTint100;
+			result.colorPrimaryTint150;
+			result.colorPrimaryTint200;
 
 			// @ts-expect-error - colorPrimaryTint300 is not a valid tint level
-			result.colors.colorPrimaryTint300;
+			result.colorPrimaryTint300;
 		});
 
 		it("should return all variation keys for multiple colors", () => {
@@ -1265,19 +1267,19 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			// primary variations
-			result.colors.colorPrimary;
-			result.colors.colorPrimary500;
-			result.colors.colorPrimaryShade100;
-			result.colors.colorPrimaryTint100;
+			result.colorPrimary;
+			result.colorPrimary500;
+			result.colorPrimaryShade100;
+			result.colorPrimaryTint100;
 
 			// danger variations
-			result.colors.colorDanger;
-			result.colors.colorDanger500;
-			result.colors.colorDangerShade100;
-			result.colors.colorDangerTint100;
+			result.colorDanger;
+			result.colorDanger500;
+			result.colorDangerShade100;
+			result.colorDangerTint100;
 
 			// @ts-expect-error - colorSuccess is not in custom config
-			result.colors.colorSuccess;
+			result.colorSuccess;
 		});
 
 		it("should return scalePowers when scale is enabled", () => {
@@ -1295,26 +1297,27 @@ describe("useDesignTokensPreset", () => {
 			expect(result.scalePowers[5]).toBeDefined();
 		});
 
-		it("should type scalePowers as undefined when scale is disabled", () => {
+		it("should type scalePowers as absent when scale is disabled", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				scale: false,
 			});
 
-			expect(result.scalePowers).toBeUndefined();
+			expect((result as Record<string, unknown>).scalePowers).toBeUndefined();
 		});
 
-		it("should type colors as undefined when colors is disabled", () => {
+		it("should type colors as absent when colors is disabled", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: false,
 				borderColor: false,
 			});
 
-			expect(result.colors).toBeUndefined();
+			// @ts-expect-error - colorPrimary doesn't exist when colors is disabled
+			result.colorPrimary;
 
-			// @ts-expect-error - colors is undefined when disabled
-			const _colorsCheck: Record<string, unknown> = result.colors;
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--color--primary");
 		});
 	});
 
@@ -1354,7 +1357,11 @@ describe("useDesignTokensPreset", () => {
 				spacing: { default: "1rem", sm: "0.5rem", lg: "2rem" },
 				themes: {
 					compact: {
-						spacing: { default: "0.75rem", sm: "0.25rem", lg: "1.5rem" },
+						spacing: {
+							default: "0.75rem",
+							sm: "0.25rem",
+							lg: "1.5rem",
+						},
 					},
 				},
 			});
@@ -1409,6 +1416,7 @@ describe("useDesignTokensPreset", () => {
 							sm: "0.25rem",
 						},
 					},
+					dark: { colors: false, borderColor: false },
 				},
 				meta: {
 					colors: {
@@ -1420,7 +1428,7 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			// Colors and spacing should have been created at root level
-			expect(result.colors).toBeDefined();
+			expect(result.colorPrimary).toBeDefined();
 			expect(result.spacing).toBeDefined();
 
 			const css = consumeCSS(s.root, s.options);
@@ -1439,6 +1447,7 @@ describe("useDesignTokensPreset", () => {
 					default: {
 						colors: { primary: "#007bff" },
 					},
+					dark: { colors: false, borderColor: false },
 				},
 				meta: {
 					colors: {
@@ -1450,7 +1459,9 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			// Root-level colors should win (brand, not primary)
-			const colorKeys = Object.keys(result.colors || {});
+			const colorKeys = Object.keys(result).filter((k) =>
+				k.startsWith("color"),
+			);
 			expect(colorKeys).toContain("colorBrand");
 			expect(colorKeys).not.toContain("colorPrimary");
 		});
@@ -1473,6 +1484,7 @@ describe("useDesignTokensPreset", () => {
 					default: {
 						colors: { primary: "#007bff" },
 					},
+					dark: { colors: false, borderColor: false },
 				},
 				meta: {
 					colors: {
@@ -1483,6 +1495,7 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
+			// Dark theme still exists (from domain-level defaults for other domains)
 			expect(s.root.themes).toHaveLength(1);
 			expect(s.root.themes[0]!.name).toBe("dark");
 		});
@@ -1533,9 +1546,115 @@ describe("useDesignTokensPreset", () => {
 			expect(css).toContain('[data-theme="dark"]');
 		});
 
-		it("should not apply theme overrides for domains disabled at root level", () => {
+		it("should support reference color values that point to shade/tint variants", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				colors: {
+					primary: "#ff0000",
+					"primary.hover": "@color.primary-shade-50",
+					"primary.focus": "@color.primary-shade-100",
+				},
+				borderColor: false,
+			});
+
+			// Base color should exist
+			expect(result.colorPrimary).toBeDefined();
+
+			// State color variables should exist
+			expect(result.colorPrimaryHover).toBeDefined();
+			expect(result.colorPrimaryFocus).toBeDefined();
+
+			// State colors should be references to shade variants
+			expect(result.colorPrimaryHover.value).toEqual({
+				type: "reference",
+				name: "color.primary-shade-50",
+			});
+			expect(result.colorPrimaryFocus.value).toEqual({
+				type: "reference",
+				name: "color.primary-shade-100",
+			});
+
+			// CSS should contain the reference variables
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain(
+				"--color--primary--hover: var(--color--primary-shade-50)",
+			);
+			expect(css).toContain(
+				"--color--primary--focus: var(--color--primary-shade-100)",
+			);
+		});
+
+		it("should support dark theme overrides for reference color values", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				colors: {
+					primary: "#ff0000",
+					"primary.hover": "@color.primary-shade-50",
+					"primary.focus": "@color.primary-shade-100",
+				},
+				borderColor: false,
+				themes: {
+					dark: {
+						colors: {
+							primary: "#ff6666",
+							"primary.hover": "@color.primary-tint-50",
+							"primary.focus": "@color.primary-tint-100",
+						},
+						borderColor: false,
+					},
+				},
+				meta: {
+					colors: {
+						generateLightness: false,
+					},
+				},
+			});
+
+			const css = consumeCSS(s.root, s.options);
+
+			// Root should have shade references
+			expect(css).toContain(
+				"--color--primary--hover: var(--color--primary-shade-50)",
+			);
+			expect(css).toContain(
+				"--color--primary--focus: var(--color--primary-shade-100)",
+			);
+
+			// Dark theme should have tint references
+			expect(css).toContain('[data-theme="dark"]');
+			expect(css).toContain(
+				"--color--primary--hover: var(--color--primary-tint-50)",
+			);
+			expect(css).toContain(
+				"--color--primary--focus: var(--color--primary-tint-100)",
+			);
+		});
+
+		it("should support reference colors alongside multiple base colors", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: {
+					primary: "#ff0000",
+					secondary: "#00ff00",
+					"primary.hover": "@color.primary-shade-50",
+					"secondary.hover": "@color.secondary-tint-50",
+				},
+				borderColor: false,
+			});
+
+			expect(result.colorPrimaryHover.value).toEqual({
+				type: "reference",
+				name: "color.primary-shade-50",
+			});
+			expect(result.colorSecondaryHover.value).toEqual({
+				type: "reference",
+				name: "color.secondary-tint-50",
+			});
+		});
+
+		it("should not apply theme overrides for domains disabled at root level", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
 				colors: false,
 				borderColor: false,
 				themes: {
@@ -1546,7 +1665,8 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			// Colors are disabled at root level
-			expect(result.colors).toBeUndefined();
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--color--primary");
 
 			// The dark theme still exists but only has color overrides
 			expect(s.root.themes).toHaveLength(1);

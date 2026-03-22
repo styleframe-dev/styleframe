@@ -6,7 +6,6 @@ const { ref, selector, recipe, css } = s;
 
 useUtilitiesPreset(s);
 
-const { borderRadius } = useDesignTokensPreset(s);
 const {
 	borderRadiusNone,
 	borderRadiusSm,
@@ -15,7 +14,7 @@ const {
 	borderRadiusXl,
 	borderRadius2xl,
 	borderRadiusFull,
-} = borderRadius;
+} = useDesignTokensPreset(s);
 
 selector(".border-radius-swatch__preview", {
 	width: "calc(@spacing * 6)",

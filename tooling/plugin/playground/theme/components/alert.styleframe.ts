@@ -4,14 +4,24 @@ import { useTokens } from "../useTokens";
 const s = styleframe();
 const { ref, selector, css } = s;
 
-const { tokens, colorWhite, fadeIn } = useTokens(s);
-const { spacingXs, spacingSm, spacingMd } = tokens.spacing;
-const { borderRadiusLg, borderRadiusMd } = tokens.borderRadius;
-const { borderWidthThin } = tokens.borderWidth;
-const { fontSizeSm, fontSizeMd } = tokens.fontSize;
-const { fontWeightSemibold } = tokens.fontWeight;
-const { lineHeightNormal } = tokens.lineHeight;
-const { colorSuccess, colorWarning, colorDanger, colorInfo } = tokens.colors;
+const {
+	colorWhite,
+	fadeIn,
+	spacingXs,
+	spacingSm,
+	spacingMd,
+	borderRadiusLg,
+	borderRadiusMd,
+	borderWidthThin,
+	fontSizeSm,
+	fontSizeMd,
+	fontWeightSemibold,
+	lineHeightNormal,
+	colorSuccess,
+	colorWarning,
+	colorDanger,
+	colorInfo,
+} = useTokens(s);
 
 // Alert structure
 selector(".alert", {

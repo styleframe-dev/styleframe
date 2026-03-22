@@ -18,16 +18,16 @@ import { figmaValueToStyleframe } from "./value-parsing";
  * Known composable categories and their function names
  */
 const COMPOSABLE_MAP: Record<string, string> = {
-	color: "useColor",
-	spacing: "useSpacing",
-	fontSize: "useFontSize",
-	fontWeight: "useFontWeight",
-	fontFamily: "useFontFamily",
-	lineHeight: "useLineHeight",
-	letterSpacing: "useLetterSpacing",
-	borderWidth: "useBorderWidth",
-	borderRadius: "useBorderRadius",
-	boxShadow: "useBoxShadow",
+	color: "useColorDesignTokens",
+	spacing: "useSpacingDesignTokens",
+	fontSize: "useFontSizeDesignTokens",
+	fontWeight: "useFontWeightDesignTokens",
+	fontFamily: "useFontFamilyDesignTokens",
+	lineHeight: "useLineHeightDesignTokens",
+	letterSpacing: "useLetterSpacingDesignTokens",
+	borderWidth: "useBorderWidthDesignTokens",
+	borderRadius: "useBorderRadiusDesignTokens",
+	boxShadow: "useBoxShadowDesignTokens",
 };
 
 /**

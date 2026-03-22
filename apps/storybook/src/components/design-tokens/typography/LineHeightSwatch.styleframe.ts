@@ -6,14 +6,13 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { lineHeight } = useDesignTokensPreset(s);
 const {
 	lineHeightTight,
 	lineHeightSnug,
 	lineHeightNormal,
 	lineHeightRelaxed,
 	lineHeightLoose,
-} = lineHeight;
+} = useDesignTokensPreset(s);
 
 selector(".line-height-swatch__preview", {
 	color: "@color.text-weakest",

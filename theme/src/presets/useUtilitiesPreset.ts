@@ -127,6 +127,7 @@ import {
 // Borders
 import {
 	useBorderColorBottomUtility,
+	useBorderBottomUtility,
 	useBorderColorEndUtility,
 	useBorderColorLeftUtility,
 	useBorderColorRightUtility,
@@ -135,6 +136,10 @@ import {
 	useBorderColorUtility,
 	useBorderColorXUtility,
 	useBorderColorYUtility,
+	useBorderLeftUtility,
+	useBorderRightUtility,
+	useBorderTopUtility,
+	useBorderUtility,
 	useBorderRadiusBottomLeftUtility,
 	useBorderRadiusBottomRightUtility,
 	useBorderRadiusBottomUtility,
@@ -403,6 +408,7 @@ import {
 	useTransitionDurationUtility,
 	useTransitionPropertyUtility,
 	useTransitionTimingFunctionUtility,
+	useTransitionUtility,
 } from "../utilities/transitions-animation";
 
 // Typography
@@ -1311,6 +1317,12 @@ export function useUtilitiesPreset(
 	);
 	if (height) createHeightUtility(height);
 
+	const createBorderUtility = useBorderUtility(s);
+	const createBorderTopUtility = useBorderTopUtility(s);
+	const createBorderRightUtility = useBorderRightUtility(s);
+	const createBorderBottomUtility = useBorderBottomUtility(s);
+	const createBorderLeftUtility = useBorderLeftUtility(s);
+
 	const createBorderStyleUtility = useBorderStyleUtility(
 		s,
 		undefined,
@@ -1387,7 +1399,7 @@ export function useUtilitiesPreset(
 		s,
 		undefined,
 		undefined,
-		resolveUtilityOptions("animate"),
+		resolveUtilityOptions("animation"),
 	);
 	if (animation) createAnimationUtility(animation);
 
@@ -1598,6 +1610,11 @@ export function useUtilitiesPreset(
 		),
 
 		// Borders
+		createBorderUtility,
+		createBorderTopUtility,
+		createBorderRightUtility,
+		createBorderBottomUtility,
+		createBorderLeftUtility,
 		createBorderColorBottomUtility: useBorderColorBottomUtility(
 			s,
 			undefined,
@@ -2694,6 +2711,12 @@ export function useUtilitiesPreset(
 		// Transitions and Animation
 		createAnimationUtility,
 		createTransitionBehaviorUtility,
+		createTransitionUtility: useTransitionUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("transition"),
+		),
 		createTransitionDelayUtility: useTransitionDelayUtility(
 			s,
 			undefined,

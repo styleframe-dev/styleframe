@@ -5,6 +5,16 @@ import {
 } from "../../values";
 
 /**
+ * Create transition utility classes.
+ */
+export const useTransitionUtility = createUseUtility(
+	"transition",
+	({ value }) => ({
+		transition: value,
+	}),
+);
+
+/**
  * Create transition-property utility classes.
  */
 export const useTransitionPropertyUtility = createUseUtility(

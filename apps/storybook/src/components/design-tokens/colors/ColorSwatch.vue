@@ -7,6 +7,8 @@ import { themeEventBus } from "../../../utils/themeEventBus";
 const props = defineProps<{
 	name: string;
 	value: string;
+	label?: string;
+	interactive?: boolean;
 }>();
 
 const previewEl = vueRef<HTMLElement | null>(null);
@@ -38,6 +40,10 @@ function getContrastRatio(l1: number, l2: number): number {
 	return (lighter + 0.05) / (darker + 0.05);
 }
 
+function deferredUpdateContrastRatios() {
+	requestAnimationFrame(updateContrastRatios);
+}
+
 function updateContrastRatios() {
 	if (!previewEl.value) return;
 
@@ -59,21 +65,44 @@ function updateContrastRatios() {
 	adjacentPassesAA.value = adjacentRatio >= 3;
 }
 
+const interactionEvents = [
+	"mouseenter",
+	"mouseleave",
+	"focus",
+	"blur",
+	"mousedown",
+	"mouseup",
+	"transitionend",
+] as const;
+
 onMounted(() => {
 	updateContrastRatios();
 	themeEventBus.on("theme-change", updateContrastRatios);
+
+	if (props.interactive && previewEl.value) {
+		for (const event of interactionEvents) {
+			previewEl.value.addEventListener(event, deferredUpdateContrastRatios);
+		}
+	}
 });
 
 onUnmounted(() => {
 	themeEventBus.off("theme-change", updateContrastRatios);
+
+	if (props.interactive && previewEl.value) {
+		for (const event of interactionEvents) {
+			previewEl.value.removeEventListener(event, deferredUpdateContrastRatios);
+		}
+	}
 });
 </script>
 
 <template>
-	<SwatchCard :name="name">
+	<SwatchCard :name="name" :label="label">
 		<div
 			ref="previewEl"
-			:class="['color-swatch__preview', colorSwatch({ variant: value })]"
+			:tabindex="interactive ? 0 : undefined"
+			:class="['color-swatch__preview', colorSwatch({ variant: value, interactive })]"
 		>
 			{{ name }}
 		</div>

@@ -8,7 +8,9 @@ type Payloads<ListenerMap> = {
 type Listener<Payload> = (payload: Payload) => void;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface EventBus<ListenerMap extends Payloads<ListenerMap> = Record<string, any>> {
+export interface EventBus<
+	ListenerMap extends Payloads<ListenerMap> = Record<string, any>,
+> {
 	on<EventName extends keyof ListenerMap & string>(
 		eventName: EventName,
 		fn: Listener<ListenerMap[EventName]>,

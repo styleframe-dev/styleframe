@@ -6,8 +6,8 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { fontFamily } = useDesignTokensPreset(s);
-const { fontFamilyBase, fontFamilyPrint, fontFamilyMono } = fontFamily;
+const { fontFamilyBase, fontFamilyPrint, fontFamilyMono } =
+	useDesignTokensPreset(s);
 
 selector(".font-family-swatch__preview", {
 	color: "@color.text-weakest",
