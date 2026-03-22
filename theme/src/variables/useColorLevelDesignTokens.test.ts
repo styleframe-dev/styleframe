@@ -5,7 +5,7 @@ import { useColorLevelDesignTokens } from "./useColorLevelDesignTokens";
 import { colorLevelValues } from "../values";
 
 describe("useColorLevelDesignTokens", () => {
-	it("should create lightness levels with default values", () => {
+	it("should create color levels with default values", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		const levels = useColorLevelDesignTokens(s, colorPrimary, colorLevelValues);
@@ -37,7 +37,7 @@ describe("useColorLevelDesignTokens", () => {
 		expect(css).toMatch(/^--color--primary-100: oklch\(.+\);$/);
 	});
 
-	it("should compile lightness levels to correct CSS output using consumeCSS", () => {
+	it("should compile color levels to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		useColorLevelDesignTokens(s, colorPrimary, {
@@ -54,7 +54,7 @@ describe("useColorLevelDesignTokens", () => {
 		expect(css).toMatch(/--color--primary-900: oklch\(.+\);/);
 	});
 
-	it("should create lightness levels with custom values", () => {
+	it("should create color levels with custom values", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
 		const levels = useColorLevelDesignTokens(s, colorPrimary, {

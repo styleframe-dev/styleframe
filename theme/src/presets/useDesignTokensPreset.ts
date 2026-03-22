@@ -5,6 +5,7 @@ import {
 	type TokenValue,
 	type Variable,
 } from "@styleframe/core";
+import { defu } from "defu";
 import type { CamelCase } from "scule";
 import { camelCase } from "scule";
 import type { ExportKeys } from "../types";
@@ -217,7 +218,7 @@ const domains = [
 			const baseColors = useColorDesignTokens(s, baseColorValues, options);
 			let result: Record<string, Variable> = { ...baseColors };
 
-			const meta = { ...defaultColorsMetaConfig, ...config.meta?.colors };
+			const meta = defu(config.meta?.colors ?? {}, defaultColorsMetaConfig);
 
 			for (const colorVariable of Object.values(
 				baseColors,
