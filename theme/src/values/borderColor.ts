@@ -1,5 +1,5 @@
 export const borderColorValues = {
-	default: "@color.surface-shade-100",
+	default: "@color.gray-200",
 	primary: "@color.primary-shade-100",
 	secondary: "@color.secondary-shade-100",
 	success: "@color.success-shade-100",
@@ -9,7 +9,7 @@ export const borderColorValues = {
 } as const;
 
 export const hoverBorderColorValues = {
-	hover: "@color.surface-shade-150",
+	hover: "@color.gray-300",
 	"primary.hover": "@color.primary-shade-150",
 	"secondary.hover": "@color.secondary-shade-150",
 	"success.hover": "@color.success-shade-150",
@@ -19,7 +19,7 @@ export const hoverBorderColorValues = {
 } as const;
 
 export const darkModeBorderColorValues = {
-	default: "@color.surface-tint-100",
+	default: "@color.gray-700",
 	primary: "@color.primary-tint-100",
 	secondary: "@color.secondary-tint-100",
 	success: "@color.success-tint-100",
@@ -29,7 +29,7 @@ export const darkModeBorderColorValues = {
 } as const;
 
 export const darkModeHoverBorderColorValues = {
-	hover: "@color.surface-tint-150",
+	hover: "@color.gray-600",
 	"primary.hover": "@color.primary-tint-150",
 	"secondary.hover": "@color.secondary-tint-150",
 	"success.hover": "@color.success-tint-150",

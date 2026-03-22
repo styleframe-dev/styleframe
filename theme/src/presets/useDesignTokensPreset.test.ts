@@ -341,7 +341,7 @@ describe("useDesignTokensPreset", () => {
 			expect(tintKeys.length).toBeGreaterThan(0);
 		});
 
-		it("should not generate lightness when generateLightness is false", () => {
+		it("should not generate lightness when generateLevels is false", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				colors: { primary: "#007bff" },
@@ -349,7 +349,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 					},
 				},
 			});
@@ -406,10 +406,10 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: true,
+						generateLevels: true,
 						generateShades: false,
 						generateTints: false,
-						lightnessLevels: { 100: 10, 500: 50, 900: 90 },
+						levels: { 100: 10, 500: 50, 900: 90 },
 					},
 				},
 			});
@@ -428,7 +428,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: true,
 						generateTints: false,
 						shadeLevels: { "shade-50": 5, "shade-100": 10 },
@@ -449,7 +449,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: true,
 						tintLevels: { "tint-50": 5, "tint-100": 10 },
@@ -462,6 +462,89 @@ describe("useDesignTokensPreset", () => {
 			expect(resultKeys).toContain("colorPrimaryTint100");
 		});
 
+		it("should disable levels for a specific color via overrides", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: { primary: "#007bff", secondary: "#333333" },
+				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
+				meta: {
+					colors: {
+						generateShades: false,
+						generateTints: false,
+						overrides: {
+							secondary: { generateLevels: false },
+						},
+					},
+				},
+			});
+
+			const primaryLevelKeys = Object.keys(result).filter((name) =>
+				/colorPrimary\d+/.test(name),
+			);
+			const secondaryLevelKeys = Object.keys(result).filter((name) =>
+				/colorSecondary\d+/.test(name),
+			);
+			expect(primaryLevelKeys.length).toBeGreaterThan(0);
+			expect(secondaryLevelKeys.length).toBe(0);
+		});
+
+		it("should enable levels for a specific color when globally disabled via overrides", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: { primary: "#007bff", secondary: "#333333" },
+				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
+				meta: {
+					colors: {
+						generateLevels: false,
+						generateShades: false,
+						generateTints: false,
+						overrides: {
+							primary: { generateLevels: true },
+						},
+					},
+				},
+			});
+
+			const primaryLevelKeys = Object.keys(result).filter((name) =>
+				/colorPrimary\d+/.test(name),
+			);
+			const secondaryLevelKeys = Object.keys(result).filter((name) =>
+				/colorSecondary\d+/.test(name),
+			);
+			expect(primaryLevelKeys.length).toBeGreaterThan(0);
+			expect(secondaryLevelKeys.length).toBe(0);
+		});
+
+		it("should override shades and tints per color independently", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				colors: { primary: "#007bff", secondary: "#333333" },
+				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
+				meta: {
+					colors: {
+						generateLevels: false,
+						overrides: {
+							primary: { generateShades: false },
+							secondary: { generateTints: false },
+						},
+					},
+				},
+			});
+
+			const resultKeys = Object.keys(result);
+
+			// Primary: shades disabled, tints enabled
+			expect(resultKeys.some((k) => /colorPrimaryShade/.test(k))).toBe(false);
+			expect(resultKeys.some((k) => /colorPrimaryTint/.test(k))).toBe(true);
+
+			// Secondary: shades enabled, tints disabled
+			expect(resultKeys.some((k) => /colorSecondaryShade/.test(k))).toBe(true);
+			expect(resultKeys.some((k) => /colorSecondaryTint/.test(k))).toBe(false);
+		});
+
 		it("should disable all color variations", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
@@ -470,7 +553,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -499,10 +582,10 @@ describe("useDesignTokensPreset", () => {
 
 	describe("defaultColorsMetaConfig", () => {
 		it("should have correct default values", () => {
-			expect(defaultColorsMetaConfig.generateLightness).toBe(true);
+			expect(defaultColorsMetaConfig.generateLevels).toBe(true);
 			expect(defaultColorsMetaConfig.generateShades).toBe(true);
 			expect(defaultColorsMetaConfig.generateTints).toBe(true);
-			expect(defaultColorsMetaConfig.lightnessLevels).toBeDefined();
+			expect(defaultColorsMetaConfig.levels).toBeDefined();
 			expect(defaultColorsMetaConfig.shadeLevels).toBeDefined();
 			expect(defaultColorsMetaConfig.tintLevels).toBeDefined();
 		});
@@ -526,7 +609,7 @@ describe("useDesignTokensPreset", () => {
 				},
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -561,7 +644,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -600,7 +683,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -838,7 +921,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -1185,7 +1268,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: true,
+						generateLevels: true,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -1217,7 +1300,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: true,
 						generateTints: false,
 					},
@@ -1242,7 +1325,7 @@ describe("useDesignTokensPreset", () => {
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: true,
 					},
@@ -1334,7 +1417,7 @@ describe("useDesignTokensPreset", () => {
 				},
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -1388,7 +1471,7 @@ describe("useDesignTokensPreset", () => {
 				},
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -1420,7 +1503,7 @@ describe("useDesignTokensPreset", () => {
 				},
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -1451,7 +1534,7 @@ describe("useDesignTokensPreset", () => {
 				},
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -1488,7 +1571,7 @@ describe("useDesignTokensPreset", () => {
 				},
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -1528,7 +1611,7 @@ describe("useDesignTokensPreset", () => {
 				},
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 						generateShades: false,
 						generateTints: false,
 					},
@@ -1605,7 +1688,7 @@ describe("useDesignTokensPreset", () => {
 				},
 				meta: {
 					colors: {
-						generateLightness: false,
+						generateLevels: false,
 					},
 				},
 			});
