@@ -181,7 +181,7 @@ Document core Styleframe methods. Each method gets an H2 heading with the functi
 
 ### Design Token Pages (`05.design-tokens/`)
 
-Document `@styleframe/theme` composables. Each composable (e.g., `useColorDesignTokens`, `useColorLightnessDesignTokens`) gets its own H2 section. Show:
+Document `@styleframe/theme` composables. Each composable (e.g., `useColorDesignTokens`, `useColorLevelDesignTokens`) gets its own H2 section. Show:
 1. Default usage with tabbed Code/Output
 2. Custom values variant
 3. Extending defaults variant

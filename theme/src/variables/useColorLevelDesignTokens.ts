@@ -1,6 +1,6 @@
 import { createUseDerivedVariable } from "../utils";
 import { computeLightnessColor, parseOklch } from "../utils/oklchGamut";
-import { colorLightnessValues } from "../values";
+import { colorLevelValues } from "../values";
 /**
  * Create a set of lightness levels for a color variable.
  *
@@ -18,7 +18,7 @@ import { colorLightnessValues } from "../values";
  *   colorPrimary200, // Variable<'color.primary-200'>
  *   colorPrimary300, // Variable<'color.primary-300'>
  *   ...
- * } = useColorLightnessDesignTokens(s, colorPrimary, {
+ * } = useColorLevelDesignTokens(s, colorPrimary, {
  *   100: 0.93,
  *   200: 0.85,
  *   300: 0.75,
@@ -26,8 +26,8 @@ import { colorLightnessValues } from "../values";
  * });
  * ```
  */
-export const useColorLightnessDesignTokens = createUseDerivedVariable({
-	defaults: colorLightnessValues,
+export const useColorLevelDesignTokens = createUseDerivedVariable({
+	defaults: colorLevelValues,
 	delimiter: "-",
 	transform: (value: number, { s, parent }) => {
 		if (typeof value !== "number") {

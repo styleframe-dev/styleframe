@@ -5,6 +5,7 @@ import {
 	type TokenValue,
 	type Variable,
 } from "@styleframe/core";
+import { defu } from "defu";
 import type { CamelCase } from "scule";
 import { camelCase } from "scule";
 import type { ExportKeys } from "../types";
@@ -15,7 +16,7 @@ import {
 	borderWidthValues,
 	boxShadowValues,
 	breakpointValues,
-	colorLightnessValues,
+	colorLevelValues,
 	colorShadeValues,
 	colorTintValues,
 	colorValues,
@@ -42,7 +43,7 @@ import {
 	useBoxShadowDesignTokens,
 	useBreakpointDesignTokens,
 	useColorDesignTokens,
-	useColorLightnessDesignTokens,
+	useColorLevelDesignTokens,
 	useColorShadeDesignTokens,
 	useColorTintDesignTokens,
 	useDurationDesignTokens,
@@ -217,24 +218,27 @@ const domains = [
 			const baseColors = useColorDesignTokens(s, baseColorValues, options);
 			let result: Record<string, Variable> = { ...baseColors };
 
-			const meta = { ...defaultColorsMetaConfig, ...config.meta?.colors };
+			const meta = defu(config.meta?.colors ?? {}, defaultColorsMetaConfig);
 
 			for (const colorVariable of Object.values(
 				baseColors,
 			) as Variable<string>[]) {
-				if (meta.generateLightness) {
+				const colorKey = colorVariable.name.slice("color.".length);
+				const colorOverride = meta.overrides?.[colorKey];
+
+				if (colorOverride?.generateLevels ?? meta.generateLevels) {
 					result = {
 						...result,
-						...useColorLightnessDesignTokens(
+						...useColorLevelDesignTokens(
 							s,
 							colorVariable,
-							meta.lightnessLevels,
+							meta.levels,
 							options,
 						),
 					};
 				}
 
-				if (meta.generateShades) {
+				if (colorOverride?.generateShades ?? meta.generateShades) {
 					result = {
 						...result,
 						...useColorShadeDesignTokens(
@@ -246,7 +250,7 @@ const domains = [
 					};
 				}
 
-				if (meta.generateTints) {
+				if (colorOverride?.generateTints ?? meta.generateTints) {
 					result = {
 						...result,
 						...useColorTintDesignTokens(
@@ -375,7 +379,7 @@ type UnionToIntersection<U> = (
 	: never;
 
 // Variation level types
-type DefaultLightnessLevels = typeof colorLightnessValues;
+type DefaultLevelValues = typeof colorLevelValues;
 type DefaultShadeLevels = typeof colorShadeValues;
 type DefaultTintLevels = typeof colorTintValues;
 type DefaultColors = typeof colorValues;
@@ -384,7 +388,7 @@ type DefaultColors = typeof colorValues;
  * Generates all variation keys for a single color name (distributive over K)
  */
 type ColorVariationsForKey<K> = K extends string
-	? ExportKeys<`color.${K}`, DefaultLightnessLevels, "-"> &
+	? ExportKeys<`color.${K}`, DefaultLevelValues, "-"> &
 			ExportKeys<`color.${K}`, DefaultShadeLevels, "-"> &
 			ExportKeys<`color.${K}`, DefaultTintLevels, "-">
 	: never;
@@ -424,15 +428,22 @@ type FlatColorResult<
 // =============================================================================
 
 /**
- * Configuration for color generation behavior
+ * Per-color generation flags
  */
-export interface ColorsMetaConfig {
-	generateLightness?: boolean;
+export interface ColorGenerationFlags {
+	generateLevels?: boolean;
 	generateShades?: boolean;
 	generateTints?: boolean;
-	lightnessLevels?: Record<string | number, number>;
+}
+
+/**
+ * Configuration for color generation behavior
+ */
+export interface ColorsMetaConfig extends ColorGenerationFlags {
+	levels?: Record<string | number, number>;
 	shadeLevels?: Record<string | number, number>;
 	tintLevels?: Record<string | number, number>;
+	overrides?: Record<string, ColorGenerationFlags>;
 }
 
 /**
@@ -551,12 +562,55 @@ export type DesignTokensPresetResult<
  * Default colors meta configuration
  */
 export const defaultColorsMetaConfig: Required<ColorsMetaConfig> = {
-	generateLightness: true,
+	generateLevels: true,
 	generateShades: true,
 	generateTints: true,
-	lightnessLevels: colorLightnessValues,
+	levels: colorLevelValues,
 	shadeLevels: colorShadeValues,
 	tintLevels: colorTintValues,
+	overrides: {
+		white: {
+			generateLevels: false,
+			generateShades: false,
+			generateTints: false,
+		},
+		black: {
+			generateLevels: false,
+			generateShades: false,
+			generateTints: false,
+		},
+		background: {
+			generateLevels: false,
+			generateShades: false,
+			generateTints: false,
+		},
+		surface: { generateLevels: false },
+		text: {
+			generateLevels: false,
+			generateShades: false,
+			generateTints: false,
+		},
+		"text-inverted": {
+			generateLevels: false,
+			generateShades: false,
+			generateTints: false,
+		},
+		"text-weak": {
+			generateLevels: false,
+			generateShades: false,
+			generateTints: false,
+		},
+		"text-weaker": {
+			generateLevels: false,
+			generateShades: false,
+			generateTints: false,
+		},
+		"text-weakest": {
+			generateLevels: false,
+			generateShades: false,
+			generateTints: false,
+		},
+	},
 };
 
 /**

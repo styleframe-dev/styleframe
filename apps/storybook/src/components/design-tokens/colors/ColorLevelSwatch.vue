@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { colorLightnessSwatch } from "virtual:styleframe";
+import { colorLevelSwatch } from "virtual:styleframe";
 import SwatchCard from "../../primitives/SwatchCard.vue";
 
 const props = defineProps<{
@@ -10,7 +10,7 @@ const props = defineProps<{
 
 <template>
 	<SwatchCard :name="name">
-		<div :class="['color-lightness-swatch__preview', colorLightnessSwatch({ variant: value })]">
+		<div :class="['color-level-swatch__preview', colorLevelSwatch({ variant: value })]">
 			{{ name }}
 		</div>
 	</SwatchCard>

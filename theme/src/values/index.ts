@@ -6,7 +6,7 @@ export * from "./borderWidth";
 export * from "./boxShadow";
 export * from "./breakpoint";
 export * from "./color";
-export * from "./colorLightness";
+export * from "./colorLevel";
 export * from "./colorShade";
 export * from "./colorTint";
 export * from "./duration";

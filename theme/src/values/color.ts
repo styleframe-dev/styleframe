@@ -56,12 +56,12 @@ export const colorValues = {
 	"text-weaker": "#475569",
 	"text-weakest": "#64748B",
 
-	"text.on-primary": "@color.primary-900",
-	"text.on-secondary": "@color.secondary-900",
-	"text.on-success": "@color.success-900",
-	"text.on-warning": "@color.warning-900",
-	"text.on-danger": "@color.danger-900",
-	"text.on-info": "@color.info-900",
+	"text.on-primary": "@color.text-inverted",
+	"text.on-secondary": "@color.text-inverted",
+	"text.on-success": "@color.text-inverted",
+	"text.on-warning": "@color.text-inverted",
+	"text.on-danger": "@color.text-inverted",
+	"text.on-info": "@color.text-inverted",
 	"text.on-gray": "@color.text-inverted",
 } as const;
 
@@ -120,11 +120,11 @@ export const darkModeColorValues = {
 	"text-weaker": "#94A3B8",
 	"text-weakest": "#64748B",
 
-	"text.on-primary": "@color.primary-50",
-	"text.on-secondary": "@color.secondary-100",
-	"text.on-success": "@color.success-100",
-	"text.on-warning": "@color.warning-100",
-	"text.on-danger": "@color.danger-100",
-	"text.on-info": "@color.info-100",
-	"text.on-gray": "@color.text-inverted",
+	"text.on-primary": "@color.text",
+	"text.on-secondary": "@color.text",
+	"text.on-success": "@color.text",
+	"text.on-warning": "@color.text",
+	"text.on-danger": "@color.text",
+	"text.on-info": "@color.text",
+	"text.on-gray": "@color.text",
 };

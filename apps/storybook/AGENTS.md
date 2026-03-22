@@ -38,7 +38,7 @@ apps/storybook/
     │   ├── color.stories.ts
     │   ├── color-shade.stories.ts
     │   ├── color-tint.stories.ts
-    │   ├── color-lightness.stories.ts
+    │   ├── color-level.stories.ts
     │   ├── font-size.stories.ts
     │   ├── font-weight.stories.ts
     │   ├── font-family.stories.ts
@@ -63,7 +63,7 @@ apps/storybook/
     │   ├── ColorSwatch.vue        # Color token visualization with contrast ratio
     │   ├── ColorShadeSwatch.vue   # Color shade variant swatch
     │   ├── ColorTintSwatch.vue    # Color tint variant swatch
-    │   ├── ColorLightnessSwatch.vue
+    │   ├── ColorLevelSwatch.vue
     │   ├── FontSizeSwatch.vue
     │   ├── FontWeightSwatch.vue
     │   ├── FontFamilySwatch.vue

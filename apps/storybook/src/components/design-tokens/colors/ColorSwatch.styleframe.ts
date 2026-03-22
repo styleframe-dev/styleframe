@@ -112,29 +112,6 @@ const {
 	colorGrayActive,
 } = useDesignTokensPreset(s, {
 	meta: { merge: true },
-	colors: {
-		"primary.hover": "@color.primary-shade-50",
-		"primary.focus": "@color.primary-shade-100",
-		"primary.active": "@color.primary-shade-150",
-		"secondary.hover": "@color.secondary-shade-50",
-		"secondary.focus": "@color.secondary-shade-100",
-		"secondary.active": "@color.secondary-shade-150",
-		"success.hover": "@color.success-shade-50",
-		"success.focus": "@color.success-shade-100",
-		"success.active": "@color.success-shade-150",
-		"warning.hover": "@color.warning-shade-50",
-		"warning.focus": "@color.warning-shade-100",
-		"warning.active": "@color.warning-shade-150",
-		"danger.hover": "@color.danger-shade-50",
-		"danger.focus": "@color.danger-shade-100",
-		"danger.active": "@color.danger-shade-150",
-		"info.hover": "@color.info-shade-50",
-		"info.focus": "@color.info-shade-100",
-		"info.active": "@color.info-shade-150",
-		"gray.hover": "@color.gray-shade-50",
-		"gray.focus": "@color.gray-shade-100",
-		"gray.active": "@color.gray-shade-150",
-	},
 });
 
 const { bodyBackground } = useBodyElement(s);

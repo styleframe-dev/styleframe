@@ -1,18 +1,14 @@
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
-import { useColorLightnessDesignTokens } from "./useColorLightnessDesignTokens";
-import { colorLightnessValues } from "../values";
+import { useColorLevelDesignTokens } from "./useColorLevelDesignTokens";
+import { colorLevelValues } from "../values";
 
-describe("useColorLightnessDesignTokens", () => {
-	it("should create lightness levels with default values", () => {
+describe("useColorLevelDesignTokens", () => {
+	it("should create color levels with default values", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
-		const levels = useColorLightnessDesignTokens(
-			s,
-			colorPrimary,
-			colorLightnessValues,
-		);
+		const levels = useColorLevelDesignTokens(s, colorPrimary, colorLevelValues);
 
 		// Test some of the default levels (we know they exist from the default parameter)
 		expect(levels.colorPrimary50).toEqual({
@@ -41,10 +37,10 @@ describe("useColorLightnessDesignTokens", () => {
 		expect(css).toMatch(/^--color--primary-100: oklch\(.+\);$/);
 	});
 
-	it("should compile lightness levels to correct CSS output using consumeCSS", () => {
+	it("should compile color levels to correct CSS output using consumeCSS", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
-		useColorLightnessDesignTokens(s, colorPrimary, {
+		useColorLevelDesignTokens(s, colorPrimary, {
 			100: 0.93,
 			500: 0.55,
 			900: 0.17,
@@ -58,10 +54,10 @@ describe("useColorLightnessDesignTokens", () => {
 		expect(css).toMatch(/--color--primary-900: oklch\(.+\);/);
 	});
 
-	it("should create lightness levels with custom values", () => {
+	it("should create color levels with custom values", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
-		const levels = useColorLightnessDesignTokens(s, colorPrimary, {
+		const levels = useColorLevelDesignTokens(s, colorPrimary, {
 			100: 0.93,
 			200: 0.85,
 			300: 0.75,
@@ -96,7 +92,7 @@ describe("useColorLightnessDesignTokens", () => {
 	it("should add variables to root", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
-		useColorLightnessDesignTokens(s, colorPrimary, {
+		useColorLevelDesignTokens(s, colorPrimary, {
 			100: 0.93,
 			200: 0.85,
 		} as const);
@@ -108,7 +104,7 @@ describe("useColorLightnessDesignTokens", () => {
 	it("should handle color with kebab-case name", () => {
 		const s = styleframe();
 		const colorPrimaryDark = s.variable("color--primary-dark", "#0056b3");
-		const levels = useColorLightnessDesignTokens(s, colorPrimaryDark, {
+		const levels = useColorLevelDesignTokens(s, colorPrimaryDark, {
 			100: 0.93,
 		} as const);
 
@@ -118,7 +114,7 @@ describe("useColorLightnessDesignTokens", () => {
 	it("should handle empty levels object", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
-		const levels = useColorLightnessDesignTokens(s, colorPrimary, {} as const);
+		const levels = useColorLevelDesignTokens(s, colorPrimary, {} as const);
 
 		expect(levels).toEqual({});
 	});
@@ -126,7 +122,7 @@ describe("useColorLightnessDesignTokens", () => {
 	it("should work with different variable name patterns", () => {
 		const s = styleframe();
 		const customColor = s.variable("custom-color", "#ff0000");
-		const levels = useColorLightnessDesignTokens(s, customColor, {
+		const levels = useColorLevelDesignTokens(s, customColor, {
 			500: 0.55,
 		} as const);
 
@@ -145,7 +141,7 @@ describe("useColorLightnessDesignTokens", () => {
 	it("should produce lighter colors for lower levels and darker for higher", () => {
 		const s = styleframe();
 		const colorPrimary = s.variable("color--primary", "#007bff");
-		const levels = useColorLightnessDesignTokens(s, colorPrimary, {
+		const levels = useColorLevelDesignTokens(s, colorPrimary, {
 			100: 0.93,
 			500: 0.55,
 			900: 0.17,
@@ -169,7 +165,7 @@ describe("useColorLightnessDesignTokens", () => {
 	it("should handle achromatic colors (gray)", () => {
 		const s = styleframe();
 		const colorGray = s.variable("color--gray", "#808080");
-		const levels = useColorLightnessDesignTokens(s, colorGray, {
+		const levels = useColorLevelDesignTokens(s, colorGray, {
 			100: 0.93,
 		} as const);
 
@@ -182,7 +178,7 @@ describe("useColorLightnessDesignTokens", () => {
 		it("should preserve variable name in return type", () => {
 			const s = styleframe();
 			const colorPrimary = s.variable("color--primary", "#007bff");
-			const levels = useColorLightnessDesignTokens(s, colorPrimary, {
+			const levels = useColorLevelDesignTokens(s, colorPrimary, {
 				100: 0.93,
 				200: 0.85,
 			} as const);
@@ -197,7 +193,7 @@ describe("useColorLightnessDesignTokens", () => {
 		it("should work with generic variable names", () => {
 			const s = styleframe();
 			const colorSecondary = s.variable("color--secondary", "#6c757d");
-			const levels = useColorLightnessDesignTokens(s, colorSecondary, {
+			const levels = useColorLevelDesignTokens(s, colorSecondary, {
 				300: 0.75,
 			} as const);
 

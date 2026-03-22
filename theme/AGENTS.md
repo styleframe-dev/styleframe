@@ -35,7 +35,7 @@ Each composable creates CSS custom properties and returns typed token objects. A
 ### Colors
 
 ```ts
-import { useColor, useColorLightness, useColorShade, useColorTint } from '@styleframe/theme';
+import { useColor, useColorLevel, useColorShade, useColorTint } from '@styleframe/theme';
 
 // Base colors (converted to OKLCH internally)
 const { colorPrimary, colorSecondary } = useColor(s, {
@@ -43,9 +43,9 @@ const { colorPrimary, colorSecondary } = useColor(s, {
     secondary: '#6c757d',
 } as const);
 
-// Lightness variants (absolute L channel in OKLCH)
+// Level variants (absolute L channel in OKLCH)
 // Returns: colorPrimary50, colorPrimary100, ..., colorPrimary950
-const primaryLightness = useColorLightness(s, colorPrimary, defaultColorLightnessValues);
+const primaryLevels = useColorLevel(s, colorPrimary, colorLevelValues);
 
 // Shade variants (relative: subtracts from L channel - darker)
 const { colorPrimaryShade100 } = useColorShade(s, colorPrimary, { 100: 10 } as const);
@@ -288,7 +288,7 @@ All default token values are exported as constants for reference or customizatio
 ```ts
 import {
     defaultColorValues,
-    defaultColorLightnessValues,
+    colorLevelValues,
     defaultColorShadeValues,
     defaultColorTintValues,
     defaultSpacingValues,
@@ -386,7 +386,7 @@ export default s;
 
 ```ts
 import type { Styleframe } from 'styleframe';
-import { useColor, useColorLightness, defaultColorLightnessValues } from '@styleframe/theme';
+import { useColor, useColorLevel, colorLevelValues } from '@styleframe/theme';
 
 export function useThemeColors(s: Styleframe) {
     const { colorPrimary, colorSecondary } = useColor(s, {
@@ -394,7 +394,7 @@ export function useThemeColors(s: Styleframe) {
         secondary: '#6c757d',
     } as const);
 
-    const primaryLevels = useColorLightness(s, colorPrimary, defaultColorLightnessValues);
+    const primaryLevels = useColorLevel(s, colorPrimary, colorLevelValues);
 
     return { colorPrimary, colorSecondary, ...primaryLevels };
 }
