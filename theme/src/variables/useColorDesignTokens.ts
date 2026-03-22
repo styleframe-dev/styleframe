@@ -1,5 +1,5 @@
-import { oklch } from "culori";
 import { createUseVariable } from "../utils";
+import { parseOklch } from "../utils/oklchGamut";
 /**
  * Create a set of color variables for use in a Styleframe instance.
  *
@@ -25,8 +25,11 @@ export const useColorDesignTokens = createUseVariable("color", {
 		let transformedValue = value;
 
 		if (typeof value === "string") {
-			const { l, c, h, alpha = 1 } = oklch(value);
-			transformedValue = `oklch(${l} ${c} ${h ?? 0} / ${alpha})`;
+			const parsed = parseOklch(value);
+			if (parsed) {
+				const { l, c, h, alpha } = parsed;
+				transformedValue = `oklch(${l} ${c} ${h} / ${alpha})`;
+			}
 		}
 
 		return transformedValue;
