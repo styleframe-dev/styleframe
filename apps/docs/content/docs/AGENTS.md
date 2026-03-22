@@ -12,8 +12,11 @@ content/docs/
 ├── 04.resources/           # Guides, comparisons with other tools
 ├── 05.components/          # Component recipes (Badge, etc.)
 ├── 05.design-tokens/       # Color, spacing, typography, scale, breakpoint tokens
+│   └── 02.composables/     # Individual design token composable pages
 ├── 06.utilities/           # 16 utility categories (spacing, layout, typography, etc.)
+│   └── 02.composables/     # Individual utility composable pages
 └── 07.modifiers/           # Pseudo-state, form-state, aria, structural, etc.
+    └── 02.composables/     # Individual modifier composable pages
 ```
 
 **Numbering convention:** Directories and files use `NN.` prefixes for ordering (e.g., `01.introduction.md`, `06.colors.md`). Index files use `00.index.md`. Subdirectories follow the same pattern.

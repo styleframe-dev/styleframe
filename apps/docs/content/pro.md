@@ -40,7 +40,7 @@ Premium Features for Professional Design Systems
     ---
     icon: i-lucide-waves
     target: _blank
-    to: /docs/design-tokens/fluid-design
+    to: /docs/design-tokens/composables/fluid-design
     ---
     #title
     [Fluid Responsive]{.text-primary} Design
@@ -54,7 +54,7 @@ Premium Features for Professional Design Systems
     ---
     icon: i-lucide-sparkles
     target: _blank
-    to: /docs/design-tokens/fluid-design
+    to: /docs/design-tokens/composables/fluid-design
     ---
     #title
     [Premium]{.text-primary} Composables
@@ -90,7 +90,7 @@ Premium Features for Professional Design Systems
     ---
     icon: i-lucide-zap
     target: _blank
-    to: /docs/design-tokens/fluid-design/viewport
+    to: /docs/design-tokens/composables/fluid-design/viewport
     ---
     #title
     [Performance]{.text-primary} Optimized
@@ -103,7 +103,7 @@ Premium Features for Professional Design Systems
     ---
     icon: i-lucide-book-open
     target: _blank
-    to: /docs/design-tokens/fluid-design
+    to: /docs/design-tokens/composables/fluid-design
     ---
     #title
     [Complete]{.text-primary} Documentation
@@ -137,7 +137,7 @@ links:
 -   label: Learn about Fluid Responsive Design
     color: neutral
     variant: outline
-    to: /docs/design-tokens/fluid-design
+    to: /docs/design-tokens/composables/fluid-design
     icon: i-lucide-waves
 ---
 
@@ -182,7 +182,7 @@ Styleframe Pro's fluid responsive design system eliminates the complexity of tra
     ---
     icon: i-lucide-minimize-2
     target: _blank
-    to: /docs/design-tokens/fluid-design
+    to: /docs/design-tokens/composables/fluid-design
     ---
     #title
     [Reduce]{.text-primary} Complexity
@@ -195,7 +195,7 @@ Styleframe Pro's fluid responsive design system eliminates the complexity of tra
     ---
     icon: i-lucide-circle-check-big
     target: _blank
-    to: /docs/design-tokens/fluid-design
+    to: /docs/design-tokens/composables/fluid-design
     ---
     #title
     [Perfect]{.text-primary} Consistency
