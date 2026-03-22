@@ -279,7 +279,7 @@ import { useDesignTokensPreset, useModifiersPreset, useUtilitiesPreset } from '@
 
 const s = styleframe();
 
-const tokens = useDesignTokensPreset(s);   // All design token variables
+const { colorPrimary, spacingMd } = useDesignTokensPreset(s); // Flat — all tokens directly
 const modifiers = useModifiersPreset(s);   // All pseudo-state/element/media modifiers
 useUtilitiesPreset(s);                      // All utility classes
 

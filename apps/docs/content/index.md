@@ -19,13 +19,13 @@ title: styleframe.config.ts
 
 ```ts
 import { styleframe } from 'styleframe';
-import { useColor } from '@styleframe/theme';
+import { useColorDesignTokens } from '@styleframe/theme';
 
 const s = styleframe();
 const { variable, ref, selector } = s;
 
 const spacing = variable('spacing', '1rem');
-const { colorPrimary } = useColor(s, {
+const { colorPrimary } = useColorDesignTokens(s, {
     primary: '#318fa0',
 });
 
@@ -271,21 +271,21 @@ title: styleframe.config.ts
 
 ```ts
 import { styleframe } from 'styleframe';
-import { useColor } from '@styleframe/theme';
-import { useSpacing, useTypography } from '@orgname/theme-minimal';
+import { useColorDesignTokens } from '@styleframe/theme';
+import { useSpacingDesignTokens, useTypography } from '@orgname/theme-minimal';
 import { useComponents } from './my-components';
 
 const s = styleframe();
 
 // Colors from the default theme
-const { colorPrimary, colorSecondary } = useColor(s, {
+const { colorPrimary, colorSecondary } = useColorDesignTokens(s, {
     primary: '#318fa0',
     secondary: '#ff6b6b'
 });
 
 // Typography and spacing from another theme
 useTypography(s);
-useSpacing(s);
+useSpacingDesignTokens(s);
 
 // Plus your custom components
 useComponents(s);

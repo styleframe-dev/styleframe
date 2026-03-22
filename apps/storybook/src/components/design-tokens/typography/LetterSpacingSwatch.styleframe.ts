@@ -6,14 +6,13 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { letterSpacing } = useDesignTokensPreset(s);
 const {
 	letterSpacingTighter,
 	letterSpacingTight,
 	letterSpacingNormal,
 	letterSpacingWide,
 	letterSpacingWider,
-} = letterSpacing;
+} = useDesignTokensPreset(s);
 
 selector(".letter-spacing-swatch__preview", {
 	color: "@color.text-weakest",

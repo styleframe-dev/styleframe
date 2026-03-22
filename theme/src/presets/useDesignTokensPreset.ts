@@ -1,8 +1,9 @@
-import type {
-	DeclarationsCallbackContext,
-	Styleframe,
-	TokenValue,
-	Variable,
+import {
+	isKeyReferenceValue,
+	type DeclarationsCallbackContext,
+	type Styleframe,
+	type TokenValue,
+	type Variable,
 } from "@styleframe/core";
 import type { CamelCase } from "scule";
 import { camelCase } from "scule";
@@ -34,28 +35,28 @@ import {
 	zIndexValues,
 } from "../values";
 import {
-	useBorderColor,
-	useBorderRadius,
-	useBorderStyle,
-	useBorderWidth,
-	useBoxShadow,
-	useBreakpoint,
-	useColor,
-	useColorLightness,
-	useColorShade,
-	useColorTint,
-	useDuration,
-	useEasing,
-	useFontFamily,
-	useFontSize,
-	useFontStyle,
-	useFontWeight,
-	useLetterSpacing,
-	useLineHeight,
-	useScale,
-	useScalePowers,
-	useSpacing,
-	useZIndex,
+	useBorderColorDesignTokens,
+	useBorderRadiusDesignTokens,
+	useBorderStyleDesignTokens,
+	useBorderWidthDesignTokens,
+	useBoxShadowDesignTokens,
+	useBreakpointDesignTokens,
+	useColorDesignTokens,
+	useColorLightnessDesignTokens,
+	useColorShadeDesignTokens,
+	useColorTintDesignTokens,
+	useDurationDesignTokens,
+	useEasingDesignTokens,
+	useFontFamilyDesignTokens,
+	useFontSizeDesignTokens,
+	useFontStyleDesignTokens,
+	useFontWeightDesignTokens,
+	useLetterSpacingDesignTokens,
+	useLineHeightDesignTokens,
+	useScaleDesignTokens,
+	useScalePowersDesignTokens,
+	useSpacingDesignTokens,
+	useZIndexDesignTokens,
 } from "../variables";
 
 // =============================================================================
@@ -63,7 +64,7 @@ import {
 // =============================================================================
 
 interface DomainProcessContext {
-	result: Record<string, Record<string, Variable | TokenValue> | undefined>;
+	result: Record<string, Variable | TokenValue>;
 	config: DesignTokensPresetConfig<boolean>;
 }
 
@@ -113,88 +114,107 @@ function defineDomain<
  * key is derived at runtime via `camelCase(key)`.
  */
 const domains = [
-	defineDomain({ key: "scale", defaults: scaleValues, composable: useScale }),
+	defineDomain({
+		key: "scale",
+		defaults: scaleValues,
+		composable: useScaleDesignTokens,
+	}),
 	defineDomain({
 		key: "spacing",
 		defaults: spacingValues,
-		composable: useSpacing,
+		composable: useSpacingDesignTokens,
 	}),
 	defineDomain({
 		key: "border-width",
 		defaults: borderWidthValues,
-		composable: useBorderWidth,
+		composable: useBorderWidthDesignTokens,
 	}),
 	defineDomain({
 		key: "border-radius",
 		defaults: borderRadiusValues,
-		composable: useBorderRadius,
+		composable: useBorderRadiusDesignTokens,
 	}),
 	defineDomain({
 		key: "border-style",
 		defaults: borderStyleValues,
-		composable: useBorderStyle,
+		composable: useBorderStyleDesignTokens,
 	}),
 	defineDomain({
 		key: "box-shadow",
 		defaults: boxShadowValues,
-		composable: useBoxShadow,
+		composable: useBoxShadowDesignTokens,
 	}),
 	defineDomain({
 		key: "z-index",
 		defaults: zIndexValues,
-		composable: useZIndex,
+		composable: useZIndexDesignTokens,
 	}),
 	defineDomain({
 		key: "font-family",
 		defaults: fontFamilyValues,
-		composable: useFontFamily,
+		composable: useFontFamilyDesignTokens,
 	}),
 	defineDomain({
 		key: "font-size",
 		defaults: fontSizeValues,
-		composable: useFontSize,
+		composable: useFontSizeDesignTokens,
 	}),
 	defineDomain({
 		key: "font-style",
 		defaults: fontStyleValues,
-		composable: useFontStyle,
+		composable: useFontStyleDesignTokens,
 	}),
 	defineDomain({
 		key: "font-weight",
 		defaults: fontWeightValues,
-		composable: useFontWeight,
+		composable: useFontWeightDesignTokens,
 	}),
 	defineDomain({
 		key: "line-height",
 		defaults: lineHeightValues,
-		composable: useLineHeight,
+		composable: useLineHeightDesignTokens,
 	}),
 	defineDomain({
 		key: "letter-spacing",
 		defaults: letterSpacingValues,
-		composable: useLetterSpacing,
+		composable: useLetterSpacingDesignTokens,
 	}),
 	defineDomain({
 		key: "breakpoint",
 		defaults: breakpointValues,
-		composable: useBreakpoint,
+		composable: useBreakpointDesignTokens,
 	}),
 	defineDomain({
 		key: "easing",
 		defaults: easingValues,
-		composable: useEasing,
+		composable: useEasingDesignTokens,
 	}),
 	defineDomain({
 		key: "duration",
 		defaults: durationValues,
-		composable: useDuration,
+		composable: useDurationDesignTokens,
 	}),
 	defineDomain({
 		key: "colors",
 		defaults: colorValues as Record<string, TokenValue>,
-		themes: { dark: darkModeColorValues },
+		themes: {
+			dark: darkModeColorValues,
+		},
 		composable: (s, values, options, { config }) => {
-			const baseColors = useColor(s, values as Record<string, string>, options);
+			// Partition values into base colors (hex) and reference colors (@...)
+			const baseColorValues: Record<string, string> = {};
+			const referenceColorValues: Record<string, string> = {};
+
+			for (const [key, value] of Object.entries(values)) {
+				if (isKeyReferenceValue(value)) {
+					referenceColorValues[key] = value as string;
+				} else {
+					baseColorValues[key] = value as string;
+				}
+			}
+
+			// Create base color variables + generate variations
+			const baseColors = useColorDesignTokens(s, baseColorValues, options);
 			let result: Record<string, Variable> = { ...baseColors };
 
 			const meta = { ...defaultColorsMetaConfig, ...config.meta?.colors };
@@ -205,7 +225,7 @@ const domains = [
 				if (meta.generateLightness) {
 					result = {
 						...result,
-						...useColorLightness(
+						...useColorLightnessDesignTokens(
 							s,
 							colorVariable,
 							meta.lightnessLevels,
@@ -217,16 +237,36 @@ const domains = [
 				if (meta.generateShades) {
 					result = {
 						...result,
-						...useColorShade(s, colorVariable, meta.shadeLevels, options),
+						...useColorShadeDesignTokens(
+							s,
+							colorVariable,
+							meta.shadeLevels,
+							options,
+						),
 					};
 				}
 
 				if (meta.generateTints) {
 					result = {
 						...result,
-						...useColorTint(s, colorVariable, meta.tintLevels, options),
+						...useColorTintDesignTokens(
+							s,
+							colorVariable,
+							meta.tintLevels,
+							options,
+						),
 					};
 				}
+			}
+
+			// Create reference color variables (shade/tint vars now exist)
+			if (Object.keys(referenceColorValues).length > 0) {
+				const referenceColors = useColorDesignTokens(
+					s,
+					referenceColorValues,
+					options,
+				);
+				result = { ...result, ...referenceColors };
 			}
 
 			return result;
@@ -235,7 +275,7 @@ const domains = [
 	defineDomain({
 		key: "border-color",
 		defaults: borderColorValues,
-		composable: useBorderColor,
+		composable: useBorderColorDesignTokens,
 		themes: { dark: darkModeBorderColorValues },
 	}),
 	defineDomain({
@@ -243,9 +283,9 @@ const domains = [
 		defaults: {} as Record<string, TokenValue>,
 		configurable: false,
 		composable: (s, _values, _options, { result, config }) => {
-			const scaleVar = result.scale?.["scale"];
+			const scaleVar = result["scale"];
 			if (!scaleVar) return undefined;
-			return useScalePowers(
+			return useScalePowersDesignTokens(
 				s,
 				scaleVar as Variable,
 				config.scalePowers ?? scalePowerValues,
@@ -285,6 +325,12 @@ type GetDomainConfig<
 > = K extends keyof TConfig ? TConfig[K] : TDefault;
 
 /**
+ * Extracts the merge flag from config by structural matching.
+ * Returns `true` only when config literally has `meta: { merge: true }`.
+ */
+type ExtractMerge<T> = T extends { meta: { merge: true } } ? true : false;
+
+/**
  * Resolves which value record to use based on config:
  * - false => never (will be undefined)
  * - undefined => default values
@@ -299,23 +345,23 @@ type ResolveTokens<
 	: TConfig extends undefined
 		? TDefault
 		: TConfig extends Record<string, unknown>
-			? TMerge extends true
+			? [TMerge] extends [true]
 				? Omit<TDefault, keyof TConfig> & TConfig
 				: TConfig
 			: TDefault;
 
 /**
- * Generates ExportKeys or undefined based on config
+ * Generates ExportKeys or empty object based on config.
+ * Returns {} for disabled domains so they contribute no keys to the flat intersection.
  */
-type TokenResult<
+type FlatTokenResult<
 	TConfig,
 	TPrefix extends string,
 	TDefault extends Record<string, unknown>,
 	TMerge extends boolean = false,
-	TSeparator extends string = ".",
 > = TConfig extends false
-	? undefined
-	: ExportKeys<TPrefix, ResolveTokens<TConfig, TDefault, TMerge>, TSeparator>;
+	? {}
+	: ExportKeys<TPrefix, ResolveTokens<TConfig, TDefault, TMerge>>;
 
 /**
  * Helper to convert a union to an intersection
@@ -356,19 +402,20 @@ type ResolvedColors<TColors, TMerge extends boolean> = TColors extends Record<
 	string,
 	string
 >
-	? TMerge extends true
+	? [TMerge] extends [true]
 		? Omit<DefaultColors, keyof TColors> & TColors
 		: TColors
 	: DefaultColors;
 
 /**
  * Color result type that strongly types base colors and all variations.
+ * Returns {} for disabled colors so they contribute no keys to the flat intersection.
  */
-type ColorResult<
+type FlatColorResult<
 	TColors,
 	TMerge extends boolean = false,
 > = TColors extends false
-	? undefined
+	? {}
 	: ExportKeys<"color", ResolvedColors<TColors, TMerge>, "."> &
 			AllColorVariations<ResolvedColors<TColors, TMerge>>;
 
@@ -444,7 +491,6 @@ export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
 
 /**
  * Per-theme token overrides derived from DesignTokensPresetConfig:
- * - No `false` values (themes override, not disable)
  * - No `meta`, `scalePowers`, or `themes` (shared config, not per-theme)
  */
 type ConfigurableDomainKeys = Exclude<
@@ -453,46 +499,49 @@ type ConfigurableDomainKeys = Exclude<
 >;
 
 export type ThemeTokenOverrides = {
-	[K in ConfigurableDomainKeys]?: Exclude<DesignTokensPresetConfig[K], false>;
+	[K in ConfigurableDomainKeys]?: DesignTokensPresetConfig[K];
 };
 
 // =============================================================================
-// Result Type (mapped over domain maps)
+// Result Type (flat intersection of all domain ExportKeys)
 // =============================================================================
 
 /**
- * Result for simple domains, generated via mapped type over the domains tuple.
- * Maps kebab-case domain keys to camelCase result keys.
+ * Flat result for simple domains — intersection of all ExportKeys for enabled domains.
+ * Each domain contributes its variable keys directly (or {} if disabled).
  */
-type SimpleDomainResults<TConfig, TMerge extends boolean> = {
-	[K in SimpleDomainKey as CamelCase<K>]: TokenResult<
-		GetDomainConfig<TConfig, CamelCase<K>, DomainDefaultsMap[K]>,
-		K,
-		DomainDefaultsMap[K],
-		TMerge
-	>;
-};
+type FlatSimpleDomainResults<
+	TConfig,
+	TMerge extends boolean,
+> = UnionToIntersection<
+	{
+		[K in SimpleDomainKey]: FlatTokenResult<
+			GetDomainConfig<TConfig, CamelCase<K>, DomainDefaultsMap[K]>,
+			K,
+			DomainDefaultsMap[K],
+			TMerge
+		>;
+	}[SimpleDomainKey]
+>;
 
 /**
- * Result structure for the default design tokens preset.
- * Uses mapped types for simple domains, with special handling for colors and scalePowers.
+ * scalePowers result — stays nested since its keys are numbers.
+ */
+type ScalePowersResult<TScaleConfig> = TScaleConfig extends false
+	? {}
+	: { scalePowers: Record<number, TokenValue> };
+
+/**
+ * Flat result structure for the design tokens preset.
+ * All variable keys are directly accessible (no domain grouping).
+ * Only `scalePowers` remains nested (numeric keys).
  */
 export type DesignTokensPresetResult<
 	TConfig = {},
 	TMerge extends boolean = false,
-> = SimpleDomainResults<TConfig, TMerge> & {
-	colors: ColorResult<
-		GetDomainConfig<TConfig, "colors", DefaultColors>,
-		TMerge
-	>;
-	scalePowers: GetDomainConfig<
-		TConfig,
-		"scale",
-		typeof scaleValues
-	> extends false
-		? undefined
-		: Record<number, TokenValue>;
-};
+> = FlatSimpleDomainResults<TConfig, TMerge> &
+	FlatColorResult<GetDomainConfig<TConfig, "colors", DefaultColors>, TMerge> &
+	ScalePowersResult<GetDomainConfig<TConfig, "scale", typeof scaleValues>>;
 
 // =============================================================================
 // Runtime Helpers
@@ -544,7 +593,7 @@ function collectThemeNames(
  *
  * @param s - The Styleframe instance
  * @param config - Configuration options for customizing the preset
- * @returns An object containing all generated design token variables
+ * @returns A flat object containing all generated design token variables
  *
  * @example
  * ```typescript
@@ -553,42 +602,30 @@ function collectThemeNames(
  *
  * const s = styleframe();
  *
- * // Use all defaults
- * const tokens = useDesignTokensPreset(s);
+ * // Use all defaults — destructure directly
+ * const { colorPrimary, spacingMd, borderRadiusMd } = useDesignTokensPreset(s);
  *
  * // Customize specific domains
- * const tokens = useDesignTokensPreset(s, {
+ * const { colorPrimary, spacingSm } = useDesignTokensPreset(s, {
  *     colors: { primary: "#ff6600", secondary: "#333" },
- *     meta: {
- *         colors: {
- *             generateLightness: true,
- *             generateShades: false,
- *         },
- *     },
- *     spacing: {
- *         default: "0.5rem",
- *         sm: "0.25rem",
- *         md: "0.5rem",
- *         lg: "1rem",
- *     },
+ *     spacing: { default: "0.5rem", sm: "0.25rem" },
  *     easing: false, // Disable easing entirely
  * });
  *
- * // Merge custom values with defaults
- * const tokens = useDesignTokensPreset(s, {
- *     meta: { merge: true },
- *     spacing: { xl: "2rem", xxl: "4rem" }, // Added to default spacing values
- *     colors: { brand: "#ff6600" }, // Added to default colors
- * });
+ * // scalePowers stays nested (numeric keys)
+ * const { scalePowers } = useDesignTokensPreset(s);
+ * const power = scalePowers[-1];
  * ```
  */
 export function useDesignTokensPreset(
 	s: Styleframe,
 ): DesignTokensPresetResult<{}, false>;
 export function useDesignTokensPreset<
-	TConfig extends DesignTokensPresetConfig<TMerge>,
-	TMerge extends boolean = false,
->(s: Styleframe, config: TConfig): DesignTokensPresetResult<TConfig, TMerge>;
+	TConfig extends DesignTokensPresetConfig<boolean>,
+>(
+	s: Styleframe,
+	config: TConfig,
+): DesignTokensPresetResult<TConfig, ExtractMerge<TConfig>>;
 export function useDesignTokensPreset(
 	s: Styleframe,
 	config: DesignTokensPresetConfig<boolean> = {},
@@ -596,22 +633,28 @@ export function useDesignTokensPreset(
 	const shouldMerge = config.meta?.merge === true;
 	const defaultThemeOverrides = config.themes?.default;
 
-	const result: Record<
-		string,
-		Record<string, Variable | TokenValue> | undefined
-	> = {};
+	const result: Record<string, Variable | TokenValue> = {};
 	const context: DomainProcessContext = { result, config };
+	const disabledDomains = new Set<string>();
 
 	for (const entry of domains) {
 		const configKey = camelCase(entry.key);
 
 		if (entry.configurable === false) {
-			result[configKey] = entry.composable(
+			const domainResult = entry.composable(
 				s,
 				entry.defaults,
 				{ default: true },
 				context,
 			);
+			if (domainResult) {
+				// scalePowers stays nested (numeric keys)
+				if (configKey === "scalePowers") {
+					(result as Record<string, unknown>).scalePowers = domainResult;
+				} else {
+					Object.assign(result, domainResult);
+				}
+			}
 			continue;
 		}
 
@@ -620,7 +663,7 @@ export function useDesignTokensPreset(
 			defaultThemeOverrides?.[configKey as keyof ThemeTokenOverrides];
 
 		if (configValue === false) {
-			result[configKey] = undefined;
+			disabledDomains.add(configKey);
 			continue;
 		}
 
@@ -634,7 +677,15 @@ export function useDesignTokensPreset(
 					: (configValue as Record<string, TokenValue>)
 				: entry.defaults;
 
-		result[configKey] = entry.composable(s, values, { default: true }, context);
+		const domainResult = entry.composable(
+			s,
+			values,
+			{ default: true },
+			context,
+		);
+		if (domainResult) {
+			Object.assign(result, domainResult);
+		}
 	}
 
 	// Apply non-default themes (from both config and domain-level defaults)
@@ -648,21 +699,25 @@ export function useDesignTokensPreset(
 				if (entry.configurable === false) continue;
 
 				const configKey = camelCase(entry.key);
+
+				// Skip domains disabled at root level
+				if (disabledDomains.has(configKey)) continue;
+
 				const themeValues =
 					userOverrides[configKey as keyof ThemeTokenOverrides] ??
 					entry.themes?.[themeName];
 
-				if (themeValues) {
+				if (themeValues && themeValues !== (false as unknown)) {
 					entry.composable(
 						ctx,
 						themeValues as Record<string, TokenValue>,
 						{ default: false },
-						{ result: {}, config },
+						{ result: {} as Record<string, Variable | TokenValue>, config },
 					);
 				}
 			}
 		});
 	}
 
-	return result as DesignTokensPresetResult;
+	return result as unknown as DesignTokensPresetResult;
 }

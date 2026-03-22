@@ -4,14 +4,23 @@ import { useTokens } from "../useTokens";
 const s = styleframe();
 const { ref, selector, css } = s;
 
-const { tokens, colorBackground, colorText, colorTextMuted, colorBorder } =
-	useTokens(s);
-const { colorPrimary } = tokens.colors;
-const { spacingXs, spacingSm, spacingMd, spacingXl } = tokens.spacing;
-const { borderWidthThin } = tokens.borderWidth;
-const { boxShadowXs } = tokens.boxShadow;
-const { fontSizeSm, fontSizeLg } = tokens.fontSize;
-const { fontWeightBold, fontWeightMedium } = tokens.fontWeight;
+const {
+	colorBackground,
+	colorText,
+	colorTextMuted,
+	colorBorder,
+	colorPrimary,
+	spacingXs,
+	spacingSm,
+	spacingMd,
+	spacingXl,
+	borderWidthThin,
+	boxShadowXs,
+	fontSizeSm,
+	fontSizeLg,
+	fontWeightBold,
+	fontWeightMedium,
+} = useTokens(s);
 
 selector(".navbar", {
 	display: "flex",

@@ -43,7 +43,7 @@ export function useTokens(s: Styleframe) {
 	});
 
 	return {
-		tokens,
+		...tokens,
 		colorWhite,
 		colorBackground,
 		colorSurface,

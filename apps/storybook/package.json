@@ -5,7 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "storybook dev -p 6006",
-		"build": "storybook build"
+		"build": "storybook build",
+		"typecheck": "vue-tsc --noEmit -p tsconfig.json"
 	},
 	"dependencies": {
 		"@styleframe/core": "workspace:*",

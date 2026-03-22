@@ -214,20 +214,19 @@ Presets compose multiple composables into a single call for rapid setup.
 
 ### useDesignTokensPreset
 
-Creates all design token variables at once.
+Creates all design token variables at once. Returns a flat object — all variables are directly destructurable.
 
 ```ts
 import { useDesignTokensPreset } from '@styleframe/theme';
 
-const tokens = useDesignTokensPreset(s, {
+const { colorPrimary, spacingMd, borderRadiusMd } = useDesignTokensPreset(s);
+
+// With custom config
+const { colorPrimary, spacingMd } = useDesignTokensPreset(s, {
     colors: { primary: '#006cff', secondary: '#6c757d' },
     spacing: { default: '1rem' },
     fontSize: { default: '1rem' },
-    // Set false to disable a category
-    easing: false,
-    // Meta options
-    merge: true,
-    colors: { generateLightness: true, generateShades: false, generateTints: false },
+    easing: false, // Set false to disable a category
 });
 ```
 
@@ -348,7 +347,7 @@ import { useDesignTokensPreset, useModifiersPreset, useUtilitiesPreset } from '@
 
 const s = styleframe();
 
-const tokens = useDesignTokensPreset(s);
+const { colorPrimary, spacingMd, scalePowers } = useDesignTokensPreset(s);
 const modifiers = useModifiersPreset(s);
 useUtilitiesPreset(s);
 

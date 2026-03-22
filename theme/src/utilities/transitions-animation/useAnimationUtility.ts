@@ -12,7 +12,7 @@ import { animationValues } from "../../values";
  * ```
  */
 export const useAnimationUtility = createUseUtility(
-	"animate",
+	"animation",
 	({ value }) => ({
 		animation: value,
 	}),

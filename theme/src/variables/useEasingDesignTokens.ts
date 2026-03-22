@@ -1,0 +1,33 @@
+import { createUseVariable } from "../utils";
+import { easingValues } from "../values";
+/**
+ * Create a set of easing variables for use in a Styleframe instance.
+ *
+ * Includes CSS keywords, cubic-bezier curves from easings.net, and
+ * linear() functions for spring and bounce animations.
+ *
+ * @usage
+ * ```typescript
+ * import { styleframe } from "styleframe";
+ * import { useEasingDesignTokens } from "@styleframe/theme";
+ *
+ * const s = styleframe();
+ *
+ * const {
+ *   easing, // Variable<'easing'>
+ *   easingEaseInOut, // Variable<'easing.ease-in-out'>
+ *   easingEaseOutCubic, // Variable<'easing.ease-out-cubic'>
+ *   easingSpring, // Variable<'easing.spring'>
+ *   easingBounce, // Variable<'easing.bounce'>
+ * } = useEasingDesignTokens(s, {
+ *   default: "ease-in-out",
+ *   "ease-in-out": "ease-in-out",
+ *   "ease-out-cubic": "cubic-bezier(0.215, 0.61, 0.355, 1)",
+ *   spring: "linear(...)",
+ *   bounce: "linear(...)",
+ * });
+ * ```
+ */
+export const useEasingDesignTokens = createUseVariable("easing", {
+	defaults: easingValues,
+});

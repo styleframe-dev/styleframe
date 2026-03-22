@@ -57,7 +57,7 @@ Not every page has all sections. Simpler pages may omit Examples or FAQ.
 ## Heading Hierarchy
 
 - **H1 (`#`)** — NEVER used in page body. Title comes from frontmatter.
-- **H2 (`##`)** — Main sections: `Overview`, `Why Use X?`, function names (`` ## `useColor` ``), `Examples`, `Best Practices`, `FAQ`.
+- **H2 (`##`)** — Main sections: `Overview`, `Why Use X?`, function names (`` ## `useColorDesignTokens` ``), `Examples`, `Best Practices`, `FAQ`.
 - **H3 (`###`)** — Subsections within H2: `Naming Convention`, `Default Values`, `Creating Custom X`.
 - **H4 (`####`)** — Rare. Used inside `::steps{level="4"}` blocks.
 
@@ -108,7 +108,7 @@ export default s;
 
 ### Inline Code
 
-- Use backticks for: variable names (`` `colorPrimary` ``), CSS properties (`` `--color--primary` ``), function names (`` `useColor()` ``), class names (`` `_margin:md` ``), values (`` `'1rem'` ``).
+- Use backticks for: variable names (`` `colorPrimary` ``), CSS properties (`` `--color--primary` ``), function names (`` `useColorDesignTokens()` ``), class names (`` `_margin:md` ``), values (`` `'1rem'` ``).
 
 ---
 
@@ -181,7 +181,7 @@ Document core Styleframe methods. Each method gets an H2 heading with the functi
 
 ### Design Token Pages (`05.design-tokens/`)
 
-Document `@styleframe/theme` composables. Each composable (e.g., `useColor`, `useColorLightness`) gets its own H2 section. Show:
+Document `@styleframe/theme` composables. Each composable (e.g., `useColorDesignTokens`, `useColorLightnessDesignTokens`) gets its own H2 section. Show:
 1. Default usage with tabbed Code/Output
 2. Custom values variant
 3. Extending defaults variant

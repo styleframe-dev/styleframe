@@ -6,7 +6,6 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { borderStyle } = useDesignTokensPreset(s);
 const {
 	borderStyleNone,
 	borderStyleSolid,
@@ -16,7 +15,7 @@ const {
 	borderStyleGroove,
 	borderStyleInset,
 	borderStyleOutset,
-} = borderStyle;
+} = useDesignTokensPreset(s);
 
 selector(".border-style-swatch__preview", {
 	width: "calc(@spacing * 6)",
