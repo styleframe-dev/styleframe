@@ -3,7 +3,7 @@ import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";
 import { oklch } from "culori";
 import { useColorDesignTokens } from "./useColorDesignTokens";
-import { useColorLightnessDesignTokens } from "./useColorLightnessDesignTokens";
+import { useColorLevelDesignTokens } from "./useColorLevelDesignTokens";
 import { useColorShadeDesignTokens } from "./useColorShadeDesignTokens";
 import { useColorTintDesignTokens } from "./useColorTintDesignTokens";
 
@@ -260,7 +260,7 @@ describe("integration", () => {
 		});
 
 		// Create lightness levels for primary
-		const primaryLevels = useColorLightnessDesignTokens(s, colorPrimary, {
+		const primaryLevels = useColorLevelDesignTokens(s, colorPrimary, {
 			100: 10,
 			500: 50,
 			900: 90,
@@ -308,7 +308,7 @@ describe("integration", () => {
 			"brand-primary": "#007bff",
 		});
 
-		const levels = useColorLightnessDesignTokens(s, colorBrandPrimary, {
+		const levels = useColorLevelDesignTokens(s, colorBrandPrimary, {
 			400: 0.65,
 		} as const);
 
@@ -357,7 +357,7 @@ describe("integration", () => {
 			primary: "#007bff",
 		});
 
-		const levels = useColorLightnessDesignTokens(s, colorPrimary, {
+		const levels = useColorLevelDesignTokens(s, colorPrimary, {
 			100: 0.93,
 			200: 0.85,
 		});

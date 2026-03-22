@@ -290,24 +290,26 @@ export default s;
 
 | Category | Composables |
 |----------|-------------|
-| **Colors** | `useColor`, `useColorLightness`, `useColorShade`, `useColorTint` |
-| **Scales** | `useScale`, `useScalePowers` |
-| **Spacing** | `useSpacing`, `useMultiplier` |
-| **Typography** | `useFontFamily`, `useFontSize`, `useFontWeight`, `useFontStyle`, `useLineHeight`, `useLetterSpacing` |
-| **Borders/Effects** | `useBorderWidth`, `useBorderRadius`, `useBorderStyle`, `useBorderColor`, `useBoxShadow` |
-| **Breakpoints** | `useBreakpoint` |
-| **Easing** | `useEasing` |
+| **Colors** | `useColorDesignTokens`, `useColorLevelDesignTokens`, `useColorShadeDesignTokens`, `useColorTintDesignTokens` |
+| **Scales** | `useScaleDesignTokens`, `useScalePowersDesignTokens` |
+| **Spacing** | `useSpacingDesignTokens`, `useMultiplierDesignTokens` |
+| **Typography** | `useFontFamilyDesignTokens`, `useFontSizeDesignTokens`, `useFontWeightDesignTokens`, `useFontStyleDesignTokens`, `useLineHeightDesignTokens`, `useLetterSpacingDesignTokens` |
+| **Borders/Effects** | `useBorderWidthDesignTokens`, `useBorderRadiusDesignTokens`, `useBorderStyleDesignTokens`, `useBorderColorDesignTokens`, `useBoxShadowDesignTokens` |
+| **Breakpoints** | `useBreakpointDesignTokens` |
+| **Easing** | `useEasingDesignTokens` |
+| **Duration** | `useDurationDesignTokens` |
+| **Z-Index** | `useZIndexDesignTokens` |
 
 All composables take `s` (Styleframe instance) as first argument, accept optional custom values, and return typed token objects.
 
 ```ts
-import { useColor, useSpacing, useMultiplier, useScale, useScalePowers } from '@styleframe/theme';
+import { useColorDesignTokens, useSpacingDesignTokens, useMultiplierDesignTokens, useScaleDesignTokens, useScalePowersDesignTokens } from '@styleframe/theme';
 
-const { colorPrimary } = useColor(s, { primary: '#006cff' } as const);
-const { spacing } = useSpacing(s, { default: '1rem' } as const);
-const { scale } = useScale(s, { default: '@minor-third' });
-const scalePowers = useScalePowers(s, scale);
-const { spacingSm, spacingMd } = useMultiplier(s, spacing, {
+const { colorPrimary } = useColorDesignTokens(s, { primary: '#006cff' } as const);
+const { spacing } = useSpacingDesignTokens(s, { default: '1rem' } as const);
+const { scale } = useScaleDesignTokens(s, { default: '@minor-third' });
+const scalePowers = useScalePowersDesignTokens(s, scale);
+const { spacingSm, spacingMd } = useMultiplierDesignTokens(s, spacing, {
     sm: scalePowers[-1],
     md: scalePowers[0],
 });

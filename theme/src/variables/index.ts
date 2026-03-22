@@ -5,7 +5,7 @@ export * from "./useBorderWidthDesignTokens";
 export * from "./useBoxShadowDesignTokens";
 export * from "./useBreakpointDesignTokens";
 export * from "./useColorDesignTokens";
-export * from "./useColorLightnessDesignTokens";
+export * from "./useColorLevelDesignTokens";
 export * from "./useColorShadeDesignTokens";
 export * from "./useColorTintDesignTokens";
 export * from "./useDurationDesignTokens";
