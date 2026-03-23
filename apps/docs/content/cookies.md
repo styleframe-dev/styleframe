@@ -8,9 +8,9 @@
 
 ## 1. Introduction
 
-Inkline Pro, managed by Pixevil Creative Web SRL ("_the Company_", "_Styleframe_", "_styleframe_", "_we_", "_us_", or "_our_"), utilizes cookies and similar tracking technologies on our website [styleframe.dev](https://styleframe.dev) (the "Website") and associated services (collectively, the "Service"). This Cookie Policy explains the use of cookies and similar technologies to enhance and personalize your user experience.
+Styleframe Pro, managed by Pixevil Creative Web SRL ("_the Company_", "_Styleframe_", "_styleframe_", "_we_", "_us_", or "_our_"), utilizes cookies and similar tracking technologies on our website [styleframe.dev](https://styleframe.dev) (the "Website") and associated services (collectively, the "Service"). This Cookie Policy explains the use of cookies and similar technologies to enhance and personalize your user experience.
 
-We use cookies to help improve your experience of our Website at [styleframe.dev](https://styleframe.dev). This cookie policy is part of Inkline’s [Privacy Policy](/privacy). It covers the use of cookies between your device and our Website.
+We use cookies to help improve your experience of our Website at [styleframe.dev](https://styleframe.dev). This cookie policy is part of Styleframe’s [Privacy Policy](/privacy). It covers the use of cookies between your device and our Website.
 
 We also provide basic information on third-party services we may use, who may also use cookies as part of their service. This policy does not cover their cookies.
 
