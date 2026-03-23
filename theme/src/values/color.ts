@@ -3,13 +3,14 @@ export const colorValues = {
 	 * Primitives
 	 */
 
-	primary: "#198CCF",
-	secondary: "#878BFF",
-	success: "#53B365",
-	warning: "#FFC53D",
-	danger: "#FF604A",
-	info: "#399FFF",
-	gray: "#E5E5E5",
+	primary: "#007A99",
+	secondary: "#406AD4",
+	success: "#058059",
+	warning: "#E8BF2B",
+	danger: "#D22E3E",
+	info: "#0E76B2",
+	gray: "#5F7186",
+
 	white: "#ffffff",
 	black: "#000000",
 
@@ -43,8 +44,8 @@ export const colorValues = {
 	 * Surfaces
 	 */
 
-	background: "#f8fafc",
-	surface: "#ffffff",
+	background: "#F8FAFC",
+	surface: "#FFFFFF",
 
 	/**
 	 * Text
@@ -55,14 +56,6 @@ export const colorValues = {
 	"text-weak": "#334155",
 	"text-weaker": "#475569",
 	"text-weakest": "#64748B",
-
-	"text.on-primary": "@color.text-inverted",
-	"text.on-secondary": "@color.text-inverted",
-	"text.on-success": "@color.text-inverted",
-	"text.on-warning": "@color.text-inverted",
-	"text.on-danger": "@color.text-inverted",
-	"text.on-info": "@color.text-inverted",
-	"text.on-gray": "@color.text-inverted",
 } as const;
 
 export const darkModeColorValues = {
@@ -70,13 +63,14 @@ export const darkModeColorValues = {
 	 * Primitives
 	 */
 
-	primary: "#1676AD",
-	secondary: "#878BFF",
-	success: "#53B365",
-	warning: "#FFC53D",
-	danger: "#FF604A",
-	info: "#399FFF",
-	gray: "#E5E5E5",
+	primary: "#007A99",
+	secondary: "#406AD4",
+	success: "#058059",
+	warning: "#E8BF2B",
+	danger: "#D22E3E",
+	info: "#0E76B2",
+	gray: "#5F7186",
+
 	/**
 	 * States
 	 */
@@ -107,8 +101,8 @@ export const darkModeColorValues = {
 	 * Surfaces
 	 */
 
-	background: "#0F172A",
-	surface: "#1E293B",
+	background: "#15181E",
+	surface: "#1C2028",
 
 	/**
 	 * Text
@@ -119,12 +113,4 @@ export const darkModeColorValues = {
 	"text-weak": "#CBD5E1",
 	"text-weaker": "#94A3B8",
 	"text-weakest": "#64748B",
-
-	"text.on-primary": "@color.text",
-	"text.on-secondary": "@color.text",
-	"text.on-success": "@color.text",
-	"text.on-warning": "@color.text",
-	"text.on-danger": "@color.text",
-	"text.on-info": "@color.text",
-	"text.on-gray": "@color.text",
 };
