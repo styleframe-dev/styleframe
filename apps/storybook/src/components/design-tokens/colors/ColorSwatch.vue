@@ -12,6 +12,7 @@ const props = defineProps<{
 }>();
 
 const previewEl = vueRef<HTMLElement | null>(null);
+const hexValue = vueRef<string>("");
 const textContrastRatio = vueRef<number | null>(null);
 const textPassesAA = vueRef(false);
 const textPassesAAA = vueRef(false);
@@ -24,6 +25,10 @@ function parseColor(color: string): [number, number, number] {
 	ctx.fillRect(0, 0, 1, 1);
 	const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
 	return [r, g, b];
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+	return `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`.toUpperCase();
 }
 
 function relativeLuminance(r: number, g: number, b: number): number {
@@ -51,7 +56,10 @@ function updateContrastRatios() {
 	const fg = getComputedStyle(previewEl.value).color;
 	const pageBg = getComputedStyle(document.body).backgroundColor;
 
-	const bgLum = relativeLuminance(...parseColor(bg));
+	const bgRgb = parseColor(bg);
+	hexValue.value = rgbToHex(...bgRgb);
+
+	const bgLum = relativeLuminance(...bgRgb);
 	const fgLum = relativeLuminance(...parseColor(fg));
 	const pageBgLum = relativeLuminance(...parseColor(pageBg));
 
@@ -104,9 +112,10 @@ onUnmounted(() => {
 			:tabindex="interactive ? 0 : undefined"
 			:class="['color-swatch__preview', colorSwatch({ variant: value, interactive })]"
 		>
-			{{ name }}
+			{{ hexValue }}
 		</div>
 		<template #label>
+			<div class="color-swatch__name">color.{{ name }}</div>
 			<div class="color-swatch__checks">
 				<div class="color-swatch__check">
 					<span class="color-swatch__check-label">Text</span>
