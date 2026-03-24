@@ -58,14 +58,16 @@ describe("applyModifiers", () => {
 		expect(result.declarations).toEqual({ backgroundColor: "blue" });
 	});
 
-	it("should merge results from multiple modifiers", () => {
+	it("should compose modifiers inside-out (last = innermost, first = outermost)", () => {
 		const modifiers = new Map<string, ModifierFactory>([
 			[
 				"hover",
 				{
 					type: "modifier",
 					key: ["hover"],
-					factory: () => ({ backgroundColor: "blue" }),
+					factory: ({ declarations }) => ({
+						"&:hover": declarations,
+					}),
 				},
 			],
 			[
@@ -73,16 +75,28 @@ describe("applyModifiers", () => {
 				{
 					type: "modifier",
 					key: ["focus"],
-					factory: () => ({ outline: "2px solid" }),
+					factory: ({ declarations }) => ({
+						"&:focus": declarations,
+					}),
 				},
 			],
 		]);
 
 		const result = applyModifiers(root, root, modifiers);
 
-		expect(result.declarations).toEqual({
-			backgroundColor: "blue",
-			outline: "2px solid",
+		// hover is outermost, focus is innermost
+		// Result: &:hover { &:focus { color: red } }
+		expect(result.children).toHaveLength(1);
+		expect(result.children[0]).toMatchObject({
+			type: "selector",
+			query: "&:hover",
+		});
+		const hoverChild = result.children[0] as any;
+		expect(hoverChild.children).toHaveLength(1);
+		expect(hoverChild.children[0]).toMatchObject({
+			type: "selector",
+			query: "&:focus",
+			declarations: { color: "red" },
 		});
 	});
 
@@ -103,29 +117,29 @@ describe("applyModifiers", () => {
 		expect(result.declarations).toEqual({ color: "red" });
 	});
 
-	it("should pass original declarations (not accumulated) to each modifier factory", () => {
+	it("should pass accumulated declarations from inner modifier to outer modifier", () => {
 		const receivedDeclarations: any[] = [];
 
 		const modifiers = new Map<string, ModifierFactory>([
 			[
-				"first",
+				"outer",
 				{
 					type: "modifier",
-					key: ["first"],
+					key: ["outer"],
 					factory: (ctx) => {
 						receivedDeclarations.push({ ...ctx.declarations });
-						return { added: "first" };
+						return { wrapped: "outer" };
 					},
 				},
 			],
 			[
-				"second",
+				"inner",
 				{
 					type: "modifier",
-					key: ["second"],
+					key: ["inner"],
 					factory: (ctx) => {
 						receivedDeclarations.push({ ...ctx.declarations });
-						return { added: "second" };
+						return { wrapped: "inner" };
 					},
 				},
 			],
@@ -133,9 +147,10 @@ describe("applyModifiers", () => {
 
 		applyModifiers(root, root, modifiers);
 
-		// Both modifiers should receive the original base declarations
+		// Inner modifier runs first with original declarations
 		expect(receivedDeclarations[0]).toEqual({ color: "red" });
-		expect(receivedDeclarations[1]).toEqual({ color: "red" });
+		// Outer modifier receives inner's accumulated result
+		expect(receivedDeclarations[1]).toEqual({ wrapped: "inner" });
 	});
 
 	it("should not mutate the base instance", () => {
@@ -158,6 +173,32 @@ describe("applyModifiers", () => {
 
 		expect(baseRoot.declarations).toEqual({ color: "red" });
 		expect(baseRoot.id).toBe("base-id");
+	});
+
+	it("should handle single modifier wrapping declarations", () => {
+		const modifiers = new Map<string, ModifierFactory>([
+			[
+				"hover",
+				{
+					type: "modifier",
+					key: ["hover"],
+					factory: ({ declarations }) => ({
+						"&:hover": declarations,
+					}),
+				},
+			],
+		]);
+
+		const result = applyModifiers(root, root, modifiers);
+
+		// Declarations parsed into selector child
+		expect(result.declarations).toEqual({});
+		expect(result.children).toHaveLength(1);
+		expect(result.children[0]).toMatchObject({
+			type: "selector",
+			query: "&:hover",
+			declarations: { color: "red" },
+		});
 	});
 });
 

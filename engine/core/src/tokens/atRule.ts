@@ -1,6 +1,8 @@
+import { isContainerInput } from "../typeGuards";
 import type {
 	AtRule,
 	Container,
+	ContainerInput,
 	DeclarationsBlock,
 	DeclarationsCallback,
 	Root,
@@ -15,7 +17,10 @@ export function createAtRuleFunction(parent: Container, root: Root) {
 	return function atRule(
 		identifier: string,
 		rule: string,
-		declarationsOrCallback?: DeclarationsBlock | DeclarationsCallback,
+		declarationsOrCallback?:
+			| DeclarationsBlock
+			| ContainerInput
+			| DeclarationsCallback,
 	): AtRule {
 		const instance: AtRule = {
 			type: "at-rule",
@@ -36,6 +41,10 @@ export function createAtRuleFunction(parent: Container, root: Root) {
 		if (typeof declarationsOrCallback === "function") {
 			// atRule(query, callback)
 			instance.declarations = declarationsOrCallback(callbackContext) ?? {};
+		} else if (isContainerInput(declarationsOrCallback)) {
+			instance.variables = declarationsOrCallback.variables;
+			instance.declarations = declarationsOrCallback.declarations;
+			instance.children = declarationsOrCallback.children;
 		} else if (declarationsOrCallback) {
 			// atRule(query, declarations)
 			instance.declarations = declarationsOrCallback;
@@ -59,7 +68,10 @@ export function createMediaFunction(parent: Container, root: Root) {
 
 	return function media(
 		query: string,
-		declarationsOrCallback?: DeclarationsBlock | DeclarationsCallback,
+		declarationsOrCallback?:
+			| DeclarationsBlock
+			| ContainerInput
+			| DeclarationsCallback,
 	): AtRule {
 		return atRule("media", query, declarationsOrCallback);
 	};

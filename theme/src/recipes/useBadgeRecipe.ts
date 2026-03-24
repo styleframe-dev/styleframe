@@ -103,7 +103,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 				background: `@color.${color}`,
 				color: "@color.white",
 				borderColor: `@color.${color}-shade-50`,
-				dark: {
+				"&:dark": {
 					borderColor: `@color.${color}-tint-50`,
 				},
 			},
@@ -120,7 +120,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			css: {
 				background: `@color.${color}-100`,
 				color: `@color.${color}-700`,
-				dark: {
+				"&:dark": {
 					background: `@color.${color}-800`,
 					color: `@color.${color}-400`,
 				},
@@ -132,7 +132,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 				background: `@color.${color}-100`,
 				color: `@color.${color}-700`,
 				borderColor: `@color.${color}-300`,
-				dark: {
+				"&:dark": {
 					background: `@color.${color}-800`,
 					color: `@color.${color}-400`,
 					borderColor: `@color.${color}-600`,

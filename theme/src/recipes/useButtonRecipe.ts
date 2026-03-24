@@ -37,13 +37,13 @@ export const useButtonRecipe = createUseRecipe("button", {
 		whiteSpace: "nowrap",
 		userSelect: "none",
 		outline: "none",
-		"focus-visible": {
+		"&:focus-visible": {
 			outlineWidth: "2px",
 			outlineStyle: "solid",
 			outlineColor: "@color.primary",
 			outlineOffset: "2px",
 		},
-		disabled: {
+		"&:disabled": {
 			cursor: "not-allowed",
 			opacity: "0.75",
 			pointerEvents: "none",
@@ -162,7 +162,15 @@ export const useButtonRecipe = createUseRecipe("button", {
 				},
 				"&:dark:hover": {
 					color: `@color.${color}-300`,
-					background: `@color.${color}-700`,
+					background: `@color.${color}-800`,
+				},
+				"&:dark:focus": {
+					color: `@color.${color}-300`,
+					background: `@color.${color}-800`,
+				},
+				"&:dark:active": {
+					color: `@color.${color}-300`,
+					background: `@color.${color}-750`,
 				},
 			},
 		})),
@@ -180,6 +188,19 @@ export const useButtonRecipe = createUseRecipe("button", {
 				},
 				"&:active": {
 					background: `@color.${color}-200`,
+				},
+				"&:dark": {
+					background: `@color.${color}-800`,
+					color: `@color.${color}-400`,
+				},
+				"&:dark:hover": {
+					background: `@color.${color}-750`,
+				},
+				"&:dark:focus": {
+					background: `@color.${color}-750`,
+				},
+				"&:dark:active": {
+					background: `@color.${color}-700`,
 				},
 			},
 		})),
@@ -199,6 +220,20 @@ export const useButtonRecipe = createUseRecipe("button", {
 				"&:active": {
 					background: `@color.${color}-200`,
 				},
+				dark: {
+					background: `@color.${color}-800`,
+					color: `@color.${color}-400`,
+					borderColor: `@color.${color}-600`,
+				},
+				"&:dark:hover": {
+					background: `@color.${color}-750`,
+				},
+				"&:dark:focus": {
+					background: `@color.${color}-750`,
+				},
+				"&:dark:active": {
+					background: `@color.${color}-700`,
+				},
 			},
 		})),
 		// Ghost variants
@@ -216,6 +251,17 @@ export const useButtonRecipe = createUseRecipe("button", {
 				},
 				"&:active": {
 					background: `@color.${color}-200`,
+				},
+				"&:dark:hover": {
+					color: `@color.${color}-400`,
+					background: `@color.${color}-750`,
+				},
+				"&:dark:focus": {
+					color: `@color.${color}-400`,
+					background: `@color.${color}-750`,
+				},
+				"&:dark:active": {
+					background: `@color.${color}-700`,
 				},
 			},
 		})),

@@ -8,7 +8,7 @@ import type {
 	createSelectorFunction,
 	createVariableFunction,
 } from "../tokens";
-import type { TokenValue } from "./tokens";
+import type { ContainerInput, TokenValue } from "./tokens";
 
 // Helper type to make CSS property values also accept Reference types
 type CSSValueWithReference<T> = T extends string | number | undefined
@@ -22,9 +22,11 @@ export type DeclarationsBlock = {
 	[K in keyof CSSProperties]: CSSValueWithReference<CSSProperties[K]>;
 } & {
 	// Support for nested selectors (like '&:hover', '.child')
+	// and ContainerInput for forwarding variables/children through modifiers
 	[key: string]:
 		| CSSValueWithReference<CSSProperties[keyof CSSProperties]>
-		| DeclarationsBlock;
+		| DeclarationsBlock
+		| ContainerInput;
 };
 
 export type DeclarationsCallbackContext = {

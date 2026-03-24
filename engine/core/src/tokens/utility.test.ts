@@ -2205,7 +2205,7 @@ describe("createModifiedUtilityFunction", () => {
 		expect(result.modifiers).toEqual(["dark", "hover"]);
 	});
 
-	test("should apply modifiers in order", () => {
+	test("should apply modifiers inside-out (last = innermost, first = outermost)", () => {
 		const baseUtility: Utility = {
 			type: "utility",
 			id: "test-id",
@@ -2248,10 +2248,11 @@ describe("createModifiedUtilityFunction", () => {
 			]),
 		);
 
-		expect(executionOrder).toEqual(["first", "second"]);
+		// Inside-out: second (inner) runs first, then first (outer)
+		expect(executionOrder).toEqual(["second", "first"]);
 		expect(result.variables).toHaveLength(2);
-		expect(result.variables[0]?.name).toBe("first-var");
-		expect(result.variables[1]?.name).toBe("second-var");
+		expect(result.variables[0]?.name).toBe("second-var");
+		expect(result.variables[1]?.name).toBe("first-var");
 	});
 
 	test("should handle modifiers that modify existing declarations", () => {
@@ -2704,9 +2705,9 @@ describe("createModifiedUtilityFunction", () => {
 			new Map([["additional", additionalModifier]]),
 		);
 
-		expect(result.variables).toHaveLength(2);
-		expect(result.variables[0]).toEqual(existingVar);
-		expect(result.variables[1]).toEqual({
+		// Modifiers reset instance variables/children, only modifier side effects remain
+		expect(result.variables).toHaveLength(1);
+		expect(result.variables[0]).toEqual({
 			type: "variable",
 			id: expect.any(String),
 			name: "new-var",
@@ -2714,9 +2715,8 @@ describe("createModifiedUtilityFunction", () => {
 			parentId: expect.any(String),
 		});
 
-		expect(result.children).toHaveLength(2);
-		expect(result.children[0]).toEqual(existingChild);
-		expect(result.children[1]).toMatchObject({
+		expect(result.children).toHaveLength(1);
+		expect(result.children[0]).toMatchObject({
 			type: "selector",
 			query: ".new",
 			declarations: { color: "blue" },

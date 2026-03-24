@@ -22,37 +22,39 @@ export function applyModifiers<InstanceType extends Container>(
 
 	root._registry.set(instance.id, instance);
 
-	const callbackContext = createDeclarationsCallbackContext(instance, root);
-
 	if (modifiers.size > 0) {
-		const originalDeclarations = deepClone(baseInstance.declarations);
-		let hasResult = false;
+		const modifierList = [...modifiers.values()];
+		let accumulated = deepClone(baseInstance.declarations);
 
-		for (const modifier of modifiers.values()) {
-			const result = modifier.factory({
+		// Reset instance for modifier processing — modifiers control the output
+		instance.declarations = {};
+		instance.variables = [];
+		instance.children = [];
+
+		// Apply inside-out: last modifier = innermost, first = outermost
+		for (let i = modifierList.length - 1; i >= 0; i--) {
+			const callbackContext = createDeclarationsCallbackContext(instance, root);
+			const result = modifierList[i]?.factory({
 				...callbackContext,
-				declarations: deepClone(originalDeclarations),
-				variables: deepClone(instance.variables),
-				children: deepClone(instance.children),
+				declarations: deepClone(accumulated),
+				variables: deepClone(baseInstance.variables),
+				children: deepClone(baseInstance.children),
 			});
 
 			if (result) {
-				if (!hasResult) {
-					instance.declarations = {};
-					hasResult = true;
-				}
-
-				// Merge the modifier's output into instance declarations,
-				// then parse selector/at-rule keys into children
-				Object.assign(instance.declarations, result);
-				parseDeclarationsBlock(
-					instance.declarations,
-					callbackContext,
-					instance,
-					root,
-				);
+				accumulated = result;
 			}
 		}
+
+		// Set accumulated result and parse nested selectors/at-rules into children
+		instance.declarations = accumulated;
+		const callbackContext = createDeclarationsCallbackContext(instance, root);
+		parseDeclarationsBlock(
+			instance.declarations,
+			callbackContext,
+			instance,
+			root,
+		);
 	}
 
 	return instance;

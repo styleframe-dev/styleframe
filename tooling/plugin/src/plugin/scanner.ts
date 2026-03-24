@@ -198,17 +198,11 @@ export function registerMatchedUtilities(
 		} else if (modifierEntry) {
 			// Deduplicate: check if this exact modifier combination is already tracked
 			const entryKey = Array.isArray(modifierEntry)
-				? modifierEntry
-						.map((m) => m.key.join(","))
-						.sort()
-						.join("|")
+				? modifierEntry.map((m) => m.key.join(",")).join("|")
 				: modifierEntry.key.join(",");
 			const isDuplicate = existing.modifierGroups.some((group) => {
 				const groupKey = Array.isArray(group)
-					? group
-							.map((m) => m.key.join(","))
-							.sort()
-							.join("|")
+					? group.map((m) => m.key.join(",")).join("|")
 					: group.key.join(",");
 				return groupKey === entryKey;
 			});

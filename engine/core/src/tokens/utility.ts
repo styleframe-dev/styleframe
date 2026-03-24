@@ -269,8 +269,8 @@ export function createUtilityFunction(parent: Container, root: Root) {
 									(existing) =>
 										existing.key === key &&
 										existing.modifiers.length === combination.length &&
-										existing.modifiers.every((mod) =>
-											combination.includes(mod),
+										existing.modifiers.every(
+											(mod, i) => mod === combination[i],
 										),
 								);
 
