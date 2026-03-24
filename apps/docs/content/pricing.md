@@ -86,7 +86,7 @@ If you can't find what you're looking for, email our support team and someone wi
   :::::accordion-item{label="Can I use styleframe Pro for my own commercial projects?" icon="i-lucide-circle-help"}
   Absolutely! Your license covers unlimited projects — from public websites to paid SaaS applications.
   
-  The only restriction: you can't create website builders or tools that let users generate their own sites using Styleframe Pro components. Please contact [support@styleframe.com](mailto:support@styleframe.com) for more information about a Builder License. Everything else is fair game.
+  The only restriction: you can't create website builders or tools that let users generate their own sites using Styleframe Pro components. Please contact [support@styleframe.dev](mailto:support@styleframe.dev) for more information about a Builder License. Everything else is fair game.
   
   [Read our license](/license) for full details and examples.
   :::::
@@ -96,7 +96,7 @@ If you can't find what you're looking for, email our support team and someone wi
   [Read our license](/license) for full details and examples.
   :::::
   :::::accordion-item{label="Can I sell templates/themes I build with styleframe Pro?" icon="i-lucide-circle-help"}
-  Yes, you can use styleframe Pro to create derivative products like themes, UI kits, page builders, or anything else where you would be repackaging and redistributing our components or templates for someone else to use to build their own sites, but this will require a special Builder License. Contact [support@styleframe.com](mailto:support@styleframe.com) for more information.
+  Yes, you can use styleframe Pro to create derivative products like themes, UI kits, page builders, or anything else where you would be repackaging and redistributing our components or templates for someone else to use to build their own sites, but this will require a special Builder License. Contact [support@styleframe.dev](mailto:support@styleframe.dev) for more information.
   
   [Read our license](/license) for full details and examples.
   :::::
@@ -105,7 +105,7 @@ If you can't find what you're looking for, email our support team and someone wi
   
   **Multiple teams?** Purchase separate team licenses for each division. For example, one for your storefront team, another for marketing, and another for data science.
   
-  **Single large team or organization?** If you're an agency or unified organization without clear divisions, contact us at [support@styleframe.com](mailto:support@styleframe.com) for enterprise pricing.
+  **Single large team or organization?** If you're an agency or unified organization without clear divisions, contact us at [support@styleframe.dev](mailto:support@styleframe.dev) for enterprise pricing.
   :::::
 ::::
 :::
