@@ -43,15 +43,11 @@ export function useDdSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<DdElementConfig>,
 ): DdElementResult {
-	let result!: DdElementResult;
+	const result = useDdDesignTokens(ctx, config) as DdElementResult;
 
-	ctx.selector("dd", (ctx) => {
-		result = useDdDesignTokens(ctx, config) as DdElementResult;
-
-		return {
-			marginBottom: ctx.ref(result.ddMarginBottom),
-			marginLeft: ctx.ref(result.ddMarginLeft),
-		};
+	ctx.selector("dd", {
+		marginBottom: ctx.ref(result.ddMarginBottom),
+		marginLeft: ctx.ref(result.ddMarginLeft),
 	});
 
 	return result;

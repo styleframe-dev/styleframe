@@ -287,7 +287,7 @@ describe("createUtilityFunction", () => {
 		expect(secondaryHover).toBeDefined();
 	});
 
-	test("should store utility instances with multiple modifiers", () => {
+	test("should store utility instances with explicit modifiers (no auto-combination)", () => {
 		const hoverModifier: ModifierFactory = {
 			type: "modifier",
 			key: ["hover"],
@@ -308,6 +308,7 @@ describe("createUtilityFunction", () => {
 			background: value,
 		}));
 
+		// Explicit modifiers: hover alone, focus alone (no auto-combination)
 		createBackgroundUtility(
 			{
 				primary: "#007bff",
@@ -315,10 +316,8 @@ describe("createUtilityFunction", () => {
 			[hoverModifier, focusModifier],
 		);
 
-		// 1 base utility + combinations of 2 modifiers
-		// Combinations: [hover], [focus], [focus,hover] = 3 modified variants
-		// Total: 1 base + 3 modified = 4
-		expect(root.children).toHaveLength(4);
+		// 1 base utility + 2 explicit modifiers = 3 total
+		expect(root.children).toHaveLength(3);
 
 		const backgroundUtility = root.children.find(
 			(u) =>
@@ -337,6 +336,57 @@ describe("createUtilityFunction", () => {
 		});
 
 		// Check modified variants exist
+		const hoverVariant = root.children.find(
+			(u) =>
+				isUtility(u) &&
+				u.name === "background" &&
+				u.modifiers.includes("hover") &&
+				!u.modifiers.includes("focus"),
+		);
+		const focusVariant = root.children.find(
+			(u) =>
+				isUtility(u) &&
+				u.name === "background" &&
+				u.modifiers.includes("focus") &&
+				!u.modifiers.includes("hover"),
+		);
+
+		expect(hoverVariant).toBeDefined();
+		expect(focusVariant).toBeDefined();
+	});
+
+	test("should support combined modifiers via nested arrays", () => {
+		const hoverModifier: ModifierFactory = {
+			type: "modifier",
+			key: ["hover"],
+			factory: ({ declarations }) => ({
+				"&:hover": declarations,
+			}),
+		};
+
+		const focusModifier: ModifierFactory = {
+			type: "modifier",
+			key: ["focus"],
+			factory: ({ declarations }) => ({
+				"&:focus": declarations,
+			}),
+		};
+
+		const createBackgroundUtility = utility("background", ({ value }) => ({
+			background: value,
+		}));
+
+		// Explicit: hover, focus, and [hover, focus] combined
+		createBackgroundUtility(
+			{
+				primary: "#007bff",
+			},
+			[hoverModifier, focusModifier, [hoverModifier, focusModifier]],
+		);
+
+		// 1 base + 3 explicit modifiers = 4 total
+		expect(root.children).toHaveLength(4);
+
 		const hoverVariant = root.children.find(
 			(u) =>
 				isUtility(u) &&

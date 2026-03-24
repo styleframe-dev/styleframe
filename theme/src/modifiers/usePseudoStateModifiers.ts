@@ -36,7 +36,7 @@ export function useFocusVisibleModifier(s: Styleframe): ModifierFactory {
 
 export function useActiveModifier(s: Styleframe): ModifierFactory {
 	return s.modifier("active", ({ declarations }) => ({
-		"&:active": declarations,
+		"&:active, &:focus:active": declarations,
 	}));
 }
 

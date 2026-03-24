@@ -40,6 +40,21 @@ describe("useMediaPreferenceModifiers", () => {
 		expect(css).toContain("._dark\\:background-color\\:primary {");
 	});
 
+	it("should generate dark modifier with both media query and theme selectors", () => {
+		const s = styleframe();
+		const { dark } = useMediaPreferenceModifiers(s);
+
+		const createBg = s.utility("background-color", ({ value }) => ({
+			backgroundColor: value,
+		}));
+		createBg({ primary: "#006cff" }, [dark]);
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("@media (prefers-color-scheme: dark)");
+		expect(css).toContain(".dark-theme");
+		expect(css).toContain('[data-theme="dark"]');
+	});
+
 	it("should generate correct CSS class names for motion-reduce modifier", () => {
 		const s = styleframe();
 		const { motionReduce } = useMediaPreferenceModifiers(s);

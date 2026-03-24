@@ -99,7 +99,14 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 	compoundVariants: colors.flatMap((color) => [
 		{
 			match: { color, variant: "solid" as const },
-			css: { background: `@color.${color}`, color: "@color.white" },
+			css: {
+				background: `@color.${color}`,
+				color: "@color.white",
+				borderColor: `@color.${color}-shade-50`,
+				dark: {
+					borderColor: `@color.${color}-tint-50`,
+				},
+			},
 		},
 		{
 			match: { color, variant: "outline" as const },
@@ -111,16 +118,25 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 		{
 			match: { color, variant: "soft" as const },
 			css: {
-				background: `@color.${color}-900`,
-				color: `@color.${color}`,
+				background: `@color.${color}-100`,
+				color: `@color.${color}-700`,
+				dark: {
+					background: `@color.${color}-800`,
+					color: `@color.${color}-400`,
+				},
 			},
 		},
 		{
 			match: { color, variant: "subtle" as const },
 			css: {
-				background: `@color.${color}-950`,
-				color: `@color.${color}`,
-				borderColor: `@color.${color}-800`,
+				background: `@color.${color}-100`,
+				color: `@color.${color}-700`,
+				borderColor: `@color.${color}-300`,
+				dark: {
+					background: `@color.${color}-800`,
+					color: `@color.${color}-400`,
+					borderColor: `@color.${color}-600`,
+				},
 			},
 		},
 	]),

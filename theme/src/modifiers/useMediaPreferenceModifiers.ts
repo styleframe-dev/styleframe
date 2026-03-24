@@ -13,9 +13,17 @@ export interface MediaPreferenceModifiers {
 }
 
 export function useDarkModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("dark", ({ declarations }) => ({
-		"@media (prefers-color-scheme: dark)": declarations,
-	}));
+	return s.modifier(
+		"dark",
+		({ declarations, variables, children, selector, media }) => {
+			media("(prefers-color-scheme: dark)", declarations);
+			selector(':is(.dark-theme, [data-theme="dark"]) &', {
+				declarations: { ...declarations },
+				variables,
+				children,
+			});
+		},
+	);
 }
 
 export function useMotionSafeModifier(s: Styleframe): ModifierFactory {

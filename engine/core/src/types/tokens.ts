@@ -79,7 +79,7 @@ export type UtilityCallbackFn = DeclarationsCallback<
 
 export type UtilityCreatorFn = (
 	values: Record<string, TokenValue> | TokenValue[],
-	modifiers?: ModifierFactory[],
+	modifiers?: (ModifierFactory | ModifierFactory[])[],
 ) => void;
 
 export type ModifierCallbackFn = DeclarationsCallback<

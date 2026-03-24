@@ -46,15 +46,14 @@ export function useParagraphSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<ParagraphElementConfig>,
 ): ParagraphElementResult {
-	let result!: ParagraphElementResult;
+	const result = useParagraphDesignTokens(
+		ctx,
+		config,
+	) as ParagraphElementResult;
 
-	ctx.selector("p", (ctx) => {
-		result = useParagraphDesignTokens(ctx, config) as ParagraphElementResult;
-
-		return {
-			marginTop: ctx.ref(result.paragraphMarginTop),
-			marginBottom: ctx.ref(result.paragraphMarginBottom),
-		};
+	ctx.selector("p", {
+		marginTop: ctx.ref(result.paragraphMarginTop),
+		marginBottom: ctx.ref(result.paragraphMarginBottom),
 	});
 
 	return result;

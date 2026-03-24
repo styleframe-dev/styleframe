@@ -17,7 +17,7 @@ import {
 	createDeclarationsCallbackContext,
 	parseDeclarationsBlock,
 } from "./declarations";
-import { applyModifiers, combineKeys } from "./modifier";
+import { applyModifiers } from "./modifier";
 
 /**
  * Create an autogenerate function for namespace arrays that resolves
@@ -73,6 +73,41 @@ function createNamespaceAutogenerate(
 		// For non-@ values (refs, arbitrary), delegate to base transform
 		return baseTransform(value);
 	};
+}
+
+/**
+ * Expand a group of modifiers into key maps for applyModifiers.
+ *
+ * A single modifier with key: ["sm", "md", "lg"] expands into 3 maps:
+ *   [{sm: mod}], [{md: mod}], [{lg: mod}]
+ *
+ * Multiple single-key modifiers [hover, dark] produce one map:
+ *   [{hover: hoverMod, dark: darkMod}]
+ *
+ * For mixed cases (multi-key + others), takes the cartesian product.
+ */
+function expandModifierGroup(
+	group: ModifierFactory[],
+): Map<string, ModifierFactory>[] {
+	// Start with a single empty map
+	let results: Map<string, ModifierFactory>[] = [new Map()];
+
+	for (const modifier of group) {
+		if (!isModifier(modifier)) continue;
+
+		const newResults: Map<string, ModifierFactory>[] = [];
+		for (const modKey of modifier.key) {
+			for (const existing of results) {
+				const copy = new Map(existing);
+				copy.set(modKey, modifier);
+				newResults.push(copy);
+			}
+		}
+		results = newResults;
+	}
+
+	// Filter out the empty map if nothing was added
+	return results.filter((m) => m.size > 0);
 }
 
 export function createUtilityFunction(parent: Container, root: Root) {
@@ -219,43 +254,39 @@ export function createUtilityFunction(parent: Container, root: Root) {
 
 					// Create modified variants for this specific value
 					if (modifiers && modifiers.length > 0) {
-						const modifierKeys = modifiers.map((modifier) => modifier.key);
-						const modifierKeyCombinations = combineKeys(modifierKeys);
+						for (const entry of modifiers) {
+							// Normalize: single modifier → [modifier], array stays as-is
+							const group = Array.isArray(entry) ? entry : [entry];
 
-						const modifiedEntries = modifierKeyCombinations
-							.filter((combination) => {
-								// Check for duplicate keys without modifiers
-								return !factoryInstance.values.find(
-									(entry) =>
-										entry.key === key &&
-										entry.modifiers.length === combination.length &&
-										entry.modifiers.every((mod) => combination.includes(mod)),
+							// Expand multi-key modifiers into individual key applications
+							const keyMaps = expandModifierGroup(group);
+
+							for (const modifiersByKey of keyMaps) {
+								const combination = [...modifiersByKey.keys()];
+
+								// Skip duplicates
+								const isDuplicate = factoryInstance.values.find(
+									(existing) =>
+										existing.key === key &&
+										existing.modifiers.length === combination.length &&
+										existing.modifiers.every((mod) =>
+											combination.includes(mod),
+										),
 								);
-							})
-							.reduce<Utility[]>((acc, combination) => {
-								const modifiersByKey = new Map<string, ModifierFactory>();
-								for (const modKey of combination) {
-									const modifier = modifiers.find((modifier) =>
-										modifier.key.includes(modKey),
+
+								if (!isDuplicate) {
+									factoryInstance.values.push({
+										key,
+										value,
+										modifiers: combination,
+									});
+
+									parent.children.push(
+										applyModifiers(instance, root, modifiersByKey),
 									);
-
-									if (modifier && isModifier(modifier)) {
-										modifiersByKey.set(modKey, modifier);
-									}
 								}
-
-								factoryInstance.values.push({
-									key,
-									value,
-									modifiers: combination,
-								});
-
-								acc.push(applyModifiers(instance, root, modifiersByKey));
-
-								return acc;
-							}, []);
-
-						parent.children.push(...modifiedEntries);
+							}
+						}
 					}
 				}
 			},

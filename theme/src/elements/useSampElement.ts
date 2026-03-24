@@ -35,14 +35,10 @@ export function useSampSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<SampElementConfig>,
 ): SampElementResult {
-	let result!: SampElementResult;
+	const result = useSampDesignTokens(ctx, config) as SampElementResult;
 
-	ctx.selector("samp", (ctx) => {
-		result = useSampDesignTokens(ctx, config) as SampElementResult;
-
-		return {
-			fontFamily: ctx.ref(result.sampFontFamily),
-		};
+	ctx.selector("samp", {
+		fontFamily: ctx.ref(result.sampFontFamily),
 	});
 
 	return result;

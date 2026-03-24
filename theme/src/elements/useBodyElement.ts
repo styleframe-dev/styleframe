@@ -13,6 +13,12 @@ export const defaultBodyOptions: WithThemes<BodyElementConfig> = {
 	fontFamily: "@font-family",
 	fontSize: "@font-size",
 	lineHeight: "@line-height",
+	themes: {
+		dark: {
+			color: "@color.text",
+			background: "@color.background",
+		},
+	},
 };
 
 export interface BodyElementConfig {
@@ -55,20 +61,16 @@ export function useBodySelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<BodyElementConfig>,
 ): BodyElementResult {
-	let result!: BodyElementResult;
+	const result = useBodyDesignTokens(ctx, config) as BodyElementResult;
 
-	ctx.selector("body", (ctx) => {
-		result = useBodyDesignTokens(ctx, config) as BodyElementResult;
-
-		return {
-			fontFamily: ctx.ref(result.bodyFontFamily),
-			fontSize: ctx.ref(result.bodyFontSize),
-			lineHeight: ctx.ref(result.bodyLineHeight),
-			color: ctx.ref(result.bodyColor),
-			background: ctx.ref(result.bodyBackground),
-			"-webkit-font-smoothing": "antialiased",
-			"-moz-osx-font-smoothing": "grayscale",
-		};
+	ctx.selector("body", {
+		fontFamily: ctx.ref(result.bodyFontFamily),
+		fontSize: ctx.ref(result.bodyFontSize),
+		lineHeight: ctx.ref(result.bodyLineHeight),
+		color: ctx.ref(result.bodyColor),
+		background: ctx.ref(result.bodyBackground),
+		"-webkit-font-smoothing": "antialiased",
+		"-moz-osx-font-smoothing": "grayscale",
 	});
 
 	return result;

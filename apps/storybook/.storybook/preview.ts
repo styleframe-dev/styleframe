@@ -16,8 +16,20 @@ const channel = addons.getChannel();
 channel.on(DARK_MODE_EVENT_NAME, (isDark: boolean) => {
 	if (isDark) {
 		document.body.dataset.theme = "dark";
+		document.body.classList.remove("default-theme");
+		document.body.classList.add("dark-theme");
 	} else {
 		delete document.body.dataset.theme;
+		document.body.classList.remove("dark-theme");
+		document.body.classList.add("default-theme");
+	}
+});
+
+window.addEventListener("message", (event: MessageEvent) => {
+	if (event.data?.type === "styleframe:theme") {
+		const mode = event.data.theme === "dark" ? "dark" : "light";
+
+		channel.emit(DARK_MODE_EVENT_NAME, mode === "dark");
 	}
 });
 
@@ -51,6 +63,8 @@ const preview: Preview = {
 		darkMode: {
 			stylePreview: true,
 			current: "light",
+			darkClass: ["dark-theme"],
+			lightClass: ["default-theme"],
 			dark,
 			light,
 		},

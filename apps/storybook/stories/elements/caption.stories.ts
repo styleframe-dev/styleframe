@@ -11,7 +11,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
 	render: () => ({
 		template: `
-			<table class="_width:full _min-width:[320px]">
+			<table class="_min-width:[320px]" border="1">
 				<caption>Monthly savings</caption>
 				<thead>
 					<tr>

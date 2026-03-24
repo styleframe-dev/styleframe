@@ -38,14 +38,10 @@ export function useDlSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<DlElementConfig>,
 ): DlElementResult {
-	let result!: DlElementResult;
+	const result = useDlDesignTokens(ctx, config) as DlElementResult;
 
-	ctx.selector("dl", (ctx) => {
-		result = useDlDesignTokens(ctx, config) as DlElementResult;
-
-		return {
-			marginBottom: ctx.ref(result.dlMarginBottom),
-		};
+	ctx.selector("dl", {
+		marginBottom: ctx.ref(result.dlMarginBottom),
 	});
 
 	return result;

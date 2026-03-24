@@ -38,16 +38,12 @@ export function useAddressSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<AddressElementConfig>,
 ): AddressElementResult {
-	let result!: AddressElementResult;
+	const result = useAddressDesignTokens(ctx, config) as AddressElementResult;
 
-	ctx.selector("address", (ctx) => {
-		result = useAddressDesignTokens(ctx, config) as AddressElementResult;
-
-		return {
-			marginBottom: ctx.ref(result.addressMarginBottom),
-			fontStyle: "normal",
-			lineHeight: "inherit",
-		};
+	ctx.selector("address", {
+		marginBottom: ctx.ref(result.addressMarginBottom),
+		fontStyle: "normal",
+		lineHeight: "inherit",
 	});
 
 	return result;

@@ -498,9 +498,15 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 			}
 
 			// Call create with the value and modifiers (if any)
+			// Compound modifiers (e.g. "hover:focus") are passed as a nested array
+			// so they are applied together, not as separate individual modifiers
 			utilityFactory.create(
 				[entry.value],
-				modifierFactories.length > 0 ? modifierFactories : undefined,
+				modifierFactories.length > 0
+					? modifierFactories.length > 1
+						? [modifierFactories]
+						: modifierFactories
+					: undefined,
 			);
 		}
 	}

@@ -298,7 +298,7 @@ describe("createUseUtility", () => {
 		expect(hoverUtility).toBeDefined();
 	});
 
-	it("should apply multiple modifiers to utilities", () => {
+	it("should apply multiple modifiers to utilities as individual variants", () => {
 		const usePadding = createUseUtility("padding", ({ value }) => ({
 			padding: value,
 		}));
@@ -310,19 +310,17 @@ describe("createUseUtility", () => {
 			"&:focus": declarations,
 		}));
 
+		// Flat array: each modifier creates an individual variant (no auto-combination)
 		usePadding(s, { sm: "8px" }, [hoverModifier, focusModifier]);
 
-		const bothModifiersUtility = s.root.children.find(
-			(u): u is Utility =>
-				isUtility(u) &&
-				u.name === "padding" &&
-				u.modifiers.includes("hover") &&
-				u.modifiers.includes("focus"),
+		const utilities = s.root.children.filter(
+			(u): u is Utility => isUtility(u) && u.name === "padding",
 		);
-		expect(bothModifiersUtility).toBeDefined();
+		// base + hover + focus = 3 (no auto-combination)
+		expect(utilities).toHaveLength(3);
 	});
 
-	it("should generate all modifier combinations", () => {
+	it("should combine modifiers via nested arrays", () => {
 		const useMargin = createUseUtility("margin", ({ value }) => ({
 			margin: value,
 		}));
@@ -334,7 +332,12 @@ describe("createUseUtility", () => {
 			"&:focus": declarations,
 		}));
 
-		useMargin(s, { sm: "8px" }, [hoverModifier, focusModifier]);
+		// Nested array for combined modifier variant
+		useMargin(s, { sm: "8px" }, [
+			hoverModifier,
+			focusModifier,
+			[hoverModifier, focusModifier],
+		]);
 
 		// Should have: base, hover-only, focus-only, hover+focus
 		const utilities = s.root.children.filter(

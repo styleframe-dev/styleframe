@@ -48,24 +48,20 @@ export function usePreSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<PreElementConfig>,
 ): PreElementResult {
-	let result!: PreElementResult;
+	const result = usePreDesignTokens(ctx, config) as PreElementResult;
 
-	ctx.selector("pre", (ctx) => {
-		result = usePreDesignTokens(ctx, config) as PreElementResult;
-
-		return {
-			fontFamily: ctx.ref(result.preFontFamily),
-			fontSize: ctx.ref(result.preFontSize),
-			display: "block",
-			overflowX: "auto",
-			marginTop: "0",
-			marginBottom: ctx.ref(result.preMarginBottom),
-			"& > code": {
-				background: "transparent",
-				color: "inherit",
-				fontSize: "inherit",
-			},
-		};
+	ctx.selector("pre", {
+		fontFamily: ctx.ref(result.preFontFamily),
+		fontSize: ctx.ref(result.preFontSize),
+		display: "block",
+		overflowX: "auto",
+		marginTop: "0",
+		marginBottom: ctx.ref(result.preMarginBottom),
+		"& > code": {
+			background: "transparent",
+			color: "inherit",
+			fontSize: "inherit",
+		},
 	});
 
 	return result;
