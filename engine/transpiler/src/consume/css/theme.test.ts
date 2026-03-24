@@ -33,7 +33,7 @@ describe("createThemeConsumer", () => {
 		});
 
 		expect(consumeTheme(lightTheme, options)).toBe(
-			'[data-theme="light"] {\n\t--color-primary: #0066ff;\n}',
+			'.light-theme, [data-theme="light"] {\n\t--color-primary: #0066ff;\n}',
 		);
 	});
 
@@ -46,7 +46,7 @@ describe("createThemeConsumer", () => {
 
 		const result = consumeTheme(darkTheme, options);
 		expect(result).toEqual(
-			'[data-theme="dark"] {\n\t--color-primary: #4d9eff;\n\t--color-secondary: #ff6b6b;\n\t--background: #1a1a1a;\n}',
+			'.dark-theme, [data-theme="dark"] {\n\t--color-primary: #4d9eff;\n\t--color-secondary: #ff6b6b;\n\t--background: #1a1a1a;\n}',
 		);
 	});
 
@@ -63,7 +63,7 @@ describe("createThemeConsumer", () => {
 		);
 
 		const result = consumeTheme(themeWithSelectors, options);
-		expect(result).toEqual(`[data-theme="colorful"] {
+		expect(result).toEqual(`.colorful-theme, [data-theme="colorful"] {
 \t--primary-color: #ff0066;
 \t
 \t.button {
@@ -101,14 +101,16 @@ describe("createThemeConsumer", () => {
 		});
 
 		expect(consumeTheme(prefixedTheme, prefixOptions)).toBe(
-			'[data-theme="branded"] {\n\t--app-brand-color: #123456;\n}',
+			'.branded-theme, [data-theme="branded"] {\n\t--app-brand-color: #123456;\n}',
 		);
 	});
 
 	it("should handle empty themes", () => {
 		const emptyTheme = theme("empty", () => {});
 
-		expect(consumeTheme(emptyTheme, options)).toBe('[data-theme="empty"] {}');
+		expect(consumeTheme(emptyTheme, options)).toBe(
+			'.empty-theme, [data-theme="empty"] {}',
+		);
 	});
 
 	it("should handle themes with only nested children", () => {
@@ -124,7 +126,7 @@ describe("createThemeConsumer", () => {
 
 		const result = consumeTheme(childrenOnlyTheme, options);
 		expect(result).toEqual(
-			`[data-theme="structure"] {
+			`.structure-theme, [data-theme="structure"] {
 \t.header {
 \t\tpadding: 1rem;
 \t}
@@ -161,7 +163,7 @@ describe("createThemeConsumer", () => {
 		);
 
 		const result = consumeTheme(complexTheme, options);
-		expect(result).toEqual(`[data-theme="advanced"] {
+		expect(result).toEqual(`.advanced-theme, [data-theme="advanced"] {
 \t--spacing-unit: 8px;
 \t--primary-hue: 240;
 \t
@@ -188,7 +190,7 @@ describe("createThemeConsumer", () => {
 		});
 
 		const result = consumeTheme(refTheme, options);
-		expect(result).toEqual(`[data-theme="referenced"] {
+		expect(result).toEqual(`.referenced-theme, [data-theme="referenced"] {
 \t--large-size: calc(var(--base-size) * 1.5);
 \t--small-size: calc(var(--base-size) * 0.875);
 }`);

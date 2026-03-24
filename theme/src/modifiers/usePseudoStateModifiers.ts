@@ -11,44 +11,50 @@ export interface PseudoStateModifiers {
 }
 
 export function useHoverModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("hover", ({ declarations }) => ({
-		"&:hover": declarations,
+	return s.modifier("hover", ({ declarations, variables, children }) => ({
+		"&:hover": { declarations, variables, children },
 	}));
 }
 
 export function useFocusModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("focus", ({ declarations }) => ({
-		"&:focus": declarations,
+	return s.modifier("focus", ({ declarations, variables, children }) => ({
+		"&:focus": { declarations, variables, children },
 	}));
 }
 
 export function useFocusWithinModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("focus-within", ({ declarations }) => ({
-		"&:focus-within": declarations,
-	}));
+	return s.modifier(
+		"focus-within",
+		({ declarations, variables, children }) => ({
+			"&:focus-within": { declarations, variables, children },
+		}),
+	);
 }
 
 export function useFocusVisibleModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("focus-visible", ({ declarations }) => ({
-		"&:focus-visible": declarations,
-	}));
+	return s.modifier(
+		"focus-visible",
+		({ declarations, variables, children }) => ({
+			"&:focus-visible": { declarations, variables, children },
+		}),
+	);
 }
 
 export function useActiveModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("active", ({ declarations }) => ({
-		"&:active, &:focus:active": declarations,
+	return s.modifier("active", ({ declarations, variables, children }) => ({
+		"&:active, &:focus:active": { declarations, variables, children },
 	}));
 }
 
 export function useVisitedModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("visited", ({ declarations }) => ({
-		"&:visited": declarations,
+	return s.modifier("visited", ({ declarations, variables, children }) => ({
+		"&:visited": { declarations, variables, children },
 	}));
 }
 
 export function useTargetModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("target", ({ declarations }) => ({
-		"&:target": declarations,
+	return s.modifier("target", ({ declarations, variables, children }) => ({
+		"&:target": { declarations, variables, children },
 	}));
 }
 

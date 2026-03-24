@@ -13,57 +13,78 @@ export interface AriaStateModifiers {
 }
 
 export function useAriaBusyModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("aria-busy", ({ declarations }) => ({
-		'&[aria-busy="true"]': declarations,
+	return s.modifier("aria-busy", ({ declarations, variables, children }) => ({
+		'&[aria-busy="true"]': { declarations, variables, children },
 	}));
 }
 
 export function useAriaCheckedModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("aria-checked", ({ declarations }) => ({
-		'&[aria-checked="true"]': declarations,
-	}));
+	return s.modifier(
+		"aria-checked",
+		({ declarations, variables, children }) => ({
+			'&[aria-checked="true"]': { declarations, variables, children },
+		}),
+	);
 }
 
 export function useAriaDisabledModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("aria-disabled", ({ declarations }) => ({
-		'&[aria-disabled="true"]': declarations,
-	}));
+	return s.modifier(
+		"aria-disabled",
+		({ declarations, variables, children }) => ({
+			'&[aria-disabled="true"]': { declarations, variables, children },
+		}),
+	);
 }
 
 export function useAriaExpandedModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("aria-expanded", ({ declarations }) => ({
-		'&[aria-expanded="true"]': declarations,
-	}));
+	return s.modifier(
+		"aria-expanded",
+		({ declarations, variables, children }) => ({
+			'&[aria-expanded="true"]': { declarations, variables, children },
+		}),
+	);
 }
 
 export function useAriaHiddenModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("aria-hidden", ({ declarations }) => ({
-		'&[aria-hidden="true"]': declarations,
+	return s.modifier("aria-hidden", ({ declarations, variables, children }) => ({
+		'&[aria-hidden="true"]': { declarations, variables, children },
 	}));
 }
 
 export function useAriaPressedModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("aria-pressed", ({ declarations }) => ({
-		'&[aria-pressed="true"]': declarations,
-	}));
+	return s.modifier(
+		"aria-pressed",
+		({ declarations, variables, children }) => ({
+			'&[aria-pressed="true"]': { declarations, variables, children },
+		}),
+	);
 }
 
 export function useAriaReadonlyModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("aria-readonly", ({ declarations }) => ({
-		'&[aria-readonly="true"]': declarations,
-	}));
+	return s.modifier(
+		"aria-readonly",
+		({ declarations, variables, children }) => ({
+			'&[aria-readonly="true"]': { declarations, variables, children },
+		}),
+	);
 }
 
 export function useAriaRequiredModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("aria-required", ({ declarations }) => ({
-		'&[aria-required="true"]': declarations,
-	}));
+	return s.modifier(
+		"aria-required",
+		({ declarations, variables, children }) => ({
+			'&[aria-required="true"]': { declarations, variables, children },
+		}),
+	);
 }
 
 export function useAriaSelectedModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("aria-selected", ({ declarations }) => ({
-		'&[aria-selected="true"]': declarations,
-	}));
+	return s.modifier(
+		"aria-selected",
+		({ declarations, variables, children }) => ({
+			'&[aria-selected="true"]': { declarations, variables, children },
+		}),
+	);
 }
 
 /**

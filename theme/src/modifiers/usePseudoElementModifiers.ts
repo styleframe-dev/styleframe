@@ -13,56 +13,67 @@ export interface PseudoElementModifiers {
 }
 
 export function useBeforeModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("before", ({ declarations }) => ({
-		"&::before": { content: "''", ...declarations },
+	return s.modifier("before", ({ declarations, variables, children }) => ({
+		"&::before": {
+			declarations: { content: "''", ...declarations },
+			variables,
+			children,
+		},
 	}));
 }
 
 export function useAfterModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("after", ({ declarations }) => ({
-		"&::after": { content: "''", ...declarations },
+	return s.modifier("after", ({ declarations, variables, children }) => ({
+		"&::after": {
+			declarations: { content: "''", ...declarations },
+			variables,
+			children,
+		},
 	}));
 }
 
 export function usePlaceholderModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("placeholder", ({ declarations }) => ({
-		"&::placeholder": declarations,
+	return s.modifier("placeholder", ({ declarations, variables, children }) => ({
+		"&::placeholder": { declarations, variables, children },
 	}));
 }
 
 export function useSelectionModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("selection", ({ declarations }) => ({
-		"&::selection": declarations,
+	return s.modifier("selection", ({ declarations, variables, children }) => ({
+		"&::selection": { declarations, variables, children },
 	}));
 }
 
 export function useFirstLetterModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("first-letter", ({ declarations }) => ({
-		"&::first-letter": declarations,
-	}));
+	return s.modifier(
+		"first-letter",
+		({ declarations, variables, children }) => ({
+			"&::first-letter": { declarations, variables, children },
+		}),
+	);
 }
 
 export function useFirstLineModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("first-line", ({ declarations }) => ({
-		"&::first-line": declarations,
+	return s.modifier("first-line", ({ declarations, variables, children }) => ({
+		"&::first-line": { declarations, variables, children },
 	}));
 }
 
 export function useMarkerModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("marker", ({ declarations }) => ({
-		"&::marker": declarations,
+	return s.modifier("marker", ({ declarations, variables, children }) => ({
+		"&::marker": { declarations, variables, children },
 	}));
 }
 
 export function useBackdropModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("backdrop", ({ declarations }) => ({
-		"&::backdrop": declarations,
+	return s.modifier("backdrop", ({ declarations, variables, children }) => ({
+		"&::backdrop": { declarations, variables, children },
 	}));
 }
 
 export function useFileModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("file", ({ declarations }) => ({
-		"&::file-selector-button": declarations,
+	return s.modifier("file", ({ declarations, variables, children }) => ({
+		"&::file-selector-button": { declarations, variables, children },
 	}));
 }
 

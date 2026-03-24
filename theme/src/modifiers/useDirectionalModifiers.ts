@@ -6,14 +6,22 @@ export interface DirectionalModifiers {
 }
 
 export function useRtlModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("rtl", ({ declarations }) => ({
-		'&:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *)': declarations,
+	return s.modifier("rtl", ({ declarations, variables, children }) => ({
+		'&:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *)': {
+			declarations,
+			variables,
+			children,
+		},
 	}));
 }
 
 export function useLtrModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("ltr", ({ declarations }) => ({
-		'&:where(:dir(ltr), [dir="ltr"], [dir="ltr"] *)': declarations,
+	return s.modifier("ltr", ({ declarations, variables, children }) => ({
+		'&:where(:dir(ltr), [dir="ltr"], [dir="ltr"] *)': {
+			declarations,
+			variables,
+			children,
+		},
 	}));
 }
 

@@ -218,7 +218,7 @@ describe("createUtilityConsumer", () => {
 			{
 				sm: "8px",
 			},
-			[hoverModifier, focusModifier],
+			[[hoverModifier, focusModifier]],
 		);
 
 		// Find the utility with both modifiers
@@ -236,13 +236,11 @@ describe("createUtilityConsumer", () => {
 
 		const result = consumeUtility(hoverFocusMarginUtility, options);
 
-		const expected = `._focus\\:hover\\:margin\\:sm {
-\t&:focus {
-\t\tmargin: 8px;
-\t}
-\t
+		const expected = `._hover\\:focus\\:margin\\:sm {
 \t&:hover {
-\t\tmargin: 8px;
+\t\t&:focus {
+\t\t\tmargin: 8px;
+\t\t}
 \t}
 }`;
 
@@ -502,7 +500,7 @@ describe("createUtilityConsumer", () => {
 			{
 				sm: "8px",
 			},
-			[hoverModifier, responsiveModifier],
+			[[hoverModifier, responsiveModifier]],
 		);
 
 		// Find the utility with both modifiers
@@ -522,11 +520,9 @@ describe("createUtilityConsumer", () => {
 
 		const expected = `._hover\\:responsive\\:margin\\:sm {
 \t&:hover {
-\t\tmargin: 8px;
-\t}
-\t
-\t@media (min-width: 768px) {
-\t\tmargin: 8px;
+\t\t@media (min-width: 768px) {
+\t\t\tmargin: 8px;
+\t\t}
 \t}
 }`;
 
@@ -667,7 +663,7 @@ describe("createUtilityConsumer", () => {
 			{
 				sm: "8px",
 			},
-			[hoverModifier, focusModifier],
+			[hoverModifier, focusModifier, [hoverModifier, focusModifier]],
 		);
 
 		// Check that all combinations are created

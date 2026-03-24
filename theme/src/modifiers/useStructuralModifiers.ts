@@ -13,56 +13,65 @@ export interface StructuralModifiers {
 }
 
 export function useFirstModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("first", ({ declarations }) => ({
-		"&:first-child": declarations,
+	return s.modifier("first", ({ declarations, variables, children }) => ({
+		"&:first-child": { declarations, variables, children },
 	}));
 }
 
 export function useLastModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("last", ({ declarations }) => ({
-		"&:last-child": declarations,
+	return s.modifier("last", ({ declarations, variables, children }) => ({
+		"&:last-child": { declarations, variables, children },
 	}));
 }
 
 export function useOnlyModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("only", ({ declarations }) => ({
-		"&:only-child": declarations,
+	return s.modifier("only", ({ declarations, variables, children }) => ({
+		"&:only-child": { declarations, variables, children },
 	}));
 }
 
 export function useOddModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("odd", ({ declarations }) => ({
-		"&:nth-child(odd)": declarations,
+	return s.modifier("odd", ({ declarations, variables, children }) => ({
+		"&:nth-child(odd)": { declarations, variables, children },
 	}));
 }
 
 export function useEvenModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("even", ({ declarations }) => ({
-		"&:nth-child(even)": declarations,
+	return s.modifier("even", ({ declarations, variables, children }) => ({
+		"&:nth-child(even)": { declarations, variables, children },
 	}));
 }
 
 export function useFirstOfTypeModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("first-of-type", ({ declarations }) => ({
-		"&:first-of-type": declarations,
-	}));
+	return s.modifier(
+		"first-of-type",
+		({ declarations, variables, children }) => ({
+			"&:first-of-type": { declarations, variables, children },
+		}),
+	);
 }
 
 export function useLastOfTypeModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("last-of-type", ({ declarations }) => ({
-		"&:last-of-type": declarations,
-	}));
+	return s.modifier(
+		"last-of-type",
+		({ declarations, variables, children }) => ({
+			"&:last-of-type": { declarations, variables, children },
+		}),
+	);
 }
 
 export function useOnlyOfTypeModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("only-of-type", ({ declarations }) => ({
-		"&:only-of-type": declarations,
-	}));
+	return s.modifier(
+		"only-of-type",
+		({ declarations, variables, children }) => ({
+			"&:only-of-type": { declarations, variables, children },
+		}),
+	);
 }
 
 export function useEmptyModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("empty", ({ declarations }) => ({
-		"&:empty": declarations,
+	return s.modifier("empty", ({ declarations, variables, children }) => ({
+		"&:empty": { declarations, variables, children },
 	}));
 }
 

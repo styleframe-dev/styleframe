@@ -6,14 +6,14 @@ export interface OtherStateModifiers {
 }
 
 export function useOpenModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("open", ({ declarations }) => ({
-		"&:is([open], :popover-open)": declarations,
+	return s.modifier("open", ({ declarations, variables, children }) => ({
+		"&:is([open], :popover-open)": { declarations, variables, children },
 	}));
 }
 
 export function useInertModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("inert", ({ declarations }) => ({
-		"&:is([inert], [inert] *)": declarations,
+	return s.modifier("inert", ({ declarations, variables, children }) => ({
+		"&:is([inert], [inert] *)": { declarations, variables, children },
 	}));
 }
 
