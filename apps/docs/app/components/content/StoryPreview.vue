@@ -17,7 +17,7 @@ const baseUrl = import.meta.dev
 	? "http://localhost:6006"
 	: "https://storybook.styleframe.dev";
 
-const defaultHeight = computed(() => (props.panel ? 420 : 240));
+const defaultHeight = computed(() => (props.panel ? 600 : 320));
 const iframeHeight = computed(() => props.height ?? defaultHeight.value);
 
 const src = computed(() =>
