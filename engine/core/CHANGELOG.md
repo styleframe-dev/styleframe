@@ -1,5 +1,17 @@
 # @styleframe/core
 
+## 3.2.0
+
+### Minor Changes
+
+- [#155](https://github.com/styleframe-dev/styleframe/pull/155) [`cc4f170`](https://github.com/styleframe-dev/styleframe/commit/cc4f170c56ad2e246b94ab4d64b7f6c3097c7223) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Refactor recipes, improve modifier at-rule support, and forward variables through modifier factories
+  - Refactor recipes and utilities with improved color theming composables
+  - Add at-rule support for modifiers (e.g. media preference modifiers)
+  - Forward variables and children through all modifier factory functions
+  - Restructure docs for components, utilities, and modifiers into composable subdirectories
+  - Add Button composable recipe documentation
+  - Update plugin scanner for improved recipe handling
+
 ## 3.1.0
 
 ### Minor Changes

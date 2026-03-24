@@ -1,5 +1,40 @@
 # @styleframe/theme
 
+## 3.3.0
+
+### Minor Changes
+
+- [#154](https://github.com/styleframe-dev/styleframe/pull/154) [`352f10c`](https://github.com/styleframe-dev/styleframe/commit/352f10c958ac12b7dde245657f3ae8d548e9378b) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Update color palette for accessibility and show hex values in swatches
+  - Revise base color values to OKLCH-aligned accessible colors for both light and dark modes
+  - Remove per-color `text.on-*` tokens in favor of a single `colorTextInverted` reference
+  - Display computed hex values inside color swatch previews
+  - Add `color.<name>` labels below each swatch with monospace styling
+
+- [#149](https://github.com/styleframe-dev/styleframe/pull/149) [`b9e54ed`](https://github.com/styleframe-dev/styleframe/commit/b9e54eda1acbf1b1b256f96bf6306dc300602618) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Flatten design tokens preset result and rename variable composables
+  - Rename all variable composables from `use{Name}` to `use{Name}DesignTokens` for clearer naming
+  - Flatten `useDesignTokensPreset` result so variables are directly destructurable instead of nested by domain
+  - Add OKLCH gamut mapping utilities for color processing
+  - Add color reference value support so colors can reference generated shade/tint variants
+  - Add border, transition, and animation utility implementations
+
+- [#155](https://github.com/styleframe-dev/styleframe/pull/155) [`cc4f170`](https://github.com/styleframe-dev/styleframe/commit/cc4f170c56ad2e246b94ab4d64b7f6c3097c7223) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Refactor recipes, improve modifier at-rule support, and forward variables through modifier factories
+  - Refactor recipes and utilities with improved color theming composables
+  - Add at-rule support for modifiers (e.g. media preference modifiers)
+  - Forward variables and children through all modifier factory functions
+  - Restructure docs for components, utilities, and modifiers into composable subdirectories
+  - Add Button composable recipe documentation
+  - Update plugin scanner for improved recipe handling
+
+- [#151](https://github.com/styleframe-dev/styleframe/pull/151) [`6a18eeb`](https://github.com/styleframe-dev/styleframe/commit/6a18eeb5e36d9f66ef48f2e107d2b6ff65b2a792) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Rename colorLightness to colorLevel across theme, docs, and storybook
+  - Rename `colorLightness` value to `colorLevel` for clearer terminology
+  - Rename `useColorLightnessDesignTokens` to `useColorLevelDesignTokens`
+  - Update all color-related design token references from lightness to level
+
+### Patch Changes
+
+- Updated dependencies [[`cc4f170`](https://github.com/styleframe-dev/styleframe/commit/cc4f170c56ad2e246b94ab4d64b7f6c3097c7223)]:
+  - @styleframe/core@3.2.0
+
 ## 3.2.0
 
 ### Minor Changes
