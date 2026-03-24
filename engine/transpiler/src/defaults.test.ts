@@ -8,21 +8,21 @@ import {
 describe("defaultThemeSelectorFn", () => {
 	test("should return a data-theme attribute selector", () => {
 		const result = defaultThemeSelectorFn({ name: "light" });
-		expect(result).toBe('[data-theme="light"]');
+		expect(result).toBe('.light-theme, [data-theme="light"]');
 	});
 
 	test("should handle different theme names", () => {
 		expect(defaultThemeSelectorFn({ name: "dark" })).toBe(
-			'[data-theme="dark"]',
+			'.dark-theme, [data-theme="dark"]',
 		);
 		expect(defaultThemeSelectorFn({ name: "custom-theme" })).toBe(
-			'[data-theme="custom-theme"]',
+			'.custom-theme-theme, [data-theme="custom-theme"]',
 		);
 	});
 
 	test("should handle empty theme name", () => {
 		const result = defaultThemeSelectorFn({ name: "" });
-		expect(result).toBe('[data-theme=""]');
+		expect(result).toBe('.-theme, [data-theme=""]');
 	});
 });
 

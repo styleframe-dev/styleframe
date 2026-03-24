@@ -14,6 +14,11 @@ export const defaultCaptionOptions: WithThemes<CaptionElementConfig> = {
 	paddingBottom: "@spacing.xs",
 	paddingLeft: "@spacing.sm",
 	textAlign: "left",
+	themes: {
+		dark: {
+			color: "@color.text-weak",
+		},
+	},
 };
 
 export interface CaptionElementConfig {
@@ -75,19 +80,15 @@ export function useCaptionSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<CaptionElementConfig>,
 ): CaptionElementResult {
-	let result!: CaptionElementResult;
+	const result = useCaptionDesignTokens(ctx, config) as CaptionElementResult;
 
-	ctx.selector("caption", (ctx) => {
-		result = useCaptionDesignTokens(ctx, config) as CaptionElementResult;
-
-		return {
-			color: ctx.ref(result.captionColor),
-			paddingTop: ctx.ref(result.captionPaddingTop),
-			paddingRight: ctx.ref(result.captionPaddingRight),
-			paddingBottom: ctx.ref(result.captionPaddingBottom),
-			paddingLeft: ctx.ref(result.captionPaddingLeft),
-			textAlign: ctx.ref(result.captionTextAlign),
-		};
+	ctx.selector("caption", {
+		color: ctx.ref(result.captionColor),
+		paddingTop: ctx.ref(result.captionPaddingTop),
+		paddingRight: ctx.ref(result.captionPaddingRight),
+		paddingBottom: ctx.ref(result.captionPaddingBottom),
+		paddingLeft: ctx.ref(result.captionPaddingLeft),
+		textAlign: ctx.ref(result.captionTextAlign),
 	});
 
 	return result;

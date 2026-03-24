@@ -33,7 +33,6 @@ selector(".button-row", {
 selector(".button-label", {
 	fontSize: "@font-size.sm",
 	fontWeight: "@font-weight.semibold",
-	color: "@color.black",
 	minWidth: "80px",
 });
 

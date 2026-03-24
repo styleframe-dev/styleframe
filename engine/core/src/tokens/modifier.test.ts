@@ -1,100 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { ModifierFactory, Root } from "../types";
-import {
-	applyModifiers,
-	combineKeys,
-	createModifierFunction,
-} from "./modifier";
+import { applyModifiers, createModifierFunction } from "./modifier";
 import { createRoot } from "./root";
-
-describe("combineKeys", () => {
-	it("returns empty array for empty input", () => {
-		expect(combineKeys([])).toEqual([]);
-	});
-
-	it("handles a single string", () => {
-		expect(combineKeys([["hover"]])).toEqual([["hover"]]);
-	});
-
-	it("combines two strings and sorts combinations by length then alphabetically", () => {
-		const result = combineKeys([["hover"], ["focus"]]);
-		expect(result).toEqual([["focus"], ["hover"], ["focus", "hover"]]);
-	});
-
-	it("combines a string with an array, without combining elements within the array", () => {
-		const result = combineKeys([["hover"], ["sm", "md"]]);
-		expect(result).toEqual([
-			// singles (alphabetical)
-			["hover"],
-			["md"],
-			["sm"],
-			// pairs (alphabetical within and across combinations)
-			["hover", "md"],
-			["hover", "sm"],
-		]);
-	});
-
-	it("combines two arrays, choosing at most one element from each", () => {
-		const result = combineKeys([
-			["sm", "md"],
-			["active", "hover"],
-		]);
-		expect(result).toEqual([
-			// singles (alphabetical)
-			["active"],
-			["hover"],
-			["md"],
-			["sm"],
-			// pairs (cross-product, alphabetical within and across)
-			["active", "md"],
-			["active", "sm"],
-			["hover", "md"],
-			["hover", "sm"],
-		]);
-	});
-
-	it("does not combine elements within the same array when only one array is provided", () => {
-		const result = combineKeys([["a", "b", "c"]]);
-		expect(result).toEqual([["a"], ["b"], ["c"]]);
-	});
-
-	it("generates combinations across three groups and maintains order and uniqueness", () => {
-		const result = combineKeys([["focus"], ["sm", "md"], ["hover", "active"]]);
-
-		// Expect exact ordering: first by length, then alphabetical within each length
-		expect(result).toEqual([
-			// singles
-			["active"],
-			["focus"],
-			["hover"],
-			["md"],
-			["sm"],
-			// pairs
-			["active", "focus"],
-			["active", "md"],
-			["active", "sm"],
-			["focus", "hover"],
-			["focus", "md"],
-			["focus", "sm"],
-			["hover", "md"],
-			["hover", "sm"],
-			// triples
-			["active", "focus", "md"],
-			["active", "focus", "sm"],
-			["focus", "hover", "md"],
-			["focus", "hover", "sm"],
-		]);
-
-		// Assert no duplicates present (defensive check)
-		const unique = new Set(result.map((r) => r.join(",")));
-		expect(unique.size).toBe(result.length);
-	});
-
-	it("sorts elements within each combination alphabetically", () => {
-		const result = combineKeys([["b"], ["a"]]);
-		expect(result).toEqual([["a"], ["b"], ["a", "b"]]);
-	});
-});
 
 describe("applyModifiers", () => {
 	let root: Root;
@@ -151,14 +58,16 @@ describe("applyModifiers", () => {
 		expect(result.declarations).toEqual({ backgroundColor: "blue" });
 	});
 
-	it("should merge results from multiple modifiers", () => {
+	it("should compose modifiers inside-out (last = innermost, first = outermost)", () => {
 		const modifiers = new Map<string, ModifierFactory>([
 			[
 				"hover",
 				{
 					type: "modifier",
 					key: ["hover"],
-					factory: () => ({ backgroundColor: "blue" }),
+					factory: ({ declarations }) => ({
+						"&:hover": declarations,
+					}),
 				},
 			],
 			[
@@ -166,16 +75,28 @@ describe("applyModifiers", () => {
 				{
 					type: "modifier",
 					key: ["focus"],
-					factory: () => ({ outline: "2px solid" }),
+					factory: ({ declarations }) => ({
+						"&:focus": declarations,
+					}),
 				},
 			],
 		]);
 
 		const result = applyModifiers(root, root, modifiers);
 
-		expect(result.declarations).toEqual({
-			backgroundColor: "blue",
-			outline: "2px solid",
+		// hover is outermost, focus is innermost
+		// Result: &:hover { &:focus { color: red } }
+		expect(result.children).toHaveLength(1);
+		expect(result.children[0]).toMatchObject({
+			type: "selector",
+			query: "&:hover",
+		});
+		const hoverChild = result.children[0] as any;
+		expect(hoverChild.children).toHaveLength(1);
+		expect(hoverChild.children[0]).toMatchObject({
+			type: "selector",
+			query: "&:focus",
+			declarations: { color: "red" },
 		});
 	});
 
@@ -196,29 +117,29 @@ describe("applyModifiers", () => {
 		expect(result.declarations).toEqual({ color: "red" });
 	});
 
-	it("should pass original declarations (not accumulated) to each modifier factory", () => {
+	it("should pass accumulated declarations from inner modifier to outer modifier", () => {
 		const receivedDeclarations: any[] = [];
 
 		const modifiers = new Map<string, ModifierFactory>([
 			[
-				"first",
+				"outer",
 				{
 					type: "modifier",
-					key: ["first"],
+					key: ["outer"],
 					factory: (ctx) => {
 						receivedDeclarations.push({ ...ctx.declarations });
-						return { added: "first" };
+						return { wrapped: "outer" };
 					},
 				},
 			],
 			[
-				"second",
+				"inner",
 				{
 					type: "modifier",
-					key: ["second"],
+					key: ["inner"],
 					factory: (ctx) => {
 						receivedDeclarations.push({ ...ctx.declarations });
-						return { added: "second" };
+						return { wrapped: "inner" };
 					},
 				},
 			],
@@ -226,9 +147,10 @@ describe("applyModifiers", () => {
 
 		applyModifiers(root, root, modifiers);
 
-		// Both modifiers should receive the original base declarations
+		// Inner modifier runs first with original declarations
 		expect(receivedDeclarations[0]).toEqual({ color: "red" });
-		expect(receivedDeclarations[1]).toEqual({ color: "red" });
+		// Outer modifier receives inner's accumulated result
+		expect(receivedDeclarations[1]).toEqual({ wrapped: "inner" });
 	});
 
 	it("should not mutate the base instance", () => {
@@ -251,6 +173,32 @@ describe("applyModifiers", () => {
 
 		expect(baseRoot.declarations).toEqual({ color: "red" });
 		expect(baseRoot.id).toBe("base-id");
+	});
+
+	it("should handle single modifier wrapping declarations", () => {
+		const modifiers = new Map<string, ModifierFactory>([
+			[
+				"hover",
+				{
+					type: "modifier",
+					key: ["hover"],
+					factory: ({ declarations }) => ({
+						"&:hover": declarations,
+					}),
+				},
+			],
+		]);
+
+		const result = applyModifiers(root, root, modifiers);
+
+		// Declarations parsed into selector child
+		expect(result.declarations).toEqual({});
+		expect(result.children).toHaveLength(1);
+		expect(result.children[0]).toMatchObject({
+			type: "selector",
+			query: "&:hover",
+			declarations: { color: "red" },
+		});
 	});
 });
 

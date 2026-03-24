@@ -16,74 +16,80 @@ export interface FormStateModifiers {
 }
 
 export function useDisabledModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("disabled", ({ declarations }) => ({
-		"&:disabled": declarations,
+	return s.modifier("disabled", ({ declarations, variables, children }) => ({
+		"&:disabled": { declarations, variables, children },
 	}));
 }
 
 export function useEnabledModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("enabled", ({ declarations }) => ({
-		"&:enabled": declarations,
+	return s.modifier("enabled", ({ declarations, variables, children }) => ({
+		"&:enabled": { declarations, variables, children },
 	}));
 }
 
 export function useCheckedModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("checked", ({ declarations }) => ({
-		"&:checked": declarations,
+	return s.modifier("checked", ({ declarations, variables, children }) => ({
+		"&:checked": { declarations, variables, children },
 	}));
 }
 
 export function useIndeterminateModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("indeterminate", ({ declarations }) => ({
-		"&:indeterminate": declarations,
-	}));
+	return s.modifier(
+		"indeterminate",
+		({ declarations, variables, children }) => ({
+			"&:indeterminate": { declarations, variables, children },
+		}),
+	);
 }
 
 export function useRequiredModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("required", ({ declarations }) => ({
-		"&:required": declarations,
+	return s.modifier("required", ({ declarations, variables, children }) => ({
+		"&:required": { declarations, variables, children },
 	}));
 }
 
 export function useOptionalModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("optional", ({ declarations }) => ({
-		"&:optional": declarations,
+	return s.modifier("optional", ({ declarations, variables, children }) => ({
+		"&:optional": { declarations, variables, children },
 	}));
 }
 
 export function useValidModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("valid", ({ declarations }) => ({
-		"&:valid": declarations,
+	return s.modifier("valid", ({ declarations, variables, children }) => ({
+		"&:valid": { declarations, variables, children },
 	}));
 }
 
 export function useInvalidModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("invalid", ({ declarations }) => ({
-		"&:invalid": declarations,
+	return s.modifier("invalid", ({ declarations, variables, children }) => ({
+		"&:invalid": { declarations, variables, children },
 	}));
 }
 
 export function usePlaceholderShownModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("placeholder-shown", ({ declarations }) => ({
-		"&:placeholder-shown": declarations,
-	}));
+	return s.modifier(
+		"placeholder-shown",
+		({ declarations, variables, children }) => ({
+			"&:placeholder-shown": { declarations, variables, children },
+		}),
+	);
 }
 
 export function useAutofillModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("autofill", ({ declarations }) => ({
-		"&:autofill": declarations,
+	return s.modifier("autofill", ({ declarations, variables, children }) => ({
+		"&:autofill": { declarations, variables, children },
 	}));
 }
 
 export function useReadOnlyModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("read-only", ({ declarations }) => ({
-		"&:read-only": declarations,
+	return s.modifier("read-only", ({ declarations, variables, children }) => ({
+		"&:read-only": { declarations, variables, children },
 	}));
 }
 
 export function useReadonlyModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("readonly", ({ declarations }) => ({
-		"&:read-only": declarations,
+	return s.modifier("readonly", ({ declarations, variables, children }) => ({
+		"&:read-only": { declarations, variables, children },
 	}));
 }
 

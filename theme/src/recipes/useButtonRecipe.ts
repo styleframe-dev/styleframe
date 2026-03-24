@@ -24,6 +24,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 		borderStyle: "@border-style.solid",
 		borderColor: "transparent",
 		borderRadius: "@border-radius.md",
+		lineHeight: "@line-height.normal",
 		paddingTop: "@0.5",
 		paddingBottom: "@0.5",
 		paddingLeft: "@0.75",
@@ -36,13 +37,13 @@ export const useButtonRecipe = createUseRecipe("button", {
 		whiteSpace: "nowrap",
 		userSelect: "none",
 		outline: "none",
-		"focus-visible": {
+		"&:focus-visible": {
 			outlineWidth: "2px",
 			outlineStyle: "solid",
 			outlineColor: "@color.primary",
 			outlineOffset: "2px",
 		},
-		disabled: {
+		"&:disabled": {
 			cursor: "not-allowed",
 			opacity: "0.75",
 			pointerEvents: "none",
@@ -74,7 +75,6 @@ export const useButtonRecipe = createUseRecipe("button", {
 		size: {
 			xs: {
 				fontSize: "@font-size.xs",
-				lineHeight: "@line-height.normal",
 				paddingTop: "@0.25",
 				paddingBottom: "@0.25",
 				paddingLeft: "@0.5",
@@ -84,7 +84,6 @@ export const useButtonRecipe = createUseRecipe("button", {
 			},
 			sm: {
 				fontSize: "@font-size.sm",
-				lineHeight: "@line-height.normal",
 				paddingTop: "@0.375",
 				paddingBottom: "@0.375",
 				paddingLeft: "@0.625",
@@ -94,7 +93,6 @@ export const useButtonRecipe = createUseRecipe("button", {
 			},
 			md: {
 				fontSize: "@font-size.sm",
-				lineHeight: "@line-height.normal",
 				paddingTop: "@0.5",
 				paddingBottom: "@0.5",
 				paddingLeft: "@0.75",
@@ -104,7 +102,6 @@ export const useButtonRecipe = createUseRecipe("button", {
 			},
 			lg: {
 				fontSize: "@font-size.md",
-				lineHeight: "@line-height.normal",
 				paddingTop: "@0.625",
 				paddingBottom: "@0.625",
 				paddingLeft: "@0.875",
@@ -114,7 +111,6 @@ export const useButtonRecipe = createUseRecipe("button", {
 			},
 			xl: {
 				fontSize: "@font-size.lg",
-				lineHeight: "@line-height.normal",
 				paddingTop: "@0.75",
 				paddingBottom: "@0.75",
 				paddingLeft: "@1",
@@ -131,11 +127,18 @@ export const useButtonRecipe = createUseRecipe("button", {
 			css: {
 				background: `@color.${color}`,
 				color: "@color.white",
+				borderColor: `@color.${color}-shade-50`,
 				"&:hover": {
-					background: `@color.${color}-400`,
+					background: `@color.${color}-tint-50`,
+				},
+				"&:focus": {
+					background: `@color.${color}-tint-50`,
 				},
 				"&:active": {
-					background: `@color.${color}-300`,
+					background: `@color.${color}-tint-100`,
+				},
+				"&:dark": {
+					borderColor: `@color.${color}-tint-50`,
 				},
 			},
 		})),
@@ -146,10 +149,28 @@ export const useButtonRecipe = createUseRecipe("button", {
 				color: `@color.${color}`,
 				borderColor: `@color.${color}`,
 				"&:hover": {
-					background: `@color.${color}-950`,
+					color: `@color.${color}-700`,
+					background: `@color.${color}-150`,
+				},
+				"&:focus": {
+					color: `@color.${color}-700`,
+					background: `@color.${color}-150`,
 				},
 				"&:active": {
-					background: `@color.${color}-900`,
+					color: `@color.${color}-700`,
+					background: `@color.${color}-200`,
+				},
+				"&:dark:hover": {
+					color: `@color.${color}-300`,
+					background: `@color.${color}-800`,
+				},
+				"&:dark:focus": {
+					color: `@color.${color}-300`,
+					background: `@color.${color}-800`,
+				},
+				"&:dark:active": {
+					color: `@color.${color}-300`,
+					background: `@color.${color}-750`,
 				},
 			},
 		})),
@@ -157,12 +178,28 @@ export const useButtonRecipe = createUseRecipe("button", {
 		...colors.map((color) => ({
 			match: { color, variant: "soft" as const },
 			css: {
-				background: `@color.${color}-900`,
-				color: `@color.${color}`,
+				background: `@color.${color}-100`,
+				color: `@color.${color}-700`,
 				"&:hover": {
-					background: `@color.${color}-800`,
+					background: `@color.${color}-150`,
+				},
+				"&:focus": {
+					background: `@color.${color}-150`,
 				},
 				"&:active": {
+					background: `@color.${color}-200`,
+				},
+				"&:dark": {
+					background: `@color.${color}-800`,
+					color: `@color.${color}-400`,
+				},
+				"&:dark:hover": {
+					background: `@color.${color}-750`,
+				},
+				"&:dark:focus": {
+					background: `@color.${color}-750`,
+				},
+				"&:dark:active": {
 					background: `@color.${color}-700`,
 				},
 			},
@@ -171,14 +208,31 @@ export const useButtonRecipe = createUseRecipe("button", {
 		...colors.map((color) => ({
 			match: { color, variant: "subtle" as const },
 			css: {
-				background: `@color.${color}-950`,
-				color: `@color.${color}`,
-				borderColor: `@color.${color}-800`,
+				background: `@color.${color}-100`,
+				color: `@color.${color}-700`,
+				borderColor: `@color.${color}-300`,
 				"&:hover": {
-					background: `@color.${color}-900`,
+					background: `@color.${color}-150`,
+				},
+				"&:focus": {
+					background: `@color.${color}-150`,
 				},
 				"&:active": {
+					background: `@color.${color}-200`,
+				},
+				dark: {
 					background: `@color.${color}-800`,
+					color: `@color.${color}-400`,
+					borderColor: `@color.${color}-600`,
+				},
+				"&:dark:hover": {
+					background: `@color.${color}-750`,
+				},
+				"&:dark:focus": {
+					background: `@color.${color}-750`,
+				},
+				"&:dark:active": {
+					background: `@color.${color}-700`,
 				},
 			},
 		})),
@@ -188,10 +242,26 @@ export const useButtonRecipe = createUseRecipe("button", {
 			css: {
 				color: `@color.${color}`,
 				"&:hover": {
-					background: `@color.${color}-950`,
+					color: `@color.${color}-700`,
+					background: `@color.${color}-100`,
+				},
+				"&:focus": {
+					color: `@color.${color}-700`,
+					background: `@color.${color}-100`,
 				},
 				"&:active": {
-					background: `@color.${color}-900`,
+					background: `@color.${color}-200`,
+				},
+				"&:dark:hover": {
+					color: `@color.${color}-400`,
+					background: `@color.${color}-750`,
+				},
+				"&:dark:focus": {
+					color: `@color.${color}-400`,
+					background: `@color.${color}-750`,
+				},
+				"&:dark:active": {
+					background: `@color.${color}-700`,
 				},
 			},
 		})),
@@ -201,6 +271,17 @@ export const useButtonRecipe = createUseRecipe("button", {
 			css: {
 				color: `@color.${color}`,
 				"&:hover": {
+					color: `@color.${color}-shade-50`,
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+				"&:focus": {
+					color: `@color.${color}-shade-50`,
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+				"&:active": {
+					color: `@color.${color}-shade-50`,
 					textDecoration: "underline",
 					textUnderlineOffset: "4px",
 				},

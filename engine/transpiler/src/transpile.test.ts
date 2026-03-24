@@ -131,12 +131,12 @@ describe("transpile", () => {
 
 			expect(content).toEqual(`
 
-[data-theme="light"] {
+.light-theme, [data-theme="light"] {
 \t--background-color: #ffffff;
 \t--text-color: #000000;
 }
 
-[data-theme="dark"] {
+.dark-theme, [data-theme="dark"] {
 \t--background-color: #000000;
 \t--text-color: #ffffff;
 }`);
@@ -733,7 +733,7 @@ body {
 \tanimation: slideUp 0.5s ease-out;
 }
 
-[data-theme="light"] {
+.light-theme, [data-theme="light"] {
 \t--bg-primary: #ffffff;
 \t--bg-secondary: #f5f5f5;
 \t--text-primary: #1a1a1a;
@@ -750,7 +750,7 @@ body {
 \t}
 }
 
-[data-theme="dark"] {
+.dark-theme, [data-theme="dark"] {
 \t--bg-primary: #1a1a1a;
 \t--bg-secondary: #2d2d2d;
 \t--text-primary: #ffffff;

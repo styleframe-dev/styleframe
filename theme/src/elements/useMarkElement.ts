@@ -8,7 +8,7 @@ import type { WithThemes } from "../types";
 import { mergeElementOptions, registerElementThemes } from "../utils";
 
 export const defaultMarkOptions: WithThemes<MarkElementConfig> = {
-	background: "#fef08a",
+	background: "@color.warning-100",
 	color: "inherit",
 	paddingTop: "0.1875rem",
 	paddingRight: "0.375rem",
@@ -16,7 +16,7 @@ export const defaultMarkOptions: WithThemes<MarkElementConfig> = {
 	paddingLeft: "0.375rem",
 	themes: {
 		dark: {
-			background: "@color.warning",
+			background: "@color.warning-700",
 		},
 	},
 };
@@ -74,11 +74,9 @@ export function useMarkSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<MarkElementConfig>,
 ): MarkElementResult {
-	let result!: MarkElementResult;
+	const result = useMarkDesignTokens(ctx, config) as MarkElementResult;
 
 	ctx.selector("mark", (ctx) => {
-		result = useMarkDesignTokens(ctx, config) as MarkElementResult;
-
 		return {
 			background: ctx.ref(result.markBackground),
 			color: ctx.ref(result.markColor),

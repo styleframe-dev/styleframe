@@ -83,27 +83,6 @@ const {
 	colorGrayShade100,
 	colorGrayShade150,
 	colorGrayShade200,
-	colorPrimaryHover,
-	colorPrimaryFocus,
-	colorPrimaryActive,
-	colorSecondaryHover,
-	colorSecondaryFocus,
-	colorSecondaryActive,
-	colorSuccessHover,
-	colorSuccessFocus,
-	colorSuccessActive,
-	colorWarningHover,
-	colorWarningFocus,
-	colorWarningActive,
-	colorDangerHover,
-	colorDangerFocus,
-	colorDangerActive,
-	colorInfoHover,
-	colorInfoFocus,
-	colorInfoActive,
-	colorGrayHover,
-	colorGrayFocus,
-	colorGrayActive,
 } = useDesignTokensPreset(s, {
 	meta: { merge: true },
 });
@@ -162,13 +141,6 @@ selector(".color-swatch__name", {
 export const colorSwatch = recipe({
 	name: "color-swatch",
 	variants: {
-		interactive: {
-			true: {
-				cursor: "pointer",
-				transition: "background-color 150ms ease",
-			},
-			false: {},
-		},
 		variant: {
 			// Base colors
 			primary: {
@@ -420,50 +392,6 @@ export const colorSwatch = recipe({
 			},
 			"gray-shade-200": {
 				background: ref(colorGrayShade200),
-			},
-
-			// Interactive variants
-			"primary-interactive": {
-				background: ref(colorPrimary),
-				"&:hover": { background: ref(colorPrimaryHover) },
-				"&:focus-visible": { background: ref(colorPrimaryFocus) },
-				"&:active": { background: ref(colorPrimaryActive) },
-			},
-			"secondary-interactive": {
-				background: ref(colorSecondary),
-				"&:hover": { background: ref(colorSecondaryHover) },
-				"&:focus-visible": { background: ref(colorSecondaryFocus) },
-				"&:active": { background: ref(colorSecondaryActive) },
-			},
-			"success-interactive": {
-				background: ref(colorSuccess),
-				"&:hover": { background: ref(colorSuccessHover) },
-				"&:focus-visible": { background: ref(colorSuccessFocus) },
-				"&:active": { background: ref(colorSuccessActive) },
-			},
-			"warning-interactive": {
-				background: ref(colorWarning),
-				"&:hover": { background: ref(colorWarningHover) },
-				"&:focus-visible": { background: ref(colorWarningFocus) },
-				"&:active": { background: ref(colorWarningActive) },
-			},
-			"danger-interactive": {
-				background: ref(colorDanger),
-				"&:hover": { background: ref(colorDangerHover) },
-				"&:focus-visible": { background: ref(colorDangerFocus) },
-				"&:active": { background: ref(colorDangerActive) },
-			},
-			"info-interactive": {
-				background: ref(colorInfo),
-				"&:hover": { background: ref(colorInfoHover) },
-				"&:focus-visible": { background: ref(colorInfoFocus) },
-				"&:active": { background: ref(colorInfoActive) },
-			},
-			"gray-interactive": {
-				background: ref(colorGray),
-				"&:hover": { background: ref(colorGrayHover) },
-				"&:focus-visible": { background: ref(colorGrayFocus) },
-				"&:active": { background: ref(colorGrayActive) },
 			},
 		},
 	},

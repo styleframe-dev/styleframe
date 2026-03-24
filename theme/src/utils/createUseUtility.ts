@@ -66,7 +66,7 @@ export function createUseUtility<
 	return function useUtility<T extends Record<string, TokenValue> = Defaults>(
 		s: Styleframe,
 		values?: T,
-		modifiers?: ModifierFactory[],
+		modifiers?: (ModifierFactory | ModifierFactory[])[],
 		utilityOptions?: UseUtilityOptions,
 	): UtilityCreatorFn {
 		const resolvedName = utilityOptions?.name ?? utilityName;

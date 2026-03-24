@@ -80,12 +80,13 @@ describe("usePseudoStateModifiers", () => {
 		const createMargin = s.utility("margin", ({ value }) => ({
 			margin: value,
 		}));
+		// Explicit: hover, focus as individual modifiers (no auto-combination)
 		createMargin({ sm: "8px" }, [hover, focus]);
 
 		const utilities = s.root.children.filter(
 			(u): u is Utility => isUtility(u) && u.name === "margin",
 		);
-		// base + hover + focus + focus,hover = 4
-		expect(utilities).toHaveLength(4);
+		// base + hover + focus = 3 (no auto-combination)
+		expect(utilities).toHaveLength(3);
 	});
 });

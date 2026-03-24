@@ -5,43 +5,6 @@ import {
 	parseDeclarationsBlock,
 } from "./declarations";
 
-export function combineKeys(groups: string[][]): string[][] {
-	const result: string[][] = [];
-
-	// Generate all combinations using recursive approach
-	function generateCombinations(groupIndex: number, current: string[]) {
-		// Add current combination if not empty
-		if (current.length > 0) {
-			result.push([...current].sort());
-		}
-
-		// Try adding elements from remaining groups
-		for (let i = groupIndex; i < groups.length; i++) {
-			const group = groups[i];
-
-			if (group) {
-				if (group.length === 1 && !!group[0]) {
-					// Single element (originally a string) - can always add
-					generateCombinations(i + 1, [...current, group[0]]);
-				} else {
-					// Array group - add at most one element
-					for (const element of group) {
-						generateCombinations(i + 1, [...current, element]);
-					}
-				}
-			}
-		}
-	}
-
-	generateCombinations(0, []);
-
-	// Sort result: first by length, then alphabetically
-	return result.sort((a, b) => {
-		if (a.length !== b.length) return a.length - b.length;
-		return a.join(",").localeCompare(b.join(","));
-	});
-}
-
 export function applyModifiers<InstanceType extends Container>(
 	baseInstance: InstanceType,
 	root: Root,
@@ -59,37 +22,39 @@ export function applyModifiers<InstanceType extends Container>(
 
 	root._registry.set(instance.id, instance);
 
-	const callbackContext = createDeclarationsCallbackContext(instance, root);
-
 	if (modifiers.size > 0) {
-		const originalDeclarations = deepClone(baseInstance.declarations);
-		let hasResult = false;
+		const modifierList = [...modifiers.values()];
+		let accumulated = deepClone(baseInstance.declarations);
 
-		for (const modifier of modifiers.values()) {
-			const result = modifier.factory({
+		// Reset instance for modifier processing — modifiers control the output
+		instance.declarations = {};
+		instance.variables = [];
+		instance.children = [];
+
+		// Apply inside-out: last modifier = innermost, first = outermost
+		for (let i = modifierList.length - 1; i >= 0; i--) {
+			const callbackContext = createDeclarationsCallbackContext(instance, root);
+			const result = modifierList[i]?.factory({
 				...callbackContext,
-				declarations: deepClone(originalDeclarations),
-				variables: deepClone(instance.variables),
-				children: deepClone(instance.children),
+				declarations: deepClone(accumulated),
+				variables: deepClone(baseInstance.variables),
+				children: deepClone(baseInstance.children),
 			});
 
 			if (result) {
-				if (!hasResult) {
-					instance.declarations = {};
-					hasResult = true;
-				}
-
-				// Merge the modifier's output into instance declarations,
-				// then parse selector/at-rule keys into children
-				Object.assign(instance.declarations, result);
-				parseDeclarationsBlock(
-					instance.declarations,
-					callbackContext,
-					instance,
-					root,
-				);
+				accumulated = result;
 			}
 		}
+
+		// Set accumulated result and parse nested selectors/at-rules into children
+		instance.declarations = accumulated;
+		const callbackContext = createDeclarationsCallbackContext(instance, root);
+		parseDeclarationsBlock(
+			instance.declarations,
+			callbackContext,
+			instance,
+			root,
+		);
 	}
 
 	return instance;

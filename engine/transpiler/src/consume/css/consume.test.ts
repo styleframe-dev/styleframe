@@ -78,7 +78,7 @@ describe("consume", () => {
 
 		const result = consume(lightTheme, options);
 
-		expect(result).toEqual(`[data-theme="light"] {
+		expect(result).toEqual(`.light-theme, [data-theme="light"] {
 \t--background-color: #ffffff;
 \t--text-color: #000000;
 }`);
@@ -183,7 +183,7 @@ describe("consume", () => {
 \t}
 }
 
-[data-theme="dark"] {
+.dark-theme, [data-theme="dark"] {
 \t--card-bg: #333;
 \t--card-shadow: 0 2px 4px rgba(0,0,0,0.2);
 \t

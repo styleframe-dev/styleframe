@@ -43,18 +43,14 @@ export function useOlSelectors(
 	ctx: DeclarationsCallbackContext,
 	config: Required<OlElementConfig>,
 ): OlElementResult {
-	let result!: OlElementResult;
+	const result = useOlDesignTokens(ctx, config) as OlElementResult;
 
-	ctx.selector("ol", (ctx) => {
-		result = useOlDesignTokens(ctx, config) as OlElementResult;
-
-		return {
-			marginBottom: ctx.ref(result.olMarginBottom),
-			paddingLeft: ctx.ref(result.olPaddingLeft),
-			"& ol, & ul": {
-				marginBottom: "0",
-			},
-		};
+	ctx.selector("ol", {
+		marginBottom: ctx.ref(result.olMarginBottom),
+		paddingLeft: ctx.ref(result.olPaddingLeft),
+		"& ol, & ul": {
+			marginBottom: "0",
+		},
 	});
 
 	return result;

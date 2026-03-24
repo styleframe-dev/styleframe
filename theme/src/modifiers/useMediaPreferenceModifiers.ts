@@ -13,57 +13,86 @@ export interface MediaPreferenceModifiers {
 }
 
 export function useDarkModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("dark", ({ declarations }) => ({
-		"@media (prefers-color-scheme: dark)": declarations,
+	return s.modifier("dark", ({ declarations, variables, children }) => ({
+		"@media (prefers-color-scheme: dark)": {
+			declarations,
+			variables,
+			children,
+		},
+		':is(.dark-theme, [data-theme="dark"]) &': {
+			declarations: { ...declarations },
+			variables,
+			children,
+		},
 	}));
 }
 
 export function useMotionSafeModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("motion-safe", ({ declarations }) => ({
-		"@media (prefers-reduced-motion: no-preference)": declarations,
+	return s.modifier("motion-safe", ({ declarations, variables, children }) => ({
+		"@media (prefers-reduced-motion: no-preference)": {
+			declarations,
+			variables,
+			children,
+		},
 	}));
 }
 
 export function useMotionReduceModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("motion-reduce", ({ declarations }) => ({
-		"@media (prefers-reduced-motion: reduce)": declarations,
-	}));
+	return s.modifier(
+		"motion-reduce",
+		({ declarations, variables, children }) => ({
+			"@media (prefers-reduced-motion: reduce)": {
+				declarations,
+				variables,
+				children,
+			},
+		}),
+	);
 }
 
 export function useContrastMoreModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("contrast-more", ({ declarations }) => ({
-		"@media (prefers-contrast: more)": declarations,
-	}));
+	return s.modifier(
+		"contrast-more",
+		({ declarations, variables, children }) => ({
+			"@media (prefers-contrast: more)": { declarations, variables, children },
+		}),
+	);
 }
 
 export function useContrastLessModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("contrast-less", ({ declarations }) => ({
-		"@media (prefers-contrast: less)": declarations,
-	}));
+	return s.modifier(
+		"contrast-less",
+		({ declarations, variables, children }) => ({
+			"@media (prefers-contrast: less)": { declarations, variables, children },
+		}),
+	);
 }
 
 export function usePortraitModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("portrait", ({ declarations }) => ({
-		"@media (orientation: portrait)": declarations,
+	return s.modifier("portrait", ({ declarations, variables, children }) => ({
+		"@media (orientation: portrait)": { declarations, variables, children },
 	}));
 }
 
 export function useLandscapeModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("landscape", ({ declarations }) => ({
-		"@media (orientation: landscape)": declarations,
+	return s.modifier("landscape", ({ declarations, variables, children }) => ({
+		"@media (orientation: landscape)": { declarations, variables, children },
 	}));
 }
 
 export function usePrintModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("print", ({ declarations }) => ({
-		"@media print": declarations,
+	return s.modifier("print", ({ declarations, variables, children }) => ({
+		"@media print": { declarations, variables, children },
 	}));
 }
 
 export function useForcedColorsModifier(s: Styleframe): ModifierFactory {
-	return s.modifier("forced-colors", ({ declarations }) => ({
-		"@media (forced-colors: active)": declarations,
-	}));
+	return s.modifier(
+		"forced-colors",
+		({ declarations, variables, children }) => ({
+			"@media (forced-colors: active)": { declarations, variables, children },
+		}),
+	);
 }
 
 /**

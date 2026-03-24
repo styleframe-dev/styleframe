@@ -18,7 +18,7 @@ export default defineConfig({
 	plugins: [
 		styleframe({
 			scanner: {
-				content: ["./src/**/*.stories.{ts,tsx}"],
+				content: ["./stories/**/*.stories.{ts,tsx}", "./src/**/*.{vue,ts,tsx}"],
 			},
 			resolve: {
 				alias: {

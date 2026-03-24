@@ -10,6 +10,9 @@ const props = withDefaults(defineProps<Props>(), {
 	panel: false,
 });
 
+const colorMode = useColorMode();
+const iframeRef = useTemplateRef<HTMLIFrameElement>("iframe");
+
 const baseUrl = import.meta.dev
 	? "http://localhost:6006"
 	: "https://storybook.styleframe.dev";
@@ -22,6 +25,19 @@ const src = computed(() =>
 		? `${baseUrl}/?path=/story/${props.story}&shortcuts=false&singleStory=true`
 		: `${baseUrl}/?path=/story/${props.story}&full=1&shortcuts=false&singleStory=true`,
 );
+
+function sendThemeToIframe() {
+	iframeRef.value?.contentWindow?.postMessage(
+		{ type: "styleframe:theme", theme: colorMode.value },
+		"*",
+	);
+}
+
+function onIframeLoad() {
+	sendThemeToIframe();
+}
+
+watch(() => colorMode.value, sendThemeToIframe);
 </script>
 
 <template>
@@ -30,15 +46,17 @@ const src = computed(() =>
 		:style="{ height: `${iframeHeight}px` }"
 	>
 		<iframe
+			ref="iframe"
 			:src="src"
 			width="100%"
 			height="100%"
 			frameborder="0"
+			@load="onIframeLoad"
 		/>
 	</div>
 </template>
 
-<style scoped>
+<style >
 .story-preview {
 	border: 1px solid var(--color-gray-200);
 	border-radius: 8px;
@@ -49,5 +67,10 @@ const src = computed(() =>
 
 .story-preview iframe {
 	display: block;
+}
+
+.dark-theme .story-preview,
+.dark .story-preview {
+	border-color: var(--color-gray-700);
 }
 </style>

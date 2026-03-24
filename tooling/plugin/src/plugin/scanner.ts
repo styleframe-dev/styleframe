@@ -147,7 +147,8 @@ export function isContentFile(
 interface RegistrationEntry {
 	factory: UtilityFactory;
 	parsed: ParsedUtility;
-	modifiers: ModifierFactory[];
+	/** Each entry is a modifier group from a distinct class usage */
+	modifierGroups: (ModifierFactory | ModifierFactory[])[];
 }
 
 /**
@@ -172,7 +173,7 @@ export function registerMatchedUtilities(
 		return 0;
 	}
 
-	// Group by (factory name, value) to deduplicate and merge modifier sets
+	// Group by (factory name, value) to deduplicate
 	const groups = new Map<string, RegistrationEntry>();
 
 	for (const match of unregistered) {
@@ -180,27 +181,42 @@ export function registerMatchedUtilities(
 		const key = `${factory.name}:${match.parsed.value}`;
 		const existing = groups.get(key);
 
+		// Each match represents a distinct class usage (e.g. _hover:margin:sm or _dark:hover:margin:sm).
+		// A single modifier is added directly; multiple modifiers from the same class
+		// are wrapped as a nested array so they are applied together as a combined variant.
+		const modifierEntry: ModifierFactory | ModifierFactory[] | undefined =
+			match.modifierFactories.length > 1
+				? match.modifierFactories
+				: match.modifierFactories[0];
+
 		if (!existing) {
 			groups.set(key, {
 				factory,
 				parsed: match.parsed,
-				modifiers: [...match.modifierFactories],
+				modifierGroups: modifierEntry ? [modifierEntry] : [],
 			});
-		} else {
-			// Merge modifiers from this match
-			for (const mod of match.modifierFactories) {
-				const modKey = mod.key.join(",");
-				if (!existing.modifiers.some((m) => m.key.join(",") === modKey)) {
-					existing.modifiers.push(mod);
-				}
+		} else if (modifierEntry) {
+			// Deduplicate: check if this exact modifier combination is already tracked
+			const entryKey = Array.isArray(modifierEntry)
+				? modifierEntry.map((m) => m.key.join(",")).join("|")
+				: modifierEntry.key.join(",");
+			const isDuplicate = existing.modifierGroups.some((group) => {
+				const groupKey = Array.isArray(group)
+					? group.map((m) => m.key.join(",")).join("|")
+					: group.key.join(",");
+				return groupKey === entryKey;
+			});
+
+			if (!isDuplicate) {
+				existing.modifierGroups.push(modifierEntry);
 			}
 		}
 	}
 
 	let count = 0;
 
-	for (const { factory, parsed, modifiers } of groups.values()) {
-		const modifierArgs = modifiers.length > 0 ? modifiers : undefined;
+	for (const { factory, parsed, modifierGroups } of groups.values()) {
+		const modifierArgs = modifierGroups.length > 0 ? modifierGroups : undefined;
 
 		if (parsed.isArbitrary && parsed.arbitraryValue !== undefined) {
 			// Arbitrary value: register with the literal CSS value
