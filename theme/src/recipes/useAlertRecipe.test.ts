@@ -1,10 +1,33 @@
+import type { Styleframe } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
+import { useDarkModifier } from "../modifiers/useMediaPreferenceModifiers";
 import { useAlertRecipe } from "./useAlertRecipe";
-import { useUtilitiesPreset } from "../presets";
 
 function createInstance() {
 	const s = styleframe();
-	useUtilitiesPreset(s);
+	for (const name of [
+		"display",
+		"flexBasis",
+		"alignItems",
+		"borderWidth",
+		"borderStyle",
+		"borderColor",
+		"fontWeight",
+		"fontSize",
+		"lineHeight",
+		"paddingTop",
+		"paddingBottom",
+		"paddingLeft",
+		"paddingRight",
+		"gap",
+		"borderRadius",
+		"flexDirection",
+		"background",
+		"color",
+	]) {
+		s.utility(name, ({ value }) => ({ [name]: value }));
+	}
+	useDarkModifier(s);
 	return s;
 }
 
