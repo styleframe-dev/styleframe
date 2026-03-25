@@ -2,6 +2,7 @@
 import Alert from "./Alert.vue";
 
 const colors = [
+	"neutral",
 	"primary",
 	"secondary",
 	"success",
@@ -10,7 +11,6 @@ const colors = [
 	"danger",
 	"light",
 	"dark",
-	"neutral",
 ] as const;
 const sizes = ["sm", "md", "lg"] as const;
 </script>

@@ -16,6 +16,7 @@ const colors = [
 export const useAlertRecipe = createUseRecipe("alert", {
 	base: {
 		display: "flex",
+		flexBasis: "100%",
 		alignItems: "flex-start",
 		borderWidth: "@border-width.thin",
 		borderStyle: "@border-style.solid",
@@ -138,6 +139,7 @@ export const useAlertRecipe = createUseRecipe("alert", {
 				color: "@color.text",
 				borderColor: "@color.gray-200",
 				"&:dark": {
+					color: "@color.text-inverted",
 					borderColor: "@color.gray-300",
 				},
 			},
@@ -272,8 +274,8 @@ export const useAlertRecipe = createUseRecipe("alert", {
 		},
 	],
 	defaultVariants: {
-		color: "info",
-		variant: "soft",
+		color: "neutral",
+		variant: "subtle",
 		size: "md",
 		orientation: "horizontal",
 	},

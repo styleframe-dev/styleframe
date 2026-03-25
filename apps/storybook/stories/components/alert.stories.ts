@@ -6,6 +6,7 @@ import AlertSizeGrid from "../../src/components/components/alert/AlertSizeGrid.v
 import AlertOrientationGrid from "../../src/components/components/alert/AlertOrientationGrid.vue";
 
 const colors = [
+	"neutral",
 	"primary",
 	"secondary",
 	"success",
@@ -14,7 +15,6 @@ const colors = [
 	"danger",
 	"light",
 	"dark",
-	"neutral",
 ] as const;
 const variants = ["solid", "outline", "soft", "subtle"] as const;
 const sizes = ["sm", "md", "lg"] as const;
@@ -53,6 +53,14 @@ const meta = {
 			control: "text",
 			description: "The description text of the alert",
 		},
+		icon: {
+			control: "text",
+			description: "The name of the icon to display (optional)",
+		},
+		dismissible: {
+			control: "boolean",
+			description: "Whether the alert can be dismissed",
+		},
 	},
 } satisfies Meta<typeof Alert>;
 
@@ -61,8 +69,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 	args: {
-		color: "info",
-		variant: "soft",
+		color: "neutral",
+		variant: "subtle",
 		size: "md",
 		orientation: "horizontal",
 		title: "Alert",
@@ -92,6 +100,13 @@ export const AllOrientations: StoryObj = {
 };
 
 // Individual color stories
+export const Neutral: Story = {
+	args: {
+		color: "neutral",
+		title: "Neutral",
+	},
+};
+
 export const Primary: Story = {
 	args: {
 		color: "primary",
@@ -145,13 +160,6 @@ export const Dark: Story = {
 	args: {
 		color: "dark",
 		title: "Dark",
-	},
-};
-
-export const Neutral: Story = {
-	args: {
-		color: "neutral",
-		title: "Neutral",
 	},
 };
 

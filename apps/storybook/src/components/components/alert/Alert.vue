@@ -19,6 +19,8 @@ const props = withDefaults(
 		orientation?: "horizontal" | "vertical";
 		title?: string;
 		description?: string;
+		dismissible?: boolean;
+		icon?: string;
 	}>(),
 	{
 		color: "info",
@@ -27,6 +29,8 @@ const props = withDefaults(
 		orientation: "horizontal",
 		title: "Alert",
 		description: "This is an alert description.",
+		dismissible: false,
+		icon: "✓",
 	},
 );
 
@@ -42,7 +46,15 @@ const classes = computed(() =>
 
 <template>
 	<div :class="classes">
-		<strong v-if="props.title">{{ props.title }}</strong>
-		<span v-if="props.description">{{ props.description }}</span>
+		<slot v-if="icon" name="icon">
+			{{ props.icon }}
+		</slot>
+		<div>
+			<strong v-if="props.title">{{ props.title }}</strong>
+			<div v-if="props.description">{{ props.description }}</div>
+		</div>
+		<slot v-if="dismissible" name="dismiss">
+			✖
+		</slot>
 	</div>
 </template>
