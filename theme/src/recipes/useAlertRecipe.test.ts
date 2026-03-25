@@ -1,35 +1,16 @@
-import type { Styleframe } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { useAlertRecipe } from "./useAlertRecipe";
+import { useUtilitiesPreset } from "../presets";
 
-function registerUtilities(s: Styleframe) {
-	for (const name of [
-		"display",
-		"alignItems",
-		"borderWidth",
-		"borderStyle",
-		"borderColor",
-		"fontWeight",
-		"fontSize",
-		"lineHeight",
-		"paddingTop",
-		"paddingBottom",
-		"paddingLeft",
-		"paddingRight",
-		"gap",
-		"borderRadius",
-		"flexDirection",
-		"background",
-		"color",
-	]) {
-		s.utility(name, ({ value }) => ({ [name]: value }));
-	}
+function createInstance() {
+	const s = styleframe();
+	useUtilitiesPreset(s);
+	return s;
 }
 
 describe("useAlertRecipe", () => {
 	it("should create a recipe with correct metadata", () => {
-		const s = styleframe();
-		registerUtilities(s);
+		const s = createInstance();
 		const recipe = useAlertRecipe(s);
 
 		expect(recipe.type).toBe("recipe");
@@ -37,11 +18,12 @@ describe("useAlertRecipe", () => {
 	});
 
 	it("should have correct base styles", () => {
-		const s = styleframe();
+		const s = createInstance();
 		const recipe = useAlertRecipe(s);
 
 		expect(recipe.base).toEqual({
 			display: "flex",
+			flexBasis: "100%",
 			alignItems: "flex-start",
 			borderWidth: "@border-width.thin",
 			borderStyle: "@border-style.solid",
@@ -60,7 +42,7 @@ describe("useAlertRecipe", () => {
 
 	describe("variants", () => {
 		it("should have all color variants", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			expect(Object.keys(recipe.variants!.color)).toEqual([
@@ -77,7 +59,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have all style variants", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual([
@@ -89,7 +71,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have size variants with correct styles", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			expect(recipe.variants!.size).toEqual({
@@ -121,7 +103,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have orientation variants", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			expect(recipe.variants!.orientation).toEqual({
@@ -132,12 +114,12 @@ describe("useAlertRecipe", () => {
 	});
 
 	it("should have correct default variants", () => {
-		const s = styleframe();
+		const s = createInstance();
 		const recipe = useAlertRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
-			color: "info",
-			variant: "soft",
+			color: "neutral",
+			variant: "subtle",
 			size: "md",
 			orientation: "horizontal",
 		});
@@ -145,7 +127,7 @@ describe("useAlertRecipe", () => {
 
 	describe("compound variants", () => {
 		it("should have 36 compound variants total", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			// 6 standard colors × 4 variants + 3 special colors × 4 variants = 36
@@ -153,7 +135,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have correct solid compound variant for standard colors", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			const primarySolid = recipe.compoundVariants!.find(
@@ -174,7 +156,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have correct outline compound variant for standard colors", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			const infoOutline = recipe.compoundVariants!.find(
@@ -191,7 +173,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have correct soft compound variant with dark mode", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			const successSoft = recipe.compoundVariants!.find(
@@ -212,7 +194,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have correct subtle compound variant with dark mode", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			const dangerSubtle = recipe.compoundVariants!.find(
@@ -235,7 +217,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have correct light color compound variants", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			const lightSolid = recipe.compoundVariants!.find(
@@ -249,6 +231,7 @@ describe("useAlertRecipe", () => {
 					color: "@color.text",
 					borderColor: "@color.gray-200",
 					"&:dark": {
+						color: "@color.text-inverted",
 						borderColor: "@color.gray-300",
 					},
 				},
@@ -256,7 +239,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have correct dark color compound variants", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			const darkSolid = recipe.compoundVariants!.find(
@@ -277,7 +260,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should have correct neutral color compound variants with adaptive dark mode", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s);
 
 			const neutralSolid = recipe.compoundVariants!.find(
@@ -302,7 +285,7 @@ describe("useAlertRecipe", () => {
 
 	describe("config overrides", () => {
 		it("should allow overriding base styles", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s, {
 				base: { display: "inline-flex" },
 			});
@@ -314,16 +297,16 @@ describe("useAlertRecipe", () => {
 
 	describe("filter", () => {
 		it("should filter color variants", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s, {
 				filter: { color: ["info", "success"] },
 			});
 
-			expect(Object.keys(recipe.variants!.color)).toEqual(["info", "success"]);
+			expect(Object.keys(recipe.variants!.color)).toEqual(["success", "info"]);
 		});
 
 		it("should prune compound variants when filtering colors", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s, {
 				filter: { color: ["primary"] },
 			});
@@ -335,7 +318,7 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should filter variant axis", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s, {
 				filter: { variant: ["solid", "soft"] },
 			});
@@ -349,13 +332,13 @@ describe("useAlertRecipe", () => {
 		});
 
 		it("should adjust default variants when filtered out", () => {
-			const s = styleframe();
+			const s = createInstance();
 			const recipe = useAlertRecipe(s, {
 				filter: { color: ["primary"] },
 			});
 
 			expect(recipe.defaultVariants?.color).toBeUndefined();
-			expect(recipe.defaultVariants?.variant).toBe("soft");
+			expect(recipe.defaultVariants?.variant).toBe("subtle");
 			expect(recipe.defaultVariants?.size).toBe("md");
 			expect(recipe.defaultVariants?.orientation).toBe("horizontal");
 		});
