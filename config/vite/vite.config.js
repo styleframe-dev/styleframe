@@ -26,6 +26,11 @@ export const createViteConfig = (name, cwd, options = {}) =>
 			reporters: ["verbose"],
 			coverage: {
 				provider: "v8",
+				exclude: [
+					...vitestConfig.coverage.exclude,
+					"**/*.styleframe.ts",
+					"**/styleframe.config.ts",
+				],
 			},
 		},
 	});
