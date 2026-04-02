@@ -20,13 +20,23 @@ const buttonColors = ["primary", "secondary", "success", "danger"] as const;
 const buttonVariants = ["solid", "outline", "ghost"] as const;
 const buttonSizes = ["sm", "md", "lg"] as const;
 
-const badgeColors = ["primary", "secondary", "success", "warning", "danger", "info"] as const;
+const badgeColors = [
+	"primary",
+	"secondary",
+	"success",
+	"warning",
+	"danger",
+	"info",
+] as const;
 
 const badgeSizes = ["sm", "md", "lg"] as const;
 
 const alertColors = ["success", "warning", "danger", "info"] as const;
 
-const alertConfig: Record<string, { icon: string; title: string; message: string }> = {
+const alertConfig: Record<
+	string,
+	{ icon: string; title: string; message: string }
+> = {
 	success: {
 		icon: "\u2713",
 		title: "Success",

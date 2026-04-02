@@ -9,8 +9,7 @@ const props = withDefaults(
 		size?: "xs" | "sm" | "md" | "lg" | "xl";
 		label?: string;
 	}>(),
-	{
-	},
+	{},
 );
 
 const classes = computed(() =>
