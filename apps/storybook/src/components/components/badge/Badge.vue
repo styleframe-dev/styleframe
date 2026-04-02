@@ -4,7 +4,16 @@ import { badge } from "virtual:styleframe";
 
 const props = withDefaults(
 	defineProps<{
-		color?: "primary" | "secondary" | "success" | "info" | "warning" | "danger";
+		color?:
+			| "primary"
+			| "secondary"
+			| "success"
+			| "info"
+			| "warning"
+			| "danger"
+			| "light"
+			| "dark"
+			| "neutral";
 		variant?: "solid" | "outline" | "soft" | "subtle";
 		size?: "xs" | "sm" | "md" | "lg" | "xl";
 		label?: string;

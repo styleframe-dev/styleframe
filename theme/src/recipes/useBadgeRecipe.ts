@@ -39,6 +39,9 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			info: {},
 			warning: {},
 			danger: {},
+			light: {},
+			dark: {},
+			neutral: {},
 		},
 		variant: {
 			solid: {},
@@ -96,52 +99,196 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			},
 		},
 	},
-	compoundVariants: colors.flatMap((color) => [
+	compoundVariants: [
+		...colors.flatMap((color) => [
+			{
+				match: { color, variant: "solid" as const },
+				css: {
+					background: `@color.${color}`,
+					color: "@color.white",
+					borderColor: `@color.${color}-shade-50`,
+					"&:dark": {
+						borderColor: `@color.${color}-tint-50`,
+					},
+				},
+			},
+			{
+				match: { color, variant: "outline" as const },
+				css: {
+					color: `@color.${color}`,
+					borderColor: `@color.${color}`,
+				},
+			},
+			{
+				match: { color, variant: "soft" as const },
+				css: {
+					background: `@color.${color}-100`,
+					color: `@color.${color}-700`,
+					"&:dark": {
+						background: `@color.${color}-800`,
+						color: `@color.${color}-400`,
+					},
+				},
+			},
+			{
+				match: { color, variant: "subtle" as const },
+				css: {
+					background: `@color.${color}-100`,
+					color: `@color.${color}-700`,
+					borderColor: `@color.${color}-300`,
+					"&:dark": {
+						background: `@color.${color}-800`,
+						color: `@color.${color}-400`,
+						borderColor: `@color.${color}-600`,
+					},
+				},
+			},
+		]),
+
+		// Light color
 		{
-			match: { color, variant: "solid" as const },
+			match: { color: "light" as const, variant: "solid" as const },
 			css: {
-				background: `@color.${color}`,
+				background: "@color.white",
+				color: "@color.text",
+				borderColor: "@color.gray-200",
+				"&:dark": {
+					color: "@color.text-inverted",
+					borderColor: "@color.gray-300",
+				},
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "outline" as const },
+			css: {
+				color: "@color.text",
+				borderColor: "@color.gray-300",
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "soft" as const },
+			css: {
+				background: "@color.gray-100",
+				color: "@color.gray-700",
+				"&:dark": {
+					background: "@color.gray-100",
+					color: "@color.gray-700",
+				},
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "subtle" as const },
+			css: {
+				background: "@color.gray-100",
+				color: "@color.gray-700",
+				borderColor: "@color.gray-300",
+				"&:dark": {
+					background: "@color.gray-100",
+					color: "@color.gray-700",
+					borderColor: "@color.gray-300",
+				},
+			},
+		},
+
+		// Dark color
+		{
+			match: { color: "dark" as const, variant: "solid" as const },
+			css: {
+				background: "@color.gray-900",
 				color: "@color.white",
-				borderColor: `@color.${color}-shade-50`,
+				borderColor: "@color.gray-800",
 				"&:dark": {
-					borderColor: `@color.${color}-tint-50`,
+					borderColor: "@color.gray-950",
 				},
 			},
 		},
 		{
-			match: { color, variant: "outline" as const },
+			match: { color: "dark" as const, variant: "outline" as const },
 			css: {
-				color: `@color.${color}`,
-				borderColor: `@color.${color}`,
-			},
-		},
-		{
-			match: { color, variant: "soft" as const },
-			css: {
-				background: `@color.${color}-100`,
-				color: `@color.${color}-700`,
+				color: "@color.gray-900",
+				borderColor: "@color.gray-900",
 				"&:dark": {
-					background: `@color.${color}-800`,
-					color: `@color.${color}-400`,
+					color: "@color.gray-900",
 				},
 			},
 		},
 		{
-			match: { color, variant: "subtle" as const },
+			match: { color: "dark" as const, variant: "soft" as const },
 			css: {
-				background: `@color.${color}-100`,
-				color: `@color.${color}-700`,
-				borderColor: `@color.${color}-300`,
+				background: "@color.gray-800",
+				color: "@color.gray-200",
 				"&:dark": {
-					background: `@color.${color}-800`,
-					color: `@color.${color}-400`,
-					borderColor: `@color.${color}-600`,
+					background: "@color.gray-800",
+					color: "@color.gray-200",
 				},
 			},
 		},
-	]),
+		{
+			match: { color: "dark" as const, variant: "subtle" as const },
+			css: {
+				background: "@color.gray-800",
+				color: "@color.gray-200",
+				borderColor: "@color.gray-600",
+				"&:dark": {
+					background: "@color.gray-800",
+					color: "@color.gray-200",
+					borderColor: "@color.gray-600",
+				},
+			},
+		},
+
+		// Neutral color (light in light mode, dark in dark mode)
+		{
+			match: { color: "neutral" as const, variant: "solid" as const },
+			css: {
+				background: "@color.white",
+				color: "@color.text",
+				borderColor: "@color.gray-200",
+				"&:dark": {
+					background: "@color.gray-900",
+					color: "@color.white",
+					borderColor: "@color.gray-800",
+				},
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "outline" as const },
+			css: {
+				color: "@color.text",
+				borderColor: "@color.gray-300",
+				"&:dark": {
+					color: "@color.gray-200",
+					borderColor: "@color.gray-600",
+				},
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "soft" as const },
+			css: {
+				background: "@color.gray-100",
+				color: "@color.gray-700",
+				"&:dark": {
+					background: "@color.gray-800",
+					color: "@color.gray-300",
+				},
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "subtle" as const },
+			css: {
+				background: "@color.gray-100",
+				color: "@color.gray-700",
+				borderColor: "@color.gray-300",
+				"&:dark": {
+					background: "@color.gray-800",
+					color: "@color.gray-300",
+					borderColor: "@color.gray-600",
+				},
+			},
+		},
+	],
 	defaultVariants: {
-		color: "primary",
+		color: "neutral",
 		variant: "solid",
 		size: "sm",
 	},
