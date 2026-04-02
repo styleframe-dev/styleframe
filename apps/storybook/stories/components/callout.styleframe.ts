@@ -1,14 +1,14 @@
-import { useAlertRecipe } from "@styleframe/theme";
+import { useCalloutRecipe } from "@styleframe/theme";
 import { styleframe } from "virtual:styleframe";
 
 const s = styleframe();
 const { selector } = s;
 
-// Initialize alert recipe
-export const alert = useAlertRecipe(s);
+// Initialize callout recipe
+export const callout = useCalloutRecipe(s);
 
 // Container styles for story layout
-selector(".alert-grid", {
+selector(".callout-grid", {
 	display: "flex",
 	flexWrap: "wrap",
 	gap: "@spacing.md",
@@ -16,21 +16,21 @@ selector(".alert-grid", {
 	alignItems: "flex-start",
 });
 
-selector(".alert-section", {
+selector(".callout-section", {
 	display: "flex",
 	flexDirection: "column",
 	gap: "@spacing.lg",
 	padding: "@spacing.md",
 });
 
-selector(".alert-row", {
+selector(".callout-row", {
 	display: "flex",
 	flexWrap: "wrap",
 	gap: "@spacing.sm",
 	alignItems: "flex-start",
 });
 
-selector(".alert-label", {
+selector(".callout-label", {
 	fontSize: "@font-size.sm",
 	fontWeight: "@font-weight.semibold",
 	minWidth: "80px",

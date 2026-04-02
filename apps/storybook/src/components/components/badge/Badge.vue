@@ -10,10 +10,6 @@ const props = withDefaults(
 		label?: string;
 	}>(),
 	{
-		color: "primary",
-		variant: "solid",
-		size: "sm",
-		label: "Badge",
 	},
 );
 

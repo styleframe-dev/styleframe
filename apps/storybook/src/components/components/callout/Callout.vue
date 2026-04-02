@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { alert } from "virtual:styleframe";
+import { callout } from "virtual:styleframe";
+import CalloutContent from "./CalloutContent.vue";
+import CalloutTitle from "./CalloutTitle.vue";
+import CalloutDescription from "./CalloutDescription.vue";
 
 const props = withDefaults(
 	defineProps<{
@@ -21,21 +24,11 @@ const props = withDefaults(
 		description?: string;
 		dismissible?: boolean;
 		icon?: string;
-	}>(),
-	{
-		color: "info",
-		variant: "soft",
-		size: "md",
-		orientation: "horizontal",
-		title: "Alert",
-		description: "This is an alert description.",
-		dismissible: false,
-		icon: "✓",
-	},
+	}>(), {}
 );
 
 const classes = computed(() =>
-	alert({
+	callout({
 		color: props.color,
 		variant: props.variant,
 		size: props.size,
@@ -49,10 +42,11 @@ const classes = computed(() =>
 		<slot v-if="icon" name="icon">
 			{{ props.icon }}
 		</slot>
-		<div>
-			<strong v-if="props.title">{{ props.title }}</strong>
-			<div v-if="props.description">{{ props.description }}</div>
-		</div>
+		<CalloutContent>
+			<CalloutTitle v-if="props.title">{{ props.title }}</CalloutTitle>
+			<CalloutDescription v-if="props.description">{{ props.description }}</CalloutDescription>
+			<slot />
+		</CalloutContent>
 		<slot v-if="dismissible" name="dismiss">
 			✖
 		</slot>

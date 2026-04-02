@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import Alert from "../../src/components/components/alert/Alert.vue";
-import AlertGrid from "../../src/components/components/alert/AlertGrid.vue";
-import AlertSizeGrid from "../../src/components/components/alert/AlertSizeGrid.vue";
-import AlertOrientationGrid from "../../src/components/components/alert/AlertOrientationGrid.vue";
+import Callout from "../../src/components/components/callout/Callout.vue";
+import CalloutGrid from "../../src/components/components/callout/preview/CalloutGrid.vue";
+import CalloutSizeGrid from "../../src/components/components/callout/preview/CalloutSizeGrid.vue";
+import CalloutOrientationGrid from "../../src/components/components/callout/preview/CalloutOrientationGrid.vue";
 
 const colors = [
 	"neutral",
@@ -21,14 +21,17 @@ const sizes = ["sm", "md", "lg"] as const;
 const orientations = ["horizontal", "vertical"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Alert",
-	component: Alert,
+	title: "Theme/Recipes/Callout",
+	component: Callout,
 	tags: ["autodocs"],
+	parameters: {
+		layout: "padded",
+	},
 	argTypes: {
 		color: {
 			control: "select",
 			options: colors,
-			description: "The color variant of the alert",
+			description: "The color variant of the callout",
 		},
 		variant: {
 			control: "select",
@@ -38,20 +41,20 @@ const meta = {
 		size: {
 			control: "select",
 			options: sizes,
-			description: "The size of the alert",
+			description: "The size of the callout",
 		},
 		orientation: {
 			control: "select",
 			options: orientations,
-			description: "The layout direction of the alert",
+			description: "The layout direction of the callout",
 		},
 		title: {
 			control: "text",
-			description: "The title text of the alert",
+			description: "The title text of the callout",
 		},
 		description: {
 			control: "text",
-			description: "The description text of the alert",
+			description: "The description text of the callout",
 		},
 		icon: {
 			control: "text",
@@ -59,10 +62,10 @@ const meta = {
 		},
 		dismissible: {
 			control: "boolean",
-			description: "Whether the alert can be dismissed",
+			description: "Whether the callout can be dismissed",
 		},
 	},
-} satisfies Meta<typeof Alert>;
+} satisfies Meta<typeof Callout>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -73,29 +76,29 @@ export const Default: Story = {
 		variant: "subtle",
 		size: "md",
 		orientation: "horizontal",
-		title: "Alert",
-		description: "This is an alert description.",
+		title: "Callout",
+		description: "This is a callout description.",
 	},
 };
 
 export const AllVariants: StoryObj = {
 	render: () => ({
-		components: { AlertGrid },
-		template: "<AlertGrid />",
+		components: { CalloutGrid },
+		template: "<CalloutGrid />",
 	}),
 };
 
 export const AllSizes: StoryObj = {
 	render: () => ({
-		components: { AlertSizeGrid },
-		template: "<AlertSizeGrid />",
+		components: { CalloutSizeGrid },
+		template: "<CalloutSizeGrid />",
 	}),
 };
 
 export const AllOrientations: StoryObj = {
 	render: () => ({
-		components: { AlertOrientationGrid },
-		template: "<AlertOrientationGrid />",
+		components: { CalloutOrientationGrid },
+		template: "<CalloutOrientationGrid />",
 	}),
 };
 
@@ -103,63 +106,72 @@ export const AllOrientations: StoryObj = {
 export const Neutral: Story = {
 	args: {
 		color: "neutral",
-		title: "Neutral",
+		title: "Neutral Callout",
+		description: "This is a neutral callout.",
 	},
 };
 
 export const Primary: Story = {
 	args: {
 		color: "primary",
-		title: "Primary",
+		title: "Primary Callout",
+		description: "This is a primary callout.",
 	},
 };
 
 export const Secondary: Story = {
 	args: {
 		color: "secondary",
-		title: "Secondary",
+		title: "Secondary Callout",
+		description: "This is a secondary callout.",
 	},
 };
 
 export const Success: Story = {
 	args: {
 		color: "success",
-		title: "Success",
+		title: "Success Callout",
+		description: "This is a success callout.",
 	},
 };
 
 export const Info: Story = {
 	args: {
 		color: "info",
-		title: "Info",
+		title: "Info Callout",
+		description: "This is an info callout.",
 	},
 };
 
 export const Warning: Story = {
 	args: {
 		color: "warning",
-		title: "Warning",
+		title: "Warning Callout",
+		description: "This is a warning callout.",
 	},
 };
 
 export const Danger: Story = {
 	args: {
 		color: "danger",
-		title: "Danger",
+		title: "Danger Callout",
+		description: "This is a danger callout.",
 	},
 };
 
 export const Light: Story = {
 	args: {
 		color: "light",
-		title: "Light",
+		title: "Light Callout",
+		description: "This is a light callout.",
 	},
 };
 
 export const Dark: Story = {
 	args: {
 		color: "dark",
-		title: "Dark",
+		title: "Dark Callout",
+		description: "This is a dark callout.",
 	},
 };
 
@@ -167,28 +179,32 @@ export const Dark: Story = {
 export const Solid: Story = {
 	args: {
 		variant: "solid",
-		title: "Solid",
+		title: "Solid Callout",
+		description: "This is a solid callout.",
 	},
 };
 
 export const Outline: Story = {
 	args: {
 		variant: "outline",
-		title: "Outline",
+		title: "Outline Callout",
+		description: "This is an outline callout.",
 	},
 };
 
 export const Soft: Story = {
 	args: {
 		variant: "soft",
-		title: "Soft",
+		title: "Soft Callout",
+		description: "This is a soft callout.",
 	},
 };
 
 export const Subtle: Story = {
 	args: {
 		variant: "subtle",
-		title: "Subtle",
+		title: "Subtle Callout",
+		description: "This is a subtle callout.",
 	},
 };
 
@@ -196,21 +212,24 @@ export const Subtle: Story = {
 export const Small: Story = {
 	args: {
 		size: "sm",
-		title: "Small",
+		title: "Small Callout",
+		description: "This is a small callout.",
 	},
 };
 
 export const Medium: Story = {
 	args: {
 		size: "md",
-		title: "Medium",
+		title: "Medium Callout",
+		description: "This is a medium callout.",
 	},
 };
 
 export const Large: Story = {
 	args: {
 		size: "lg",
-		title: "Large",
+		title: "Large Callout",
+		description: "This is a large callout.",
 	},
 };
 
@@ -218,13 +237,15 @@ export const Large: Story = {
 export const Horizontal: Story = {
 	args: {
 		orientation: "horizontal",
-		title: "Horizontal",
+		title: "Horizontal Callout",
+		description: "This callout is oriented horizontally.",
 	},
 };
 
 export const Vertical: Story = {
 	args: {
 		orientation: "vertical",
-		title: "Vertical",
+		title: "Vertical Callout",
+		description: "This callout is oriented vertically.",
 	},
 };

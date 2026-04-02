@@ -10,10 +10,10 @@ const colors = [
 ] as const;
 
 /**
- * Alert recipe for contextual feedback messages.
+ * Callout recipe for contextual feedback messages.
  * Supports color, variant, size, and orientation axes.
  */
-export const useAlertRecipe = createUseRecipe("alert", {
+export const useCalloutRecipe = createUseRecipe("callout", {
 	base: {
 		display: "flex",
 		flexBasis: "100%",

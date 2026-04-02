@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import Button from "../../src/components/components/button/Button.vue";
-import ButtonGrid from "../../src/components/components/button/ButtonGrid.vue";
-import ButtonSizeGrid from "../../src/components/components/button/ButtonSizeGrid.vue";
+import ButtonGrid from "../../src/components/components/button/preview/ButtonGrid.vue";
+import ButtonSizeGrid from "../../src/components/components/button/preview/ButtonSizeGrid.vue";
 
 const colors = [
 	"primary",
@@ -26,6 +26,9 @@ const meta = {
 	title: "Theme/Recipes/Button",
 	component: Button,
 	tags: ["autodocs"],
+	parameters: {
+		layout: "padded",
+	},
 	argTypes: {
 		color: {
 			control: "select",

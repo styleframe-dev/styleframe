@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Badge from "./Badge.vue";
+import Button from "../Button.vue";
 
 const colors = [
 	"primary",
@@ -9,15 +9,22 @@ const colors = [
 	"warning",
 	"danger",
 ] as const;
-const variants = ["solid", "outline", "soft", "subtle"] as const;
+const variants = [
+	"solid",
+	"outline",
+	"soft",
+	"subtle",
+	"ghost",
+	"link",
+] as const;
 </script>
 
 <template>
-	<div class="badge-section">
+	<div class="button-section">
 		<div v-for="variant in variants" :key="variant">
-			<div class="badge-label">{{ variant }}</div>
-			<div class="badge-row">
-				<Badge
+			<div class="button-label">{{ variant }}</div>
+			<div class="button-row">
+				<Button
 					v-for="color in colors"
 					:key="`${variant}-${color}`"
 					:color="color"

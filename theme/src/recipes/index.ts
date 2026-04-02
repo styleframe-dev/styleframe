@@ -1,3 +1,3 @@
-export * from "./useAlertRecipe";
+export * from "./useCalloutRecipe";
 export * from "./useBadgeRecipe";
 export * from "./useButtonRecipe";
