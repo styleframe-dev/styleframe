@@ -9,13 +9,7 @@ const props = withDefaults(
 		label?: string;
 		disabled?: boolean;
 	}>(),
-	{
-		color: "primary",
-		variant: "solid",
-		size: "md",
-		label: "Button",
-		disabled: false,
-	},
+	{},
 );
 </script>
 

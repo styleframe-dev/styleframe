@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import Badge from "../../src/components/components/badge/Badge.vue";
-import BadgeGrid from "../../src/components/components/badge/BadgeGrid.vue";
-import BadgeSizeGrid from "../../src/components/components/badge/BadgeSizeGrid.vue";
+import BadgeGrid from "../../src/components/components/badge/preview/BadgeGrid.vue";
+import BadgeSizeGrid from "../../src/components/components/badge/preview/BadgeSizeGrid.vue";
 
 const colors = [
 	"primary",

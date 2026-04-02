@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Button from "./Button.vue";
+import Button from "../Button.vue";
 
 const colors = [
 	"primary",
@@ -9,26 +9,19 @@ const colors = [
 	"warning",
 	"danger",
 ] as const;
-const variants = [
-	"solid",
-	"outline",
-	"soft",
-	"subtle",
-	"ghost",
-	"link",
-] as const;
+const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
 </script>
 
 <template>
 	<div class="button-section">
-		<div v-for="variant in variants" :key="variant">
-			<div class="button-label">{{ variant }}</div>
+		<div v-for="size in sizes" :key="size">
+			<div class="button-label">{{ size }}</div>
 			<div class="button-row">
 				<Button
 					v-for="color in colors"
-					:key="`${variant}-${color}`"
+					:key="`${size}-${color}`"
 					:color="color"
-					:variant="variant"
+					:size="size"
 					:label="color"
 				/>
 			</div>

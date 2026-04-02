@@ -9,12 +9,7 @@ const props = withDefaults(
 		size?: "xs" | "sm" | "md" | "lg" | "xl";
 		label?: string;
 	}>(),
-	{
-		color: "primary",
-		variant: "solid",
-		size: "sm",
-		label: "Badge",
-	},
+	{},
 );
 
 const classes = computed(() =>

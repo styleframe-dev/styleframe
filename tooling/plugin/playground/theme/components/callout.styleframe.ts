@@ -23,8 +23,8 @@ const {
 	colorInfo,
 } = useTokens(s);
 
-// Alert structure
-selector(".alert", {
+// Callout structure
+selector(".callout", {
 	display: "flex",
 	gap: ref(spacingSm),
 	padding: ref(spacingMd),
@@ -39,7 +39,7 @@ selector(".alert", {
 	},
 });
 
-selector(".alert__icon", {
+selector(".callout__icon", {
 	flexShrink: "0",
 	width: "20px",
 	height: "20px",
@@ -49,24 +49,24 @@ selector(".alert__icon", {
 	justifyContent: "center",
 });
 
-selector(".alert__content", {
+selector(".callout__content", {
 	flex: "1",
 	minWidth: "0",
 });
 
-selector(".alert__title", {
+selector(".callout__title", {
 	fontWeight: ref(fontWeightSemibold),
 	fontSize: ref(fontSizeMd),
 	margin: "0",
 });
 
-selector(".alert__description", {
+selector(".callout__description", {
 	fontSize: ref(fontSizeSm),
 	marginTop: ref(spacingXs),
 	margin: "0",
 });
 
-selector(".alert__dismiss", {
+selector(".callout__dismiss", {
 	flexShrink: "0",
 	display: "inline-flex",
 	alignItems: "center",
@@ -84,9 +84,9 @@ selector(".alert__dismiss", {
 	},
 });
 
-// Alert color recipe
-export const alertRecipe = s.recipe({
-	name: "alert",
+// Callout color recipe
+export const playgroundCalloutRecipe = s.recipe({
+	name: "playground-callout",
 	base: {},
 	variants: {
 		color: {

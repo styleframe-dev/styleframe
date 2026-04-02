@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Badge from "./Badge.vue";
+import Badge from "../Badge.vue";
 
 const colors = [
 	"primary",
