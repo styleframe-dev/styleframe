@@ -254,8 +254,9 @@ describe("useCalloutRecipe", () => {
 					color: "@color.text",
 					borderColor: "@color.gray-200",
 					"&:dark": {
-						color: "@color.text-inverted",
-						borderColor: "@color.gray-300",
+						background: "@color.white",
+						color: "@color.text",
+						borderColor: "@color.gray-200",
 					},
 				},
 			});
@@ -276,7 +277,9 @@ describe("useCalloutRecipe", () => {
 					color: "@color.white",
 					borderColor: "@color.gray-800",
 					"&:dark": {
-						borderColor: "@color.gray-950",
+						background: "@color.gray-900",
+						color: "@color.white",
+						borderColor: "@color.gray-800",
 					},
 				},
 			});

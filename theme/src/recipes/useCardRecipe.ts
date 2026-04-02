@@ -1,44 +1,24 @@
 import { createUseRecipe } from "../utils/createUseRecipe";
 
-const colors = [
-	"primary",
-	"secondary",
-	"success",
-	"info",
-	"warning",
-	"danger",
-] as const;
-
 /**
- * Callout recipe for contextual feedback messages.
- * Supports color, variant, size, and orientation axes.
+ * Card container recipe.
+ * Supports color (light, dark, neutral), variant, and size axes.
  */
-export const useCalloutRecipe = createUseRecipe("callout", {
+export const useCardRecipe = createUseRecipe("card", {
 	base: {
 		display: "flex",
+		flexDirection: "column",
 		flexBasis: "100%",
-		alignItems: "flex-start",
 		borderWidth: "@border-width.thin",
 		borderStyle: "@border-style.solid",
 		borderColor: "transparent",
-		fontWeight: "@font-weight.medium",
-		fontSize: "@font-size.sm",
-		lineHeight: "@line-height.normal",
-		paddingTop: "@0.75",
-		paddingBottom: "@0.75",
-		paddingLeft: "@1",
-		paddingRight: "@1",
-		gap: "@0.75",
 		borderRadius: "@border-radius.md",
+		overflow: "hidden",
+		lineHeight: "@line-height.normal",
+		boxShadow: "@box-shadow.sm",
 	},
 	variants: {
 		color: {
-			primary: {},
-			secondary: {},
-			success: {},
-			info: {},
-			warning: {},
-			danger: {},
 			light: {},
 			dark: {},
 			neutral: {},
@@ -51,97 +31,28 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 		},
 		size: {
 			sm: {
-				fontSize: "@font-size.xs",
-				paddingTop: "@0.5",
-				paddingBottom: "@0.5",
-				paddingLeft: "@0.75",
-				paddingRight: "@0.75",
-				gap: "@0.5",
+				borderRadius: "@border-radius.sm",
 			},
 			md: {
-				fontSize: "@font-size.sm",
-				paddingTop: "@0.75",
-				paddingBottom: "@0.75",
-				paddingLeft: "@1",
-				paddingRight: "@1",
-				gap: "@0.75",
+				borderRadius: "@border-radius.md",
 			},
 			lg: {
-				fontSize: "@font-size.md",
-				paddingTop: "@1",
-				paddingBottom: "@1",
-				paddingLeft: "@1.25",
-				paddingRight: "@1.25",
-				gap: "@1",
-			},
-		},
-		orientation: {
-			horizontal: {
-				flexDirection: "row",
-			},
-			vertical: {
-				flexDirection: "column",
+				borderRadius: "@border-radius.lg",
 			},
 		},
 	},
 	compoundVariants: [
-		// Standard colors
-		...colors.flatMap((color) => [
-			{
-				match: { color, variant: "solid" as const },
-				css: {
-					background: `@color.${color}`,
-					color: "@color.white",
-					borderColor: `@color.${color}-shade-50`,
-					"&:dark": {
-						borderColor: `@color.${color}-tint-50`,
-					},
-				},
-			},
-			{
-				match: { color, variant: "outline" as const },
-				css: {
-					color: `@color.${color}`,
-					borderColor: `@color.${color}`,
-				},
-			},
-			{
-				match: { color, variant: "soft" as const },
-				css: {
-					background: `@color.${color}-100`,
-					color: `@color.${color}-700`,
-					"&:dark": {
-						background: `@color.${color}-800`,
-						color: `@color.${color}-400`,
-					},
-				},
-			},
-			{
-				match: { color, variant: "subtle" as const },
-				css: {
-					background: `@color.${color}-100`,
-					color: `@color.${color}-700`,
-					borderColor: `@color.${color}-300`,
-					"&:dark": {
-						background: `@color.${color}-800`,
-						color: `@color.${color}-400`,
-						borderColor: `@color.${color}-600`,
-					},
-				},
-			},
-		]),
-
 		// Light color (matches neutral light mode appearance, stays fixed across themes)
 		{
 			match: { color: "light" as const, variant: "solid" as const },
 			css: {
 				background: "@color.white",
 				color: "@color.text",
-				borderColor: "@color.gray-200",
+				borderColor: "@color.gray-150",
 				"&:dark": {
 					background: "@color.white",
-					color: "@color.text-inverted",
-					borderColor: "@color.gray-200",
+					color: "@color.text",
+					borderColor: "@color.gray-150",
 				},
 			},
 		},
@@ -150,9 +61,6 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 			css: {
 				color: "@color.text",
 				borderColor: "@color.gray-300",
-				"&:dark": {
-					color: "@color.text-inverted",
-				},
 			},
 		},
 		{
@@ -186,11 +94,11 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 			css: {
 				background: "@color.gray-900",
 				color: "@color.white",
-				borderColor: "@color.gray-800",
+				borderColor: "@color.gray-850",
 				"&:dark": {
 					background: "@color.gray-900",
 					color: "@color.white",
-					borderColor: "@color.gray-800",
+					borderColor: "@color.gray-850",
 				},
 			},
 		},
@@ -230,17 +138,17 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 			},
 		},
 
-		// Neutral color (light in light mode, dark in dark mode)
+		// Neutral color (adaptive: light in light mode, dark in dark mode)
 		{
 			match: { color: "neutral" as const, variant: "solid" as const },
 			css: {
 				background: "@color.white",
 				color: "@color.text",
-				borderColor: "@color.gray-200",
+				borderColor: "@color.gray-150",
 				"&:dark": {
 					background: "@color.gray-900",
 					color: "@color.white",
-					borderColor: "@color.gray-800",
+					borderColor: "@color.gray-850",
 				},
 			},
 		},
@@ -282,8 +190,148 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 	],
 	defaultVariants: {
 		color: "neutral",
-		variant: "subtle",
+		variant: "solid",
 		size: "md",
-		orientation: "horizontal",
+	},
+});
+
+/**
+ * Card header recipe with bottom separator.
+ */
+export const useCardHeaderRecipe = createUseRecipe("card-header", {
+	base: {
+		display: "flex",
+		alignItems: "center",
+		gap: "@0.75",
+		paddingTop: "@0.75",
+		paddingBottom: "@0.75",
+		paddingLeft: "@1",
+		paddingRight: "@1",
+		borderBottomWidth: "@border-width.thin",
+		borderBottomStyle: "@border-style.solid",
+		borderBottomColor: "@color.gray-200",
+		"&:dark": {
+			borderBottomColor: "@color.gray-700",
+		},
+	},
+	variants: {
+		size: {
+			sm: {
+				paddingTop: "@0.5",
+				paddingBottom: "@0.5",
+				paddingLeft: "@0.75",
+				paddingRight: "@0.75",
+				gap: "@0.5",
+			},
+			md: {
+				paddingTop: "@0.75",
+				paddingBottom: "@0.75",
+				paddingLeft: "@1",
+				paddingRight: "@1",
+				gap: "@0.75",
+			},
+			lg: {
+				paddingTop: "@1",
+				paddingBottom: "@1",
+				paddingLeft: "@1.25",
+				paddingRight: "@1.25",
+				gap: "@1",
+			},
+		},
+	},
+	defaultVariants: {
+		size: "md",
+	},
+});
+
+/**
+ * Card body recipe for main content area.
+ */
+export const useCardBodyRecipe = createUseRecipe("card-body", {
+	base: {
+		display: "flex",
+		flexDirection: "column",
+		gap: "@0.5",
+		paddingTop: "@0.75",
+		paddingBottom: "@0.75",
+		paddingLeft: "@1",
+		paddingRight: "@1",
+	},
+	variants: {
+		size: {
+			sm: {
+				paddingTop: "@0.5",
+				paddingBottom: "@0.5",
+				paddingLeft: "@0.75",
+				paddingRight: "@0.75",
+				gap: "@0.375",
+			},
+			md: {
+				paddingTop: "@0.75",
+				paddingBottom: "@0.75",
+				paddingLeft: "@1",
+				paddingRight: "@1",
+				gap: "@0.5",
+			},
+			lg: {
+				paddingTop: "@1",
+				paddingBottom: "@1",
+				paddingLeft: "@1.25",
+				paddingRight: "@1.25",
+				gap: "@0.75",
+			},
+		},
+	},
+	defaultVariants: {
+		size: "md",
+	},
+});
+
+/**
+ * Card footer recipe with top separator.
+ */
+export const useCardFooterRecipe = createUseRecipe("card-footer", {
+	base: {
+		display: "flex",
+		alignItems: "center",
+		gap: "@0.75",
+		paddingTop: "@0.75",
+		paddingBottom: "@0.75",
+		paddingLeft: "@1",
+		paddingRight: "@1",
+		borderTopWidth: "@border-width.thin",
+		borderTopStyle: "@border-style.solid",
+		borderTopColor: "@color.gray-200",
+		"&:dark": {
+			borderTopColor: "@color.gray-700",
+		},
+	},
+	variants: {
+		size: {
+			sm: {
+				paddingTop: "@0.5",
+				paddingBottom: "@0.5",
+				paddingLeft: "@0.75",
+				paddingRight: "@0.75",
+				gap: "@0.5",
+			},
+			md: {
+				paddingTop: "@0.75",
+				paddingBottom: "@0.75",
+				paddingLeft: "@1",
+				paddingRight: "@1",
+				gap: "@0.75",
+			},
+			lg: {
+				paddingTop: "@1",
+				paddingBottom: "@1",
+				paddingLeft: "@1.25",
+				paddingRight: "@1.25",
+				gap: "@1",
+			},
+		},
+	},
+	defaultVariants: {
+		size: "md",
 	},
 });
