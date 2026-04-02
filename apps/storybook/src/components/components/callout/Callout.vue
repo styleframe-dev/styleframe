@@ -24,7 +24,8 @@ const props = withDefaults(
 		description?: string;
 		dismissible?: boolean;
 		icon?: string;
-	}>(), {}
+	}>(),
+	{},
 );
 
 const classes = computed(() =>

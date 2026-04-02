@@ -9,8 +9,7 @@ const props = withDefaults(
 		label?: string;
 		disabled?: boolean;
 	}>(),
-	{
-	},
+	{},
 );
 </script>
 
