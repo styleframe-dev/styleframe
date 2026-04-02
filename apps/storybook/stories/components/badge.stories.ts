@@ -11,6 +11,9 @@ const colors = [
 	"info",
 	"warning",
 	"danger",
+	"light",
+	"dark",
+	"neutral",
 ] as const;
 const variants = ["solid", "outline", "soft", "subtle"] as const;
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
@@ -108,6 +111,27 @@ export const Danger: Story = {
 	args: {
 		color: "danger",
 		label: "Danger",
+	},
+};
+
+export const Light: Story = {
+	args: {
+		color: "light",
+		label: "Light",
+	},
+};
+
+export const Dark: Story = {
+	args: {
+		color: "dark",
+		label: "Dark",
+	},
+};
+
+export const Neutral: Story = {
+	args: {
+		color: "neutral",
+		label: "Neutral",
 	},
 };
 
