@@ -288,7 +288,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 		},
 	],
 	defaultVariants: {
-		color: "primary",
+		color: "neutral",
 		variant: "solid",
 		size: "sm",
 	},

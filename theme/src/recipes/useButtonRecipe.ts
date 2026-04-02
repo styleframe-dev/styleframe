@@ -716,7 +716,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 		},
 	],
 	defaultVariants: {
-		color: "primary",
+		color: "neutral",
 		variant: "solid",
 		size: "md",
 	},
