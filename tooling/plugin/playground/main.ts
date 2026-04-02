@@ -2,7 +2,7 @@ import "virtual:styleframe.css";
 import {
 	buttonRecipe,
 	badgeRecipe,
-	alertRecipe,
+	calloutRecipe,
 	avatarRecipe,
 	cardSelector,
 } from "virtual:styleframe";
@@ -165,7 +165,7 @@ function renderAlerts() {
 			.map((color) => {
 				const { icon, title, message } = alertConfig[color];
 				return `
-				<div class="alert ${alertRecipe({ color })}">
+				<div class="alert ${calloutRecipe({ color })}">
 					<div class="alert__icon">${icon}</div>
 					<div class="alert__content">
 						<p class="alert__title">${title}</p>
@@ -221,6 +221,6 @@ console.log(
 	buttonRecipe({ color: "danger", variant: "outline" }),
 );
 console.log("badgeRecipe():", badgeRecipe());
-console.log("alertRecipe():", alertRecipe());
+console.log("calloutRecipe():", calloutRecipe());
 console.log("avatarRecipe():", avatarRecipe());
 console.log("cardSelector:", cardSelector);
