@@ -26,8 +26,8 @@ const {
 	lineHeightTight,
 } = useTokens(s);
 
-export const badgeRecipe = s.recipe({
-	name: "badge",
+export const playgroundBadgeRecipe = s.recipe({
+	name: "playground-badge",
 	base: {
 		display: "inline-flex",
 		alignItems: "center",

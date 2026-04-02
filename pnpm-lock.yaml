@@ -1040,6 +1040,9 @@ importers:
       '@styleframe/theme':
         specifier: workspace:^3.3.0
         version: link:../../../theme
+      '@vitejs/plugin-vue':
+        specifier: catalog:nuxt
+        version: 6.0.1(vite@6.4.1(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vue@3.5.26(typescript@5.9.3))
       styleframe:
         specifier: workspace:^3.3.0
         version: link:../../../engine/styleframe
@@ -1049,6 +1052,9 @@ importers:
       vite-plugin-inspect:
         specifier: ^11.1.0
         version: 11.3.3(vite@6.4.1(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))
+      vue:
+        specifier: catalog:nuxt
+        version: 3.5.26(typescript@5.9.3)
 
 packages:
 
@@ -13554,6 +13560,12 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.29
       vite: rolldown-vite@7.2.5(@types/node@22.15.32)(esbuild@0.25.11)(jiti@2.6.1)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
       vue: 3.5.26(typescript@5.8.3)
+
+  '@vitejs/plugin-vue@6.0.1(vite@6.4.1(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vue@3.5.26(typescript@5.9.3))':
+    dependencies:
+      '@rolldown/pluginutils': 1.0.0-beta.29
+      vite: 6.4.1(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1)
+      vue: 3.5.26(typescript@5.9.3)
 
   '@vitejs/plugin-vue@6.0.1(vite@7.1.12(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vue@3.5.26(typescript@5.8.3))':
     dependencies:
