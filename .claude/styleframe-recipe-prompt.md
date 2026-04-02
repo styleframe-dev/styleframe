@@ -22,6 +22,9 @@ const colors = [
 	"danger",
 ] as const;
 
+// Use `const` by default. Export `colors` (and optionally a `variants` array)
+// when they need to be consumed externally (e.g., by storybook stories or Vue components).
+
 /**
  * <Brief description of the recipe>.
  */
@@ -64,6 +67,11 @@ export const use<ComponentName>Recipe = createUseRecipe("<component-name>", {
 		// Include defaults for any custom variant axes
 	},
 });
+
+// Default variant guidance:
+// - Interactive components: color: "primary", variant: "solid", size: "md"
+// - Container/feedback components: color: "neutral", variant: "subtle", size: "md"
+// - Display components (badge): color: "primary", variant: "solid", size: "sm"
 ```
 
 ### Formatting Rules
@@ -149,6 +157,7 @@ Block-level components that wrap content with optional icons/actions:
 ```ts
 base: {
 	display: "flex",
+	flexBasis: "100%",
 	alignItems: "flex-start",
 	borderWidth: "@border-width.thin",
 	borderStyle: "@border-style.solid",
@@ -290,6 +299,7 @@ compoundVariants: [
 			color: "@color.text",
 			borderColor: "@color.gray-200",
 			"&:dark": {
+				color: "@color.text-inverted",
 				borderColor: "@color.gray-300",
 			},
 		},
@@ -1048,6 +1058,210 @@ This file uses only `export *` re-exports, never named exports.
 
 ---
 
+## Runtime Overrides & Filtering
+
+The function returned by `createUseRecipe` accepts an optional second argument for runtime customization:
+
+```ts
+const recipe = use<ComponentName>Recipe(s, options?);
+```
+
+### Config Overrides
+
+Any part of the recipe config can be overridden via deep merge (using `defu`):
+
+```ts
+const callout = useCalloutRecipe(s, {
+	base: { display: "inline-flex" },
+});
+// Result: base.display is "inline-flex", all other base properties preserved
+```
+
+### Filtering
+
+The `filter` option restricts which variant values are available. Filtered-out values are removed from `variants`, compound variants are automatically pruned, and default variants are cleared if their value was filtered out.
+
+```ts
+const callout = useCalloutRecipe(s, {
+	filter: {
+		color: ["primary", "info"],
+		variant: ["solid", "soft"],
+	},
+});
+// Result: only primary/info colors and solid/soft variants remain
+// Compound variants for other combinations are pruned
+// If defaultVariants.color was "neutral", it becomes undefined
+```
+
+---
+
+## Writing Tests
+
+**File:** `theme/src/recipes/use<ComponentName>Recipe.test.ts`
+
+### Test Setup
+
+Create a `createInstance()` helper that registers minimal utility stubs for every CSS property used in the recipe, plus the dark modifier:
+
+```ts
+import { styleframe } from "@styleframe/core";
+import { useDarkModifier } from "../modifiers/useMediaPreferenceModifiers";
+
+function createInstance() {
+	const s = styleframe();
+	for (const name of ["display", "background", "color", /* ... all CSS properties used */]) {
+		s.utility(name, ({ value }) => ({ [name]: value }));
+	}
+	useDarkModifier(s);
+	return s;
+}
+```
+
+### Key Assertions
+
+1. **Metadata**: `recipe.type === "recipe"` and `recipe.name` matches kebab-case name
+2. **Base styles**: `toEqual` against the full base object
+3. **Variant axis keys**: `Object.keys(recipe.variants!.<axis>)` contains expected values
+4. **Default variants**: `toEqual` against the full `defaultVariants` object
+5. **Compound variant count**: `(semantic colors × variant styles) + (non-semantic colors × variant styles)`
+6. **Compound variant correctness**: Find by `match` and assert `css` for representative entries (at least one per variant style + one per non-semantic color)
+7. **Config overrides**: Verify overridden base property changes while others are preserved
+8. **Filter**: Verify variant pruning, compound variant pruning, and default variant adjustment when filtered out
+
+---
+
+## Styleframe File
+
+After creating the recipe and registering it in the barrel export, create a styleframe file that initializes the recipe and defines layout selectors for story previews.
+
+**File:** `apps/storybook/stories/components/<component-name>.styleframe.ts`
+
+```ts
+import { use<ComponentName>Recipe } from "@styleframe/theme";
+import { styleframe } from "virtual:styleframe";
+
+const s = styleframe();
+const { selector } = s;
+
+export const <componentName> = use<ComponentName>Recipe(s);
+
+// Layout selectors for story grid previews
+selector(".<component-name>-grid", {
+	display: "flex",
+	flexWrap: "wrap",
+	gap: "@spacing.md",
+	padding: "@spacing.md",
+	alignItems: "center",
+});
+
+selector(".<component-name>-section", {
+	display: "flex",
+	flexDirection: "column",
+	gap: "@spacing.lg",
+	padding: "@spacing.md",
+});
+
+selector(".<component-name>-row", {
+	display: "flex",
+	flexWrap: "wrap",
+	gap: "@spacing.sm",
+	alignItems: "center",
+});
+
+selector(".<component-name>-label", {
+	fontSize: "@font-size.sm",
+	fontWeight: "@font-weight.semibold",
+	minWidth: "80px",
+});
+
+export default s;
+```
+
+For container components that align items at the top, use `alignItems: "flex-start"` instead of `"center"` in the grid/row selectors.
+
+---
+
+## Storybook Stories
+
+**File:** `apps/storybook/stories/components/<component-name>.stories.ts`
+
+### Structure
+
+```ts
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
+
+import <ComponentName> from "../../src/components/components/<component-name>/<ComponentName>.vue";
+import <ComponentName>Grid from "../../src/components/components/<component-name>/preview/<ComponentName>Grid.vue";
+import <ComponentName>SizeGrid from "../../src/components/components/<component-name>/preview/<ComponentName>SizeGrid.vue";
+
+const colors = [/* matching recipe color values */] as const;
+const variants = [/* matching recipe variant values */] as const;
+const sizes = [/* matching recipe size values */] as const;
+
+const meta = {
+	title: "Theme/Recipes/<ComponentName>",
+	component: <ComponentName>,
+	tags: ["autodocs"],
+	parameters: {
+		layout: "padded",
+	},
+	argTypes: {
+		color: { control: "select", options: colors, description: "The color variant" },
+		variant: { control: "select", options: variants, description: "The visual style variant" },
+		size: { control: "select", options: sizes, description: "The size" },
+		// Add argTypes for any custom variant axes (orientation, etc.)
+	},
+} satisfies Meta<typeof <ComponentName>>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+```
+
+### Required Stories
+
+- **`Default`**: Single instance with default args
+- **`AllVariants`**: Grid showing all color × variant combinations
+- **`AllSizes`**: Grid showing all sizes
+- **Per-color stories**: One exported story per color (Primary, Secondary, Success, Info, Warning, Danger, and any non-semantic colors)
+- **Per-variant stories**: One per variant style (Solid, Outline, Soft, Subtle, Ghost, Link)
+- **Per-size stories**: One per size (ExtraSmall, Small, Medium, Large, ExtraLarge)
+- **Custom axis stories**: When applicable (e.g., `AllOrientations`, `Horizontal`, `Vertical`)
+- **Feature stories**: When applicable (e.g., `Disabled` for interactive components)
+
+---
+
+## Vue Component
+
+**File:** `apps/storybook/src/components/components/<component-name>/<ComponentName>.vue`
+
+```vue
+<script setup lang="ts">
+import { <componentName> } from "virtual:styleframe";
+
+const props = withDefaults(
+	defineProps<{
+		color?: "primary" | "secondary" | /* ... union of recipe color values */;
+		variant?: "solid" | "outline" | /* ... union of recipe variant values */;
+		size?: "sm" | "md" | "lg" | /* ... union of recipe size values */;
+		// Add props for custom variant axes and component-specific features
+	}>(),
+	{},
+);
+</script>
+
+<template>
+	<div :class="<componentName>({ color: props.color, variant: props.variant, size: props.size })">
+		<slot />
+	</div>
+</template>
+```
+
+For complex components, extract sub-components (e.g., `<ComponentName>Title.vue`, `<ComponentName>Content.vue`) into the same directory.
+
+Grid preview components go in a `preview/` subdirectory (e.g., `<ComponentName>Grid.vue`, `<ComponentName>SizeGrid.vue`).
+
+---
+
 ## Validation Checklist
 
 Before considering a recipe complete, verify every item:
@@ -1060,12 +1274,14 @@ Before considering a recipe complete, verify every item:
 - [ ] Recipe name (first arg) is kebab-case matching the component
 - [ ] File uses tabs for indentation
 - [ ] File uses double quotes for strings
+- [ ] Container component base includes `flexBasis: "100%"`
 
 ### Variants
 - [ ] `color` variant has empty objects `{}` for all 6 semantic colors + any non-semantic colors (light, dark, neutral)
 - [ ] `variant` has appropriate styles for the component type
 - [ ] `size` has appropriate sizes for the component (3-5 sizes; containers may use sm/md/lg only)
 - [ ] `defaultVariants` specifies color, variant, size, and any custom variant axes
+- [ ] Default values match the component's primary use case (see Default Variant Guidance)
 
 ### Custom Variant Axes (when applicable)
 - [ ] Custom axes (orientation, shape, etc.) have all options defined with appropriate CSS
@@ -1111,3 +1327,30 @@ Before considering a recipe complete, verify every item:
 - [ ] Soft dark hover/focus: background -750; dark active: -700
 - [ ] Subtle dark: background -800, color -400, borderColor -600
 - [ ] Ghost dark hover/focus: color -400, background -750; dark active: -700
+
+### Runtime API
+- [ ] Recipe supports runtime config overrides via second argument
+- [ ] Recipe supports filtering via `filter` option
+
+### Tests
+- [ ] Test file exists at `theme/src/recipes/use<ComponentName>Recipe.test.ts`
+- [ ] Tests cover: metadata, base styles, variant keys, defaults, compound variant count, individual compound correctness
+- [ ] Tests cover config overrides and filter behavior
+- [ ] Test setup uses minimal utility stubs and dark modifier
+
+### Styleframe File
+- [ ] File exists at `apps/storybook/stories/components/<component-name>.styleframe.ts`
+- [ ] Recipe is initialized and exported as `<componentName>`
+- [ ] Layout selectors defined for grid/section/row/label
+
+### Storybook Stories
+- [ ] Story file exists at `apps/storybook/stories/components/<component-name>.stories.ts`
+- [ ] Meta uses `title: "Theme/Recipes/<ComponentName>"` and `tags: ["autodocs"]`
+- [ ] Stories include: Default, AllVariants grid, AllSizes grid, per-color, per-variant, per-size
+- [ ] Custom axis stories included when applicable
+
+### Vue Component
+- [ ] Component exists at `apps/storybook/src/components/components/<component-name>/<ComponentName>.vue`
+- [ ] Props typed with union literals matching recipe variant values
+- [ ] Recipe class binding uses `<componentName>({ color, variant, size })`
+- [ ] Grid preview components in `preview/` subdirectory

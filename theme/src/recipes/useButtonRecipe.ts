@@ -220,7 +220,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 				"&:active": {
 					background: `@color.${color}-200`,
 				},
-				dark: {
+				"&:dark": {
 					background: `@color.${color}-800`,
 					color: `@color.${color}-400`,
 					borderColor: `@color.${color}-600`,
