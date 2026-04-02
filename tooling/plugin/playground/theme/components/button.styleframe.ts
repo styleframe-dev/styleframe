@@ -37,8 +37,8 @@ selector(".button", {
 	},
 });
 
-export const buttonRecipe = s.recipe({
-	name: "button",
+export const playgroundButtonRecipe = s.recipe({
+	name: "playground-button",
 	base: {
 		display: "inline-flex",
 		alignItems: "center",

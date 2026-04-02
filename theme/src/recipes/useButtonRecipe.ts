@@ -57,6 +57,9 @@ export const useButtonRecipe = createUseRecipe("button", {
 			info: {},
 			warning: {},
 			danger: {},
+			light: {},
+			dark: {},
+			neutral: {},
 		},
 		variant: {
 			solid: {},
@@ -287,6 +290,430 @@ export const useButtonRecipe = createUseRecipe("button", {
 				},
 			},
 		})),
+
+		// Light color
+		{
+			match: { color: "light" as const, variant: "solid" as const },
+			css: {
+				background: "@color.white",
+				color: "@color.text",
+				borderColor: "@color.gray-200",
+				"&:hover": {
+					background: "@color.gray-100",
+				},
+				"&:focus": {
+					background: "@color.gray-100",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+				"&:dark": {
+					color: "@color.text-inverted",
+					borderColor: "@color.gray-300",
+				},
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "outline" as const },
+			css: {
+				color: "@color.text",
+				borderColor: "@color.gray-300",
+				"&:hover": {
+					background: "@color.gray-100",
+				},
+				"&:focus": {
+					background: "@color.gray-100",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "soft" as const },
+			css: {
+				background: "@color.gray-100",
+				color: "@color.gray-700",
+				"&:hover": {
+					background: "@color.gray-150",
+				},
+				"&:focus": {
+					background: "@color.gray-150",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+				"&:dark": {
+					background: "@color.gray-100",
+					color: "@color.gray-700",
+				},
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "subtle" as const },
+			css: {
+				background: "@color.gray-100",
+				color: "@color.gray-700",
+				borderColor: "@color.gray-300",
+				"&:hover": {
+					background: "@color.gray-150",
+				},
+				"&:focus": {
+					background: "@color.gray-150",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+				"&:dark": {
+					background: "@color.gray-100",
+					color: "@color.gray-700",
+					borderColor: "@color.gray-300",
+				},
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "ghost" as const },
+			css: {
+				color: "@color.gray-700",
+				"&:hover": {
+					background: "@color.gray-100",
+				},
+				"&:focus": {
+					background: "@color.gray-100",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "link" as const },
+			css: {
+				color: "@color.gray-700",
+				"&:hover": {
+					color: "@color.gray-900",
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+				"&:focus": {
+					color: "@color.gray-900",
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+				"&:active": {
+					color: "@color.gray-900",
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+			},
+		},
+
+		// Dark color
+		{
+			match: { color: "dark" as const, variant: "solid" as const },
+			css: {
+				background: "@color.gray-900",
+				color: "@color.white",
+				borderColor: "@color.gray-800",
+				"&:hover": {
+					background: "@color.gray-800",
+				},
+				"&:focus": {
+					background: "@color.gray-800",
+				},
+				"&:active": {
+					background: "@color.gray-750",
+				},
+				"&:dark": {
+					borderColor: "@color.gray-950",
+				},
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "outline" as const },
+			css: {
+				color: "@color.gray-900",
+				borderColor: "@color.gray-900",
+				"&:hover": {
+					background: "@color.gray-800",
+					color: "@color.white",
+				},
+				"&:focus": {
+					background: "@color.gray-800",
+					color: "@color.white",
+				},
+				"&:active": {
+					background: "@color.gray-750",
+					color: "@color.white",
+				},
+				"&:dark": {
+					color: "@color.gray-900",
+				},
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "soft" as const },
+			css: {
+				background: "@color.gray-800",
+				color: "@color.gray-200",
+				"&:hover": {
+					background: "@color.gray-750",
+				},
+				"&:focus": {
+					background: "@color.gray-750",
+				},
+				"&:active": {
+					background: "@color.gray-700",
+				},
+				"&:dark": {
+					background: "@color.gray-800",
+					color: "@color.gray-200",
+				},
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "subtle" as const },
+			css: {
+				background: "@color.gray-800",
+				color: "@color.gray-200",
+				borderColor: "@color.gray-600",
+				"&:hover": {
+					background: "@color.gray-750",
+				},
+				"&:focus": {
+					background: "@color.gray-750",
+				},
+				"&:active": {
+					background: "@color.gray-700",
+				},
+				"&:dark": {
+					background: "@color.gray-800",
+					color: "@color.gray-200",
+					borderColor: "@color.gray-600",
+				},
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "ghost" as const },
+			css: {
+				color: "@color.gray-900",
+				"&:hover": {
+					background: "@color.gray-800",
+					color: "@color.white",
+				},
+				"&:focus": {
+					background: "@color.gray-800",
+					color: "@color.white",
+				},
+				"&:active": {
+					background: "@color.gray-750",
+					color: "@color.white",
+				},
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "link" as const },
+			css: {
+				color: "@color.gray-900",
+				"&:hover": {
+					color: "@color.black",
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+				"&:focus": {
+					color: "@color.black",
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+				"&:active": {
+					color: "@color.black",
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+			},
+		},
+
+		// Neutral color (light in light mode, dark in dark mode)
+		{
+			match: { color: "neutral" as const, variant: "solid" as const },
+			css: {
+				background: "@color.white",
+				color: "@color.text",
+				borderColor: "@color.gray-200",
+				"&:hover": {
+					background: "@color.gray-100",
+				},
+				"&:focus": {
+					background: "@color.gray-100",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+				"&:dark": {
+					background: "@color.gray-900",
+					color: "@color.white",
+					borderColor: "@color.gray-800",
+				},
+				"&:dark:hover": {
+					background: "@color.gray-800",
+				},
+				"&:dark:focus": {
+					background: "@color.gray-800",
+				},
+				"&:dark:active": {
+					background: "@color.gray-750",
+				},
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "outline" as const },
+			css: {
+				color: "@color.text",
+				borderColor: "@color.gray-300",
+				"&:hover": {
+					background: "@color.gray-100",
+				},
+				"&:focus": {
+					background: "@color.gray-100",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+				"&:dark": {
+					color: "@color.gray-200",
+					borderColor: "@color.gray-600",
+				},
+				"&:dark:hover": {
+					background: "@color.gray-800",
+				},
+				"&:dark:focus": {
+					background: "@color.gray-800",
+				},
+				"&:dark:active": {
+					background: "@color.gray-750",
+				},
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "soft" as const },
+			css: {
+				background: "@color.gray-100",
+				color: "@color.gray-700",
+				"&:hover": {
+					background: "@color.gray-150",
+				},
+				"&:focus": {
+					background: "@color.gray-150",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+				"&:dark": {
+					background: "@color.gray-800",
+					color: "@color.gray-300",
+				},
+				"&:dark:hover": {
+					background: "@color.gray-750",
+				},
+				"&:dark:focus": {
+					background: "@color.gray-750",
+				},
+				"&:dark:active": {
+					background: "@color.gray-700",
+				},
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "subtle" as const },
+			css: {
+				background: "@color.gray-100",
+				color: "@color.gray-700",
+				borderColor: "@color.gray-300",
+				"&:hover": {
+					background: "@color.gray-150",
+				},
+				"&:focus": {
+					background: "@color.gray-150",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+				"&:dark": {
+					background: "@color.gray-800",
+					color: "@color.gray-300",
+					borderColor: "@color.gray-600",
+				},
+				"&:dark:hover": {
+					background: "@color.gray-750",
+				},
+				"&:dark:focus": {
+					background: "@color.gray-750",
+				},
+				"&:dark:active": {
+					background: "@color.gray-700",
+				},
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "ghost" as const },
+			css: {
+				color: "@color.text",
+				"&:hover": {
+					background: "@color.gray-100",
+				},
+				"&:focus": {
+					background: "@color.gray-100",
+				},
+				"&:active": {
+					background: "@color.gray-200",
+				},
+				"&:dark": {
+					color: "@color.gray-200",
+				},
+				"&:dark:hover": {
+					background: "@color.gray-800",
+				},
+				"&:dark:focus": {
+					background: "@color.gray-800",
+				},
+				"&:dark:active": {
+					background: "@color.gray-750",
+				},
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "link" as const },
+			css: {
+				color: "@color.text",
+				"&:hover": {
+					color: "@color.gray-900",
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+				"&:focus": {
+					color: "@color.gray-900",
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+				"&:active": {
+					color: "@color.gray-900",
+					textDecoration: "underline",
+					textUnderlineOffset: "4px",
+				},
+				"&:dark": {
+					color: "@color.gray-200",
+				},
+				"&:dark:hover": {
+					color: "@color.white",
+				},
+				"&:dark:focus": {
+					color: "@color.white",
+				},
+				"&:dark:active": {
+					color: "@color.white",
+				},
+			},
+		},
 	],
 	defaultVariants: {
 		color: "primary",

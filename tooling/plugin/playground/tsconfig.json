@@ -9,8 +9,10 @@
 	},
 	"include": [
 		"*.styleframe.ts",
+		"recipes/**/*.styleframe.ts",
 		"styleframe.config.ts",
-		"main.ts",
+		"src/**/*.ts",
+		"src/**/*.vue",
 		".styleframe/**/*.d.ts"
 	],
 	"exclude": ["node_modules", "dist"]

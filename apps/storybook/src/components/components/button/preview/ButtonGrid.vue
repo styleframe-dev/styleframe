@@ -8,6 +8,9 @@ const colors = [
 	"info",
 	"warning",
 	"danger",
+	"light",
+	"dark",
+	"neutral",
 ] as const;
 const variants = [
 	"solid",

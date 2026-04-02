@@ -1,13 +1,15 @@
 import path from "node:path";
 import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
 import Inspect from "vite-plugin-inspect";
 import Styleframe from "../src/vite";
 
 export default defineConfig({
 	plugins: [
 		Inspect(),
+		vue(),
 		Styleframe({
-			content: ["index.html"],
+			content: ["index.html", "src/**/*.vue"],
 			resolve: {
 				alias: {
 					"@styleframe/theme": "../../../theme/src/index.ts",
@@ -20,6 +22,10 @@ export default defineConfig({
 			"@styleframe/theme": path.resolve(
 				__dirname,
 				"../../../theme/src/index.ts",
+			),
+			"@storybook-components": path.resolve(
+				__dirname,
+				"../../../apps/storybook/src/components/components",
 			),
 		},
 	},

@@ -85,8 +85,8 @@ selector(".callout__dismiss", {
 });
 
 // Callout color recipe
-export const calloutRecipe = s.recipe({
-	name: "callout",
+export const playgroundCalloutRecipe = s.recipe({
+	name: "playground-callout",
 	base: {},
 	variants: {
 		color: {
