@@ -48,11 +48,11 @@ export const useCardRecipe = createUseRecipe("card", {
 			css: {
 				background: "@color.white",
 				color: "@color.text",
-				borderColor: "@color.gray-150",
+				borderColor: "@color.gray-200",
 				"&:dark": {
 					background: "@color.white",
 					color: "@color.text-inverted",
-					borderColor: "@color.gray-150",
+					borderColor: "@color.gray-200",
 				},
 			},
 		},
@@ -60,10 +60,10 @@ export const useCardRecipe = createUseRecipe("card", {
 			match: { color: "light" as const, variant: "outline" as const },
 			css: {
 				color: "@color.text-inverted",
-				borderColor: "@color.gray-300",
+				borderColor: "@color.gray-200",
 				"&:dark": {
 					color: "@color.text",
-					borderColor: "@color.gray-300",
+					borderColor: "@color.gray-200",
 				},
 			},
 		},
@@ -97,12 +97,12 @@ export const useCardRecipe = createUseRecipe("card", {
 			match: { color: "dark" as const, variant: "solid" as const },
 			css: {
 				background: "@color.gray-900",
-				color: "@color.white",
-				borderColor: "@color.gray-850",
+				color: "@color.text-inverted",
+				borderColor: "@color.gray-800",
 				"&:dark": {
 					background: "@color.gray-900",
-					color: "@color.white",
-					borderColor: "@color.gray-850",
+					color: "@color.text",
+					borderColor: "@color.gray-800",
 				},
 			},
 		},
@@ -148,11 +148,11 @@ export const useCardRecipe = createUseRecipe("card", {
 			css: {
 				background: "@color.white",
 				color: "@color.text",
-				borderColor: "@color.gray-150",
+				borderColor: "@color.gray-200",
 				"&:dark": {
 					background: "@color.gray-900",
 					color: "@color.white",
-					borderColor: "@color.gray-850",
+					borderColor: "@color.gray-800",
 				},
 			},
 		},
@@ -160,7 +160,7 @@ export const useCardRecipe = createUseRecipe("card", {
 			match: { color: "neutral" as const, variant: "outline" as const },
 			css: {
 				color: "@color.text",
-				borderColor: "@color.gray-300",
+				borderColor: "@color.gray-200",
 				"&:dark": {
 					color: "@color.gray-200",
 					borderColor: "@color.gray-600",
@@ -213,12 +213,20 @@ export const useCardHeaderRecipe = createUseRecipe("card-header", {
 		paddingRight: "@1",
 		borderBottomWidth: "@border-width.thin",
 		borderBottomStyle: "@border-style.solid",
-		borderBottomColor: "@color.gray-200",
-		"&:dark": {
-			borderBottomColor: "@color.gray-700",
-		},
+		borderBottomColor: "transparent",
 	},
 	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
 		size: {
 			sm: {
 				paddingTop: "@0.5",
@@ -243,7 +251,100 @@ export const useCardHeaderRecipe = createUseRecipe("card-header", {
 			},
 		},
 	},
+	compoundVariants: [
+		// Light
+		{
+			match: { color: "light" as const, variant: "solid" as const },
+			css: {
+				borderBottomColor: "@color.gray-200",
+				"&:dark": { borderBottomColor: "@color.gray-200" },
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "outline" as const },
+			css: {
+				borderBottomColor: "@color.gray-200",
+				"&:dark": { borderBottomColor: "@color.gray-200" },
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "soft" as const },
+			css: {
+				borderBottomColor: "transparent",
+				"&:dark": { borderBottomColor: "transparent" },
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "subtle" as const },
+			css: {
+				borderBottomColor: "@color.gray-200",
+				"&:dark": { borderBottomColor: "@color.gray-200" },
+			},
+		},
+
+		// Dark
+		{
+			match: { color: "dark" as const, variant: "solid" as const },
+			css: {
+				borderBottomColor: "@color.gray-800",
+				"&:dark": { borderBottomColor: "@color.gray-800" },
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "outline" as const },
+			css: {
+				borderBottomColor: "@color.gray-800",
+				"&:dark": { borderBottomColor: "@color.gray-800" },
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "soft" as const },
+			css: {
+				borderBottomColor: "transparent",
+				"&:dark": { borderBottomColor: "transparent" },
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "subtle" as const },
+			css: {
+				borderBottomColor: "@color.gray-600",
+				"&:dark": { borderBottomColor: "@color.gray-600" },
+			},
+		},
+
+		// Neutral
+		{
+			match: { color: "neutral" as const, variant: "solid" as const },
+			css: {
+				borderBottomColor: "@color.gray-200",
+				"&:dark": { borderBottomColor: "@color.gray-800" },
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "outline" as const },
+			css: {
+				borderBottomColor: "@color.gray-200",
+				"&:dark": { borderBottomColor: "@color.gray-800" },
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "soft" as const },
+			css: {
+				borderBottomColor: "transparent",
+				"&:dark": { borderBottomColor: "transparent" },
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "subtle" as const },
+			css: {
+				borderBottomColor: "@color.gray-300",
+				"&:dark": { borderBottomColor: "@color.gray-600" },
+			},
+		},
+	],
 	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
 		size: "md",
 	},
 });
@@ -262,6 +363,17 @@ export const useCardBodyRecipe = createUseRecipe("card-body", {
 		paddingRight: "@1",
 	},
 	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
 		size: {
 			sm: {
 				paddingTop: "@0.5",
@@ -287,6 +399,8 @@ export const useCardBodyRecipe = createUseRecipe("card-body", {
 		},
 	},
 	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
 		size: "md",
 	},
 });
@@ -305,12 +419,20 @@ export const useCardFooterRecipe = createUseRecipe("card-footer", {
 		paddingRight: "@1",
 		borderTopWidth: "@border-width.thin",
 		borderTopStyle: "@border-style.solid",
-		borderTopColor: "@color.gray-200",
-		"&:dark": {
-			borderTopColor: "@color.gray-700",
-		},
+		borderTopColor: "transparent",
 	},
 	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
 		size: {
 			sm: {
 				paddingTop: "@0.5",
@@ -335,7 +457,100 @@ export const useCardFooterRecipe = createUseRecipe("card-footer", {
 			},
 		},
 	},
+	compoundVariants: [
+		// Light
+		{
+			match: { color: "light" as const, variant: "solid" as const },
+			css: {
+				borderTopColor: "@color.gray-200",
+				"&:dark": { borderTopColor: "@color.gray-200" },
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "outline" as const },
+			css: {
+				borderTopColor: "@color.gray-300",
+				"&:dark": { borderTopColor: "@color.gray-300" },
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "soft" as const },
+			css: {
+				borderTopColor: "transparent",
+				"&:dark": { borderTopColor: "transparent" },
+			},
+		},
+		{
+			match: { color: "light" as const, variant: "subtle" as const },
+			css: {
+				borderTopColor: "@color.gray-300",
+				"&:dark": { borderTopColor: "@color.gray-300" },
+			},
+		},
+
+		// Dark
+		{
+			match: { color: "dark" as const, variant: "solid" as const },
+			css: {
+				borderTopColor: "@color.gray-800",
+				"&:dark": { borderTopColor: "@color.gray-800" },
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "outline" as const },
+			css: {
+				borderTopColor: "@color.gray-600",
+				"&:dark": { borderTopColor: "@color.gray-600" },
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "soft" as const },
+			css: {
+				borderTopColor: "transparent",
+				"&:dark": { borderTopColor: "transparent" },
+			},
+		},
+		{
+			match: { color: "dark" as const, variant: "subtle" as const },
+			css: {
+				borderTopColor: "@color.gray-600",
+				"&:dark": { borderTopColor: "@color.gray-600" },
+			},
+		},
+
+		// Neutral
+		{
+			match: { color: "neutral" as const, variant: "solid" as const },
+			css: {
+				borderTopColor: "@color.gray-200",
+				"&:dark": { borderTopColor: "@color.gray-800" },
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "outline" as const },
+			css: {
+				borderTopColor: "@color.gray-200",
+				"&:dark": { borderTopColor: "@color.gray-800" },
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "soft" as const },
+			css: {
+				borderTopColor: "@color.gray-200",
+				"&:dark": { borderTopColor: "@color.gray-700" },
+			},
+		},
+		{
+			match: { color: "neutral" as const, variant: "subtle" as const },
+			css: {
+				borderTopColor: "@color.gray-300",
+				"&:dark": { borderTopColor: "@color.gray-600" },
+			},
+		},
+	],
 	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
 		size: "md",
 	},
 });

@@ -144,11 +144,11 @@ describe("useCardRecipe", () => {
 				css: {
 					background: "@color.white",
 					color: "@color.text",
-					borderColor: "@color.gray-150",
+					borderColor: "@color.gray-200",
 					"&:dark": {
 						background: "@color.white",
 						color: "@color.text-inverted",
-						borderColor: "@color.gray-150",
+						borderColor: "@color.gray-200",
 					},
 				},
 			});
@@ -188,11 +188,11 @@ describe("useCardRecipe", () => {
 				css: {
 					background: "@color.gray-900",
 					color: "@color.white",
-					borderColor: "@color.gray-850",
+					borderColor: "@color.gray-800",
 					"&:dark": {
 						background: "@color.gray-900",
 						color: "@color.white",
-						borderColor: "@color.gray-850",
+						borderColor: "@color.gray-800",
 					},
 				},
 			});
@@ -211,11 +211,11 @@ describe("useCardRecipe", () => {
 				css: {
 					background: "@color.white",
 					color: "@color.text",
-					borderColor: "@color.gray-150",
+					borderColor: "@color.gray-200",
 					"&:dark": {
 						background: "@color.gray-900",
 						color: "@color.white",
-						borderColor: "@color.gray-850",
+						borderColor: "@color.gray-800",
 					},
 				},
 			});
@@ -329,10 +329,7 @@ describe("useCardHeaderRecipe", () => {
 			paddingRight: "@1",
 			borderBottomWidth: "@border-width.thin",
 			borderBottomStyle: "@border-style.solid",
-			borderBottomColor: "@color.gray-200",
-			"&:dark": {
-				borderBottomColor: "@color.gray-700",
-			},
+			borderBottomColor: "transparent",
 		});
 	});
 
@@ -370,6 +367,8 @@ describe("useCardHeaderRecipe", () => {
 		const recipe = useCardHeaderRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
+			color: "neutral",
+			variant: "solid",
 			size: "md",
 		});
 	});
@@ -433,6 +432,8 @@ describe("useCardBodyRecipe", () => {
 		const recipe = useCardBodyRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
+			color: "neutral",
+			variant: "solid",
 			size: "md",
 		});
 	});
@@ -461,10 +462,7 @@ describe("useCardFooterRecipe", () => {
 			paddingRight: "@1",
 			borderTopWidth: "@border-width.thin",
 			borderTopStyle: "@border-style.solid",
-			borderTopColor: "@color.gray-200",
-			"&:dark": {
-				borderTopColor: "@color.gray-700",
-			},
+			borderTopColor: "transparent",
 		});
 	});
 
@@ -502,6 +500,8 @@ describe("useCardFooterRecipe", () => {
 		const recipe = useCardFooterRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
+			color: "neutral",
+			variant: "solid",
 			size: "md",
 		});
 	});

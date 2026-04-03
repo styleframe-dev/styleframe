@@ -149,10 +149,10 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 			match: { color: "light" as const, variant: "outline" as const },
 			css: {
 				color: "@color.text-inverted",
-				borderColor: "@color.gray-300",
+				borderColor: "@color.gray-200",
 				"&:dark": {
 					color: "@color.text",
-					borderColor: "@color.gray-300",
+					borderColor: "@color.gray-200",
 				},
 			},
 		},
@@ -186,11 +186,11 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 			match: { color: "dark" as const, variant: "solid" as const },
 			css: {
 				background: "@color.gray-900",
-				color: "@color.white",
+				color: "@color.text-inverted",
 				borderColor: "@color.gray-800",
 				"&:dark": {
 					background: "@color.gray-900",
-					color: "@color.white",
+					color: "@color.text",
 					borderColor: "@color.gray-800",
 				},
 			},
@@ -249,7 +249,7 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 			match: { color: "neutral" as const, variant: "outline" as const },
 			css: {
 				color: "@color.text",
-				borderColor: "@color.gray-300",
+				borderColor: "@color.gray-200",
 				"&:dark": {
 					color: "@color.gray-200",
 					borderColor: "@color.gray-600",

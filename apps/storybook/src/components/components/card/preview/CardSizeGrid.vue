@@ -27,13 +27,13 @@ const sizeTitles: Record<string, string> = {
 					:size="size"
 					style="max-width: 300px"
 				>
-					<CardHeader :size="size">
+					<CardHeader :color="color" :size="size">
 						<CardTitle>{{ sizeTitles[size] }} {{ color.charAt(0).toUpperCase() + color.slice(1) }}</CardTitle>
 					</CardHeader>
 					<CardBody :size="size">
 						<CardDescription>This is a {{ size }} {{ color }} card.</CardDescription>
 					</CardBody>
-					<CardFooter :size="size">
+					<CardFooter :color="color" :size="size">
 						Footer content
 					</CardFooter>
 				</Card>
