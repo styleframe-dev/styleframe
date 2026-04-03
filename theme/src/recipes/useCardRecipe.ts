@@ -469,8 +469,8 @@ export const useCardFooterRecipe = createUseRecipe("card-footer", {
 		{
 			match: { color: "light" as const, variant: "outline" as const },
 			css: {
-				borderTopColor: "@color.gray-300",
-				"&:dark": { borderTopColor: "@color.gray-300" },
+				borderTopColor: "@color.gray-200",
+				"&:dark": { borderTopColor: "@color.gray-200" },
 			},
 		},
 		{

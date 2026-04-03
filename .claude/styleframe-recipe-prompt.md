@@ -1000,9 +1000,9 @@ useDropdownDividerRecipe  - Separator line (minimal — no variant axes)
 **Example: Card** (sectioned container, non-semantic colors only)
 ```
 useCardRecipe             - Main container (color: light/dark/neutral, variant, size)
-useCardHeaderRecipe       - Header section (size only — controls padding + separator border)
-useCardBodyRecipe         - Body section (size only — controls padding)
-useCardFooterRecipe       - Footer section (size only — controls padding + separator border)
+useCardHeaderRecipe       - Header section (color, variant, size — controls padding + separator border color)
+useCardBodyRecipe         - Body section (color, variant, size — controls padding; color/variant for prop forwarding, no compound variants)
+useCardFooterRecipe       - Footer section (color, variant, size — controls padding + separator border color)
 CardTitle                 - Plain selector (.card-title) — fixed typography, no variants
 CardDescription           - Plain selector (.card-description) — fixed typography, no variants
 ```
@@ -1011,9 +1011,10 @@ CardDescription           - Plain selector (.card-description) — fixed typogra
 
 1. All recipes in a single file share the same `colors` array (when semantic colors are used).
 2. Each recipe has its own `base`, `variants`, `compoundVariants`, `defaultVariants`.
-3. Sub-component recipes may have fewer variant axes (e.g., a header might only need a size variant).
-4. Name each recipe with the full sub-component path: `"card-header"`, `"card-footer"`, `"dropdown-item"`.
-5. Export each recipe individually.
+3. Sub-component recipes may have fewer variant axes (e.g., a body might only need a size variant).
+4. Sub-component recipes should include `color` and `variant` axes when their visual styling (e.g., separator border colors) varies by the parent's color/variant combination. Even sub-parts without compound variants may include `color`/`variant` axes to enable prop forwarding from the parent Vue component.
+5. Name each recipe with the full sub-component path: `"card-header"`, `"card-footer"`, `"dropdown-item"`.
+6. Export each recipe individually.
 
 ### Example: Dropdown Multi-Recipe File
 
@@ -1124,7 +1125,7 @@ export const useCardRecipe = createUseRecipe("card", {
 
 /**
  * Card header recipe with bottom separator.
- * Only has a `size` variant — no color/variant axes.
+ * Accepts color/variant to control separator border color per color/variant combination.
  */
 export const useCardHeaderRecipe = createUseRecipe("card-header", {
 	base: {
@@ -1137,12 +1138,20 @@ export const useCardHeaderRecipe = createUseRecipe("card-header", {
 		paddingRight: "@1",
 		borderBottomWidth: "@border-width.thin",
 		borderBottomStyle: "@border-style.solid",
-		borderBottomColor: "@color.gray-200",
-		"&:dark": {
-			borderBottomColor: "@color.gray-700",
-		},
+		borderBottomColor: "transparent",
 	},
 	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
 		size: {
 			sm: {
 				paddingTop: "@0.5",
@@ -1167,13 +1176,35 @@ export const useCardHeaderRecipe = createUseRecipe("card-header", {
 			},
 		},
 	},
+	compoundVariants: [
+		// Light — fixed across themes
+		{ match: { color: "light" as const, variant: "solid" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-200" } } },
+		{ match: { color: "light" as const, variant: "outline" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-200" } } },
+		{ match: { color: "light" as const, variant: "soft" as const }, css: { borderBottomColor: "transparent", "&:dark": { borderBottomColor: "transparent" } } },
+		{ match: { color: "light" as const, variant: "subtle" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-200" } } },
+
+		// Dark — fixed across themes
+		{ match: { color: "dark" as const, variant: "solid" as const }, css: { borderBottomColor: "@color.gray-800", "&:dark": { borderBottomColor: "@color.gray-800" } } },
+		{ match: { color: "dark" as const, variant: "outline" as const }, css: { borderBottomColor: "@color.gray-800", "&:dark": { borderBottomColor: "@color.gray-800" } } },
+		{ match: { color: "dark" as const, variant: "soft" as const }, css: { borderBottomColor: "transparent", "&:dark": { borderBottomColor: "transparent" } } },
+		{ match: { color: "dark" as const, variant: "subtle" as const }, css: { borderBottomColor: "@color.gray-600", "&:dark": { borderBottomColor: "@color.gray-600" } } },
+
+		// Neutral — adaptive (different light/dark values)
+		{ match: { color: "neutral" as const, variant: "solid" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-800" } } },
+		{ match: { color: "neutral" as const, variant: "outline" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-800" } } },
+		{ match: { color: "neutral" as const, variant: "soft" as const }, css: { borderBottomColor: "transparent", "&:dark": { borderBottomColor: "transparent" } } },
+		{ match: { color: "neutral" as const, variant: "subtle" as const }, css: { borderBottomColor: "@color.gray-300", "&:dark": { borderBottomColor: "@color.gray-600" } } },
+	],
 	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
 		size: "md",
 	},
 });
 
 /**
  * Card body recipe for main content area.
+ * Includes color/variant axes for prop forwarding from parent, but no compound variants.
  */
 export const useCardBodyRecipe = createUseRecipe("card-body", {
 	base: {
@@ -1186,6 +1217,17 @@ export const useCardBodyRecipe = createUseRecipe("card-body", {
 		paddingRight: "@1",
 	},
 	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
 		size: {
 			sm: {
 				paddingTop: "@0.5",
@@ -1211,12 +1253,15 @@ export const useCardBodyRecipe = createUseRecipe("card-body", {
 		},
 	},
 	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
 		size: "md",
 	},
 });
 
 /**
  * Card footer recipe with top separator.
+ * Accepts color/variant to control separator border color per color/variant combination.
  */
 export const useCardFooterRecipe = createUseRecipe("card-footer", {
 	base: {
@@ -1229,12 +1274,20 @@ export const useCardFooterRecipe = createUseRecipe("card-footer", {
 		paddingRight: "@1",
 		borderTopWidth: "@border-width.thin",
 		borderTopStyle: "@border-style.solid",
-		borderTopColor: "@color.gray-200",
-		"&:dark": {
-			borderTopColor: "@color.gray-700",
-		},
+		borderTopColor: "transparent",
 	},
 	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
 		size: {
 			sm: {
 				paddingTop: "@0.5",
@@ -1259,7 +1312,28 @@ export const useCardFooterRecipe = createUseRecipe("card-footer", {
 			},
 		},
 	},
+	compoundVariants: [
+		// Light — fixed across themes
+		{ match: { color: "light" as const, variant: "solid" as const }, css: { borderTopColor: "@color.gray-200", "&:dark": { borderTopColor: "@color.gray-200" } } },
+		{ match: { color: "light" as const, variant: "outline" as const }, css: { borderTopColor: "@color.gray-300", "&:dark": { borderTopColor: "@color.gray-300" } } },
+		{ match: { color: "light" as const, variant: "soft" as const }, css: { borderTopColor: "transparent", "&:dark": { borderTopColor: "transparent" } } },
+		{ match: { color: "light" as const, variant: "subtle" as const }, css: { borderTopColor: "@color.gray-300", "&:dark": { borderTopColor: "@color.gray-300" } } },
+
+		// Dark — fixed across themes
+		{ match: { color: "dark" as const, variant: "solid" as const }, css: { borderTopColor: "@color.gray-800", "&:dark": { borderTopColor: "@color.gray-800" } } },
+		{ match: { color: "dark" as const, variant: "outline" as const }, css: { borderTopColor: "@color.gray-600", "&:dark": { borderTopColor: "@color.gray-600" } } },
+		{ match: { color: "dark" as const, variant: "soft" as const }, css: { borderTopColor: "transparent", "&:dark": { borderTopColor: "transparent" } } },
+		{ match: { color: "dark" as const, variant: "subtle" as const }, css: { borderTopColor: "@color.gray-600", "&:dark": { borderTopColor: "@color.gray-600" } } },
+
+		// Neutral — adaptive (different light/dark values)
+		{ match: { color: "neutral" as const, variant: "solid" as const }, css: { borderTopColor: "@color.gray-200", "&:dark": { borderTopColor: "@color.gray-800" } } },
+		{ match: { color: "neutral" as const, variant: "outline" as const }, css: { borderTopColor: "@color.gray-200", "&:dark": { borderTopColor: "@color.gray-800" } } },
+		{ match: { color: "neutral" as const, variant: "soft" as const }, css: { borderTopColor: "@color.gray-200", "&:dark": { borderTopColor: "@color.gray-700" } } },
+		{ match: { color: "neutral" as const, variant: "subtle" as const }, css: { borderTopColor: "@color.gray-300", "&:dark": { borderTopColor: "@color.gray-600" } } },
+	],
 	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
 		size: "md",
 	},
 });
@@ -1530,7 +1604,9 @@ Before considering a recipe complete, verify every item:
 - [ ] Sub-parts needing variant axes (e.g., size-responsive padding) are separate recipes
 - [ ] Sub-parts with fixed styling are plain CSS selectors in the styleframe file
 - [ ] Sub-recipe names use full path: `"card-header"`, `"card-body"`, `"card-footer"`
-- [ ] Header/footer separators use `@color.gray-200` / dark: `@color.gray-700`
+- [ ] Sub-parts whose visual styling varies by color/variant (e.g., separator border colors) include `color` and `variant` axes with compound variants
+- [ ] Sub-parts that need color/variant for prop forwarding (but have no visual variation) include `color`/`variant` axes with empty objects and no compound variants
+- [ ] Header/footer separator compound variants follow light (fixed) / dark (fixed) / neutral (adaptive) pattern
 
 ### Interactive States (interactive components only)
 - [ ] Every compound variant with `"&:hover"` also has matching `"&:focus"` (accessibility)
