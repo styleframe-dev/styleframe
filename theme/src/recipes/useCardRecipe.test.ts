@@ -147,7 +147,7 @@ describe("useCardRecipe", () => {
 					borderColor: "@color.gray-150",
 					"&:dark": {
 						background: "@color.white",
-						color: "@color.text",
+						color: "@color.text-inverted",
 						borderColor: "@color.gray-150",
 					},
 				},
@@ -165,8 +165,12 @@ describe("useCardRecipe", () => {
 			expect(lightOutline).toEqual({
 				match: { color: "light", variant: "outline" },
 				css: {
-					color: "@color.text",
+					color: "@color.text-inverted",
 					borderColor: "@color.gray-300",
+					"&:dark": {
+						color: "@color.text",
+						borderColor: "@color.gray-300",
+					},
 				},
 			});
 		});
