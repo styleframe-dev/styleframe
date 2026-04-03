@@ -166,10 +166,10 @@ describe("useCardRecipe", () => {
 				match: { color: "light", variant: "outline" },
 				css: {
 					color: "@color.text-inverted",
-					borderColor: "@color.gray-300",
+					borderColor: "@color.gray-200",
 					"&:dark": {
 						color: "@color.text",
-						borderColor: "@color.gray-300",
+						borderColor: "@color.gray-200",
 					},
 				},
 			});
@@ -187,11 +187,11 @@ describe("useCardRecipe", () => {
 				match: { color: "dark", variant: "solid" },
 				css: {
 					background: "@color.gray-900",
-					color: "@color.white",
+					color: "@color.text-inverted",
 					borderColor: "@color.gray-800",
 					"&:dark": {
 						background: "@color.gray-900",
-						color: "@color.white",
+						color: "@color.text",
 						borderColor: "@color.gray-800",
 					},
 				},

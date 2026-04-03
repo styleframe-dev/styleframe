@@ -274,11 +274,11 @@ describe("useCalloutRecipe", () => {
 				match: { color: "dark", variant: "solid" },
 				css: {
 					background: "@color.gray-900",
-					color: "@color.white",
+					color: "@color.text-inverted",
 					borderColor: "@color.gray-800",
 					"&:dark": {
 						background: "@color.gray-900",
-						color: "@color.white",
+						color: "@color.text",
 						borderColor: "@color.gray-800",
 					},
 				},
