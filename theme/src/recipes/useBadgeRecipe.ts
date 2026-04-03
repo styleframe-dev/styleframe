@@ -145,7 +145,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			},
 		]),
 
-		// Light color
+		// Light color (neutral light-mode values, fixed across themes)
 		{
 			match: { color: "light" as const, variant: "solid" as const },
 			css: {
@@ -153,16 +153,21 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 				color: "@color.text",
 				borderColor: "@color.gray-200",
 				"&:dark": {
+					background: "@color.white",
 					color: "@color.text-inverted",
-					borderColor: "@color.gray-300",
+					borderColor: "@color.gray-200",
 				},
 			},
 		},
 		{
 			match: { color: "light" as const, variant: "outline" as const },
 			css: {
-				color: "@color.text",
+				color: "@color.text-inverted",
 				borderColor: "@color.gray-300",
+				"&:dark": {
+					color: "@color.text",
+					borderColor: "@color.gray-300",
+				},
 			},
 		},
 		{
@@ -190,7 +195,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			},
 		},
 
-		// Dark color
+		// Dark color (neutral dark-mode values, fixed across themes)
 		{
 			match: { color: "dark" as const, variant: "solid" as const },
 			css: {
@@ -198,17 +203,20 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 				color: "@color.white",
 				borderColor: "@color.gray-800",
 				"&:dark": {
-					borderColor: "@color.gray-950",
+					background: "@color.gray-900",
+					color: "@color.white",
+					borderColor: "@color.gray-800",
 				},
 			},
 		},
 		{
 			match: { color: "dark" as const, variant: "outline" as const },
 			css: {
-				color: "@color.gray-900",
-				borderColor: "@color.gray-900",
+				color: "@color.text",
+				borderColor: "@color.gray-600",
 				"&:dark": {
-					color: "@color.gray-900",
+					color: "@color.text-inverted",
+					borderColor: "@color.gray-600",
 				},
 			},
 		},
@@ -216,10 +224,10 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			match: { color: "dark" as const, variant: "soft" as const },
 			css: {
 				background: "@color.gray-800",
-				color: "@color.gray-200",
+				color: "@color.gray-300",
 				"&:dark": {
 					background: "@color.gray-800",
-					color: "@color.gray-200",
+					color: "@color.gray-300",
 				},
 			},
 		},
@@ -227,11 +235,11 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			match: { color: "dark" as const, variant: "subtle" as const },
 			css: {
 				background: "@color.gray-800",
-				color: "@color.gray-200",
+				color: "@color.gray-300",
 				borderColor: "@color.gray-600",
 				"&:dark": {
 					background: "@color.gray-800",
-					color: "@color.gray-200",
+					color: "@color.gray-300",
 					borderColor: "@color.gray-600",
 				},
 			},

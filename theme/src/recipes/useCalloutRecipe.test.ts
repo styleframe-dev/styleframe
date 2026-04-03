@@ -255,7 +255,7 @@ describe("useCalloutRecipe", () => {
 					borderColor: "@color.gray-200",
 					"&:dark": {
 						background: "@color.white",
-						color: "@color.text",
+						color: "@color.text-inverted",
 						borderColor: "@color.gray-200",
 					},
 				},

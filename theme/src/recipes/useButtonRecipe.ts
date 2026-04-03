@@ -291,7 +291,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 			},
 		})),
 
-		// Light color
+		// Light color (neutral light-mode values, fixed across themes)
 		{
 			match: { color: "light" as const, variant: "solid" as const },
 			css: {
@@ -308,24 +308,41 @@ export const useButtonRecipe = createUseRecipe("button", {
 					background: "@color.gray-200",
 				},
 				"&:dark": {
+					background: "@color.white",
 					color: "@color.text-inverted",
-					borderColor: "@color.gray-300",
+					borderColor: "@color.gray-200",
 				},
 			},
 		},
 		{
 			match: { color: "light" as const, variant: "outline" as const },
 			css: {
-				color: "@color.text",
+				color: "@color.text-inverted",
 				borderColor: "@color.gray-300",
 				"&:hover": {
 					background: "@color.gray-100",
+					color: "@color.text",
 				},
 				"&:focus": {
 					background: "@color.gray-100",
+					color: "@color.text",
 				},
 				"&:active": {
 					background: "@color.gray-200",
+					color: "@color.text",
+				},
+				"&:dark": {
+					color: "@color.text",
+					borderColor: "@color.gray-300",
+				},
+				"&:dark:hover": {
+					color: "@color.text-inverted",
+				},
+				"&:dark:focus": {
+					color: "@color.text-inverted",
+				},
+				"&:dark:active": {
+					color: "@color.text-inverted",
 				},
 			},
 		},
@@ -374,22 +391,37 @@ export const useButtonRecipe = createUseRecipe("button", {
 		{
 			match: { color: "light" as const, variant: "ghost" as const },
 			css: {
-				color: "@color.gray-700",
+				color: "@color.text-inverted",
 				"&:hover": {
 					background: "@color.gray-100",
+					color: "@color.text",
 				},
 				"&:focus": {
 					background: "@color.gray-100",
+					color: "@color.text",
 				},
 				"&:active": {
 					background: "@color.gray-200",
+					color: "@color.text",
+				},
+				"&:dark": {
+					color: "@color.text",
+				},
+				"&:dark:hover": {
+					color: "@color.text-inverted",
+				},
+				"&:dark:focus": {
+					color: "@color.text-inverted",
+				},
+				"&:dark:active": {
+					color: "@color.text-inverted",
 				},
 			},
 		},
 		{
 			match: { color: "light" as const, variant: "link" as const },
 			css: {
-				color: "@color.gray-700",
+				color: "@color.text-inverted",
 				"&:hover": {
 					color: "@color.gray-900",
 					textDecoration: "underline",
@@ -405,10 +437,13 @@ export const useButtonRecipe = createUseRecipe("button", {
 					textDecoration: "underline",
 					textUnderlineOffset: "4px",
 				},
+				"&:dark": {
+					color: "@color.text",
+				},
 			},
 		},
 
-		// Dark color
+		// Dark color (neutral dark-mode values, fixed across themes)
 		{
 			match: { color: "dark" as const, variant: "solid" as const },
 			css: {
@@ -425,29 +460,41 @@ export const useButtonRecipe = createUseRecipe("button", {
 					background: "@color.gray-750",
 				},
 				"&:dark": {
-					borderColor: "@color.gray-950",
+					background: "@color.gray-900",
+					color: "@color.white",
+					borderColor: "@color.gray-800",
 				},
 			},
 		},
 		{
 			match: { color: "dark" as const, variant: "outline" as const },
 			css: {
-				color: "@color.gray-900",
-				borderColor: "@color.gray-900",
+				color: "@color.text",
+				borderColor: "@color.gray-600",
 				"&:hover": {
 					background: "@color.gray-800",
-					color: "@color.white",
+					color: "@color.text-inverted",
 				},
 				"&:focus": {
 					background: "@color.gray-800",
-					color: "@color.white",
+					color: "@color.text-inverted",
 				},
 				"&:active": {
 					background: "@color.gray-750",
-					color: "@color.white",
+					color: "@color.text-inverted",
 				},
 				"&:dark": {
-					color: "@color.gray-900",
+					color: "@color.text-inverted",
+					borderColor: "@color.gray-600",
+				},
+				"&:dark:hover": {
+					color: "@color.text",
+				},
+				"&:dark:focus": {
+					color: "@color.text",
+				},
+				"&:dark:active": {
+					color: "@color.text",
 				},
 			},
 		},
@@ -455,7 +502,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 			match: { color: "dark" as const, variant: "soft" as const },
 			css: {
 				background: "@color.gray-800",
-				color: "@color.gray-200",
+				color: "@color.gray-300",
 				"&:hover": {
 					background: "@color.gray-750",
 				},
@@ -467,7 +514,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 				},
 				"&:dark": {
 					background: "@color.gray-800",
-					color: "@color.gray-200",
+					color: "@color.gray-300",
 				},
 			},
 		},
@@ -475,7 +522,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 			match: { color: "dark" as const, variant: "subtle" as const },
 			css: {
 				background: "@color.gray-800",
-				color: "@color.gray-200",
+				color: "@color.gray-300",
 				borderColor: "@color.gray-600",
 				"&:hover": {
 					background: "@color.gray-750",
@@ -488,7 +535,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 				},
 				"&:dark": {
 					background: "@color.gray-800",
-					color: "@color.gray-200",
+					color: "@color.gray-300",
 					borderColor: "@color.gray-600",
 				},
 			},
@@ -496,39 +543,54 @@ export const useButtonRecipe = createUseRecipe("button", {
 		{
 			match: { color: "dark" as const, variant: "ghost" as const },
 			css: {
-				color: "@color.gray-900",
+				color: "@color.text",
 				"&:hover": {
 					background: "@color.gray-800",
-					color: "@color.white",
+					color: "@color.text-inverted",
 				},
 				"&:focus": {
 					background: "@color.gray-800",
-					color: "@color.white",
+					color: "@color.text-inverted",
 				},
 				"&:active": {
 					background: "@color.gray-750",
-					color: "@color.white",
+					color: "@color.text-inverted",
+				},
+				"&:dark": {
+					color: "@color.text-inverted",
+				},
+				"&:dark:hover": {
+					color: "@color.text",
+				},
+				"&:dark:focus": {
+					color: "@color.text",
+				},
+				"&:dark:active": {
+					color: "@color.text",
 				},
 			},
 		},
 		{
 			match: { color: "dark" as const, variant: "link" as const },
 			css: {
-				color: "@color.gray-900",
+				color: "@color.text",
 				"&:hover": {
-					color: "@color.black",
+					color: "@color.white",
 					textDecoration: "underline",
 					textUnderlineOffset: "4px",
 				},
 				"&:focus": {
-					color: "@color.black",
+					color: "@color.white",
 					textDecoration: "underline",
 					textUnderlineOffset: "4px",
 				},
 				"&:active": {
-					color: "@color.black",
+					color: "@color.white",
 					textDecoration: "underline",
 					textUnderlineOffset: "4px",
+				},
+				"&:dark": {
+					color: "@color.text-inverted",
 				},
 			},
 		},

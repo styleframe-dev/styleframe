@@ -131,7 +131,7 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 			},
 		]),
 
-		// Light color (matches neutral light mode appearance, stays fixed across themes)
+		// Light color (neutral light-mode values, fixed across themes)
 		{
 			match: { color: "light" as const, variant: "solid" as const },
 			css: {
@@ -148,10 +148,11 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 		{
 			match: { color: "light" as const, variant: "outline" as const },
 			css: {
-				color: "@color.text",
+				color: "@color.text-inverted",
 				borderColor: "@color.gray-300",
 				"&:dark": {
-					color: "@color.text-inverted",
+					color: "@color.text",
+					borderColor: "@color.gray-300",
 				},
 			},
 		},
@@ -180,7 +181,7 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 			},
 		},
 
-		// Dark color (matches neutral dark mode appearance, stays fixed across themes)
+		// Dark color (neutral dark-mode values, fixed across themes)
 		{
 			match: { color: "dark" as const, variant: "solid" as const },
 			css: {
@@ -197,10 +198,10 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 		{
 			match: { color: "dark" as const, variant: "outline" as const },
 			css: {
-				color: "@color.gray-200",
+				color: "@color.text",
 				borderColor: "@color.gray-600",
 				"&:dark": {
-					color: "@color.gray-200",
+					color: "@color.text-inverted",
 					borderColor: "@color.gray-600",
 				},
 			},
