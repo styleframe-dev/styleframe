@@ -162,7 +162,7 @@ describe("useButtonGroupRecipe", () => {
 				(cv) => cv.match.orientation !== undefined,
 			);
 			expect(orientationCompounds).toHaveLength(1);
-			expect(orientationCompounds[0].match.orientation).toBe("horizontal");
+			expect(orientationCompounds[0]!.match.orientation).toBe("horizontal");
 		});
 
 		it("should adjust default variants when filtered out", () => {
