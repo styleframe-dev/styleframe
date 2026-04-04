@@ -155,7 +155,15 @@ import {
 	useBorderRadiusTopRightUtility,
 	useBorderRadiusTopUtility,
 	useBorderRadiusUtility,
+	useBorderStyleBottomUtility,
+	useBorderStyleEndUtility,
+	useBorderStyleLeftUtility,
+	useBorderStyleRightUtility,
+	useBorderStyleStartUtility,
+	useBorderStyleTopUtility,
 	useBorderStyleUtility,
+	useBorderStyleXUtility,
+	useBorderStyleYUtility,
 	useBorderWidthBottomUtility,
 	useBorderWidthEndUtility,
 	useBorderWidthLeftUtility,
@@ -1331,6 +1339,70 @@ export function useUtilitiesPreset(
 	);
 	if (borderStyle) createBorderStyleUtility(borderStyle);
 
+	const createBorderStyleXUtility = useBorderStyleXUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-x-style"),
+	);
+	if (borderStyle) createBorderStyleXUtility(borderStyle);
+
+	const createBorderStyleYUtility = useBorderStyleYUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-y-style"),
+	);
+	if (borderStyle) createBorderStyleYUtility(borderStyle);
+
+	const createBorderStyleTopUtility = useBorderStyleTopUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-top-style"),
+	);
+	if (borderStyle) createBorderStyleTopUtility(borderStyle);
+
+	const createBorderStyleRightUtility = useBorderStyleRightUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-right-style"),
+	);
+	if (borderStyle) createBorderStyleRightUtility(borderStyle);
+
+	const createBorderStyleBottomUtility = useBorderStyleBottomUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-bottom-style"),
+	);
+	if (borderStyle) createBorderStyleBottomUtility(borderStyle);
+
+	const createBorderStyleLeftUtility = useBorderStyleLeftUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-left-style"),
+	);
+	if (borderStyle) createBorderStyleLeftUtility(borderStyle);
+
+	const createBorderStyleStartUtility = useBorderStyleStartUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-inline-start-style"),
+	);
+	if (borderStyle) createBorderStyleStartUtility(borderStyle);
+
+	const createBorderStyleEndUtility = useBorderStyleEndUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("border-inline-end-style"),
+	);
+	if (borderStyle) createBorderStyleEndUtility(borderStyle);
+
 	const createBorderWidthUtility = useBorderWidthUtility(
 		s,
 		undefined,
@@ -1760,6 +1832,14 @@ export function useUtilitiesPreset(
 			resolveUtilityOptions("border-radius"),
 		),
 		createBorderStyleUtility,
+		createBorderStyleBottomUtility,
+		createBorderStyleEndUtility,
+		createBorderStyleLeftUtility,
+		createBorderStyleRightUtility,
+		createBorderStyleStartUtility,
+		createBorderStyleTopUtility,
+		createBorderStyleXUtility,
+		createBorderStyleYUtility,
 		createBorderWidthBottomUtility: useBorderWidthBottomUtility(
 			s,
 			undefined,

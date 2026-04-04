@@ -22,6 +22,7 @@ export default defineConfig({
 			},
 			resolve: {
 				alias: {
+					"@/*": path.resolve(dirname, "./src/*"),
 					"@styleframe/theme": "../../theme/src/index.ts",
 				},
 			},
@@ -29,9 +30,13 @@ export default defineConfig({
 		vue(),
 	],
 	resolve: {
-		alias: {
-			"@styleframe/theme": path.resolve(dirname, "../../theme/src/index.ts"),
-		},
+		alias: [
+			{ find: /^@\//, replacement: path.resolve(dirname, "./src") + "/" },
+			{
+				find: "@styleframe/theme",
+				replacement: path.resolve(dirname, "../../theme/src/index.ts"),
+			},
+		],
 	},
 	test: {
 		projects: [

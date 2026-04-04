@@ -1,6 +1,6 @@
 import type { Styleframe } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { useDarkModifier } from "../modifiers/useMediaPreferenceModifiers";
+import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
 import { useCalloutRecipe } from "./useCalloutRecipe";
 
 function createInstance() {
@@ -254,8 +254,9 @@ describe("useCalloutRecipe", () => {
 					color: "@color.text",
 					borderColor: "@color.gray-200",
 					"&:dark": {
+						background: "@color.white",
 						color: "@color.text-inverted",
-						borderColor: "@color.gray-300",
+						borderColor: "@color.gray-200",
 					},
 				},
 			});
@@ -273,10 +274,12 @@ describe("useCalloutRecipe", () => {
 				match: { color: "dark", variant: "solid" },
 				css: {
 					background: "@color.gray-900",
-					color: "@color.white",
+					color: "@color.text-inverted",
 					borderColor: "@color.gray-800",
 					"&:dark": {
-						borderColor: "@color.gray-950",
+						background: "@color.gray-900",
+						color: "@color.text",
+						borderColor: "@color.gray-800",
 					},
 				},
 			});

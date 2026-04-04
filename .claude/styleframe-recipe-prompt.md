@@ -82,7 +82,7 @@ export const use<ComponentName>Recipe = createUseRecipe("<component-name>", {
 - Add `as const` on every `variant` value inside `match` objects: `variant: "solid" as const`.
 - The recipe name (first argument) is **kebab-case** matching the component.
 - The exported constant follows the pattern `use<ComponentName>Recipe`.
-- Use `colors.flatMap()` to generate compound variants dynamically.
+- Use `colors.flatMap()` to generate compound variants dynamically (when semantic colors are used). For non-semantic-only components, write all compound variants manually.
 
 ---
 
@@ -181,6 +181,7 @@ Note: `flexDirection` is omitted from the base when using an `orientation` varia
 - **Non-interactive components**: Remove `cursor`, `"&:focus-visible"`, `"&:disabled"`, transition properties, `userSelect`, `outline`.
 - **Block-level components** (card, alert): Use `display: "flex"` instead of `"inline-flex"`.
 - **Components without borders**: Remove `borderWidth`, `borderStyle`, `borderColor`.
+- **Sectioned containers** (card, dialog): When the component has distinct sub-parts (header/body/footer) that each have their own padding, **omit padding from the main container base**. Add `overflow: "hidden"` so child content is clipped by the container's `borderRadius`. Add `boxShadow: "@box-shadow.sm"` for elevation when the component is a surface/card. Add `flexDirection: "column"` directly in the base (no orientation variant).
 - Adjust default padding/fontSize/lineHeight to fit the component's purpose.
 
 ---
@@ -261,6 +262,8 @@ color: {
 
 Some components need colors beyond the 6 semantic ones. These are added directly to the `color` variant object (not the `colors` array) and get **manually written** compound variants since they don't follow the `@color.${color}` token pattern.
 
+**Non-semantic-only components**: Some components (e.g., card, surface, modal) only use non-semantic colors (`light`, `dark`, `neutral`) and have NO semantic colors at all. In this case, omit the `colors` array entirely and write all compound variants manually — no `colors.flatMap()` is needed.
+
 | Color | Behavior | Light Mode | Dark Mode |
 |-------|----------|------------|-----------|
 | `light` | Always light, ignores dark mode | White/gray bg, dark text | Same as light mode |
@@ -291,16 +294,17 @@ compoundVariants: [
 		// ...
 	]),
 
-	// Light color (manual — always light, dark mode override keeps light appearance)
+	// Light color (matches neutral light mode, stays fixed across themes)
 	{
 		match: { color: "light" as const, variant: "solid" as const },
 		css: {
 			background: "@color.white",
 			color: "@color.text",
-			borderColor: "@color.gray-200",
+			borderColor: "@color.gray-150",
 			"&:dark": {
-				color: "@color.text-inverted",
-				borderColor: "@color.gray-300",
+				background: "@color.white",
+				color: "@color.text",
+				borderColor: "@color.gray-150",
 			},
 		},
 	},
@@ -336,25 +340,28 @@ compoundVariants: [
 		},
 	},
 
-	// Dark color (manual — always dark, dark mode override keeps dark appearance)
+	// Dark color (matches neutral dark mode, stays fixed across themes)
 	{
 		match: { color: "dark" as const, variant: "solid" as const },
 		css: {
 			background: "@color.gray-900",
 			color: "@color.white",
-			borderColor: "@color.gray-800",
+			borderColor: "@color.gray-850",
 			"&:dark": {
-				borderColor: "@color.gray-950",
+				background: "@color.gray-900",
+				color: "@color.white",
+				borderColor: "@color.gray-850",
 			},
 		},
 	},
 	{
 		match: { color: "dark" as const, variant: "outline" as const },
 		css: {
-			color: "@color.gray-900",
-			borderColor: "@color.gray-900",
+			color: "@color.gray-200",
+			borderColor: "@color.gray-600",
 			"&:dark": {
-				color: "@color.gray-900",
+				color: "@color.gray-200",
+				borderColor: "@color.gray-600",
 			},
 		},
 	},
@@ -362,10 +369,10 @@ compoundVariants: [
 		match: { color: "dark" as const, variant: "soft" as const },
 		css: {
 			background: "@color.gray-800",
-			color: "@color.gray-200",
+			color: "@color.gray-300",
 			"&:dark": {
 				background: "@color.gray-800",
-				color: "@color.gray-200",
+				color: "@color.gray-300",
 			},
 		},
 	},
@@ -373,11 +380,11 @@ compoundVariants: [
 		match: { color: "dark" as const, variant: "subtle" as const },
 		css: {
 			background: "@color.gray-800",
-			color: "@color.gray-200",
+			color: "@color.gray-300",
 			borderColor: "@color.gray-600",
 			"&:dark": {
 				background: "@color.gray-800",
-				color: "@color.gray-200",
+				color: "@color.gray-300",
 				borderColor: "@color.gray-600",
 			},
 		},
@@ -389,11 +396,11 @@ compoundVariants: [
 		css: {
 			background: "@color.white",
 			color: "@color.text",
-			borderColor: "@color.gray-200",
+			borderColor: "@color.gray-150",
 			"&:dark": {
 				background: "@color.gray-900",
 				color: "@color.white",
-				borderColor: "@color.gray-800",
+				borderColor: "@color.gray-850",
 			},
 		},
 	},
@@ -436,9 +443,11 @@ compoundVariants: [
 ```
 
 **Key patterns:**
-- `light` and `dark` repeat the same values in `"&:dark"` to override theme switching — they stay fixed.
-- `neutral` has genuinely different values in `"&:dark"` — it adapts to the theme.
+- **`light`** = neutral's light-mode appearance, frozen. Repeats ALL light-mode values in `"&:dark"` so dark mode cannot change them.
+- **`dark`** = neutral's dark-mode appearance, frozen. Repeats ALL dark-mode values in both light and `"&:dark"`.
+- **`neutral`** = adaptive. Light-mode values in the base CSS, genuinely different dark-mode values in `"&:dark"`.
 - All non-semantic colors use gray tokens (`@color.gray-*`, `@color.white`, `@color.text`).
+- Solid border colors use **subtle shades/tints** of the background (matching the semantic `shade-50`/`tint-50` pattern): `gray-150` for light backgrounds, `gray-850` for dark backgrounds.
 
 ---
 
@@ -973,22 +982,41 @@ compoundVariants: colors.flatMap((color) => [
 
 Complex components may require multiple recipes. Each is a separate `createUseRecipe` call in the same file.
 
-**Example: Dropdown**
+### When to Use a Recipe vs a Plain Selector
+
+- **Use a recipe** when a sub-part needs **variant axes** (e.g., size-responsive padding, color variants). Examples: card header/body/footer (need `size`), dropdown item (needs `color` + `variant`).
+- **Use a plain CSS selector** (in the styleframe file) when a sub-part has **fixed styling with no variants**. Examples: card title/description (just typography), dropdown divider (just a border line).
+- **Use a plain Vue wrapper** (no recipe, no selector) when a sub-part is purely structural with minimal/no styling. Examples: callout content wrapper.
+
+### Examples
+
+**Example: Dropdown** (interactive sub-items)
 ```
-useDropdownRecipe         - Container/popover wrapper
-useDropdownItemRecipe     - Individual menu items (interactive, with hover/focus)
-useDropdownDividerRecipe  - Separator line (minimal, may not need color/variant)
+useDropdownRecipe         - Container/popover wrapper (color, variant, size)
+useDropdownItemRecipe     - Individual menu items (color, variant, size — interactive states)
+useDropdownDividerRecipe  - Separator line (minimal — no variant axes)
+```
+
+**Example: Card** (sectioned container, non-semantic colors only)
+```
+useCardRecipe             - Main container (color: light/dark/neutral, variant, size)
+useCardHeaderRecipe       - Header section (color, variant, size — controls padding + separator border color)
+useCardBodyRecipe         - Body section (color, variant, size — controls padding; color/variant for prop forwarding, no compound variants)
+useCardFooterRecipe       - Footer section (color, variant, size — controls padding + separator border color)
+CardTitle                 - Plain selector (.card-title) — fixed typography, no variants
+CardDescription           - Plain selector (.card-description) — fixed typography, no variants
 ```
 
 ### Rules
 
-1. All recipes in a single file share the same `colors` array.
+1. All recipes in a single file share the same `colors` array (when semantic colors are used).
 2. Each recipe has its own `base`, `variants`, `compoundVariants`, `defaultVariants`.
-3. Sub-component recipes may have fewer variant axes (e.g., a divider might only need a size variant).
-4. Name each recipe with the full sub-component path: `"dropdown-item"`, `"dropdown-divider"`.
-5. Export each recipe individually.
+3. Sub-component recipes may have fewer variant axes (e.g., a body might only need a size variant).
+4. Sub-component recipes should include `color` and `variant` axes when their visual styling (e.g., separator border colors) varies by the parent's color/variant combination. Even sub-parts without compound variants may include `color`/`variant` axes to enable prop forwarding from the parent Vue component.
+5. Name each recipe with the full sub-component path: `"card-header"`, `"card-footer"`, `"dropdown-item"`.
+6. Export each recipe individually.
 
-### Example Multi-Recipe File
+### Example: Dropdown Multi-Recipe File
 
 ```ts
 import { createUseRecipe } from "../utils/createUseRecipe";
@@ -1038,6 +1066,276 @@ export const useDropdownDividerRecipe = createUseRecipe("dropdown-divider", {
 	},
 	variants: {},
 	defaultVariants: {},
+});
+```
+
+### Example: Card Multi-Recipe File (Non-Semantic Colors Only)
+
+```ts
+import { createUseRecipe } from "../utils/createUseRecipe";
+
+// No `colors` array — card only uses non-semantic colors (light, dark, neutral).
+// All compound variants are written manually.
+
+/**
+ * Card container recipe.
+ */
+export const useCardRecipe = createUseRecipe("card", {
+	base: {
+		display: "flex",
+		flexDirection: "column",
+		flexBasis: "100%",
+		borderWidth: "@border-width.thin",
+		borderStyle: "@border-style.solid",
+		borderColor: "transparent",
+		borderRadius: "@border-radius.md",
+		overflow: "hidden",
+		lineHeight: "@line-height.normal",
+		boxShadow: "@box-shadow.sm",
+	},
+	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
+		size: {
+			sm: { borderRadius: "@border-radius.sm" },
+			md: { borderRadius: "@border-radius.md" },
+			lg: { borderRadius: "@border-radius.lg" },
+		},
+	},
+	compoundVariants: [
+		// All 12 compound variants (3 colors × 4 variants) written manually.
+		// Follow the non-semantic color patterns from the Non-Semantic Colors section.
+		// ...
+	],
+	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
+		size: "md",
+	},
+});
+
+/**
+ * Card header recipe with bottom separator.
+ * Accepts color/variant to control separator border color per color/variant combination.
+ */
+export const useCardHeaderRecipe = createUseRecipe("card-header", {
+	base: {
+		display: "flex",
+		alignItems: "center",
+		gap: "@0.75",
+		paddingTop: "@0.75",
+		paddingBottom: "@0.75",
+		paddingLeft: "@1",
+		paddingRight: "@1",
+		borderBottomWidth: "@border-width.thin",
+		borderBottomStyle: "@border-style.solid",
+		borderBottomColor: "transparent",
+	},
+	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
+		size: {
+			sm: {
+				paddingTop: "@0.5",
+				paddingBottom: "@0.5",
+				paddingLeft: "@0.75",
+				paddingRight: "@0.75",
+				gap: "@0.5",
+			},
+			md: {
+				paddingTop: "@0.75",
+				paddingBottom: "@0.75",
+				paddingLeft: "@1",
+				paddingRight: "@1",
+				gap: "@0.75",
+			},
+			lg: {
+				paddingTop: "@1",
+				paddingBottom: "@1",
+				paddingLeft: "@1.25",
+				paddingRight: "@1.25",
+				gap: "@1",
+			},
+		},
+	},
+	compoundVariants: [
+		// Light — fixed across themes
+		{ match: { color: "light" as const, variant: "solid" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-200" } } },
+		{ match: { color: "light" as const, variant: "outline" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-200" } } },
+		{ match: { color: "light" as const, variant: "soft" as const }, css: { borderBottomColor: "transparent", "&:dark": { borderBottomColor: "transparent" } } },
+		{ match: { color: "light" as const, variant: "subtle" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-200" } } },
+
+		// Dark — fixed across themes
+		{ match: { color: "dark" as const, variant: "solid" as const }, css: { borderBottomColor: "@color.gray-800", "&:dark": { borderBottomColor: "@color.gray-800" } } },
+		{ match: { color: "dark" as const, variant: "outline" as const }, css: { borderBottomColor: "@color.gray-800", "&:dark": { borderBottomColor: "@color.gray-800" } } },
+		{ match: { color: "dark" as const, variant: "soft" as const }, css: { borderBottomColor: "transparent", "&:dark": { borderBottomColor: "transparent" } } },
+		{ match: { color: "dark" as const, variant: "subtle" as const }, css: { borderBottomColor: "@color.gray-600", "&:dark": { borderBottomColor: "@color.gray-600" } } },
+
+		// Neutral — adaptive (different light/dark values)
+		{ match: { color: "neutral" as const, variant: "solid" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-800" } } },
+		{ match: { color: "neutral" as const, variant: "outline" as const }, css: { borderBottomColor: "@color.gray-200", "&:dark": { borderBottomColor: "@color.gray-800" } } },
+		{ match: { color: "neutral" as const, variant: "soft" as const }, css: { borderBottomColor: "transparent", "&:dark": { borderBottomColor: "transparent" } } },
+		{ match: { color: "neutral" as const, variant: "subtle" as const }, css: { borderBottomColor: "@color.gray-300", "&:dark": { borderBottomColor: "@color.gray-600" } } },
+	],
+	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
+		size: "md",
+	},
+});
+
+/**
+ * Card body recipe for main content area.
+ * Includes color/variant axes for prop forwarding from parent, but no compound variants.
+ */
+export const useCardBodyRecipe = createUseRecipe("card-body", {
+	base: {
+		display: "flex",
+		flexDirection: "column",
+		gap: "@0.5",
+		paddingTop: "@0.75",
+		paddingBottom: "@0.75",
+		paddingLeft: "@1",
+		paddingRight: "@1",
+	},
+	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
+		size: {
+			sm: {
+				paddingTop: "@0.5",
+				paddingBottom: "@0.5",
+				paddingLeft: "@0.75",
+				paddingRight: "@0.75",
+				gap: "@0.375",
+			},
+			md: {
+				paddingTop: "@0.75",
+				paddingBottom: "@0.75",
+				paddingLeft: "@1",
+				paddingRight: "@1",
+				gap: "@0.5",
+			},
+			lg: {
+				paddingTop: "@1",
+				paddingBottom: "@1",
+				paddingLeft: "@1.25",
+				paddingRight: "@1.25",
+				gap: "@0.75",
+			},
+		},
+	},
+	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
+		size: "md",
+	},
+});
+
+/**
+ * Card footer recipe with top separator.
+ * Accepts color/variant to control separator border color per color/variant combination.
+ */
+export const useCardFooterRecipe = createUseRecipe("card-footer", {
+	base: {
+		display: "flex",
+		alignItems: "center",
+		gap: "@0.75",
+		paddingTop: "@0.75",
+		paddingBottom: "@0.75",
+		paddingLeft: "@1",
+		paddingRight: "@1",
+		borderTopWidth: "@border-width.thin",
+		borderTopStyle: "@border-style.solid",
+		borderTopColor: "transparent",
+	},
+	variants: {
+		color: {
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		variant: {
+			solid: {},
+			outline: {},
+			soft: {},
+			subtle: {},
+		},
+		size: {
+			sm: {
+				paddingTop: "@0.5",
+				paddingBottom: "@0.5",
+				paddingLeft: "@0.75",
+				paddingRight: "@0.75",
+				gap: "@0.5",
+			},
+			md: {
+				paddingTop: "@0.75",
+				paddingBottom: "@0.75",
+				paddingLeft: "@1",
+				paddingRight: "@1",
+				gap: "@0.75",
+			},
+			lg: {
+				paddingTop: "@1",
+				paddingBottom: "@1",
+				paddingLeft: "@1.25",
+				paddingRight: "@1.25",
+				gap: "@1",
+			},
+		},
+	},
+	compoundVariants: [
+		// Light — fixed across themes
+		{ match: { color: "light" as const, variant: "solid" as const }, css: { borderTopColor: "@color.gray-200", "&:dark": { borderTopColor: "@color.gray-200" } } },
+		{ match: { color: "light" as const, variant: "outline" as const }, css: { borderTopColor: "@color.gray-300", "&:dark": { borderTopColor: "@color.gray-300" } } },
+		{ match: { color: "light" as const, variant: "soft" as const }, css: { borderTopColor: "transparent", "&:dark": { borderTopColor: "transparent" } } },
+		{ match: { color: "light" as const, variant: "subtle" as const }, css: { borderTopColor: "@color.gray-300", "&:dark": { borderTopColor: "@color.gray-300" } } },
+
+		// Dark — fixed across themes
+		{ match: { color: "dark" as const, variant: "solid" as const }, css: { borderTopColor: "@color.gray-800", "&:dark": { borderTopColor: "@color.gray-800" } } },
+		{ match: { color: "dark" as const, variant: "outline" as const }, css: { borderTopColor: "@color.gray-600", "&:dark": { borderTopColor: "@color.gray-600" } } },
+		{ match: { color: "dark" as const, variant: "soft" as const }, css: { borderTopColor: "transparent", "&:dark": { borderTopColor: "transparent" } } },
+		{ match: { color: "dark" as const, variant: "subtle" as const }, css: { borderTopColor: "@color.gray-600", "&:dark": { borderTopColor: "@color.gray-600" } } },
+
+		// Neutral — adaptive (different light/dark values)
+		{ match: { color: "neutral" as const, variant: "solid" as const }, css: { borderTopColor: "@color.gray-200", "&:dark": { borderTopColor: "@color.gray-800" } } },
+		{ match: { color: "neutral" as const, variant: "outline" as const }, css: { borderTopColor: "@color.gray-200", "&:dark": { borderTopColor: "@color.gray-800" } } },
+		{ match: { color: "neutral" as const, variant: "soft" as const }, css: { borderTopColor: "@color.gray-200", "&:dark": { borderTopColor: "@color.gray-700" } } },
+		{ match: { color: "neutral" as const, variant: "subtle" as const }, css: { borderTopColor: "@color.gray-300", "&:dark": { borderTopColor: "@color.gray-600" } } },
+	],
+	defaultVariants: {
+		color: "neutral",
+		variant: "solid",
+		size: "md",
+	},
 });
 ```
 
@@ -1268,16 +1566,17 @@ Before considering a recipe complete, verify every item:
 
 ### Structure
 - [ ] File imports `createUseRecipe` from `"../utils/createUseRecipe"`
-- [ ] `colors` array contains exactly: `"primary"`, `"secondary"`, `"success"`, `"info"`, `"warning"`, `"danger"`
-- [ ] `colors` array has `as const` assertion
+- [ ] `colors` array contains exactly: `"primary"`, `"secondary"`, `"success"`, `"info"`, `"warning"`, `"danger"` (omit entirely for non-semantic-only components)
+- [ ] `colors` array has `as const` assertion (when present)
 - [ ] Recipe is exported as `export const use<ComponentName>Recipe`
 - [ ] Recipe name (first arg) is kebab-case matching the component
 - [ ] File uses tabs for indentation
 - [ ] File uses double quotes for strings
 - [ ] Container component base includes `flexBasis: "100%"`
+- [ ] Sectioned containers (card-like) include `overflow: "hidden"` and omit padding from the main base
 
 ### Variants
-- [ ] `color` variant has empty objects `{}` for all 6 semantic colors + any non-semantic colors (light, dark, neutral)
+- [ ] `color` variant has empty objects `{}` for all colors (semantic, non-semantic, or non-semantic-only)
 - [ ] `variant` has appropriate styles for the component type
 - [ ] `size` has appropriate sizes for the component (3-5 sizes; containers may use sm/md/lg only)
 - [ ] `defaultVariants` specifies color, variant, size, and any custom variant axes
@@ -1291,14 +1590,23 @@ Before considering a recipe complete, verify every item:
 ### Compound Variants
 - [ ] Every `match` object has `as const` on the variant style value
 - [ ] Every color x variant-style combination has a compound variant entry
-- [ ] `colors.flatMap()` is used to generate compound variants for semantic colors
-- [ ] Compound variants use template literals: `` `@color.${color}` ``
+- [ ] `colors.flatMap()` is used to generate compound variants for semantic colors (skip for non-semantic-only components)
+- [ ] Compound variants use template literals: `` `@color.${color}` `` (for semantic colors)
 
 ### Non-Semantic Colors (when applicable)
 - [ ] `light`, `dark`, `neutral` have manually written compound variants (not in `colors.flatMap()`)
 - [ ] Non-semantic colors use gray tokens (`@color.gray-*`, `@color.white`, `@color.text`)
 - [ ] `light` and `dark` repeat same values in `"&:dark"` to stay fixed across themes
 - [ ] `neutral` has genuinely different `"&:dark"` values (adaptive)
+- [ ] Solid border colors use subtle shades/tints: `gray-150` (light bg), `gray-950`/`gray-850` (dark bg)
+
+### Multi-Recipe Sub-Parts (when applicable)
+- [ ] Sub-parts needing variant axes (e.g., size-responsive padding) are separate recipes
+- [ ] Sub-parts with fixed styling are plain CSS selectors in the styleframe file
+- [ ] Sub-recipe names use full path: `"card-header"`, `"card-body"`, `"card-footer"`
+- [ ] Sub-parts whose visual styling varies by color/variant (e.g., separator border colors) include `color` and `variant` axes with compound variants
+- [ ] Sub-parts that need color/variant for prop forwarding (but have no visual variation) include `color`/`variant` axes with empty objects and no compound variants
+- [ ] Header/footer separator compound variants follow light (fixed) / dark (fixed) / neutral (adaptive) pattern
 
 ### Interactive States (interactive components only)
 - [ ] Every compound variant with `"&:hover"` also has matching `"&:focus"` (accessibility)

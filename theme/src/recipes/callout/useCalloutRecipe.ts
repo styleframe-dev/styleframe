@@ -1,6 +1,6 @@
-import { createUseRecipe } from "../utils/createUseRecipe";
+import { createUseRecipe } from "../../utils/createUseRecipe";
 
-export const colors = [
+const colors = [
 	"primary",
 	"secondary",
 	"success",
@@ -9,26 +9,26 @@ export const colors = [
 	"danger",
 ] as const;
 
-export const variants = ["solid", "outline", "soft", "subtle"] as const;
-
 /**
- * Full badge recipe with color, variant, and size variants.
- * Includes all Nuxt UI-inspired styling options.
+ * Callout recipe for contextual feedback messages.
+ * Supports color, variant, size, and orientation axes.
  */
-export const useBadgeRecipe = createUseRecipe("badge", {
+export const useCalloutRecipe = createUseRecipe("callout", {
 	base: {
-		display: "inline-flex",
+		display: "flex",
+		flexBasis: "100%",
+		alignItems: "flex-start",
 		borderWidth: "@border-width.thin",
 		borderStyle: "@border-style.solid",
 		borderColor: "transparent",
-		alignItems: "center",
 		fontWeight: "@font-weight.medium",
 		fontSize: "@font-size.sm",
-		lineHeight: "1",
-		paddingTop: "@0.25",
-		paddingBottom: "@0.25",
-		paddingLeft: "@0.375",
-		paddingRight: "@0.375",
+		lineHeight: "@line-height.normal",
+		paddingTop: "@0.75",
+		paddingBottom: "@0.75",
+		paddingLeft: "@1",
+		paddingRight: "@1",
+		gap: "@0.75",
 		borderRadius: "@border-radius.md",
 	},
 	variants: {
@@ -50,56 +50,42 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			subtle: {},
 		},
 		size: {
-			xs: {
-				fontSize: "@font-size.2xs",
-				lineHeight: "@line-height.normal",
-				paddingTop: "@0.125",
-				paddingBottom: "@0.125",
-				paddingLeft: "@0.25",
-				paddingRight: "@0.25",
-				gap: "@0.125",
-				borderRadius: "@border-radius.sm",
-			},
 			sm: {
 				fontSize: "@font-size.xs",
-				lineHeight: "@line-height.tight",
-				paddingTop: "@0.25",
-				paddingBottom: "@0.25",
-				paddingLeft: "@0.375",
-				paddingRight: "@0.375",
-				gap: "@0.25",
-				borderRadius: "@border-radius.md",
+				paddingTop: "@0.5",
+				paddingBottom: "@0.5",
+				paddingLeft: "@0.75",
+				paddingRight: "@0.75",
+				gap: "@0.5",
 			},
 			md: {
 				fontSize: "@font-size.sm",
-				paddingTop: "@0.375",
-				paddingBottom: "@0.375",
-				paddingLeft: "@0.5",
-				paddingRight: "@0.5",
-				gap: "@0.375",
-				borderRadius: "@border-radius.md",
+				paddingTop: "@0.75",
+				paddingBottom: "@0.75",
+				paddingLeft: "@1",
+				paddingRight: "@1",
+				gap: "@0.75",
 			},
 			lg: {
 				fontSize: "@font-size.md",
-				paddingTop: "@0.5",
-				paddingBottom: "@0.5",
-				paddingLeft: "@0.625",
-				paddingRight: "@0.625",
-				gap: "@0.5",
-				borderRadius: "@border-radius.md",
+				paddingTop: "@1",
+				paddingBottom: "@1",
+				paddingLeft: "@1.25",
+				paddingRight: "@1.25",
+				gap: "@1",
 			},
-			xl: {
-				fontSize: "@font-size.lg",
-				paddingTop: "@0.625",
-				paddingBottom: "@0.625",
-				paddingLeft: "@0.75",
-				paddingRight: "@0.75",
-				gap: "@0.625",
-				borderRadius: "@border-radius.lg",
+		},
+		orientation: {
+			horizontal: {
+				flexDirection: "row",
+			},
+			vertical: {
+				flexDirection: "column",
 			},
 		},
 	},
 	compoundVariants: [
+		// Standard colors
 		...colors.flatMap((color) => [
 			{
 				match: { color, variant: "solid" as const },
@@ -145,7 +131,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			},
 		]),
 
-		// Light color
+		// Light color (neutral light-mode values, fixed across themes)
 		{
 			match: { color: "light" as const, variant: "solid" as const },
 			css: {
@@ -153,16 +139,21 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 				color: "@color.text",
 				borderColor: "@color.gray-200",
 				"&:dark": {
+					background: "@color.white",
 					color: "@color.text-inverted",
-					borderColor: "@color.gray-300",
+					borderColor: "@color.gray-200",
 				},
 			},
 		},
 		{
 			match: { color: "light" as const, variant: "outline" as const },
 			css: {
-				color: "@color.text",
-				borderColor: "@color.gray-300",
+				color: "@color.text-inverted",
+				borderColor: "@color.gray-200",
+				"&:dark": {
+					color: "@color.text",
+					borderColor: "@color.gray-200",
+				},
 			},
 		},
 		{
@@ -190,25 +181,28 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			},
 		},
 
-		// Dark color
+		// Dark color (neutral dark-mode values, fixed across themes)
 		{
 			match: { color: "dark" as const, variant: "solid" as const },
 			css: {
 				background: "@color.gray-900",
-				color: "@color.white",
+				color: "@color.text-inverted",
 				borderColor: "@color.gray-800",
 				"&:dark": {
-					borderColor: "@color.gray-950",
+					background: "@color.gray-900",
+					color: "@color.text",
+					borderColor: "@color.gray-800",
 				},
 			},
 		},
 		{
 			match: { color: "dark" as const, variant: "outline" as const },
 			css: {
-				color: "@color.gray-900",
-				borderColor: "@color.gray-900",
+				color: "@color.text",
+				borderColor: "@color.gray-600",
 				"&:dark": {
-					color: "@color.gray-900",
+					color: "@color.text-inverted",
+					borderColor: "@color.gray-600",
 				},
 			},
 		},
@@ -216,10 +210,10 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			match: { color: "dark" as const, variant: "soft" as const },
 			css: {
 				background: "@color.gray-800",
-				color: "@color.gray-200",
+				color: "@color.gray-300",
 				"&:dark": {
 					background: "@color.gray-800",
-					color: "@color.gray-200",
+					color: "@color.gray-300",
 				},
 			},
 		},
@@ -227,11 +221,11 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			match: { color: "dark" as const, variant: "subtle" as const },
 			css: {
 				background: "@color.gray-800",
-				color: "@color.gray-200",
+				color: "@color.gray-300",
 				borderColor: "@color.gray-600",
 				"&:dark": {
 					background: "@color.gray-800",
-					color: "@color.gray-200",
+					color: "@color.gray-300",
 					borderColor: "@color.gray-600",
 				},
 			},
@@ -255,7 +249,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			match: { color: "neutral" as const, variant: "outline" as const },
 			css: {
 				color: "@color.text",
-				borderColor: "@color.gray-300",
+				borderColor: "@color.gray-200",
 				"&:dark": {
 					color: "@color.gray-200",
 					borderColor: "@color.gray-600",
@@ -289,7 +283,8 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 	],
 	defaultVariants: {
 		color: "neutral",
-		variant: "solid",
-		size: "sm",
+		variant: "subtle",
+		size: "md",
+		orientation: "horizontal",
 	},
 });
