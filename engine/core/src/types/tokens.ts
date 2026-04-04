@@ -133,6 +133,7 @@ export type RecipeRuntime<Variants extends VariantsBase = VariantsBase> = {
 			[K in keyof Variants]?: keyof Variants[K] & string;
 		};
 		css?: RuntimeVariantDeclarationsBlock;
+		className?: string;
 	}>;
 };
 
@@ -151,7 +152,8 @@ export type Recipe<
 		match: {
 			[K in keyof Variants]?: keyof Variants[K] & string;
 		};
-		css: VariantDeclarationsBlock;
+		css?: VariantDeclarationsBlock;
+		className?: string;
 	}>;
 	_runtime?: RecipeRuntime<Variants>;
 	_exportName?: string;

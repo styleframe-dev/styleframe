@@ -304,7 +304,10 @@ export function generateRecipeRuntime<
 	if (recipe.compoundVariants) {
 		runtime.compoundVariants = recipe.compoundVariants.map((compound) => ({
 			match: { ...compound.match },
-			css: transformDeclarationsToRuntime(compound.css, root),
+			...(compound.css
+				? { css: transformDeclarationsToRuntime(compound.css, root) }
+				: {}),
+			...(compound.className ? { className: compound.className } : {}),
 		}));
 	}
 

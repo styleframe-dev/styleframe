@@ -535,4 +535,87 @@ describe("createRecipe", () => {
 		// Should only have base padding since variant is undefined
 		expect(result).toBe("element _padding:default");
 	});
+
+	it("should append className from matching compound variant", () => {
+		const runtime = {
+			variants: {
+				disabled: {
+					true: {},
+					false: {},
+				},
+			},
+			defaultVariants: {
+				disabled: "true",
+			},
+			compoundVariants: [
+				{
+					match: { disabled: "true" },
+					className: "button--disabled",
+				},
+			],
+		} as const satisfies RecipeRuntime;
+
+		const button = createRecipe("button", runtime);
+		const result = button({});
+
+		expect(result).toContain("button--disabled");
+	});
+
+	it("should not append className from non-matching compound variant", () => {
+		const runtime = {
+			variants: {
+				disabled: {
+					true: {},
+					false: {},
+				},
+			},
+			defaultVariants: {
+				disabled: "false",
+			},
+			compoundVariants: [
+				{
+					match: { disabled: "true" },
+					className: "button--disabled",
+				},
+			],
+		} as const satisfies RecipeRuntime;
+
+		const button = createRecipe("button", runtime);
+		const result = button({});
+
+		expect(result).not.toContain("button--disabled");
+	});
+
+	it("should handle compound variant with both css and className", () => {
+		const runtime = {
+			variants: {
+				color: {
+					primary: {},
+				},
+				disabled: {
+					true: {},
+					false: {},
+				},
+			},
+			defaultVariants: {
+				color: "primary",
+				disabled: "true",
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary", disabled: "true" },
+					css: {
+						opacity: "50",
+					},
+					className: "button--primary-disabled",
+				},
+			],
+		} as const satisfies RecipeRuntime;
+
+		const button = createRecipe("button", runtime);
+		const result = button({});
+
+		expect(result).toContain("_opacity:50");
+		expect(result).toContain("button--primary-disabled");
+	});
 });
