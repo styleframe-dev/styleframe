@@ -7,7 +7,7 @@ export const colorValues = {
 	secondary: "#406AD4",
 	success: "#058059",
 	warning: "#E8BF2B",
-	danger: "#D22E3E",
+	error: "#D22E3E",
 	info: "#0E76B2",
 	gray: "#5F7186",
 	white: "#ffffff",
@@ -40,7 +40,7 @@ export const darkModeColorValues = {
 	secondary: "#406AD4",
 	success: "#058059",
 	warning: "#E8BF2B",
-	danger: "#D22E3E",
+	error: "#D22E3E",
 	info: "#0E76B2",
 	gray: "#5F7186",
 

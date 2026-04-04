@@ -19,7 +19,7 @@ const colors = [
 	"success",
 	"info",
 	"warning",
-	"danger",
+	"error",
 ] as const;
 
 // Use `const` by default. Export `colors` (and optionally a `variants` array)
@@ -39,7 +39,7 @@ export const use<ComponentName>Recipe = createUseRecipe("<component-name>", {
 			success: {},
 			info: {},
 			warning: {},
-			danger: {},
+			error: {},
 		},
 		variant: {
 			// Choose variant styles appropriate for this component type.
@@ -209,7 +209,7 @@ All values prefixed with `@` are design token references resolved at compile tim
 
 ### Available Token Values
 
-**Colors**: primary, secondary, success, info, warning, danger, gray, white, black, background, surface, text, text-inverted, text-weak, text-weaker, text-weakest
+**Colors**: primary, secondary, success, info, warning, error, gray, white, black, background, surface, text, text-inverted, text-weak, text-weaker, text-weakest
 
 **Color Levels** (absolute lightness): 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950
 
@@ -252,7 +252,7 @@ color: {
 	success: {},
 	info: {},
 	warning: {},
-	danger: {},
+	error: {},
 },
 ```
 
@@ -277,7 +277,7 @@ color: {
 	success: {},
 	info: {},
 	warning: {},
-	danger: {},
+	error: {},
 	light: {},
 	dark: {},
 	neutral: {},
@@ -1027,7 +1027,7 @@ const colors = [
 	"success",
 	"info",
 	"warning",
-	"danger",
+	"error",
 ] as const;
 
 /**
@@ -1520,7 +1520,7 @@ type Story = StoryObj<typeof meta>;
 - **`Default`**: Single instance with default args
 - **`AllVariants`**: Grid showing all color × variant combinations
 - **`AllSizes`**: Grid showing all sizes
-- **Per-color stories**: One exported story per color (Primary, Secondary, Success, Info, Warning, Danger, and any non-semantic colors)
+- **Per-color stories**: One exported story per color (Primary, Secondary, Success, Info, Warning, Error, and any non-semantic colors)
 - **Per-variant stories**: One per variant style (Solid, Outline, Soft, Subtle, Ghost, Link)
 - **Per-size stories**: One per size (ExtraSmall, Small, Medium, Large, ExtraLarge)
 - **Custom axis stories**: When applicable (e.g., `AllOrientations`, `Horizontal`, `Vertical`)
@@ -1566,7 +1566,7 @@ Before considering a recipe complete, verify every item:
 
 ### Structure
 - [ ] File imports `createUseRecipe` from `"../utils/createUseRecipe"`
-- [ ] `colors` array contains exactly: `"primary"`, `"secondary"`, `"success"`, `"info"`, `"warning"`, `"danger"` (omit entirely for non-semantic-only components)
+- [ ] `colors` array contains exactly: `"primary"`, `"secondary"`, `"success"`, `"info"`, `"warning"`, `"error"` (omit entirely for non-semantic-only components)
 - [ ] `colors` array has `as const` assertion (when present)
 - [ ] Recipe is exported as `export const use<ComponentName>Recipe`
 - [ ] Recipe name (first arg) is kebab-case matching the component

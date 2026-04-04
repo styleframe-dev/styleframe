@@ -230,7 +230,7 @@ Components import recipe functions from `virtual:styleframe` and apply them via 
 import { button } from 'virtual:styleframe';
 
 const props = withDefaults(defineProps<{
-    color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger';
+    color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error';
     variant?: 'solid' | 'outline' | 'soft' | 'subtle' | 'ghost' | 'link';
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
     label?: string;

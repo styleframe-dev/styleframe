@@ -10,7 +10,7 @@ const props = withDefaults(
 			| "success"
 			| "info"
 			| "warning"
-			| "danger"
+			| "error"
 			| "light"
 			| "dark"
 			| "neutral";

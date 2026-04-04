@@ -10,7 +10,7 @@ const {
 	colorTextMuted,
 	colorBorder,
 	colorPrimary,
-	colorDanger,
+	colorError,
 	spacingXs,
 	spacingSm,
 	spacingMd,
@@ -74,7 +74,7 @@ selector(".input-group__helper", {
 
 selector(".input-group__error", {
 	fontSize: ref(fontSizeXs),
-	color: css`${ref(colorDanger)}`,
+	color: css`${ref(colorError)}`,
 	margin: "0",
 });
 

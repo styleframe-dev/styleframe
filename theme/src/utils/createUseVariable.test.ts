@@ -875,9 +875,9 @@ describe("createUseVariable", () => {
 					blue: "#3b82f6",
 					red: "#ef4444",
 					primary: "@color.blue",
-					danger: "@color.red",
+					error: "@color.red",
 					link: "@color.primary",
-					error: "@color.danger",
+					alert: "@color.error",
 				},
 			});
 			const s = styleframe();
@@ -885,9 +885,9 @@ describe("createUseVariable", () => {
 				colorBlue,
 				colorRed,
 				colorPrimary,
-				colorDanger,
-				colorLink,
 				colorError,
+				colorLink,
+				colorAlert,
 			} = useColor(s);
 
 			expect(colorBlue.value).toBe("#3b82f6");
@@ -896,7 +896,7 @@ describe("createUseVariable", () => {
 				type: "reference",
 				name: "color.blue",
 			});
-			expect(colorDanger.value).toEqual({
+			expect(colorError.value).toEqual({
 				type: "reference",
 				name: "color.red",
 			});
@@ -904,9 +904,9 @@ describe("createUseVariable", () => {
 				type: "reference",
 				name: "color.primary",
 			});
-			expect(colorError.value).toEqual({
+			expect(colorAlert.value).toEqual({
 				type: "reference",
-				name: "color.danger",
+				name: "color.error",
 			});
 		});
 

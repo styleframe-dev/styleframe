@@ -6,7 +6,7 @@ const colors = [
 	"success",
 	"info",
 	"warning",
-	"danger",
+	"error",
 ] as const;
 
 /**
@@ -38,7 +38,7 @@ export const useCalloutRecipe = createUseRecipe("callout", {
 			success: {},
 			info: {},
 			warning: {},
-			danger: {},
+			error: {},
 			light: {},
 			dark: {},
 			neutral: {},

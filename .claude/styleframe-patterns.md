@@ -15,10 +15,10 @@ export function useColorVariables(s: Styleframe) {
     const colorPrimary = variable('color.primary', '#006cff', { default: true });
     const colorSecondary = variable('color.secondary', '#6c757d', { default: true });
     const colorSuccess = variable('color.success', '#28a745', { default: true });
-    const colorDanger = variable('color.danger', '#dc3545', { default: true });
+    const colorError = variable('color.error', '#dc3545', { default: true });
     const colorWhite = variable('color.white', '#ffffff', { default: true });
 
-    return { colorPrimary, colorSecondary, colorSuccess, colorDanger, colorWhite };
+    return { colorPrimary, colorSecondary, colorSuccess, colorError, colorWhite };
 }
 ```
 
@@ -153,11 +153,11 @@ const { scale } = useScale(s, { ...defaultScaleValues, default: '@minor-third' }
 const scalePowers = useScalePowers(s, scale, [-2, -1, 0, 1, 2, 3, 4, 5]);
 
 // 2. COLORS - Base colors with lightness variants
-const { colorPrimary, colorSecondary, colorSuccess, colorDanger } = useColor(s, {
+const { colorPrimary, colorSecondary, colorSuccess, colorError } = useColor(s, {
     primary: '#006cff',
     secondary: '#6c757d',
     success: '#28a745',
-    danger: '#dc3545',
+    error: '#dc3545',
 } as const);
 
 const primaryLevels = useColorLightness(s, colorPrimary, defaultColorLightnessValues);

@@ -4,7 +4,7 @@ export const borderColorValues = {
 	secondary: "@color.secondary",
 	success: "@color.success",
 	warning: "@color.warning",
-	danger: "@color.danger",
+	error: "@color.error",
 	info: "@color.info",
 } as const;
 

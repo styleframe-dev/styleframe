@@ -95,20 +95,20 @@ describe("createRootConsumer", () => {
 
 	it("should handle root with variables and children", () => {
 		const primaryVar = variable("primary", "#0066ff");
-		const dangerVar = variable("danger", "#ff0000");
+		const errorVar = variable("error", "#ff0000");
 		selector(".btn-primary", {
 			backgroundColor: ref(primaryVar),
 			color: "white",
 		});
-		selector(".alert-danger", {
-			borderColor: ref(dangerVar),
-			color: ref(dangerVar),
+		selector(".alert-error", {
+			borderColor: ref(errorVar),
+			color: ref(errorVar),
 		});
 
 		const result = consumeRoot(root, options);
 		expect(result).toBe(`:root {
 \t--primary: #0066ff;
-\t--danger: #ff0000;
+\t--error: #ff0000;
 }
 
 .btn-primary {
@@ -116,9 +116,9 @@ describe("createRootConsumer", () => {
 \tcolor: white;
 }
 
-.alert-danger {
-\tborder-color: var(--danger);
-\tcolor: var(--danger);
+.alert-error {
+\tborder-color: var(--error);
+\tcolor: var(--error);
 }`);
 	});
 

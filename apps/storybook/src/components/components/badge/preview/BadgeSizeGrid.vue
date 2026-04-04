@@ -7,7 +7,7 @@ const colors = [
 	"success",
 	"info",
 	"warning",
-	"danger",
+	"error",
 ] as const;
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
 </script>

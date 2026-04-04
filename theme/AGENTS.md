@@ -54,7 +54,7 @@ const { colorPrimaryShade100 } = useColorShade(s, colorPrimary, { 100: 10 } as c
 const { colorPrimaryTint100 } = useColorTint(s, colorPrimary, { 100: 10 } as const);
 ```
 
-Default colors: `primary`, `secondary`, `success`, `info`, `warning`, `danger`, `neutral`, `white`, `black`.
+Default colors: `primary`, `secondary`, `success`, `info`, `warning`, `error`, `neutral`, `white`, `black`.
 
 ### Scales
 
@@ -192,13 +192,13 @@ Pre-built component recipes with color, variant, and size support.
 import { useButtonRecipe, useBadgeRecipe } from '@styleframe/theme';
 
 useButtonRecipe(s);
-// Colors: primary, secondary, success, info, warning, danger
+// Colors: primary, secondary, success, info, warning, error
 // Variants: solid, outline, soft, subtle, ghost, link
 // Sizes: xs, sm, md, lg, xl
 // Defaults: color=primary, variant=solid, size=md
 
 useBadgeRecipe(s);
-// Colors: primary, secondary, success, info, warning, danger
+// Colors: primary, secondary, success, info, warning, error
 // Variants: solid, outline, soft, subtle
 // Sizes: xs, sm, md, lg, xl
 // Defaults: color=primary, variant=solid, size=sm

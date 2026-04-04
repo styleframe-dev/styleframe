@@ -1615,7 +1615,7 @@ describe("createUtilityFunction", () => {
 				{
 					type: "variable",
 					id: "test-id",
-					name: "border-color.danger",
+					name: "border-color.error",
 					value: "#dc3545",
 				},
 				{
@@ -1634,14 +1634,14 @@ describe("createUtilityFunction", () => {
 				{ namespace: ["border-color", "color"] },
 			);
 
-			createBorderColorUtility(["@danger", "@primary", "@unknown"]);
+			createBorderColorUtility(["@error", "@primary", "@unknown"]);
 
 			expect(root.utilities[0]?.values).toEqual([
 				{
-					key: "danger",
+					key: "error",
 					value: {
 						type: "reference",
-						name: "border-color.danger",
+						name: "border-color.error",
 					},
 					modifiers: [],
 				},
