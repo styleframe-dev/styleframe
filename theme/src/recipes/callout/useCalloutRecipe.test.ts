@@ -1,6 +1,6 @@
 import type { Styleframe } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
-import { useDarkModifier } from "../modifiers/useMediaPreferenceModifiers";
+import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
 import { useCalloutRecipe } from "./useCalloutRecipe";
 
 function createInstance() {

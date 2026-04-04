@@ -1,11 +1,11 @@
 import { styleframe } from "@styleframe/core";
-import { useDarkModifier } from "../modifiers/useMediaPreferenceModifiers";
+import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
 import {
 	useCardRecipe,
 	useCardHeaderRecipe,
 	useCardBodyRecipe,
 	useCardFooterRecipe,
-} from "./useCardRecipe";
+} from "./index";
 
 function createInstance() {
 	const s = styleframe();

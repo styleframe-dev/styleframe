@@ -1,4 +1,4 @@
-import { createUseRecipe } from "../utils/createUseRecipe";
+import { createUseRecipe } from "../../utils/createUseRecipe";
 
 const colors = [
 	"primary",
