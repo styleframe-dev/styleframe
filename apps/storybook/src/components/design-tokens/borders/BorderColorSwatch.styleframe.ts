@@ -6,7 +6,15 @@ const { ref, selector, recipe } = s;
 
 useUtilitiesPreset(s);
 
-const { borderColor, borderColorPrimary } = useDesignTokensPreset(s);
+const {
+	borderColor,
+	borderColorPrimary,
+	borderColorSecondary,
+	borderColorSuccess,
+	borderColorWarning,
+	borderColorDanger,
+	borderColorInfo,
+} = useDesignTokensPreset(s);
 
 selector(".border-color-swatch__preview", {
 	width: "calc(@spacing * 6)",
@@ -26,6 +34,21 @@ export const borderColorSwatch = recipe({
 			},
 			primary: {
 				borderColor: ref(borderColorPrimary),
+			},
+			secondary: {
+				borderColor: ref(borderColorSecondary),
+			},
+			success: {
+				borderColor: ref(borderColorSuccess),
+			},
+			warning: {
+				borderColor: ref(borderColorWarning),
+			},
+			danger: {
+				borderColor: ref(borderColorDanger),
+			},
+			info: {
+				borderColor: ref(borderColorInfo),
 			},
 		},
 	},

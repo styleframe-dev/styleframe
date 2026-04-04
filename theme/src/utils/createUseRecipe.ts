@@ -20,7 +20,8 @@ export type RecipeConfig<
 		match: {
 			[K in keyof Variants]?: keyof Variants[K] & string;
 		};
-		css: VariantDeclarationsBlock;
+		css?: VariantDeclarationsBlock;
+		className?: string;
 	}>;
 };
 
