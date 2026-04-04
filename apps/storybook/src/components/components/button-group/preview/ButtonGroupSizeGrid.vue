@@ -3,7 +3,14 @@ import ButtonGroup from "../ButtonGroup.vue";
 import Button from "../../button/Button.vue";
 
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
-const colors = ["primary", "secondary", "success", "info", "warning", "danger"] as const;
+const colors = [
+	"primary",
+	"secondary",
+	"success",
+	"info",
+	"warning",
+	"danger",
+] as const;
 </script>
 
 <template>

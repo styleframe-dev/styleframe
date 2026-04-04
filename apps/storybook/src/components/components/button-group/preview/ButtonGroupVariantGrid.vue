@@ -2,8 +2,22 @@
 import ButtonGroup from "../ButtonGroup.vue";
 import Button from "../../button/Button.vue";
 
-const variants = ["solid", "outline", "soft", "subtle", "ghost", "link"] as const;
-const colors = ["primary", "secondary", "success", "info", "warning", "danger"] as const;
+const variants = [
+	"solid",
+	"outline",
+	"soft",
+	"subtle",
+	"ghost",
+	"link",
+] as const;
+const colors = [
+	"primary",
+	"secondary",
+	"success",
+	"info",
+	"warning",
+	"danger",
+] as const;
 </script>
 
 <template>
