@@ -1658,4 +1658,87 @@ describe("generateRecipeRuntime", () => {
 			borderWidth: "[thin]",
 		});
 	});
+
+	test("should generate runtime for compoundVariants with className only", () => {
+		const instance = recipe({
+			name: "button",
+			variants: {
+				disabled: {
+					false: {},
+					true: {},
+				},
+			},
+			compoundVariants: [
+				{
+					match: { disabled: "true" },
+					className: "button--disabled",
+				},
+			],
+		});
+
+		expect(instance._runtime?.compoundVariants).toEqual([
+			{
+				match: { disabled: "true" },
+				className: "button--disabled",
+			},
+		]);
+	});
+
+	test("should generate runtime for compoundVariants with both css and className", () => {
+		utility("background", ({ value }) => ({ background: value }));
+
+		const instance = recipe({
+			name: "button",
+			variants: {
+				color: {
+					primary: { background: "@color.primary" },
+				},
+				disabled: {
+					false: {},
+					true: {},
+				},
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary", disabled: "false" },
+					css: { background: "@color.primary-hover" },
+					className: "button--primary-active",
+				},
+			],
+		});
+
+		expect(instance._runtime?.compoundVariants).toEqual([
+			{
+				match: { color: "primary", disabled: "false" },
+				css: { background: "color.primary-hover" },
+				className: "button--primary-active",
+			},
+		]);
+	});
+
+	test("should process recipe utilities without error when compoundVariant has className only", () => {
+		const instance = recipe({
+			name: "button",
+			variants: {
+				disabled: {
+					false: {},
+					true: {},
+				},
+			},
+			compoundVariants: [
+				{
+					match: { disabled: "true" },
+					className: "button--disabled",
+				},
+			],
+		});
+
+		// Should not throw — className-only compound variants have no utilities to process
+		expect(instance._runtime?.compoundVariants).toEqual([
+			{
+				match: { disabled: "true" },
+				className: "button--disabled",
+			},
+		]);
+	});
 });

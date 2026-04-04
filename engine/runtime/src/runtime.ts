@@ -169,6 +169,7 @@ export function createRecipe<R extends RecipeRuntime>(
 		}
 
 		// 3. Apply compound variants if conditions match
+		const compoundClassNames: string[] = [];
 		if (runtime.compoundVariants) {
 			for (const compoundVariant of runtime.compoundVariants) {
 				// Check if all variant conditions match
@@ -190,9 +191,14 @@ export function createRecipe<R extends RecipeRuntime>(
 					}
 				}
 
-				// If all conditions match, apply the compound variant css declarations
-				if (allConditionsMatch && compoundVariant.css) {
-					processDeclarationsBlock(compoundVariant.css, declarationsMap);
+				// If all conditions match, apply the compound variant declarations and className
+				if (allConditionsMatch) {
+					if (compoundVariant.css) {
+						processDeclarationsBlock(compoundVariant.css, declarationsMap);
+					}
+					if (compoundVariant.className) {
+						compoundClassNames.push(compoundVariant.className);
+					}
 				}
 			}
 		}
@@ -209,6 +215,9 @@ export function createRecipe<R extends RecipeRuntime>(
 				modifiers.length > 0 ? key.slice(modifiers.join(":").length + 1) : key;
 			classNames.push(toClassName(utilityName, value, modifiers));
 		}
+
+		// Append compound variant classNames after utility classes
+		classNames.push(...compoundClassNames);
 
 		return classNames.join(" ");
 	};
