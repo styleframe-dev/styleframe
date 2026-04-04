@@ -336,7 +336,7 @@ Typography, Backgrounds, Borders, Effects, Filters, Flexbox & Grid, Layout, Sizi
 ```ts
 import { useButtonRecipe, useBadgeRecipe } from '@styleframe/theme';
 
-useButtonRecipe(s);  // Colors: primary/secondary/success/info/warning/danger
+useButtonRecipe(s);  // Colors: primary/secondary/success/info/warning/error
                      // Variants: solid/outline/soft/subtle/ghost/link
                      // Sizes: xs/sm/md/lg/xl
 

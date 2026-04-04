@@ -10,7 +10,7 @@ const colors = [
 	"success",
 	"info",
 	"warning",
-	"danger",
+	"error",
 	"light",
 	"dark",
 	"neutral",
@@ -107,10 +107,10 @@ export const Warning: Story = {
 	},
 };
 
-export const Danger: Story = {
+export const Error: Story = {
 	args: {
-		color: "danger",
-		label: "Danger",
+		color: "error",
+		label: "Error",
 	},
 };
 

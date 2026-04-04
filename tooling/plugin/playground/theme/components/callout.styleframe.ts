@@ -19,7 +19,7 @@ const {
 	lineHeightNormal,
 	colorSuccess,
 	colorWarning,
-	colorDanger,
+	colorError,
 	colorInfo,
 } = useTokens(s);
 
@@ -100,10 +100,10 @@ export const playgroundCalloutRecipe = s.recipe({
 				color: ref(colorWhite),
 				borderColor: ref(colorWarning),
 			},
-			danger: {
-				backgroundColor: ref(colorDanger),
+			error: {
+				backgroundColor: ref(colorError),
 				color: ref(colorWhite),
-				borderColor: ref(colorDanger),
+				borderColor: ref(colorError),
 			},
 			info: {
 				backgroundColor: ref(colorInfo),

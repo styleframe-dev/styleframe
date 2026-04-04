@@ -74,7 +74,7 @@ describe("useCalloutRecipe", () => {
 				"success",
 				"info",
 				"warning",
-				"danger",
+				"error",
 				"light",
 				"dark",
 				"neutral",
@@ -220,20 +220,20 @@ describe("useCalloutRecipe", () => {
 			const s = createInstance();
 			const recipe = useCalloutRecipe(s);
 
-			const dangerSubtle = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "danger" && cv.match.variant === "subtle",
+			const errorSubtle = recipe.compoundVariants!.find(
+				(cv) => cv.match.color === "error" && cv.match.variant === "subtle",
 			);
 
-			expect(dangerSubtle).toEqual({
-				match: { color: "danger", variant: "subtle" },
+			expect(errorSubtle).toEqual({
+				match: { color: "error", variant: "subtle" },
 				css: {
-					background: "@color.danger-100",
-					color: "@color.danger-700",
-					borderColor: "@color.danger-300",
+					background: "@color.error-100",
+					color: "@color.error-700",
+					borderColor: "@color.error-300",
 					"&:dark": {
-						background: "@color.danger-800",
-						color: "@color.danger-400",
-						borderColor: "@color.danger-600",
+						background: "@color.error-800",
+						color: "@color.error-400",
+						borderColor: "@color.error-600",
 					},
 				},
 			});

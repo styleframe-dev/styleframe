@@ -7,7 +7,7 @@ const colors = [
 	"success",
 	"info",
 	"warning",
-	"danger",
+	"error",
 	"light",
 	"dark",
 	"neutral",

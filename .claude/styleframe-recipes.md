@@ -191,7 +191,7 @@ recipe({
         color: {
             primary: { background: ref(colorPrimary) },
             secondary: { background: ref(colorSecondary) },
-            danger: { background: ref(colorDanger) },
+            error: { background: ref(colorError) },
         },
         // "size" variant group
         size: {

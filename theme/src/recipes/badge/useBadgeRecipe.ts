@@ -6,7 +6,7 @@ export const colors = [
 	"success",
 	"info",
 	"warning",
-	"danger",
+	"error",
 ] as const;
 
 export const variants = ["solid", "outline", "soft", "subtle"] as const;
@@ -38,7 +38,7 @@ export const useBadgeRecipe = createUseRecipe("badge", {
 			success: {},
 			info: {},
 			warning: {},
-			danger: {},
+			error: {},
 			light: {},
 			dark: {},
 			neutral: {},

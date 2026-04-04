@@ -25,10 +25,10 @@ test.describe("Recipe Variant System", () => {
 		expect(styles.backgroundColor).toContain("oklch(");
 	});
 
-	test("danger outline badge has border color and transparent background", async ({
+	test("error outline badge has border color and transparent background", async ({
 		page,
 	}) => {
-		const element = page.locator("#test-badge-danger-outline");
+		const element = page.locator("#test-badge-error-outline");
 
 		const styles = await element.evaluate((el) => {
 			const computed = window.getComputedStyle(el);
@@ -38,7 +38,7 @@ test.describe("Recipe Variant System", () => {
 			};
 		});
 
-		// Danger outline: border-color and text should be danger color
+		// Error outline: border-color and text should be error color
 		expect(styles.borderColor).toContain("oklch(");
 		expect(styles.color).toContain("oklch(");
 	});

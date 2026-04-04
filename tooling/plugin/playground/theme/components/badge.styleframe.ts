@@ -11,7 +11,7 @@ const {
 	colorSecondary,
 	colorSuccess,
 	colorWarning,
-	colorDanger,
+	colorError,
 	colorInfo,
 	spacing2xs,
 	spacingXs,
@@ -58,8 +58,8 @@ export const playgroundBadgeRecipe = s.recipe({
 				backgroundColor: ref(colorWarning),
 				color: ref(colorWhite),
 			},
-			danger: {
-				backgroundColor: ref(colorDanger),
+			error: {
+				backgroundColor: ref(colorError),
 				color: ref(colorWhite),
 			},
 			info: {
@@ -118,8 +118,8 @@ export const playgroundBadgeRecipe = s.recipe({
 			css: { color: ref(colorWarning), borderColor: ref(colorWarning) },
 		},
 		{
-			match: { color: "danger", variant: "outline" },
-			css: { color: ref(colorDanger), borderColor: ref(colorDanger) },
+			match: { color: "error", variant: "outline" },
+			css: { color: ref(colorError), borderColor: ref(colorError) },
 		},
 		{
 			match: { color: "info", variant: "outline" },

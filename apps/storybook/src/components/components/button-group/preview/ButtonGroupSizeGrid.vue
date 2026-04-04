@@ -9,7 +9,7 @@ const colors = [
 	"success",
 	"info",
 	"warning",
-	"danger",
+	"error",
 ] as const;
 </script>
 

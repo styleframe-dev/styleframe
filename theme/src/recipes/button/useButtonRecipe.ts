@@ -6,7 +6,7 @@ const colors = [
 	"success",
 	"info",
 	"warning",
-	"danger",
+	"error",
 ] as const;
 
 /**
@@ -56,7 +56,7 @@ export const useButtonRecipe = createUseRecipe("button", {
 			success: {},
 			info: {},
 			warning: {},
-			danger: {},
+			error: {},
 			light: {},
 			dark: {},
 			neutral: {},

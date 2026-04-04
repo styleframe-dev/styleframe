@@ -15,7 +15,7 @@ const {
 	colorSecondary,
 	colorSuccess,
 	colorWarning,
-	colorDanger,
+	colorError,
 	colorInfo,
 	colorBlack,
 	colorWhite,
@@ -43,10 +43,10 @@ const {
 	colorWarningTint100,
 	colorWarningTint150,
 	colorWarningTint200,
-	colorDangerTint50,
-	colorDangerTint100,
-	colorDangerTint150,
-	colorDangerTint200,
+	colorErrorTint50,
+	colorErrorTint100,
+	colorErrorTint150,
+	colorErrorTint200,
 	colorInfoTint50,
 	colorInfoTint100,
 	colorInfoTint150,
@@ -71,10 +71,10 @@ const {
 	colorWarningShade100,
 	colorWarningShade150,
 	colorWarningShade200,
-	colorDangerShade50,
-	colorDangerShade100,
-	colorDangerShade150,
-	colorDangerShade200,
+	colorErrorShade50,
+	colorErrorShade100,
+	colorErrorShade150,
+	colorErrorShade200,
 	colorInfoShade50,
 	colorInfoShade100,
 	colorInfoShade150,
@@ -155,7 +155,7 @@ export const colorSwatch = recipe({
 			warning: {
 				background: ref(colorWarning),
 			},
-			danger: { background: ref(colorDanger) },
+			error: { background: ref(colorError) },
 			info: { background: ref(colorInfo) },
 			white: { color: ref(colorBlack), background: ref(colorWhite) },
 			black: { color: ref(colorWhite), background: ref(colorBlack) },
@@ -241,20 +241,20 @@ export const colorSwatch = recipe({
 			"warning-tint-200": {
 				background: ref(colorWarningTint200),
 			},
-			"danger-tint-base": {
-				background: ref(colorDanger),
+			"error-tint-base": {
+				background: ref(colorError),
 			},
-			"danger-tint-50": {
-				background: ref(colorDangerTint50),
+			"error-tint-50": {
+				background: ref(colorErrorTint50),
 			},
-			"danger-tint-100": {
-				background: ref(colorDangerTint100),
+			"error-tint-100": {
+				background: ref(colorErrorTint100),
 			},
-			"danger-tint-150": {
-				background: ref(colorDangerTint150),
+			"error-tint-150": {
+				background: ref(colorErrorTint150),
 			},
-			"danger-tint-200": {
-				background: ref(colorDangerTint200),
+			"error-tint-200": {
+				background: ref(colorErrorTint200),
 			},
 			"info-tint-base": {
 				background: ref(colorInfo),
@@ -348,20 +348,20 @@ export const colorSwatch = recipe({
 			"warning-shade-200": {
 				background: ref(colorWarningShade200),
 			},
-			"danger-shade-base": {
-				background: ref(colorDanger),
+			"error-shade-base": {
+				background: ref(colorError),
 			},
-			"danger-shade-50": {
-				background: ref(colorDangerShade50),
+			"error-shade-50": {
+				background: ref(colorErrorShade50),
 			},
-			"danger-shade-100": {
-				background: ref(colorDangerShade100),
+			"error-shade-100": {
+				background: ref(colorErrorShade100),
 			},
-			"danger-shade-150": {
-				background: ref(colorDangerShade150),
+			"error-shade-150": {
+				background: ref(colorErrorShade150),
 			},
-			"danger-shade-200": {
-				background: ref(colorDangerShade200),
+			"error-shade-200": {
+				background: ref(colorErrorShade200),
 			},
 			"info-shade-base": {
 				background: ref(colorInfo),

@@ -68,7 +68,7 @@ describe("createUseRecipe", () => {
 		const useRecipe = createUseRecipe("test", {
 			base: {},
 			variants: {
-				color: { primary: {}, danger: {} },
+				color: { primary: {}, error: {} },
 				variant: { solid: {}, outline: {} },
 			},
 			compoundVariants: [
@@ -129,7 +129,7 @@ describe("createUseRecipe filter", () => {
 				primary: {},
 				secondary: {},
 				success: {},
-				danger: {},
+				error: {},
 			},
 			variant: {
 				solid: {},
@@ -152,11 +152,11 @@ describe("createUseRecipe filter", () => {
 				css: { borderColor: "blue" },
 			},
 			{
-				match: { color: "danger", variant: "solid" },
+				match: { color: "error", variant: "solid" },
 				css: { background: "red" },
 			},
 			{
-				match: { color: "danger", variant: "outline" },
+				match: { color: "error", variant: "outline" },
 				css: { borderColor: "red" },
 			},
 			{
@@ -197,15 +197,12 @@ describe("createUseRecipe filter", () => {
 			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: {
-					color: ["primary", "danger"],
+					color: ["primary", "error"],
 					size: ["sm", "md"],
 				},
 			});
 
-			expect(Object.keys(recipe.variants!.color)).toEqual([
-				"primary",
-				"danger",
-			]);
+			expect(Object.keys(recipe.variants!.color)).toEqual(["primary", "error"]);
 			expect(Object.keys(recipe.variants!.size)).toEqual(["sm", "md"]);
 			expect(Object.keys(recipe.variants!.variant)).toEqual([
 				"solid",
@@ -235,7 +232,7 @@ describe("createUseRecipe filter", () => {
 				"primary",
 				"secondary",
 				"success",
-				"danger",
+				"error",
 			]);
 		});
 
@@ -293,7 +290,7 @@ describe("createUseRecipe filter", () => {
 			registerUtilities(s);
 			const recipe = useRecipe(s, {
 				filter: {
-					color: ["primary", "danger"],
+					color: ["primary", "error"],
 					variant: ["solid", "outline"],
 				},
 			});
@@ -308,11 +305,11 @@ describe("createUseRecipe filter", () => {
 					css: { borderColor: "blue" },
 				},
 				{
-					match: { color: "danger", variant: "solid" },
+					match: { color: "error", variant: "solid" },
 					css: { background: "red" },
 				},
 				{
-					match: { color: "danger", variant: "outline" },
+					match: { color: "error", variant: "outline" },
 					css: { borderColor: "red" },
 				},
 			]);
@@ -354,7 +351,7 @@ describe("createUseRecipe filter", () => {
 			const s = styleframe();
 			registerUtilities(s);
 			const recipe = useRecipe(s, {
-				filter: { color: ["danger"] },
+				filter: { color: ["error"] },
 			});
 
 			expect(recipe.defaultVariants?.color).toBeUndefined();
@@ -394,7 +391,7 @@ describe("createUseRecipe filter", () => {
 				"primary",
 				"secondary",
 				"success",
-				"danger",
+				"error",
 			]);
 			expect(recipe.compoundVariants).toHaveLength(5);
 		});
@@ -408,7 +405,7 @@ describe("createUseRecipe filter", () => {
 				"primary",
 				"secondary",
 				"success",
-				"danger",
+				"error",
 			]);
 			expect(recipe.compoundVariants).toHaveLength(5);
 		});

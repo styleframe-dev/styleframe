@@ -93,10 +93,10 @@ export const Warning: Story = {
 	},
 };
 
-export const Danger: Story = {
+export const Error: Story = {
 	args: {
-		name: "danger",
-		value: "danger",
+		name: "error",
+		value: "error",
 	},
 };
 

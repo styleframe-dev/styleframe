@@ -12,7 +12,7 @@ const {
 	borderColorSecondary,
 	borderColorSuccess,
 	borderColorWarning,
-	borderColorDanger,
+	borderColorError,
 	borderColorInfo,
 } = useDesignTokensPreset(s);
 
@@ -44,8 +44,8 @@ export const borderColorSwatch = recipe({
 			warning: {
 				borderColor: ref(borderColorWarning),
 			},
-			danger: {
-				borderColor: ref(borderColorDanger),
+			error: {
+				borderColor: ref(borderColorError),
 			},
 			info: {
 				borderColor: ref(borderColorInfo),

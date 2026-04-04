@@ -200,14 +200,14 @@ describe("useBorderColorDesignTokens", () => {
 			const s = styleframe();
 			useBorderColorDesignTokens(s, {
 				primary: "#3b82f6",
-				danger: "#ef4444",
+				error: "#ef4444",
 				default: "@border-color.primary",
 			});
 
 			const css = consumeCSS(s.root, s.options);
 
 			expect(css).toContain("--border-color--primary: #3b82f6;");
-			expect(css).toContain("--border-color--danger: #ef4444;");
+			expect(css).toContain("--border-color--error: #ef4444;");
 			expect(css).toContain("--border-color: var(--border-color--primary);");
 		});
 	});
@@ -276,7 +276,7 @@ describe("useBorderColorDesignTokens", () => {
 				{
 					default: "#e5e5e5",
 					primary: "#3b82f6",
-					danger: "#ef4444",
+					error: "#ef4444",
 				},
 			);
 
@@ -290,7 +290,7 @@ describe("useBorderColorDesignTokens", () => {
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("--border-color--primary: #3b82f6;");
-			expect(css).toContain("--border-color--danger: #ef4444;");
+			expect(css).toContain("--border-color--error: #ef4444;");
 			expect(css).toContain("--border-color: #e5e5e5;");
 			expect(css).toContain("--border-color: var(--border-color);");
 			expect(css).toContain("--border-color: var(--border-color--primary);");

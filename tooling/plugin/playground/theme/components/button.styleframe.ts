@@ -10,7 +10,7 @@ const {
 	colorPrimary,
 	colorSecondary,
 	colorSuccess,
-	colorDanger,
+	colorError,
 	spacingXs,
 	spacingSm,
 	spacingMd,
@@ -70,10 +70,10 @@ export const playgroundButtonRecipe = s.recipe({
 				color: ref(colorWhite),
 				borderColor: ref(colorSuccess),
 			},
-			danger: {
-				backgroundColor: ref(colorDanger),
+			error: {
+				backgroundColor: ref(colorError),
 				color: ref(colorWhite),
-				borderColor: ref(colorDanger),
+				borderColor: ref(colorError),
 			},
 		},
 		size: {
@@ -134,8 +134,8 @@ export const playgroundButtonRecipe = s.recipe({
 			css: { color: ref(colorSuccess) },
 		},
 		{
-			match: { color: "danger", variant: "outline" },
-			css: { color: ref(colorDanger) },
+			match: { color: "error", variant: "outline" },
+			css: { color: ref(colorError) },
 		},
 		// Ghost variant: only text color
 		{
@@ -151,8 +151,8 @@ export const playgroundButtonRecipe = s.recipe({
 			css: { color: ref(colorSuccess) },
 		},
 		{
-			match: { color: "danger", variant: "ghost" },
-			css: { color: ref(colorDanger) },
+			match: { color: "error", variant: "ghost" },
+			css: { color: ref(colorError) },
 		},
 	],
 });

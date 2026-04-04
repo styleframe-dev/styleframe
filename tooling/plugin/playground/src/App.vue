@@ -16,7 +16,7 @@ import {
 
 // --- Data ---
 
-const buttonColors = ["primary", "secondary", "success", "danger"] as const;
+const buttonColors = ["primary", "secondary", "success", "error"] as const;
 const buttonVariants = ["solid", "outline", "ghost"] as const;
 const buttonSizes = ["sm", "md", "lg"] as const;
 
@@ -25,13 +25,13 @@ const badgeColors = [
 	"secondary",
 	"success",
 	"warning",
-	"danger",
+	"error",
 	"info",
 ] as const;
 
 const badgeSizes = ["sm", "md", "lg"] as const;
 
-const alertColors = ["success", "warning", "danger", "info"] as const;
+const alertColors = ["success", "warning", "error", "info"] as const;
 
 const alertConfig: Record<
 	string,
@@ -47,7 +47,7 @@ const alertConfig: Record<
 		title: "Warning",
 		message: "Your session will expire in 5 minutes.",
 	},
-	danger: {
+	error: {
 		icon: "\u2715",
 		title: "Error",
 		message: "There was a problem processing your request.",
@@ -72,8 +72,8 @@ function capitalize(str: string) {
 onMounted(() => {
 	console.log("button():", button());
 	console.log(
-		'button({ color: "danger", variant: "outline" }):',
-		button({ color: "danger", variant: "outline" }),
+		'button({ color: "error", variant: "outline" }):',
+		button({ color: "error", variant: "outline" }),
 	);
 	console.log("badge():", badge());
 	console.log("callout():", callout());

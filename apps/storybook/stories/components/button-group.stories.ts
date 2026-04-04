@@ -218,14 +218,14 @@ export const Warning: Story = {
 	}),
 };
 
-export const Danger: Story = {
+export const Error: Story = {
 	render: () => ({
 		components: { ButtonGroup, Button },
 		template: `
 			<ButtonGroup>
-				<Button color="danger" label="Left" />
-				<Button color="danger" label="Center" />
-				<Button color="danger" label="Right" />
+				<Button color="error" label="Left" />
+				<Button color="error" label="Center" />
+				<Button color="error" label="Right" />
 			</ButtonGroup>
 		`,
 	}),

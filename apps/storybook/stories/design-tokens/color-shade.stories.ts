@@ -8,7 +8,7 @@ const colors = [
 	"secondary",
 	"success",
 	"warning",
-	"danger",
+	"error",
 	"info",
 	"gray",
 ];
@@ -121,7 +121,7 @@ export const WarningShades: StoryObj = {
 	}),
 };
 
-export const DangerShades: StoryObj = {
+export const ErrorShades: StoryObj = {
 	render: () => ({
 		components: { ColorSwatch, StoryGrid },
 		setup() {
@@ -130,7 +130,7 @@ export const DangerShades: StoryObj = {
 		template: `
 			<StoryGrid :items="shades">
 				<template #default="{ item }">
-					<ColorSwatch :name="item" :value="\`danger-shade-\${item}\`" :label="shadeLabels[item]" />
+					<ColorSwatch :name="item" :value="\`error-shade-\${item}\`" :label="shadeLabels[item]" />
 				</template>
 			</StoryGrid>
 		`,

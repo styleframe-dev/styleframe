@@ -948,7 +948,7 @@ describe("useDesignTokensPreset", () => {
 			expect(result.colorSecondary).toBeDefined();
 			expect(result.colorSuccess).toBeDefined();
 			expect(result.colorWarning).toBeDefined();
-			expect(result.colorDanger).toBeDefined();
+			expect(result.colorError).toBeDefined();
 		});
 
 		it("should allow access to color variations via type assertion", () => {
@@ -1254,7 +1254,7 @@ describe("useDesignTokensPreset", () => {
 			result.colorSecondary;
 			result.colorSuccess;
 			result.colorWarning;
-			result.colorDanger;
+			result.colorError;
 			result.colorInfo;
 			// @ts-expect-error - colorBrand is not a default key
 			result.colorBrand;
@@ -1345,7 +1345,7 @@ describe("useDesignTokensPreset", () => {
 		it("should return all variation keys for multiple colors", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
-				colors: { primary: "#007bff", danger: "#ef4444" },
+				colors: { primary: "#007bff", error: "#ef4444" },
 				borderColor: false,
 			});
 
@@ -1355,11 +1355,11 @@ describe("useDesignTokensPreset", () => {
 			result.colorPrimaryShade100;
 			result.colorPrimaryTint100;
 
-			// danger variations
-			result.colorDanger;
-			result.colorDanger500;
-			result.colorDangerShade100;
-			result.colorDangerTint100;
+			// error variations
+			result.colorError;
+			result.colorError500;
+			result.colorErrorShade100;
+			result.colorErrorTint100;
 
 			// @ts-expect-error - colorSuccess is not in custom config
 			result.colorSuccess;
