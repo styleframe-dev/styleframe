@@ -108,7 +108,7 @@ function applyFilter(
 export function createUseRecipe<
 	Name extends string,
 	const Config extends RecipeConfig,
->(name: Name, defaults: Config) {
+>(name: Name, defaults: Config, setup?: (s: Styleframe) => void) {
 	type Variants = NonNullable<Config["variants"]>;
 
 	return function useRecipe<F extends FilterConfig<Variants> = {}>(
@@ -118,9 +118,15 @@ export function createUseRecipe<
 		const { filter, ...configOverrides } = options ?? {};
 		const merged = defu(configOverrides, defaults) as RecipeConfig;
 		const filtered = filter ? applyFilter(merged, filter) : merged;
-		return s.recipe({
+		const recipe = s.recipe({
 			name,
 			...filtered,
 		}) as Recipe<Name, ApplyFilter<Variants, F>>;
+
+		if (setup) {
+			setup(s);
+		}
+
+		return recipe;
 	};
 }
