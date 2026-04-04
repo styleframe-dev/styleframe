@@ -4,6 +4,8 @@ import { cardBody } from "virtual:styleframe";
 
 const props = withDefaults(
 	defineProps<{
+		color?: "light" | "dark" | "neutral";
+		variant?: "solid" | "outline" | "soft" | "subtle";
 		size?: "sm" | "md" | "lg";
 	}>(),
 	{},
@@ -11,6 +13,8 @@ const props = withDefaults(
 
 const classes = computed(() =>
 	cardBody({
+		color: props.color,
+		variant: props.variant,
 		size: props.size,
 	}),
 );
