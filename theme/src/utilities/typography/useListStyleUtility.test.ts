@@ -5,7 +5,27 @@ import {
 	useListStyleImageUtility,
 	useListStylePositionUtility,
 	useListStyleTypeUtility,
+	useListStyleUtility,
 } from "./useListStyleUtility";
+
+describe("useListStyleUtility", () => {
+	it("should set correct declarations", () => {
+		const s = styleframe();
+		useListStyleUtility(s, { none: "none" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({ listStyle: "none" });
+	});
+
+	it("should compile to correct CSS output", () => {
+		const s = styleframe();
+		useListStyleUtility(s, { none: "none" });
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._list-style\\:none {");
+		expect(css).toContain("list-style: none;");
+	});
+});
 
 describe("useListStyleTypeUtility", () => {
 	it("should create utility instances with provided values", () => {

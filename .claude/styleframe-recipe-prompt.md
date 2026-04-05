@@ -670,6 +670,29 @@ defaultVariants: {
 
 Custom axes should be simple enums that map to a small number of CSS properties. Complex conditional behavior belongs in compound variants instead.
 
+### Boolean State Axes (active, disabled, block, etc.)
+
+Boolean component states MUST be modeled as variant axes with string `"true"` / `"false"` keys, not as manual class additions with `selector()` callbacks. Place the state-specific CSS directly in the variant value:
+
+```ts
+active: {
+	true: { fontWeight: "@font-weight.semibold" },
+	false: {},
+},
+disabled: {
+	true: { cursor: "not-allowed", opacity: "0.5", pointerEvents: "none" },
+	false: {},
+},
+```
+
+Default to `"false"` in `defaultVariants`. The consuming component passes the state as a string variant prop:
+
+```ts
+recipe({ active: isActive ? "true" : "false" })
+```
+
+**NEVER** use `selector()` with class-based modifiers (e.g., `.component.-active`) for states that apply to the element itself. Use `className` compound variants + `selector()` only when the state styles target **child elements** (e.g., `.button-group.-horizontal > .button`).
+
 ---
 
 ## Compound Variants
