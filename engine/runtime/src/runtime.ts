@@ -45,6 +45,22 @@ function toClassName(
  * @param value - The value to check
  * @returns True if the value is a modifier block
  */
+/**
+ * Resolves a variant value from props, coercing booleans to strings.
+ * Falls back to defaultVariants if the prop is not provided.
+ */
+function resolveVariantValue(
+	props: Record<string, string | boolean>,
+	variantKey: string,
+	defaultVariants?: Record<string, string>,
+): string | undefined {
+	const raw = props[variantKey];
+	return (
+		(raw !== undefined ? String(raw) : undefined) ??
+		defaultVariants?.[variantKey]
+	);
+}
+
 function isModifierBlock(
 	value: RuntimeVariantDeclarationsValue,
 ): value is RuntimeModifierDeclarationsBlock {
@@ -151,11 +167,11 @@ export function createRecipe<R extends RecipeRuntime>(
 				runtime.variants,
 			)) {
 				// Get the selected variant value from props or defaultVariants
-				const selectedVariant =
-					(props as Record<string, string>)[variantKey] ??
-					runtime.defaultVariants?.[
-						variantKey as keyof typeof runtime.defaultVariants
-					];
+				const selectedVariant = resolveVariantValue(
+					props as Record<string, string | boolean>,
+					variantKey,
+					runtime.defaultVariants as Record<string, string> | undefined,
+				);
 
 				const options = variantOptions as RuntimeVariantOptions;
 				const declarations = selectedVariant
@@ -179,11 +195,11 @@ export function createRecipe<R extends RecipeRuntime>(
 					compoundVariant.match,
 				)) {
 					// Get the selected variant value from props or defaultVariants
-					const selectedVariant =
-						(props as Record<string, string>)[variantKey] ??
-						runtime.defaultVariants?.[
-							variantKey as keyof typeof runtime.defaultVariants
-						];
+					const selectedVariant = resolveVariantValue(
+						props as Record<string, string | boolean>,
+						variantKey,
+						runtime.defaultVariants as Record<string, string> | undefined,
+					);
 
 					if (selectedVariant !== variantValue) {
 						allConditionsMatch = false;
