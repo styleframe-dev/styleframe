@@ -1,14 +1,15 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Card footer recipe with top separator.
+ * Modal footer recipe with top separator.
  */
-export const useCardFooterRecipe = createUseRecipe(
-	"card-footer",
+export const useModalFooterRecipe = createUseRecipe(
+	"modal-footer",
 	{
 		base: {
 			display: "flex",
 			alignItems: "center",
+			justifyContent: "flex-end",
 			gap: "@0.75",
 			paddingTop: "@0.75",
 			paddingBottom: "@0.75",
@@ -169,10 +170,10 @@ export const useCardFooterRecipe = createUseRecipe(
 		},
 	},
 	(s) => {
-		s.selector(".card-footer:first-child", {
+		s.selector(".modal-footer:first-child", {
 			borderTopColor: "transparent",
 		});
-		s.selector(".card-footer:last-child", {
+		s.selector(".modal-footer:last-child", {
 			borderBottomColor: "transparent",
 		});
 	},

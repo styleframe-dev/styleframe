@@ -1,9 +1,9 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Card body recipe for main content area.
+ * Modal body recipe for main content area.
  */
-export const useCardBodyRecipe = createUseRecipe("card-body", {
+export const useModalBodyRecipe = createUseRecipe("modal-body", {
 	base: {
 		display: "flex",
 		flexDirection: "column",

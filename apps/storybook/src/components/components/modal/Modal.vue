@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { cardHeader } from "virtual:styleframe";
+import { modal } from "virtual:styleframe";
 
 const props = withDefaults(
 	defineProps<{
@@ -12,7 +12,7 @@ const props = withDefaults(
 );
 
 const classes = computed(() =>
-	cardHeader({
+	modal({
 		color: props.color,
 		variant: props.variant,
 		size: props.size,

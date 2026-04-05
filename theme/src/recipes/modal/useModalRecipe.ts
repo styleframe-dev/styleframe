@@ -1,10 +1,10 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Card container recipe.
+ * Modal container recipe.
  * Supports color (light, dark, neutral), variant, and size axes.
  */
-export const useCardRecipe = createUseRecipe("card", {
+export const useModalRecipe = createUseRecipe("modal", {
 	base: {
 		display: "flex",
 		flexDirection: "column",

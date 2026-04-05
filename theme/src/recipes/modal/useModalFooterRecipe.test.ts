@@ -1,6 +1,6 @@
 import { styleframe } from "@styleframe/core";
 import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
-import { useCardFooterRecipe } from "./index";
+import { useModalFooterRecipe } from "./index";
 
 function createInstance() {
 	const s = styleframe();
@@ -9,6 +9,7 @@ function createInstance() {
 		"flexDirection",
 		"flexBasis",
 		"alignItems",
+		"justifyContent",
 		"borderWidth",
 		"borderStyle",
 		"borderColor",
@@ -37,22 +38,23 @@ function createInstance() {
 	return s;
 }
 
-describe("useCardFooterRecipe", () => {
+describe("useModalFooterRecipe", () => {
 	it("should create a recipe with correct metadata", () => {
 		const s = createInstance();
-		const recipe = useCardFooterRecipe(s);
+		const recipe = useModalFooterRecipe(s);
 
 		expect(recipe.type).toBe("recipe");
-		expect(recipe.name).toBe("card-footer");
+		expect(recipe.name).toBe("modal-footer");
 	});
 
 	it("should have correct base styles", () => {
 		const s = createInstance();
-		const recipe = useCardFooterRecipe(s);
+		const recipe = useModalFooterRecipe(s);
 
 		expect(recipe.base).toEqual({
 			display: "flex",
 			alignItems: "center",
+			justifyContent: "flex-end",
 			gap: "@0.75",
 			paddingTop: "@0.75",
 			paddingBottom: "@0.75",
@@ -69,7 +71,7 @@ describe("useCardFooterRecipe", () => {
 
 	it("should have correct size variants", () => {
 		const s = createInstance();
-		const recipe = useCardFooterRecipe(s);
+		const recipe = useModalFooterRecipe(s);
 
 		expect(recipe.variants!.size).toEqual({
 			sm: {
@@ -98,7 +100,7 @@ describe("useCardFooterRecipe", () => {
 
 	it("should have correct default variants", () => {
 		const s = createInstance();
-		const recipe = useCardFooterRecipe(s);
+		const recipe = useModalFooterRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
@@ -110,14 +112,14 @@ describe("useCardFooterRecipe", () => {
 	describe("compound variants", () => {
 		it("should have 9 compound variants total", () => {
 			const s = createInstance();
-			const recipe = useCardFooterRecipe(s);
+			const recipe = useModalFooterRecipe(s);
 
 			expect(recipe.compoundVariants).toHaveLength(9);
 		});
 
 		it("should set both borderTopColor and borderBottomColor", () => {
 			const s = createInstance();
-			const recipe = useCardFooterRecipe(s);
+			const recipe = useModalFooterRecipe(s);
 
 			const neutralSolid = recipe.compoundVariants!.find(
 				(cv) => cv.match.color === "neutral" && cv.match.variant === "solid",

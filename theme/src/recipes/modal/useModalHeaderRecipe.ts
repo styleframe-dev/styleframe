@@ -1,10 +1,10 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Card footer recipe with top separator.
+ * Modal header recipe with bottom separator.
  */
-export const useCardFooterRecipe = createUseRecipe(
-	"card-footer",
+export const useModalHeaderRecipe = createUseRecipe(
+	"modal-header",
 	{
 		base: {
 			display: "flex",
@@ -169,10 +169,10 @@ export const useCardFooterRecipe = createUseRecipe(
 		},
 	},
 	(s) => {
-		s.selector(".card-footer:first-child", {
+		s.selector(".modal-header:first-child", {
 			borderTopColor: "transparent",
 		});
-		s.selector(".card-footer:last-child", {
+		s.selector(".modal-header:last-child", {
 			borderBottomColor: "transparent",
 		});
 	},

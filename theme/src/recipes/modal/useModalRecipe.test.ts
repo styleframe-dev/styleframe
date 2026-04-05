@@ -1,6 +1,6 @@
 import { styleframe } from "@styleframe/core";
 import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
-import { useCardRecipe } from "./index";
+import { useModalRecipe } from "./index";
 
 function createInstance() {
 	const s = styleframe();
@@ -37,18 +37,18 @@ function createInstance() {
 	return s;
 }
 
-describe("useCardRecipe", () => {
+describe("useModalRecipe", () => {
 	it("should create a recipe with correct metadata", () => {
 		const s = createInstance();
-		const recipe = useCardRecipe(s);
+		const recipe = useModalRecipe(s);
 
 		expect(recipe.type).toBe("recipe");
-		expect(recipe.name).toBe("card");
+		expect(recipe.name).toBe("modal");
 	});
 
 	it("should have correct base styles", () => {
 		const s = createInstance();
-		const recipe = useCardRecipe(s);
+		const recipe = useModalRecipe(s);
 
 		expect(recipe.base).toEqual({
 			display: "flex",
@@ -67,7 +67,7 @@ describe("useCardRecipe", () => {
 	describe("variants", () => {
 		it("should have all color variants", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s);
+			const recipe = useModalRecipe(s);
 
 			expect(Object.keys(recipe.variants!.color)).toEqual([
 				"light",
@@ -78,7 +78,7 @@ describe("useCardRecipe", () => {
 
 		it("should have all style variants", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s);
+			const recipe = useModalRecipe(s);
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual([
 				"solid",
@@ -89,7 +89,7 @@ describe("useCardRecipe", () => {
 
 		it("should have size variants with correct styles", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s);
+			const recipe = useModalRecipe(s);
 
 			expect(recipe.variants!.size).toEqual({
 				sm: {
@@ -107,7 +107,7 @@ describe("useCardRecipe", () => {
 
 	it("should have correct default variants", () => {
 		const s = createInstance();
-		const recipe = useCardRecipe(s);
+		const recipe = useModalRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
@@ -119,7 +119,7 @@ describe("useCardRecipe", () => {
 	describe("compound variants", () => {
 		it("should have 9 compound variants total", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s);
+			const recipe = useModalRecipe(s);
 
 			// 3 colors × 3 variants = 9
 			expect(recipe.compoundVariants).toHaveLength(9);
@@ -127,7 +127,7 @@ describe("useCardRecipe", () => {
 
 		it("should have correct light solid compound variant", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s);
+			const recipe = useModalRecipe(s);
 
 			const lightSolid = recipe.compoundVariants!.find(
 				(cv) => cv.match.color === "light" && cv.match.variant === "solid",
@@ -150,7 +150,7 @@ describe("useCardRecipe", () => {
 
 		it("should have correct dark solid compound variant", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s);
+			const recipe = useModalRecipe(s);
 
 			const darkSolid = recipe.compoundVariants!.find(
 				(cv) => cv.match.color === "dark" && cv.match.variant === "solid",
@@ -173,7 +173,7 @@ describe("useCardRecipe", () => {
 
 		it("should have correct neutral solid compound variant with adaptive dark mode", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s);
+			const recipe = useModalRecipe(s);
 
 			const neutralSolid = recipe.compoundVariants!.find(
 				(cv) => cv.match.color === "neutral" && cv.match.variant === "solid",
@@ -196,7 +196,7 @@ describe("useCardRecipe", () => {
 
 		it("should have correct neutral subtle compound variant", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s);
+			const recipe = useModalRecipe(s);
 
 			const neutralSubtle = recipe.compoundVariants!.find(
 				(cv) => cv.match.color === "neutral" && cv.match.variant === "subtle",
@@ -221,7 +221,7 @@ describe("useCardRecipe", () => {
 	describe("config overrides", () => {
 		it("should allow overriding base styles", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s, {
+			const recipe = useModalRecipe(s, {
 				base: { display: "inline-flex" },
 			});
 
@@ -233,7 +233,7 @@ describe("useCardRecipe", () => {
 	describe("filter", () => {
 		it("should filter color variants", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s, {
+			const recipe = useModalRecipe(s, {
 				filter: { color: ["neutral"] },
 			});
 
@@ -242,7 +242,7 @@ describe("useCardRecipe", () => {
 
 		it("should prune compound variants when filtering colors", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s, {
+			const recipe = useModalRecipe(s, {
 				filter: { color: ["neutral"] },
 			});
 
@@ -254,7 +254,7 @@ describe("useCardRecipe", () => {
 
 		it("should filter variant axis", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s, {
+			const recipe = useModalRecipe(s, {
 				filter: { variant: ["solid", "soft"] },
 			});
 
@@ -268,7 +268,7 @@ describe("useCardRecipe", () => {
 
 		it("should adjust default variants when filtered out", () => {
 			const s = createInstance();
-			const recipe = useCardRecipe(s, {
+			const recipe = useModalRecipe(s, {
 				filter: { color: ["light"] },
 			});
 

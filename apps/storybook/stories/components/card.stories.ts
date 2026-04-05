@@ -10,7 +10,7 @@ import CardGrid from "@/components/components/card/preview/CardGrid.vue";
 import CardSizeGrid from "@/components/components/card/preview/CardSizeGrid.vue";
 
 const colors = ["neutral", "light", "dark"] as const;
-const variants = ["solid", "outline", "soft", "subtle"] as const;
+const variants = ["solid", "soft", "subtle"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
@@ -113,12 +113,6 @@ export const Dark: Story = {
 export const Solid: Story = {
 	args: {
 		variant: "solid",
-	},
-};
-
-export const Outline: Story = {
-	args: {
-		variant: "outline",
 	},
 };
 

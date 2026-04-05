@@ -1,6 +1,6 @@
 import { styleframe } from "@styleframe/core";
 import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
-import { useCardFooterRecipe } from "./index";
+import { useModalHeaderRecipe } from "./index";
 
 function createInstance() {
 	const s = styleframe();
@@ -37,18 +37,18 @@ function createInstance() {
 	return s;
 }
 
-describe("useCardFooterRecipe", () => {
+describe("useModalHeaderRecipe", () => {
 	it("should create a recipe with correct metadata", () => {
 		const s = createInstance();
-		const recipe = useCardFooterRecipe(s);
+		const recipe = useModalHeaderRecipe(s);
 
 		expect(recipe.type).toBe("recipe");
-		expect(recipe.name).toBe("card-footer");
+		expect(recipe.name).toBe("modal-header");
 	});
 
 	it("should have correct base styles", () => {
 		const s = createInstance();
-		const recipe = useCardFooterRecipe(s);
+		const recipe = useModalHeaderRecipe(s);
 
 		expect(recipe.base).toEqual({
 			display: "flex",
@@ -69,7 +69,7 @@ describe("useCardFooterRecipe", () => {
 
 	it("should have correct size variants", () => {
 		const s = createInstance();
-		const recipe = useCardFooterRecipe(s);
+		const recipe = useModalHeaderRecipe(s);
 
 		expect(recipe.variants!.size).toEqual({
 			sm: {
@@ -98,7 +98,7 @@ describe("useCardFooterRecipe", () => {
 
 	it("should have correct default variants", () => {
 		const s = createInstance();
-		const recipe = useCardFooterRecipe(s);
+		const recipe = useModalHeaderRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
@@ -110,14 +110,14 @@ describe("useCardFooterRecipe", () => {
 	describe("compound variants", () => {
 		it("should have 9 compound variants total", () => {
 			const s = createInstance();
-			const recipe = useCardFooterRecipe(s);
+			const recipe = useModalHeaderRecipe(s);
 
 			expect(recipe.compoundVariants).toHaveLength(9);
 		});
 
 		it("should set both borderTopColor and borderBottomColor", () => {
 			const s = createInstance();
-			const recipe = useCardFooterRecipe(s);
+			const recipe = useModalHeaderRecipe(s);
 
 			const neutralSolid = recipe.compoundVariants!.find(
 				(cv) => cv.match.color === "neutral" && cv.match.variant === "solid",
