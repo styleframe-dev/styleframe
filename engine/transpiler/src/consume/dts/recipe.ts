@@ -19,7 +19,12 @@ function generateVariantPropsType(runtime: Recipe["_runtime"]): string {
 		const optionKeys = Object.keys(variantOptions);
 		if (optionKeys.length > 0) {
 			const optionUnion = optionKeys.map((k) => `"${k}"`).join(" | ");
-			entries.push(`${variantKey}?: ${optionUnion}`);
+			const isBooleanVariant =
+				optionKeys.includes("true") && optionKeys.includes("false");
+			const typeUnion = isBooleanVariant
+				? `${optionUnion} | boolean`
+				: optionUnion;
+			entries.push(`${variantKey}?: ${typeUnion}`);
 		}
 	}
 
