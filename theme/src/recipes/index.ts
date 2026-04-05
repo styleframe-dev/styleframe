@@ -3,3 +3,4 @@ export * from "./button";
 export * from "./button-group";
 export * from "./callout";
 export * from "./card";
+export * from "./tooltip";
