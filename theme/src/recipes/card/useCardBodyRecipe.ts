@@ -205,7 +205,7 @@ export const useCardBodyRecipe = createUseRecipe(
 	(s) => {
 		// Collapse bottom border when followed by card footer
 		s.selector(".card-body:has(+ .card-footer)", {
-			borderBottomColor: "transparent",
+			borderBottomWidth: "0",
 		});
 	},
 );

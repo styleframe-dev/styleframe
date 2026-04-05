@@ -1,15 +1,15 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Card footer recipe with top separator.
+ * Modal body recipe for main content area.
  */
-export const useCardFooterRecipe = createUseRecipe(
-	"card-footer",
+export const useModalBodyRecipe = createUseRecipe(
+	"modal-body",
 	{
 		base: {
 			display: "flex",
-			alignItems: "center",
-			gap: "@0.75",
+			flexDirection: "column",
+			gap: "@0.5",
 			paddingTop: "@0.75",
 			paddingBottom: "@0.75",
 			paddingLeft: "@1",
@@ -29,7 +29,6 @@ export const useCardFooterRecipe = createUseRecipe(
 			},
 			variant: {
 				solid: {},
-				outline: {},
 				soft: {},
 				subtle: {},
 			},
@@ -39,21 +38,21 @@ export const useCardFooterRecipe = createUseRecipe(
 					paddingBottom: "@0.5",
 					paddingLeft: "@0.75",
 					paddingRight: "@0.75",
-					gap: "@0.5",
+					gap: "@0.375",
 				},
 				md: {
 					paddingTop: "@0.75",
 					paddingBottom: "@0.75",
 					paddingLeft: "@1",
 					paddingRight: "@1",
-					gap: "@0.75",
+					gap: "@0.5",
 				},
 				lg: {
 					paddingTop: "@1",
 					paddingBottom: "@1",
 					paddingLeft: "@1.25",
 					paddingRight: "@1.25",
-					gap: "@1",
+					gap: "@0.75",
 				},
 			},
 		},
@@ -61,17 +60,6 @@ export const useCardFooterRecipe = createUseRecipe(
 			// Light
 			{
 				match: { color: "light" as const, variant: "solid" as const },
-				css: {
-					borderTopColor: "@color.gray-200",
-					borderBottomColor: "@color.gray-200",
-					"&:dark": {
-						borderTopColor: "@color.gray-200",
-						borderBottomColor: "@color.gray-200",
-					},
-				},
-			},
-			{
-				match: { color: "light" as const, variant: "outline" as const },
 				css: {
 					borderTopColor: "@color.gray-200",
 					borderBottomColor: "@color.gray-200",
@@ -95,10 +83,10 @@ export const useCardFooterRecipe = createUseRecipe(
 			{
 				match: { color: "light" as const, variant: "subtle" as const },
 				css: {
-					borderTopColor: "@color.gray-300",
+					borderTopColor: "@color.gray-200",
 					borderBottomColor: "@color.gray-300",
 					"&:dark": {
-						borderTopColor: "@color.gray-300",
+						borderTopColor: "@color.gray-200",
 						borderBottomColor: "@color.gray-300",
 					},
 				},
@@ -113,17 +101,6 @@ export const useCardFooterRecipe = createUseRecipe(
 					"&:dark": {
 						borderTopColor: "@color.gray-800",
 						borderBottomColor: "@color.gray-800",
-					},
-				},
-			},
-			{
-				match: { color: "dark" as const, variant: "outline" as const },
-				css: {
-					borderTopColor: "@color.gray-600",
-					borderBottomColor: "@color.gray-600",
-					"&:dark": {
-						borderTopColor: "@color.gray-600",
-						borderBottomColor: "@color.gray-600",
 					},
 				},
 			},
@@ -163,24 +140,13 @@ export const useCardFooterRecipe = createUseRecipe(
 				},
 			},
 			{
-				match: { color: "neutral" as const, variant: "outline" as const },
-				css: {
-					borderTopColor: "@color.gray-200",
-					borderBottomColor: "@color.gray-200",
-					"&:dark": {
-						borderTopColor: "@color.gray-800",
-						borderBottomColor: "@color.gray-800",
-					},
-				},
-			},
-			{
 				match: { color: "neutral" as const, variant: "soft" as const },
 				css: {
-					borderTopColor: "@color.gray-200",
-					borderBottomColor: "@color.gray-200",
+					borderTopColor: "transparent",
+					borderBottomColor: "transparent",
 					"&:dark": {
-						borderTopColor: "@color.gray-700",
-						borderBottomColor: "@color.gray-700",
+						borderTopColor: "transparent",
+						borderBottomColor: "transparent",
 					},
 				},
 			},
@@ -203,8 +169,8 @@ export const useCardFooterRecipe = createUseRecipe(
 		},
 	},
 	(s) => {
-		// Collapse bottom border when footer is the last child (overlaps container border)
-		s.selector(".card-footer:last-child", {
+		// Collapse bottom border when followed by modal footer
+		s.selector(".modal-body:has(+ .modal-footer)", {
 			borderBottomWidth: "0",
 		});
 	},

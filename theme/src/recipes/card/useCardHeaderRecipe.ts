@@ -203,12 +203,16 @@ export const useCardHeaderRecipe = createUseRecipe(
 		},
 	},
 	(s) => {
+		// Collapse top border when header is the first child (overlaps container border)
+		s.selector(".card-header:first-child", {
+			borderTopWidth: "0",
+		});
 		// Collapse bottom border when followed by another card part
 		s.selector(".card-header:has(+ .card-body)", {
-			borderBottomColor: "transparent",
+			borderBottomWidth: "0",
 		});
 		s.selector(".card-header:has(+ .card-footer)", {
-			borderBottomColor: "transparent",
+			borderBottomWidth: "0",
 		});
 	},
 );

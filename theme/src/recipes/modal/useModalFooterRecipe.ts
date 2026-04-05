@@ -1,10 +1,10 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Card footer recipe with top separator.
+ * Modal footer recipe with top separator.
  */
-export const useCardFooterRecipe = createUseRecipe(
-	"card-footer",
+export const useModalFooterRecipe = createUseRecipe(
+	"modal-footer",
 	{
 		base: {
 			display: "flex",
@@ -29,7 +29,6 @@ export const useCardFooterRecipe = createUseRecipe(
 			},
 			variant: {
 				solid: {},
-				outline: {},
 				soft: {},
 				subtle: {},
 			},
@@ -61,17 +60,6 @@ export const useCardFooterRecipe = createUseRecipe(
 			// Light
 			{
 				match: { color: "light" as const, variant: "solid" as const },
-				css: {
-					borderTopColor: "@color.gray-200",
-					borderBottomColor: "@color.gray-200",
-					"&:dark": {
-						borderTopColor: "@color.gray-200",
-						borderBottomColor: "@color.gray-200",
-					},
-				},
-			},
-			{
-				match: { color: "light" as const, variant: "outline" as const },
 				css: {
 					borderTopColor: "@color.gray-200",
 					borderBottomColor: "@color.gray-200",
@@ -117,17 +105,6 @@ export const useCardFooterRecipe = createUseRecipe(
 				},
 			},
 			{
-				match: { color: "dark" as const, variant: "outline" as const },
-				css: {
-					borderTopColor: "@color.gray-600",
-					borderBottomColor: "@color.gray-600",
-					"&:dark": {
-						borderTopColor: "@color.gray-600",
-						borderBottomColor: "@color.gray-600",
-					},
-				},
-			},
-			{
 				match: { color: "dark" as const, variant: "soft" as const },
 				css: {
 					borderTopColor: "transparent",
@@ -153,17 +130,6 @@ export const useCardFooterRecipe = createUseRecipe(
 			// Neutral
 			{
 				match: { color: "neutral" as const, variant: "solid" as const },
-				css: {
-					borderTopColor: "@color.gray-200",
-					borderBottomColor: "@color.gray-200",
-					"&:dark": {
-						borderTopColor: "@color.gray-800",
-						borderBottomColor: "@color.gray-800",
-					},
-				},
-			},
-			{
-				match: { color: "neutral" as const, variant: "outline" as const },
 				css: {
 					borderTopColor: "@color.gray-200",
 					borderBottomColor: "@color.gray-200",
@@ -204,7 +170,7 @@ export const useCardFooterRecipe = createUseRecipe(
 	},
 	(s) => {
 		// Collapse bottom border when footer is the last child (overlaps container border)
-		s.selector(".card-footer:last-child", {
+		s.selector(".modal-footer:last-child", {
 			borderBottomWidth: "0",
 		});
 	},
