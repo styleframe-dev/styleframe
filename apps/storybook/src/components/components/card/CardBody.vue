@@ -5,7 +5,7 @@ import { cardBody } from "virtual:styleframe";
 const props = withDefaults(
 	defineProps<{
 		color?: "light" | "dark" | "neutral";
-		variant?: "solid" | "outline" | "soft" | "subtle";
+		variant?: "solid" | "soft" | "subtle";
 		size?: "sm" | "md" | "lg";
 	}>(),
 	{},

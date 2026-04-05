@@ -108,11 +108,11 @@ describe("useCardHeaderRecipe", () => {
 	});
 
 	describe("compound variants", () => {
-		it("should have 12 compound variants total", () => {
+		it("should have 9 compound variants total", () => {
 			const s = createInstance();
 			const recipe = useCardHeaderRecipe(s);
 
-			expect(recipe.compoundVariants).toHaveLength(12);
+			expect(recipe.compoundVariants).toHaveLength(9);
 		});
 
 		it("should set both borderTopColor and borderBottomColor", () => {
