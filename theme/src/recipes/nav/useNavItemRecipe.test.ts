@@ -145,6 +145,32 @@ describe("useNavItemRecipe", () => {
 		});
 	});
 
+	it("should have active variants", () => {
+		const s = createInstance();
+		const recipe = useNavItemRecipe(s);
+
+		expect(recipe.variants!.active).toEqual({
+			true: {
+				fontWeight: "@font-weight.semibold",
+			},
+			false: {},
+		});
+	});
+
+	it("should have disabled variants", () => {
+		const s = createInstance();
+		const recipe = useNavItemRecipe(s);
+
+		expect(recipe.variants!.disabled).toEqual({
+			true: {
+				cursor: "not-allowed",
+				opacity: "0.5",
+				pointerEvents: "none",
+			},
+			false: {},
+		});
+	});
+
 	it("should have correct default variants", () => {
 		const s = createInstance();
 		const recipe = useNavItemRecipe(s);
@@ -153,6 +179,8 @@ describe("useNavItemRecipe", () => {
 			color: "neutral",
 			variant: "ghost",
 			size: "md",
+			active: "false",
+			disabled: "false",
 		});
 	});
 
@@ -404,9 +432,10 @@ describe("useNavItemRecipe", () => {
 			});
 
 			expect(
-				recipe.compoundVariants!.every((cv) => cv.match.color === "neutral"),
+				recipe.compoundVariants!.every(
+					(cv) => !cv.match.color || cv.match.color === "neutral",
+				),
 			).toBe(true);
-			expect(recipe.compoundVariants).toHaveLength(2);
 		});
 
 		it("should filter variant axis", () => {
@@ -417,7 +446,9 @@ describe("useNavItemRecipe", () => {
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual(["ghost"]);
 			expect(
-				recipe.compoundVariants!.every((cv) => cv.match.variant === "ghost"),
+				recipe.compoundVariants!.every(
+					(cv) => !cv.match.variant || cv.match.variant === "ghost",
+				),
 			).toBe(true);
 		});
 

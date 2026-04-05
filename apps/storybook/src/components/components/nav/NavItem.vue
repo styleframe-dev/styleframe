@@ -16,15 +16,15 @@ const props = withDefaults(
 
 <template>
 	<a
-		:class="[
+		:class="
 			navItem({
 				color: props.color,
 				variant: props.variant,
 				size: props.size,
-			}),
-			props.active && '-active',
-			props.disabled && '-disabled',
-		]"
+				active: props.active ? 'true' : 'false',
+				disabled: props.disabled ? 'true' : 'false',
+			})
+		"
 		:href="props.href"
 		:aria-disabled="props.disabled || undefined"
 	>
