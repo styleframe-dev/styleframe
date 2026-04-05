@@ -586,6 +586,98 @@ describe("createRecipe", () => {
 		expect(result).not.toContain("button--disabled");
 	});
 
+	it("should accept boolean true to select 'true' variant option", () => {
+		const runtime = {
+			variants: {
+				disabled: {
+					true: { opacity: "50" },
+					false: { opacity: "100" },
+				},
+			},
+			defaultVariants: {
+				disabled: "false",
+			},
+		} as const satisfies RecipeRuntime;
+
+		const button = createRecipe("button", runtime);
+		const result = button({ disabled: true });
+
+		expect(result).toContain("_opacity:50");
+	});
+
+	it("should accept boolean false to select 'false' variant option", () => {
+		const runtime = {
+			variants: {
+				disabled: {
+					true: { opacity: "50" },
+					false: { opacity: "100" },
+				},
+			},
+			defaultVariants: {
+				disabled: "true",
+			},
+		} as const satisfies RecipeRuntime;
+
+		const button = createRecipe("button", runtime);
+		const result = button({ disabled: false });
+
+		expect(result).toContain("_opacity:100");
+	});
+
+	it("should match boolean true in compound variant conditions", () => {
+		const runtime = {
+			variants: {
+				color: {
+					primary: {},
+				},
+				disabled: {
+					true: {},
+					false: {},
+				},
+			},
+			defaultVariants: {
+				color: "primary",
+				disabled: "false",
+			},
+			compoundVariants: [
+				{
+					match: { color: "primary", disabled: "true" },
+					css: {
+						opacity: "50",
+					},
+					className: "button--primary-disabled",
+				},
+			],
+		} as const satisfies RecipeRuntime;
+
+		const button = createRecipe("button", runtime);
+		const result = button({ disabled: true });
+
+		expect(result).toContain("_opacity:50");
+		expect(result).toContain("button--primary-disabled");
+	});
+
+	it("should not fall through to defaultVariants when boolean false is provided", () => {
+		const runtime = {
+			variants: {
+				disabled: {
+					true: { opacity: "50" },
+					false: { opacity: "100" },
+				},
+			},
+			defaultVariants: {
+				disabled: "true",
+			},
+		} as const satisfies RecipeRuntime;
+
+		const button = createRecipe("button", runtime);
+		// boolean false should select "false" variant, not fall through to default "true"
+		const result = button({ disabled: false });
+
+		expect(result).toContain("_opacity:100");
+		expect(result).not.toContain("_opacity:50");
+	});
+
 	it("should handle compound variant with both css and className", () => {
 		const runtime = {
 			variants: {
