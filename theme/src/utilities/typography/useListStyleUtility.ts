@@ -2,6 +2,16 @@ import { createUseUtility } from "../../utils";
 import { listStylePositionValues, listStyleTypeValues } from "../../values";
 
 /**
+ * Create list-style shorthand utility classes.
+ */
+export const useListStyleUtility = createUseUtility(
+	"list-style",
+	({ value }) => ({
+		listStyle: value,
+	}),
+);
+
+/**
  * Create list-style-image utility classes.
  */
 export const useListStyleImageUtility = createUseUtility(
