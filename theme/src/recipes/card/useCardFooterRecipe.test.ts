@@ -129,8 +129,8 @@ describe("useCardFooterRecipe", () => {
 					borderTopColor: "@color.gray-200",
 					borderBottomColor: "@color.gray-200",
 					"&:dark": {
-						borderTopColor: "@color.gray-800",
-						borderBottomColor: "@color.gray-800",
+						borderTopColor: "@color.gray-700",
+						borderBottomColor: "@color.gray-700",
 					},
 				},
 			});

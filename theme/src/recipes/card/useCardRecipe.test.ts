@@ -161,11 +161,11 @@ describe("useCardRecipe", () => {
 				css: {
 					background: "@color.gray-900",
 					color: "@color.text-inverted",
-					borderColor: "@color.gray-800",
+					borderColor: "@color.gray-700",
 					"&:dark": {
 						background: "@color.gray-900",
 						color: "@color.text",
-						borderColor: "@color.gray-800",
+						borderColor: "@color.gray-700",
 					},
 				},
 			});
@@ -188,7 +188,7 @@ describe("useCardRecipe", () => {
 					"&:dark": {
 						background: "@color.gray-900",
 						color: "@color.white",
-						borderColor: "@color.gray-800",
+						borderColor: "@color.gray-700",
 					},
 				},
 			});
@@ -207,11 +207,11 @@ describe("useCardRecipe", () => {
 				css: {
 					background: "@color.gray-100",
 					color: "@color.gray-700",
-					borderColor: "@color.gray-300",
+					borderColor: "@color.gray-200",
 					"&:dark": {
 						background: "@color.gray-800",
 						color: "@color.gray-300",
-						borderColor: "@color.gray-600",
+						borderColor: "@color.gray-700",
 					},
 				},
 			});
