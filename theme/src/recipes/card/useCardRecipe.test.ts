@@ -82,7 +82,6 @@ describe("useCardRecipe", () => {
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual([
 				"solid",
-				"outline",
 				"soft",
 				"subtle",
 			]);
@@ -118,12 +117,12 @@ describe("useCardRecipe", () => {
 	});
 
 	describe("compound variants", () => {
-		it("should have 12 compound variants total", () => {
+		it("should have 9 compound variants total", () => {
 			const s = createInstance();
 			const recipe = useCardRecipe(s);
 
-			// 3 colors × 4 variants = 12
-			expect(recipe.compoundVariants).toHaveLength(12);
+			// 3 colors × 3 variants = 9
+			expect(recipe.compoundVariants).toHaveLength(9);
 		});
 
 		it("should have correct light solid compound variant", () => {
@@ -149,27 +148,6 @@ describe("useCardRecipe", () => {
 			});
 		});
 
-		it("should have correct light outline compound variant", () => {
-			const s = createInstance();
-			const recipe = useCardRecipe(s);
-
-			const lightOutline = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "light" && cv.match.variant === "outline",
-			);
-
-			expect(lightOutline).toEqual({
-				match: { color: "light", variant: "outline" },
-				css: {
-					color: "@color.text-inverted",
-					borderColor: "@color.gray-200",
-					"&:dark": {
-						color: "@color.text",
-						borderColor: "@color.gray-200",
-					},
-				},
-			});
-		});
-
 		it("should have correct dark solid compound variant", () => {
 			const s = createInstance();
 			const recipe = useCardRecipe(s);
@@ -183,11 +161,11 @@ describe("useCardRecipe", () => {
 				css: {
 					background: "@color.gray-900",
 					color: "@color.text-inverted",
-					borderColor: "@color.gray-800",
+					borderColor: "@color.gray-700",
 					"&:dark": {
 						background: "@color.gray-900",
 						color: "@color.text",
-						borderColor: "@color.gray-800",
+						borderColor: "@color.gray-700",
 					},
 				},
 			});
@@ -210,7 +188,7 @@ describe("useCardRecipe", () => {
 					"&:dark": {
 						background: "@color.gray-900",
 						color: "@color.white",
-						borderColor: "@color.gray-800",
+						borderColor: "@color.gray-700",
 					},
 				},
 			});
@@ -229,11 +207,11 @@ describe("useCardRecipe", () => {
 				css: {
 					background: "@color.gray-100",
 					color: "@color.gray-700",
-					borderColor: "@color.gray-300",
+					borderColor: "@color.gray-200",
 					"&:dark": {
 						background: "@color.gray-800",
 						color: "@color.gray-300",
-						borderColor: "@color.gray-600",
+						borderColor: "@color.gray-700",
 					},
 				},
 			});
@@ -271,7 +249,7 @@ describe("useCardRecipe", () => {
 			expect(
 				recipe.compoundVariants!.every((cv) => cv.match.color === "neutral"),
 			).toBe(true);
-			expect(recipe.compoundVariants).toHaveLength(4);
+			expect(recipe.compoundVariants).toHaveLength(3);
 		});
 
 		it("should filter variant axis", () => {
