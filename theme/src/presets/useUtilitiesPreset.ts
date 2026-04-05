@@ -437,6 +437,7 @@ import {
 	useListStyleImageUtility,
 	useListStylePositionUtility,
 	useListStyleTypeUtility,
+	useListStyleUtility,
 	useOverflowWrapUtility,
 	useTextAlignUtility,
 	useTextColorUtility,
@@ -1522,6 +1523,8 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("hyphens"),
 	);
 	if (hyphens) createHyphensUtility(hyphens);
+
+	const createListStyleUtility = useListStyleUtility(s);
 
 	const createListStylePositionUtility = useListStylePositionUtility(
 		s,
@@ -2876,6 +2879,7 @@ export function useUtilitiesPreset(
 			undefined,
 			resolveUtilityOptions("line-height"),
 		),
+		createListStyleUtility,
 		createListStyleImageUtility: useListStyleImageUtility(
 			s,
 			undefined,

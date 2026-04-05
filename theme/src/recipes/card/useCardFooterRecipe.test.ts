@@ -108,11 +108,11 @@ describe("useCardFooterRecipe", () => {
 	});
 
 	describe("compound variants", () => {
-		it("should have 12 compound variants total", () => {
+		it("should have 9 compound variants total", () => {
 			const s = createInstance();
 			const recipe = useCardFooterRecipe(s);
 
-			expect(recipe.compoundVariants).toHaveLength(12);
+			expect(recipe.compoundVariants).toHaveLength(9);
 		});
 
 		it("should set both borderTopColor and borderBottomColor", () => {
@@ -129,8 +129,8 @@ describe("useCardFooterRecipe", () => {
 					borderTopColor: "@color.gray-200",
 					borderBottomColor: "@color.gray-200",
 					"&:dark": {
-						borderTopColor: "@color.gray-800",
-						borderBottomColor: "@color.gray-800",
+						borderTopColor: "@color.gray-700",
+						borderBottomColor: "@color.gray-700",
 					},
 				},
 			});

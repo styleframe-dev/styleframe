@@ -58,12 +58,6 @@ describe("useCardBodyRecipe", () => {
 			paddingBottom: "@0.75",
 			paddingLeft: "@1",
 			paddingRight: "@1",
-			borderTopWidth: "@border-width.thin",
-			borderTopStyle: "@border-style.solid",
-			borderTopColor: "transparent",
-			borderBottomWidth: "@border-width.thin",
-			borderBottomStyle: "@border-style.solid",
-			borderBottomColor: "transparent",
 		});
 	});
 
@@ -107,55 +101,10 @@ describe("useCardBodyRecipe", () => {
 		});
 	});
 
-	describe("compound variants", () => {
-		it("should have 12 compound variants total", () => {
-			const s = createInstance();
-			const recipe = useCardBodyRecipe(s);
+	it("should not have compound variants", () => {
+		const s = createInstance();
+		const recipe = useCardBodyRecipe(s);
 
-			// 3 colors × 4 variants = 12
-			expect(recipe.compoundVariants).toHaveLength(12);
-		});
-
-		it("should have correct neutral solid compound variant", () => {
-			const s = createInstance();
-			const recipe = useCardBodyRecipe(s);
-
-			const neutralSolid = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "neutral" && cv.match.variant === "solid",
-			);
-
-			expect(neutralSolid).toEqual({
-				match: { color: "neutral", variant: "solid" },
-				css: {
-					borderTopColor: "@color.gray-200",
-					borderBottomColor: "@color.gray-200",
-					"&:dark": {
-						borderTopColor: "@color.gray-800",
-						borderBottomColor: "@color.gray-800",
-					},
-				},
-			});
-		});
-
-		it("should have transparent borders for soft variants", () => {
-			const s = createInstance();
-			const recipe = useCardBodyRecipe(s);
-
-			const neutralSoft = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "neutral" && cv.match.variant === "soft",
-			);
-
-			expect(neutralSoft).toEqual({
-				match: { color: "neutral", variant: "soft" },
-				css: {
-					borderTopColor: "transparent",
-					borderBottomColor: "transparent",
-					"&:dark": {
-						borderTopColor: "transparent",
-						borderBottomColor: "transparent",
-					},
-				},
-			});
-		});
+		expect(recipe.compoundVariants).toBeUndefined();
 	});
 });

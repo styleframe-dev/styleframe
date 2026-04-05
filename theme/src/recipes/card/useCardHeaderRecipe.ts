@@ -29,7 +29,6 @@ export const useCardHeaderRecipe = createUseRecipe(
 			},
 			variant: {
 				solid: {},
-				outline: {},
 				soft: {},
 				subtle: {},
 			},
@@ -71,17 +70,6 @@ export const useCardHeaderRecipe = createUseRecipe(
 				},
 			},
 			{
-				match: { color: "light" as const, variant: "outline" as const },
-				css: {
-					borderTopColor: "@color.gray-200",
-					borderBottomColor: "@color.gray-200",
-					"&:dark": {
-						borderTopColor: "@color.gray-200",
-						borderBottomColor: "@color.gray-200",
-					},
-				},
-			},
-			{
 				match: { color: "light" as const, variant: "soft" as const },
 				css: {
 					borderTopColor: "transparent",
@@ -108,22 +96,11 @@ export const useCardHeaderRecipe = createUseRecipe(
 			{
 				match: { color: "dark" as const, variant: "solid" as const },
 				css: {
-					borderTopColor: "@color.gray-800",
-					borderBottomColor: "@color.gray-800",
+					borderTopColor: "@color.gray-700",
+					borderBottomColor: "@color.gray-700",
 					"&:dark": {
-						borderTopColor: "@color.gray-800",
-						borderBottomColor: "@color.gray-800",
-					},
-				},
-			},
-			{
-				match: { color: "dark" as const, variant: "outline" as const },
-				css: {
-					borderTopColor: "@color.gray-800",
-					borderBottomColor: "@color.gray-800",
-					"&:dark": {
-						borderTopColor: "@color.gray-800",
-						borderBottomColor: "@color.gray-800",
+						borderTopColor: "@color.gray-700",
+						borderBottomColor: "@color.gray-700",
 					},
 				},
 			},
@@ -141,11 +118,11 @@ export const useCardHeaderRecipe = createUseRecipe(
 			{
 				match: { color: "dark" as const, variant: "subtle" as const },
 				css: {
-					borderTopColor: "@color.gray-600",
-					borderBottomColor: "@color.gray-600",
+					borderTopColor: "@color.gray-700",
+					borderBottomColor: "@color.gray-700",
 					"&:dark": {
-						borderTopColor: "@color.gray-600",
-						borderBottomColor: "@color.gray-600",
+						borderTopColor: "@color.gray-700",
+						borderBottomColor: "@color.gray-700",
 					},
 				},
 			},
@@ -157,19 +134,8 @@ export const useCardHeaderRecipe = createUseRecipe(
 					borderTopColor: "@color.gray-200",
 					borderBottomColor: "@color.gray-200",
 					"&:dark": {
-						borderTopColor: "@color.gray-800",
-						borderBottomColor: "@color.gray-800",
-					},
-				},
-			},
-			{
-				match: { color: "neutral" as const, variant: "outline" as const },
-				css: {
-					borderTopColor: "@color.gray-200",
-					borderBottomColor: "@color.gray-200",
-					"&:dark": {
-						borderTopColor: "@color.gray-800",
-						borderBottomColor: "@color.gray-800",
+						borderTopColor: "@color.gray-700",
+						borderBottomColor: "@color.gray-700",
 					},
 				},
 			},
@@ -187,11 +153,11 @@ export const useCardHeaderRecipe = createUseRecipe(
 			{
 				match: { color: "neutral" as const, variant: "subtle" as const },
 				css: {
-					borderTopColor: "@color.gray-300",
-					borderBottomColor: "@color.gray-300",
+					borderTopColor: "@color.gray-200",
+					borderBottomColor: "@color.gray-200",
 					"&:dark": {
-						borderTopColor: "@color.gray-600",
-						borderBottomColor: "@color.gray-600",
+						borderTopColor: "@color.gray-700",
+						borderBottomColor: "@color.gray-700",
 					},
 				},
 			},
@@ -204,10 +170,10 @@ export const useCardHeaderRecipe = createUseRecipe(
 	},
 	(s) => {
 		// Collapse bottom border when followed by another card part
-		s.selector(".card-header:has(+ .card-body)", {
-			borderBottomColor: "transparent",
+		s.selector(".card-header:first-child", {
+			borderTopColor: "transparent",
 		});
-		s.selector(".card-header:has(+ .card-footer)", {
+		s.selector(".card-header:last-child", {
 			borderBottomColor: "transparent",
 		});
 	},

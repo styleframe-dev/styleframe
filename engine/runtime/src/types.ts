@@ -44,7 +44,11 @@ export type RecipeVariantProps<R> = R extends {
 			: // Specific type with literal keys - extract exact variant keys and options
 				{
 					[K in keyof V]?: V[K] extends Record<string, unknown>
-						? keyof V[K] & string
+						? "true" extends keyof V[K]
+							? "false" extends keyof V[K]
+								? (keyof V[K] & string) | boolean
+								: keyof V[K] & string
+							: keyof V[K] & string
 						: never;
 				}
 		: Record<string, string>
