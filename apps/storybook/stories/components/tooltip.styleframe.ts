@@ -37,4 +37,16 @@ selector(".tooltip-label", {
 	minWidth: "80px",
 });
 
+selector(".tooltip-wrapper", {
+	position: "relative",
+	display: "inline-flex",
+	flexDirection: "column",
+	alignItems: "center",
+});
+
+selector(".tooltip-arrow-position", {
+	bottom: "calc(@tooltip.arrow.size * -1)",
+	left: "calc(50% - 5px)",
+});
+
 export default s;

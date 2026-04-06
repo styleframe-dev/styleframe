@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { tooltip } from "virtual:styleframe";
+import { tooltip, tooltipArrow } from "virtual:styleframe";
 
 const props = withDefaults(
 	defineProps<{
@@ -19,10 +19,20 @@ const classes = computed(() =>
 		size: props.size,
 	}),
 );
+
+const arrowClasses = computed(() =>
+	tooltipArrow({
+		color: props.color,
+		variant: props.variant,
+	}),
+);
 </script>
 
 <template>
-	<span :class="classes">
-		<slot>{{ props.label }}</slot>
-	</span>
+	<div class="tooltip-wrapper">
+		<span :class="classes">
+			<slot>{{ props.label }}</slot>
+		</span>
+		<span :class="[arrowClasses, 'tooltip-arrow-position']" />
+	</div>
 </template>
