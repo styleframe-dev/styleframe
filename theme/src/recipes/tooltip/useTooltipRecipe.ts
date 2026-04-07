@@ -204,7 +204,7 @@ export const useTooltipArrowRecipe = createUseRecipe(
 			borderRightColor: "transparent",
 			borderTopWidth: "calc(@tooltip.arrow.size + 1px)",
 			borderTopStyle: "@border-style.solid",
-			borderTopColor: "red",
+			borderTopColor: "transparent",
 			position: "absolute",
 			zIndex: "@z-index.tooltip",
 			"&:after": {
@@ -216,7 +216,7 @@ export const useTooltipArrowRecipe = createUseRecipe(
 				borderRightColor: "transparent",
 				borderTopWidth: "@tooltip.arrow.size",
 				borderTopStyle: "@border-style.solid",
-				borderTopColor: "blue",
+				borderTopColor: "transparent",
 				position: "absolute",
 				left: "calc(@tooltip.arrow.size * -1)",
 				top: "calc(@tooltip.arrow.size * -1 - 1px)",
