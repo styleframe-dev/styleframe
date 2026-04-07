@@ -46,7 +46,7 @@ selector(".tooltip-wrapper", {
 
 selector(".tooltip-arrow-position", {
 	bottom: "calc(@tooltip.arrow.size * -1)",
-	left: "calc(50% - 5px)",
+	left: "calc(50% - @tooltip.arrow.size)",
 });
 
 export default s;
