@@ -383,6 +383,6 @@ export const useTooltipArrowRecipe = createUseRecipe(
 		},
 	},
 	(s) => {
-		s.variable("tooltip.arrow.size", "5px");
+		s.variable("tooltip.arrow.size", "5px", { default: true });
 	},
 );
