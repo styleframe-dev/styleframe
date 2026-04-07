@@ -1,5 +1,6 @@
 import { styleframe } from "@styleframe/core";
 import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
+import { useAfterModifier } from "../../modifiers/usePseudoElementModifiers";
 import { useTooltipRecipe, useTooltipArrowRecipe } from "./useTooltipRecipe";
 
 function createInstance() {
@@ -25,10 +26,23 @@ function createInstance() {
 		"color",
 		"width",
 		"height",
+		"borderLeftWidth",
+		"borderLeftStyle",
+		"borderLeftColor",
+		"borderRightWidth",
+		"borderRightStyle",
+		"borderRightColor",
+		"borderTopWidth",
+		"borderTopStyle",
+		"borderTopColor",
+		"position",
+		"left",
+		"top",
 	]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
 	useDarkModifier(s);
+	useAfterModifier(s);
 	return s;
 }
 
@@ -60,7 +74,7 @@ describe("useTooltipRecipe", () => {
 			paddingRight: "@0.625",
 			borderRadius: "@border-radius.md",
 			boxShadow: "@box-shadow.sm",
-			zIndex: "@z-index.popover",
+			zIndex: "@z-index.tooltip",
 			maxWidth: "240px",
 		});
 	});
@@ -309,11 +323,34 @@ describe("useTooltipArrowRecipe", () => {
 		const recipe = useTooltipArrowRecipe(s);
 
 		expect(recipe.base).toEqual({
-			width: "8px",
-			height: "8px",
-			borderWidth: "@border-width.thin",
-			borderStyle: "@border-style.solid",
-			borderColor: "transparent",
+			width: "0",
+			height: "0",
+			borderLeftWidth: "calc(@tooltip.arrow.size + 1px)",
+			borderLeftStyle: "@border-style.solid",
+			borderLeftColor: "transparent",
+			borderRightWidth: "calc(@tooltip.arrow.size + 1px)",
+			borderRightStyle: "@border-style.solid",
+			borderRightColor: "transparent",
+			borderTopWidth: "calc(@tooltip.arrow.size + 1px)",
+			borderTopStyle: "@border-style.solid",
+			borderTopColor: "red",
+			position: "absolute",
+			zIndex: "@z-index.tooltip",
+			"&:after": {
+				borderLeftWidth: "@tooltip.arrow.size",
+				borderLeftStyle: "@border-style.solid",
+				borderLeftColor: "transparent",
+				borderRightWidth: "@tooltip.arrow.size",
+				borderRightStyle: "@border-style.solid",
+				borderRightColor: "transparent",
+				borderTopWidth: "@tooltip.arrow.size",
+				borderTopStyle: "@border-style.solid",
+				borderTopColor: "blue",
+				position: "absolute",
+				left: "calc(@tooltip.arrow.size * -1)",
+				top: "calc(@tooltip.arrow.size * -1 - 1px)",
+				zIndex: "0",
+			},
 		});
 	});
 
@@ -371,11 +408,15 @@ describe("useTooltipArrowRecipe", () => {
 			expect(darkSolid).toEqual({
 				match: { color: "dark", variant: "solid" },
 				css: {
-					background: "@color.gray-900",
-					borderColor: "@color.gray-800",
+					borderTopColor: "@color.gray-800",
+					"&:after": {
+						borderTopColor: "@color.gray-900",
+					},
 					"&:dark": {
-						background: "@color.gray-900",
-						borderColor: "@color.gray-800",
+						borderTopColor: "@color.gray-800",
+					},
+					"&:dark:after": {
+						borderTopColor: "@color.gray-900",
 					},
 				},
 			});
@@ -392,11 +433,15 @@ describe("useTooltipArrowRecipe", () => {
 			expect(neutralSolid).toEqual({
 				match: { color: "neutral", variant: "solid" },
 				css: {
-					background: "@color.white",
-					borderColor: "@color.gray-200",
+					borderTopColor: "@color.gray-200",
+					"&:after": {
+						borderTopColor: "@color.white",
+					},
 					"&:dark": {
-						background: "@color.gray-900",
-						borderColor: "@color.gray-800",
+						borderTopColor: "@color.gray-800",
+					},
+					"&:dark:after": {
+						borderTopColor: "@color.gray-900",
 					},
 				},
 			});
@@ -413,11 +458,15 @@ describe("useTooltipArrowRecipe", () => {
 			expect(neutralSubtle).toEqual({
 				match: { color: "neutral", variant: "subtle" },
 				css: {
-					background: "@color.gray-100",
-					borderColor: "@color.gray-300",
+					borderTopColor: "@color.gray-300",
+					"&:after": {
+						borderTopColor: "@color.gray-100",
+					},
 					"&:dark": {
-						background: "@color.gray-800",
-						borderColor: "@color.gray-600",
+						borderTopColor: "@color.gray-600",
+					},
+					"&:dark:after": {
+						borderTopColor: "@color.gray-800",
 					},
 				},
 			});
@@ -432,7 +481,7 @@ describe("useTooltipArrowRecipe", () => {
 			});
 
 			expect(recipe.base!.width).toBe("12px");
-			expect(recipe.base!.height).toBe("8px");
+			expect(recipe.base!.height).toBe("0");
 		});
 	});
 
