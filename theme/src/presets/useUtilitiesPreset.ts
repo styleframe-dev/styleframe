@@ -411,6 +411,10 @@ import {
 // Transitions and Animation
 import {
 	useAnimationUtility,
+	useAnimationNameUtility,
+	useAnimationDurationUtility,
+	useAnimationTimingFunctionUtility,
+	useAnimationIterationCountUtility,
 	useTransitionBehaviorUtility,
 	useTransitionDelayUtility,
 	useTransitionDurationUtility,
@@ -587,6 +591,10 @@ export interface UtilitiesPresetConfig {
 
 	// Transitions & Animation
 	animation?: Record<string, string> | false;
+	animationName?: Record<string, string> | false;
+	animationDuration?: Record<string, string> | false;
+	animationTimingFunction?: Record<string, string> | false;
+	animationIterationCount?: Record<string, string> | false;
 	transitionBehavior?: Record<string, string> | false;
 	transitionProperty?: Record<string, string> | false;
 
@@ -819,6 +827,16 @@ export function useUtilitiesPreset(
 		transformStyleValues,
 	);
 	const animation = resolveValues(config.animation, animationValues);
+	const animationName = resolveValues(config.animationName, {});
+	const animationDuration = resolveValues(config.animationDuration, {});
+	const animationTimingFunction = resolveValues(
+		config.animationTimingFunction,
+		{},
+	);
+	const animationIterationCount = resolveValues(
+		config.animationIterationCount,
+		{},
+	);
 	const transitionBehavior = resolveValues(
 		config.transitionBehavior,
 		transitionBehaviorValues,
@@ -1475,6 +1493,42 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("animation"),
 	);
 	if (animation) createAnimationUtility(animation);
+
+	const createAnimationNameUtility = useAnimationNameUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("animation-name"),
+	);
+	if (animationName) createAnimationNameUtility(animationName);
+
+	const createAnimationDurationUtility = useAnimationDurationUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("animation-duration"),
+	);
+	if (animationDuration) createAnimationDurationUtility(animationDuration);
+
+	const createAnimationTimingFunctionUtility =
+		useAnimationTimingFunctionUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("animation-timing-function"),
+		);
+	if (animationTimingFunction)
+		createAnimationTimingFunctionUtility(animationTimingFunction);
+
+	const createAnimationIterationCountUtility =
+		useAnimationIterationCountUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("animation-iteration-count"),
+		);
+	if (animationIterationCount)
+		createAnimationIterationCountUtility(animationIterationCount);
 
 	const createTransitionBehaviorUtility = useTransitionBehaviorUtility(
 		s,
@@ -2793,6 +2847,10 @@ export function useUtilitiesPreset(
 
 		// Transitions and Animation
 		createAnimationUtility,
+		createAnimationNameUtility,
+		createAnimationDurationUtility,
+		createAnimationTimingFunctionUtility,
+		createAnimationIterationCountUtility,
 		createTransitionBehaviorUtility,
 		createTransitionUtility: useTransitionUtility(
 			s,
