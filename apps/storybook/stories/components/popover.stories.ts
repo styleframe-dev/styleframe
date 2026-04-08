@@ -11,7 +11,7 @@ import PopoverGrid from "@/components/components/popover/preview/PopoverGrid.vue
 import PopoverSizeGrid from "@/components/components/popover/preview/PopoverSizeGrid.vue";
 
 const colors = ["neutral", "light", "dark"] as const;
-const variants = ["solid", "outline", "soft", "subtle"] as const;
+const variants = ["solid", "soft", "subtle"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
@@ -115,12 +115,6 @@ export const Dark: Story = {
 export const Solid: Story = {
 	args: {
 		variant: "solid",
-	},
-};
-
-export const Outline: Story = {
-	args: {
-		variant: "outline",
 	},
 };
 

@@ -22,7 +22,6 @@ export const usePopoverArrowRecipe = createUseRecipe("popover-arrow", {
 		},
 		variant: {
 			solid: {},
-			outline: {},
 			soft: {},
 			subtle: {},
 		},
@@ -55,17 +54,6 @@ export const usePopoverArrowRecipe = createUseRecipe("popover-arrow", {
 			},
 		},
 		{
-			match: { color: "light" as const, variant: "outline" as const },
-			css: {
-				background: "@color.white",
-				borderColor: "@color.gray-200",
-				"&:dark": {
-					background: "@color.white",
-					borderColor: "@color.gray-200",
-				},
-			},
-		},
-		{
 			match: { color: "light" as const, variant: "soft" as const },
 			css: {
 				background: "@color.gray-100",
@@ -78,10 +66,10 @@ export const usePopoverArrowRecipe = createUseRecipe("popover-arrow", {
 			match: { color: "light" as const, variant: "subtle" as const },
 			css: {
 				background: "@color.gray-100",
-				borderColor: "@color.gray-300",
+				borderColor: "@color.gray-200",
 				"&:dark": {
 					background: "@color.gray-100",
-					borderColor: "@color.gray-300",
+					borderColor: "@color.gray-200",
 				},
 			},
 		},
@@ -91,21 +79,10 @@ export const usePopoverArrowRecipe = createUseRecipe("popover-arrow", {
 			match: { color: "dark" as const, variant: "solid" as const },
 			css: {
 				background: "@color.gray-900",
-				borderColor: "@color.gray-800",
+				borderColor: "@color.gray-700",
 				"&:dark": {
 					background: "@color.gray-900",
-					borderColor: "@color.gray-800",
-				},
-			},
-		},
-		{
-			match: { color: "dark" as const, variant: "outline" as const },
-			css: {
-				background: "@color.gray-900",
-				borderColor: "@color.gray-600",
-				"&:dark": {
-					background: "@color.gray-900",
-					borderColor: "@color.gray-600",
+					borderColor: "@color.gray-700",
 				},
 			},
 		},
@@ -122,10 +99,10 @@ export const usePopoverArrowRecipe = createUseRecipe("popover-arrow", {
 			match: { color: "dark" as const, variant: "subtle" as const },
 			css: {
 				background: "@color.gray-800",
-				borderColor: "@color.gray-600",
+				borderColor: "@color.gray-700",
 				"&:dark": {
 					background: "@color.gray-800",
-					borderColor: "@color.gray-600",
+					borderColor: "@color.gray-700",
 				},
 			},
 		},
@@ -138,18 +115,7 @@ export const usePopoverArrowRecipe = createUseRecipe("popover-arrow", {
 				borderColor: "@color.gray-200",
 				"&:dark": {
 					background: "@color.gray-900",
-					borderColor: "@color.gray-800",
-				},
-			},
-		},
-		{
-			match: { color: "neutral" as const, variant: "outline" as const },
-			css: {
-				background: "@color.white",
-				borderColor: "@color.gray-200",
-				"&:dark": {
-					background: "@color.gray-900",
-					borderColor: "@color.gray-600",
+					borderColor: "@color.gray-700",
 				},
 			},
 		},
@@ -166,10 +132,10 @@ export const usePopoverArrowRecipe = createUseRecipe("popover-arrow", {
 			match: { color: "neutral" as const, variant: "subtle" as const },
 			css: {
 				background: "@color.gray-100",
-				borderColor: "@color.gray-300",
+				borderColor: "@color.gray-200",
 				"&:dark": {
 					background: "@color.gray-800",
-					borderColor: "@color.gray-600",
+					borderColor: "@color.gray-700",
 				},
 			},
 		},

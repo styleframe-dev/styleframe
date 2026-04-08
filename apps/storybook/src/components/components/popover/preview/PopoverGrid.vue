@@ -7,7 +7,7 @@ import PopoverTitle from "../PopoverTitle.vue";
 import PopoverDescription from "../PopoverDescription.vue";
 
 const colors = ["neutral", "light", "dark"] as const;
-const variants = ["solid", "outline", "soft", "subtle"] as const;
+const variants = ["solid", "soft", "subtle"] as const;
 </script>
 
 <template>

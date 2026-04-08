@@ -63,7 +63,6 @@ describe("usePopoverArrowRecipe", () => {
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual([
 				"solid",
-				"outline",
 				"soft",
 				"subtle",
 			]);
@@ -102,12 +101,12 @@ describe("usePopoverArrowRecipe", () => {
 	});
 
 	describe("compound variants", () => {
-		it("should have 12 compound variants total", () => {
+		it("should have 9 compound variants total", () => {
 			const s = createInstance();
 			const recipe = usePopoverArrowRecipe(s);
 
-			// 3 colors × 4 variants = 12
-			expect(recipe.compoundVariants).toHaveLength(12);
+			// 3 colors × 3 variants = 9
+			expect(recipe.compoundVariants).toHaveLength(9);
 		});
 
 		it("should have correct neutral solid compound variant matching popover background", () => {
@@ -125,7 +124,7 @@ describe("usePopoverArrowRecipe", () => {
 					borderColor: "@color.gray-200",
 					"&:dark": {
 						background: "@color.gray-900",
-						borderColor: "@color.gray-800",
+						borderColor: "@color.gray-700",
 					},
 				},
 			});
@@ -162,10 +161,10 @@ describe("usePopoverArrowRecipe", () => {
 				match: { color: "dark", variant: "subtle" },
 				css: {
 					background: "@color.gray-800",
-					borderColor: "@color.gray-600",
+					borderColor: "@color.gray-700",
 					"&:dark": {
 						background: "@color.gray-800",
-						borderColor: "@color.gray-600",
+						borderColor: "@color.gray-700",
 					},
 				},
 			});
