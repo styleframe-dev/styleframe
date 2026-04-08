@@ -22,33 +22,33 @@ All `*.styleframe.ts` extension files share one `Styleframe` instance from `styl
 
 ## Monorepo Package Map
 
-```
-engine/
-├── core/           # @styleframe/core — Token AST, factory methods (variable, ref, selector, utility, modifier, recipe, theme, css, keyframes, media, atRule, merge)
-├── loader/         # @styleframe/loader — Runtime config loading, module loading, HMR, build
-├── runtime/        # @styleframe/runtime — Browser-side recipe class name generation
-├── scanner/        # @styleframe/scanner — Content scanning for utility class extraction
-├── styleframe/     # styleframe — Barrel package re-exporting all engine APIs
-└── transpiler/     # @styleframe/transpiler — AST-to-CSS/TS/DTS code generation
+**Engine packages** (`engine/`):
+- `core/` — @styleframe/core — Token AST, factory methods (variable, ref, selector, utility, modifier, recipe, theme, css, keyframes, media, atRule, merge)
+- `loader/` — @styleframe/loader — Runtime config loading, module loading, HMR, build
+- `runtime/` — @styleframe/runtime — Browser-side recipe class name generation
+- `scanner/` — @styleframe/scanner — Content scanning for utility class extraction
+- `styleframe/` — styleframe — Barrel package re-exporting all engine APIs
+- `transpiler/` — @styleframe/transpiler — AST-to-CSS/TS/DTS code generation
 
-theme/              # @styleframe/theme — Design token composables, modifiers, utilities, recipes, presets
+**Theme** (`theme/`):
+- @styleframe/theme — Design token composables, modifiers, utilities, recipes, presets
 
-tooling/
-├── cli/            # @styleframe/cli — CLI for init, build, and Figma sync
-├── figma/          # @styleframe/figma — Bidirectional Figma variable sync via DTCG format
-└── plugin/         # @styleframe/plugin — Unplugin build integration (Vite, Webpack, Nuxt, Astro, Rollup, Rspack, esbuild, Farm)
+**Tooling** (`tooling/`):
+- `cli/` — @styleframe/cli — CLI for init, build, and Figma sync
+- `figma/` — @styleframe/figma — Bidirectional Figma variable sync via DTCG format
+- `plugin/` — @styleframe/plugin — Unplugin build integration (Vite, Webpack, Nuxt, Astro, Rollup, Rspack, esbuild, Farm)
 
-config/             # @styleframe/config-typescript, @styleframe/config-vite — Shared build configs
+**Config** (`config/`):
+- @styleframe/config-typescript, @styleframe/config-vite — Shared build configs
 
-apps/
-├── docs/           # Documentation site (Nuxt Content + Markdown)
-├── app/            # Customer dashboard (Nuxt 3 + Supabase)
-├── shared/         # Shared Nuxt layer for doc apps
-└── storybook/      # Storybook 10 + Vue 3 design system showcase
+**Applications** (`apps/`):
+- `docs/` — Documentation site (Nuxt Content + Markdown)
+- `app/` — Customer dashboard (Nuxt 3 + Supabase)
+- `shared/` — Shared Nuxt layer for doc apps
+- `storybook/` — Storybook 10 + Vue 3 design system showcase
 
-testing/
-└── integration/    # Playwright end-to-end tests across Chromium, Firefox, WebKit
-```
+**Testing** (`testing/`):
+- `integration/` — Playwright end-to-end tests across Chromium, Firefox, WebKit
 
 **Import rule:** Import from `'styleframe'` (the barrel package), not `@styleframe/*` sub-packages. Use `'styleframe/plugin/vite'` for plugins, `'styleframe/loader'` for loader, `'styleframe/transpiler'` for transpiler.
 

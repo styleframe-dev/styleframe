@@ -116,6 +116,10 @@ export function createUseRecipe<
 		s: Styleframe,
 		options?: DeepPartial<RecipeConfig<Variants>> & { filter?: F },
 	): Recipe<Name, ApplyFilter<Variants, F>> {
+		if (setup) {
+			setup(s);
+		}
+
 		const { filter, ...configOverrides } = options ?? {};
 		const merged = defu(configOverrides, defaults) as RecipeConfig;
 		const filtered = filter ? applyFilter(merged, filter) : merged;
@@ -123,10 +127,6 @@ export function createUseRecipe<
 			name,
 			...filtered,
 		}) as Recipe<Name, ApplyFilter<Variants, F>>;
-
-		if (setup) {
-			setup(s);
-		}
 
 		return recipe;
 	};
