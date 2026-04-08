@@ -115,6 +115,18 @@ describe("useWidthUtility", () => {
 
 		expect(typeof creator).toBe("function");
 	});
+
+	it("should support spacing multiplier values", () => {
+		const s = styleframe();
+		const createWidth = useWidthUtility(s);
+		createWidth(["@1", "@2"]);
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._width\\:1 {");
+		expect(css).toContain("width: calc(var(--spacing, 1rem) * 1);");
+		expect(css).toContain("._width\\:2 {");
+		expect(css).toContain("width: calc(var(--spacing, 1rem) * 2);");
+	});
 });
 
 describe("useMinWidthUtility", () => {
