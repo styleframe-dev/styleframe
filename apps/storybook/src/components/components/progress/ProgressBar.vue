@@ -17,12 +17,7 @@ const props = withDefaults(
 		size?: "xs" | "sm" | "md" | "lg" | "xl";
 		orientation?: "horizontal" | "vertical";
 		inverted?: boolean;
-		animation?:
-			| "none"
-			| "carousel"
-			| "carousel-inverse"
-			| "swing"
-			| "elastic";
+		animation?: "none" | "carousel" | "carousel-inverse" | "swing" | "elastic";
 		value?: number | null;
 	}>(),
 	{ value: 0, animation: "none" },
