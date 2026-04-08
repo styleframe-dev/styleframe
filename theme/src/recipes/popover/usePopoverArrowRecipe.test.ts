@@ -1,5 +1,6 @@
 import { styleframe } from "@styleframe/core";
 import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
+import { useAfterModifier } from "../../modifiers/usePseudoElementModifiers";
 import { usePopoverArrowRecipe } from "./index";
 
 function createInstance() {
@@ -8,16 +9,23 @@ function createInstance() {
 		"position",
 		"width",
 		"height",
-		"borderWidth",
-		"borderStyle",
-		"borderColor",
-		"transform",
-		"background",
-		"color",
+		"borderLeftWidth",
+		"borderLeftStyle",
+		"borderLeftColor",
+		"borderRightWidth",
+		"borderRightStyle",
+		"borderRightColor",
+		"borderTopWidth",
+		"borderTopStyle",
+		"borderTopColor",
+		"zIndex",
+		"left",
+		"top",
 	]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
 	useDarkModifier(s);
+	useAfterModifier(s);
 	return s;
 }
 
@@ -35,13 +43,34 @@ describe("usePopoverArrowRecipe", () => {
 		const recipe = usePopoverArrowRecipe(s);
 
 		expect(recipe.base).toEqual({
+			width: "0",
+			height: "0",
+			borderLeftWidth: "calc(@popover.arrow.size + 1px)",
+			borderLeftStyle: "@border-style.solid",
+			borderLeftColor: "transparent",
+			borderRightWidth: "calc(@popover.arrow.size + 1px)",
+			borderRightStyle: "@border-style.solid",
+			borderRightColor: "transparent",
+			borderTopWidth: "calc(@popover.arrow.size + 1px)",
+			borderTopStyle: "@border-style.solid",
+			borderTopColor: "transparent",
 			position: "absolute",
-			width: "@0.5",
-			height: "@0.5",
-			borderWidth: "@border-width.thin",
-			borderStyle: "@border-style.solid",
-			borderColor: "transparent",
-			transform: "rotate(45deg)",
+			zIndex: "@z-index.popover",
+			"&:after": {
+				borderLeftWidth: "@popover.arrow.size",
+				borderLeftStyle: "@border-style.solid",
+				borderLeftColor: "transparent",
+				borderRightWidth: "@popover.arrow.size",
+				borderRightStyle: "@border-style.solid",
+				borderRightColor: "transparent",
+				borderTopWidth: "@popover.arrow.size",
+				borderTopStyle: "@border-style.solid",
+				borderTopColor: "transparent",
+				position: "absolute",
+				left: "calc(@popover.arrow.size * -1)",
+				top: "calc(@popover.arrow.size * -1 - 1px)",
+				zIndex: "0",
+			},
 		});
 	});
 
@@ -68,24 +97,11 @@ describe("usePopoverArrowRecipe", () => {
 			]);
 		});
 
-		it("should have size variants with correct styles", () => {
+		it("should not have size variants", () => {
 			const s = createInstance();
 			const recipe = usePopoverArrowRecipe(s);
 
-			expect(recipe.variants!.size).toEqual({
-				sm: {
-					width: "@0.375",
-					height: "@0.375",
-				},
-				md: {
-					width: "@0.5",
-					height: "@0.5",
-				},
-				lg: {
-					width: "@0.625",
-					height: "@0.625",
-				},
-			});
+			expect(recipe.variants!.size).toBeUndefined();
 		});
 	});
 
@@ -96,7 +112,6 @@ describe("usePopoverArrowRecipe", () => {
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
 			variant: "solid",
-			size: "md",
 		});
 	});
 
@@ -109,7 +124,7 @@ describe("usePopoverArrowRecipe", () => {
 			expect(recipe.compoundVariants).toHaveLength(9);
 		});
 
-		it("should have correct neutral solid compound variant matching popover background", () => {
+		it("should have correct neutral solid compound variant", () => {
 			const s = createInstance();
 			const recipe = usePopoverArrowRecipe(s);
 
@@ -120,17 +135,21 @@ describe("usePopoverArrowRecipe", () => {
 			expect(neutralSolid).toEqual({
 				match: { color: "neutral", variant: "solid" },
 				css: {
-					background: "@color.white",
-					borderColor: "@color.gray-200",
+					borderTopColor: "@color.gray-200",
+					"&:after": {
+						borderTopColor: "@color.white",
+					},
 					"&:dark": {
-						background: "@color.gray-900",
-						borderColor: "@color.gray-700",
+						borderTopColor: "@color.gray-700",
+					},
+					"&:dark:after": {
+						borderTopColor: "@color.gray-900",
 					},
 				},
 			});
 		});
 
-		it("should have correct light soft compound variant without border", () => {
+		it("should have correct light soft compound variant", () => {
 			const s = createInstance();
 			const recipe = usePopoverArrowRecipe(s);
 
@@ -141,15 +160,21 @@ describe("usePopoverArrowRecipe", () => {
 			expect(lightSoft).toEqual({
 				match: { color: "light", variant: "soft" },
 				css: {
-					background: "@color.gray-100",
+					borderTopColor: "@color.gray-100",
+					"&:after": {
+						borderTopColor: "@color.gray-100",
+					},
 					"&:dark": {
-						background: "@color.gray-100",
+						borderTopColor: "@color.gray-100",
+					},
+					"&:dark:after": {
+						borderTopColor: "@color.gray-100",
 					},
 				},
 			});
 		});
 
-		it("should have correct dark subtle compound variant with border", () => {
+		it("should have correct dark subtle compound variant", () => {
 			const s = createInstance();
 			const recipe = usePopoverArrowRecipe(s);
 
@@ -160,11 +185,15 @@ describe("usePopoverArrowRecipe", () => {
 			expect(darkSubtle).toEqual({
 				match: { color: "dark", variant: "subtle" },
 				css: {
-					background: "@color.gray-800",
-					borderColor: "@color.gray-700",
+					borderTopColor: "@color.gray-700",
+					"&:after": {
+						borderTopColor: "@color.gray-800",
+					},
 					"&:dark": {
-						background: "@color.gray-800",
-						borderColor: "@color.gray-700",
+						borderTopColor: "@color.gray-700",
+					},
+					"&:dark:after": {
+						borderTopColor: "@color.gray-800",
 					},
 				},
 			});
