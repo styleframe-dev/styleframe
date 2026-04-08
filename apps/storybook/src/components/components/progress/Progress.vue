@@ -6,6 +6,7 @@ const props = withDefaults(
 	defineProps<{
 		color?: "light" | "dark" | "neutral";
 		size?: "xs" | "sm" | "md" | "lg" | "xl";
+		orientation?: "horizontal" | "vertical";
 		value?: number;
 	}>(),
 	{},
@@ -15,6 +16,7 @@ const classes = computed(() =>
 	progress({
 		color: props.color,
 		size: props.size,
+		orientation: props.orientation,
 	}),
 );
 </script>
@@ -26,6 +28,7 @@ const classes = computed(() =>
 		:aria-valuenow="value"
 		:aria-valuemin="0"
 		:aria-valuemax="100"
+		:aria-orientation="orientation"
 	>
 		<slot />
 	</div>

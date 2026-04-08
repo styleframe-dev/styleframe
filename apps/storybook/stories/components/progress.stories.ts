@@ -17,6 +17,13 @@ const colors = [
 	"neutral",
 ] as const;
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
+const animations = [
+	"none",
+	"carousel",
+	"carousel-inverse",
+	"swing",
+	"elastic",
+] as const;
 
 const meta = {
 	title: "Theme/Recipes/Progress",
@@ -36,9 +43,23 @@ const meta = {
 			options: sizes,
 			description: "The size (height) of the progress bar",
 		},
+		orientation: {
+			control: "select",
+			options: ["horizontal", "vertical"],
+			description: "The orientation of the progress bar",
+		},
+		inverted: {
+			control: "boolean",
+			description: "Whether the fill direction is inverted",
+		},
+		animation: {
+			control: "select",
+			options: animations,
+			description: "The animation style for indeterminate state (value=null)",
+		},
 		value: {
 			control: { type: "range", min: 0, max: 100, step: 1 },
-			description: "The progress value (0-100)",
+			description: "The progress value (0-100). Set to null for indeterminate.",
 		},
 	},
 } satisfies Meta<typeof Progress>;
@@ -56,8 +77,8 @@ export const Default: Story = {
 			return { args };
 		},
 		template: `
-			<Progress :size="args.size" :value="args.value">
-				<ProgressBar :color="args.color" :size="args.size" :value="args.value" />
+			<Progress :size="args.size" :orientation="args.orientation" :value="args.value">
+				<ProgressBar :color="args.color" :size="args.size" :orientation="args.orientation" :inverted="args.inverted" :animation="args.animation" :value="args.value" />
 			</Progress>
 		`,
 	}),
@@ -74,6 +95,127 @@ export const AllSizes: StoryObj = {
 	render: () => ({
 		components: { ProgressSizeGrid },
 		template: "<ProgressSizeGrid />",
+	}),
+};
+
+export const Indeterminate: StoryObj = {
+	render: () => ({
+		components: { Progress, ProgressBar },
+		template: `
+			<div class="_display:flex _flex-direction:column _gap:1.5">
+				<div>
+					<div class="_margin-bottom:0.5 _font-weight:600">Carousel</div>
+					<Progress>
+						<ProgressBar :value="null" animation="carousel" />
+					</Progress>
+				</div>
+				<div>
+					<div class="_margin-bottom:0.5 _font-weight:600">Carousel Inverse</div>
+					<Progress>
+						<ProgressBar :value="null" animation="carousel-inverse" />
+					</Progress>
+				</div>
+				<div>
+					<div class="_margin-bottom:0.5 _font-weight:600">Swing</div>
+					<Progress>
+						<ProgressBar :value="null" animation="swing" />
+					</Progress>
+				</div>
+				<div>
+					<div class="_margin-bottom:0.5 _font-weight:600">Elastic</div>
+					<Progress>
+						<ProgressBar :value="null" animation="elastic" />
+					</Progress>
+				</div>
+			</div>
+		`,
+	}),
+};
+
+export const Vertical: StoryObj = {
+	render: () => ({
+		components: { Progress, ProgressBar },
+		template: `
+			<div class="_display:flex _gap:1.5 _height:[200px]">
+				<Progress orientation="vertical" :value="65">
+					<ProgressBar color="primary" orientation="vertical" :value="65" />
+				</Progress>
+				<Progress orientation="vertical" :value="40">
+					<ProgressBar color="secondary" orientation="vertical" :value="40" />
+				</Progress>
+				<Progress orientation="vertical" :value="80">
+					<ProgressBar color="success" orientation="vertical" :value="80" />
+				</Progress>
+				<Progress orientation="vertical" :value="25">
+					<ProgressBar color="warning" orientation="vertical" :value="25" />
+				</Progress>
+				<Progress orientation="vertical" :value="55">
+					<ProgressBar color="error" orientation="vertical" :value="55" />
+				</Progress>
+			</div>
+		`,
+	}),
+};
+
+export const Inverted: StoryObj = {
+	render: () => ({
+		components: { Progress, ProgressBar },
+		template: `
+			<div class="_display:flex _flex-direction:column _gap:1.5">
+				<div>
+					<div class="_margin-bottom:0.5 _font-weight:600">Normal (left to right)</div>
+					<Progress :value="65">
+						<ProgressBar :value="65" />
+					</Progress>
+				</div>
+				<div>
+					<div class="_margin-bottom:0.5 _font-weight:600">Inverted (right to left)</div>
+					<Progress :value="65">
+						<ProgressBar :value="65" :inverted="true" />
+					</Progress>
+				</div>
+				<div class="_display:flex _gap:1.5">
+					<div>
+						<div class="_margin-bottom:0.5 _font-weight:600">Vertical (bottom to top)</div>
+						<div class="_display:flex _height:[180px]">
+							<Progress orientation="vertical" :value="65">
+								<ProgressBar orientation="vertical" :value="65" />
+							</Progress>
+						</div>
+					</div>
+					<div>
+						<div class="_margin-bottom:0.5 _font-weight:600">Vertical Inverted (top to bottom)</div>
+						<div class="_display:flex _height:[180px]">
+							<Progress orientation="vertical" :value="65">
+								<ProgressBar orientation="vertical" :value="65" :inverted="true" />
+							</Progress>
+						</div>
+					</div>
+				</div>
+			</div>
+		`,
+	}),
+};
+
+export const IndeterminateVertical: StoryObj = {
+	render: () => ({
+		components: { Progress, ProgressBar },
+		template: `
+			<div class="_display:flex _gap:1.5 _height:[200px]">
+				<Progress orientation="vertical">
+					<ProgressBar orientation="vertical" :value="null" animation="carousel" />
+				</Progress>
+				<Progress orientation="vertical">
+					<ProgressBar orientation="vertical" :value="null" animation="carousel-inverse" />
+				</Progress>
+				<Progress orientation="vertical">
+					<ProgressBar orientation="vertical" :value="null" animation="swing" />
+				</Progress>
+				<Progress orientation="vertical">
+					<ProgressBar orientation="vertical" :value="null" animation="elastic" />
+				</Progress>
+			</div>
+		`,
 	}),
 };
 

@@ -14,6 +14,14 @@ function createInstance() {
 		"transitionProperty",
 		"transitionTimingFunction",
 		"transitionDuration",
+		"flexDirection",
+		"marginLeft",
+		"marginBottom",
+		"marginTop",
+		"animationName",
+		"animationDuration",
+		"animationTimingFunction",
+		"animationIterationCount",
 	]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
@@ -36,7 +44,6 @@ describe("useProgressRecipe", () => {
 
 		expect(recipe.base).toEqual({
 			display: "flex",
-			width: "100%",
 			overflow: "hidden",
 			borderRadius: "@border-radius.md",
 		});
@@ -52,6 +59,21 @@ describe("useProgressRecipe", () => {
 				"dark",
 				"neutral",
 			]);
+		});
+
+		it("should have orientation variants", () => {
+			const s = createInstance();
+			const recipe = useProgressRecipe(s);
+
+			expect(recipe.variants!.orientation).toEqual({
+				horizontal: {
+					width: "100%",
+				},
+				vertical: {
+					flexDirection: "column-reverse",
+					height: "100%",
+				},
+			});
 		});
 
 		it("should have size variants with correct styles", () => {
@@ -89,17 +111,18 @@ describe("useProgressRecipe", () => {
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
+			orientation: "horizontal",
 			size: "md",
 		});
 	});
 
 	describe("compound variants", () => {
-		it("should have 3 compound variants total", () => {
+		it("should have 8 compound variants total", () => {
 			const s = createInstance();
 			const recipe = useProgressRecipe(s);
 
-			// 3 non-semantic colors × 1 (no variant axis) = 3
-			expect(recipe.compoundVariants).toHaveLength(3);
+			// 3 non-semantic colors + 5 vertical × size overrides = 8
+			expect(recipe.compoundVariants).toHaveLength(8);
 		});
 
 		it("should have correct light color compound variant", () => {
@@ -132,9 +155,9 @@ describe("useProgressRecipe", () => {
 			expect(dark).toEqual({
 				match: { color: "dark" },
 				css: {
-					background: "@color.gray-700",
+					background: "@color.gray-800",
 					"&:dark": {
-						background: "@color.gray-700",
+						background: "@color.gray-800",
 					},
 				},
 			});
@@ -158,6 +181,23 @@ describe("useProgressRecipe", () => {
 				},
 			});
 		});
+
+		it("should have vertical × size compound variants", () => {
+			const s = createInstance();
+			const recipe = useProgressRecipe(s);
+
+			const verticalMd = recipe.compoundVariants!.find(
+				(cv) => cv.match.orientation === "vertical" && cv.match.size === "md",
+			);
+
+			expect(verticalMd).toEqual({
+				match: { orientation: "vertical", size: "md" },
+				css: {
+					height: "auto",
+					width: "@0.5",
+				},
+			});
+		});
 	});
 
 	describe("config overrides", () => {
@@ -168,7 +208,6 @@ describe("useProgressRecipe", () => {
 			});
 
 			expect(recipe.base!.display).toBe("inline-flex");
-			expect(recipe.base!.width).toBe("100%");
 		});
 	});
 
@@ -188,10 +227,11 @@ describe("useProgressRecipe", () => {
 				filter: { color: ["neutral"] },
 			});
 
-			expect(
-				recipe.compoundVariants!.every((cv) => cv.match.color === "neutral"),
-			).toBe(true);
-			expect(recipe.compoundVariants).toHaveLength(1);
+			const colorOnlyCvs = recipe.compoundVariants!.filter(
+				(cv) => cv.match.color && !cv.match.orientation,
+			);
+			expect(colorOnlyCvs).toHaveLength(1);
+			expect(colorOnlyCvs[0].match.color).toBe("neutral");
 		});
 
 		it("should adjust default variants when filtered out", () => {
@@ -220,9 +260,7 @@ describe("useProgressBarRecipe", () => {
 		const recipe = useProgressBarRecipe(s);
 
 		expect(recipe.base).toEqual({
-			height: "100%",
 			borderRadius: "@border-radius.md",
-			transitionProperty: "width",
 			transitionTimingFunction: "@easing.ease-in-out",
 			transitionDuration: "300ms",
 		});
@@ -246,11 +284,55 @@ describe("useProgressBarRecipe", () => {
 			]);
 		});
 
-		it("should have variant axis with solid", () => {
+		it("should have orientation variants", () => {
 			const s = createInstance();
 			const recipe = useProgressBarRecipe(s);
 
-			expect(Object.keys(recipe.variants!.variant)).toEqual(["solid"]);
+			expect(recipe.variants!.orientation).toEqual({
+				horizontal: {
+					height: "100%",
+					transitionProperty: "width",
+				},
+				vertical: {
+					width: "100%",
+					transitionProperty: "height",
+				},
+			});
+		});
+
+		it("should have inverted variants", () => {
+			const s = createInstance();
+			const recipe = useProgressBarRecipe(s);
+
+			expect(recipe.variants!.inverted).toEqual({
+				true: {},
+				false: {},
+			});
+		});
+
+		it("should have animation variants", () => {
+			const s = createInstance();
+			const recipe = useProgressBarRecipe(s);
+
+			expect(Object.keys(recipe.variants!.animation)).toEqual([
+				"none",
+				"carousel",
+				"carousel-inverse",
+				"swing",
+				"elastic",
+			]);
+		});
+
+		it("should have correct carousel animation styles", () => {
+			const s = createInstance();
+			const recipe = useProgressBarRecipe(s);
+
+			expect(recipe.variants!.animation.carousel).toEqual({
+				animationName: "progress-carousel",
+				animationDuration: "1.5s",
+				animationTimingFunction: "linear",
+				animationIterationCount: "infinite",
+			});
 		});
 
 		it("should have size variants with correct styles", () => {
@@ -273,30 +355,33 @@ describe("useProgressBarRecipe", () => {
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "primary",
-			variant: "solid",
+			orientation: "horizontal",
+			inverted: "false",
+			animation: "none",
 			size: "md",
 		});
 	});
 
 	describe("compound variants", () => {
-		it("should have 9 compound variants total", () => {
+		it("should have correct total compound variants", () => {
 			const s = createInstance();
 			const recipe = useProgressBarRecipe(s);
 
-			// 6 semantic × 1 variant + 3 non-semantic × 1 variant = 9
-			expect(recipe.compoundVariants).toHaveLength(9);
+			// 6 semantic colors + 3 non-semantic (light/dark/neutral)
+			// + 2 inverted × orientation + 4 animation × vertical = 15
+			expect(recipe.compoundVariants).toHaveLength(15);
 		});
 
-		it("should have correct solid compound variant for standard colors", () => {
+		it("should have correct compound variant for standard colors", () => {
 			const s = createInstance();
 			const recipe = useProgressBarRecipe(s);
 
-			const primarySolid = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "primary" && cv.match.variant === "solid",
+			const primary = recipe.compoundVariants!.find(
+				(cv) => cv.match.color === "primary",
 			);
 
-			expect(primarySolid).toEqual({
-				match: { color: "primary", variant: "solid" },
+			expect(primary).toEqual({
+				match: { color: "primary" },
 				css: {
 					background: "@color.primary",
 				},
@@ -307,12 +392,12 @@ describe("useProgressBarRecipe", () => {
 			const s = createInstance();
 			const recipe = useProgressBarRecipe(s);
 
-			const lightSolid = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "light" && cv.match.variant === "solid",
+			const light = recipe.compoundVariants!.find(
+				(cv) => cv.match.color === "light",
 			);
 
-			expect(lightSolid).toEqual({
-				match: { color: "light", variant: "solid" },
+			expect(light).toEqual({
+				match: { color: "light" },
 				css: {
 					background: "@color.gray-400",
 					"&:dark": {
@@ -326,16 +411,16 @@ describe("useProgressBarRecipe", () => {
 			const s = createInstance();
 			const recipe = useProgressBarRecipe(s);
 
-			const darkSolid = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "dark" && cv.match.variant === "solid",
+			const dark = recipe.compoundVariants!.find(
+				(cv) => cv.match.color === "dark",
 			);
 
-			expect(darkSolid).toEqual({
-				match: { color: "dark", variant: "solid" },
+			expect(dark).toEqual({
+				match: { color: "dark" },
 				css: {
-					background: "@color.gray-500",
+					background: "@color.gray-600",
 					"&:dark": {
-						background: "@color.gray-500",
+						background: "@color.gray-600",
 					},
 				},
 			});
@@ -345,18 +430,64 @@ describe("useProgressBarRecipe", () => {
 			const s = createInstance();
 			const recipe = useProgressBarRecipe(s);
 
-			const neutralSolid = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "neutral" && cv.match.variant === "solid",
+			const neutral = recipe.compoundVariants!.find(
+				(cv) => cv.match.color === "neutral",
 			);
 
-			expect(neutralSolid).toEqual({
-				match: { color: "neutral", variant: "solid" },
+			expect(neutral).toEqual({
+				match: { color: "neutral" },
 				css: {
 					background: "@color.gray-400",
 					"&:dark": {
-						background: "@color.gray-500",
+						background: "@color.gray-600",
 					},
 				},
+			});
+		});
+
+		it("should have inverted × horizontal compound variant", () => {
+			const s = createInstance();
+			const recipe = useProgressBarRecipe(s);
+
+			const invertedH = recipe.compoundVariants!.find(
+				(cv) =>
+					cv.match.inverted === "true" && cv.match.orientation === "horizontal",
+			);
+
+			expect(invertedH).toEqual({
+				match: { inverted: "true", orientation: "horizontal" },
+				css: { marginLeft: "auto" },
+			});
+		});
+
+		it("should have inverted × vertical compound variant", () => {
+			const s = createInstance();
+			const recipe = useProgressBarRecipe(s);
+
+			const invertedV = recipe.compoundVariants!.find(
+				(cv) =>
+					cv.match.inverted === "true" && cv.match.orientation === "vertical",
+			);
+
+			expect(invertedV).toEqual({
+				match: { inverted: "true", orientation: "vertical" },
+				css: { marginBottom: "auto" },
+			});
+		});
+
+		it("should have vertical animation override compound variants", () => {
+			const s = createInstance();
+			const recipe = useProgressBarRecipe(s);
+
+			const carouselVertical = recipe.compoundVariants!.find(
+				(cv) =>
+					cv.match.animation === "carousel" &&
+					cv.match.orientation === "vertical",
+			);
+
+			expect(carouselVertical).toEqual({
+				match: { animation: "carousel", orientation: "vertical" },
+				css: { animationName: "progress-carousel-vertical" },
 			});
 		});
 	});
@@ -365,11 +496,10 @@ describe("useProgressBarRecipe", () => {
 		it("should allow overriding base styles", () => {
 			const s = createInstance();
 			const recipe = useProgressBarRecipe(s, {
-				base: { height: "50%" },
+				base: { borderRadius: "@border-radius.lg" },
 			});
 
-			expect(recipe.base!.height).toBe("50%");
-			expect(recipe.base!.borderRadius).toBe("@border-radius.md");
+			expect(recipe.base!.borderRadius).toBe("@border-radius.lg");
 		});
 	});
 
@@ -392,10 +522,11 @@ describe("useProgressBarRecipe", () => {
 				filter: { color: ["primary"] },
 			});
 
-			expect(
-				recipe.compoundVariants!.every((cv) => cv.match.color === "primary"),
-			).toBe(true);
-			expect(recipe.compoundVariants).toHaveLength(1);
+			const colorOnlyCvs = recipe.compoundVariants!.filter(
+				(cv) => cv.match.color && !cv.match.inverted && !cv.match.animation,
+			);
+			expect(colorOnlyCvs).toHaveLength(1);
+			expect(colorOnlyCvs[0].match.color).toBe("primary");
 		});
 
 		it("should adjust default variants when filtered out", () => {
@@ -405,7 +536,6 @@ describe("useProgressBarRecipe", () => {
 			});
 
 			expect(recipe.defaultVariants?.color).toBeUndefined();
-			expect(recipe.defaultVariants?.variant).toBe("solid");
 			expect(recipe.defaultVariants?.size).toBe("md");
 		});
 	});

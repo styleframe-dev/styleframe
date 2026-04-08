@@ -15,23 +15,47 @@ const props = withDefaults(
 			| "dark"
 			| "neutral";
 		size?: "xs" | "sm" | "md" | "lg" | "xl";
-		value?: number;
+		orientation?: "horizontal" | "vertical";
+		inverted?: boolean;
+		animation?:
+			| "none"
+			| "carousel"
+			| "carousel-inverse"
+			| "swing"
+			| "elastic";
+		value?: number | null;
 	}>(),
-	{ value: 0 },
+	{ value: 0, animation: "none" },
 );
+
+const isIndeterminate = computed(() => props.value == null);
 
 const classes = computed(() =>
 	progressBar({
 		color: props.color,
 		size: props.size,
+		orientation: props.orientation,
+		inverted: props.inverted ? "true" : "false",
+		animation:
+			isIndeterminate.value && props.animation !== "none"
+				? props.animation
+				: "none",
 	}),
 );
 
-const widthStyle = computed(() => ({
-	width: `${Math.min(100, Math.max(0, props.value))}%`,
-}));
+const fillStyle = computed(() => {
+	if (isIndeterminate.value) {
+		return props.orientation === "vertical"
+			? { height: "50%" }
+			: { width: "50%" };
+	}
+	const clamped = `${Math.min(100, Math.max(0, props.value!))}%`;
+	return props.orientation === "vertical"
+		? { height: clamped }
+		: { width: clamped };
+});
 </script>
 
 <template>
-	<div :class="classes" :style="widthStyle" />
+	<div :class="classes" :style="fillStyle" />
 </template>
