@@ -104,7 +104,7 @@ export const Indeterminate: StoryObj = {
 		template: `
 			<div class="_display:flex _flex-direction:column _gap:1.5">
 				<div>
-					<div class="_margin-bottom:0.5 _font-weight:600">Carousel</div>
+					<div class="_margin-bottom:0.5 _font-weight:semibold">Carousel</div>
 					<Progress>
 						<ProgressBar :value="null" animation="carousel" />
 					</Progress>
