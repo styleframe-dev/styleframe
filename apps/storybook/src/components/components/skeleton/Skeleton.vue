@@ -19,5 +19,5 @@ const classes = computed(() =>
 </script>
 
 <template>
-	<div :class="classes" />
+	<div :class="classes" aria-hidden="true" />
 </template>
