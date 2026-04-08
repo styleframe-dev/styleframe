@@ -5,3 +5,4 @@ export * from "./callout";
 export * from "./card";
 export * from "./modal";
 export * from "./nav";
+export * from "./placeholder";
