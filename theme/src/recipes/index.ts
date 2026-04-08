@@ -6,3 +6,4 @@ export * from "./card";
 export * from "./modal";
 export * from "./nav";
 export * from "./skeleton";
+export * from "./tooltip";

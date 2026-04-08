@@ -64,6 +64,16 @@ function createNamespaceAutogenerate(
 						};
 					}
 				}
+
+				// Check if variable exists with its exact name (cross-namespace reference)
+				if (root.variables.some((v) => v.name === variableName)) {
+					return {
+						[variableName]: {
+							type: "reference",
+							name: variableName,
+						} satisfies Reference<string>,
+					};
+				}
 			}
 
 			// No variable found — fall back to first namespace as default
@@ -200,7 +210,15 @@ export function createUtilityFunction(parent: Container, root: Root) {
 							}
 
 							if (!found) {
-								value = key;
+								// Check if variable exists with exact key name (cross-namespace reference)
+								if (root.variables.some((v) => v.name === key)) {
+									value = {
+										type: "reference",
+										name: key,
+									} satisfies Reference<string>;
+								} else {
+									value = key;
+								}
 							}
 						}
 					}

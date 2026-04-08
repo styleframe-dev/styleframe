@@ -181,3 +181,13 @@ export const useTranslateZUtility = createUseUtility(
 			"translate3d(var(--transform-translate-x), var(--transform-translate-y), var(--transform-translate-z)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y))",
 	}),
 );
+
+/**
+ * Create transform utility classes.
+ */
+export const useTransformUtility = createUseUtility(
+	"transform",
+	({ value }) => ({
+		transform: value,
+	}),
+);
