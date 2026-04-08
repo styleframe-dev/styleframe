@@ -231,7 +231,7 @@ describe("useProgressRecipe", () => {
 				(cv) => cv.match.color && !cv.match.orientation,
 			);
 			expect(colorOnlyCvs).toHaveLength(1);
-			expect(colorOnlyCvs[0].match.color).toBe("neutral");
+			expect(colorOnlyCvs[0]!.match.color).toBe("neutral");
 		});
 
 		it("should adjust default variants when filtered out", () => {
@@ -526,7 +526,7 @@ describe("useProgressBarRecipe", () => {
 				(cv) => cv.match.color && !cv.match.inverted && !cv.match.animation,
 			);
 			expect(colorOnlyCvs).toHaveLength(1);
-			expect(colorOnlyCvs[0].match.color).toBe("primary");
+			expect(colorOnlyCvs[0]!.match.color).toBe("primary");
 		});
 
 		it("should adjust default variants when filtered out", () => {
