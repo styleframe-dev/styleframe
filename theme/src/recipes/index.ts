@@ -3,5 +3,8 @@ export * from "./button";
 export * from "./button-group";
 export * from "./callout";
 export * from "./card";
+export * from "./modal";
 export * from "./nav";
 export * from "./popover";
+export * from "./skeleton";
+export * from "./tooltip";
