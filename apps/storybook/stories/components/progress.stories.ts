@@ -110,19 +110,19 @@ export const Indeterminate: StoryObj = {
 					</Progress>
 				</div>
 				<div>
-					<div class="_margin-bottom:0.5 _font-weight:600">Carousel Inverse</div>
+					<div class="_margin-bottom:0.5 _font-weight:semibold">Carousel Inverse</div>
 					<Progress>
 						<ProgressBar :value="null" animation="carousel-inverse" />
 					</Progress>
 				</div>
 				<div>
-					<div class="_margin-bottom:0.5 _font-weight:600">Swing</div>
+					<div class="_margin-bottom:0.5 _font-weight:semibold">Swing</div>
 					<Progress>
 						<ProgressBar :value="null" animation="swing" />
 					</Progress>
 				</div>
 				<div>
-					<div class="_margin-bottom:0.5 _font-weight:600">Elastic</div>
+					<div class="_margin-bottom:0.5 _font-weight:semibold">Elastic</div>
 					<Progress>
 						<ProgressBar :value="null" animation="elastic" />
 					</Progress>
