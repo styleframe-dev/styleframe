@@ -14,36 +14,14 @@ export const usePlaceholderRecipe = createUseRecipe("placeholder", {
 		borderColor: "@color.gray-300",
 		borderRadius: "@border-radius.md",
 		overflow: "hidden",
-		position: "relative",
 		opacity: "0.75",
+		padding: "@1",
+		backgroundImage:
+			"repeating-linear-gradient(-45deg, transparent, transparent 7px, rgba(0, 0, 0, 0.04) 7px, rgba(0, 0, 0, 0.04) 8px)",
 		"&:dark": {
 			borderColor: "@color.gray-600",
+			backgroundImage:
+				"repeating-linear-gradient(-45deg, transparent, transparent 7px, rgba(255, 255, 255, 0.04) 7px, rgba(255, 255, 255, 0.04) 8px)",
 		},
-	},
-	variants: {
-		size: {
-			sm: {
-				paddingTop: "@0.5",
-				paddingBottom: "@0.5",
-				paddingLeft: "@0.5",
-				paddingRight: "@0.5",
-			},
-			md: {
-				paddingTop: "@1",
-				paddingBottom: "@1",
-				paddingLeft: "@1",
-				paddingRight: "@1",
-			},
-			lg: {
-				paddingTop: "@1.5",
-				paddingBottom: "@1.5",
-				paddingLeft: "@1.5",
-				paddingRight: "@1.5",
-			},
-		},
-	},
-	compoundVariants: [],
-	defaultVariants: {
-		size: "md",
 	},
 });
