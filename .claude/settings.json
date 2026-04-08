@@ -11,6 +11,23 @@
 		"commit": "",
 		"pr": ""
 	},
+	"permissions": {
+		"allow": [
+			"Bash(command:pnpm install)",
+			"Bash(command:pnpm dev)",
+			"Bash(command:pnpm build)",
+			"Bash(command:pnpm test)",
+			"Bash(command:pnpm typecheck)",
+			"Bash(command:pnpm lint)",
+			"Bash(command:pnpm format)",
+			"Bash(command:git status)",
+			"Bash(command:git diff*)",
+			"Bash(command:git log*)",
+			"Bash(command:git add*)",
+			"Bash(command:turbo run *)",
+			"Bash(command:caliber *)"
+		]
+	},
 	"hooks": {
 		"SessionEnd": [
 			{

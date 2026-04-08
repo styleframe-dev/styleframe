@@ -6,11 +6,27 @@ Styleframe is a type-safe, composable CSS-in-TypeScript framework for building d
 
 **Full API documentation:** See `AGENTS.md` for comprehensive Styleframe architecture, API reference, and patterns.
 
+**Package-specific guides:** Each package has detailed `AGENTS.md` (e.g., `engine/core/AGENTS.md`, `theme/AGENTS.md`, `tooling/plugin/AGENTS.md`).
+
 ## Project Structure
 
 Core packages live in `engine/` (@styleframe/core, loader, runtime, transpiler, scanner), design tokens in `theme/`, build tools in `tooling/` (CLI, Figma sync, plugins), applications in `apps/` (docs, Storybook, dashboard), tests in `testing/`, and shared configs in `config/`.
 
 **Import rule:** Always import from `'styleframe'` (barrel package), not `@styleframe/*` sub-packages.
+
+## Project Configuration
+
+- `package.json` — Monorepo root with Turbo scripts and dependencies
+- `turbo.json` — Turbo build pipeline configuration
+- `pnpm-workspace.yaml` — Workspace package definitions
+- `biome.json` — Biome formatter and linter config
+- `.editorconfig` — Editor settings for consistent code style
+- `.gitignore` — Git ignore rules
+- `.changeset/` — Changesets for version management and changelogs
+- `.husky/` — Git hooks (pre-commit, commit-msg)
+- `.ai/` — AI assistant configurations (if present)
+- `.zed/` — Zed editor configuration (if present)
+- `.caliber/` — Caliber config sync state and error logs
 
 ## Common Commands
 
@@ -43,22 +59,38 @@ pnpm ci:publish            # Publish to npm
 ### Adding a new feature
 
 1. Make changes in the appropriate package under `engine/`, `theme/`, or `tooling/`
-2. Update tests in the same package
-3. Run `pnpm typecheck` and `pnpm lint`
-4. Test in Storybook if UI-related: `pnpm storybook`
-5. Create changeset: `pnpm ci:changeset`
+2. Update tests in the same package (e.g., `engine/core/test/`, `theme/test/`)
+3. Run `pnpm typecheck` and `pnpm lint` from project root
+4. Test in Storybook if UI-related: `pnpm storybook` (see `apps/storybook/`)
+5. Create changeset: `pnpm ci:changeset` (adds file to `.changeset/`)
+6. Git hooks in `.husky/` will run lint-staged before commit
 
 ### Working on recipes
 
-- Recipe implementations: `theme/src/recipes/`
-- Recipe documentation: `apps/docs/content/docs/recipes/`
-- Recipe stories: `apps/storybook/src/stories/recipes/`
+- Recipe implementations: `theme/src/recipes/` (e.g., `theme/src/recipes/button.ts`)
+- Recipe documentation: `apps/docs/content/docs/recipes/` (Markdown files)
+- Recipe stories: `apps/storybook/src/stories/recipes/` (Storybook stories)
+- Recipe tests: `theme/test/recipes/` (Vitest tests)
 
 ### Working on the transpiler
 
-- Core transpiler: `engine/transpiler/src/`
-- Test fixtures: `engine/transpiler/test/`
+- Core transpiler: `engine/transpiler/src/` (CSS/TS/DTS generators)
+- Transpiler entry: `engine/transpiler/src/index.ts`
+- Test fixtures: `engine/transpiler/test/` (input/output pairs)
 - Always verify output CSS matches expectations
+
+### Working on design tokens
+
+- Token composables: `theme/src/tokens/` (color, spacing, typography, etc.)
+- Token presets: `theme/src/presets/` (complete design system presets)
+- Token documentation: `apps/docs/content/docs/tokens/`
+
+### Working on build plugins
+
+- Plugin implementations: `tooling/plugin/src/` (Vite, Webpack, Nuxt, etc.)
+- Plugin entry: `tooling/plugin/src/index.ts`
+- Virtual module handlers: `tooling/plugin/src/virtual-modules.ts`
+- Test integration with different bundlers in `testing/integration/`
 
 ## Key Conventions
 
@@ -88,21 +120,41 @@ export default s;
 ## Testing
 
 ```bash
-# Unit tests (per package)
-cd engine/core && pnpm test
+# Unit tests (per package, using Vitest)
+cd engine/core && pnpm test          # Run core package tests
+cd theme && pnpm test                # Run theme package tests
 
-# Integration tests (full E2E)
-pnpm test:integration
+# Integration tests (Playwright E2E)
+pnpm test:integration                # Runs testing/integration/
 ```
+
+**Test locations:**
+- Unit tests: `<package>/test/` (e.g., `engine/core/test/`, `theme/test/`)
+- Integration tests: `testing/integration/` (Playwright specs)
+- Test configs: `vitest.config.ts` in each package, `playwright.config.ts` in testing/integration/
 
 ## Package-Specific Guides
 
 Each package has detailed documentation in its own `AGENTS.md`:
 
-- `engine/core/AGENTS.md` — Core token AST and factory methods
-- `engine/transpiler/AGENTS.md` — CSS/TS/DTS code generation
-- `theme/AGENTS.md` — Design token composables and presets
-- `tooling/plugin/AGENTS.md` — Build tool integrations
+**Engine packages:**
+- `engine/core/AGENTS.md` — Core token AST and factory methods (`engine/core/src/`)
+- `engine/loader/AGENTS.md` — Config loading and HMR (`engine/loader/src/`)
+- `engine/transpiler/AGENTS.md` — CSS/TS/DTS code generation (`engine/transpiler/src/`)
+- `engine/runtime/AGENTS.md` — Browser runtime (`engine/runtime/src/`)
+- `engine/scanner/AGENTS.md` — Content scanning (`engine/scanner/src/`)
+
+**Theme & tooling:**
+- `theme/AGENTS.md` — Design token composables and presets (`theme/src/`)
+- `tooling/plugin/AGENTS.md` — Build tool integrations (`tooling/plugin/src/`)
+- `tooling/cli/AGENTS.md` — CLI commands (`tooling/cli/src/`)
+- `tooling/figma/AGENTS.md` — Figma sync (`tooling/figma/src/`)
+
+**Applications:**
+- `apps/docs/content/docs/AGENTS.md` — Documentation site (`apps/docs/`)
+- `apps/storybook/AGENTS.md` — Component showcase (`apps/storybook/`)
+- `apps/app/AGENTS.md` — Customer dashboard (`apps/app/`)
+- `apps/shared/AGENTS.md` — Shared Nuxt layer (`apps/shared/`)
 
 ## Code Navigation
 
