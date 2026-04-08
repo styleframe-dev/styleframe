@@ -152,6 +152,41 @@ describe("parseDeclarationsBlock", () => {
 			expect(declarations).not.toHaveProperty("100%");
 		});
 
+		it("should parse compound keyframe selectors", () => {
+			const declarations = {
+				"0%, 100%": { opacity: "1" },
+				"50%": { opacity: "0.5" },
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(mockContext.selector).toHaveBeenCalledTimes(2);
+			expect(mockContext.selector).toHaveBeenCalledWith("0%, 100%", {
+				opacity: "1",
+			});
+			expect(mockContext.selector).toHaveBeenCalledWith("50%", {
+				opacity: "0.5",
+			});
+
+			expect(declarations).not.toHaveProperty("0%, 100%");
+			expect(declarations).not.toHaveProperty("50%");
+		});
+
+		it("should parse compound from/to keyframe selectors", () => {
+			const declarations = {
+				"from, to": { opacity: "1" },
+			};
+
+			parseDeclarationsBlock(declarations, mockContext, root, root);
+
+			expect(mockContext.selector).toHaveBeenCalledTimes(1);
+			expect(mockContext.selector).toHaveBeenCalledWith("from, to", {
+				opacity: "1",
+			});
+
+			expect(declarations).not.toHaveProperty("from, to");
+		});
+
 		it("should parse from and to keyframe selectors", () => {
 			const declarations = {
 				from: { opacity: "0" },

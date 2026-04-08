@@ -62,9 +62,7 @@ export function parseDeclarationsBlock(
 			}
 		} else if (
 			/^[.&:]/.test(key) ||
-			/^\d+%$/.test(key) ||
-			key === "from" ||
-			key === "to"
+			/^(\d+%|from|to)(\s*,\s*(\d+%|from|to))*$/.test(key)
 		) {
 			// If the key starts with a special character or is a keyframe selector, treat it as a nested selector
 			const nested = declarations[key] as DeclarationsBlock;

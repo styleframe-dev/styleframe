@@ -104,6 +104,18 @@ describe("useHeightUtility", () => {
 
 		expect(typeof creator).toBe("function");
 	});
+
+	it("should support spacing multiplier values", () => {
+		const s = styleframe();
+		const createHeight = useHeightUtility(s);
+		createHeight(["@1", "@2"]);
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._height\\:1 {");
+		expect(css).toContain("height: calc(var(--spacing, 1rem) * 1);");
+		expect(css).toContain("._height\\:2 {");
+		expect(css).toContain("height: calc(var(--spacing, 1rem) * 2);");
+	});
 });
 
 describe("useMinHeightUtility", () => {
