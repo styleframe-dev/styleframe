@@ -402,6 +402,7 @@ import {
 	useSkewYUtility,
 	useTransformOriginUtility,
 	useTransformStyleUtility,
+	useTransformUtility,
 	useTranslateUtility,
 	useTranslateXUtility,
 	useTranslateYUtility,
@@ -572,7 +573,11 @@ export interface UtilitiesPresetConfig {
 
 	// Sizing
 	width?: Record<string, string> | false;
+	minWidth?: Record<string, string> | false;
+	maxWidth?: Record<string, string> | false;
 	height?: Record<string, string> | false;
+	minHeight?: Record<string, string> | false;
+	maxHeight?: Record<string, string> | false;
 
 	// Borders
 	borderStyle?: Record<string, string> | false;
@@ -586,6 +591,7 @@ export interface UtilitiesPresetConfig {
 	// Transforms
 	backfaceVisibility?: Record<string, string> | false;
 	perspectiveOrigin?: Record<string, string> | false;
+	transform?: Record<string, string> | false;
 	transformOrigin?: Record<string, string> | false;
 	transformStyle?: Record<string, string> | false;
 
@@ -801,7 +807,11 @@ export function useUtilitiesPreset(
 	const visibility = resolveValues(config.visibility, visibilityValues);
 	const zIndex = resolveValues(config.zIndex, zIndexValues);
 	const width = resolveValues(config.width, widthValues);
+	const minWidth = resolveValues(config.minWidth, {});
+	const maxWidth = resolveValues(config.maxWidth, {});
 	const height = resolveValues(config.height, heightValues);
+	const minHeight = resolveValues(config.minHeight, {});
+	const maxHeight = resolveValues(config.maxHeight, {});
 	const borderStyle = resolveValues(config.borderStyle, borderStyleValues);
 	const borderWidth = resolveValues(config.borderWidth, borderWidthValues);
 	const borderCollapse = resolveValues(
@@ -818,6 +828,7 @@ export function useUtilitiesPreset(
 		config.perspectiveOrigin,
 		perspectiveOriginValues,
 	);
+	const transform = resolveValues(config.transform, {});
 	const transformOrigin = resolveValues(
 		config.transformOrigin,
 		transformOriginValues,
@@ -1336,6 +1347,22 @@ export function useUtilitiesPreset(
 	);
 	if (width) createWidthUtility(width);
 
+	const createMinWidthUtility = useMinWidthUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("min-width"),
+	);
+	if (minWidth) createMinWidthUtility(minWidth);
+
+	const createMaxWidthUtility = useMaxWidthUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("max-width"),
+	);
+	if (maxWidth) createMaxWidthUtility(maxWidth);
+
 	const createHeightUtility = useHeightUtility(
 		s,
 		undefined,
@@ -1343,6 +1370,22 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("height"),
 	);
 	if (height) createHeightUtility(height);
+
+	const createMinHeightUtility = useMinHeightUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("min-height"),
+	);
+	if (minHeight) createMinHeightUtility(minHeight);
+
+	const createMaxHeightUtility = useMaxHeightUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("max-height"),
+	);
+	if (maxHeight) createMaxHeightUtility(maxHeight);
 
 	const createBorderUtility = useBorderUtility(s);
 	const createBorderTopUtility = useBorderTopUtility(s);
@@ -1485,6 +1528,14 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("transform-style"),
 	);
 	if (transformStyle) createTransformStyleUtility(transformStyle);
+
+	const createTransformUtility = useTransformUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("transform"),
+	);
+	if (transform) createTransformUtility(transform);
 
 	const createAnimationUtility = useAnimationUtility(
 		s,
@@ -2528,30 +2579,10 @@ export function useUtilitiesPreset(
 
 		// Sizing
 		createHeightUtility,
-		createMaxHeightUtility: useMaxHeightUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("max-height"),
-		),
-		createMaxWidthUtility: useMaxWidthUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("max-width"),
-		),
-		createMinHeightUtility: useMinHeightUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("min-height"),
-		),
-		createMinWidthUtility: useMinWidthUtility(
-			s,
-			undefined,
-			undefined,
-			resolveUtilityOptions("min-width"),
-		),
+		createMaxHeightUtility,
+		createMaxWidthUtility,
+		createMinHeightUtility,
+		createMinWidthUtility,
 		createSizeUtility: useSizeUtility(
 			s,
 			undefined,
@@ -2820,6 +2851,7 @@ export function useUtilitiesPreset(
 		),
 		createTransformOriginUtility,
 		createTransformStyleUtility,
+		createTransformUtility,
 		createTranslateUtility: useTranslateUtility(
 			s,
 			undefined,

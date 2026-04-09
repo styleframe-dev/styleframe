@@ -1,4 +1,4 @@
-import { createUseSpacingUtility, createUseUtility } from "../../utils";
+import { createUseSpacingUtility } from "../../utils";
 
 /**
  * Create width utility classes with multiplier support.
@@ -30,9 +30,9 @@ export const useWidthUtility = createUseSpacingUtility(
 );
 
 /**
- * Create min-width utility classes.
+ * Create min-width utility classes with multiplier support.
  */
-export const useMinWidthUtility = createUseUtility(
+export const useMinWidthUtility = createUseSpacingUtility(
 	"min-width",
 	({ value }) => ({
 		minWidth: value,
@@ -40,9 +40,9 @@ export const useMinWidthUtility = createUseUtility(
 );
 
 /**
- * Create max-width utility classes.
+ * Create max-width utility classes with multiplier support.
  */
-export const useMaxWidthUtility = createUseUtility(
+export const useMaxWidthUtility = createUseSpacingUtility(
 	"max-width",
 	({ value }) => ({
 		maxWidth: value,
