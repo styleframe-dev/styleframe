@@ -1,5 +1,23 @@
 # @styleframe/core
 
+## 3.3.0
+
+### Minor Changes
+
+- [#164](https://github.com/styleframe-dev/styleframe/pull/164) [`efd99f7`](https://github.com/styleframe-dev/styleframe/commit/efd99f70a30f9a42c6e1793ed777b1565fb47a82) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add className support for compound variants in recipes
+  - Add optional `className` field to compound variants, appended to output when conditions match
+  - Make `css` optional on compound variants, allowing className-only compound variants
+
+### Patch Changes
+
+- [#175](https://github.com/styleframe-dev/styleframe/pull/175) [`b506ea5`](https://github.com/styleframe-dev/styleframe/commit/b506ea5c3c36fa24fea19a69ee3fef7035397dda) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Skeleton recipe with pulse animation and supporting utilities
+  - Add `useSkeletonRecipe` with size (`xs`, `sm`, `md`, `lg`, `xl`) and rounded (`true`, `false`) variants, pulse animation, and dark mode support
+  - Add granular animation utilities: `useAnimationNameUtility`, `useAnimationDurationUtility`, `useAnimationTimingFunctionUtility`, `useAnimationIterationCountUtility`
+  - Switch `useWidthUtility` and `useHeightUtility` to `createUseSpacingUtility` for `@N` multiplier support
+  - Add compound keyframe selector support in core engine (e.g. `"0%, 100%"`)
+  - Add Skeleton storybook component, grid previews, and stories
+  - Add Skeleton documentation page
+
 ## 3.2.0
 
 ### Minor Changes
