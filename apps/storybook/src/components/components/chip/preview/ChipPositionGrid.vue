@@ -2,7 +2,12 @@
 import Chip from "../Chip.vue";
 import ChipIndicator from "../ChipIndicator.vue";
 
-const positions = ["top-right", "top-left", "bottom-right", "bottom-left"] as const;
+const positions = [
+	"top-right",
+	"top-left",
+	"bottom-right",
+	"bottom-left",
+] as const;
 </script>
 
 <template>

@@ -29,7 +29,10 @@ const classes = computed(() =>
 		variant: props.variant,
 		size: props.size,
 		position: props.position,
-		inset: props.inset !== undefined ? String(props.inset) as "true" | "false" : undefined,
+		inset:
+			props.inset !== undefined
+				? (String(props.inset) as "true" | "false")
+				: undefined,
 	}),
 );
 </script>
