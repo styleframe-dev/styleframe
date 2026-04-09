@@ -41,3 +41,35 @@ window.addEventListener("message", (event: MessageEvent) => {
 		);
 	}
 });
+
+// Auto-size: relay preview content height to docs parent when embedded
+if (window !== window.parent) {
+	const PADDING = 64;
+	const params = new URLSearchParams(window.location.search);
+	const isFullMode = params.has("full");
+
+	window.addEventListener("message", (event: MessageEvent) => {
+		if (event.data?.type === "styleframe:preview-height") {
+			let totalHeight: number;
+
+			if (isFullMode) {
+				// Full mode: just content + padding (no visible chrome)
+				totalHeight = event.data.height + PADDING;
+			} else {
+				// Panel mode: content + chrome (toolbar + panel)
+				const previewIframe = document.getElementById(
+					"storybook-preview-iframe",
+				) as HTMLIFrameElement | null;
+				if (!previewIframe) return;
+
+				const chromeHeight = window.innerHeight - previewIframe.offsetHeight;
+				totalHeight = chromeHeight + event.data.height + PADDING;
+			}
+
+			window.parent.postMessage(
+				{ type: "styleframe:height", height: totalHeight },
+				"*",
+			);
+		}
+	});
+}
