@@ -1,0 +1,69 @@
+import { createUseRecipe } from "../../utils/createUseRecipe";
+
+/**
+ * Spinner container recipe.
+ * Provides color and layout for the loading spinner with optional label text.
+ */
+export const useSpinnerRecipe = createUseRecipe("spinner", {
+	base: {
+		display: "inline-flex",
+		position: "relative",
+		alignItems: "center",
+		justifyContent: "center",
+		fontSize: "@font-size.sm",
+		lineHeight: "@line-height.normal",
+	},
+	variants: {
+		color: {
+			primary: {},
+			light: {},
+			dark: {},
+			neutral: {},
+		},
+		size: {
+			auto: {},
+			sm: {},
+			md: {},
+			lg: {},
+		},
+	},
+	compoundVariants: [
+		{
+			match: { color: "primary" as const },
+			css: {
+				color: "@color.primary",
+			},
+		},
+		{
+			match: { color: "light" as const },
+			css: {
+				color: "@color.gray-700",
+				"&:dark": {
+					color: "@color.gray-700",
+				},
+			},
+		},
+		{
+			match: { color: "dark" as const },
+			css: {
+				color: "@color.white",
+				"&:dark": {
+					color: "@color.white",
+				},
+			},
+		},
+		{
+			match: { color: "neutral" as const },
+			css: {
+				color: "@color.gray-700",
+				"&:dark": {
+					color: "@color.white",
+				},
+			},
+		},
+	],
+	defaultVariants: {
+		color: "primary",
+		size: "md",
+	},
+});
