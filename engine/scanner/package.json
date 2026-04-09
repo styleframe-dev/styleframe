@@ -41,7 +41,6 @@
 		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vite-plugin-dts": "catalog:",
-		"vite-plugin-node": "catalog:",
 		"vitest": "catalog:"
 	},
 	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
