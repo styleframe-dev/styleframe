@@ -18,6 +18,7 @@ export default defineNuxtConfig({
 		"nuxt-llms",
 	],
 	icon: {
-		provider: "iconify",
+		serverBundle: "local",
+		fetchTimeout: 10000,
 	},
 });
