@@ -1,5 +1,99 @@
 # @styleframe/theme
 
+## 3.4.0
+
+### Minor Changes
+
+- [#165](https://github.com/styleframe-dev/styleframe/pull/165) [`5ef9019`](https://github.com/styleframe-dev/styleframe/commit/5ef9019fd0121cf95bd4e7373dbd55028f25b6d0) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add ButtonGroup recipe for grouping buttons with joined borders
+  - Add `useButtonGroupRecipe` with orientation (`horizontal`, `vertical`) and block (`true`, `false`) variants
+  - Use compound variant `className` with RSCSS modifiers (`-horizontal`, `-vertical`, `-block`) to emit helper classes
+  - Use `setup` callback to register nested selectors for joined-button effects (border-radius and border removal on inner children)
+  - Add ButtonGroup storybook component, grid preview, and stories
+
+- [#162](https://github.com/styleframe-dev/styleframe/pull/162) [`990ed33`](https://github.com/styleframe-dev/styleframe/commit/990ed33078b61ddf1cd025ce358862d103e0ea84) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Card recipe with border style utility improvements
+  - Add `useCardRecipe` with size (`sm`, `md`, `lg`), variant (`elevated`, `outline`, `filled`, `ghost`), and color variants including light, dark, and neutral
+  - Add border style utility support (`solid`, `dashed`, `dotted`, `double`, `hidden`, `none`) with responsive and state modifier capabilities
+  - Normalize light/dark color variants across Badge, Button, and Callout recipes using `text-inverted` token
+  - Add Card storybook components, grid previews, and stories
+
+- [#180](https://github.com/styleframe-dev/styleframe/pull/180) [`d2c1ed6`](https://github.com/styleframe-dev/styleframe/commit/d2c1ed65b1a268647e4789a20341d8da61fb9f74) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Chip recipe with indicator, tests, and documentation
+  - Add `useChipRecipe` wrapper recipe with relative positioning context
+  - Add `useChipIndicatorRecipe` with 9 colors, 2 variants (solid/soft), 5 sizes, 4 corner positions, and inset mode
+  - Wire `useTransformUtility` into `useUtilitiesPreset`
+  - Convert min/max width/height utilities to spacing multiplier utilities for consistency
+  - Add Chip documentation page with usage examples, API reference, and FAQ
+
+- [#160](https://github.com/styleframe-dev/styleframe/pull/160) [`cb053e0`](https://github.com/styleframe-dev/styleframe/commit/cb053e0135fef47161537516c53e3fc0e8b238cb) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add light, dark, and neutral colors to Badge and Button recipes
+  - Add `light`, `dark`, and `neutral` color variants to `useBadgeRecipe` with compound variants for solid, outline, soft, and subtle styles
+  - Add `light`, `dark`, and `neutral` color variants to `useButtonRecipe` with compound variants for solid, outline, soft, subtle, ghost, and link styles
+  - Update storybook Badge and Button components, grid previews, and stories to document the new colors
+
+- [#171](https://github.com/styleframe-dev/styleframe/pull/171) [`6f6a360`](https://github.com/styleframe-dev/styleframe/commit/6f6a360b838188eae8244353351e8b458792c95d) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Modal recipe with overlay, header, body, and footer parts
+  - Add `useModalRecipe` with size (`sm`, `md`, `lg`), variant (`solid`, `soft`, `subtle`), and color (`light`, `dark`, `neutral`) variants matching the Card recipe structure
+  - Add `useModalHeaderRecipe` and `useModalFooterRecipe` with separator border compound variants and setup functions for `:first-child`/`:last-child` border collapse
+  - Add `useModalBodyRecipe` with size-based padding and gap, no compound variants
+  - Add `useModalOverlayRecipe` with fixed-position full-screen backdrop (`rgba(0, 0, 0, 0.75)`) and centered flex layout
+  - Add Modal storybook components, grid previews, and stories with interactive open/close and fullscreen example
+  - Add Modal documentation page
+
+- [#168](https://github.com/styleframe-dev/styleframe/pull/168) [`0250281`](https://github.com/styleframe-dev/styleframe/commit/02502814c4ec5fba342d7dd20a72180635caf7d8) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Nav recipe with list-style utility
+  - Add `useNavRecipe` and `useNavItemRecipe` multi-part recipes with size (xs–xl), color, and variant (pills, underline, default) support
+  - Add `useListStyleUtility` shorthand utility for the `list-style` CSS property
+  - Add Nav storybook components, grid previews, and stories
+
+- [#176](https://github.com/styleframe-dev/styleframe/pull/176) [`cccd1cd`](https://github.com/styleframe-dev/styleframe/commit/cccd1cdab769a7fb8d3cbfb4620ad2926099f0fc) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Placeholder recipe with dashed border and CSS hatch pattern
+  - Add `usePlaceholderRecipe` as a base-only recipe (no variants) with a dashed border, hatch background pattern, and automatic dark mode support
+  - Add Placeholder documentation page with usage examples, API reference, and FAQ
+
+- [#179](https://github.com/styleframe-dev/styleframe/pull/179) [`8eadb4b`](https://github.com/styleframe-dev/styleframe/commit/8eadb4b8e6200b962f114d8bf48578eb17e85d95) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Popover recipe with composable sub-recipes and documentation
+  - Add `usePopoverRecipe` with size (`sm`, `md`, `lg`), variant (`solid`, `soft`, `subtle`), and color (`light`, `dark`, `neutral`) variants
+  - Add `usePopoverHeaderRecipe` and `usePopoverFooterRecipe` with border collapsing via `:first-child`/`:last-child` selectors
+  - Add `usePopoverBodyRecipe` for content area styling
+  - Add `usePopoverArrowRecipe` with CSS border triangle implementation using `@popover.arrow.size` variable and `&:after` pseudo-element for border/fill separation
+  - Add Popover storybook components, grid previews, and stories
+  - Add complete documentation page covering usage, anatomy, accessibility, and API reference
+
+- [#178](https://github.com/styleframe-dev/styleframe/pull/178) [`2bcd961`](https://github.com/styleframe-dev/styleframe/commit/2bcd961d109c1a3c647a777256b81b2ce3d50d5a) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Progress recipe with orientation, inverted, and indeterminate animation support
+  - Add `useProgressRecipe` (track) and `useProgressBarRecipe` (bar) with 9 bar colors, 3 track colors, 5 sizes, horizontal/vertical orientation, inverted fill direction, and 4 indeterminate animations (carousel, carousel-inverse, swing, elastic)
+  - Register 8 keyframes automatically (4 horizontal + 4 vertical) via setup callback
+  - Add Progress documentation page with usage examples, API reference, and FAQ
+
+- [#175](https://github.com/styleframe-dev/styleframe/pull/175) [`b506ea5`](https://github.com/styleframe-dev/styleframe/commit/b506ea5c3c36fa24fea19a69ee3fef7035397dda) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Skeleton recipe with pulse animation and supporting utilities
+  - Add `useSkeletonRecipe` with size (`xs`, `sm`, `md`, `lg`, `xl`) and rounded (`true`, `false`) variants, pulse animation, and dark mode support
+  - Add granular animation utilities: `useAnimationNameUtility`, `useAnimationDurationUtility`, `useAnimationTimingFunctionUtility`, `useAnimationIterationCountUtility`
+  - Switch `useWidthUtility` and `useHeightUtility` to `createUseSpacingUtility` for `@N` multiplier support
+  - Add compound keyframe selector support in core engine (e.g. `"0%, 100%"`)
+  - Add Skeleton storybook component, grid previews, and stories
+  - Add Skeleton documentation page
+
+- [#172](https://github.com/styleframe-dev/styleframe/pull/172) [`7620771`](https://github.com/styleframe-dev/styleframe/commit/7620771ede3b1e6e9a2f14cf20e845af1078635e) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Tooltip recipe with arrow sub-recipe and transform utility
+  - Add `useTooltipRecipe` with size (`sm`, `md`, `lg`), variant (`solid`, `soft`, `subtle`), and color (`light`, `dark`, `neutral`) variants
+  - Add `useTooltipArrowRecipe` with CSS border triangle implementation using `@tooltip.arrow.size` variable and `&:after` pseudo-element for border/fill separation
+  - Add `useTransformUtility` for arbitrary `transform` CSS property values
+  - Add Tooltip storybook components, grid previews, and stories including freeform rich content example
+
+- [#163](https://github.com/styleframe-dev/styleframe/pull/163) [`1a7dc77`](https://github.com/styleframe-dev/styleframe/commit/1a7dc77600b6c9766ed69bf00338a225f5188b12) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add per-part borders with adjacency collapsing to Card recipe
+  - Add independent `borderTop` and `borderBottom` to each card part (header, body, footer) with compound variants per color×variant
+  - Add `:first-child` / `:last-child` collapse selectors to header and footer recipes to remove duplicate borders at card edges
+  - Extend `createUseRecipe` with an optional `setup` callback for registering selectors alongside recipes
+  - Add `color` and `variant` props to `CardBody` component
+
+- [#158](https://github.com/styleframe-dev/styleframe/pull/158) [`90f1862`](https://github.com/styleframe-dev/styleframe/commit/90f1862e12596943fb739b7cf98e2dfc8c47ff6d) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Rename Alert recipe to Callout recipe
+  - Rename `useAlertRecipe` to `useCalloutRecipe` with updated recipe name from `alert` to `callout`
+  - Add `CalloutContent`, `CalloutTitle`, and `CalloutDescription` sub-components for better composability
+  - Move storybook grid preview components into `preview/` subdirectories for cleaner organization
+  - Add Callout documentation page
+
+- [#166](https://github.com/styleframe-dev/styleframe/pull/166) [`ff13980`](https://github.com/styleframe-dev/styleframe/commit/ff139805c9839da9b4d4511099e7838f7e159ba7) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Rename `danger` semantic color to `error` across the design system
+  - Rename `danger` color token to `error` in default color values and border color values
+  - Update all recipes (badge, button, callout) to use `error` instead of `danger` in color variants
+  - Update all documentation, storybook stories, and playground examples
+
+### Patch Changes
+
+- Updated dependencies [[`b506ea5`](https://github.com/styleframe-dev/styleframe/commit/b506ea5c3c36fa24fea19a69ee3fef7035397dda), [`efd99f7`](https://github.com/styleframe-dev/styleframe/commit/efd99f70a30f9a42c6e1793ed777b1565fb47a82)]:
+  - @styleframe/core@3.3.0
+
 ## 3.3.0
 
 ### Minor Changes

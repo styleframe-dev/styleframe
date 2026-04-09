@@ -1,5 +1,18 @@
 # @styleframe/loader
 
+## 3.0.1
+
+### Patch Changes
+
+- [#181](https://github.com/styleframe-dev/styleframe/pull/181) [`e77988d`](https://github.com/styleframe-dev/styleframe/commit/e77988dda7f019d3a32f5e0cb7ba44930aee6a6d) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Remove vite-plugin-node and externalize peer deps in scanner/loader builds
+  - Remove `vite-plugin-node` which was injecting dead code (rfdc deep-clone, Buffer utilities) into dist bundles
+  - Replace with native Vite library mode and explicit `rollupOptions.external` for peer dependencies and Node.js builtins
+  - Scanner dist: 23.21 kB → 11.18 kB (52% smaller), Loader dist: 43.83 kB → 4.10 kB (91% smaller)
+
+- Updated dependencies [[`b506ea5`](https://github.com/styleframe-dev/styleframe/commit/b506ea5c3c36fa24fea19a69ee3fef7035397dda), [`efd99f7`](https://github.com/styleframe-dev/styleframe/commit/efd99f70a30f9a42c6e1793ed777b1565fb47a82), [`179c90d`](https://github.com/styleframe-dev/styleframe/commit/179c90d9f73dadbbeb9159ab9fbd7287ceba1f20)]:
+  - @styleframe/core@3.3.0
+  - @styleframe/transpiler@3.2.0
+
 ## 3.0.0
 
 ### Major Changes

@@ -1,6 +1,6 @@
 {
 	"name": "styleframe",
-	"version": "3.3.0",
+	"version": "3.4.0",
 	"bin": {
 		"styleframe": "./dist/cli.cjs"
 	},
@@ -96,17 +96,17 @@
 	},
 	"peerDependencies": {
 		"@styleframe/plugin": "workspace:^3.2.0",
-		"@styleframe/core": "workspace:^3.2.0",
-		"@styleframe/loader": "workspace:^3.0.0",
-		"@styleframe/transpiler": "workspace:^3.1.0"
+		"@styleframe/core": "workspace:^3.3.0",
+		"@styleframe/loader": "workspace:^3.0.1",
+		"@styleframe/transpiler": "workspace:^3.2.0"
 	},
 	"devDependencies": {
 		"@styleframe/config-typescript": "workspace:^3.0.0",
 		"@styleframe/cli": "workspace:^3.0.0",
 		"@styleframe/plugin": "workspace:^3.2.0",
-		"@styleframe/core": "workspace:^3.2.0",
-		"@styleframe/loader": "workspace:^3.0.0",
-		"@styleframe/transpiler": "workspace:^3.1.0",
+		"@styleframe/core": "workspace:^3.3.0",
+		"@styleframe/loader": "workspace:^3.0.1",
+		"@styleframe/transpiler": "workspace:^3.2.0",
 		"@types/node": "^22.15.17",
 		"@vitest/coverage-v8": "catalog:",
 		"bumpp": "^10.1.0",
