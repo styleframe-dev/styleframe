@@ -44,7 +44,7 @@ export const useChipIndicatorRecipe = createUseRecipe("chip-indicator", {
 			xs: {
 				width: "@0.375",
 				height: "@0.375",
-				fontSize: "0",
+				fontSize: "@font-size.4xs",
 			},
 			sm: {
 				minWidth: "@0.75",

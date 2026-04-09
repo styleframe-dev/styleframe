@@ -1,4 +1,4 @@
-import { createUseSpacingUtility, createUseUtility } from "../../utils";
+import { createUseSpacingUtility } from "../../utils";
 
 /**
  * Create height utility classes with multiplier support.
@@ -29,9 +29,9 @@ export const useHeightUtility = createUseSpacingUtility(
 );
 
 /**
- * Create min-height utility classes.
+ * Create min-height utility classes with multiplier support.
  */
-export const useMinHeightUtility = createUseUtility(
+export const useMinHeightUtility = createUseSpacingUtility(
 	"min-height",
 	({ value }) => ({
 		minHeight: value,
@@ -39,9 +39,9 @@ export const useMinHeightUtility = createUseUtility(
 );
 
 /**
- * Create max-height utility classes.
+ * Create max-height utility classes with multiplier support.
  */
-export const useMaxHeightUtility = createUseUtility(
+export const useMaxHeightUtility = createUseSpacingUtility(
 	"max-height",
 	({ value }) => ({
 		maxHeight: value,
