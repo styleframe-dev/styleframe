@@ -52,17 +52,20 @@ const meta = {
 			return { args };
 		},
 		template: `
-			<Popover v-bind="args" style="max-width: 400px">
-				<PopoverHeader v-bind="args">
-					<PopoverTitle>Popover Title</PopoverTitle>
-				</PopoverHeader>
-				<PopoverBody v-bind="args">
-					<PopoverDescription>This is a popover description with some content.</PopoverDescription>
-				</PopoverBody>
-				<PopoverFooter v-bind="args">
-					Footer content
-				</PopoverFooter>
-			</Popover>
+			<div class="popover-wrapper">
+				<Popover v-bind="args" style="max-width: 400px">
+					<PopoverHeader v-bind="args">
+						<PopoverTitle>Popover Title</PopoverTitle>
+					</PopoverHeader>
+					<PopoverBody v-bind="args">
+						<PopoverDescription>This is a popover description with some content.</PopoverDescription>
+					</PopoverBody>
+					<PopoverFooter v-bind="args">
+						Footer content
+					</PopoverFooter>
+				</Popover>
+				<PopoverArrow v-bind="args" class="popover-arrow-position" />
+			</div>
 		`,
 	}),
 } satisfies Meta<typeof Popover>;

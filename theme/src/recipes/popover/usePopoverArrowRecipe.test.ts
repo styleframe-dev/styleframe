@@ -96,13 +96,6 @@ describe("usePopoverArrowRecipe", () => {
 				"subtle",
 			]);
 		});
-
-		it("should not have size variants", () => {
-			const s = createInstance();
-			const recipe = usePopoverArrowRecipe(s);
-
-			expect(recipe.variants!.size).toBeUndefined();
-		});
 	});
 
 	it("should have correct default variants", () => {

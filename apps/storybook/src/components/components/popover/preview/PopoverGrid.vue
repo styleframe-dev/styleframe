@@ -3,6 +3,7 @@ import Popover from "../Popover.vue";
 import PopoverHeader from "../PopoverHeader.vue";
 import PopoverBody from "../PopoverBody.vue";
 import PopoverFooter from "../PopoverFooter.vue";
+import PopoverArrow from "../PopoverArrow.vue";
 import PopoverTitle from "../PopoverTitle.vue";
 import PopoverDescription from "../PopoverDescription.vue";
 
@@ -15,23 +16,28 @@ const variants = ["solid", "soft", "subtle"] as const;
 		<div v-for="variant in variants" :key="variant">
 			<div class="popover-label">{{ variant }}</div>
 			<div class="popover-row">
-				<Popover
+				<div
 					v-for="color in colors"
 					:key="`${variant}-${color}`"
-					:color="color"
-					:variant="variant"
-					style="max-width: 300px"
+					class="popover-wrapper"
 				>
-					<PopoverHeader :color="color" :variant="variant">
-						<PopoverTitle>{{ variant.charAt(0).toUpperCase() + variant.slice(1) }} {{ color.charAt(0).toUpperCase() + color.slice(1) }}</PopoverTitle>
-					</PopoverHeader>
-					<PopoverBody>
-						<PopoverDescription>This is a {{ variant }} {{ color }} popover.</PopoverDescription>
-					</PopoverBody>
-					<PopoverFooter :color="color" :variant="variant">
-						Footer content
-					</PopoverFooter>
-				</Popover>
+					<Popover
+						:color="color"
+						:variant="variant"
+						style="max-width: 300px"
+					>
+						<PopoverHeader :color="color" :variant="variant">
+							<PopoverTitle>{{ variant.charAt(0).toUpperCase() + variant.slice(1) }} {{ color.charAt(0).toUpperCase() + color.slice(1) }}</PopoverTitle>
+						</PopoverHeader>
+						<PopoverBody>
+							<PopoverDescription>This is a {{ variant }} {{ color }} popover.</PopoverDescription>
+						</PopoverBody>
+						<PopoverFooter :color="color" :variant="variant">
+							Footer content
+						</PopoverFooter>
+					</Popover>
+					<PopoverArrow :color="color" :variant="variant" class="popover-arrow-position" />
+				</div>
 			</div>
 		</div>
 	</div>

@@ -46,4 +46,16 @@ selector(".popover-label", {
 	minWidth: "80px",
 });
 
+selector(".popover-wrapper", {
+	position: "relative",
+	display: "inline-flex",
+	flexDirection: "column",
+	alignItems: "center",
+});
+
+selector(".popover-arrow-position", {
+	bottom: "calc(@popover.arrow.size * -1)",
+	left: "calc(50% - @popover.arrow.size)",
+});
+
 export default s;
