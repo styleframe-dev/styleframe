@@ -26,7 +26,6 @@ Core packages live in `engine/` (@styleframe/core, loader, runtime, transpiler, 
 - `.husky/` — Git hooks (pre-commit, commit-msg)
 - `.ai/` — AI assistant configurations (if present)
 - `.zed/` — Zed editor configuration (if present)
-- `.caliber/` — Caliber config sync state and error logs
 
 ## Common Commands
 
