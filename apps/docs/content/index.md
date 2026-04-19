@@ -147,7 +147,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-square-terminal
     target: _blank
-    to: /docs/resources/guides
+    to: /docs/getting-started/guides
     ---
     #title
     Intuitive [Developer Experience]{.text-primary}

@@ -78,7 +78,9 @@ const { data: navigation } = await useAsyncData(
 									`${sectionPath}/${folder.replace(/^\d+\./, "")}`,
 							),
 						)
-						.filter((item): item is ContentNavigationItem => item !== undefined);
+						.filter(
+							(item): item is ContentNavigationItem => item !== undefined,
+						);
 				} else {
 					result = localeResult;
 				}

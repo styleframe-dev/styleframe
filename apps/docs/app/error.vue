@@ -75,7 +75,7 @@ const { data: navigation } = await useAsyncData(
 						? (localeResult[0].children ?? [])
 						: localeResult;
 				const result = Array.isArray(section.folder)
-					? (section.folder
+					? section.folder
 							.map((folder) =>
 								unwrapped.find(
 									(item) =>
@@ -85,7 +85,7 @@ const { data: navigation } = await useAsyncData(
 							)
 							.filter(
 								(item): item is ContentNavigationItem => item !== undefined,
-							))
+							)
 					: unwrapped;
 				return [section.key, flattenNavigation(result)] as const;
 			}),
