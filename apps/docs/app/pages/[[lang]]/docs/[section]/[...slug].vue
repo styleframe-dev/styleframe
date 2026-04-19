@@ -3,10 +3,20 @@ import { kebabCase } from "scule";
 import type {
 	ContentNavigationItem,
 	Collections,
-	DocsCollectionItem,
+	PageCollectionItemBase,
 } from "@nuxt/content";
+
+type DocsPageItem = PageCollectionItemBase & {
+	links?: Array<{
+		label: string;
+		icon: string;
+		to: string;
+		target?: string;
+	}>;
+	seo?: { title?: string; description?: string };
+};
 import { findPageHeadline } from "@nuxt/content/utils";
-import { addPrerenderPath } from "../../../../utils/prerender";
+import { addPrerenderPath } from "../../../../../utils/prerender";
 
 definePageMeta({
 	layout: "default",
@@ -15,10 +25,28 @@ definePageMeta({
 const route = useRoute();
 const { locale, isEnabled, t } = useDocusI18n();
 const appConfig = useAppConfig();
-const navigation = inject<Ref<ContentNavigationItem[]>>("navigation");
+const navigationMap =
+	inject<Ref<Record<string, ContentNavigationItem[]>>>("navigation");
+
+const sectionSlug = computed(() => route.params.section as string);
+const section = computed(() => findDocsSectionBySlug(sectionSlug.value));
+
+if (!section.value) {
+	throw createError({
+		statusCode: 404,
+		statusMessage: "Page not found",
+		fatal: true,
+	});
+}
 
 const collectionName = computed(() =>
-	isEnabled.value ? `docs_${locale.value}` : "docs",
+	isEnabled.value
+		? `docs_${section.value!.key}_${locale.value}`
+		: `docs_${section.value!.key}`,
+);
+
+const navigation = computed(
+	() => navigationMap?.value?.[section.value!.key] ?? [],
 );
 
 const [{ data: page }, { data: surround }] = await Promise.all([
@@ -27,7 +55,7 @@ const [{ data: page }, { data: surround }] = await Promise.all([
 		() =>
 			queryCollection(collectionName.value as keyof Collections)
 				.path(route.path)
-				.first() as Promise<DocsCollectionItem>,
+				.first() as Promise<DocsPageItem>,
 	),
 	useAsyncData(`${kebabCase(route.path)}-surround`, () => {
 		return queryCollectionItemSurroundings(
@@ -61,12 +89,12 @@ useSeoMeta({
 	ogDescription: description,
 });
 
-const headline = ref(findPageHeadline(navigation?.value, page.value?.path));
+const headline = ref(findPageHeadline(navigation.value, page.value?.path));
 watch(
-	() => navigation?.value,
+	() => navigation.value,
 	() => {
 		headline.value =
-			findPageHeadline(navigation?.value, page.value?.path) || headline.value;
+			findPageHeadline(navigation.value, page.value?.path) || headline.value;
 	},
 );
 
@@ -106,7 +134,7 @@ const editLink = computed(() => {
 		>
 			<template #links>
 				<UButton
-					v-for="(link, index) in (page as DocsCollectionItem).links"
+					v-for="(link, index) in (page as DocsPageItem).links"
 					:key="index"
 					size="sm"
 					v-bind="link"

@@ -2,6 +2,7 @@ import type { DefinedCollection } from "@nuxt/content";
 import { defineContentConfig, defineCollection, z } from "@nuxt/content";
 import { asSitemapCollection } from "@nuxtjs/sitemap/content";
 import { useNuxt } from "@nuxt/kit";
+import { DOCS_SECTIONS } from "./app/utils/docsSections";
 
 const { options } = useNuxt();
 const locales = options.i18n?.locales;
@@ -34,17 +35,18 @@ if (locales && Array.isArray(locales)) {
 			}),
 		);
 
-		collections[`docs_${code}`] = defineCollection(
-			asSitemapCollection({
-				type: "page",
-				source: {
-					include: `${code}/**/*.{md,yml}`,
-					prefix: `/${code}`,
-					exclude: [`${code}/*.md`],
-				},
-				schema: createDocsSchema(),
-			}),
-		);
+		for (const section of DOCS_SECTIONS) {
+			collections[`docs_${section.key}_${code}`] = defineCollection(
+				asSitemapCollection({
+					type: "page",
+					source: {
+						include: `${code}/docs/${section.folder}/**/*.{md,yml}`,
+						prefix: `/${code}/docs/${section.slug}`,
+					},
+					schema: createDocsSchema(),
+				}),
+			);
+		}
 	}
 } else {
 	collections = {
@@ -54,17 +56,20 @@ if (locales && Array.isArray(locales)) {
 				source: [{ include: "*.md" }],
 			}),
 		),
-		docs: defineCollection(
+	};
+
+	for (const section of DOCS_SECTIONS) {
+		collections[`docs_${section.key}`] = defineCollection(
 			asSitemapCollection({
 				type: "page",
 				source: {
-					include: "**/*.{md,yml}",
-					exclude: ["*.md"],
+					include: `docs/${section.folder}/**/*.{md,yml}`,
+					prefix: `/docs/${section.slug}`,
 				},
 				schema: createDocsSchema(),
 			}),
-		),
-	};
+		);
+	}
 }
 
 export default defineContentConfig({ collections });

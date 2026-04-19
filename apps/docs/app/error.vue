@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { NuxtError } from "#app";
-import type { PageCollections } from "@nuxt/content";
+import type {
+	ContentNavigationItem,
+	PageCollections,
+} from "@nuxt/content";
 import * as nuxtUiLocales from "@nuxt/ui/locale";
 import { flattenNavigation } from "~/utils/flattenNavigation";
 
@@ -46,37 +49,56 @@ if (isEnabled.value) {
 	});
 }
 
-const collectionName = computed(() =>
-	isEnabled.value ? `docs_${locale.value}` : "docs",
-);
+const getCollectionName = (key: string) =>
+	(isEnabled.value
+		? `docs_${key}_${locale.value}`
+		: `docs_${key}`) as keyof PageCollections;
 
 const { data: navigation } = await useAsyncData(
-	`navigation_${collectionName.value}`,
-	() =>
-		queryCollectionNavigation(collectionName.value as keyof PageCollections),
+	() => `navigation_${locale.value}`,
+	async () => {
+		const results = await Promise.all(
+			DOCS_SECTIONS.map(async (section) => {
+				const collectionName = getCollectionName(section.key);
+				const data = await queryCollectionNavigation(collectionName);
+				const rootResult =
+					data.find((item) => item.path === `/docs/${section.slug}`)
+						?.children ||
+					data.find((item) => item.path === "/docs")?.children ||
+					data ||
+					[];
+				const result =
+					rootResult.find((item) => item.path === `/${locale.value}`)
+						?.children || rootResult;
+				return [section.key, flattenNavigation(result)] as const;
+			}),
+		);
+		return Object.fromEntries(results) as Record<
+			string,
+			ContentNavigationItem[]
+		>;
+	},
+	{ watch: [locale] },
+);
+
+const { data: files } = useLazyAsyncData(
+	`search_${locale.value}`,
+	async () => {
+		const perSection = await Promise.all(
+			DOCS_SECTIONS.map((section) =>
+				queryCollectionSearchSections(getCollectionName(section.key)),
+			),
+		);
+		return perSection.flat();
+	},
 	{
-		transform: (data) => {
-			const rootResult =
-				data.find((item) => item.path === "/docs")?.children || data || [];
-
-			const result =
-				rootResult.find((item) => item.path === `/${locale.value}`)?.children ||
-				rootResult;
-
-			return flattenNavigation(result);
-		},
+		server: false,
 		watch: [locale],
 	},
 );
-const { data: files } = useLazyAsyncData(
-	`search_${collectionName.value}`,
-	() =>
-		queryCollectionSearchSections(
-			collectionName.value as keyof PageCollections,
-		),
-	{
-		server: false,
-	},
+
+const flatNavigation = computed(() =>
+	navigation.value ? Object.values(navigation.value).flat() : [],
 );
 
 provide("navigation", navigation);
@@ -91,7 +113,7 @@ provide("navigation", navigation);
 		<AppFooter />
 
 		<ClientOnly>
-			<LazyUContentSearch :files="files" :navigation="navigation" />
+			<LazyUContentSearch :files="files" :navigation="flatNavigation" />
 		</ClientOnly>
 	</UApp>
 </template>
