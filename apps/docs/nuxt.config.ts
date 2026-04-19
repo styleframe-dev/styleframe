@@ -42,6 +42,9 @@ export default defineNuxtConfig({
 		},
 	},
 	css: ["../shared/app/assets/css/main.css"],
+	imports: {
+		dirs: ["constants"],
+	},
 	nitro: {
 		prerender: {
 			crawlLinks: true,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { PageCollections } from "@nuxt/content";
+import type { ContentNavigationItem, PageCollections } from "@nuxt/content";
 import * as nuxtUiLocales from "@nuxt/ui/locale";
 import { flattenNavigation } from "~/utils/flattenNavigation";
 
@@ -13,9 +13,11 @@ const lang = computed(
 const dir = computed(
 	() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.dir || "ltr",
 );
-const collectionName = computed(() =>
-	isEnabled.value ? `docs_${locale.value}` : "docs",
-);
+
+const getCollectionName = (key: string) =>
+	(isEnabled.value
+		? `docs_${key}_${locale.value}`
+		: `docs_${key}`) as keyof PageCollections;
 
 useHead({
 	meta: [{ name: "viewport", content: "width=device-width, initial-scale=1" }],
@@ -46,32 +48,73 @@ if (isEnabled.value) {
 }
 
 const { data: navigation } = await useAsyncData(
-	() => `navigation_${collectionName.value}`,
-	() =>
-		queryCollectionNavigation(collectionName.value as keyof PageCollections),
+	() => `navigation_${locale.value}`,
+	async () => {
+		const results = await Promise.all(
+			DOCS_SECTIONS.map(async (section) => {
+				const collectionName = getCollectionName(section.key);
+				const data = await queryCollectionNavigation(collectionName);
+				const rootResult =
+					data.find((item) => item.path === `/docs/${section.slug}`)
+						?.children ||
+					data.find((item) => item.path === "/docs")?.children ||
+					data ||
+					[];
+				const localeResult =
+					rootResult.find((item) => item.path === `/${locale.value}`)
+						?.children || rootResult;
+				const sectionPath = `/docs/${section.slug}`;
+				let result: ContentNavigationItem[];
+				if (Array.isArray(section.folder)) {
+					const unwrapped =
+						localeResult.length === 1 && localeResult[0].path === sectionPath
+							? (localeResult[0].children ?? [])
+							: localeResult;
+					result = section.folder
+						.map((folder) =>
+							unwrapped.find(
+								(item) =>
+									item.path ===
+									`${sectionPath}/${folder.replace(/^\d+\./, "")}`,
+							),
+						)
+						.filter(
+							(item): item is ContentNavigationItem => item !== undefined,
+						);
+				} else {
+					result = localeResult;
+				}
+				return [section.key, flattenNavigation(result)] as const;
+			}),
+		);
+		return Object.fromEntries(results) as Record<
+			string,
+			ContentNavigationItem[]
+		>;
+	},
 	{
-		transform: (data) => {
-			const rootResult =
-				data.find((item) => item.path === "/docs")?.children || data || [];
-
-			const result =
-				rootResult.find((item) => item.path === `/${locale.value}`)?.children ||
-				rootResult;
-
-			return flattenNavigation(result);
-		},
 		watch: [locale],
 	},
 );
+
 const { data: files } = useLazyAsyncData(
-	`search_${collectionName.value}`,
-	() =>
-		queryCollectionSearchSections(
-			collectionName.value as keyof PageCollections,
-		),
+	`search_${locale.value}`,
+	async () => {
+		const perSection = await Promise.all(
+			DOCS_SECTIONS.map((section) =>
+				queryCollectionSearchSections(getCollectionName(section.key)),
+			),
+		);
+		return perSection.flat();
+	},
 	{
 		server: false,
+		watch: [locale],
 	},
+);
+
+const flatNavigation = computed(() =>
+	navigation.value ? Object.values(navigation.value).flat() : [],
 );
 
 provide("navigation", navigation);
@@ -86,7 +129,7 @@ provide("navigation", navigation);
 		</NuxtLayout>
 
 		<ClientOnly>
-			<LazyUContentSearch :files="files" :navigation="navigation" />
+			<LazyUContentSearch :files="files" :navigation="flatNavigation" />
 		</ClientOnly>
 	</UApp>
 </template>

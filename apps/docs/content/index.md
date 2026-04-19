@@ -147,7 +147,7 @@ Built for Excellent Developer Experience
     ---
     icon: i-lucide-square-terminal
     target: _blank
-    to: /docs/resources/guides
+    to: /docs/getting-started/guides
     ---
     #title
     Intuitive [Developer Experience]{.text-primary}
@@ -260,7 +260,7 @@ links:
 -   label: Explore the default theme
     color: neutral
     variant: outline
-    to: /docs/design-tokens
+    to: /docs/theme/design-tokens
     icon: i-lucide-palette
 ---
 

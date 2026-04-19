@@ -1,10 +1,37 @@
 <script setup lang="ts">
+import { useResizeObserver } from "@vueuse/core";
 import { useDocusI18n } from "../../composables/useDocusI18n";
 
 const appConfig = useAppConfig();
 const site = useSiteConfig();
 
 const { localePath, isEnabled, locales } = useDocusI18n();
+
+const route = useRoute();
+const isDocs = computed(() => route.path.startsWith("/docs"));
+
+const headerEl = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+	headerEl.value = document.querySelector<HTMLElement>("header");
+});
+
+useResizeObserver(headerEl, ([entry]) => {
+	if (!isDocs.value) return;
+	const height = entry.contentRect.height;
+	if (height > 0) {
+		document.documentElement.style.setProperty(
+			"--ui-header-height",
+			`${height}px`,
+		);
+	}
+});
+
+watch(isDocs, (docs) => {
+	if (!docs) {
+		document.documentElement.style.removeProperty("--ui-header-height");
+	}
+});
 
 const links = computed(() =>
 	appConfig.github && appConfig.github.url
@@ -22,7 +49,7 @@ const links = computed(() =>
 
 <template>
 	<UHeader
-		:ui="{ center: 'flex-1' }"
+		:ui="{ center: 'flex-1', root: isDocs ? 'h-auto' : '' }"
 		:to="localePath('/')"
 		:title="appConfig.header?.title || site.name"
 	>
@@ -76,6 +103,10 @@ const links = computed(() =>
 
 		<template #body>
 			<AppHeaderBody />
+		</template>
+
+		<template v-if="isDocs" #bottom>
+			<AppSubHeader />
 		</template>
 	</UHeader>
 </template>

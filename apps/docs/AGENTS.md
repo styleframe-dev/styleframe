@@ -6,18 +6,23 @@ This directory contains the source content for the Styleframe documentation site
 
 ```
 content/docs/
-├── 01.getting-started/     # Installation, introduction, licensing, CLI
+├── 01.getting-started/     # Introduction, installation, guides, comparisons, tooling, licensing
 ├── 02.api/                 # Core API reference (variables, selectors, utilities, recipes, etc.)
-├── 03.tooling/             # Scanner, Figma plugin
-├── 04.resources/           # Guides, comparisons with other tools
-├── 05.components/          # Component recipes (Badge, etc.)
-├── 05.design-tokens/       # Color, spacing, typography, scale, breakpoint tokens
+├── 03.design-tokens/       # Color, spacing, typography, scale, breakpoint tokens
 │   └── 02.composables/     # Individual design token composable pages
-├── 06.utilities/           # 16 utility categories (spacing, layout, typography, etc.)
+├── 04.components/          # Component recipes (Badge, Button, etc.)
+│   └── 02.composables/     # Individual component composable pages
+├── 05.utilities/           # Utility categories (spacing, layout, typography, etc.)
 │   └── 02.composables/     # Individual utility composable pages
-└── 07.modifiers/           # Pseudo-state, form-state, aria, structural, etc.
+└── 06.modifiers/           # Pseudo-state, form-state, aria, structural, etc.
     └── 02.composables/     # Individual modifier composable pages
 ```
+
+**Navigation sections:** The docs site groups these folders into three top-level navigation sections (see `apps/docs/app/constants/sections.ts`):
+
+- **Getting Started** → `01.getting-started/`
+- **API Reference** → `02.api/`
+- **Theme** → bundles `03.design-tokens/`, `04.components/`, `05.utilities/`, `06.modifiers/`
 
 **Numbering convention:** Directories and files use `NN.` prefixes for ordering (e.g., `01.introduction.md`, `06.colors.md`). Index files use `00.index.md`. Subdirectories follow the same pattern.
 
@@ -182,7 +187,7 @@ Another answer.
 
 Document core Styleframe methods. Each method gets an H2 heading with the function signature. Show tabbed Code/Output examples for each. Include a "Naming Convention" or similar subsection when the method has naming rules. End with Best Practices and FAQ.
 
-### Design Token Pages (`05.design-tokens/`)
+### Design Token Pages (`03.design-tokens/`)
 
 Document `@styleframe/theme` composables. Each composable (e.g., `useColorDesignTokens`, `useColorLevelDesignTokens`) gets its own H2 section. Show:
 1. Default usage with tabbed Code/Output
@@ -191,7 +196,7 @@ Document `@styleframe/theme` composables. Each composable (e.g., `useColorDesign
 
 Include default value tables and tips about `as const` usage. End with Best Practices and FAQ.
 
-### Utility Pages (`06.utilities/`)
+### Utility Pages (`05.utilities/`)
 
 Document utility composables. Show:
 1. Basic usage with the utility creator function
@@ -201,7 +206,7 @@ Document utility composables. Show:
 
 Class name format: `_property-name:value` (e.g., `_margin:sm`), with modifier prefix: `_hover:margin:sm`.
 
-### Modifier Pages (`07.modifiers/`)
+### Modifier Pages (`06.modifiers/`)
 
 Document modifier composables. Each modifier gets its own H2 with tabbed Code/Output/Usage. Include:
 1. Individual modifier functions (e.g., `useHoverModifier`)
@@ -209,7 +214,7 @@ Document modifier composables. Each modifier gets its own H2 with tabbed Code/Ou
 3. CSS selector mapping table
 4. Combined modifier examples
 
-### Component Pages (`05.components/`)
+### Component Pages (`04.components/`)
 
 Document pre-built recipes. Include:
 1. Registration with `useButtonRecipe(s)` etc.
