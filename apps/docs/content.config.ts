@@ -2,7 +2,7 @@ import type { DefinedCollection } from "@nuxt/content";
 import { defineContentConfig, defineCollection, z } from "@nuxt/content";
 import { asSitemapCollection } from "@nuxtjs/sitemap/content";
 import { useNuxt } from "@nuxt/kit";
-import { DOCS_SECTIONS } from "./app/utils/docsSections";
+import { DOCS_SECTIONS, type DocsSection } from "./app/constants/sections";
 
 const { options } = useNuxt();
 const locales = options.i18n?.locales;
@@ -20,6 +20,29 @@ const createDocsSchema = () =>
 			)
 			.optional(),
 	});
+
+const buildDocsSource = (
+	section: DocsSection,
+	pathPrefix = "",
+	urlPrefix = "",
+) => {
+	const folders = Array.isArray(section.folder)
+		? section.folder
+		: [section.folder];
+	const baseUrl = `${urlPrefix}/docs/${section.slug}`;
+
+	if (folders.length === 1) {
+		return {
+			include: `${pathPrefix}docs/${folders[0]}/**/*.{md,yml}`,
+			prefix: baseUrl,
+		};
+	}
+
+	return folders.map((folder) => ({
+		include: `${pathPrefix}docs/${folder}/**/*.{md,yml}`,
+		prefix: `${baseUrl}/${folder.replace(/^\d+\./, "")}`,
+	}));
+};
 
 let collections: Record<string, DefinedCollection>;
 
@@ -39,10 +62,7 @@ if (locales && Array.isArray(locales)) {
 			collections[`docs_${section.key}_${code}`] = defineCollection(
 				asSitemapCollection({
 					type: "page",
-					source: {
-						include: `${code}/docs/${section.folder}/**/*.{md,yml}`,
-						prefix: `/${code}/docs/${section.slug}`,
-					},
+					source: buildDocsSource(section, `${code}/`, `/${code}`),
 					schema: createDocsSchema(),
 				}),
 			);
@@ -62,10 +82,7 @@ if (locales && Array.isArray(locales)) {
 		collections[`docs_${section.key}`] = defineCollection(
 			asSitemapCollection({
 				type: "page",
-				source: {
-					include: `docs/${section.folder}/**/*.{md,yml}`,
-					prefix: `/docs/${section.slug}`,
-				},
+				source: buildDocsSource(section),
 				schema: createDocsSchema(),
 			}),
 		);

@@ -2,7 +2,7 @@ import { withLeadingSlash } from "ufo";
 import { stringify } from "minimark/stringify";
 import { queryCollection } from "@nuxt/content/nitro";
 import type { Collections } from "@nuxt/content";
-import { DOCS_SECTIONS } from "~/utils/docsSections";
+import { DOCS_SECTIONS } from "~/constants/sections";
 
 export default eventHandler(async (event) => {
 	const slug = getRouterParams(event)["slug.md"];

@@ -260,7 +260,7 @@ links:
 -   label: Explore the default theme
     color: neutral
     variant: outline
-    to: /docs/design-tokens
+    to: /docs/theme/design-tokens
     icon: i-lucide-palette
 ---
 

@@ -1,5 +1,5 @@
 import type { ContentNavigationItem } from "@nuxt/content";
-import type { DocsSection } from "~/utils/docsSections";
+import type { DocsSection } from "~/constants/sections";
 
 export type DocsSectionLink = DocsSection & {
 	to: string;

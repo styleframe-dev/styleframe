@@ -60,9 +60,28 @@ const { data: navigation } = await useAsyncData(
 					data.find((item) => item.path === "/docs")?.children ||
 					data ||
 					[];
-				const result =
+				const localeResult =
 					rootResult.find((item) => item.path === `/${locale.value}`)
 						?.children || rootResult;
+				const sectionPath = `/docs/${section.slug}`;
+				let result: ContentNavigationItem[];
+				if (Array.isArray(section.folder)) {
+					const unwrapped =
+						localeResult.length === 1 && localeResult[0].path === sectionPath
+							? (localeResult[0].children ?? [])
+							: localeResult;
+					result = section.folder
+						.map((folder) =>
+							unwrapped.find(
+								(item) =>
+									item.path ===
+									`${sectionPath}/${folder.replace(/^\d+\./, "")}`,
+							),
+						)
+						.filter((item): item is ContentNavigationItem => item !== undefined);
+				} else {
+					result = localeResult;
+				}
 				return [section.key, flattenNavigation(result)] as const;
 			}),
 		);
