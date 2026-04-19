@@ -1,0 +1,14 @@
+import * as esbuild from "esbuild-wasm";
+// Vite resolves the `?url` import to the hashed asset URL at build time.
+import esbuildWasmUrl from "esbuild-wasm/esbuild.wasm?url";
+
+let initPromise: Promise<typeof esbuild> | null = null;
+
+export function getEsbuild(): Promise<typeof esbuild> {
+	if (!initPromise) {
+		initPromise = esbuild
+			.initialize({ wasmURL: esbuildWasmUrl, worker: true })
+			.then(() => esbuild);
+	}
+	return initPromise;
+}
