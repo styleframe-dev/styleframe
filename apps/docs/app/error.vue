@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import type { NuxtError } from "#app";
-import type {
-	ContentNavigationItem,
-	PageCollections,
-} from "@nuxt/content";
+import type { ContentNavigationItem, PageCollections } from "@nuxt/content";
 import * as nuxtUiLocales from "@nuxt/ui/locale";
 import { flattenNavigation } from "~/utils/flattenNavigation";
 
