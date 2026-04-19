@@ -11,4 +11,5 @@ export * from "./placeholder";
 export * from "./popover";
 export * from "./progress";
 export * from "./skeleton";
+export * from "./toast";
 export * from "./tooltip";
