@@ -33,6 +33,7 @@
 		"@vitejs/plugin-vue": "catalog:nuxt",
 		"@vitest/coverage-v8": "catalog:",
 		"@vue/tsconfig": "catalog:nuxt",
+		"jsdom": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:nuxt",
 		"vitest": "catalog:",
