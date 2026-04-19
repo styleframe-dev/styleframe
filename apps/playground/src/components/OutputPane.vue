@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import {
-	pgEditorShell,
-	pgEditorSurface,
-} from "virtual:styleframe";
+import { pgEditorShell, pgEditorSurface } from "virtual:styleframe";
 import CodeOutput from "./CodeOutput.vue";
 import ErrorBanner from "./ErrorBanner.vue";
 import PreviewFrame from "./PreviewFrame.vue";
