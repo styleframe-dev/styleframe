@@ -32,9 +32,14 @@ function vendorModules(): Plugin {
 		"virtual:pg-runtime-url": "styleframe-runtime.esm.js",
 	};
 
+	let isBuild = false;
+
 	return {
 		name: "pg-vendor-modules",
 		enforce: "pre",
+		config(_, env) {
+			isBuild = env.command === "build";
+		},
 		resolveId(id) {
 			if (id in vendorPaths) return id;
 			return null;
@@ -42,6 +47,9 @@ function vendorModules(): Plugin {
 		async load(id) {
 			if (!(id in vendorPaths)) return null;
 			const absolute = vendorPaths[id]!;
+			if (!isBuild) {
+				return `export default ${JSON.stringify(`/@fs${absolute}`)};`;
+			}
 			const fs = await import("node:fs/promises");
 			const source = await fs.readFile(absolute, "utf8");
 			const name = emittedFileNames[id]!;

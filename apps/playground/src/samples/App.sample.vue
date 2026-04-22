@@ -5,15 +5,15 @@ import Component from "./Component.vue";
 <template>
 	<main class="stage">
 		<div class="stack">
-			<Component
-				title="Styleframe Playground"
-				body="Edit styleframe.config.ts, App.vue, or Component.vue on the left. The preview, CSS, and runtime JS rebuild as you type."
-			/>
-			<Component
-				title="Recipes, live"
-				body="This card uses the card, card-header, and card-body recipes from @styleframe/theme."
-				variant="soft"
-			/>
+			<Component>
+				<template #header>
+					Styleframe Playground
+				</template>
+				<p class="_margin:0">Edit styleframe.config.ts, App.vue, or Component.vue on the left, then click Run (or press Ctrl/Cmd+S) to rebuild the preview, CSS, and runtime JS.</p>
+				<template #footer>
+					Made with Styleframe
+				</template>
+			</Component>
 		</div>
 	</main>
 </template>

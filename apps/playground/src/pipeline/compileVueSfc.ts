@@ -1,9 +1,4 @@
-import {
-	compileScript,
-	compileTemplate,
-	parse,
-	rewriteDefault,
-} from "@vue/compiler-sfc";
+import { compileScript, compileTemplate, parse } from "@vue/compiler-sfc";
 import { transformTs } from "./transformTs";
 
 export interface CompiledSfc {
@@ -32,6 +27,7 @@ export async function compileVueSfc(
 
 	let scriptCode = "";
 	let scriptLang: string | undefined;
+	let bindingMetadata: ReturnType<typeof compileScript>["bindings"];
 	if (descriptor.script || descriptor.scriptSetup) {
 		const compiled = compileScript(descriptor, {
 			id,
@@ -41,6 +37,7 @@ export async function compileVueSfc(
 		scriptCode = compiled.content;
 		scriptLang =
 			compiled.lang ?? descriptor.scriptSetup?.lang ?? descriptor.script?.lang;
+		bindingMetadata = compiled.bindings;
 	} else {
 		scriptCode = "const __sfc__ = {};";
 	}
@@ -53,7 +50,7 @@ export async function compileVueSfc(
 			id,
 			scoped: hasScoped,
 			isProd: false,
-			compilerOptions: { bindingMetadata: undefined },
+			compilerOptions: { bindingMetadata },
 		});
 		if (compiled.errors.length > 0) {
 			const messages = compiled.errors.map((e) =>
@@ -67,7 +64,7 @@ export async function compileVueSfc(
 		);
 	}
 
-	let combined = rewriteDefault(scriptCode, "__sfc__");
+	let combined = scriptCode;
 	combined += "\n" + renderCode + "\n";
 	if (descriptor.template) {
 		combined += `__sfc__.render = _sfc_render;\n`;

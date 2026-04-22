@@ -5,8 +5,10 @@ import type { EditorView } from "@codemirror/view";
 import {
 	createEditor,
 	type EditorLanguage,
+	setEditorTheme,
 	setEditorValue,
 } from "@/editor/codemirror";
+import { useTheme } from "@/state/theme";
 
 const props = defineProps<{
 	value: string;
@@ -15,6 +17,7 @@ const props = defineProps<{
 
 const host = ref<HTMLDivElement | null>(null);
 let view: EditorView | null = null;
+const { resolved } = useTheme();
 
 onMounted(() => {
 	if (!host.value) return;
@@ -22,6 +25,7 @@ onMounted(() => {
 		parent: host.value,
 		doc: props.value,
 		language: props.language,
+		theme: resolved.value,
 		readOnly: true,
 	});
 });
@@ -37,6 +41,10 @@ watch(
 		if (view) setEditorValue(view, next);
 	},
 );
+
+watch(resolved, (next) => {
+	if (view) setEditorTheme(view, next);
+});
 </script>
 
 <template>

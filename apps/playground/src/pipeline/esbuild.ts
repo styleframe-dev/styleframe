@@ -1,4 +1,4 @@
-import * as esbuild from "esbuild-wasm";
+import * as esbuild from "esbuild-wasm/esm/browser";
 // Vite resolves the `?url` import to the hashed asset URL at build time.
 import esbuildWasmUrl from "esbuild-wasm/esbuild.wasm?url";
 

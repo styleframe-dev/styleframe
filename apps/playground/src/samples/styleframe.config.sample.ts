@@ -1,5 +1,6 @@
 import {
 	useCardBodyRecipe,
+	useCardFooterRecipe,
 	useCardHeaderRecipe,
 	useCardRecipe,
 	useDesignTokensPreset,
@@ -21,6 +22,7 @@ useModifiersPreset(s);
 export const card = useCardRecipe(s);
 export const cardHeader = useCardHeaderRecipe(s);
 export const cardBody = useCardBodyRecipe(s);
+export const cardFooter = useCardFooterRecipe(s);
 
 const { selector } = s;
 
@@ -29,14 +31,14 @@ selector(".stage", {
 	minHeight: "100vh",
 	alignItems: "center",
 	justifyContent: "center",
-	padding: "@2",
+	padding: "calc(@spacing * 2)",
 	background: "@color.background",
 });
 
 selector(".stack", {
 	display: "flex",
 	flexDirection: "column",
-	gap: "@1",
+	gap: "@spacing",
 	maxWidth: "32rem",
 	width: "100%",
 });

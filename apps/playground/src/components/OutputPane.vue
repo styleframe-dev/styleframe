@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { pgEditorShell, pgEditorSurface } from "virtual:styleframe";
+import BrowserChrome from "./BrowserChrome.vue";
 import CodeOutput from "./CodeOutput.vue";
 import ErrorBanner from "./ErrorBanner.vue";
 import PreviewFrame from "./PreviewFrame.vue";
@@ -37,15 +38,23 @@ const tabs: ReadonlyArray<{ id: OutputId; label: string }> = [
 		/>
 		<div :class="pgEditorSurface()" style="position: relative">
 			<div v-show="active === 'preview'" style="height: 100%">
-				<PreviewFrame
-					:srcdoc="props.srcdoc"
-					@runtime-error="(message) => emit('runtime-error', message)"
-				/>
+				<BrowserChrome url="localhost:5173" :hmr-ready="true">
+					<PreviewFrame
+						:srcdoc="props.srcdoc"
+						@runtime-error="(message) => emit('runtime-error', message)"
+					/>
+				</BrowserChrome>
 			</div>
-			<div v-show="active === 'css'" style="height: 100%">
-				<CodeOutput :value="props.css" language="typescript" />
+			<div
+				v-show="active === 'css'"
+				style="display: flex; flex-direction: column; height: 100%; min-height: 0"
+			>
+				<CodeOutput :value="props.css" language="css" />
 			</div>
-			<div v-show="active === 'js'" style="height: 100%">
+			<div
+				v-show="active === 'js'"
+				style="display: flex; flex-direction: column; height: 100%; min-height: 0"
+			>
 				<CodeOutput :value="props.js" language="typescript" />
 			</div>
 			<ErrorBanner

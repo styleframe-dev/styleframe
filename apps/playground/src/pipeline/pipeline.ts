@@ -1,6 +1,10 @@
 import { buildSrcdoc, type BuildSrcdocResult } from "./buildSrcdoc";
 import { compileVueSfc } from "./compileVueSfc";
 import { evalUserConfig } from "./evalUserConfig";
+import {
+	scanAndRegisterUtilities,
+	type ScanResult,
+} from "./scanAndRegisterUtilities";
 import { transformTs } from "./transformTs";
 import { transpileStyleframe } from "./transpileStyleframe";
 
@@ -20,6 +24,7 @@ export interface PipelineSuccess {
 	appCode: string;
 	componentCode: string;
 	srcdoc: string;
+	scan: ScanResult;
 	revoke: () => void;
 }
 
@@ -28,6 +33,7 @@ export interface PipelineFailure {
 	stage:
 		| "config-transform"
 		| "config-eval"
+		| "scan"
 		| "transpile"
 		| "config-compile"
 		| "vue"
@@ -57,6 +63,16 @@ export async function runPipeline(
 		instance = await evalUserConfig(compiledConfig);
 	} catch (error) {
 		return { ok: false, stage: "config-eval", error: toError(error) };
+	}
+
+	let scan: ScanResult;
+	try {
+		scan = scanAndRegisterUtilities(instance, [
+			{ content: input.app, filePath: "App.vue" },
+			{ content: input.component, filePath: "Component.vue" },
+		]);
+	} catch (error) {
+		return { ok: false, stage: "scan", error: toError(error) };
 	}
 
 	let transpiled: Awaited<ReturnType<typeof transpileStyleframe>>;
@@ -106,6 +122,7 @@ export async function runPipeline(
 		appCode: appCompiled.code,
 		componentCode: componentCompiled.code,
 		srcdoc: built.srcdoc,
+		scan,
 		revoke: built.revoke,
 	};
 }

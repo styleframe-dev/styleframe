@@ -1,4 +1,5 @@
 import { reactive, readonly } from "vue";
+import type { ScanResult } from "@/pipeline/scanAndRegisterUtilities";
 import configSample from "@/samples/styleframe.config.sample.ts?raw";
 import appSample from "@/samples/App.sample.vue?raw";
 import componentSample from "@/samples/Component.sample.vue?raw";
@@ -8,6 +9,7 @@ export type OutputId = "preview" | "css" | "js";
 
 interface PlaygroundState {
 	files: Record<FileId, string>;
+	lastBuiltFiles: Record<FileId, string>;
 	activeFile: FileId;
 	activeOutput: OutputId;
 	output: {
@@ -15,11 +17,17 @@ interface PlaygroundState {
 		runtimeTs: string;
 		srcdoc: string;
 	};
+	scan: ScanResult | null;
 	error: string | null;
 }
 
 const state = reactive<PlaygroundState>({
 	files: {
+		config: configSample,
+		app: appSample,
+		component: componentSample,
+	},
+	lastBuiltFiles: {
 		config: configSample,
 		app: appSample,
 		component: componentSample,
@@ -31,6 +39,7 @@ const state = reactive<PlaygroundState>({
 		runtimeTs: "",
 		srcdoc: "",
 	},
+	scan: null,
 	error: null,
 });
 

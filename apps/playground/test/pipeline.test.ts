@@ -76,6 +76,7 @@ describe("runPipeline", () => {
 		expect(result.appCode).toBe("// App.vue");
 		expect(result.componentCode).toBe("// Component.vue");
 		expect(result.srcdoc).toBe("<html></html>");
+		expect(result.scan).toEqual({ count: 0, registered: [], diagnostics: [] });
 		expect(result.revoke).toBe(revoke);
 	});
 

@@ -5,9 +5,10 @@ export const useToolbarRecipe = createUseRecipe("pg-toolbar", {
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "space-between",
-		gap: "@0.5",
-		paddingTop: "@0.5",
-		paddingBottom: "@0.5",
+		flexShrink: 0,
+		gap: "@0.75",
+		paddingTop: "@0.375",
+		paddingBottom: "@0.375",
 		paddingLeft: "@0.75",
 		paddingRight: "@0.75",
 		height: "@3",
@@ -22,20 +23,10 @@ export const useToolbarRecipe = createUseRecipe("pg-toolbar", {
 	},
 });
 
-export const useToolbarTitleRecipe = createUseRecipe("pg-toolbar-title", {
+export const useToolbarSectionRecipe = createUseRecipe("pg-toolbar-section", {
 	base: {
-		fontSize: "@font-size.sm",
-		fontWeight: "@font-weight.semibold",
-		color: "@color.gray-900",
-		"&:dark": {
-			color: "@color.white",
-		},
-	},
-});
-
-export const useToolbarSubtitleRecipe = createUseRecipe("pg-toolbar-subtitle", {
-	base: {
-		fontSize: "@font-size.xs",
-		color: "@color.gray-500",
+		display: "inline-flex",
+		alignItems: "center",
+		gap: "@0.5",
 	},
 });

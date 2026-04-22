@@ -155,8 +155,10 @@ function extractFromJSX(content: string, pattern?: RegExp): string[] {
 function extractFromVue(content: string, pattern?: RegExp): string[] {
 	const classes: string[] = [];
 
-	// Extract from template section
-	const templateMatch = content.match(/<template[^>]*>([\s\S]*?)<\/template>/i);
+	// Extract from template section.
+	// Use greedy matching so nested slot templates (<template #slot>...</template>)
+	// don't cut the outer match short — match from the first <template> to the LAST </template>.
+	const templateMatch = content.match(/<template[^>]*>([\s\S]*)<\/template>/i);
 	if (templateMatch?.[1]) {
 		classes.push(...extractFromHTML(templateMatch[1], pattern));
 

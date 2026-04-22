@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const initialize = vi.fn(async () => undefined);
 
-vi.mock("esbuild-wasm", () => ({
+vi.mock("esbuild-wasm/esm/browser", () => ({
 	initialize,
 	transform: vi.fn(),
 }));

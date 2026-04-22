@@ -1,9 +1,7 @@
 <script setup>
-import { card, cardBody, cardHeader } from "./styleframe.config";
+import { card, cardBody, cardHeader, cardFooter } from "./styleframe.config";
 
 const props = defineProps({
-	title: { type: String, required: true },
-	body: { type: String, required: true },
 	variant: { type: String, default: "solid" },
 	size: { type: String, default: "md" },
 });
@@ -11,7 +9,14 @@ const props = defineProps({
 
 <template>
 	<article :class="card({ color: 'light', variant: props.variant, size: props.size })">
-		<header :class="cardHeader()">{{ props.title }}</header>
-		<div :class="cardBody()">{{ props.body }}</div>
+		<header :class="cardHeader()">
+			<slot name="header" />
+		</header>
+		<div :class="cardBody()">
+			<slot />
+		</div>
+		<footer :class="cardFooter()">
+			<slot name="footer" />
+		</footer>
 	</article>
 </template>

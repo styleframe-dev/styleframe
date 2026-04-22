@@ -17,8 +17,48 @@ declare module "virtual:styleframe" {
 	export const pgErrorBannerMessage: (props?: Record<string, never>) => string;
 	export const pgErrorBannerClose: (props?: Record<string, never>) => string;
 	export const pgToolbar: (props?: Record<string, never>) => string;
-	export const pgToolbarTitle: (props?: Record<string, never>) => string;
-	export const pgToolbarSubtitle: (props?: Record<string, never>) => string;
+	export const pgToolbarSection: (props?: Record<string, never>) => string;
+	export const pgThemeToggle: (props?: Record<string, never>) => string;
+	export const button: (props?: {
+		color?:
+			| "primary"
+			| "secondary"
+			| "success"
+			| "info"
+			| "warning"
+			| "error"
+			| "light"
+			| "dark"
+			| "neutral";
+		variant?: "solid" | "outline" | "soft" | "subtle" | "ghost" | "link";
+		size?: "xs" | "sm" | "md" | "lg" | "xl";
+	}) => string;
+	export const pgBrandMark: (props?: Record<string, never>) => string;
+	export const pgBrandLogotype: (props?: Record<string, never>) => string;
+	export const pgBrandBadge: (props?: Record<string, never>) => string;
+	export const pgFileTabList: (props?: Record<string, never>) => string;
+	export const pgFileTab: (props?: { state?: "inactive" | "active" }) => string;
+	export const pgFileTabDot: (props?: Record<string, never>) => string;
+	export const pgBrowserChrome: (props?: Record<string, never>) => string;
+	export const pgBrowserDots: (props?: Record<string, never>) => string;
+	export const pgBrowserDot: (props?: {
+		tone?: "red" | "yellow" | "green";
+	}) => string;
+	export const pgBrowserUrl: (props?: Record<string, never>) => string;
+	export const pgBrowserUrlText: (props?: Record<string, never>) => string;
+	export const pgBrowserActions: (props?: Record<string, never>) => string;
+	export const pgBrowserAction: (props?: Record<string, never>) => string;
+	export const pgBrowserViewport: (props?: Record<string, never>) => string;
+	export const pgHmrIndicator: (props?: Record<string, never>) => string;
+	export const pgHmrDot: (props?: Record<string, never>) => string;
+	export const pgStatusBar: (props?: Record<string, never>) => string;
+	export const pgStatusBarGroup: (props?: {
+		align?: "start" | "end";
+	}) => string;
+	export const pgStatusBarItem: (props?: Record<string, never>) => string;
+	export const pgStatusBarDot: (props?: {
+		tone?: "success" | "error" | "warning";
+	}) => string;
 }
 
 declare module "virtual:styleframe.css" {

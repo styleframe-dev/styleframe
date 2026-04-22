@@ -23,7 +23,7 @@ describe("compileVueSfc", () => {
 		expect(code.trimEnd().endsWith("export default __sfc__;")).toBe(true);
 	});
 
-	it("compiles a <script setup> block via rewriteDefault", async () => {
+	it("compiles a <script setup> block with a single __sfc__ declaration", async () => {
 		const source = [
 			"<script setup>",
 			"const value = 42;",
@@ -37,6 +37,25 @@ describe("compileVueSfc", () => {
 		expect(code).toContain("__sfc__");
 		expect(code).not.toMatch(/export default \{/);
 		expect(code).toContain("__sfc__.render = _sfc_render;");
+		expect(code.match(/\bconst __sfc__\s*=/g) ?? []).toHaveLength(1);
+	});
+
+	it('compiles a <script setup lang="ts"> block without duplicating __sfc__', async () => {
+		const source = [
+			'<script setup lang="ts">',
+			"const props = defineProps<{ title: string }>();",
+			"</script>",
+			"<template><p>{{ props.title }}</p></template>",
+		].join("\n");
+
+		const { compileVueSfc } = await import("@/pipeline/compileVueSfc");
+		const { code } = await compileVueSfc(source, "SetupTs.vue");
+
+		expect(code.match(/\bconst __sfc__\s*=/g) ?? []).toHaveLength(1);
+		expect(code).toContain("__sfc__.render = _sfc_render;");
+		expect(code).toMatch(
+			/(?:export default __sfc__|[A-Za-z_$][\w$]*\s*as\s+default)/,
+		);
 	});
 
 	it("produces a stable scope id for the same filename", async () => {
