@@ -59,6 +59,7 @@ export const useFileTabRecipe = createUseRecipe("pg-file-tab", {
 			active: {
 				color: "@color.gray-900",
 				background: "@color.white",
+				boxShadow: "inset 0 2px 0 @color.primary",
 				"&:hover": {
 					color: "@color.gray-900",
 				},
@@ -68,15 +69,6 @@ export const useFileTabRecipe = createUseRecipe("pg-file-tab", {
 				},
 				"&:dark:hover": {
 					color: "@color.white",
-				},
-				"&::before": {
-					content: '""',
-					position: "absolute",
-					top: "0",
-					left: "0",
-					right: "0",
-					height: "2px",
-					background: "@color.primary",
 				},
 			},
 		},
