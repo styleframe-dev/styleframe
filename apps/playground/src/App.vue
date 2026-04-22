@@ -50,7 +50,11 @@ const dirty = computed<Record<FileId, boolean>>(() => ({
 }));
 
 const canRun = computed(
-	() => dirty.value.config || dirty.value.app || dirty.value.component || !!state.error,
+	() =>
+		dirty.value.config ||
+		dirty.value.app ||
+		dirty.value.component ||
+		!!state.error,
 );
 
 const scanSummary = computed(() => {
@@ -111,7 +115,12 @@ function onChange(payload: { id: FileId; value: string }) {
 
 function onKeyDown(event: KeyboardEvent) {
 	const mod = event.metaKey || event.ctrlKey;
-	if (mod && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "s") {
+	if (
+		mod &&
+		!event.altKey &&
+		!event.shiftKey &&
+		event.key.toLowerCase() === "s"
+	) {
 		event.preventDefault();
 		void run();
 	}
