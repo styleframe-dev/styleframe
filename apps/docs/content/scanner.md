@@ -30,7 +30,7 @@ If you've used Tailwind JIT, you already know the workflow. Write utility classe
     ---
     color: neutral
     size: xl
-    to: /docs/tooling/scanner
+    to: /docs/getting-started/tooling/scanner
     variant: outline
     ---
     Read utility scanner docs
@@ -256,7 +256,7 @@ Enable the scanner, register your factories, and let your templates drive your C
     ---
     color: neutral
     size: xl
-    to: /docs/tooling/scanner
+    to: /docs/getting-started/tooling/scanner
     variant: outline
     ---
     Read utility scanner docs

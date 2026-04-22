@@ -2,6 +2,7 @@ import { withLeadingSlash } from "ufo";
 import { stringify } from "minimark/stringify";
 import { queryCollection } from "@nuxt/content/nitro";
 import type { Collections } from "@nuxt/content";
+import { DOCS_SECTIONS } from "~/constants/sections";
 
 export default eventHandler(async (event) => {
 	const slug = getRouterParams(event)["slug.md"];
@@ -16,22 +17,37 @@ export default eventHandler(async (event) => {
 	const path = withLeadingSlash(slug.replace(".md", ""));
 	const config = useRuntimeConfig(event).public;
 
-	let collectionName = "docs";
-	if (config.i18n?.locales) {
-		const pathSegments = path.split("/").filter(Boolean);
-		const firstSegment = pathSegments[0];
+	const pathSegments = path.split("/").filter(Boolean);
+	let localeSegment: string | undefined;
+	let sectionIndex = 1; // expect /docs/<section>/...
 
+	if (config.i18n?.locales) {
 		const availableLocales = config.i18n.locales.map(
 			(locale: string | { code: string }) =>
 				typeof locale === "string" ? locale : locale.code,
 		);
-
+		const firstSegment = pathSegments[0];
 		if (firstSegment && availableLocales.includes(firstSegment)) {
-			collectionName = `docs_${firstSegment}`;
+			localeSegment = firstSegment;
+			sectionIndex = 2;
 		} else if (config.i18n.defaultLocale) {
-			collectionName = `docs_${config.i18n.defaultLocale}`;
+			localeSegment = config.i18n.defaultLocale;
 		}
 	}
+
+	const sectionSlug = pathSegments[sectionIndex];
+	const section = DOCS_SECTIONS.find((s) => s.slug === sectionSlug);
+	if (!section) {
+		throw createError({
+			statusCode: 404,
+			statusMessage: "Page not found",
+			fatal: true,
+		});
+	}
+
+	const collectionName = localeSegment
+		? `docs_${section.key}_${localeSegment}`
+		: `docs_${section.key}`;
 
 	const page = await queryCollection(event, collectionName as keyof Collections)
 		.path(path)
