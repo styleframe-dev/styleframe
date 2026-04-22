@@ -140,6 +140,24 @@ describe("extractFromVue", () => {
 
 		expect(result).toContain("_margin:sm");
 	});
+
+	it("should extract classes after nested slot templates", () => {
+		const content = `
+			<template>
+				<Header>
+					<template #title>Styleframe Playground</template>
+					<template #actions>
+						<button class="_padding:md">Click</button>
+					</template>
+				</Header>
+				<p class="_margin:0">hello</p>
+			</template>
+		`;
+		const result = extractFromVue(content);
+
+		expect(result).toContain("_padding:md");
+		expect(result).toContain("_margin:0");
+	});
 });
 
 describe("extractFromSvelte", () => {

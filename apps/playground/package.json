@@ -1,0 +1,45 @@
+{
+	"name": "@styleframe/playground",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"preview": "vite preview",
+		"typecheck": "vue-tsc --noEmit -p tsconfig.json",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"@codemirror/commands": "^6.7.1",
+		"@codemirror/lang-css": "^6.3.1",
+		"@codemirror/lang-javascript": "^6.2.2",
+		"@codemirror/lang-vue": "^0.1.3",
+		"@codemirror/language": "^6.10.3",
+		"@codemirror/state": "^6.4.1",
+		"@codemirror/view": "^6.34.1",
+		"@lezer/highlight": "^1.2.3",
+		"@styleframe/core": "workspace:*",
+		"@styleframe/runtime": "workspace:*",
+		"@styleframe/scanner": "workspace:*",
+		"@styleframe/theme": "workspace:*",
+		"@styleframe/transpiler": "workspace:*",
+		"@vue/compiler-sfc": "^3.5.24",
+		"codemirror": "^6.0.1",
+		"esbuild-wasm": "^0.24.0",
+		"styleframe": "workspace:*",
+		"vue": "catalog:nuxt"
+	},
+	"devDependencies": {
+		"@styleframe/plugin": "workspace:*",
+		"@types/node": "catalog:",
+		"@vitejs/plugin-vue": "catalog:nuxt",
+		"@vitest/coverage-v8": "catalog:",
+		"@vue/tsconfig": "catalog:nuxt",
+		"jsdom": "catalog:",
+		"typescript": "catalog:",
+		"vite": "catalog:nuxt",
+		"vitest": "catalog:",
+		"vue-tsc": "catalog:nuxt"
+	}
+}

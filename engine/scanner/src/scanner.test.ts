@@ -1,5 +1,6 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { createScanner, quickScan, createContentScanner } from "./scanner";
+import { createScanner } from "./node";
+import { quickScan, createContentScanner } from "./scanner";
 import { hashContent, createCache } from "./cache";
 import { createChangeHandler } from "./watcher";
 
