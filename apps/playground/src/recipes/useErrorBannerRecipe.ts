@@ -3,9 +3,9 @@ import { createUseRecipe } from "@styleframe/theme";
 export const useErrorBannerRecipe = createUseRecipe("pg-error-banner", {
 	base: {
 		position: "absolute",
-		top: "@0.5",
-		left: "@0.5",
-		right: "@0.5",
+		bottom: "calc(@spacing * 0.5)",
+		left: "calc(@spacing * 0.5)",
+		right: "calc(@spacing * 0.5)",
 		display: "flex",
 		alignItems: "flex-start",
 		gap: "@0.5",

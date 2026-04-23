@@ -6,6 +6,7 @@ import {
 	pgToolbar,
 	pgToolbarSection,
 } from "virtual:styleframe";
+import { version as styleframeVersion } from "styleframe/package.json";
 import { useTheme } from "@/state/theme";
 import vueUrl from "virtual:pg-vue-url";
 import runtimeUrl from "virtual:pg-runtime-url";
@@ -197,7 +198,7 @@ onBeforeUnmount(() => {
 		indent="Spaces: 2"
 		encoding="UTF-8"
 		eol="LF"
-		version="v1.0.0"
+		:version="`v${styleframeVersion}`"
 		:problems="state.error ? 1 : 0"
 		:scan-summary="scanSummary"
 	/>

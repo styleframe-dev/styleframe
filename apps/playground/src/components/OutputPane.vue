@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { pgEditorShell, pgEditorSurface } from "virtual:styleframe";
 import BrowserChrome from "./BrowserChrome.vue";
 import CodeOutput from "./CodeOutput.vue";
@@ -27,6 +28,9 @@ const tabs: ReadonlyArray<{ id: OutputId; label: string }> = [
 	{ id: "css", label: "CSS Output" },
 	{ id: "js", label: "JS Output" },
 ];
+
+const refreshKey = ref(0);
+const viewport = ref<"mobile" | "tablet" | "desktop">("desktop");
 </script>
 
 <template>
@@ -38,8 +42,15 @@ const tabs: ReadonlyArray<{ id: OutputId; label: string }> = [
 		/>
 		<div :class="pgEditorSurface()" style="position: relative">
 			<div v-show="active === 'preview'" style="height: 100%">
-				<BrowserChrome url="localhost:5173" :hmr-ready="true">
+				<BrowserChrome
+					url="localhost:5173"
+					:hmr-ready="true"
+					:srcdoc="props.srcdoc"
+					v-model:viewport="viewport"
+					@refresh="refreshKey++"
+				>
 					<PreviewFrame
+						:key="refreshKey"
 						:srcdoc="props.srcdoc"
 						@runtime-error="(message) => emit('runtime-error', message)"
 					/>
