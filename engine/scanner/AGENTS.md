@@ -14,7 +14,6 @@ Content scanning and utility class extraction for the Styleframe CSS-in-TypeScri
 
 ```ts
 import {
-  createScanner,
   quickScan,
   createContentScanner,
   parseUtilityClass,
@@ -27,7 +26,12 @@ import {
   createChangeHandler,
   debounce,
 } from "@styleframe/scanner";
+
+// Node-only (uses fast-glob + node:fs/promises):
+import { createScanner } from "@styleframe/scanner/node";
 ```
+
+The main entry is browser-safe. `createScanner` is published under the `/node` subpath because it pulls in `fast-glob` and `node:fs/promises`; importing it from a browser bundle will fail.
 
 **Peer dependencies:** `@styleframe/core`, `@styleframe/license`
 **Dependencies:** `fast-glob`
@@ -72,9 +76,11 @@ Styleframe utility classes follow the pattern: `_[modifiers:]name[:value]`
 
 ### createScanner(config)
 
-Create a scanner instance for file-based scanning with caching and watching support.
+Create a scanner instance for file-based scanning with caching and watching support. Node-only — import from `@styleframe/scanner/node`.
 
 ```ts
+import { createScanner } from "@styleframe/scanner/node";
+
 const scanner = createScanner({
   content: ["./src/**/*.{tsx,jsx,html,vue}"],
   cwd: process.cwd(),
@@ -337,8 +343,9 @@ import { UTILITY_CLASS_PATTERN, ARBITRARY_VALUE_PATTERN, DEFAULT_EXTENSIONS, DEF
 
 | File | Purpose |
 |------|---------|
-| `src/index.ts` | Re-exports all public API |
-| `src/scanner.ts` | Scanner creation (`createScanner`, `quickScan`, `createContentScanner`) |
+| `src/index.ts` | Browser-safe public API barrel |
+| `src/scanner.ts` | Browser-safe scan helpers (`quickScan`, `createContentScanner`) |
+| `src/node.ts` | Node-only scanner (`createScanner`) — entry for `@styleframe/scanner/node` |
 | `src/parser.ts` | Utility class parsing (`parseUtilityClass`, `extractUtilityClasses`, `generateUtilityClassName`) |
 | `src/extractor.ts` | Format-specific content extractors for all supported file types |
 | `src/matcher.ts` | Utility matching against Styleframe root (`matchUtilities`, `filterUtilities`) |
