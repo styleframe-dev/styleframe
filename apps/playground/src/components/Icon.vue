@@ -9,7 +9,9 @@ type IconName =
 	| "reload"
 	| "external"
 	| "play"
-	| "spinner";
+	| "spinner"
+	| "smartphone"
+	| "tablet";
 
 const props = withDefaults(
 	defineProps<{
@@ -39,6 +41,10 @@ const paths: Record<IconName, string> = {
 	play: '<path d="M8 5v14l11-7z" fill="currentColor"/>',
 	spinner:
 		'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.25" stroke-dasharray="14 42" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="0.9s" repeatCount="indefinite"/></circle>',
+	smartphone:
+		'<rect x="7" y="2" width="10" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M11 18h2" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>',
+	tablet:
+		'<rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M11 18h2" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>',
 };
 
 const svg = computed(() => paths[props.name]);

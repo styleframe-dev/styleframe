@@ -11,6 +11,7 @@ import {
 	useBrowserDotsRecipe,
 	useBrowserUrlRecipe,
 	useBrowserUrlTextRecipe,
+	useBrowserViewportFrameRecipe,
 	useBrowserViewportRecipe,
 	useEditorShellRecipe,
 	useEditorSurfaceRecipe,
@@ -69,6 +70,7 @@ export const pgBrowserUrlText = useBrowserUrlTextRecipe(s);
 export const pgBrowserActions = useBrowserActionsRecipe(s);
 export const pgBrowserAction = useBrowserActionRecipe(s);
 export const pgBrowserViewport = useBrowserViewportRecipe(s);
+export const pgBrowserViewportFrame = useBrowserViewportFrameRecipe(s);
 export const pgHmrIndicator = useHmrIndicatorRecipe(s);
 export const pgHmrDot = useHmrDotRecipe(s);
 

@@ -49,6 +49,9 @@ declare module "virtual:styleframe" {
 	export const pgBrowserActions: (props?: Record<string, never>) => string;
 	export const pgBrowserAction: (props?: Record<string, never>) => string;
 	export const pgBrowserViewport: (props?: Record<string, never>) => string;
+	export const pgBrowserViewportFrame: (props?: {
+		size?: "mobile" | "tablet" | "desktop";
+	}) => string;
 	export const pgHmrIndicator: (props?: Record<string, never>) => string;
 	export const pgHmrDot: (props?: Record<string, never>) => string;
 	export const pgStatusBar: (props?: Record<string, never>) => string;
