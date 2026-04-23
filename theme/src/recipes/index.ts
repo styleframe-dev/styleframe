@@ -4,6 +4,7 @@ export * from "./button-group";
 export * from "./callout";
 export * from "./card";
 export * from "./chip";
+export * from "./input";
 export * from "./spinner";
 export * from "./modal";
 export * from "./nav";
