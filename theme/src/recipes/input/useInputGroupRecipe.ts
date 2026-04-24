@@ -34,6 +34,7 @@ export const useInputGroupRecipe = createUseRecipe(
 			".input-prepend + .input": {
 				borderTopLeftRadius: "0",
 				borderBottomLeftRadius: "0",
+				borderLeftWidth: "0",
 			},
 			".input-prepend > *:first-child": {
 				borderTopRightRadius: "0",
@@ -42,6 +43,7 @@ export const useInputGroupRecipe = createUseRecipe(
 			".input:has(+ .input-append)": {
 				borderTopRightRadius: "0",
 				borderBottomRightRadius: "0",
+				borderRightWidth: "0",
 			},
 			".input-append > *:last-child": {
 				borderTopLeftRadius: "0",

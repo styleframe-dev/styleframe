@@ -12,6 +12,8 @@ function createInstance() {
 		"borderBottomLeftRadius",
 		"borderTopRightRadius",
 		"borderBottomRightRadius",
+		"borderLeftWidth",
+		"borderRightWidth",
 	]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
