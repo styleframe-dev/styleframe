@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import type { ContentNavigationItem } from "@nuxt/content";
 
-const navigation = inject<Ref<ContentNavigationItem[]>>("navigation");
+const navigationMap =
+	inject<Ref<Record<string, ContentNavigationItem[]> | null>>("navigation");
+
+const navigation = computed<ContentNavigationItem[]>(() =>
+	navigationMap?.value ? Object.values(navigationMap.value).flat() : [],
+);
 </script>
 
 <template>
