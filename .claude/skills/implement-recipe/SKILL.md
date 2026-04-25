@@ -280,6 +280,13 @@ active: {
 
 Default to `"false"` in `defaultVariants`. **NEVER** use `selector()` with class-based modifiers for states that apply to the element itself.
 
+**Cascade order for multiple standalone boolean-state compounds.** When a recipe has more than one standalone boolean-state compound (no `color` field — e.g., `{ match: { invalid: "true" }, css: { ... } }`), later entries in the `compoundVariants` array win on CSS conflicts. For `invalid` / `readonly` / `disabled`, order them **invalid → readonly → disabled** so:
+
+- `invalid`'s error border renders first and stays visible even when the input is further dimmed.
+- `readonly`'s subtle background is overridden only if `disabled` is also set.
+- `disabled`'s `opacity` + `pointer-events: none` wins last, correctly suppressing interaction regardless of the other two.
+
+
 ### Step 7: Compound variant CSS — semantic color templates
 
 These are the canonical templates for the 6 semantic colors. `color` is the iteration variable from `flatMap`/`map`.
