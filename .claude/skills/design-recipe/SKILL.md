@@ -106,11 +106,80 @@ For each sub-part (e.g., Card → `cardHeader`, `cardBody`, `cardFooter`):
 
 If the parent has a `color` or `variant` axis that changes the sub-part's look, the sub-recipe usually re-exposes those axes.
 
-### Step 6: Pick the HTML element
+### Step 6: Form-field wrapper pattern (only for native form elements)
 
-Confirm the HTML element from the research (`div`, `span`, `button`, `a`, `nav`, ...). Interactive components default to `button`, display components to `span`, containers to `div`.
+Skip this step unless the component styles a native form element (`<input>`, `<select>`, `<textarea>`). For every other component — badges, buttons, cards, layouts — move to Step 7.
 
-### Step 7: Present design and get approval
+#### When to use this pattern
+
+Use the wrapper pattern if **any** of the following is true:
+
+- The consumer needs inline addons **inside** the field (icons, currency symbols, inline reveal/clear buttons).
+- The focus ring must extend to include the inline addons, not just the native element's box.
+- The native element's browser-imposed styling blocks customization (`<select>` chevron, `<input type=number>` spinners).
+
+Otherwise, use the single-element pattern: the recipe class goes directly on the native element and no wrapper exists.
+
+#### Architecture
+
+```html
+<span class="input input--neutral input--default input--md">
+  <span class="input-prefix input-prefix--md">$</span>   <!-- optional -->
+  <input class="input-field" />
+  <span class="input-suffix input-suffix--md">USD</span> <!-- optional -->
+</span>
+```
+
+- The wrapper `<span>` carries the main recipe class. It owns the border, background, padding, and `:focus-within` ring.
+- The nested `<input class="input-field">` is transparent and inherits typography from the wrapper. It is styled via a setup callback on the wrapper recipe, not via its own recipe.
+- Focus is detected on the wrapper with `:focus-within`, **not** `:focus-visible` on the inner element, so the ring encloses the addons too.
+
+#### Setup callback template
+
+The wrapper recipe's `setup(s)` callback registers the inner-field selector:
+
+```ts
+(s) => {
+  const { selector } = s;
+  selector(".<name>-field", {
+    flexGrow: "1",
+    minWidth: "0",
+    width: "100%",
+    background: "transparent",
+    border: "none",
+    outline: "none",
+    padding: "0",
+    color: "inherit",
+    fontFamily: "inherit",
+    fontSize: "inherit",
+    fontWeight: "inherit",
+    lineHeight: "inherit",
+    "&::placeholder": { color: "@color.text-weakest" },
+  });
+}
+```
+
+#### Four-slot addon taxonomy (only when addons are needed)
+
+| Slot | Position | Recipe | Has its own background/border? | Typical use |
+|------|----------|--------|-------------------------------|-------------|
+| `#prefix` | INSIDE the field, inline with text | `<name>-prefix` | No — shares the wrapper's field | Icon, currency symbol, leading indicator |
+| `#suffix` | INSIDE the field, inline with text | `<name>-suffix` | No — shares the wrapper's field | Unit label, reveal toggle, inline clear |
+| `#prepend` | OUTSIDE the field, joined on the left | `<name>-prepend` + `<name>-group` | Yes — stands as its own block | Protocol selector, country code |
+| `#append` | OUTSIDE the field, joined on the right | `<name>-append` + `<name>-group` | Yes — stands as its own block | Currency code, domain suffix |
+
+**Naming rule**: **prefix/suffix = inline (inside the field); prepend/append = block (outside the field)**. This mirrors the Inkline convention — do not conflate them.
+
+#### Vue integration notes
+
+- Expose the inside addons (`#prefix`, `#suffix`) as **named slots on the main component**, not as standalone components. Consumers drop in arbitrary content.
+- Mirror boolean props (`disabled`, `readonly`, `invalid`) to **both** the recipe axis on the wrapper **and** the native attribute on the nested `<input>`. Dropping the native attribute breaks form semantics, accessibility, and IME behavior.
+
+### Step 7: Pick the HTML element
+
+Confirm the HTML element from the research (`div`, `span`, `button`, `a`, `nav`, ...). Interactive components default to `button`, display components to `span`, containers to `div`. Form-field wrappers (from Step 6) default to `span`.
+
+### Step 8: Present design and get approval
 
 Show the design summary to the user using this shape:
 
@@ -132,7 +201,7 @@ Default: color=<x>, variant=<y>, size=<z>
 
 Wait for explicit user approval before writing `design.md`. If the user requests changes, iterate and re-present.
 
-### Step 8: Write `design.md`
+### Step 9: Write `design.md`
 
 Only after approval. Use the schema below.
 
@@ -288,6 +357,19 @@ All values prefixed with `@` are design token references resolved at compile tim
 - **Z-index**: `hide`, `base`, `dropdown`, `sticky`, `overlay`, `modal`, `popover`, `toast`, `max`, `auto`
 - **Easing**: `ease-in-out`, `ease-out`, `ease-in`, `spring`, `bounce`
 - **Duration**: `instant`, `fastest`, `faster`, `fast`, `normal`, `slow`, `slower`, `slowest`
+
+### Mode-relative vs. absolute color tokens (watch out for `&:dark`)
+
+> ⚠️ **Footgun**: `@color.text`, `@color.text-inverted`, `@color.text-weak`, `@color.text-weaker`, and `@color.text-weakest` are **mode-relative** — they resolve to different RGB values in light vs. dark mode. When a `&:dark` block is meant to **fix** a variant's appearance across themes (e.g., the `light` color variant must keep a white background and dark text in both light and dark mode), a mode-relative token inside `&:dark` flips the meaning and produces the wrong colour.
+>
+> **Rules**:
+> - **Outer block**: `@color.text` resolves to dark text — correct for light-appearance variants.
+> - **Inside `&:dark` pinning a light-appearance variant** (e.g. `light` + `default`): use `@color.text-inverted` (which, in dark mode, resolves to the light-mode value) OR absolute tokens like `@color.gray-900`.
+> - **Inside `&:dark` pinning a dark-appearance variant** (e.g. `dark` + `default`): use absolute `@color.white`. Do **not** use `@color.text-inverted` — in dark mode it resolves to dark, producing dark-on-dark.
+> - `@color.white`, `@color.black`, and the entire `@color.gray-50..950` scale are absolute and safe inside both blocks.
+>
+> Quick check: `@color.text*` tokens are only ever safe to copy into a `&:dark` block when the intent is "adapt to dark mode" (as for `neutral`); they are unsafe when the intent is "stay the same across modes" (as for `light`/`dark`).
+
 
 ---
 
