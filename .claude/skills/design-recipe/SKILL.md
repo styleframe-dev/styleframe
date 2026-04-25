@@ -370,6 +370,7 @@ All values prefixed with `@` are design token references resolved at compile tim
 >
 > Quick check: `@color.text*` tokens are only ever safe to copy into a `&:dark` block when the intent is "adapt to dark mode" (as for `neutral`); they are unsafe when the intent is "stay the same across modes" (as for `light`/`dark`).
 
+
 ---
 
 ## `design.md` schema

@@ -13,7 +13,11 @@ const navigation = computed<ContentNavigationItem[]>(() => {
 </script>
 
 <template>
-	<UContentNavigation highlight :navigation="navigation">
+	<UContentNavigation
+		:key="route.params.section as string"
+		highlight
+		:navigation="navigation"
+	>
 		<template #link-title="{ link }">
 			{{ link.title }}
 			<ProIcon v-if="link.pro" />

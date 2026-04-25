@@ -2,6 +2,7 @@ export * from "./scanner";
 export * from "./parser";
 export * from "./extractor";
 export * from "./matcher";
+export * from "./register";
 export * from "./cache";
 export * from "./watcher";
 export * from "./constants";

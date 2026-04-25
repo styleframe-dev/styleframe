@@ -7,6 +7,7 @@
 	"scripts": {
 		"dev": "turbo run dev",
 		"dev:docs": "turbo run dev --filter @styleframe/docs --filter @styleframe/storybook",
+		"dev:playground": "turbo run dev --filter @styleframe/playground",
 		"storybook": "turbo run dev --filter @styleframe/storybook",
 		"ci:changeset": "changeset",
 		"ci:publish": "pnpm run ci:prepublish && changeset publish",
@@ -16,6 +17,7 @@
 		"build": "turbo run build",
 		"build:nodocs": "turbo run build --filter './engine/*' --filter './tooling/*' --filter './theme'",
 		"build:docs": "turbo run build --filter './apps/docs'",
+		"build:playground": "turbo run build --filter @styleframe/playground",
 		"test": "turbo run test",
 		"test:integration": "turbo run start --filter './testing/integration'",
 		"typecheck": "turbo run typecheck",

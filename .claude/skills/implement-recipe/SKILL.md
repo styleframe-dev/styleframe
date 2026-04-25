@@ -286,6 +286,7 @@ Default to `"false"` in `defaultVariants`. **NEVER** use `selector()` with class
 - `readonly`'s subtle background is overridden only if `disabled` is also set.
 - `disabled`'s `opacity` + `pointer-events: none` wins last, correctly suppressing interaction regardless of the other two.
 
+
 ### Step 7: Compound variant CSS — semantic color templates
 
 These are the canonical templates for the 6 semantic colors. `color` is the iteration variable from `flatMap`/`map`.
