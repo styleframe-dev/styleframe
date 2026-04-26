@@ -24,6 +24,9 @@ import {
 	darkModeColorValues,
 	durationValues,
 	easingValues,
+	fluidFontSizeBaseValues,
+	fluidFontSizeValues,
+	fluidViewportValues,
 	fontFamilyValues,
 	fontSizeValues,
 	fontStyleValues,
@@ -35,6 +38,7 @@ import {
 	spacingValues,
 	zIndexValues,
 } from "../values";
+import type { FluidFontSizeRange } from "../values/fluidFontSize";
 import {
 	useBorderColorDesignTokens,
 	useBorderRadiusDesignTokens,
@@ -48,6 +52,8 @@ import {
 	useColorTintDesignTokens,
 	useDurationDesignTokens,
 	useEasingDesignTokens,
+	useFluidFontSizeDesignTokens,
+	useFluidViewportDesignTokens,
 	useFontFamilyDesignTokens,
 	useFontSizeDesignTokens,
 	useFontStyleDesignTokens,
@@ -283,6 +289,75 @@ const domains = [
 		themes: { dark: darkModeBorderColorValues },
 	}),
 	defineDomain({
+		key: "fluid-viewport",
+		defaults: {} as Record<string, TokenValue>,
+		configurable: false,
+		composable: (s, _values, _options, { config }) => {
+			const viewportConfig = config.fluidViewport;
+			const fontSizeEnabled = isFluidFontSizeEnabled(config);
+
+			if (viewportConfig === false) return undefined;
+			if (viewportConfig === undefined && !fontSizeEnabled) return undefined;
+
+			const options =
+				viewportConfig && typeof viewportConfig === "object"
+					? { ...fluidViewportValues, ...viewportConfig }
+					: fluidViewportValues;
+
+			return useFluidViewportDesignTokens(s as Styleframe, options) as Record<
+				string,
+				Variable | TokenValue
+			>;
+		},
+	}),
+	defineDomain({
+		key: "fluid-font-size",
+		defaults: {} as Record<string, TokenValue>,
+		configurable: false,
+		composable: (s, _values, _options, { config }) => {
+			if (!isFluidFontSizeEnabled(config)) return undefined;
+			// Fluid font size depends on fluid.breakpoint; if the user explicitly
+			// disabled the viewport domain, downgrade silently.
+			if (config.fluidViewport === false) return undefined;
+
+			const fontSizeConfig = config.fluidFontSize;
+			const userBase =
+				fontSizeConfig && typeof fontSizeConfig === "object"
+					? fontSizeConfig.base
+					: undefined;
+			const userValues =
+				fontSizeConfig && typeof fontSizeConfig === "object"
+					? fontSizeConfig.values
+					: undefined;
+
+			const base = userBase ?? fluidFontSizeBaseValues;
+			const values = (userValues ?? fluidFontSizeValues) as Record<
+				string,
+				FluidFontSizeRange
+			>;
+
+			const fluidResult = useFluidFontSizeDesignTokens(
+				s as Styleframe,
+				base,
+				values,
+			);
+			// useFluidFontSizeDesignTokens creates font-size.min/max but does not
+			// return their handles. Re-fetch them (idempotent under default:true).
+			const fontSizeMin = s.variable("font-size.min", base.min, {
+				default: true,
+			});
+			const fontSizeMax = s.variable("font-size.max", base.max, {
+				default: true,
+			});
+
+			return {
+				...(fluidResult as Record<string, Variable | TokenValue>),
+				fontSizeMin,
+				fontSizeMax,
+			};
+		},
+	}),
+	defineDomain({
 		key: "scale-powers",
 		defaults: {} as Record<string, TokenValue>,
 		configurable: false,
@@ -297,6 +372,16 @@ const domains = [
 		},
 	}),
 ];
+
+/**
+ * Returns true when the user has opted into fluid font size (truthy config value).
+ */
+function isFluidFontSizeEnabled(
+	config: DesignTokensPresetConfig<boolean>,
+): boolean {
+	const value = config.fluidFontSize;
+	return value !== undefined && value !== false;
+}
 
 // =============================================================================
 // Domain Type Maps (derived from the domains tuple)
@@ -497,6 +582,43 @@ export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
 	breakpoint?: Record<string, number> | false;
 	easing?: Record<string, TokenValue> | false;
 	duration?: Record<string, TokenValue> | false;
+	/**
+	 * Fluid viewport configuration. Creates `fluid.min-width`, `fluid.max-width`,
+	 * `fluid.screen`, and `fluid.breakpoint` variables for use with `useFluidClamp`
+	 * and other fluid composables.
+	 *
+	 * - `undefined` (default): only created when `fluidFontSize` is enabled
+	 * - `true`: force-enable with default range (320–1440)
+	 * - object: customize `minWidth` and/or `maxWidth`
+	 * - `false`: disable. If `fluidFontSize` is also set, it is silently downgraded.
+	 */
+	fluidViewport?:
+		| { minWidth?: TokenValue; maxWidth?: TokenValue }
+		| true
+		| false;
+	/**
+	 * Fluid font size configuration. When enabled, replaces the static `fontSize`
+	 * domain with a responsive scale that interpolates between min/max font sizes
+	 * based on viewport width. Auto-enables `fluidViewport` when set.
+	 *
+	 * Setting this **also auto-disables the static `fontSize` domain** to avoid
+	 * duplicate `font-size.*` variables. For partial fluidity, leave this off and
+	 * use `useFluidClamp(s, [min, max])` inline inside the static `fontSize` config.
+	 *
+	 * - `undefined | false` (default): static `fontSize` runs
+	 * - `true`: enable with default base (16–18) and a default fluid scale
+	 * - object: customize `base` and/or `values`
+	 */
+	fluidFontSize?:
+		| {
+				base?: { min: number; max: number };
+				values?: Record<
+					string,
+					[min: TokenValue, max: TokenValue] | `@${string}`
+				>;
+		  }
+		| true
+		| false;
 	themes?: Record<string, ThemeTokenOverrides>;
 }
 
@@ -506,7 +628,7 @@ export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
  */
 type ConfigurableDomainKeys = Exclude<
 	keyof DesignTokensPresetConfig,
-	"meta" | "scalePowers" | "themes"
+	"meta" | "scalePowers" | "themes" | "fluidViewport" | "fluidFontSize"
 >;
 
 export type ThemeTokenOverrides = {
@@ -518,20 +640,58 @@ export type ThemeTokenOverrides = {
 // =============================================================================
 
 /**
+ * True when `fluidFontSize` is set to anything truthy.
+ */
+type IsFluidFontSizeEnabled<TConfig> = TConfig extends {
+	fluidFontSize: infer F;
+}
+	? [F] extends [false | undefined]
+		? false
+		: true
+	: false;
+
+/**
+ * True when fluid viewport variables will be created (either explicit or
+ * implicitly because fluid font size is enabled).
+ */
+type IsFluidViewportEnabled<TConfig> = TConfig extends {
+	fluidViewport: false;
+}
+	? false
+	: IsFluidFontSizeEnabled<TConfig> extends true
+		? true
+		: TConfig extends { fluidViewport: infer V }
+			? [V] extends [false | undefined]
+				? false
+				: true
+			: false;
+
+/**
  * Flat result for simple domains — intersection of all ExportKeys for enabled domains.
- * Each domain contributes its variable keys directly (or {} if disabled).
+ * Each domain contributes its variable keys directly (or {} if disabled). When
+ * `fluidFontSize` is enabled, the static `font-size` domain contributes nothing
+ * (its keys are produced by the fluid domain instead).
  */
 type FlatSimpleDomainResults<
 	TConfig,
 	TMerge extends boolean,
 > = UnionToIntersection<
 	{
-		[K in SimpleDomainKey]: FlatTokenResult<
-			GetDomainConfig<TConfig, CamelCase<K>, DomainDefaultsMap[K]>,
-			K,
-			DomainDefaultsMap[K],
-			TMerge
-		>;
+		[K in SimpleDomainKey]: K extends "font-size"
+			? IsFluidFontSizeEnabled<TConfig> extends true
+				? {}
+				: FlatTokenResult<
+						GetDomainConfig<TConfig, CamelCase<K>, DomainDefaultsMap[K]>,
+						K,
+						DomainDefaultsMap[K],
+						TMerge
+					>
+			: FlatTokenResult<
+					GetDomainConfig<TConfig, CamelCase<K>, DomainDefaultsMap[K]>,
+					K,
+					DomainDefaultsMap[K],
+					TMerge
+				>;
 	}[SimpleDomainKey]
 >;
 
@@ -543,6 +703,39 @@ type ScalePowersResult<TScaleConfig> = TScaleConfig extends false
 	: { scalePowers: Record<number, TokenValue> };
 
 /**
+ * Variables produced by `useFluidViewportDesignTokens`.
+ */
+type FluidViewportResultKeys = {
+	fluidMinWidth: Variable<"fluid.min-width">;
+	fluidMaxWidth: Variable<"fluid.max-width">;
+	fluidScreen: Variable<"fluid.screen">;
+	fluidBreakpoint: Variable<"fluid.breakpoint">;
+};
+
+type FluidViewportResult<TConfig> = IsFluidViewportEnabled<TConfig> extends true
+	? FluidViewportResultKeys
+	: {};
+
+/**
+ * Resolves which fluid font size values record to use:
+ * - object with `values` → that record
+ * - `true` or object without `values` → defaults
+ * - otherwise → defaults (caller already gated by IsFluidFontSizeEnabled)
+ */
+type ResolveFluidFontSizeValues<TConfig> = TConfig extends {
+	fluidFontSize: { values: infer V };
+}
+	? V & Record<string, unknown>
+	: typeof fluidFontSizeValues;
+
+type FluidFontSizeResult<TConfig> = IsFluidFontSizeEnabled<TConfig> extends true
+	? ExportKeys<"font-size", ResolveFluidFontSizeValues<TConfig>> & {
+			fontSizeMin: Variable<"font-size.min">;
+			fontSizeMax: Variable<"font-size.max">;
+		}
+	: {};
+
+/**
  * Flat result structure for the design tokens preset.
  * All variable keys are directly accessible (no domain grouping).
  * Only `scalePowers` remains nested (numeric keys).
@@ -552,7 +745,9 @@ export type DesignTokensPresetResult<
 	TMerge extends boolean = false,
 > = FlatSimpleDomainResults<TConfig, TMerge> &
 	FlatColorResult<GetDomainConfig<TConfig, "colors", DefaultColors>, TMerge> &
-	ScalePowersResult<GetDomainConfig<TConfig, "scale", typeof scaleValues>>;
+	ScalePowersResult<GetDomainConfig<TConfig, "scale", typeof scaleValues>> &
+	FluidViewportResult<TConfig> &
+	FluidFontSizeResult<TConfig>;
 
 // =============================================================================
 // Runtime Helpers
@@ -686,6 +881,7 @@ export function useDesignTokensPreset(
 ): DesignTokensPresetResult {
 	const shouldMerge = config.meta?.merge === true;
 	const defaultThemeOverrides = config.themes?.default;
+	const fluidFontSizeEnabled = isFluidFontSizeEnabled(config);
 
 	const result: Record<string, Variable | TokenValue> = {};
 	const context: DomainProcessContext = { result, config };
@@ -709,6 +905,12 @@ export function useDesignTokensPreset(
 					Object.assign(result, domainResult);
 				}
 			}
+			continue;
+		}
+
+		// Static font-size is replaced by fluid font size when the user opts in.
+		if (configKey === "fontSize" && fluidFontSizeEnabled) {
+			disabledDomains.add(configKey);
 			continue;
 		}
 

@@ -281,18 +281,18 @@ selector('.modal', {
 
 ---
 
-## @styleframe/pro Package (Fluid Design)
+## Fluid Design
 
 ### Fluid Viewport Setup
 
 ```ts
-import { useFluidViewport } from '@styleframe/pro';
+import { useFluidViewportDesignTokens } from '@styleframe/theme';
 
 // Default: 320px - 1440px viewport range
-useFluidViewport(s);
+useFluidViewportDesignTokens(s);
 
 // Custom range
-useFluidViewport(s, {
+useFluidViewportDesignTokens(s, {
     minWidth: 375,  // Start scaling at 375px
     maxWidth: 1920  // Stop scaling at 1920px
 });
@@ -303,10 +303,10 @@ useFluidViewport(s, {
 ### Fluid Clamp for Custom Values
 
 ```ts
-import { useFluidViewport, useFluidClamp } from '@styleframe/pro';
+import { useFluidViewportDesignTokens, useFluidClamp } from '@styleframe/theme';
 import { useSpacing } from '@styleframe/theme';
 
-useFluidViewport(s);
+useFluidViewportDesignTokens(s);
 
 // Create a fluid spacing variable (scales from 24px to 48px)
 const { spacingLg } = useSpacing(s, {
@@ -323,11 +323,11 @@ selector('.hero', {
 ### Fluid Typography
 
 ```ts
-import { useFluidViewport, useFluidFontSize } from '@styleframe/pro';
+import { useFluidViewportDesignTokens, useFluidFontSizeDesignTokens } from '@styleframe/theme';
 import { useScale, useScalePowers, defaultScaleValues } from '@styleframe/theme';
 
 // Set up fluid viewport range (320px - 1440px)
-useFluidViewport(s);
+useFluidViewportDesignTokens(s);
 
 // Define scales for mobile and desktop
 const { scaleMin, scaleMax } = useScale(s, {
@@ -349,7 +349,7 @@ const {
     fontSizeLg,
     fontSizeXl,
     fontSize2xl,
-} = useFluidFontSize(s,
+} = useFluidFontSizeDesignTokens(s,
     { min: 16, max: 18 },  // Base font size range (16px on mobile, 18px on desktop)
     {
         xs: { min: scaleMinPowers[-2], max: scaleMaxPowers[-2] },
@@ -375,9 +375,9 @@ selector('h3', { fontSize: ref(fontSizeLg) });
 
 | Composable | Purpose | Use Case |
 |------------|---------|----------|
-| `useFluidViewport()` | Set up fluid viewport ranges | Define min/max viewport widths |
+| `useFluidViewportDesignTokens()` | Set up fluid viewport ranges | Define min/max viewport widths |
 | `useFluidClamp()` | Create fluid `calc()` calculations | Custom fluid properties (spacing, sizing) |
-| `useFluidFontSize()` | Generate fluid typography scales | Complete fluid type systems |
+| `useFluidFontSizeDesignTokens()` | Generate fluid typography scales | Complete fluid type systems |
 
 ---
 
@@ -388,7 +388,7 @@ selector('h3', { fontSize: ref(fontSizeLg) });
 3. **Lightness uses OKLCH color space** for perceptually uniform colors
 4. **Scale powers can be negative** (smaller) or positive (larger)
 5. **`useMultiplier` creates calc() expressions** referencing the base variable
-6. **Call `useFluidViewport()` BEFORE** using other fluid composables
+6. **Call `useFluidViewportDesignTokens()` BEFORE** using other fluid composables
 7. **Fluid design eliminates media query breakpoints** - values scale smoothly
 8. **The `default` key generates the base variable name without suffix** - e.g., `useFontSize(s, { default: '1rem' })` returns `{ fontSize }` not `{ fontSizeDefault }`, generates CSS variable `--font-size` not `--font-size--default`, and utility class `._font-size` not `._font-size:default`. This applies to all theme composables: `useColor` returns `color`, `useSpacing` returns `spacing`, etc.
 

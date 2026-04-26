@@ -105,5 +105,6 @@ export default defineNuxtConfig({
 		discoverImages: true,
 		discoverVideos: true,
 		autoI18n: true,
+		exclude: ["/pricing", "/pro"],
 	},
 });

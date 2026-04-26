@@ -1755,4 +1755,126 @@ describe("useDesignTokensPreset", () => {
 			expect(s.root.themes).toHaveLength(1);
 		});
 	});
+
+	describe("fluid font size", () => {
+		it("should not create fluid variables when fluidFontSize is omitted", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s);
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--fluid--breakpoint");
+			expect(css).not.toContain("--font-size--min");
+			expect(css).not.toContain("--font-size--max");
+			// Static font-size still produces a static value
+			expect(css).toContain("--font-size--md: 1rem");
+		});
+
+		it("should enable fluid font size with defaults when fluidFontSize is true", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, { fluidFontSize: true });
+
+			expect(result.fontSize).toBeDefined();
+			expect(result.fontSizeMin).toBeDefined();
+			expect(result.fontSizeMax).toBeDefined();
+			expect(result.fontSizeMd).toBeDefined();
+			expect(result.fluidBreakpoint).toBeDefined();
+			expect(result.fluidMinWidth).toBeDefined();
+			expect(result.fluidMaxWidth).toBeDefined();
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--fluid--min-width: 320");
+			expect(css).toContain("--fluid--max-width: 1440");
+			expect(css).toContain("--fluid--breakpoint:");
+			expect(css).toContain("--font-size--min: 16");
+			expect(css).toContain("--font-size--max: 18");
+			expect(css).toContain("--font-size--md: calc(");
+		});
+
+		it("should auto-disable static font-size when fluidFontSize is enabled", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				fontSize: { sm: "0.875rem", md: "1rem" },
+				fluidFontSize: true,
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			// The static literal value should not appear — fluid replaces it.
+			expect(css).not.toContain("--font-size--md: 1rem");
+			expect(css).toContain("--font-size--md: calc(");
+		});
+
+		it("should honor a custom fluidFontSize base and values", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				fluidFontSize: {
+					base: { min: 14, max: 20 },
+					values: {
+						sm: [0.875, 0.9],
+						md: [1, 1.1],
+						lg: [1.25, 1.5],
+						default: "@font-size.md",
+					},
+				},
+			});
+
+			expect(result.fontSizeSm).toBeDefined();
+			expect(result.fontSizeMd).toBeDefined();
+			expect(result.fontSizeLg).toBeDefined();
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--font-size--min: 14");
+			expect(css).toContain("--font-size--max: 20");
+			expect(css).toContain("--font-size--sm: calc(");
+			expect(css).toContain("--font-size--lg: calc(");
+		});
+
+		it("should honor a custom fluidViewport range", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				fluidViewport: { minWidth: 375, maxWidth: 1920 },
+				fluidFontSize: true,
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--fluid--min-width: 375");
+			expect(css).toContain("--fluid--max-width: 1920");
+		});
+
+		it("should enable fluidViewport without fluidFontSize when set to true", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, { fluidViewport: true });
+
+			expect(result.fluidBreakpoint).toBeDefined();
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--fluid--breakpoint:");
+			// Static font-size is unaffected
+			expect(css).toContain("--font-size--md: 1rem");
+		});
+
+		it("should not create any fluid variables when fluidViewport is false and fluidFontSize is true", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				fluidViewport: false,
+				fluidFontSize: true,
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).not.toContain("--fluid--breakpoint");
+			expect(css).not.toContain("--font-size--min");
+			expect(css).not.toContain("--font-size--max");
+		});
+
+		it("should not auto-disable static font-size when fluidFontSize is false", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				fluidFontSize: false,
+				fontSize: { md: "1rem" },
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--font-size--md: 1rem");
+			expect(css).not.toContain("--fluid--breakpoint");
+		});
+	});
 });

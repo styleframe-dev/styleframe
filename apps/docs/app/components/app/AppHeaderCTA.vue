@@ -10,11 +10,6 @@ const items = computed<NavigationMenuItem[]>(() => [
 		active: route.path.startsWith("/docs"),
 	},
 	{
-		label: "Pricing",
-		to: "/pricing",
-		active: route.path.startsWith("/pricing"),
-	},
-	{
 		label: "Releases",
 		target: "_blank",
 		to: "https://github.com/styleframe-dev/styleframe/releases",
