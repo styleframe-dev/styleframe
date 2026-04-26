@@ -4,8 +4,8 @@ import type {
 	TokenValue,
 	Variable,
 } from "@styleframe/core";
-import type { ExportKeys } from "@styleframe/theme";
-import { createUseVariable } from "@styleframe/theme";
+import type { ExportKeys } from "../../types";
+import { createUseVariable } from "../../utils";
 import { useFluidClamp } from "./useFluidClamp";
 
 type Range = [min: TokenValue, max: TokenValue] | `@${string}`;
