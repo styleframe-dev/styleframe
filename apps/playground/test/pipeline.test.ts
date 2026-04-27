@@ -19,7 +19,8 @@ vi.mock("@/pipeline/buildSrcdoc", () => ({
 const input = {
 	config: "user-config-source",
 	app: "<template/>",
-	component: "<template/>",
+	card: "<template/>",
+	button: "<template/>",
 	vueUrl: "/vue",
 	runtimeUrl: "/runtime",
 };
@@ -74,7 +75,8 @@ describe("runPipeline", () => {
 		expect(result.runtimeTs).toBe("export const cls = () => 'cls';");
 		expect(result.configCode).toBe("js:export const cls = () => 'cls';");
 		expect(result.appCode).toBe("// App.vue");
-		expect(result.componentCode).toBe("// Component.vue");
+		expect(result.cardCode).toBe("// Card.vue");
+		expect(result.buttonCode).toBe("// Button.vue");
 		expect(result.srcdoc).toBe("<html></html>");
 		expect(result.scan).toEqual({ count: 0, registered: [], diagnostics: [] });
 		expect(result.revoke).toBe(revoke);

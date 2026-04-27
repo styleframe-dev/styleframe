@@ -7,8 +7,9 @@ describe("buildSrcdoc", () => {
 			css: ".pg-card{color:red}",
 			configCode: "export const card = () => 'card';",
 			appCode:
-				"import Component from './Component.vue'; export default { render(){} };",
-			componentCode: "export default { render(){} };",
+				"import Card from './Card.vue'; import Button from './Button.vue'; export default { render(){} };",
+			cardCode: "export default { render(){} };",
+			buttonCode: "export default { render(){} };",
 			vueUrl: "/vendor/vue.esm-browser.js",
 			runtimeUrl: "/vendor/styleframe-runtime.esm.js",
 		});
@@ -23,21 +24,23 @@ describe("buildSrcdoc", () => {
 		revoke();
 	});
 
-	it("rewrites the Component.vue specifier to a blob URL", () => {
-		const componentSource =
-			"globalThis.__loaded = (globalThis.__loaded ?? 0) + 1;";
-		const appSource = `import Component from "./Component.vue";\nexport default Component;`;
+	it("rewrites Card.vue and Button.vue specifiers to blob URLs", () => {
+		const cardSource = "export default { render(){} };";
+		const buttonSource = "export default { render(){} };";
+		const appSource = `import Card from "./Card.vue";\nimport Button from "./Button.vue";\nexport default Card;`;
 
 		const { srcdoc, revoke } = buildSrcdoc({
 			css: "",
 			configCode: "",
 			appCode: appSource,
-			componentCode: componentSource,
+			cardCode: cardSource,
+			buttonCode: buttonSource,
 			vueUrl: "/v",
 			runtimeUrl: "/r",
 		});
 
-		expect(srcdoc).not.toContain('from "./Component.vue"');
+		expect(srcdoc).not.toContain('from "./Card.vue"');
+		expect(srcdoc).not.toContain('from "./Button.vue"');
 		revoke();
 	});
 });
