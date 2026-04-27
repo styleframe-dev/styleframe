@@ -49,7 +49,7 @@ const links = computed(() =>
 
 <template>
 	<UHeader
-		:ui="{ center: 'flex-1', root: isDocs ? 'h-auto' : '' }"
+		:ui="{ center: 'flex-1', root: isDocs ? 'h-auto' : '', container: 'h-16' }"
 		:to="localePath('/')"
 		:title="appConfig.header?.title || site.name"
 	>
