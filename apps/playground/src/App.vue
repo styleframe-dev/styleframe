@@ -38,7 +38,8 @@ const themeLabel = computed(() => {
 const fileLanguage: Record<FileId, string> = {
 	config: "TypeScript",
 	app: "Vue",
-	component: "Vue",
+	card: "Vue",
+	button: "Vue",
 };
 
 const selection = ref<EditorSelectionState>({ line: 1, column: 1 });
@@ -47,14 +48,16 @@ const running = ref(false);
 const dirty = computed<Record<FileId, boolean>>(() => ({
 	config: state.files.config !== state.lastBuiltFiles.config,
 	app: state.files.app !== state.lastBuiltFiles.app,
-	component: state.files.component !== state.lastBuiltFiles.component,
+	card: state.files.card !== state.lastBuiltFiles.card,
+	button: state.files.button !== state.lastBuiltFiles.button,
 }));
 
 const canRun = computed(
 	() =>
 		dirty.value.config ||
 		dirty.value.app ||
-		dirty.value.component ||
+		dirty.value.card ||
+		dirty.value.button ||
 		!!state.error,
 );
 
@@ -81,7 +84,8 @@ async function rebuild() {
 	const result: PipelineResult = await runPipeline({
 		config: state.files.config,
 		app: state.files.app,
-		component: state.files.component,
+		card: state.files.card,
+		button: state.files.button,
 		vueUrl,
 		runtimeUrl,
 	});

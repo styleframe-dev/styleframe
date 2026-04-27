@@ -1,4 +1,5 @@
 import {
+	useButtonRecipe,
 	useCardBodyRecipe,
 	useCardFooterRecipe,
 	useCardHeaderRecipe,
@@ -13,7 +14,19 @@ import { styleframe } from "styleframe";
 
 const s = styleframe();
 
-useDesignTokensPreset(s);
+useDesignTokensPreset(s, {
+	colors: {
+		primary: "#3b82f6",
+		secondary: "#64748b",
+	},
+	spacing: {
+		default: "1rem",
+	},
+	borderRadius: {
+		md: "0.5rem",
+	},
+	meta: { merge: true },
+});
 useSanitizePreset(s);
 useGlobalPreset(s);
 useUtilitiesPreset(s);
@@ -23,6 +36,7 @@ export const card = useCardRecipe(s);
 export const cardHeader = useCardHeaderRecipe(s);
 export const cardBody = useCardBodyRecipe(s);
 export const cardFooter = useCardFooterRecipe(s);
+export const button = useButtonRecipe(s);
 
 const { selector } = s;
 

@@ -11,7 +11,8 @@ import { transpileStyleframe } from "./transpileStyleframe";
 export interface PipelineInput {
 	config: string;
 	app: string;
-	component: string;
+	card: string;
+	button: string;
 	vueUrl: string;
 	runtimeUrl: string;
 }
@@ -22,7 +23,8 @@ export interface PipelineSuccess {
 	runtimeTs: string;
 	configCode: string;
 	appCode: string;
-	componentCode: string;
+	cardCode: string;
+	buttonCode: string;
 	srcdoc: string;
 	scan: ScanResult;
 	revoke: () => void;
@@ -69,7 +71,8 @@ export async function runPipeline(
 	try {
 		scan = scanAndRegisterUtilities(instance, [
 			{ content: input.app, filePath: "App.vue" },
-			{ content: input.component, filePath: "Component.vue" },
+			{ content: input.card, filePath: "Card.vue" },
+			{ content: input.button, filePath: "Button.vue" },
 		]);
 	} catch (error) {
 		return { ok: false, stage: "scan", error: toError(error) };
@@ -90,11 +93,13 @@ export async function runPipeline(
 	}
 
 	let appCompiled: { code: string };
-	let componentCompiled: { code: string };
+	let cardCompiled: { code: string };
+	let buttonCompiled: { code: string };
 	try {
-		[appCompiled, componentCompiled] = await Promise.all([
+		[appCompiled, cardCompiled, buttonCompiled] = await Promise.all([
 			compileVueSfc(input.app, "App.vue"),
-			compileVueSfc(input.component, "Component.vue"),
+			compileVueSfc(input.card, "Card.vue"),
+			compileVueSfc(input.button, "Button.vue"),
 		]);
 	} catch (error) {
 		return { ok: false, stage: "vue", error: toError(error) };
@@ -106,7 +111,8 @@ export async function runPipeline(
 			css: transpiled.css,
 			configCode,
 			appCode: appCompiled.code,
-			componentCode: componentCompiled.code,
+			cardCode: cardCompiled.code,
+			buttonCode: buttonCompiled.code,
 			vueUrl: input.vueUrl,
 			runtimeUrl: input.runtimeUrl,
 		});
@@ -120,7 +126,8 @@ export async function runPipeline(
 		runtimeTs: transpiled.ts,
 		configCode,
 		appCode: appCompiled.code,
-		componentCode: componentCompiled.code,
+		cardCode: cardCompiled.code,
+		buttonCode: buttonCompiled.code,
 		srcdoc: built.srcdoc,
 		scan,
 		revoke: built.revoke,
