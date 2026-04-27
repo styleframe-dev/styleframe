@@ -19,9 +19,7 @@ describe("parseAtReferences", () => {
 		const result = parseAtReferences("@color.primary");
 
 		expect(result).toEqual([
-			"",
 			{ type: "reference", name: "color.primary", fallback: undefined },
-			"",
 		]);
 	});
 
@@ -31,7 +29,6 @@ describe("parseAtReferences", () => {
 		expect(result).toEqual([
 			"1px solid ",
 			{ type: "reference", name: "color.primary", fallback: undefined },
-			"",
 		]);
 	});
 
@@ -39,11 +36,9 @@ describe("parseAtReferences", () => {
 		const result = parseAtReferences("@size @color.primary");
 
 		expect(result).toEqual([
-			"",
 			{ type: "reference", name: "size", fallback: undefined },
 			" ",
 			{ type: "reference", name: "color.primary", fallback: undefined },
-			"",
 		]);
 	});
 
@@ -51,9 +46,7 @@ describe("parseAtReferences", () => {
 		const result = parseAtReferences("@spacing.lg");
 
 		expect(result).toEqual([
-			"",
 			{ type: "reference", name: "spacing.lg", fallback: undefined },
-			"",
 		]);
 	});
 
@@ -61,16 +54,14 @@ describe("parseAtReferences", () => {
 		const result = parseAtReferences("@my-var");
 
 		expect(result).toEqual([
-			"",
 			{ type: "reference", name: "my-var", fallback: undefined },
-			"",
 		]);
 	});
 
-	it("should return only a trailing string for empty input", () => {
+	it("should return an empty array for empty input", () => {
 		const result = parseAtReferences("");
 
-		expect(result).toEqual([""]);
+		expect(result).toEqual([]);
 	});
 });
 
@@ -333,7 +324,6 @@ describe("createPropertyValueResolver", () => {
 						name: "color.primary",
 						fallback: undefined,
 					},
-					"",
 				],
 			});
 		});
@@ -344,7 +334,6 @@ describe("createPropertyValueResolver", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: [
-					"",
 					{
 						type: "reference",
 						name: "border.width",
@@ -356,7 +345,6 @@ describe("createPropertyValueResolver", () => {
 						name: "color.primary",
 						fallback: undefined,
 					},
-					"",
 				],
 			});
 		});

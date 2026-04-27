@@ -12,11 +12,13 @@ export function parseAtReferences(str: string): TokenValue[] {
 
 	AT_VARIABLE_REGEX.lastIndex = 0;
 	while ((match = AT_VARIABLE_REGEX.exec(str)) !== null) {
-		parts.push(str.slice(lastIndex, match.index));
+		const before = str.slice(lastIndex, match.index);
+		if (before !== "") parts.push(before);
 		parts.push({ type: "reference", name: match[1] as string } as Reference);
 		lastIndex = AT_VARIABLE_REGEX.lastIndex;
 	}
-	parts.push(str.slice(lastIndex));
+	const after = str.slice(lastIndex);
+	if (after !== "") parts.push(after);
 
 	return parts;
 }

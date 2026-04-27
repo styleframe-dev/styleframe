@@ -6,9 +6,10 @@ import type {
 } from "@styleframe/core";
 import type { ExportKeys } from "../../types";
 import { createUseVariable } from "../../utils";
+import { type RangeInput, normalizeRange } from "./normalizeRange";
 import { useFluidClamp } from "./useFluidClamp";
 
-type Range = [min: TokenValue, max: TokenValue] | `@${string}`;
+type Range = RangeInput<TokenValue> | `@${string}`;
 
 /**
  * Create a set of fluid font-size variables for use in a Styleframe instance.
@@ -19,17 +20,24 @@ type Range = [min: TokenValue, max: TokenValue] | `@${string}`;
  * @usage
  * ```typescript
  * import { styleframe } from "styleframe";
- * import { useScale, useScalePowers, useFluidFontSizeDesignTokens } from "styleframe/theme";
+ * import {
+ *   useScaleDesignTokens,
+ *   useScalePowersDesignTokens,
+ *   useFluidViewportDesignTokens,
+ *   useFluidFontSizeDesignTokens,
+ * } from "styleframe/theme";
  *
  * const s = styleframe();
  *
- * const { scaleMin, scaleMax } = useScale(s, {
+ * useFluidViewportDesignTokens(s);
+ *
+ * const { scaleMin, scaleMax } = useScaleDesignTokens(s, {
  *   min: 1.2,    // minor-third
- *   max: 1.25    // major-third
+ *   max: 1.25,   // major-third
  * });
  *
- * const scaleMinPowers = useScalePowers(s, scaleMin);
- * const scaleMaxPowers = useScalePowers(s, scaleMax);
+ * const scaleMinPowers = useScalePowersDesignTokens(s, scaleMin);
+ * const scaleMaxPowers = useScalePowersDesignTokens(s, scaleMax);
  *
  * const {
  *   fontSize,    // Variable<'font-size'>
@@ -43,9 +51,9 @@ type Range = [min: TokenValue, max: TokenValue] | `@${string}`;
  *   max: 18,
  * }, {
  *   xs: [scaleMinPowers[-2], scaleMaxPowers[-2]],
- *   sm: [scaleMinPowers[-1], scaleMaxPowers[-1]],
- *   md: [scaleMinPowers[0], scaleMaxPowers[0]],
- *   lg: [scaleMinPowers[1], scaleMaxPowers[1]],
+ *   sm: { min: scaleMinPowers[-1], max: scaleMaxPowers[-1] },
+ *   md: { min: scaleMinPowers[0], max: scaleMaxPowers[0] },
+ *   lg: { min: scaleMinPowers[1], max: scaleMaxPowers[1] },
  *   xl: [scaleMinPowers[2], scaleMaxPowers[2]],
  *   default: '@font-size.md'
  * });
@@ -75,11 +83,13 @@ export function useFluidFontSizeDesignTokens<T extends Record<string, Range>>(
 				return value;
 			}
 
+			const [min, max] = normalizeRange(value);
+
 			return useFluidClamp(
 				s,
 				[
-					s.css`${s.ref(fontSizeMin)} * ${value[0]}`,
-					s.css`${s.ref(fontSizeMax)} * ${value[1]}`,
+					s.css`${s.ref(fontSizeMin)} * ${min}`,
+					s.css`${s.ref(fontSizeMax)} * ${max}`,
 				],
 				breakpoint,
 			);

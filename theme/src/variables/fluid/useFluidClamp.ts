@@ -1,29 +1,43 @@
 import type { Styleframe, TokenValue, Variable } from "@styleframe/core";
 import { isVariable } from "@styleframe/core";
+import { type RangeInput, normalizeRange } from "./normalizeRange";
 
 /**
- * Create a font-size scale for use in a Styleframe instance.
+ * Create a fluid value that interpolates between a min and max as the
+ * viewport scales. Reads `fluid.breakpoint` (set up via
+ * `useFluidViewportDesignTokens`) by default; pass a `Variable` or
+ * `TokenValue` as the third argument to use a custom interpolator.
+ *
+ * Ranges accept either a tuple `[min, max]` or an object `{ min, max }`.
  *
  * @usage
  * ```typescript
  * import { styleframe } from "styleframe";
- * import { useFontSize, useScale, useScalePowers, useMultiplier } from "styleframe/theme";
+ * import {
+ *   useFontSizeDesignTokens,
+ *   useScaleDesignTokens,
+ *   useScalePowersDesignTokens,
+ *   useMultiplierDesignTokens,
+ *   useFluidViewportDesignTokens,
+ *   useFluidClamp,
+ *   scaleValues,
+ * } from "styleframe/theme";
  *
  * const s = styleframe();
  *
- * const { fontSizeMin, fontSizeMax } = useFontSize(s, {
+ * const { fontSizeMin, fontSizeMax } = useFontSizeDesignTokens(s, {
  *   min: 16,
  *   max: 18
  * });
  *
- * const { scaleMin, scaleMax } = useScale(s, {
- *   ...defaultScaleValues,
- *   min: '@minor-third',
- *   max: '@major-third'
+ * const { scaleMin, scaleMax } = useScaleDesignTokens(s, {
+ *   ...scaleValues,
+ *   min: '@scale.minor-third',
+ *   max: '@scale.major-third'
  * });
  *
- * const scaleMinPowers = useScalePowers(s, scaleMin);
- * const scaleMaxPowers = useScalePowers(s, scaleMax);
+ * const scaleMinPowers = useScalePowersDesignTokens(s, scaleMin);
+ * const scaleMaxPowers = useScalePowersDesignTokens(s, scaleMax);
  *
  * const { fluidBreakpoint } = useFluidViewportDesignTokens(s);
  *
@@ -33,7 +47,7 @@ import { isVariable } from "@styleframe/core";
  *   fontSizeMinMd,
  *   fontSizeMinLg,
  *   fontSizeMinXl,
- * } = useMultiplier(s, fontSizeMin, {
+ * } = useMultiplierDesignTokens(s, fontSizeMin, {
  *   xs: scaleMinPowers[-2],
  *   sm: scaleMinPowers[-1],
  *   md: scaleMinPowers[0],
@@ -47,7 +61,7 @@ import { isVariable } from "@styleframe/core";
  *   fontSizeMaxMd,
  *   fontSizeMaxLg,
  *   fontSizeMaxXl,
- * } = useMultiplier(s, fontSizeMax, {
+ * } = useMultiplierDesignTokens(s, fontSizeMax, {
  *   xs: scaleMaxPowers[-2],
  *   sm: scaleMaxPowers[-1],
  *   md: scaleMaxPowers[0],
@@ -62,23 +76,24 @@ import { isVariable } from "@styleframe/core";
  *   fontSizeMd,
  *   fontSizeLg,
  *   fontSizeXl,
- * } = useFontSize(s, {
- *   xs: useFluidRangeValue(s, [fontSizeMinXs, fontSizeMaxXs]),
- *   sm: useFluidRangeValue(s, [fontSizeMinSm, fontSizeMaxSm]),
- *   md: useFluidRangeValue(s, [fontSizeMinMd, fontSizeMaxMd]),
- *   lg: useFluidRangeValue(s, [fontSizeMinLg, fontSizeMaxLg]),
- *   xl: useFluidRangeValue(s, [fontSizeMinXl, fontSizeMaxXl]),
+ * } = useFontSizeDesignTokens(s, {
+ *   xs: useFluidClamp(s, [fontSizeMinXs, fontSizeMaxXs]),
+ *   sm: useFluidClamp(s, { min: fontSizeMinSm, max: fontSizeMaxSm }),
+ *   md: useFluidClamp(s, [fontSizeMinMd, fontSizeMaxMd]),
+ *   lg: useFluidClamp(s, { min: fontSizeMinLg, max: fontSizeMaxLg }),
+ *   xl: useFluidClamp(s, [fontSizeMinXl, fontSizeMaxXl]),
  *   default: '@font-size.md'
  * });
  * ```
  */
 export function useFluidClamp(
 	s: Styleframe,
-	range: [min: Variable | TokenValue, max: Variable | TokenValue],
+	range: RangeInput<Variable | TokenValue>,
 	breakpoint: Variable | TokenValue = s.ref("fluid.breakpoint"),
 ): TokenValue {
-	const min = isVariable(range[0]) ? s.ref(range[0]) : range[0];
-	const max = isVariable(range[1]) ? s.ref(range[1]) : range[1];
+	const [rawMin, rawMax] = normalizeRange(range);
+	const min = isVariable(rawMin) ? s.ref(rawMin) : rawMin;
+	const max = isVariable(rawMax) ? s.ref(rawMax) : rawMax;
 	const bp = isVariable(breakpoint) ? s.ref(breakpoint) : breakpoint;
 
 	return s.css`calc((${min} / 16 * 1rem) + (${max} - ${min}) * ${bp})`;

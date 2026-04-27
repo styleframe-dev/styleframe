@@ -235,7 +235,6 @@ describe("createVariableFunction", () => {
 				value: [
 					"1px solid ",
 					{ type: "reference", name: "color.primary", fallback: undefined },
-					"",
 				],
 			});
 		});
@@ -248,11 +247,9 @@ describe("createVariableFunction", () => {
 			expect(result.value).toEqual({
 				type: "css",
 				value: [
-					"",
 					{ type: "reference", name: "spacing.sm", fallback: undefined },
 					" ",
 					{ type: "reference", name: "spacing.md", fallback: undefined },
-					"",
 				],
 			});
 		});

@@ -65,6 +65,7 @@ describe("useDesignTokensPreset", () => {
 		it("should disable scale when scale is false", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				fluidFontSize: false,
 				scale: false,
 			});
 
@@ -129,6 +130,7 @@ describe("useDesignTokensPreset", () => {
 				fontWeight: false,
 				lineHeight: false,
 				letterSpacing: false,
+				fluidFontSize: false,
 			});
 
 			const css = consumeCSS(s.root, s.options);
@@ -147,7 +149,9 @@ describe("useDesignTokensPreset", () => {
 			});
 
 			const css = consumeCSS(s.root, s.options);
-			expect(css).not.toContain("--breakpoint");
+			// Static breakpoint vars are `--breakpoint--<key>`; the trailing `--`
+			// distinguishes them from `--fluid--breakpoint` (which is enabled by default).
+			expect(css).not.toContain("--breakpoint--");
 		});
 
 		it("should disable easing when easing is false", () => {
@@ -181,6 +185,8 @@ describe("useDesignTokensPreset", () => {
 				breakpoint: false,
 				easing: false,
 				duration: false,
+				fluidViewport: false,
+				fluidFontSize: false,
 			});
 
 			expect(s.root.variables).toHaveLength(0);
@@ -235,6 +241,7 @@ describe("useDesignTokensPreset", () => {
 		it("should use custom fontSize values", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				fluidFontSize: false,
 				fontSize: {
 					default: "1rem",
 					sm: "0.875rem",
@@ -265,6 +272,7 @@ describe("useDesignTokensPreset", () => {
 		it("should use custom scale values", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				fluidFontSize: false,
 				scale: {
 					default: "1.25",
 				},
@@ -679,6 +687,7 @@ describe("useDesignTokensPreset", () => {
 				easing: false,
 				spacing: { default: "1rem" },
 				colors: { primary: "#000" },
+				fluidFontSize: false,
 				fontSize: { default: "1rem" },
 				themes: { dark: { colors: false, borderColor: false } },
 				meta: {
@@ -741,6 +750,7 @@ describe("useDesignTokensPreset", () => {
 		it("should not create scalePowers when scale doesn't include scale variable", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				fluidFontSize: false,
 				scale: {
 					base: "1.25",
 				},
@@ -828,6 +838,7 @@ describe("useDesignTokensPreset", () => {
 		it("should infer custom fontSize keys", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				fluidFontSize: false,
 				fontSize: { xs: "0.75rem", base: "1rem" },
 			});
 
@@ -871,6 +882,7 @@ describe("useDesignTokensPreset", () => {
 		it("should type scalePowers as undefined when scale is false", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				fluidFontSize: false,
 				scale: false,
 			});
 
@@ -1383,6 +1395,7 @@ describe("useDesignTokensPreset", () => {
 		it("should type scalePowers as absent when scale is disabled", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				fluidFontSize: false,
 				scale: false,
 			});
 
@@ -1757,19 +1770,55 @@ describe("useDesignTokensPreset", () => {
 	});
 
 	describe("fluid font size", () => {
-		it("should not create fluid variables when fluidFontSize is omitted", () => {
+		it("should create fluid viewport and fluid font-size variables by default", () => {
 			const s = styleframe();
-			useDesignTokensPreset(s);
+			const result = useDesignTokensPreset(s);
+
+			// Fluid handles surfaced on the result
+			expect(result.fluidBreakpoint).toBeDefined();
+			expect(result.fluidMinWidth).toBeDefined();
+			expect(result.fluidMaxWidth).toBeDefined();
+			expect(result.scaleMin).toBeDefined();
+			expect(result.scaleMax).toBeDefined();
+			expect(result.fontSizeMin).toBeDefined();
+			expect(result.fontSizeMax).toBeDefined();
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("--fluid--min-width:");
+			expect(css).toContain("--fluid--max-width:");
+			expect(css).toContain("--fluid--breakpoint:");
+			expect(css).toContain("--font-size--min:");
+			expect(css).toContain("--font-size--max:");
+			// Static font-size is replaced by a clamp() expression
+			expect(css).not.toContain("--font-size--md: 1rem");
+			expect(css).toContain("--font-size--md: calc(");
+		});
+
+		it("should throw when fluidViewport is false but fluidFontSize is enabled (default)", () => {
+			const s = styleframe();
+			expect(() =>
+				useDesignTokensPreset(s, { fluidViewport: false }),
+			).toThrowError(/fluid-scale.*requires.*fluidViewport/);
+		});
+
+		it("should opt out cleanly when both fluidFontSize and fluidViewport are false", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				fluidViewport: false,
+				fluidFontSize: false,
+			});
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).not.toContain("--fluid--breakpoint");
+			expect(css).not.toContain("--fluid--min-width");
+			expect(css).not.toContain("--fluid--max-width");
 			expect(css).not.toContain("--font-size--min");
 			expect(css).not.toContain("--font-size--max");
-			// Static font-size still produces a static value
+			// Static font-size runs because fluid is explicitly disabled
 			expect(css).toContain("--font-size--md: 1rem");
 		});
 
-		it("should enable fluid font size with defaults when fluidFontSize is true", () => {
+		it("should still enable fluid font size when fluidFontSize is true (explicit opt-in)", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, { fluidFontSize: true });
 
@@ -1780,6 +1829,8 @@ describe("useDesignTokensPreset", () => {
 			expect(result.fluidBreakpoint).toBeDefined();
 			expect(result.fluidMinWidth).toBeDefined();
 			expect(result.fluidMaxWidth).toBeDefined();
+			expect(result.scaleMin).toBeDefined();
+			expect(result.scaleMax).toBeDefined();
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("--fluid--min-width: 320");
@@ -1787,18 +1838,37 @@ describe("useDesignTokensPreset", () => {
 			expect(css).toContain("--fluid--breakpoint:");
 			expect(css).toContain("--font-size--min: 16");
 			expect(css).toContain("--font-size--max: 18");
-			expect(css).toContain("--font-size--md: calc(");
+			// scale.min/max default to references into the static scale set
+			expect(css).toContain("--scale--min: var(--scale--major-second);");
+			expect(css).toContain("--scale--max: var(--scale--major-third);");
+			// Power vars are materialized for both scales
+			expect(css).toContain("--scale--min-powers--1:");
+			expect(css).toContain("--scale--max-powers--1:");
+			// Default fluid font sizes reference the scale-power vars
+			expect(css).toContain("var(--scale--min-powers--1)");
+			expect(css).toContain("var(--scale--max-powers--1)");
 		});
 
-		it("should auto-disable static font-size when fluidFontSize is enabled", () => {
+		it("should honor a custom fluidScale config", () => {
 			const s = styleframe();
 			useDesignTokensPreset(s, {
-				fontSize: { sm: "0.875rem", md: "1rem" },
+				fluidScale: { min: 1.067, max: 1.333 },
 				fluidFontSize: true,
 			});
 
 			const css = consumeCSS(s.root, s.options);
-			// The static literal value should not appear — fluid replaces it.
+			expect(css).toContain("--scale--min: 1.067");
+			expect(css).toContain("--scale--max: 1.333");
+		});
+
+		it("should auto-disable static font-size when fluid font-size will run", () => {
+			const s = styleframe();
+			useDesignTokensPreset(s, {
+				fontSize: { sm: "0.875rem", md: "1rem" },
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			// Custom static fontSize is silently dropped by the default fluid scale.
 			expect(css).not.toContain("--font-size--md: 1rem");
 			expect(css).toContain("--font-size--md: calc(");
 		});
@@ -1840,29 +1910,37 @@ describe("useDesignTokensPreset", () => {
 			expect(css).toContain("--fluid--max-width: 1920");
 		});
 
-		it("should enable fluidViewport without fluidFontSize when set to true", () => {
+		it("should keep fluid viewport while opting out of fluid font size", () => {
 			const s = styleframe();
-			const result = useDesignTokensPreset(s, { fluidViewport: true });
+			const result = useDesignTokensPreset(s, {
+				fluidViewport: true,
+				fluidFontSize: false,
+			});
 
 			expect(result.fluidBreakpoint).toBeDefined();
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("--fluid--breakpoint:");
-			// Static font-size is unaffected
+			// Static font-size runs because fluid is explicitly disabled
 			expect(css).toContain("--font-size--md: 1rem");
+			expect(css).not.toContain("--font-size--min");
 		});
 
-		it("should not create any fluid variables when fluidViewport is false and fluidFontSize is true", () => {
+		it("should throw when fluidViewport is false and fluidFontSize is explicitly true", () => {
 			const s = styleframe();
-			useDesignTokensPreset(s, {
-				fluidViewport: false,
-				fluidFontSize: true,
-			});
+			expect(() =>
+				useDesignTokensPreset(s, {
+					fluidViewport: false,
+					fluidFontSize: true,
+				}),
+			).toThrowError(/fluid-scale.*requires.*fluidViewport/);
+		});
 
-			const css = consumeCSS(s.root, s.options);
-			expect(css).not.toContain("--fluid--breakpoint");
-			expect(css).not.toContain("--font-size--min");
-			expect(css).not.toContain("--font-size--max");
+		it("should throw when scale is false but fluidFontSize is enabled (default)", () => {
+			const s = styleframe();
+			expect(() => useDesignTokensPreset(s, { scale: false })).toThrowError(
+				/fluid-scale.*requires.*scale/,
+			);
 		});
 
 		it("should not auto-disable static font-size when fluidFontSize is false", () => {
@@ -1874,7 +1952,6 @@ describe("useDesignTokensPreset", () => {
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("--font-size--md: 1rem");
-			expect(css).not.toContain("--fluid--breakpoint");
 		});
 	});
 });

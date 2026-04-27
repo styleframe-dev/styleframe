@@ -12,15 +12,10 @@ describe("useScalePowersDesignTokens", () => {
 		const powers = useScalePowersDesignTokens(s, scaleGolden, scalePowerValues);
 
 		// Keys are in insertion order
-		expect(Object.keys(powers).length).toBe(8);
-		expect(powers[-2]).toBeDefined();
-		expect(powers[-1]).toBeDefined();
-		expect(powers[0]).toBeDefined();
-		expect(powers[1]).toBeDefined();
-		expect(powers[2]).toBeDefined();
-		expect(powers[3]).toBeDefined();
-		expect(powers[4]).toBeDefined();
-		expect(powers[5]).toBeDefined();
+		expect(Object.keys(powers).length).toBe(scalePowerValues.length);
+		for (const n of scalePowerValues) {
+			expect(powers[n]).toBeDefined();
+		}
 	});
 
 	it("should create CSS templates for each power", () => {

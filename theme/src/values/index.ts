@@ -12,6 +12,7 @@ export * from "./colorTint";
 export * from "./duration";
 export * from "./easing";
 export * from "./fluidFontSize";
+export * from "./fluidScale";
 export * from "./fluidViewport";
 export * from "./fontFamily";
 export * from "./fontSize";

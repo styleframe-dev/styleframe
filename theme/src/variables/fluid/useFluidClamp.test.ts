@@ -504,4 +504,65 @@ describe("useFluidClamp", () => {
 			expect(result).toHaveProperty("type", "css");
 		});
 	});
+
+	describe("object form { min, max }", () => {
+		it("should produce the same css as the tuple form for numeric values", () => {
+			const tupleS = styleframe();
+			tupleS.variable("fluid.breakpoint", "0.5");
+			const tupleResult = useFluidClamp(tupleS, [16, 20]);
+			const tupleCss = consumeCSS(
+				tupleS.variable("test", tupleResult, { default: true }),
+				tupleS.options,
+			);
+
+			const objectS = styleframe();
+			objectS.variable("fluid.breakpoint", "0.5");
+			const objectResult = useFluidClamp(objectS, { min: 16, max: 20 });
+			const objectCss = consumeCSS(
+				objectS.variable("test", objectResult, { default: true }),
+				objectS.options,
+			);
+
+			expect(objectCss).toBe(tupleCss);
+		});
+
+		it("should handle a Variable reference for min", () => {
+			const s = styleframe();
+			const minVar = s.variable("min-value", 16);
+			const result = useFluidClamp(s, { min: minVar, max: 20 });
+
+			const css = consumeCSS(
+				s.variable("test", result, { default: true }),
+				s.options,
+			);
+
+			expect(css).toContain("var(--min-value)");
+		});
+
+		it("should handle a Variable reference for max", () => {
+			const s = styleframe();
+			const maxVar = s.variable("max-value", 20);
+			const result = useFluidClamp(s, { min: 16, max: maxVar });
+
+			const css = consumeCSS(
+				s.variable("test", result, { default: true }),
+				s.options,
+			);
+
+			expect(css).toContain("var(--max-value)");
+		});
+
+		it("should honor a custom breakpoint argument", () => {
+			const s = styleframe();
+			const bpVar: Variable<"breakpoint"> = s.variable("breakpoint", "0.5");
+			const result = useFluidClamp(s, { min: 16, max: 20 }, bpVar);
+
+			const css = consumeCSS(
+				s.variable("test", result, { default: true }),
+				s.options,
+			);
+
+			expect(css).toContain("var(--breakpoint)");
+		});
+	});
 });

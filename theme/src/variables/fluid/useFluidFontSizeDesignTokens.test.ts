@@ -96,6 +96,29 @@ describe("useFluidFontSizeDesignTokens", () => {
 		expect(fontSizeMd.name).toBe("font-size.md");
 	});
 
+	it("should resolve @-prefixed multiplier strings inside tuples", () => {
+		const s = styleframe();
+		// Pre-create a multiplier variable so the @reference is valid.
+		s.variable("custom-multiplier", 1.5, { default: true });
+
+		const { fontSizeLg } = useFluidFontSizeDesignTokens(
+			s,
+			{ min: 16, max: 18 },
+			{
+				md: [1, 1],
+				lg: ["@custom-multiplier", "@custom-multiplier"],
+			},
+		);
+
+		expect(fontSizeLg.name).toBe("font-size.lg");
+
+		const css = consumeCSS(s.root, s.options);
+		// The multiplier should render as var(--custom-multiplier),
+		// not literal "@custom-multiplier".
+		expect(css).toContain("var(--custom-multiplier)");
+		expect(css).not.toContain("@custom-multiplier");
+	});
+
 	it("should add variables to root", () => {
 		const s = styleframe();
 		useFluidFontSizeDesignTokens(
@@ -648,6 +671,69 @@ describe("useFluidFontSizeDesignTokens", () => {
 
 			// Should reference the custom breakpoint
 			expect(css).toContain("calc(");
+		});
+	});
+
+	describe("object form { min, max }", () => {
+		it("should produce the same css as the tuple form for an entry", () => {
+			const tupleS = styleframe();
+			const { fontSizeMd: tupleFontSizeMd } = useFluidFontSizeDesignTokens(
+				tupleS,
+				{ min: 16, max: 18 },
+				{ md: [1, 1] },
+			);
+			const tupleCss = consumeCSS(tupleFontSizeMd, tupleS.options);
+
+			const objectS = styleframe();
+			const { fontSizeMd: objectFontSizeMd } = useFluidFontSizeDesignTokens(
+				objectS,
+				{ min: 16, max: 18 },
+				{ md: { min: 1, max: 1 } },
+			);
+			const objectCss = consumeCSS(objectFontSizeMd, objectS.options);
+
+			expect(objectCss).toBe(tupleCss);
+		});
+
+		it("should resolve mixed tuple, object, and @-reference values", () => {
+			const s = styleframe();
+			const { fontSizeXs, fontSizeSm, fontSizeMd, fontSize } =
+				useFluidFontSizeDesignTokens(
+					s,
+					{ min: 16, max: 18 },
+					{
+						xs: [0.694, 0.8],
+						sm: { min: 0.833, max: 0.889 },
+						md: [1, 1],
+						default: "@font-size.md",
+					},
+				);
+
+			expect(fontSizeXs.name).toBe("font-size.xs");
+			expect(fontSizeSm.name).toBe("font-size.sm");
+			expect(fontSizeMd.name).toBe("font-size.md");
+			expect(fontSize.name).toBe("font-size");
+
+			const smCss = consumeCSS(fontSizeSm, s.options);
+			expect(smCss).toContain("calc(");
+			expect(smCss).toContain("var(--font-size--min)");
+			expect(smCss).toContain("var(--font-size--max)");
+		});
+
+		it("should honor the custom breakpoint argument with object-form values", () => {
+			const s = styleframe();
+			const customBreakpoint = s.variable("custom-bp", "75vw");
+
+			const { fontSize } = useFluidFontSizeDesignTokens(
+				s,
+				{ min: 16, max: 18 },
+				{ default: { min: 1, max: 1 } },
+				customBreakpoint,
+			);
+
+			const css = consumeCSS(fontSize, s.options);
+
+			expect(css).toContain("var(--custom-bp)");
 		});
 	});
 });
