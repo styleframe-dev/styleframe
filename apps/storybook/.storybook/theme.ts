@@ -9,13 +9,13 @@ const commonConfig = {
 export const light = create({
 	...themes.normal,
 	base: "light",
-	// brandImage: "/images/storybook-logo-light.png",
+	brandImage: "/logotype-light.svg",
 	...commonConfig,
 });
 
 export const dark = create({
 	...themes.dark,
 	base: "dark",
-	// brandImage: "/images/storybook-logo-dark.png",
+	brandImage: "/logotype-dark.svg",
 	...commonConfig,
 });

@@ -8,13 +8,12 @@ const items = computed<NavigationMenuItem[]>(() =>
 		label: section.label,
 		to: section.to,
 		active: section.active,
-		// icon: section.icon,
 	})),
 );
 </script>
 
 <template>
-	<div class="border-t border-default">
+	<div class="border-t border-default max-lg:hidden">
 		<UContainer class="py-1">
 			<UNavigationMenu
 				:items="items"
