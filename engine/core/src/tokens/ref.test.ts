@@ -168,11 +168,7 @@ describe("createRefFunction", () => {
 				name: "border",
 				fallback: {
 					type: "css",
-					value: [
-						"1px solid ",
-						{ type: "reference", name: "color.primary" },
-						"",
-					],
+					value: ["1px solid ", { type: "reference", name: "color.primary" }],
 				},
 			});
 		});

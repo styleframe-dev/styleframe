@@ -617,30 +617,5 @@ Use styleframe for Agents. Choose from a variety of AI agents and start delegati
 ::
 
 
-::u-page-section{class="border-t border-default"}
----
-headline: Now Available
-variant: primary
-links:
--   label: Learn more
-    color: primary
-    to: /pro
-    size: xl
-    trailing-icon: i-lucide-arrow-right
--   label: See pricing plans
-    color: neutral
-    variant: outline
-    to: /pricing
-    size: xl
----
-
-#title
-Build faster with styleframe [Pro]{.text-primary}.
-
-#description
-A collection of premium design system themes, composables, component styles, and utils built on top of styleframe.
-
-::
-
 ::FluidResponsiveDesignDemo
 ::

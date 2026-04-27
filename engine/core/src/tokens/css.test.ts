@@ -43,7 +43,7 @@ describe("createCSSFunction", () => {
 
 			expect(result).toEqual({
 				type: "css",
-				value: [""],
+				value: [],
 			});
 		});
 
@@ -88,7 +88,7 @@ describe("createCSSFunction", () => {
 
 			expect(result).toEqual({
 				type: "css",
-				value: ["", "color", ": blue;"],
+				value: ["color", ": blue;"],
 			});
 		});
 
@@ -98,7 +98,7 @@ describe("createCSSFunction", () => {
 
 			expect(result).toEqual({
 				type: "css",
-				value: ["color: ", "blue", ""],
+				value: ["color: ", "blue"],
 			});
 		});
 
@@ -390,7 +390,6 @@ describe("createCSSFunction", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: [
-					"",
 					{ type: "reference", name: "spacing-md", fallback: undefined },
 					" calc(",
 					{ type: "reference", name: "spacing-md", fallback: undefined },
@@ -408,11 +407,9 @@ describe("createCSSFunction", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: [
-					"",
 					{ type: "reference", name: "spacing-sm", fallback: undefined },
 					" ",
 					{ type: "reference", name: "spacing-md", fallback: undefined },
-					"",
 				],
 			});
 		});
@@ -428,7 +425,7 @@ describe("createCSSFunction", () => {
 
 			expect(result).toEqual({
 				type: "css",
-				value: ["", "fade-in", " 300ms ease-in-out"],
+				value: ["fade-in", " 300ms ease-in-out"],
 			});
 		});
 
@@ -440,7 +437,7 @@ describe("createCSSFunction", () => {
 
 			expect(result).toEqual({
 				type: "css",
-				value: ["", "utilities", ""],
+				value: ["utilities"],
 			});
 		});
 
@@ -457,7 +454,6 @@ describe("createCSSFunction", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: [
-					"",
 					"fade-in",
 					" ",
 					{ type: "reference", name: "duration-md", fallback: undefined },
@@ -474,9 +470,7 @@ describe("createCSSFunction", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: [
-					"",
 					{ type: "reference", name: "color.primary", fallback: undefined },
-					"",
 				],
 			});
 		});
@@ -489,7 +483,6 @@ describe("createCSSFunction", () => {
 				value: [
 					"1px solid ",
 					{ type: "reference", name: "color.primary", fallback: undefined },
-					"",
 				],
 			});
 		});
@@ -500,13 +493,11 @@ describe("createCSSFunction", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: [
-					"",
 					{
 						type: "reference",
 						name: "color.primary.500",
 						fallback: undefined,
 					},
-					"",
 				],
 			});
 		});
@@ -517,11 +508,9 @@ describe("createCSSFunction", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: [
-					"",
 					{ type: "reference", name: "spacing.x", fallback: undefined },
 					" ",
 					{ type: "reference", name: "spacing.y", fallback: undefined },
-					"",
 				],
 			});
 		});
@@ -533,11 +522,9 @@ describe("createCSSFunction", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: [
-					"",
 					{ type: "reference", name: "color.primary", fallback: undefined },
 					" ",
 					"0.8",
-					"",
 				],
 			});
 		});
@@ -548,6 +535,40 @@ describe("createCSSFunction", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: ["1px solid blue"],
+			});
+		});
+
+		it("should resolve @variablename in a string interpolation", () => {
+			const value = "@color.primary";
+			const result = css`solid ${value} 1px`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: ["solid ", { type: "reference", name: "color.primary" }, " 1px"],
+			});
+		});
+
+		it("should resolve @variablename with negative-index segment in interpolation", () => {
+			const value = "@scale.min-powers.-2";
+			const result = css`calc(${value} * 1rem)`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					"calc(",
+					{ type: "reference", name: "scale.min-powers.-2" },
+					" * 1rem)",
+				],
+			});
+		});
+
+		it("should not transform interpolated strings without @", () => {
+			const value = "100%";
+			const result = css`solid ${value} red`;
+
+			expect(result).toEqual({
+				type: "css",
+				value: ["solid ", "100%", " red"],
 			});
 		});
 	});
@@ -604,7 +625,6 @@ describe("createCSSFunction", () => {
 				value: [
 					"1px solid ",
 					{ type: "reference", name: "color.primary", fallback: undefined },
-					"",
 				],
 			});
 		});
@@ -615,11 +635,9 @@ describe("createCSSFunction", () => {
 			expect(result).toEqual({
 				type: "css",
 				value: [
-					"",
 					{ type: "reference", name: "spacing.sm", fallback: undefined },
 					" ",
 					{ type: "reference", name: "spacing.md", fallback: undefined },
-					"",
 				],
 			});
 		});

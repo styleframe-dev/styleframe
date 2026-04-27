@@ -27,6 +27,11 @@ export function createCssFunction(_parent: Container, _root: Root) {
 					acc.push(ref(interpolation));
 				} else if (isAtRule(interpolation)) {
 					acc.push(interpolation.rule);
+				} else if (
+					typeof interpolation === "string" &&
+					interpolation.includes("@")
+				) {
+					acc.push(...parseAtReferences(interpolation));
 				} else {
 					acc.push(interpolation);
 				}

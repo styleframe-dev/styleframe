@@ -386,7 +386,7 @@ describe("parseDeclarationsBlock", () => {
 
 			expect(declarations.border).toEqual({
 				type: "css",
-				value: ["1px solid ", { type: "reference", name: "color.primary" }, ""],
+				value: ["1px solid ", { type: "reference", name: "color.primary" }],
 			});
 		});
 
@@ -400,11 +400,9 @@ describe("parseDeclarationsBlock", () => {
 			expect(declarations.padding).toEqual({
 				type: "css",
 				value: [
-					"",
 					{ type: "reference", name: "spacing.sm" },
 					" ",
 					{ type: "reference", name: "spacing.md" },
-					"",
 				],
 			});
 		});

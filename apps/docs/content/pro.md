@@ -1,6 +1,6 @@
 ---
 title: styleframe Pro - Premium Design System Tools
-description: Build beautiful, fluid responsive design systems in minutes with styleframe Pro's premium composables, advanced features, and mathematical precision.
+description: Build beautiful design systems in minutes with styleframe Pro's premium composables, advanced features, and mathematical precision.
 ---
 
 <!--
@@ -13,7 +13,7 @@ Hero Section -------------------------------------------------------------------
 Build Faster with styleframe [Pro]{.text-primary}
 
 #description
-Create beautiful, fluid responsive design systems with mathematical precision. Premium composables and advanced features that eliminate breakpoints and scale seamlessly across all devices.
+Create beautiful design systems with mathematical precision. Premium composables and advanced features built on top of styleframe.
 
 #links
     :::u-button
@@ -36,20 +36,6 @@ Features Section ---------------------------------------------------------------
 Premium Features for Professional Design Systems
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-waves
-    target: _blank
-    to: /docs/theme/design-tokens/composables/fluid-design
-    ---
-    #title
-    [Fluid Responsive]{.text-primary} Design
-    
-    #description
-    Create designs that scale smoothly across all viewport sizes using mathematical precision. No more breakpoints.
-    :::
-
-
     :::u-page-feature
     ---
     icon: i-lucide-sparkles
@@ -112,98 +98,6 @@ Premium Features for Professional Design Systems
     In-depth guides, examples, and best practices. Get up and running in minutes with clear instructions.
     :::
 :: 
-
-<!-- 
-Fluid Design Showcase Section ----------------------------------------------------------------------------------------------
--->
-
-::u-page-section{class="border-t border-default"}
-#title
-What's included in styleframe Pro?
-
-#description
-Starting with fluid responsive design — the foundation of modern, scalable design systems — with many more premium composables on the way. Build layouts and typography that adapt seamlessly using mathematical precision.
-::
-
-::FluidResponsiveDesignDemo
-::
-
-
-::u-page-section
----
-orientation: horizontal
-headline: Pro Feature
-links:
--   label: Learn about Fluid Responsive Design
-    color: neutral
-    variant: outline
-    to: /docs/theme/design-tokens/composables/fluid-design
-    icon: i-lucide-waves
----
-
-::browser-frame
----
-title: styleframe.config.ts
----
-
-```ts
-import { styleframe } from 'styleframe';
-import { useFluidViewport, useFluidClamp } from '@styleframe/pro';
-import { useSpacingDesignTokens } from '@styleframe/theme';
-
-const s = styleframe();
-
-// Set up fluid viewport range
-useFluidViewport(s, {
-    minWidth: 320,  // Mobile
-    maxWidth: 1440  // Desktop
-});
-
-// Create fluid spacing that scales smoothly
-const { spacingSm, spacingMd, spacingLg } = useSpacingDesignTokens(s, {
-    sm: useFluidClamp(s, { min: 8, max: 16 }),
-    md: useFluidClamp(s, { min: 16, max: 32 }),
-    lg: useFluidClamp(s, { min: 24, max: 48 }),
-});
-
-export default s;
-```
-
-::
-
-#title
-Seamless Scaling Without Breakpoints
-
-#description
-Styleframe Pro's fluid responsive design system eliminates the complexity of traditional responsive design. Based on Utopia's mathematical principles, create layouts and typography that adapt perfectly to any viewport width.
-
-#features
-    :::u-page-feature
-    ---
-    icon: i-lucide-minimize-2
-    target: _blank
-    to: /docs/theme/design-tokens/composables/fluid-design
-    ---
-    #title
-    [Reduce]{.text-primary} Complexity
-
-    #description
-    Replace dozens of media queries with single fluid values. Simpler code, easier maintenance, fewer bugs.
-    :::
-
-    :::u-page-feature
-    ---
-    icon: i-lucide-circle-check-big
-    target: _blank
-    to: /docs/theme/design-tokens/composables/fluid-design
-    ---
-    #title
-    [Perfect]{.text-primary} Consistency
-
-    #description
-    Mathematical scales ensure harmonious proportions. Every size relates to every other size predictably.
-    :::
-::
 
 <!--
 Pricing Section ----------------------------------------------------------------------------------------------

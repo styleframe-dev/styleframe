@@ -1,3 +1,4 @@
+export * from "./fluid";
 export * from "./useBorderColorDesignTokens";
 export * from "./useBorderRadiusDesignTokens";
 export * from "./useBorderStyleDesignTokens";

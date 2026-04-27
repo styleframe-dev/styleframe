@@ -117,7 +117,7 @@ Used for:
 - Use `ref()` to reference variables — never hardcode values in selectors.
 - Composable naming convention: `use<Context><Type>()` (e.g., `useMarginUtility`, `useHoverModifier`, `useColor`).
 - Group registration functions: `use<Category><Type>s()` (e.g., `usePseudoStateModifiers`).
-- Design token imports from `@styleframe/theme`, fluid design imports from `@styleframe/pro`.
+- Design token and fluid design imports from `@styleframe/theme`.
 </styleframe_docs_conventions>
 
 <instructions>
