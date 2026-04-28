@@ -178,22 +178,28 @@ describe("useFluidViewportDesignTokens", () => {
 			type: "at-rule",
 			identifier: "media",
 			rule: "screen and (min-width: 1440px)",
-			variables: [
+			children: [
 				{
-					type: "variable",
-					name: "fluid.screen",
-					value: {
-						type: "css",
-						value: [
-							"calc(",
-							{
-								type: "reference",
-								name: "fluid.max-width",
-								fallback: undefined,
+					type: "selector",
+					query: ":root",
+					variables: [
+						{
+							type: "variable",
+							name: "fluid.screen",
+							value: {
+								type: "css",
+								value: [
+									"calc(",
+									{
+										type: "reference",
+										name: "fluid.max-width",
+										fallback: undefined,
+									},
+									" * 1px)",
+								],
 							},
-							" * 1px)",
-						],
-					},
+						},
+					],
 				},
 			],
 		});
@@ -249,7 +255,9 @@ describe("useFluidViewportDesignTokens", () => {
 }
 
 @media screen and (min-width: 1440px) {
-	--fluid--screen: calc(var(--fluid--max-width) * 1px);
+	:root {
+		--fluid--screen: calc(var(--fluid--max-width) * 1px);
+	}
 }`);
 	});
 
@@ -270,7 +278,9 @@ describe("useFluidViewportDesignTokens", () => {
 }
 
 @media screen and (min-width: 1280px) {
-	--fluid--screen: calc(var(--fluid--max-width) * 1px);
+	:root {
+		--fluid--screen: calc(var(--fluid--max-width) * 1px);
+	}
 }`);
 	});
 
