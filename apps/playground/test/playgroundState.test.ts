@@ -17,7 +17,8 @@ describe("usePlaygroundState", () => {
 
 		expect(state.files.config.length).toBeGreaterThan(0);
 		expect(state.files.app.length).toBeGreaterThan(0);
-		expect(state.files.component.length).toBeGreaterThan(0);
+		expect(state.files.card.length).toBeGreaterThan(0);
+		expect(state.files.button.length).toBeGreaterThan(0);
 		expect(state.activeFile).toBe("config");
 		expect(state.activeOutput).toBe("preview");
 		expect(state.error).toBeNull();

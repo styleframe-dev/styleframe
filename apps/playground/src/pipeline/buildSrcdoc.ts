@@ -2,7 +2,8 @@ export interface BuildSrcdocInput {
 	css: string;
 	configCode: string;
 	appCode: string;
-	componentCode: string;
+	cardCode: string;
+	buttonCode: string;
 	vueUrl: string;
 	runtimeUrl: string;
 }
@@ -14,7 +15,8 @@ function makeBlobUrl(code: string): string {
 }
 
 const configSpecifierRe = /from\s*["']\.\/styleframe\.config(?:\.ts)?["']/g;
-const componentSpecifierRe = /from\s*["']\.\/Component\.vue["']/g;
+const cardSpecifierRe = /from\s*["']\.\/Card\.vue["']/g;
+const buttonSpecifierRe = /from\s*["']\.\/Button\.vue["']/g;
 
 export interface BuildSrcdocResult {
 	srcdoc: string;
@@ -22,18 +24,26 @@ export interface BuildSrcdocResult {
 }
 
 export function buildSrcdoc(input: BuildSrcdocInput): BuildSrcdocResult {
-	const { css, configCode, appCode, componentCode, vueUrl, runtimeUrl } = input;
+	const { css, configCode, appCode, cardCode, buttonCode, vueUrl, runtimeUrl } =
+		input;
 
 	const configUrl = makeBlobUrl(configCode);
 
-	const componentCodeRewritten = componentCode.replace(
+	const cardCodeRewritten = cardCode.replace(
 		configSpecifierRe,
 		`from ${JSON.stringify(configUrl)}`,
 	);
-	const componentUrl = makeBlobUrl(componentCodeRewritten);
+	const cardUrl = makeBlobUrl(cardCodeRewritten);
+
+	const buttonCodeRewritten = buttonCode.replace(
+		configSpecifierRe,
+		`from ${JSON.stringify(configUrl)}`,
+	);
+	const buttonUrl = makeBlobUrl(buttonCodeRewritten);
 
 	const appCodeRewritten = appCode
-		.replace(componentSpecifierRe, `from ${JSON.stringify(componentUrl)}`)
+		.replace(cardSpecifierRe, `from ${JSON.stringify(cardUrl)}`)
+		.replace(buttonSpecifierRe, `from ${JSON.stringify(buttonUrl)}`)
 		.replace(configSpecifierRe, `from ${JSON.stringify(configUrl)}`);
 	const appUrl = makeBlobUrl(appCodeRewritten);
 
@@ -86,7 +96,8 @@ try {
 
 	const revoke = () => {
 		URL.revokeObjectURL(configUrl);
-		URL.revokeObjectURL(componentUrl);
+		URL.revokeObjectURL(cardUrl);
+		URL.revokeObjectURL(buttonUrl);
 		URL.revokeObjectURL(appUrl);
 		URL.revokeObjectURL(bootUrl);
 	};

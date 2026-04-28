@@ -13,7 +13,7 @@ import { useTheme } from "@/state/theme";
 import type { EditorView } from "@codemirror/view";
 import FileTabList, { type FileTabEntry } from "./FileTabList.vue";
 
-type FileId = "config" | "app" | "component";
+type FileId = "config" | "app" | "card" | "button";
 
 interface FileEntry extends FileTabEntry<FileId> {
 	language: EditorLanguage;
@@ -38,11 +38,8 @@ const tabs: FileEntry[] = [
 		language: "typescript",
 	},
 	{ id: "app", label: "App.vue", language: "vue" },
-	{
-		id: "component",
-		label: "Component.vue",
-		language: "vue",
-	},
+	{ id: "card", label: "Card.vue", language: "vue" },
+	{ id: "button", label: "Button.vue", language: "vue" },
 ];
 
 const host = ref<HTMLDivElement | null>(null);
