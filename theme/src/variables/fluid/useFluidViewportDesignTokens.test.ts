@@ -163,6 +163,68 @@ describe("useFluidViewportDesignTokens", () => {
 		expect(s.root.variables[3]?.name).toBe("fluid.breakpoint");
 	});
 
+	it("should register a media query that locks fluid.screen at maxWidth", () => {
+		const s = styleframe();
+		useFluidViewportDesignTokens(s);
+
+		const lockMedia = s.root.children.find(
+			(child) =>
+				child.type === "at-rule" &&
+				child.identifier === "media" &&
+				child.rule === "screen and (min-width: 1440px)",
+		);
+
+		expect(lockMedia).toMatchObject({
+			type: "at-rule",
+			identifier: "media",
+			rule: "screen and (min-width: 1440px)",
+			variables: [
+				{
+					type: "variable",
+					name: "fluid.screen",
+					value: {
+						type: "css",
+						value: [
+							"calc(",
+							{
+								type: "reference",
+								name: "fluid.max-width",
+								fallback: undefined,
+							},
+							" * 1px)",
+						],
+					},
+				},
+			],
+		});
+	});
+
+	it("should derive lock breakpoint from custom maxWidth", () => {
+		const s = styleframe();
+		useFluidViewportDesignTokens(s, { maxWidth: 1920 });
+
+		const lockMedia = s.root.children.find(
+			(child) => child.type === "at-rule" && child.identifier === "media",
+		);
+
+		expect(lockMedia).toMatchObject({
+			rule: "screen and (min-width: 1920px)",
+		});
+	});
+
+	it("should pass through string maxWidth to lock breakpoint", () => {
+		const s = styleframe();
+		useFluidViewportDesignTokens(s, { maxWidth: "90rem" });
+
+		const lockMedia = s.root.children.find(
+			(child) => child.type === "at-rule" && child.identifier === "media",
+		);
+
+		expect(lockMedia).toMatchObject({
+			rule: "screen and (min-width: 90rem)",
+		});
+	});
+
 	it("should create fluidBreakpoint with references to other fluid variables", () => {
 		const s = styleframe();
 		const { fluidBreakpoint } = useFluidViewportDesignTokens(s);
@@ -184,6 +246,10 @@ describe("useFluidViewportDesignTokens", () => {
 	--fluid--max-width: 1440;
 	--fluid--screen: 100vw;
 	--fluid--breakpoint: calc((var(--fluid--screen) - var(--fluid--min-width) / 16 * 1rem) / (var(--fluid--max-width) - var(--fluid--min-width)));
+}
+
+@media screen and (min-width: 1440px) {
+	--fluid--screen: calc(var(--fluid--max-width) * 1px);
 }`);
 	});
 
@@ -201,6 +267,10 @@ describe("useFluidViewportDesignTokens", () => {
 	--fluid--max-width: 1280;
 	--fluid--screen: 100vw;
 	--fluid--breakpoint: calc((var(--fluid--screen) - var(--fluid--min-width) / 16 * 1rem) / (var(--fluid--max-width) - var(--fluid--min-width)));
+}
+
+@media screen and (min-width: 1280px) {
+	--fluid--screen: calc(var(--fluid--max-width) * 1px);
 }`);
 	});
 
