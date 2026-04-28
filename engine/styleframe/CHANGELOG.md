@@ -1,5 +1,69 @@
 # styleframe
 
+## 3.5.0
+
+### Minor Changes
+
+- [#196](https://github.com/styleframe-dev/styleframe/pull/196) [`5a37154`](https://github.com/styleframe-dev/styleframe/commit/5a37154540057d115a834961b708a77cbf032783) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Dropdown recipe with item, separator, label, arrow, tests, and documentation
+  - Add `useDropdownRecipe` container recipe with 3 colors (light, dark, neutral), 3 visual styles (solid, soft, subtle), and 3 sizes (sm, md, lg) — uses `@z-index.dropdown` for surface stacking
+  - Add `useDropdownItemRecipe` for clickable menu options with hover, focus, active, and disabled states across all color × variant combinations
+  - Add `useDropdownSeparatorRecipe` for visual dividers between item groups (color axis only)
+  - Add `useDropdownLabelRecipe` for uppercase muted group headings (color and size axes)
+  - Add `useDropdownArrowRecipe` using the CSS border-triangle technique — points upward by default to sit above the panel, registers an `@dropdown.arrow.size` variable (default `6px`)
+  - Add Dropdown documentation page with usage examples, anatomy, accessibility guidance (menu/menuitem/separator roles, keyboard navigation, roving tabindex), API reference, and FAQ
+
+- [#198](https://github.com/styleframe-dev/styleframe/pull/198) [`eabf9f4`](https://github.com/styleframe-dev/styleframe/commit/eabf9f4150cddc240065e72d38d3c01042fb140c) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add fluid typography to the default design tokens preset
+  - Add `useFluidClamp` to compose a `clamp()`-style fluid value between a min/max pair using a viewport-driven breakpoint reference
+  - Add `useFluidViewportDesignTokens` registering `fluid.breakpoint`, `fluid.min`, and `fluid.max` viewport variables that drive the clamp interpolation
+  - Add `useFluidFontSizeDesignTokens` registering `font-size.min/max` (with `xs`–`xl` multipliers off the type scale) and resolving `font-size.{xs..xl}` to fluid clamp values
+  - Wire fluid font sizing into `useDesignTokensPreset` so the default preset ships fluid type out of the box
+  - Add `fluidFontSize` and `fluidViewport` value helpers and documentation for the new fluid composables and the presets reference page
+
+- [#195](https://github.com/styleframe-dev/styleframe/pull/195) [`73a4c55`](https://github.com/styleframe-dev/styleframe/commit/73a4c551a403fcda250b108fb93c9ab7394b27c2) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add HamburgerMenu recipe with toggle button, animations, tests, and documentation
+  - Add `useHamburgerMenuRecipe` icon-toggle button recipe with 3 colors (light, dark, neutral), 3 sizes (sm, md, lg), 7 open-state animations (close, arrow-{up,down,left,right}, minus, plus), and a boolean `active` axis
+  - Inner bars rendered via `.hamburger-menu-inner` + `::before`/`::after` pseudo-elements; per-size dimensions and per-animation transforms registered via `setup(s)` callback
+  - Add HamburgerMenu Storybook stories with all-variants and all-sizes preview grids, plus per-color, per-size, per-animation, and disabled/active stories
+  - Add HamburgerMenu documentation page with usage examples, accessibility guidance (`aria-expanded`, `aria-label`), API reference, and best practices
+
+- [#189](https://github.com/styleframe-dev/styleframe/pull/189) [`689f02b`](https://github.com/styleframe-dev/styleframe/commit/689f02bd98262c4ee7b35b92ca537ac0e50af013) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Input recipe with prefix/suffix and prepend/append slots
+  - Add `useInputRecipe` wrapper recipe with 3 colors (light, dark, neutral), 3 variants (default, soft, ghost), 3 sizes, and `invalid`/`disabled`/`readonly` boolean state axes; the wrapper owns the visual field and inherits typography into a nested `<input class="input-field">` styled via setup callback
+  - Add `useInputPrefixRecipe` and `useInputSuffixRecipe` for inline addons rendered inside the field, beside the text
+  - Add `useInputPrependRecipe` and `useInputAppendRecipe` as transparent slot containers for external addons (Buttons, dropdowns, plain text) — content brings its own visual language
+  - Add `useInputGroupRecipe` as a pure layout coordinator that flattens border-radius and collapses border-width at the seams where prepend/append meet the input, using `:has()` selectors
+
+- [`ef662ae`](https://github.com/styleframe-dev/styleframe/commit/ef662ae696acf138a14c246b4b6f7a65ebae53c1) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Spinner recipe with circle, text, overlay, tests, and documentation
+  - Add `useSpinnerRecipe` container recipe with 4 colors (primary, light, dark, neutral) and 4 sizes (auto, sm, md, lg)
+  - Add `useSpinnerCircleRecipe` with SVG stroke-dasharray animation and keyframes
+  - Add `useSpinnerTextRecipe` for centered label overlay on the spinner
+  - Add `useSpinnerOverlayRecipe` for fixed/absolute backdrop
+  - Add Spinner documentation page with usage examples, API reference, and FAQ
+
+- [#198](https://github.com/styleframe-dev/styleframe/pull/198) [`eabf9f4`](https://github.com/styleframe-dev/styleframe/commit/eabf9f4150cddc240065e72d38d3c01042fb140c) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Enable `fluidFontSize` by default in `useDesignTokensPreset`
+  - Calling `useDesignTokensPreset(s)` with no config now emits the fluid
+    font-size scale (`clamp()`-based `font-size.*`, `font-size.min/max`,
+    `scale.min/max`, and per-power scale variables). Previously, fluid was
+    opt-in via `fluidFontSize: true`.
+  - Pass `fluidFontSize: false` to fall back to the static `fontSize` domain.
+  - Custom `fontSize: { ... }` config is silently ignored when fluid is
+    active. Migration: add `fluidFontSize: false` alongside any custom
+    `fontSize` config you want to keep applying.
+  - Domain dependencies are now validated up front. Setting `fluidViewport:
+false` or `scale: false` while leaving `fluidFontSize` enabled throws a
+    configuration error — both are required for the fluid scale to function.
+    Migration: add `fluidFontSize: false` whenever you disable `fluidViewport`
+    or `scale`.
+  - Internally, domains can now declare `enabled` predicates and a `requires`
+    list of config keys that must not be `false`. The preset uses this to gate
+    the fluid `scale` and `font-size` domains generically rather than via
+    ad-hoc checks inside each composable.
+
+- [#198](https://github.com/styleframe-dev/styleframe/pull/198) [`eabf9f4`](https://github.com/styleframe-dev/styleframe/commit/eabf9f4150cddc240065e72d38d3c01042fb140c) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Accept `{ min, max }` objects in fluid range APIs
+
+  `useFluidClamp` and the per-step `values` of `useFluidFontSizeDesignTokens`
+  now accept ranges as either `[min, max]` tuples or `{ min, max }` objects.
+  The `fluidFontSize.values` config in `useDesignTokensPreset` accepts both
+  forms as well. Existing tuple call sites are unaffected.
+
 ## 3.4.0
 
 ### Minor Changes

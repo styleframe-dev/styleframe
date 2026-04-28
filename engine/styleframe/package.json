@@ -1,6 +1,6 @@
 {
 	"name": "styleframe",
-	"version": "3.4.0",
+	"version": "3.5.0",
 	"bin": {
 		"styleframe": "./dist/cli.cjs"
 	},
