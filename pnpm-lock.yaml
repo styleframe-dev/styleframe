@@ -900,7 +900,7 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/vite
       '@styleframe/theme':
-        specifier: workspace:^3.5.0
+        specifier: workspace:^3.5.1
         version: link:../../theme
       '@types/node':
         specifier: 'catalog:'
@@ -918,7 +918,7 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
       styleframe:
-        specifier: workspace:^3.5.0
+        specifier: workspace:^3.5.1
         version: link:../../engine/styleframe
       tsx:
         specifier: 'catalog:'
@@ -1150,13 +1150,13 @@ importers:
         specifier: workspace:^3.1.0
         version: link:../../../engine/runtime
       '@styleframe/theme':
-        specifier: workspace:^3.5.0
+        specifier: workspace:^3.5.1
         version: link:../../../theme
       '@vitejs/plugin-vue':
         specifier: catalog:nuxt
         version: 6.0.1(vite@6.4.1(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(tsx@4.20.6)(yaml@2.8.1))(vue@3.5.26(typescript@5.9.3))
       styleframe:
-        specifier: workspace:^3.5.0
+        specifier: workspace:^3.5.1
         version: link:../../../engine/styleframe
       vite:
         specifier: ^6.3.5
