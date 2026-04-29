@@ -10,7 +10,7 @@ export function useFluidViewportDesignTokens(
 		maxWidth?: TokenValue;
 	} = {},
 ) {
-	const { variable, css, ref } = s;
+	const { variable, css, ref, media } = s;
 
 	const fluidMinWidth = variable("fluid.min-width", minWidth, {
 		default: true,
@@ -24,6 +24,15 @@ export function useFluidViewportDesignTokens(
 		css`calc((${ref(fluidScreen)} - ${ref(fluidMinWidth)} / 16 * 1rem) / (${ref(fluidMaxWidth)} - ${ref(fluidMinWidth)}))`,
 		{ default: true },
 	);
+
+	const lockBreakpoint =
+		typeof maxWidth === "number" ? `${maxWidth}px` : maxWidth;
+
+	media(`screen and (min-width: ${lockBreakpoint})`, ({ selector }) => {
+		selector(":root", ({ variable }) => {
+			variable("fluid.screen", css`calc(${ref(fluidMaxWidth)} * 1px)`);
+		});
+	});
 
 	return {
 		fluidMinWidth,
