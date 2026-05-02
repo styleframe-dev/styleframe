@@ -81,6 +81,7 @@ export function createPropertyValueResolver(parent: Container, root: Root) {
 		if (isKeyReferenceValue(value) && /^@[\w.-]+$/.test(value)) {
 			const name = value.slice(1);
 			validateReference(name, parent, root);
+			root._usage.variables.add(name);
 			return { type: "reference", name: name } as Reference;
 		}
 
@@ -88,6 +89,11 @@ export function createPropertyValueResolver(parent: Container, root: Root) {
 		const parts = parseAtReferences(value);
 		const hasReferences = parts.some((p) => isRef(p));
 		if (hasReferences) {
+			for (const part of parts) {
+				if (isRef(part)) {
+					root._usage.variables.add(part.name);
+				}
+			}
 			return { type: "css", value: parts } as CSS;
 		}
 

@@ -19,6 +19,7 @@ export function createRefFunction(parent: Container, root: Root) {
 			fallback != null ? resolvePropertyValue(fallback) : fallback;
 
 		if (isVariable(variable)) {
+			root._usage.variables.add(variable.name);
 			return {
 				type: "reference",
 				name: variable.name,
@@ -33,6 +34,7 @@ export function createRefFunction(parent: Container, root: Root) {
 		}
 
 		// If a string name is passed, use it directly
+		root._usage.variables.add(variable);
 		return {
 			type: "reference",
 			name: variable,
