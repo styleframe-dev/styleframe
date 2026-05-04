@@ -7,6 +7,7 @@ export * from "./chip";
 export * from "./dropdown";
 export * from "./hamburger-menu";
 export * from "./input";
+export * from "./media";
 export * from "./spinner";
 export * from "./modal";
 export * from "./nav";
