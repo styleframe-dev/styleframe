@@ -486,6 +486,17 @@ Before renaming or changing a function signature, use `findReferences` to find a
 
 ---
 
+## Local Tooling
+
+**GitHub Actions linting:** Editing files under `.github/workflows/` runs [actionlint](https://github.com/rhysd/actionlint) via lint-staged on pre-commit. Install it once locally so the hook can run:
+
+- macOS: `brew install actionlint`
+- Other platforms: see https://github.com/rhysd/actionlint/blob/main/docs/install.md
+
+Run `pnpm lint:actions` to lint all workflows manually.
+
+---
+
 ## Package-Specific Guides
 
 Each package has its own AGENTS.md with detailed API reference, types, and conventions:
