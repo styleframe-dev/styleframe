@@ -217,6 +217,7 @@ import {
 	useBrightnessUtility,
 	useContrastUtility,
 	useDropShadowUtility,
+	useFilterUtility,
 	useGrayscaleUtility,
 	useHueRotateUtility,
 	useInvertUtility,
@@ -2191,6 +2192,12 @@ export function useUtilitiesPreset(
 			undefined,
 			undefined,
 			resolveUtilityOptions("drop-shadow"),
+		),
+		createFilterUtility: useFilterUtility(
+			s,
+			undefined,
+			undefined,
+			resolveUtilityOptions("filter"),
 		),
 		createGrayscaleUtility: useGrayscaleUtility(
 			s,

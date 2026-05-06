@@ -46,13 +46,17 @@ export const usePageHeroRecipe = createUseRecipe("page-hero", {
 				flexDirection: "column",
 			},
 			horizontal: {
-				display: "grid",
-				gridTemplateColumns: "1fr 1fr",
+				flexDirection: "row",
+				alignItems: "stretch",
 			},
+		},
+		reverse: {
+			true: {},
 		},
 		alignment: {
 			start: {},
 			center: {},
+			end: {},
 		},
 	},
 	compoundVariants: [
@@ -107,26 +111,20 @@ export const usePageHeroRecipe = createUseRecipe("page-hero", {
 			},
 		},
 		{
-			match: {
-				orientation: "horizontal" as const,
-				alignment: "start" as const,
-			},
+			match: { orientation: "vertical" as const, alignment: "end" as const },
 			css: {
-				alignItems: "center",
-				justifyItems: "start",
-				textAlign: "left",
+				alignItems: "flex-end",
+				textAlign: "right",
 			},
 		},
+		// Reverse compounds — flip layout direction
 		{
-			match: {
-				orientation: "horizontal" as const,
-				alignment: "center" as const,
-			},
-			css: {
-				alignItems: "center",
-				justifyItems: "center",
-				textAlign: "center",
-			},
+			match: { orientation: "vertical" as const, reverse: "true" as const },
+			css: { flexDirection: "column-reverse" },
+		},
+		{
+			match: { orientation: "horizontal" as const, reverse: "true" as const },
+			css: { flexDirection: "row-reverse" },
 		},
 	],
 	defaultVariants: {

@@ -1,6 +1,22 @@
 import { createUseUtility } from "../../utils";
 
 /**
+ * Create filter utility classes.
+ *
+ * @example
+ * ```typescript
+ * const s = styleframe();
+ * useFilterUtility(s, {
+ *     none: 'none',
+ *     default: 'blur(8px)',
+ * });
+ * ```
+ */
+export const useFilterUtility = createUseUtility("filter", ({ value }) => ({
+	filter: value,
+}));
+
+/**
  * Create blur utility classes.
  *
  * @example
