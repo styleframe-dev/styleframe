@@ -103,8 +103,8 @@ describe("usePageHeroRecipe", () => {
 					flexDirection: "column",
 				},
 				horizontal: {
-					display: "grid",
-					gridTemplateColumns: "1fr 1fr",
+					flexDirection: "row",
+					alignItems: "stretch",
 				},
 			});
 		});
@@ -116,6 +116,7 @@ describe("usePageHeroRecipe", () => {
 			expect(Object.keys(recipe.variants!.alignment)).toEqual([
 				"start",
 				"center",
+				"end",
 			]);
 		});
 	});
@@ -133,12 +134,12 @@ describe("usePageHeroRecipe", () => {
 	});
 
 	describe("compound variants", () => {
-		it("should have 7 compound variants total", () => {
+		it("should have 8 compound variants total", () => {
 			const s = createInstance();
 			const recipe = usePageHeroRecipe(s);
 
-			// 3 color + 4 orientation × alignment = 7
-			expect(recipe.compoundVariants).toHaveLength(7);
+			// 3 color + 3 vertical alignment + 2 reverse = 8
+			expect(recipe.compoundVariants).toHaveLength(8);
 		});
 
 		it("should have correct light color compound variant", () => {
@@ -219,20 +220,17 @@ describe("usePageHeroRecipe", () => {
 			});
 		});
 
-		it("should have correct horizontal + center orientation/alignment compound", () => {
+		it("should have correct horizontal + reverse compound", () => {
 			const s = createInstance();
 			const recipe = usePageHeroRecipe(s);
 
 			const cv = recipe.compoundVariants!.find(
 				(c) =>
-					c.match.orientation === "horizontal" &&
-					c.match.alignment === "center",
+					c.match.orientation === "horizontal" && c.match.reverse === "true",
 			);
 
 			expect(cv?.css).toEqual({
-				alignItems: "center",
-				justifyItems: "center",
-				textAlign: "center",
+				flexDirection: "row-reverse",
 			});
 		});
 	});

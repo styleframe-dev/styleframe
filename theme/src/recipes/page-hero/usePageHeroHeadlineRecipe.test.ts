@@ -61,6 +61,10 @@ describe("usePageHeroHeadlineRecipe", () => {
 					alignItems: "center",
 					textAlign: "center",
 				},
+				end: {
+					alignItems: "flex-end",
+					textAlign: "right",
+				},
 			});
 		});
 	});

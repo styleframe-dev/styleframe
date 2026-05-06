@@ -7,9 +7,11 @@ function createInstance() {
 	for (const name of [
 		"display",
 		"overflow",
+		"flex",
+		"minWidth",
 		"maxWidth",
+		"alignSelf",
 		"borderRadius",
-		"boxShadow",
 	]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
@@ -32,29 +34,28 @@ describe("usePageHeroImageRecipe", () => {
 		expect(recipe.base).toEqual({
 			display: "block",
 			overflow: "hidden",
+			flex: "1",
+			minWidth: "0",
 			maxWidth: "100%",
+			alignSelf: "stretch",
 			borderRadius: "@border-radius.lg",
-			boxShadow: "@box-shadow.lg",
 		});
 	});
 
 	describe("variants", () => {
-		it("should have size variants with scaling radius and shadow", () => {
+		it("should have size variants with scaling radius", () => {
 			const s = createInstance();
 			const recipe = usePageHeroImageRecipe(s);
 
 			expect(recipe.variants!.size).toEqual({
 				sm: {
 					borderRadius: "@border-radius.md",
-					boxShadow: "@box-shadow.md",
 				},
 				md: {
 					borderRadius: "@border-radius.lg",
-					boxShadow: "@box-shadow.lg",
 				},
 				lg: {
 					borderRadius: "@border-radius.xl",
-					boxShadow: "@box-shadow.xl",
 				},
 			});
 		});
@@ -73,10 +74,10 @@ describe("usePageHeroImageRecipe", () => {
 		it("should allow overriding base styles", () => {
 			const s = createInstance();
 			const recipe = usePageHeroImageRecipe(s, {
-				base: { boxShadow: "@box-shadow.none" },
+				base: { borderRadius: "@border-radius.none" },
 			});
 
-			expect(recipe.base!.boxShadow).toBe("@box-shadow.none");
+			expect(recipe.base!.borderRadius).toBe("@border-radius.none");
 			expect(recipe.base!.overflow).toBe("hidden");
 		});
 	});

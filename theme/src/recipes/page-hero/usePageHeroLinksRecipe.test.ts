@@ -58,6 +58,7 @@ describe("usePageHeroLinksRecipe", () => {
 			expect(recipe.variants!.alignment).toEqual({
 				start: { justifyContent: "flex-start" },
 				center: { justifyContent: "center" },
+				end: { justifyContent: "flex-end" },
 			});
 		});
 	});
