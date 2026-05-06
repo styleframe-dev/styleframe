@@ -10,6 +10,7 @@ export * from "./input";
 export * from "./spinner";
 export * from "./modal";
 export * from "./nav";
+export * from "./pagination";
 export * from "./placeholder";
 export * from "./popover";
 export * from "./progress";
