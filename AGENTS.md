@@ -452,7 +452,7 @@ export function useColorVariables(s: Styleframe) {
 styleframe init [cwd]              # Scaffold project, install deps, configure build tool
 styleframe build [entry]           # Compile config to CSS/TS/DTS output
 styleframe dtcg export             # Export variables to spec-conformant DTCG JSON
-styleframe figma import -i in.json # Generate Styleframe code from DTCG JSON
+styleframe dtcg import -i in.json  # Generate Styleframe code from DTCG JSON
 ```
 
 ---
