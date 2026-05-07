@@ -1,0 +1,9 @@
+{
+	"white-no-hue": {
+		"$type": "color",
+		"$value": {
+			"colorSpace": "hsl",
+			"components": ["none", 0, 100]
+		}
+	}
+}

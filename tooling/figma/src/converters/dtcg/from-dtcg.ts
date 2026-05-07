@@ -1,302 +1,219 @@
+/**
+ * Convert a spec-conformant DTCG document (with optional resolver) into
+ * the FigmaExportFormat consumed by the plugin.
+ *
+ * Input shape:
+ *   - A single token document → produces one Figma mode named "Default".
+ *   - A token document + resolver → resolves the resolver across every
+ *     declared modifier context, treating each context as a Figma mode.
+ *     The default context becomes the first (default) mode.
+ *
+ * The legacy `$extensions["dev.styleframe"].modes` format and the
+ * historical `$modifiers` placement inside token documents are NOT
+ * supported. Documents using the legacy shape will be parsed (since the
+ * shape is just JSON) but mode information will be ignored — callers
+ * should migrate to the resolver flow.
+ */
+
+import {
+	applyInheritance,
+	type DTCGAnyToken,
+	type DTCGDocument,
+	type DTCGFileLoader,
+	type DTCGResolverDocument,
+	resolveResolver,
+	walk,
+} from "@styleframe/dtcg";
 import type {
 	FigmaExportFormat,
 	FigmaExportVariable,
 	FigmaVariableType,
-	FigmaRGBA,
+	FigmaVariableValue,
 } from "../../types";
-import type {
-	DTCGDocument,
-	DTCGToken,
-	DTCGGroup,
-	FromDTCGOptions,
-	DTCGTokenType,
-	DTCGTokenValue,
-	DTCGAliasValue,
-	DTCGModifierContext,
-} from "./types";
-import { isDTCGToken, isDTCGGroup, isDTCGAlias } from "./types";
-import { dtcgTypeToFigma } from "./type-mapping";
-import { parseAlias, dtcgPathToFigma } from "./alias-parsing";
-import { cssColorToFigma, dimensionToPixels } from "../value-parsing";
+import {
+	dtcgPathToFigma,
+	dtcgTypeToFigma,
+	dtcgValueToFigma,
+} from "./figma-bridge";
+
+export interface FromDTCGOptions {
+	/** Collection name. Defaults to `"Design Tokens"`. */
+	collectionName?: string;
+	/** Default mode name when the input has no resolver. Defaults to `"Default"`. */
+	defaultModeName?: string;
+}
+
+export interface FromDTCGResolverOptions extends FromDTCGOptions {
+	fileLoader: DTCGFileLoader;
+	/**
+	 * Name of the modifier whose contexts become Figma modes. Defaults to
+	 * `"theme"`. The modifier's `default` (or its first context) becomes
+	 * the Figma default mode.
+	 */
+	modeModifier?: string;
+}
+
+interface VariableAccumulator {
+	variable: FigmaExportVariable;
+}
+
+function pathToFigmaName(path: string): string {
+	return dtcgPathToFigma(path);
+}
+
+function tokenToFigmaVariable(
+	path: string,
+	token: DTCGAnyToken,
+	modeName: string,
+): FigmaExportVariable {
+	const requestedType = dtcgTypeToFigma(token.$type);
+	const figmaName = pathToFigmaName(path);
+	const conversion = dtcgValueToFigma(token.$value, requestedType);
+
+	const values: Record<string, FigmaVariableValue> = {};
+	let resolvedType: FigmaVariableType = requestedType;
+	let aliasTo: string | undefined;
+
+	if (conversion.kind === "alias") {
+		values[modeName] = { type: "VARIABLE_ALIAS", id: conversion.id };
+		aliasTo = conversion.id;
+	} else if (conversion.kind === "value") {
+		resolvedType = conversion.figmaType;
+		values[modeName] = conversion.value as FigmaVariableValue;
+	} else {
+		// `kind: "fallback"` — never silently drop. Downgrade the variable to
+		// STRING so the original CSS literal (e.g. `"100vw"`, `"1rem"` for
+		// unsupported units) survives the round-trip into Figma.
+		resolvedType = "STRING";
+		values[modeName] = conversion.value;
+	}
+
+	const variable: FigmaExportVariable = {
+		name: figmaName,
+		styleframeName: path,
+		type: resolvedType,
+		values,
+	};
+	if (token.$description !== undefined)
+		variable.description = token.$description;
+	if (aliasTo !== undefined) variable.aliasTo = aliasTo;
+	return variable;
+}
+
+function buildSingleModeFormat(
+	doc: DTCGDocument,
+	modeName: string,
+	collectionName: string,
+): FigmaExportFormat {
+	const inherited = applyInheritance(doc);
+	const variables: FigmaExportVariable[] = [];
+	for (const { path, token } of walk(inherited)) {
+		const variable = tokenToFigmaVariable(path, token, modeName);
+		if (Object.keys(variable.values).length > 0) {
+			variables.push(variable);
+		}
+	}
+	return { collection: collectionName, modes: [modeName], variables };
+}
 
 /**
- * Convert DTCG format to FigmaExportFormat
+ * Convert a single DTCG document (no resolver) to a single-mode
+ * FigmaExportFormat.
  */
 export function fromDTCG(
 	doc: DTCGDocument,
 	options: FromDTCGOptions = {},
 ): FigmaExportFormat {
-	const {
-		defaultModeName = "Default",
-		collectionName,
-		preferredModifier = "theme",
-	} = options;
+	const modeName = options.defaultModeName ?? "Default";
+	const collection = options.collectionName ?? "Design Tokens";
+	return buildSingleModeFormat(doc, modeName, collection);
+}
 
-	// Detect format and extract modes
-	const { modes } = extractModes(doc, defaultModeName, preferredModifier);
+/**
+ * Convert a Resolver Module document (with optional inputs) into a
+ * multi-mode FigmaExportFormat. Each declared context of the chosen
+ * modifier becomes a Figma mode.
+ */
+export async function fromDTCGResolver(
+	resolver: DTCGResolverDocument,
+	options: FromDTCGResolverOptions,
+): Promise<FigmaExportFormat> {
+	const collection = options.collectionName ?? "Design Tokens";
+	const modeModifier = options.modeModifier ?? "theme";
+	const modifier = resolver.modifiers?.[modeModifier];
+	if (!modifier) {
+		throw new Error(
+			`Resolver does not define a "${modeModifier}" modifier — cannot derive Figma modes`,
+		);
+	}
+	const contextNames = Object.keys(modifier.contexts);
+	const defaultContext = modifier.default ?? contextNames[0];
+	if (!defaultContext) {
+		throw new Error(`Modifier "${modeModifier}" has no contexts`);
+	}
+	const orderedModes = [
+		defaultContext,
+		...contextNames.filter((c) => c !== defaultContext),
+	];
 
-	const sfExtension = doc.$extensions?.["dev.styleframe"];
-	const collection =
-		collectionName || sfExtension?.collection || "Design Tokens";
+	const accumulators = new Map<string, VariableAccumulator>();
 
-	const variables: FigmaExportVariable[] = [];
+	for (const modeName of orderedModes) {
+		const resolved = await resolveResolver(
+			resolver,
+			{ [modeModifier]: modeName },
+			options.fileLoader,
+		);
+		const inherited = applyInheritance(resolved);
+		for (const { path, token } of walk(inherited)) {
+			const figmaName = pathToFigmaName(path);
+			const requestedType = dtcgTypeToFigma(token.$type);
+			const conversion = dtcgValueToFigma(token.$value, requestedType);
 
-	// Extract modifier overrides if present
-	const modifierOverrides = extractModifierOverrides(doc, preferredModifier);
-
-	// Walk the token tree
-	walkTokens(
-		doc,
-		"",
-		modes[0] || defaultModeName,
-		(path, token, inheritedType) => {
-			const variable = tokenToVariableWithModifiers(
-				path,
-				token,
-				inheritedType,
-				modes,
-				modes[0] || defaultModeName,
-				modifierOverrides,
-			);
-			if (variable) {
-				variables.push(variable);
+			let acc = accumulators.get(figmaName);
+			if (!acc) {
+				acc = {
+					variable: {
+						name: figmaName,
+						styleframeName: path,
+						type: requestedType,
+						values: {},
+					},
+				};
+				if (token.$description !== undefined)
+					acc.variable.description = token.$description;
+				accumulators.set(figmaName, acc);
 			}
-		},
-	);
+
+			if (conversion.kind === "alias") {
+				const aliasValue = {
+					type: "VARIABLE_ALIAS" as const,
+					id: conversion.id,
+				};
+				acc.variable.values[modeName] = aliasValue;
+				if (modeName === defaultContext) acc.variable.aliasTo = conversion.id;
+			} else if (conversion.kind === "value") {
+				// First mode that supplies a concrete value sets the variable's
+				// resolved Figma type. Subsequent modes that disagree fall through
+				// to `fallback` handling below if needed.
+				if (modeName === defaultContext) {
+					acc.variable.type = conversion.figmaType;
+				}
+				acc.variable.values[modeName] = conversion.value as FigmaVariableValue;
+			} else {
+				// fallback — preserve the original CSS as a STRING. Downgrade the
+				// variable type to STRING so Figma can store the literal.
+				if (modeName === defaultContext) {
+					acc.variable.type = "STRING";
+				}
+				acc.variable.values[modeName] = conversion.value;
+			}
+		}
+	}
 
 	return {
 		collection,
-		modes,
-		variables,
+		modes: orderedModes,
+		variables: [...accumulators.values()].map((a) => a.variable),
 	};
-}
-
-/**
- * Walk all tokens in a DTCG document
- */
-function walkTokens(
-	node: DTCGGroup | DTCGDocument,
-	parentPath: string,
-	defaultModeName: string,
-	callback: (
-		path: string,
-		token: DTCGToken,
-		inheritedType?: DTCGTokenType,
-	) => void,
-	inheritedType?: DTCGTokenType,
-): void {
-	const currentType = (node.$type as DTCGTokenType) || inheritedType;
-
-	for (const [key, value] of Object.entries(node)) {
-		// Skip DTCG metadata properties
-		if (key.startsWith("$")) continue;
-
-		const path = parentPath ? `${parentPath}/${key}` : key;
-
-		if (isDTCGToken(value)) {
-			callback(path, value, currentType);
-		} else if (isDTCGGroup(value)) {
-			// It's a group, recurse
-			walkTokens(value, path, defaultModeName, callback, currentType);
-		}
-	}
-}
-
-/**
- * Extract modes from document, preferring modifiers over legacy format
- */
-function extractModes(
-	doc: DTCGDocument,
-	defaultModeName: string,
-	preferredModifier: string,
-): { modes: string[]; modeSource: "modifier" | "extension" | "default" } {
-	// Check for modifier contexts first
-	const modifier = doc.$modifiers?.[preferredModifier];
-	if (modifier && modifier.contexts) {
-		const contextNames = Object.keys(modifier.contexts);
-		if (contextNames.length > 0) {
-			// Get default mode from extension or use provided default
-			const sfExtension = doc.$extensions?.["dev.styleframe"];
-			const defaultMode =
-				modifier.$default || sfExtension?.modes?.[0] || defaultModeName;
-			// Combine default mode with context names (avoiding duplicates)
-			const allModes = [
-				defaultMode,
-				...contextNames.filter((n) => n !== defaultMode),
-			];
-			return { modes: allModes, modeSource: "modifier" };
-		}
-	}
-
-	// Fall back to legacy extension format
-	const sfExtension = doc.$extensions?.["dev.styleframe"];
-	if (sfExtension?.modes && sfExtension.modes.length > 0) {
-		return { modes: sfExtension.modes, modeSource: "extension" };
-	}
-
-	return { modes: [defaultModeName], modeSource: "default" };
-}
-
-/**
- * Extract all modifier overrides into a lookup map
- * Returns: Map<tokenPath, Map<contextName, value>>
- */
-function extractModifierOverrides(
-	doc: DTCGDocument,
-	preferredModifier: string,
-): Map<string, Map<string, DTCGTokenValue>> {
-	const overrides = new Map<string, Map<string, DTCGTokenValue>>();
-
-	const modifier = doc.$modifiers?.[preferredModifier];
-	if (!modifier?.contexts) return overrides;
-
-	for (const [contextName, context] of Object.entries(modifier.contexts)) {
-		walkModifierContext(context, "", (tokenPath, value) => {
-			if (!overrides.has(tokenPath)) {
-				overrides.set(tokenPath, new Map());
-			}
-			overrides.get(tokenPath)!.set(contextName, value);
-		});
-	}
-
-	return overrides;
-}
-
-/**
- * Walk a modifier context to extract token overrides
- */
-function walkModifierContext(
-	context: DTCGModifierContext,
-	parentPath: string,
-	callback: (tokenPath: string, value: DTCGTokenValue) => void,
-): void {
-	for (const [key, value] of Object.entries(context)) {
-		const path = parentPath ? `${parentPath}.${key}` : key;
-
-		if (value && typeof value === "object" && "$value" in value) {
-			// It's a token override
-			callback(path, value.$value as DTCGTokenValue);
-		} else if (value && typeof value === "object") {
-			// It's a nested group, recurse
-			walkModifierContext(value as DTCGModifierContext, path, callback);
-		}
-	}
-}
-
-/**
- * Convert a DTCG token to FigmaExportVariable, applying modifier overrides
- */
-function tokenToVariableWithModifiers(
-	path: string,
-	token: DTCGToken,
-	inheritedType: DTCGTokenType | undefined,
-	modes: string[],
-	defaultModeName: string,
-	modifierOverrides: Map<string, Map<string, DTCGTokenValue>>,
-): FigmaExportVariable | null {
-	const type = token.$type || inheritedType || "string";
-	const figmaType = dtcgTypeToFigma(type);
-
-	// Check for alias
-	const isAlias = isDTCGAlias(token.$value);
-	let aliasTo: string | undefined;
-
-	const values: Record<string, unknown> = {};
-
-	if (isAlias) {
-		// For aliases, store the resolved alias path
-		aliasTo = parseAlias(token.$value as DTCGAliasValue);
-		// Still need to provide a placeholder value for the default mode
-		values[defaultModeName] = {
-			type: "VARIABLE_ALIAS",
-			id: dtcgPathToFigma(aliasTo),
-		};
-	} else {
-		// Convert the default value
-		const defaultValue = convertValueToFigma(token.$value, figmaType);
-		values[defaultModeName] = defaultValue;
-
-		// Apply modifier overrides (preferred)
-		const tokenPath = path.replace(/\//g, ".");
-		const pathOverrides = modifierOverrides.get(tokenPath);
-		if (pathOverrides) {
-			for (const [modeName, modeValue] of pathOverrides) {
-				if (isDTCGAlias(modeValue)) {
-					values[modeName] = {
-						type: "VARIABLE_ALIAS",
-						id: dtcgPathToFigma(parseAlias(modeValue as DTCGAliasValue)),
-					};
-				} else {
-					values[modeName] = convertValueToFigma(modeValue, figmaType);
-				}
-			}
-		}
-
-		// Fall back to legacy extension format if no modifier overrides
-		if (!pathOverrides || pathOverrides.size === 0) {
-			const legacyModeOverrides = token.$extensions?.["dev.styleframe"]?.modes;
-			if (legacyModeOverrides) {
-				for (const [modeName, modeValue] of Object.entries(
-					legacyModeOverrides,
-				)) {
-					if (isDTCGAlias(modeValue)) {
-						values[modeName] = {
-							type: "VARIABLE_ALIAS",
-							id: dtcgPathToFigma(parseAlias(modeValue as DTCGAliasValue)),
-						};
-					} else {
-						values[modeName] = convertValueToFigma(modeValue, figmaType);
-					}
-				}
-			}
-		}
-	}
-
-	// Convert path from slash to dot notation for styleframeName
-	const styleframeName = path.replace(/\//g, ".");
-
-	return {
-		name: path, // Keep slash notation for Figma
-		styleframeName,
-		type: figmaType,
-		values: values as FigmaExportVariable["values"],
-		aliasTo,
-		description: token.$description,
-	};
-}
-
-/**
- * Convert a DTCG value to Figma format
- */
-function convertValueToFigma(
-	value: DTCGTokenValue,
-	figmaType: FigmaVariableType,
-): FigmaRGBA | number | string | boolean {
-	// Handle color values
-	if (figmaType === "COLOR" && typeof value === "string") {
-		const rgba = cssColorToFigma(value);
-		if (rgba) return rgba;
-	}
-
-	// Handle FLOAT values (dimensions)
-	if (figmaType === "FLOAT") {
-		if (typeof value === "number") return value;
-		if (typeof value === "string") {
-			const pixels = dimensionToPixels(value);
-			if (pixels !== null) return pixels;
-			// Try parsing as a number
-			const num = Number.parseFloat(value);
-			if (!Number.isNaN(num)) return num;
-		}
-	}
-
-	// Handle boolean values
-	if (figmaType === "BOOLEAN") {
-		if (typeof value === "boolean") return value;
-		if (value === "true") return true;
-		if (value === "false") return false;
-	}
-
-	// Default: return as string
-	return String(value);
 }

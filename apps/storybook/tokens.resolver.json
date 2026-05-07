@@ -1,0 +1,167 @@
+{
+	"$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+	"version": "2025.10",
+	"modifiers": {
+		"theme": {
+			"contexts": {
+				"Default": [],
+				"Dark": [
+					{
+						"color": {
+							"background": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [
+										0.20859664921828713, 0.01279812659921767, 264.24609038177596
+									]
+								},
+								"$type": "color"
+							},
+							"surface": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [
+										0.24303044792780545, 0.01643614427380458, 264.20362146611194
+									]
+								},
+								"$type": "color"
+							},
+							"text": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [
+										0.968260352445309, 0.006853616753225762, 247.89567996055638
+									]
+								},
+								"$type": "color"
+							},
+							"text-inverted": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [
+										0.20768191557381332, 0.039824326599745954, 265.7548754713905
+									]
+								},
+								"$type": "color"
+							},
+							"text-weak": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [
+										0.8689814367716129, 0.019847708971185745, 252.89432962532538
+									]
+								},
+								"$type": "color"
+							},
+							"text-weaker": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [
+										0.7106715960337368, 0.03511441797152331, 256.7878262641821
+									]
+								},
+								"$type": "color"
+							},
+							"surface-shade-50": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [0.193, 0.0131, 264.2]
+								},
+								"$type": "color"
+							},
+							"surface-shade-100": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [0.143, 0.0097, 264.2]
+								},
+								"$type": "color"
+							},
+							"surface-shade-150": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [0.093, 0.0063, 264.2]
+								},
+								"$type": "color"
+							},
+							"surface-shade-200": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [0.043, 0.003, 264.2]
+								},
+								"$type": "color"
+							},
+							"surface-tint-50": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [0.293, 0.0198, 264.2]
+								},
+								"$type": "color"
+							},
+							"surface-tint-100": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [0.343, 0.0232, 264.2]
+								},
+								"$type": "color"
+							},
+							"surface-tint-150": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [0.393, 0.0243, 264.2]
+								},
+								"$type": "color"
+							},
+							"surface-tint-200": {
+								"$value": {
+									"colorSpace": "oklch",
+									"components": [0.443, 0.03, 264.2]
+								},
+								"$type": "color"
+							}
+						},
+						"border-color": {
+							"$value": "{color.gray-700}",
+							"$type": "color"
+						},
+						"selection": {
+							"color": {
+								"$value": "{color.white}",
+								"$type": "color"
+							}
+						},
+						"kbd": {
+							"background": {
+								"$value": "{color.white}",
+								"$type": "color"
+							},
+							"color": {
+								"$value": "{color.black}",
+								"$type": "color"
+							}
+						},
+						"mark": {
+							"background": {
+								"$value": "{color.warning-700}",
+								"$type": "color"
+							}
+						}
+					}
+				]
+			},
+			"default": "Default"
+		}
+	},
+	"resolutionOrder": [
+		{
+			"type": "set",
+			"sources": [
+				{
+					"$ref": "tokens.json"
+				}
+			]
+		},
+		{
+			"$ref": "#/modifiers/theme"
+		}
+	]
+}

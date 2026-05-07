@@ -2,11 +2,11 @@ import path from "node:path";
 import { readFile, writeFile } from "node:fs/promises";
 import { defineCommand } from "citty";
 import consola from "consola";
+import type { DTCGDocument } from "@styleframe/dtcg";
 import {
 	generateStyleframeCode,
 	fromDTCG,
 	type FigmaExportFormat,
-	type DTCGDocument,
 } from "@styleframe/figma";
 
 export default defineCommand({

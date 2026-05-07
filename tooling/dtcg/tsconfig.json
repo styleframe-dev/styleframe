@@ -1,0 +1,12 @@
+{
+	"extends": "../../config/typescript/tsconfig.json",
+	"compilerOptions": {
+		"tsBuildInfoFile": ".tsbuildinfo"
+	},
+	"include": [
+		"src/**/*.ts",
+		"test/**/*.ts",
+		"tsdown.config.ts",
+		"vitest.config.ts"
+	]
+}

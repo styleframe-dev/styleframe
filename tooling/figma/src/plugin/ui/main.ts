@@ -1,8 +1,9 @@
+import type { DTCGDocument, DTCGResolverDocument } from "@styleframe/dtcg";
 import type { FigmaExportFormat } from "../../types";
-import type { DTCGDocument } from "../../converters/dtcg/types";
 import {
-	isDTCGFormat,
 	extractDTCGVariables,
+	isDTCGFormat,
+	isDTCGResolver,
 	type PreviewVariable,
 } from "../shared";
 
@@ -25,12 +26,21 @@ const fileInput = document.getElementById("file-input") as HTMLInputElement;
 const fileSelected = document.getElementById("file-selected")!;
 const fileName = document.getElementById("file-name")!;
 const fileClearBtn = document.getElementById("file-clear-btn")!;
+const resolverDropZone = document.getElementById("resolver-drop-zone")!;
+const resolverInput = document.getElementById(
+	"resolver-input",
+) as HTMLInputElement;
+const resolverSelected = document.getElementById("resolver-selected")!;
+const resolverName = document.getElementById("resolver-name")!;
+const resolverClearBtn = document.getElementById("resolver-clear-btn")!;
 const importBtn = document.getElementById("import-btn") as HTMLButtonElement;
 const importPreview = document.getElementById("import-preview")!;
 const importStatus = document.getElementById("import-status")!;
 
 // Store the loaded JSON data
 let loadedImportData: unknown = null;
+let loadedResolverData: DTCGResolverDocument | null = null;
+let loadedTokensRef: string | null = null;
 
 // Export elements
 const collectionSelect = document.getElementById(
@@ -72,6 +82,14 @@ function init(): void {
 	fileDropZone.addEventListener("dragover", handleDragOver);
 	fileDropZone.addEventListener("dragleave", handleDragLeave);
 	fileDropZone.addEventListener("drop", handleDrop);
+
+	// Resolver drop zone handlers
+	resolverDropZone.addEventListener("click", () => resolverInput.click());
+	resolverInput.addEventListener("change", handleResolverFileSelect);
+	resolverClearBtn.addEventListener("click", handleResolverClear);
+	resolverDropZone.addEventListener("dragover", handleResolverDragOver);
+	resolverDropZone.addEventListener("dragleave", handleResolverDragLeave);
+	resolverDropZone.addEventListener("drop", handleResolverDrop);
 
 	// Export handlers
 	refreshBtn.addEventListener("click", requestCollections);
@@ -159,10 +177,16 @@ function processFile(file: File): void {
 		try {
 			const content = e.target?.result as string;
 			const data = JSON.parse(content);
+			if (isDTCGResolver(data)) {
+				throw new Error(
+					"Resolver file dropped in tokens slot. Use the resolver slot below for tokens.resolver.json.",
+				);
+			}
 			const variables = getPreviewVariables(data);
 
 			// Store the data for import
 			loadedImportData = data;
+			loadedTokensRef = file.name;
 
 			// Show file selected state
 			fileDropZone
@@ -179,15 +203,102 @@ function processFile(file: File): void {
 			importPreview.innerHTML = `<div class="preview-empty" style="color: var(--color-error)">${message}</div>`;
 			importBtn.disabled = true;
 			loadedImportData = null;
+			loadedTokensRef = null;
 		}
 	};
 
 	reader.onerror = () => {
 		showStatus(importStatus, "error", "Failed to read file");
 		loadedImportData = null;
+		loadedTokensRef = null;
 	};
 
 	reader.readAsText(file);
+}
+
+/**
+ * Process the selected resolver file
+ */
+function processResolverFile(file: File): void {
+	hideStatus(importStatus);
+
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		try {
+			const content = e.target?.result as string;
+			const data = JSON.parse(content);
+			if (!isDTCGResolver(data)) {
+				throw new Error(
+					'Not a DTCG Resolver document (missing version "2025.10" or resolutionOrder).',
+				);
+			}
+
+			loadedResolverData = data;
+
+			resolverDropZone
+				.querySelector(".file-drop-content")
+				?.setAttribute("hidden", "");
+			resolverSelected.removeAttribute("hidden");
+			resolverName.textContent = file.name;
+		} catch (error) {
+			const message = error instanceof Error ? error.message : "Invalid JSON";
+			showStatus(importStatus, "error", message);
+			loadedResolverData = null;
+		}
+	};
+
+	reader.onerror = () => {
+		showStatus(importStatus, "error", "Failed to read resolver file");
+		loadedResolverData = null;
+	};
+
+	reader.readAsText(file);
+}
+
+function handleResolverDragOver(e: DragEvent): void {
+	e.preventDefault();
+	e.stopPropagation();
+	resolverDropZone.classList.add("drag-over");
+}
+
+function handleResolverDragLeave(e: DragEvent): void {
+	e.preventDefault();
+	e.stopPropagation();
+	resolverDropZone.classList.remove("drag-over");
+}
+
+function handleResolverDrop(e: DragEvent): void {
+	e.preventDefault();
+	e.stopPropagation();
+	resolverDropZone.classList.remove("drag-over");
+
+	const files = e.dataTransfer?.files;
+	const file = files?.[0];
+	if (
+		file &&
+		(file.type === "application/json" || file.name.endsWith(".json"))
+	) {
+		processResolverFile(file);
+	} else if (file) {
+		showStatus(importStatus, "error", "Please select a JSON file");
+	}
+}
+
+function handleResolverFileSelect(): void {
+	const file = resolverInput.files?.[0];
+	if (file) processResolverFile(file);
+}
+
+function handleResolverClear(e: Event): void {
+	e.stopPropagation();
+	resolverInput.value = "";
+	loadedResolverData = null;
+
+	resolverDropZone
+		.querySelector(".file-drop-content")
+		?.removeAttribute("hidden");
+	resolverSelected.setAttribute("hidden", "");
+	resolverName.textContent = "";
 }
 
 /**
@@ -197,6 +308,7 @@ function handleFileClear(e: Event): void {
 	e.stopPropagation();
 	fileInput.value = "";
 	loadedImportData = null;
+	loadedTokensRef = null;
 
 	// Reset UI
 	fileDropZone.querySelector(".file-drop-content")?.removeAttribute("hidden");
@@ -275,7 +387,14 @@ function handleImport(): void {
 	}
 
 	parent.postMessage(
-		{ pluginMessage: { type: "import", data: loadedImportData } },
+		{
+			pluginMessage: {
+				type: "import",
+				data: loadedImportData,
+				resolver: loadedResolverData ?? undefined,
+				tokensRef: loadedTokensRef ?? undefined,
+			},
+		},
 		"*",
 	);
 	importBtn.disabled = true;

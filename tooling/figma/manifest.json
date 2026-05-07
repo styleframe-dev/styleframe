@@ -1,5 +1,5 @@
 {
-	"name": "Styleframe - Design Tokens Sync",
+	"name": "Styleframe",
 	"id": "1597716416772135340",
 	"api": "1.0.0",
 	"main": "dist/plugin/code.js",

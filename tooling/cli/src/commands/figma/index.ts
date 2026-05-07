@@ -6,7 +6,6 @@ export default defineCommand({
 		description: "Sync Styleframe variables with Figma",
 	},
 	subCommands: {
-		export: () => import("./export").then((m) => m.default),
 		import: () => import("./import").then((m) => m.default),
 	},
 });

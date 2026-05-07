@@ -37,6 +37,7 @@
 	},
 	"dependencies": {
 		"@styleframe/core": "workspace:^3.2.0",
+		"@styleframe/dtcg": "workspace:^1.0.0",
 		"culori": "^4.0.2"
 	},
 	"devDependencies": {

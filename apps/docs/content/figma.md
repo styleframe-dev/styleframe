@@ -251,16 +251,16 @@ headline: Developer Workflow
 
 ```bash
 # Export Styleframe variables to DTCG format
-npx styleframe figma export \
+npx styleframe dtcg export \
         --config styleframe.config.ts \
         --output tokens.json \
         --collection "Design Tokens"
 
 # Output:
 # Loading configuration from "styleframe.config.ts"...
-# Extracting variables...
-# Writing 42 variables to "tokens.json"...
-# Exported 42 variables in DTCG format
+# Building DTCG document...
+# Wrote 42 tokens to "tokens.json"
+# Exported 42 tokens in DTCG format to "tokens.json"
 ```
 
     ::::
@@ -300,7 +300,7 @@ Export design tokens directly from your Styleframe config. Run in CI/CD pipeline
     ---
     color: neutral
     icon: i-lucide-book-open
-    to: /docs/getting-started/cli#figma
+    to: /docs/getting-started/tooling/cli#dtcg
     variant: outline
     ---
     CLI Documentation

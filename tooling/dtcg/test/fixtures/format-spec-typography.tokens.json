@@ -1,0 +1,14 @@
+{
+	"typography": {
+		"heading-1": {
+			"$type": "typography",
+			"$value": {
+				"fontFamily": "Helvetica",
+				"fontSize": { "value": 32, "unit": "px" },
+				"fontWeight": 700,
+				"lineHeight": 1.2,
+				"letterSpacing": { "value": 0, "unit": "px" }
+			}
+		}
+	}
+}
