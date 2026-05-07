@@ -1,5 +1,5 @@
 ---
-"@styleframe/cli": major
+"@styleframe/cli": minor
 ---
 
 **BREAKING**: rename `styleframe figma import` → `styleframe dtcg import`.
