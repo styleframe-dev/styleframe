@@ -100,17 +100,17 @@ Use theme composables for spacing utilities with multiplier support:
 
 ```ts
 import type { Styleframe } from 'styleframe';
-import { useSpacing } from '@styleframe/theme';
+import { useSpacingDesignTokens } from '@styleframe/theme';
 import { useMarginUtility, usePaddingUtility, useGapUtility } from '@styleframe/theme';
 
 export function useSpacingUtilities(s: Styleframe) {
     const { ref } = s;
-    const { spacing, spacingSm, spacingMd, spacingLg } = useSpacing(s, {
+    const { spacing, spacingSm, spacingMd, spacingLg } = useSpacingDesignTokens(s, {
         default: '1rem',
         sm: '0.5rem',
         md: '1rem',
         lg: '1.5rem',
-    } as const);
+    });
 
     // Create utilities with named values
     const createMargin = useMarginUtility(s, {
@@ -136,36 +136,36 @@ export function useSpacingUtilities(s: Styleframe) {
 ```ts
 import { styleframe } from 'styleframe';
 import {
-    useColor, useColorLightness, useColorShade,
-    useSpacing, useMultiplier,
-    useScale, useScalePowers,
-    useFontFamily, useFontSize, useFontWeight, useLineHeight,
-    useBreakpoint,
-    useBorderRadius,
-    defaultScaleValues, defaultColorLightnessValues
+    useColorDesignTokens, useColorLevelDesignTokens, useColorShadeDesignTokens,
+    useSpacingDesignTokens, useMultiplierDesignTokens,
+    useScaleDesignTokens, useScalePowersDesignTokens,
+    useFontFamilyDesignTokens, useFontSizeDesignTokens, useFontWeightDesignTokens, useLineHeightDesignTokens,
+    useBreakpointDesignTokens,
+    useBorderRadiusDesignTokens,
+    scaleValues, colorLevelValues
 } from '@styleframe/theme';
 
 const s = styleframe();
 const { variable, ref, selector, utility, modifier, recipe, theme, css } = s;
 
 // 1. SCALES - Foundation for proportional sizing
-const { scale } = useScale(s, { ...defaultScaleValues, default: '@minor-third' });
-const scalePowers = useScalePowers(s, scale, [-2, -1, 0, 1, 2, 3, 4, 5]);
+const { scale } = useScaleDesignTokens(s, { ...scaleValues, default: '@scale.minor-third' });
+const scalePowers = useScalePowersDesignTokens(s, scale, [-2, -1, 0, 1, 2, 3, 4, 5]);
 
 // 2. COLORS - Base colors with lightness variants
-const { colorPrimary, colorSecondary, colorSuccess, colorError } = useColor(s, {
+const { colorPrimary, colorSecondary, colorSuccess, colorError } = useColorDesignTokens(s, {
     primary: '#006cff',
     secondary: '#6c757d',
     success: '#28a745',
     error: '#dc3545',
-} as const);
+});
 
-const primaryLevels = useColorLightness(s, colorPrimary, defaultColorLightnessValues);
-const { colorPrimaryShade100, colorPrimaryShade200 } = useColorShade(s, colorPrimary);
+const primaryLevels = useColorLevelDesignTokens(s, colorPrimary, colorLevelValues);
+const { colorPrimaryShade100, colorPrimaryShade200 } = useColorShadeDesignTokens(s, colorPrimary);
 
 // 3. SPACING - Scale-based spacing
-const { spacing } = useSpacing(s, { default: '1rem' } as const);
-const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl } = useMultiplier(s, spacing, {
+const { spacing } = useSpacingDesignTokens(s, { default: '1rem' });
+const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl } = useMultiplierDesignTokens(s, spacing, {
     xs: scalePowers[-2],
     sm: scalePowers[-1],
     md: scalePowers[0],
@@ -174,26 +174,26 @@ const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl } = useMultiplier(
 });
 
 // 4. TYPOGRAPHY - Scale-based font sizes
-const { fontFamily } = useFontFamily(s);
-const { fontSize } = useFontSize(s, { default: '1rem' } as const);
-const { fontSizeSm, fontSizeMd, fontSizeLg, fontSizeXl } = useMultiplier(s, fontSize, {
+const { fontFamily } = useFontFamilyDesignTokens(s);
+const { fontSize } = useFontSizeDesignTokens(s, { default: '1rem' });
+const { fontSizeSm, fontSizeMd, fontSizeLg, fontSizeXl } = useMultiplierDesignTokens(s, fontSize, {
     sm: scalePowers[-1],
     md: scalePowers[0],
     lg: scalePowers[1],
     xl: scalePowers[2],
 });
-const { fontWeightNormal, fontWeightSemibold, fontWeightBold } = useFontWeight(s);
-const { lineHeightTight, lineHeightNormal } = useLineHeight(s);
+const { fontWeightNormal, fontWeightSemibold, fontWeightBold } = useFontWeightDesignTokens(s);
+const { lineHeightTight, lineHeightNormal } = useLineHeightDesignTokens(s);
 
 // 5. BREAKPOINTS
-const { breakpointSm, breakpointMd, breakpointLg } = useBreakpoint(s);
+const { breakpointSm, breakpointMd, breakpointLg } = useBreakpointDesignTokens(s);
 
 // 6. BORDERS
-const { borderRadiusSm, borderRadiusMd, borderRadiusLg } = useBorderRadius(s, {
+const { borderRadiusSm, borderRadiusMd, borderRadiusLg } = useBorderRadiusDesignTokens(s, {
     sm: '4px',
     md: '8px',
     lg: '12px',
-} as const);
+});
 
 // 7. MODIFIERS - For utilities
 const hover = modifier('hover', ({ declarations }) => ({ '&:hover': declarations }));
@@ -264,7 +264,7 @@ const fadeIn = keyframes('fade-in', {
 });
 
 selector('.animated', {
-    animation: css`${fadeIn.name} 0.3s ease-out`,
+    animation: css`${fadeIn.rule} 0.3s ease-out`,
 
     '@media (prefers-reduced-motion: reduce)': {
         animation: 'none',
