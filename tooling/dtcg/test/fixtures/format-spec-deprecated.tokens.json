@@ -1,0 +1,9 @@
+{
+	"old-colors": {
+		"$type": "color",
+		"$deprecated": "Migrate to new-colors group",
+		"primary": {
+			"$value": { "colorSpace": "srgb", "components": [0.2, 0.2, 0.2] }
+		}
+	}
+}

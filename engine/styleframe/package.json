@@ -2,7 +2,7 @@
 	"name": "styleframe",
 	"version": "3.5.1",
 	"bin": {
-		"styleframe": "./dist/cli.cjs"
+		"styleframe": "./dist/cli.js"
 	},
 	"description": "From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.",
 	"type": "module",

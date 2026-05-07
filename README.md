@@ -135,11 +135,11 @@ Sync design tokens between your code and Figma — free, with no seat limits.
 - **Bidirectional sync** — Export tokens from code to Figma, or import Figma Variables back to TypeScript
 - **Multi-mode support** — Light, dark, and custom themes preserved as Figma modes
 - **W3C DTCG format** — Compatible with Style Dictionary, Tokens Studio, and other DTCG tools
-- **CI/CD ready** — Run `styleframe figma export` in your build pipeline to keep Figma in sync automatically
+- **CI/CD ready** — Run `styleframe dtcg export` in your build pipeline to keep Figma in sync automatically
 
 ```bash
-# Export design tokens to DTCG JSON
-npx styleframe figma export \
+# Export design tokens to spec-conformant DTCG JSON
+npx styleframe dtcg export \
     --config styleframe.config.ts \
     --output tokens.json \
     --collection "Design Tokens"

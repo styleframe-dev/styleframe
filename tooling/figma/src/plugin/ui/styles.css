@@ -72,6 +72,37 @@ body {
 	gap: var(--space-md);
 }
 
+/* Footer */
+.footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-xs);
+	padding-top: var(--space-xs);
+	font-size: 10px;
+	color: var(--color-text-tertiary);
+	text-decoration: none;
+	transition: color 0.15s ease;
+}
+
+.footer:hover {
+	color: var(--color-text-secondary);
+}
+
+.footer .logo {
+	display: inline-block;
+	height: 12px;
+	width: 78px;
+	background-image: url("./logotype-light.svg");
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-size: contain;
+}
+
+.figma-dark .footer .logo {
+	background-image: url("./logotype-dark.svg");
+}
+
 /* Tabs */
 .tabs {
 	display: flex;
@@ -302,6 +333,14 @@ textarea::placeholder {
 	transition: all 0.15s ease;
 }
 
+.file-drop-zone-secondary {
+	padding: var(--space-md);
+}
+
+.file-drop-zone-secondary .file-drop-content {
+	gap: var(--space-xs);
+}
+
 .file-drop-zone:hover {
 	border-color: var(--color-brand);
 	background: var(--color-bg-hover);
@@ -395,6 +434,7 @@ textarea::placeholder {
 /* Preview Area */
 .preview {
 	flex: 1;
+	min-height: 0;
 	overflow: auto;
 	background: var(--color-bg-secondary);
 	border-radius: var(--radius-md);

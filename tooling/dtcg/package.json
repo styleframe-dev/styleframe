@@ -1,0 +1,56 @@
+{
+	"name": "@styleframe/dtcg",
+	"type": "module",
+	"version": "1.0.0",
+	"description": "DTCG (Design Tokens Community Group) format parser, validator, and serializer for Styleframe.",
+	"license": "MIT",
+	"keywords": [
+		"styleframe",
+		"dtcg",
+		"design-tokens",
+		"tokens",
+		"w3c"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"files": [
+		"dist",
+		"LICENSE",
+		"CHANGELOG.md",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsdown",
+		"dev": "tsdown -w",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run"
+	},
+	"dependencies": {
+		"culori": "^4.0.2"
+	},
+	"devDependencies": {
+		"@styleframe/config-typescript": "workspace:^3.0.0",
+		"@types/culori": "^2.1.1",
+		"@vitest/coverage-v8": "catalog:",
+		"tsdown": "^0.12.0",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
+	},
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
+	"bugs": {
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
+	},
+	"author": "Alex Grozav <alex@styleframe.dev>"
+}

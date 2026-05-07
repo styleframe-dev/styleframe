@@ -1,0 +1,15 @@
+{
+	"$schema": "https://design-tokens.org/schemas/2025.10/tokens.json",
+	"color": {
+		"$type": "color",
+		"primary": {
+			"$value": {
+				"colorSpace": "srgb",
+				"components": [0, 0.4, 0.8]
+			}
+		},
+		"accent": {
+			"$value": "{color.primary}"
+		}
+	}
+}

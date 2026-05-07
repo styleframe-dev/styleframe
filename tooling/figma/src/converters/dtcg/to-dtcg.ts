@@ -1,298 +1,238 @@
-import type {
-	FigmaExportFormat,
-	FigmaExportVariable,
-	FigmaRGBA,
-} from "../../types";
-import type {
-	DTCGDocument,
-	DTCGToken,
-	DTCGGroup,
-	ToDTCGOptions,
-	DTCGTokenValue,
-	DTCGModifierContext,
-} from "./types";
-import { figmaTypeToDTCG } from "./type-mapping";
-import { createAlias, figmaPathToDTCG, getPathSegments } from "./alias-parsing";
-import { figmaColorToCss } from "../value-parsing";
-
-const DTCG_SCHEMA_URL =
-	"https://design-tokens.github.io/community-group/format/";
-
 /**
- * Convert FigmaExportFormat to DTCG format
+ * Convert a FigmaExportFormat into a spec-conformant DTCG document, plus
+ * an optional Resolver Module document for multi-mode collections.
+ *
+ *   - A single-mode collection produces a single `DTCGDocument` and no
+ *     resolver.
+ *   - A multi-mode collection produces:
+ *       1. A `DTCGDocument` containing the default-mode values.
+ *       2. A `DTCGResolverDocument` declaring a single `theme` modifier
+ *          whose contexts each contain the override values for one
+ *          non-default mode (inline source objects, not `$ref`s).
+ *
+ * The Figma BOOLEAN type has no DTCG equivalent and is dropped on export
+ * with a console warning.
  */
-export function toDTCG(
-	data: FigmaExportFormat,
-	options: ToDTCGOptions = {},
-): DTCGDocument {
-	const {
-		includeSchema = true,
-		schemaUrl = DTCG_SCHEMA_URL,
-		useModifiers = true,
-		themeNames,
-	} = options;
 
-	const doc: DTCGDocument = {};
+import {
+	formatAlias,
+	type DTCGAnyToken,
+	type DTCGDocument,
+	type DTCGGroup,
+	type DTCGResolverDocument,
+	type DTCGTokenValue,
+} from "@styleframe/dtcg";
+import type { FigmaExportFormat, FigmaExportVariable } from "../../types";
+import { classifyFigmaVariable, figmaPathToDtcg } from "./figma-bridge";
 
-	if (includeSchema) {
-		doc.$schema = schemaUrl;
-	}
-
-	// Store collection and modes in extensions
-	doc.$extensions = {
-		"dev.styleframe": {
-			collection: data.collection,
-			modes: data.modes,
-		},
-	};
-
-	const defaultMode = data.modes[0] || "Default";
-
-	// Determine which modes are themes
-	// If themeNames is provided, only use those modes as themes
-	// Otherwise, all non-default modes are treated as themes
-	const themeModes = themeNames
-		? data.modes.filter((m) => themeNames.includes(m) && m !== defaultMode)
-		: data.modes.slice(1);
-
-	// Track mode overrides for modifiers: Map<modeName, Map<tokenPath, value>>
-	const modeOverrides = new Map<string, Map<string, DTCGTokenValue>>();
-	for (const mode of themeModes) {
-		modeOverrides.set(mode, new Map());
-	}
-
-	// Build the token tree
-	for (const variable of data.variables) {
-		const { token, overrides } = variableToTokenWithOverrides(
-			variable,
-			data.modes,
-			useModifiers,
-			themeModes,
-		);
-		setNestedToken(doc, variable.name, token);
-
-		// Collect overrides for each theme mode (only when using modifiers)
-		if (useModifiers) {
-			for (const [modeName, value] of overrides) {
-				const modeMap = modeOverrides.get(modeName);
-				if (modeMap) {
-					const tokenPath = figmaPathToDTCG(variable.name);
-					modeMap.set(tokenPath, value);
-				}
-			}
-		}
-	}
-
-	// Generate $modifiers section if there are theme modes with overrides
-	if (useModifiers && themeModes.length > 0 && hasAnyOverrides(modeOverrides)) {
-		doc.$modifiers = {
-			theme: {
-				$type: "modifier",
-				contexts: buildModifierContexts(modeOverrides),
-			},
-		};
-	}
-
-	return doc;
+export interface ToDTCGOptions {
+	/**
+	 * URL placed in the `$schema` field of the emitted token document.
+	 * Defaults to the W3C Final 2025.10 schema.
+	 */
+	schemaUrl?: string;
+	/**
+	 * Whether to emit `$schema`. Defaults to `true`.
+	 */
+	includeSchema?: boolean;
+	/**
+	 * Name of the modifier emitted in the resolver document. Defaults to `"theme"`.
+	 */
+	modifierName?: string;
 }
 
-/**
- * Convert a single Figma variable to a DTCG token, returning overrides separately
- */
-function variableToTokenWithOverrides(
-	variable: FigmaExportVariable,
-	modes: string[],
-	useModifiers: boolean,
-	themeModes: string[],
-): { token: DTCGToken; overrides: Map<string, DTCGTokenValue> } {
-	const defaultMode = modes[0] || "Default";
-	const defaultValue = variable.values[defaultMode];
-	const dtcgType = figmaTypeToDTCG(variable.type);
-	const overrides = new Map<string, DTCGTokenValue>();
-
-	// Handle alias
-	if (variable.aliasTo) {
-		const token: DTCGToken = {
-			$value: createAlias(variable.aliasTo),
-			$type: dtcgType,
-		};
-
-		if (variable.description) {
-			token.$description = variable.description;
-		}
-
-		return { token, overrides };
-	}
-
-	// Convert the default value
-	const $value = convertValueToDTCG(defaultValue, variable.type);
-
-	const token: DTCGToken = {
-		$value,
-		$type: dtcgType,
-	};
-
-	if (variable.description) {
-		token.$description = variable.description;
-	}
-
-	// Handle multi-mode values
-	if (modes.length > 1) {
-		const modeValues: Record<string, DTCGTokenValue> = {};
-		let hasModeOverrides = false;
-
-		for (const mode of modes) {
-			if (mode === defaultMode) continue;
-
-			const modeValue = variable.values[mode];
-			if (modeValue !== undefined) {
-				const convertedValue = convertValueToDTCG(modeValue, variable.type);
-
-				// Only include if value differs from default
-				if (convertedValue !== $value) {
-					// Check if this mode is a theme mode
-					const isThemeMode = themeModes.includes(mode);
-
-					if (useModifiers && isThemeMode) {
-						// Store in overrides map for $modifiers section
-						overrides.set(mode, convertedValue);
-					} else if (!useModifiers || !isThemeMode) {
-						// Legacy: store in token extensions for non-theme modes
-						// or when not using modifiers
-						modeValues[mode] = convertedValue;
-						hasModeOverrides = true;
-					}
-				}
-			}
-		}
-
-		// Only add extensions if there are non-theme mode overrides
-		if (hasModeOverrides) {
-			token.$extensions = {
-				"dev.styleframe": {
-					modes: modeValues,
-				},
-			};
-		}
-	}
-
-	return { token, overrides };
+export interface ToDTCGResult {
+	tokens: DTCGDocument;
+	resolver?: DTCGResolverDocument;
 }
 
-/**
- * Convert a Figma value to DTCG format
- */
-function convertValueToDTCG(value: unknown, type: string): DTCGTokenValue {
-	// Handle color values (FigmaRGBA)
-	if (
-		type === "COLOR" &&
+const TOKENS_SCHEMA_URL =
+	"https://design-tokens.org/schemas/2025.10/tokens.json";
+const RESOLVER_SCHEMA_URL =
+	"https://www.designtokens.org/schemas/2025.10/resolver.json";
+
+function isFigmaAlias(
+	value: unknown,
+): value is { type: "VARIABLE_ALIAS"; id: string } {
+	return (
 		typeof value === "object" &&
 		value !== null &&
-		"r" in value
-	) {
-		return figmaColorToCss(value as FigmaRGBA);
-	}
-
-	// Handle FLOAT values - convert to dimension string
-	if (type === "FLOAT" && typeof value === "number") {
-		return `${value}px`;
-	}
-
-	// Handle boolean values - convert to string
-	if (typeof value === "boolean") {
-		return value.toString();
-	}
-
-	// Default: return as string
-	return String(value);
+		(value as { type?: string }).type === "VARIABLE_ALIAS"
+	);
 }
 
 /**
- * Set a token at a nested path in the document
- * @example "color/primary" creates { color: { primary: token } }
+ * Convert one Figma per-mode value to a DTCG `{type, value}` pair using the
+ * variable's name as a path hint. Returns `undefined` when no DTCG type can
+ * be inferred — caller should attach a `dev.styleframe.unknownType`
+ * extension instead of dropping the variable silently.
  */
+function classifyFigmaValue(
+	variable: FigmaExportVariable,
+	value: unknown,
+): { type?: string; value: DTCGTokenValue } | undefined {
+	if (isFigmaAlias(value)) {
+		return { value: formatAlias(figmaPathToDtcg(value.id)) };
+	}
+	const classification = classifyFigmaVariable(variable, value);
+	if (classification) {
+		return { type: classification.type, value: classification.value };
+	}
+	if (typeof value === "string") {
+		return { value };
+	}
+	return undefined;
+}
+
 function setNestedToken(
 	doc: DTCGDocument,
-	path: string,
-	token: DTCGToken,
+	figmaName: string,
+	token: DTCGAnyToken,
 ): void {
-	const segments = getPathSegments(path);
-
-	// Navigate to the parent group, creating groups as needed
-	let current: DTCGGroup = doc as DTCGGroup;
-
+	const segments = figmaName.split("/");
+	let cursor = doc as unknown as Record<string, unknown>;
 	for (let i = 0; i < segments.length - 1; i++) {
-		const segment = segments[i]!;
-
-		// Skip reserved $ prefixed keys when checking
-		if (!current[segment] || typeof current[segment] !== "object") {
-			current[segment] = {} as DTCGGroup;
+		const segment = segments[i] as string;
+		const next = cursor[segment];
+		if (typeof next !== "object" || next === null || Array.isArray(next)) {
+			cursor[segment] = {} as DTCGGroup;
 		}
-
-		current = current[segment] as DTCGGroup;
+		cursor = cursor[segment] as Record<string, unknown>;
 	}
-
-	// Set the token at the leaf
-	const leafKey = segments[segments.length - 1]!;
-	current[leafKey] = token;
+	cursor[segments[segments.length - 1] as string] = token as never;
 }
 
-/**
- * Check if any mode has overrides
- */
-function hasAnyOverrides(
-	modeOverrides: Map<string, Map<string, DTCGTokenValue>>,
-): boolean {
-	for (const overrides of modeOverrides.values()) {
-		if (overrides.size > 0) return true;
+function setNestedOverride(
+	context: Record<string, unknown>,
+	dtcgPath: string,
+	value: DTCGTokenValue,
+): void {
+	const segments = dtcgPath.split(".");
+	let cursor = context;
+	for (let i = 0; i < segments.length - 1; i++) {
+		const segment = segments[i] as string;
+		const next = cursor[segment];
+		if (
+			typeof next !== "object" ||
+			next === null ||
+			Array.isArray(next) ||
+			"$value" in (next as object)
+		) {
+			cursor[segment] = {};
+		}
+		cursor = cursor[segment] as Record<string, unknown>;
 	}
+	cursor[segments[segments.length - 1] as string] = { $value: value };
+}
+
+function variableToToken(
+	variable: FigmaExportVariable,
+	defaultMode: string,
+): DTCGAnyToken | undefined {
+	if (variable.type === "BOOLEAN") return undefined; // DTCG has no boolean
+
+	if (variable.aliasTo !== undefined) {
+		// Aliases carry no inherent type — a future improvement could look up
+		// the target's classification, but Figma alone doesn't have the type
+		// information needed without re-walking the entire collection.
+		const token: DTCGAnyToken = {
+			$value: formatAlias(figmaPathToDtcg(variable.aliasTo)),
+		};
+		if (variable.description !== undefined) {
+			token.$description = variable.description;
+		}
+		return token;
+	}
+
+	const defaultValue = variable.values[defaultMode];
+	const classified = classifyFigmaValue(variable, defaultValue);
+	if (!classified) return undefined;
+
+	const token: DTCGAnyToken = { $value: classified.value };
+	if (classified.type !== undefined) {
+		token.$type = classified.type as DTCGAnyToken["$type"];
+	} else {
+		// Preserve the value but flag it for round-trip awareness.
+		token.$extensions = { "dev.styleframe": { unknownType: true } };
+	}
+	if (variable.description !== undefined) {
+		token.$description = variable.description;
+	}
+	return token;
+}
+
+function valuesEqual(a: DTCGTokenValue, b: DTCGTokenValue): boolean {
+	if (a === b) return true;
+	if (typeof a !== typeof b) return false;
+	if (typeof a === "object") return JSON.stringify(a) === JSON.stringify(b);
 	return false;
 }
 
-/**
- * Build modifier contexts from collected overrides
- */
-function buildModifierContexts(
-	modeOverrides: Map<string, Map<string, DTCGTokenValue>>,
-): Record<string, DTCGModifierContext> {
-	const contexts: Record<string, DTCGModifierContext> = {};
+export function toDTCG(
+	data: FigmaExportFormat,
+	options: ToDTCGOptions = {},
+): ToDTCGResult {
+	const includeSchema = options.includeSchema ?? true;
+	const schemaUrl = options.schemaUrl ?? TOKENS_SCHEMA_URL;
+	const modifierName = options.modifierName ?? "theme";
+	const defaultMode = data.modes[0] ?? "Default";
+	const overrideModes = data.modes.slice(1);
 
-	for (const [modeName, tokenOverrides] of modeOverrides) {
-		if (tokenOverrides.size === 0) continue;
+	const tokens: DTCGDocument = {};
+	if (includeSchema) tokens.$schema = schemaUrl;
 
-		const context: DTCGModifierContext = {};
-		for (const [tokenPath, value] of tokenOverrides) {
-			// Set nested path in context (e.g., "color.background" -> { color: { background: { $value } } })
-			setNestedValue(context, tokenPath, { $value: value });
+	// One context per non-default mode. Each context holds an inline source
+	// document containing only the override values.
+	const contexts: Record<string, DTCGDocument> = {};
+	for (const mode of overrideModes) contexts[mode] = {};
+
+	for (const variable of data.variables) {
+		const token = variableToToken(variable, defaultMode);
+		if (!token) {
+			if (variable.type === "BOOLEAN") {
+				console.warn(
+					`Skipping Figma BOOLEAN variable "${variable.name}" — no DTCG equivalent`,
+				);
+			}
+			continue;
 		}
-		contexts[modeName] = context;
+		setNestedToken(tokens, variable.name, token);
+
+		if (variable.aliasTo !== undefined) continue;
+
+		const defaultDtcgValue = token.$value as DTCGTokenValue;
+		for (const mode of overrideModes) {
+			const modeValue = variable.values[mode];
+			if (modeValue === undefined) continue;
+			const classified = classifyFigmaValue(variable, modeValue);
+			if (!classified) continue;
+			if (valuesEqual(classified.value, defaultDtcgValue)) continue;
+			const dtcgPath = figmaPathToDtcg(variable.name);
+			setNestedOverride(
+				contexts[mode] as unknown as Record<string, unknown>,
+				dtcgPath,
+				classified.value,
+			);
+		}
 	}
 
-	return contexts;
-}
-
-/**
- * Set a value at a nested path using dot notation
- */
-function setNestedValue(
-	obj: DTCGModifierContext,
-	path: string,
-	value: { $value: DTCGTokenValue },
-): void {
-	const segments = path.split(".");
-	let current = obj;
-
-	for (let i = 0; i < segments.length - 1; i++) {
-		const segment = segments[i]!;
-		if (
-			!current[segment] ||
-			typeof current[segment] !== "object" ||
-			"$value" in current[segment]
-		) {
-			current[segment] = {};
-		}
-		current = current[segment] as DTCGModifierContext;
+	if (overrideModes.length === 0) {
+		return { tokens };
 	}
 
-	current[segments[segments.length - 1]!] = value;
+	const resolver: DTCGResolverDocument = {
+		$schema: RESOLVER_SCHEMA_URL,
+		version: "2025.10",
+		modifiers: {
+			[modifierName]: {
+				contexts: Object.fromEntries(
+					Object.entries(contexts).map(([mode, ctx]) => [mode, [ctx]]),
+				),
+				default: defaultMode,
+			},
+		},
+		resolutionOrder: [{ $ref: `#/modifiers/${modifierName}` }],
+	};
+
+	return { tokens, resolver };
 }

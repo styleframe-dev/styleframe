@@ -10,4 +10,25 @@ export default createViteConfig("cli", __dirname, {
 			adapter: "express",
 		}),
 	],
+	build: {
+		lib: {
+			fileName: "index",
+			formats: ["es", "cjs"],
+		},
+		rollupOptions: {
+			external: [
+				"node:fs",
+				"node:fs/promises",
+				"node:path",
+				"node:url",
+				"@styleframe/dtcg",
+				"@styleframe/figma",
+				"@styleframe/loader",
+				"citty",
+				"consola",
+				"magicast",
+				"jiti",
+			],
+		},
+	},
 });

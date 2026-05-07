@@ -1,6 +1,6 @@
 # @styleframe/cli
 
-Command-line interface for initializing, building, and syncing Styleframe projects. Provides three commands: `init` for project scaffolding, `build` for compiling Styleframe configurations, and `figma` for bidirectional design token synchronization with Figma via DTCG format.
+Command-line interface for initializing, building, and syncing Styleframe projects. Provides four commands: `init` for project scaffolding, `build` for compiling Styleframe configurations, `dtcg` for exporting Styleframe variables to spec-conformant DTCG JSON, and `figma` for generating Styleframe code from a Figma-flavoured token export.
 
 ## Package Info
 
@@ -28,10 +28,14 @@ src/
     ├── init/
     │   ├── vite.ts       # Vite config file updates
     │   └── nuxt.ts       # Nuxt config file updates
+    ├── dtcg/
+    │   ├── index.ts      # DTCG parent command
+    │   ├── export.ts     # Styleframe → DTCG export
+    │   ├── build-dtcg.ts # AST → DTCG document builder
+    │   └── evaluate.ts   # TokenValue → primitive reducer
     └── figma/
         ├── index.ts      # Figma parent command
-        ├── export.ts     # Styleframe → DTCG export
-        └── import.ts     # DTCG → Styleframe import
+        └── import.ts     # DTCG → Styleframe code generator
 ```
 
 ---
@@ -83,26 +87,24 @@ Builds Styleframe configuration into output artifacts.
 
 ---
 
-### `styleframe figma export`
+### `styleframe dtcg export`
 
-Exports Styleframe variables to DTCG (Design Tokens Community Group) format JSON for Figma import.
+Exports Styleframe variables to spec-conformant DTCG (Design Tokens Community Group) JSON. Themed configurations also emit a sibling `*.resolver.json` document.
 
 | Argument | Type | Default | Aliases | Description |
 |----------|------|---------|---------|-------------|
 | `config` | `string` | `styleframe.config.ts` | `c` | Styleframe config file path |
 | `output` | `string` | `tokens.json` | `o` | Output JSON file path |
-| `collection` | `string` | `Design Tokens` | `n`, `name` | Figma collection name |
-| `baseFontSize` | `string` | `16` | — | Base font size for rem→px conversion |
+| `collection` | `string` | `Design Tokens` | `n`, `name` | Collection name embedded in the export |
 
 **Processing pipeline:**
-1. Loads Styleframe configuration
-2. Extracts all variables (root + theme variables)
-3. Collects modes: `"Default"` + capitalized theme names
-4. Detects variable types (`COLOR`, `NUMBER`, `STRING`, `BOOLEAN`)
-5. Resolves CSS template literals and variable references
-6. Converts rem values to px using base font size
-7. Generates Figma-compatible variable definitions with aliases
-8. Writes DTCG JSON file
+1. Loads Styleframe configuration via `@styleframe/loader`
+2. Extracts root + theme variables
+3. Reduces each `TokenValue` to a primitive via `evaluate.ts`
+4. Classifies primitives into DTCG types via `@styleframe/dtcg`
+5. Emits a `DTCGDocument` (`tokens.json`) and, if there are themes, a `DTCGResolverDocument` (`tokens.resolver.json`)
+6. CSS expressions that cannot be reduced are preserved as `dev.styleframe.expression` extensions
+7. Tokens with no inferable DTCG type are preserved as untyped strings with `dev.styleframe.unknownType`
 
 ---
 
@@ -133,6 +135,7 @@ Commands are lazy-loaded using dynamic imports for fast CLI startup:
 subCommands: {
     init: () => import("./commands/init").then((m) => m.default),
     build: () => import("./commands/build").then((m) => m.default),
+    dtcg: () => import("./commands/dtcg").then((m) => m.default),
     figma: () => import("./commands/figma").then((m) => m.default),
 }
 ```
@@ -200,7 +203,8 @@ The CLI sits at the **build and initialization layer** of Styleframe:
 |-------|-------------|---------------|
 | **Init** | Scaffolds project, installs deps, configures build tools | `magicast` |
 | **Build** | Loads config, transpiles, generates output | `@styleframe/loader` |
-| **Figma sync** | Bidirectional DTCG conversion | `@styleframe/figma` |
+| **DTCG export** | Emits spec-conformant tokens.json (and resolver) | `@styleframe/loader`, `@styleframe/dtcg` |
+| **Figma import** | Generates Styleframe code from a Figma export | `@styleframe/figma` |
 
 **Framework integrations:**
 - **Vite:** Plugin at `styleframe/plugin/vite`
@@ -212,9 +216,8 @@ The CLI sits at the **build and initialization layer** of Styleframe:
 
 1. **Run `init` before `build`** to ensure proper project setup, dependencies, and framework integration.
 2. **Use the default entry point** (`styleframe.config.ts`) unless you have a specific reason to change it.
-3. **For Figma workflows:** Export first to validate token structure, then review the DTCG JSON before importing into Figma.
-4. **Set `baseFontSize` correctly** when using rem-based tokens to ensure accurate Figma conversion.
-5. **Use composables mode** (`--composables`) in `figma import` for type-safe, semantic token generation with `@styleframe/theme`.
+3. **For Figma workflows:** Run `dtcg export` first to validate token structure, then import the JSON via the `@styleframe/figma` plugin. The plugin owns the DTCG → Figma value conversion (rem→px, ms passthrough, etc.).
+4. **Use composables mode** (`--composables`) in `figma import` for type-safe, semantic token generation with `@styleframe/theme`.
 
 ## Anti-Patterns
 

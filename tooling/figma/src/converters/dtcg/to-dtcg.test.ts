@@ -1,390 +1,229 @@
-import { describe, it, expect } from "vitest";
-import { toDTCG } from "./to-dtcg";
+import type { DTCGDocument, DTCGResolverDocument } from "@styleframe/dtcg";
+import { describe, expect, it, vi } from "vitest";
 import type { FigmaExportFormat } from "../../types";
+import { toDTCG } from "./to-dtcg";
 
-describe("toDTCG", () => {
-	it("should convert basic color variable", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
+describe("toDTCG (single-mode)", () => {
+	it("emits a token document with no resolver for one mode", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
 			modes: ["Default"],
 			variables: [
 				{
 					name: "color/primary",
 					type: "COLOR",
-					values: { Default: { r: 0, g: 0.424, b: 1, a: 1 } },
+					values: { Default: { r: 1, g: 0, b: 0, a: 1 } },
 				},
 			],
 		};
-
-		const result = toDTCG(input);
-
-		expect(result.$extensions?.["dev.styleframe"]?.collection).toBe("Test");
-		expect(result.$extensions?.["dev.styleframe"]?.modes).toEqual(["Default"]);
-		expect(result.color).toBeDefined();
-		const colorGroup = result.color as Record<string, unknown>;
-		const primary = colorGroup.primary as { $value: string; $type: string };
-		expect(primary.$value).toBe("#006cff");
-		expect(primary.$type).toBe("color");
-	});
-
-	it("should generate $modifiers.theme for multi-mode collections by default", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Light", "Dark"],
-			variables: [
-				{
-					name: "color/background",
-					type: "COLOR",
-					values: {
-						Light: { r: 1, g: 1, b: 1, a: 1 },
-						Dark: { r: 0, g: 0, b: 0, a: 1 },
-					},
-				},
-			],
-		};
-
-		const result = toDTCG(input);
-
-		// Base token has Light (default) value
-		const colorGroup = result.color as Record<string, unknown>;
-		const background = colorGroup.background as {
-			$value: string;
-			$type: string;
-			$extensions?: { "dev.styleframe"?: { modes?: Record<string, string> } };
-		};
-		expect(background.$value).toBe("#ffffff");
-		// No legacy extension on token
-		expect(background.$extensions).toBeUndefined();
-		// Modifier contains Dark override
-		expect(result.$modifiers?.theme?.contexts?.Dark).toBeDefined();
-		const darkContext = result.$modifiers?.theme?.contexts?.Dark as Record<
-			string,
-			unknown
-		>;
-		const darkColor = darkContext.color as Record<string, unknown>;
-		const darkBackground = darkColor.background as { $value: string };
-		expect(darkBackground.$value).toBe("#000000");
-	});
-
-	it("should use legacy extension format when useModifiers is false", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Light", "Dark"],
-			variables: [
-				{
-					name: "color/background",
-					type: "COLOR",
-					values: {
-						Light: { r: 1, g: 1, b: 1, a: 1 },
-						Dark: { r: 0, g: 0, b: 0, a: 1 },
-					},
-				},
-			],
-		};
-
-		const result = toDTCG(input, { useModifiers: false });
-
-		const colorGroup = result.color as Record<string, unknown>;
-		const background = colorGroup.background as {
-			$value: string;
-			$type: string;
-			$extensions?: { "dev.styleframe"?: { modes?: Record<string, string> } };
-		};
-		expect(background.$value).toBe("#ffffff");
-		expect(background.$extensions?.["dev.styleframe"]?.modes?.Dark).toBe(
-			"#000000",
+		const { tokens, resolver } = toDTCG(data);
+		expect(resolver).toBeUndefined();
+		expect(tokens.$schema).toBe(
+			"https://design-tokens.org/schemas/2025.10/tokens.json",
 		);
-		// No $modifiers section
-		expect(result.$modifiers).toBeUndefined();
+		expect((tokens.color as DTCGDocument).primary).toMatchObject({
+			$type: "color",
+			$value: { colorSpace: "srgb", components: [1, 0, 0], hex: "#ff0000" },
+		});
 	});
 
-	it("should convert aliases to DTCG reference syntax", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
+	it("respects includeSchema: false", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
+			modes: ["Default"],
+			variables: [],
+		};
+		const { tokens } = toDTCG(data, { includeSchema: false });
+		expect(tokens.$schema).toBeUndefined();
+	});
+
+	it("converts dimension floats to {value, unit: 'px'}", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
 			modes: ["Default"],
 			variables: [
+				{
+					name: "spacing/small",
+					type: "FLOAT",
+					values: { Default: 4 },
+				},
+			],
+		};
+		const { tokens } = toDTCG(data);
+		const spacing = (tokens.spacing as DTCGDocument).small as {
+			$value: unknown;
+		};
+		expect(spacing.$value).toEqual({ value: 4, unit: "px" });
+	});
+
+	it("preserves descriptions", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
+			modes: ["Default"],
+			variables: [
+				{
+					name: "color/primary",
+					type: "COLOR",
+					values: { Default: { r: 0, g: 0, b: 0 } },
+					description: "Brand primary",
+				},
+			],
+		};
+		const { tokens } = toDTCG(data);
+		const primary = (tokens.color as DTCGDocument).primary as {
+			$description?: string;
+		};
+		expect(primary.$description).toBe("Brand primary");
+	});
+
+	it("emits aliases as DTCG alias strings", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
+			modes: ["Default"],
+			variables: [
+				{
+					name: "color/primary",
+					type: "COLOR",
+					values: { Default: { r: 1, g: 0, b: 0 } },
+				},
 				{
 					name: "color/accent",
 					type: "COLOR",
-					values: { Default: { r: 0, g: 0.424, b: 1, a: 1 } },
-					aliasTo: "color.primary",
+					values: { Default: { type: "VARIABLE_ALIAS", id: "color/primary" } },
+					aliasTo: "color/primary",
 				},
 			],
 		};
-
-		const result = toDTCG(input);
-
-		const colorGroup = result.color as Record<string, unknown>;
-		const accent = colorGroup.accent as { $value: string };
+		const { tokens } = toDTCG(data);
+		const accent = (tokens.color as DTCGDocument).accent as { $value: unknown };
 		expect(accent.$value).toBe("{color.primary}");
 	});
 
-	it("should handle dimension values (FLOAT)", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
+	it("drops BOOLEAN variables with a warning", () => {
+		const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+		const data: FigmaExportFormat = {
+			collection: "X",
 			modes: ["Default"],
 			variables: [
 				{
-					name: "spacing/md",
-					type: "FLOAT",
-					values: { Default: 16 },
+					name: "feature/enabled",
+					type: "BOOLEAN",
+					values: { Default: true },
 				},
 			],
 		};
-
-		const result = toDTCG(input);
-
-		const spacingGroup = result.spacing as Record<string, unknown>;
-		const md = spacingGroup.md as { $value: string; $type: string };
-		expect(md.$value).toBe("16px");
-		expect(md.$type).toBe("dimension");
-	});
-
-	it("should include schema by default", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Default"],
-			variables: [],
-		};
-
-		const result = toDTCG(input);
-
-		expect(result.$schema).toBeDefined();
-	});
-
-	it("should omit schema when includeSchema is false", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Default"],
-			variables: [],
-		};
-
-		const result = toDTCG(input, { includeSchema: false });
-
-		expect(result.$schema).toBeUndefined();
-	});
-
-	it("should handle nested paths", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Default"],
-			variables: [
-				{
-					name: "color/brand/primary",
-					type: "COLOR",
-					values: { Default: { r: 0, g: 0.424, b: 1, a: 1 } },
-				},
-			],
-		};
-
-		const result = toDTCG(input);
-
-		const colorGroup = result.color as Record<string, unknown>;
-		const brandGroup = colorGroup.brand as Record<string, unknown>;
-		const primary = brandGroup.primary as { $value: string };
-		expect(primary.$value).toBe("#006cff");
-	});
-
-	it("should include description when provided", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Default"],
-			variables: [
-				{
-					name: "color/primary",
-					type: "COLOR",
-					values: { Default: { r: 0, g: 0.424, b: 1, a: 1 } },
-					description: "Primary brand color",
-				},
-			],
-		};
-
-		const result = toDTCG(input);
-
-		const colorGroup = result.color as Record<string, unknown>;
-		const primary = colorGroup.primary as { $description: string };
-		expect(primary.$description).toBe("Primary brand color");
-	});
-
-	it("should not generate $modifiers for single-mode collections", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Default"],
-			variables: [
-				{
-					name: "color/primary",
-					type: "COLOR",
-					values: { Default: { r: 0, g: 0.424, b: 1, a: 1 } },
-				},
-			],
-		};
-
-		const result = toDTCG(input);
-
-		expect(result.$modifiers).toBeUndefined();
-	});
-
-	it("should skip tokens with same value across modes in modifiers", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Light", "Dark"],
-			variables: [
-				{
-					name: "spacing/md",
-					type: "FLOAT",
-					values: { Light: 16, Dark: 16 },
-				},
-			],
-		};
-
-		const result = toDTCG(input);
-
-		// No modifier context needed since values are identical
-		expect(result.$modifiers).toBeUndefined();
-	});
-
-	it("should handle nested paths in modifiers", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Light", "Dark"],
-			variables: [
-				{
-					name: "color/brand/primary",
-					type: "COLOR",
-					values: {
-						Light: { r: 0, g: 0.424, b: 1, a: 1 },
-						Dark: { r: 0.376, g: 0.647, b: 0.98, a: 1 },
-					},
-				},
-			],
-		};
-
-		const result = toDTCG(input);
-
-		// Modifier should have nested structure
-		const darkContext = result.$modifiers?.theme?.contexts?.Dark as Record<
-			string,
-			unknown
-		>;
-		expect(darkContext).toBeDefined();
-		const colorGroup = darkContext.color as Record<string, unknown>;
-		const brandGroup = colorGroup.brand as Record<string, unknown>;
-		const primary = brandGroup.primary as { $value: string };
-		expect(primary.$value).toBe("#60a5fa");
-	});
-
-	it("should handle multiple tokens with different override patterns", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Light", "Dark"],
-			variables: [
-				{
-					name: "color/background",
-					type: "COLOR",
-					values: {
-						Light: { r: 1, g: 1, b: 1, a: 1 },
-						Dark: { r: 0, g: 0, b: 0, a: 1 },
-					},
-				},
-				{
-					name: "color/text",
-					type: "COLOR",
-					values: {
-						Light: { r: 0, g: 0, b: 0, a: 1 },
-						Dark: { r: 1, g: 1, b: 1, a: 1 },
-					},
-				},
-				{
-					name: "spacing/md",
-					type: "FLOAT",
-					values: { Light: 16, Dark: 16 }, // Same across modes
-				},
-			],
-		};
-
-		const result = toDTCG(input);
-
-		const darkContext = result.$modifiers?.theme?.contexts?.Dark as Record<
-			string,
-			unknown
-		>;
-		expect(darkContext).toBeDefined();
-
-		// Both colors should be in the modifier
-		const colorGroup = darkContext.color as Record<string, unknown>;
-		expect((colorGroup.background as { $value: string }).$value).toBe(
-			"#000000",
-		);
-		expect((colorGroup.text as { $value: string }).$value).toBe("#ffffff");
-
-		// Spacing should NOT be in the modifier (same value)
-		expect(darkContext.spacing).toBeUndefined();
-	});
-
-	it("should only include specified theme modes in modifiers when themeNames is provided", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Default", "Dark", "HighContrast"],
-			variables: [
-				{
-					name: "color/background",
-					type: "COLOR",
-					values: {
-						Default: { r: 1, g: 1, b: 1, a: 1 },
-						Dark: { r: 0, g: 0, b: 0, a: 1 },
-						HighContrast: { r: 1, g: 1, b: 0, a: 1 },
-					},
-				},
-			],
-		};
-
-		// Only Dark is a theme, HighContrast is not
-		const result = toDTCG(input, { themeNames: ["Dark"] });
-
-		// Dark should be in modifiers
-		expect(result.$modifiers?.theme?.contexts?.Dark).toBeDefined();
-		// HighContrast should NOT be in modifiers (it's not in themeNames)
-		expect(result.$modifiers?.theme?.contexts?.HighContrast).toBeUndefined();
-
-		// HighContrast should be in token extensions instead
-		const colorGroup = result.color as Record<string, unknown>;
-		const background = colorGroup.background as {
-			$extensions?: { "dev.styleframe"?: { modes?: Record<string, string> } };
-		};
+		const { tokens } = toDTCG(data);
 		expect(
-			background.$extensions?.["dev.styleframe"]?.modes?.HighContrast,
-		).toBe("#ffff00");
+			(tokens.feature as DTCGDocument | undefined)?.enabled,
+		).toBeUndefined();
+		expect(warnSpy).toHaveBeenCalled();
+		warnSpy.mockRestore();
 	});
+});
 
-	it("should not generate modifiers when themeNames is empty array", () => {
-		const input: FigmaExportFormat = {
-			collection: "Test",
-			modes: ["Default", "Dark"],
+describe("toDTCG (multi-mode)", () => {
+	it("emits a token doc + resolver doc for >1 mode", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
+			modes: ["light", "dark"],
 			variables: [
 				{
-					name: "color/background",
+					name: "color/bg",
 					type: "COLOR",
 					values: {
-						Default: { r: 1, g: 1, b: 1, a: 1 },
-						Dark: { r: 0, g: 0, b: 0, a: 1 },
+						light: { r: 1, g: 1, b: 1, a: 1 },
+						dark: { r: 0, g: 0, b: 0, a: 1 },
 					},
 				},
 			],
 		};
-
-		// No themes specified
-		const result = toDTCG(input, { themeNames: [] });
-
-		// No modifiers should be generated
-		expect(result.$modifiers).toBeUndefined();
-
-		// Dark should be in token extensions
-		const colorGroup = result.color as Record<string, unknown>;
-		const background = colorGroup.background as {
-			$extensions?: { "dev.styleframe"?: { modes?: Record<string, string> } };
+		const { tokens, resolver } = toDTCG(data);
+		expect(resolver).toBeDefined();
+		expect(resolver?.version).toBe("2025.10");
+		expect(resolver?.modifiers?.theme?.default).toBe("light");
+		const darkContext = resolver?.modifiers?.theme?.contexts
+			.dark?.[0] as DTCGDocument;
+		const darkBg = (darkContext.color as DTCGDocument).bg as {
+			$value: unknown;
 		};
-		expect(background.$extensions?.["dev.styleframe"]?.modes?.Dark).toBe(
-			"#000000",
-		);
+		expect(darkBg.$value).toMatchObject({
+			colorSpace: "srgb",
+			components: [0, 0, 0],
+		});
+		// default mode lives in the main token doc
+		const lightBg = (tokens.color as DTCGDocument).bg as { $value: unknown };
+		expect(lightBg.$value).toMatchObject({
+			colorSpace: "srgb",
+			components: [1, 1, 1],
+		});
+	});
+
+	it("does not include override entries identical to the default", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
+			modes: ["light", "dark"],
+			variables: [
+				{
+					name: "color/border",
+					type: "COLOR",
+					values: {
+						light: { r: 0.5, g: 0.5, b: 0.5, a: 1 },
+						dark: { r: 0.5, g: 0.5, b: 0.5, a: 1 },
+					},
+				},
+			],
+		};
+		const { resolver } = toDTCG(data);
+		const darkCtx = resolver?.modifiers?.theme?.contexts.dark?.[0] as Record<
+			string,
+			unknown
+		>;
+		expect(Object.keys(darkCtx)).toHaveLength(0);
+	});
+
+	it("supports a custom modifier name", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
+			modes: ["sm", "lg"],
+			variables: [
+				{
+					name: "spacing/gap",
+					type: "FLOAT",
+					values: { sm: 4, lg: 16 },
+				},
+			],
+		};
+		const { resolver } = toDTCG(data, { modifierName: "size" });
+		expect(resolver?.modifiers?.size?.contexts.lg).toBeDefined();
+		expect(resolver?.resolutionOrder[0]).toEqual({ $ref: "#/modifiers/size" });
+	});
+});
+
+describe("toDTCG round-trip", () => {
+	it("FigmaExportFormat → toDTCG → resolver-shape preserves color components", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
+			modes: ["light", "dark"],
+			variables: [
+				{
+					name: "color/bg",
+					type: "COLOR",
+					values: {
+						light: { r: 1, g: 1, b: 1, a: 1 },
+						dark: { r: 0, g: 0, b: 0, a: 1 },
+					},
+				},
+			],
+		};
+		const { tokens, resolver } = toDTCG(data);
+		// Only the non-default override is emitted as a context entry
+		expect(Object.keys(resolver?.modifiers?.theme?.contexts ?? {})).toEqual([
+			"dark",
+		]);
+		// The default value lives in tokens
+		const lightBg = (tokens.color as DTCGDocument).bg as {
+			$value: { components: number[] };
+		};
+		expect(lightBg.$value.components).toEqual([1, 1, 1]);
 	});
 });

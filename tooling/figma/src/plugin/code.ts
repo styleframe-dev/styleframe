@@ -1,17 +1,17 @@
 /// <reference types="@figma/plugin-typings" />
 
+import type { DTCGDocument, DTCGResolverDocument } from "@styleframe/dtcg";
+import { fromDTCG, fromDTCGResolver } from "../converters/dtcg/from-dtcg";
+import { toDTCG } from "../converters/dtcg/to-dtcg";
+import {
+	figmaToStyleframeName,
+	styleframeToFigmaName,
+} from "../converters/name-mapping";
 import type {
 	FigmaExportFormat,
 	FigmaExportVariable,
 	FigmaRGBA,
 } from "../types";
-import type { DTCGDocument } from "../converters/dtcg/types";
-import {
-	figmaToStyleframeName,
-	styleframeToFigmaName,
-} from "../converters/name-mapping";
-import { fromDTCG } from "../converters/dtcg/from-dtcg";
-import { toDTCG } from "../converters/dtcg/to-dtcg";
 import { isDTCGFormat } from "./shared";
 
 /**
@@ -20,6 +20,13 @@ import { isDTCGFormat } from "./shared";
 interface ImportMessage {
 	type: "import";
 	data: FigmaExportFormat | DTCGDocument;
+	resolver?: DTCGResolverDocument;
+	/**
+	 * Filename the user uploaded `data` as. Used to satisfy `$ref` lookups in
+	 * the resolver document — the in-memory loader returns `data` for any ref
+	 * matching this name. Defaults to `"tokens.json"` when omitted.
+	 */
+	tokensRef?: string;
 }
 
 interface ExportMessage {
@@ -64,7 +71,7 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
 	try {
 		switch (msg.type) {
 			case "import":
-				await handleImport(msg.data);
+				await handleImport(msg.data, msg.resolver, msg.tokensRef);
 				break;
 			case "export":
 				await handleExport(msg.collectionId);
@@ -102,11 +109,28 @@ async function sendCollections(): Promise<void> {
  */
 async function handleImport(
 	rawData: FigmaExportFormat | DTCGDocument,
+	resolver?: DTCGResolverDocument,
+	tokensRef?: string,
 ): Promise<void> {
-	// Convert DTCG format to internal format if needed
-	const data: FigmaExportFormat = isDTCGFormat(rawData)
-		? fromDTCG(rawData)
-		: (rawData as FigmaExportFormat);
+	let data: FigmaExportFormat;
+	if (resolver && isDTCGFormat(rawData)) {
+		// Multi-mode flow: every resolver context becomes a Figma mode. The
+		// resolver references the base tokens by `$ref` (typically
+		// "tokens.json"); the Figma plugin sandbox can't fetch URLs, so we
+		// satisfy the ref from the in-memory uploaded document.
+		const baseRef = tokensRef ?? "tokens.json";
+		const fileLoader = async (ref: string): Promise<unknown> => {
+			if (ref === baseRef) return rawData;
+			throw new Error(
+				`Resolver references "${ref}" but only "${baseRef}" was uploaded`,
+			);
+		};
+		data = await fromDTCGResolver(resolver, { fileLoader });
+	} else if (isDTCGFormat(rawData)) {
+		data = fromDTCG(rawData);
+	} else {
+		data = rawData as FigmaExportFormat;
+	}
 
 	const { collection: collectionName, modes, variables } = data;
 
@@ -156,22 +180,34 @@ async function handleImport(
 	for (const v of variables) {
 		if (v.aliasTo) continue; // Skip aliases for now
 
+		const desiredType = getResolvedType(v.type);
 		const existing = existingVariables.find(
 			(fv) => fv.name === v.name && fv.variableCollectionId === collection.id,
 		);
 
 		let figmaVar: Variable;
-		if (existing) {
+		if (existing && existing.resolvedType === desiredType) {
 			figmaVar = existing;
 		} else {
+			// Either the variable doesn't exist or it was previously created with
+			// a different `resolvedType` (Figma variables can't change type once
+			// created — a stale STRING `spacing/md` would silently reject a FLOAT
+			// `setValueForMode` and leave the displayed value at 0). Remove the
+			// stale binding and recreate with the desired type.
+			if (existing) existing.remove();
 			figmaVar = figma.variables.createVariable(
 				v.name,
 				collection,
-				getResolvedType(v.type),
+				desiredType,
 			);
 		}
 
-		// Set values for each mode
+		// Set values for each mode. `from-dtcg` downgrades the variable type
+		// to STRING whenever the DTCG value can't be represented as the
+		// requested Figma type, so by the time we get here `value` and
+		// `v.type` should already match. If they ever don't (bug or external
+		// caller), surface a warning rather than silently leaving the
+		// variable at its default 0/empty.
 		for (const [modeName, value] of Object.entries(v.values)) {
 			const modeId = modeIdMap.get(modeName);
 			if (!modeId) continue;
@@ -179,6 +215,10 @@ async function handleImport(
 			const figmaValue = convertToFigmaValue(value, v.type);
 			if (figmaValue !== null) {
 				figmaVar.setValueForMode(modeId, figmaValue);
+			} else {
+				console.warn(
+					`Skipped value for "${v.name}" (mode "${modeName}"): cannot store ${typeof value} in a ${v.type} variable`,
+				);
 			}
 		}
 
@@ -362,7 +402,9 @@ function convertToFigmaValue(
 			return null;
 		}
 		case "FLOAT": {
-			return typeof value === "number" ? value : null;
+			// `0` is a legal FLOAT — only return null when the runtime type
+			// truly disagrees, never on falsy-zero.
+			return typeof value === "number" && Number.isFinite(value) ? value : null;
 		}
 		case "BOOLEAN": {
 			return typeof value === "boolean" ? value : null;

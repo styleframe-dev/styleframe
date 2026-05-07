@@ -1,0 +1,1 @@
+export { isValidNamespace } from "./namespace";

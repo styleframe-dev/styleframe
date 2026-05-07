@@ -23,7 +23,7 @@
 						<path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 					</svg>
 					<span class="file-drop-text">Drop JSON file here or <span class="file-browse-link">browse</span></span>
-					<span class="file-drop-hint">tokens.json from styleframe figma export</span>
+					<span class="file-drop-hint">tokens.json from styleframe dtcg export</span>
 				</div>
 				<div class="file-selected" id="file-selected" hidden>
 					<svg class="file-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -32,6 +32,26 @@
 					</svg>
 					<span class="file-name" id="file-name"></span>
 					<button class="file-clear-btn" id="file-clear-btn" type="button">
+						<svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+							<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+					</button>
+				</div>
+			</div>
+
+			<div class="file-drop-zone file-drop-zone-secondary" id="resolver-drop-zone">
+				<input type="file" id="resolver-input" accept=".json" hidden>
+				<div class="file-drop-content">
+					<span class="file-drop-text">Drop resolver JSON or <span class="file-browse-link">browse</span></span>
+					<span class="file-drop-hint">tokens.resolver.json — required for multi-mode (e.g. dark)</span>
+				</div>
+				<div class="file-selected" id="resolver-selected" hidden>
+					<svg class="file-check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+						<path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+						<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+					</svg>
+					<span class="file-name" id="resolver-name"></span>
+					<button class="file-clear-btn" id="resolver-clear-btn" type="button">
 						<svg width="12" height="12" viewBox="0 0 24 24" fill="none">
 							<path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
 						</svg>
@@ -96,6 +116,11 @@
 
 			<div id="export-status" class="status"></div>
 		</div>
+
+		<a class="footer" href="https://styleframe.dev/figma" target="_blank" rel="noopener noreferrer">
+			<span>Powered by</span>
+			<span class="logo" role="img" aria-label="Styleframe"></span>
+		</a>
 	</div>
 
 	<script type="module" src="./main.ts"></script>
