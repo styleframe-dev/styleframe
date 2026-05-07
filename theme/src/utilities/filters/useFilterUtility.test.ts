@@ -6,12 +6,51 @@ import {
 	useBrightnessUtility,
 	useContrastUtility,
 	useDropShadowUtility,
+	useFilterUtility,
 	useGrayscaleUtility,
 	useHueRotateUtility,
 	useInvertUtility,
 	useSaturateUtility,
 	useSepiaUtility,
 } from "./useFilterUtility";
+
+describe("useFilterUtility", () => {
+	it("should create utility instances with provided values", () => {
+		const s = styleframe();
+		useFilterUtility(s, { none: "none", default: "blur(8px)" });
+
+		const utilities = s.root.children.filter(
+			(u): u is Utility => isUtility(u) && u.name === "filter",
+		);
+		expect(utilities).toHaveLength(2);
+	});
+
+	it("should set correct declarations", () => {
+		const s = styleframe();
+		useFilterUtility(s, { default: "blur(8px)" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({
+			filter: "blur(8px)",
+		});
+	});
+
+	it("should compile to correct CSS output", () => {
+		const s = styleframe();
+		useFilterUtility(s, { default: "blur(8px)" });
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._filter {");
+		expect(css).toContain("filter: blur(8px);");
+	});
+
+	it("should handle empty values object", () => {
+		const s = styleframe();
+		useFilterUtility(s, {});
+
+		expect(s.root.children).toHaveLength(0);
+	});
+});
 
 describe("useBlurUtility", () => {
 	it("should create utility instances with provided values", () => {
