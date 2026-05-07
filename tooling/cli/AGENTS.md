@@ -108,7 +108,7 @@ Exports Styleframe variables to spec-conformant DTCG (Design Tokens Community Gr
 
 ---
 
-### `styleframe figma import`
+### `styleframe dtcg import`
 
 Generates Styleframe TypeScript code from DTCG format JSON.
 
@@ -136,7 +136,6 @@ subCommands: {
     init: () => import("./commands/init").then((m) => m.default),
     build: () => import("./commands/build").then((m) => m.default),
     dtcg: () => import("./commands/dtcg").then((m) => m.default),
-    figma: () => import("./commands/figma").then((m) => m.default),
 }
 ```
 
@@ -217,7 +216,7 @@ The CLI sits at the **build and initialization layer** of Styleframe:
 1. **Run `init` before `build`** to ensure proper project setup, dependencies, and framework integration.
 2. **Use the default entry point** (`styleframe.config.ts`) unless you have a specific reason to change it.
 3. **For Figma workflows:** Run `dtcg export` first to validate token structure, then import the JSON via the `@styleframe/figma` plugin. The plugin owns the DTCG → Figma value conversion (rem→px, ms passthrough, etc.).
-4. **Use composables mode** (`--composables`) in `figma import` for type-safe, semantic token generation with `@styleframe/theme`.
+4. **Use composables mode** (`--composables`) in `dtcg import` for type-safe, semantic token generation with `@styleframe/theme`.
 
 ## Anti-Patterns
 
