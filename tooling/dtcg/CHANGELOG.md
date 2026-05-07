@@ -1,8 +1,8 @@
-# @styleframe/figma
+# @styleframe/dtcg
 
-## 2.0.0
+## 1.1.0
 
-### Major Changes
+### Minor Changes
 
 - [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add a new `@styleframe/dtcg` package: a spec-conformant parser, validator, and serializer for the W3C DTCG Format, Color, and Resolver Modules (2025.10).
 
@@ -13,8 +13,6 @@
   - The legacy `$extensions["dev.styleframe"].modes` and inline `$modifiers` formats are no longer recognised. Multi-mode collections now serialise as a separate `.resolver.json` document; `toDTCG` returns `{ tokens, resolver? }`.
   - Composite token types (`border`, `shadow`, `gradient`, `typography`, etc.) are accepted on import but not represented as native Figma variables.
   - Figma `BOOLEAN` variables are skipped on export (DTCG has no boolean type).
-
-### Patch Changes
 
 - [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix DTCG export from `@styleframe/cli`: variables now get the correct `$type` and references are preserved as aliases.
 
@@ -28,24 +26,7 @@
 
   Round-trip lossiness across Styleframe ↔ DTCG ↔ Figma is now documented in `tooling/dtcg/AGENTS.md`.
 
-- [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix dark mode round-trip from Styleframe → DTCG → Figma.
-
-  Previously, `styleframe dtcg export` emitted a `tokens.resolver.json` that the Figma plugin had no way to consume — the plugin UI accepted only one file and its import handler always called the single-mode `fromDTCG()`. As a result, dark mode values never reached Figma. The exported resolver was also malformed: `default` referenced a non-existent context, and the resolver lacked a `set` linking to the base `tokens.json`, so any spec-conformant consumer would have failed too.
-
-  **`@styleframe/cli`** — `buildDTCG` now emits a self-contained resolver: `resolutionOrder` begins with a `set` referencing the base tokens file (controllable via `tokensSourceRef`), every theme contributes a capitalized context (`dark` → `Dark`), and a `Default` context (with no overrides) covers the unthemed mode. `default` correctly points at `Default`. Override tokens also carry `$type` so the `mergeDocuments` token-level replacement preserves typing — without this, dark color values lost their `color` type and downstream consumers (e.g. Figma) couldn't convert them, falling back to default white.
-
-  **`@styleframe/figma`** — the plugin UI exposes a second drop slot for `tokens.resolver.json`. When a resolver is provided, `code.ts` routes through `fromDTCGResolver` with an in-memory file loader so each declared context becomes a Figma mode populated with the correct per-mode values.
-
-- [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix dimension and duration tokens importing as `0` in Figma.
-
-  The Figma plugin's DTCG → Figma converter previously dropped dimension/duration tokens whose unit it couldn't represent as a Figma FLOAT (e.g. `vw`, `vh`), and silently failed to update existing variables whose `resolvedType` no longer matched the incoming token type. Both paths left the affected Figma variable at its default `0`.
-
-  The plugin now:
-  - Preserves the original CSS literal as a STRING fallback (e.g. `"100vw"`) instead of dropping the token, so the source value always survives.
-  - Detects existing variables whose `resolvedType` differs from the incoming token's type and recreates them so values can be stored. (Figma variables can't change type once created — a previously-imported STRING `spacing/md` would otherwise reject any new FLOAT value.)
-  - Emits a console warning when `convertToFigmaValue` cannot store a value, instead of silently leaving the variable at `0`.
-
-  `dtcgValueToFigma` now returns a discriminated union (`{ kind: "value" | "alias" | "fallback" }`) so callers can distinguish a true failure from a legitimate `0`.
+### Patch Changes
 
 - [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix two regressions in DTCG export uncovered by dogfooding the storybook config:
 
@@ -68,30 +49,3 @@
   The fix: `dtcgDimensionToFloat` now returns `undefined` for unsupported units (vw, vh, dvw, svw, etc.) instead of throwing, and `fromDTCG` silently skips variables whose value cannot be converted rather than crashing the whole batch. Colors and other tokens now import correctly even when the document contains fluid/viewport tokens.
 
   **Out-of-gamut sRGB clamping.** Converting oklch colours to Figma's sRGB RGBA could produce slightly negative channel values (e.g. `r = -4.21e-15`) due to floating-point rounding in the matrix multiplication. The fix clamps `r`, `g`, and `b` to `[0, 1]` in `dtcgColorToFigmaRgba`.
-
-- Updated dependencies [[`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`c314dbc`](https://github.com/styleframe-dev/styleframe/commit/c314dbc78872df38efe72d7931faf86afce5ffcc)]:
-  - @styleframe/dtcg@1.1.0
-  - @styleframe/core@3.4.0
-
-## 1.1.0
-
-### Minor Changes
-
-- [#149](https://github.com/styleframe-dev/styleframe/pull/149) [`b9e54ed`](https://github.com/styleframe-dev/styleframe/commit/b9e54eda1acbf1b1b256f96bf6306dc300602618) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Flatten design tokens preset result and rename variable composables
-  - Rename all variable composables from `use{Name}` to `use{Name}DesignTokens` for clearer naming
-  - Flatten `useDesignTokensPreset` result so variables are directly destructurable instead of nested by domain
-  - Add OKLCH gamut mapping utilities for color processing
-  - Add color reference value support so colors can reference generated shade/tint variants
-  - Add border, transition, and animation utility implementations
-
-### Patch Changes
-
-- Updated dependencies [[`cc4f170`](https://github.com/styleframe-dev/styleframe/commit/cc4f170c56ad2e246b94ab4d64b7f6c3097c7223)]:
-  - @styleframe/core@3.2.0
-
-## 1.0.1
-
-### Patch Changes
-
-- Updated dependencies [[`266f961`](https://github.com/styleframe-dev/styleframe/commit/266f96143e9ffb47e0e6326d0e5e7cc9d974ab83), [`ffe6764`](https://github.com/styleframe-dev/styleframe/commit/ffe6764a2e6c84d5b3cfdf431bf11f17a3f3f118)]:
-  - @styleframe/core@3.0.0

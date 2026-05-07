@@ -1,5 +1,33 @@
 # styleframe
 
+## 3.6.0
+
+### Minor Changes
+
+- [#204](https://github.com/styleframe-dev/styleframe/pull/204) [`1d57ffa`](https://github.com/styleframe-dev/styleframe/commit/1d57ffaa2861fd05a03f370cf3948d772d6be237) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `Media` recipe — a layout-only multi-part recipe modeled on the Bootstrap/Inkline media object pattern for image-plus-content layouts (comments, posts, list items)
+  - New recipes: `useMediaRecipe`, `useMediaFigureRecipe`, `useMediaBodyRecipe`, `useMediaTitleRecipe`
+  - Root recipe exposes `orientation` (`horizontal`/`vertical`), `align` (`start`/`center`/`end`), and `size` (`sm`/`md`/`lg`) axes — no color or surface styling, so it composes inside Card, Callout, etc.
+  - `useMediaBodyRecipe` sets `min-width: 0` to safely wrap long titles inside flex containers
+  - Designed for nesting (parent Media → child Media inside `MediaBody`) for comment threads and reply chains
+
+- [#208](https://github.com/styleframe-dev/styleframe/pull/208) [`787cf14`](https://github.com/styleframe-dev/styleframe/commit/787cf143c925ac9caacb3df1c72c3aeb2d626419) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `PageHero` recipe — a multi-part composable for full-width hero sections with color, size, orientation, alignment, and reverse axes
+  - New recipes: `usePageHeroRecipe`, `usePageHeroBodyRecipe`, `usePageHeroHeadlineRecipe`, `usePageHeroTitleRecipe`, `usePageHeroDescriptionRecipe`, `usePageHeroActionsRecipe`, `usePageHeroLinksRecipe`, `usePageHeroImageRecipe`
+  - Container exposes `color` (`light`/`dark`/`neutral` with adaptive dark mode), `size` (`sm`/`md`/`lg`), `orientation` (`vertical`/`horizontal`), `alignment` (`start`/`center`/`end`), and `reverse` axes
+  - Sub-recipes mirror the `size` and `alignment` axes and override alignment to `start` in horizontal orientation for correct two-column layout
+  - Adds a generic `useFilterUtility` and registers it in `useUtilitiesPreset`
+
+- [#209](https://github.com/styleframe-dev/styleframe/pull/209) [`3559b70`](https://github.com/styleframe-dev/styleframe/commit/3559b70dedcc13ad191c78869cd86407b8470604) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add pagination recipe with `usePaginationRecipe`, `usePaginationItemRecipe`, and `usePaginationEllipsisRecipe`. Supports 3 color modes (light, dark, neutral), 6 style variants (solid, outline, soft, subtle, ghost, link), 3 sizes (sm, md, lg), and active/disabled item states.
+
+- [#203](https://github.com/styleframe-dev/styleframe/pull/203) [`c314dbc`](https://github.com/styleframe-dev/styleframe/commit/c314dbc78872df38efe72d7931faf86afce5ffcc) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Track variable references in `root._usage.variables` for future transpiler optimizations
+  - Add `_usage: { variables: Set<string> }` to `Root` type and initialize in `createRoot()`
+  - Record variable names whenever `ref()` is called or `@`-prefixed syntax is resolved
+
+### Patch Changes
+
+- Updated dependencies [[`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`24eebba`](https://github.com/styleframe-dev/styleframe/commit/24eebba87c8fa6fc6822e18d67f4c0412192e793), [`c314dbc`](https://github.com/styleframe-dev/styleframe/commit/c314dbc78872df38efe72d7931faf86afce5ffcc)]:
+  - @styleframe/cli@4.0.0
+  - @styleframe/core@3.4.0
+
 ## 3.5.1
 
 ### Patch Changes
