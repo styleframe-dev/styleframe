@@ -1,5 +1,13 @@
 # styleframe
 
+## 3.5.1
+
+### Patch Changes
+
+- [#201](https://github.com/styleframe-dev/styleframe/pull/201) [`4ae6cd4`](https://github.com/styleframe-dev/styleframe/commit/4ae6cd46269f4619f6d8f3eb481f7aed29450db3) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Lock `fluid.screen` at `fluid.max-width` past the maximum viewport to prevent fluid values from extrapolating beyond their intended ceiling
+  - `useFluidViewportDesignTokens` now registers a media query at `min-width: <maxWidth>` that pins `fluid.screen` to `calc(var(--fluid--max-width) * 1px)`
+  - The lock breakpoint derives from the `maxWidth` option, supporting both numeric (`1440`) and string (`90rem`) values
+
 ## 3.5.0
 
 ### Minor Changes

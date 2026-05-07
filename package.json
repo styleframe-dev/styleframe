@@ -22,6 +22,7 @@
 		"test:integration": "turbo run start --filter './testing/integration'",
 		"typecheck": "turbo run typecheck",
 		"lint": "oxlint",
+		"lint:actions": "actionlint",
 		"format:check": "biome format",
 		"format": "biome format --write",
 		"prepare": "husky",
@@ -63,6 +64,9 @@
 		],
 		"*.{js,ts,jsx,tsx}": [
 			"oxlint --fix"
+		],
+		".github/workflows/*.{yml,yaml}": [
+			"actionlint"
 		]
 	},
 	"license": "MIT"

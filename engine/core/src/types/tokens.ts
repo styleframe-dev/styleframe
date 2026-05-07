@@ -216,4 +216,7 @@ export type Root = {
 	children: ContainerChild[];
 	themes: Theme[];
 	_registry: Map<string, Container | Root | Theme>;
+	_usage: {
+		variables: Set<string>;
+	};
 };

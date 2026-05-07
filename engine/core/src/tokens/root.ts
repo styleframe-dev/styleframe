@@ -13,6 +13,9 @@ export function createRoot(): Root {
 		children: [],
 		themes: [],
 		_registry: new Map(),
+		_usage: {
+			variables: new Set(),
+		},
 	};
 
 	root._registry.set(root.id, root);

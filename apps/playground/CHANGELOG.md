@@ -1,5 +1,13 @@
 # @styleframe/playground
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [[`4ae6cd4`](https://github.com/styleframe-dev/styleframe/commit/4ae6cd46269f4619f6d8f3eb481f7aed29450db3)]:
+  - @styleframe/theme@3.5.1
+  - styleframe@3.5.1
+
 ## 0.1.0
 
 ### Minor Changes
