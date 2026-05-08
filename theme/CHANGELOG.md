@@ -1,5 +1,30 @@
 # @styleframe/theme
 
+## 3.6.0
+
+### Minor Changes
+
+- [#210](https://github.com/styleframe-dev/styleframe/pull/210) [`18f82c7`](https://github.com/styleframe-dev/styleframe/commit/18f82c70fb5cdc7c46d22a648da6c68e30a98db9) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `useBreadcrumbRecipe` and `useBreadcrumbItemRecipe` — a two-part breadcrumb recipe with `light`/`dark`/`neutral` color axes and `sm`/`md`/`lg` size variants. Separators are rendered as DOM nodes and auto-inserted between items; the separator character is configurable via a `separator` prop.
+
+- [#204](https://github.com/styleframe-dev/styleframe/pull/204) [`1d57ffa`](https://github.com/styleframe-dev/styleframe/commit/1d57ffaa2861fd05a03f370cf3948d772d6be237) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `Media` recipe — a layout-only multi-part recipe modeled on the Bootstrap/Inkline media object pattern for image-plus-content layouts (comments, posts, list items)
+  - New recipes: `useMediaRecipe`, `useMediaFigureRecipe`, `useMediaBodyRecipe`, `useMediaTitleRecipe`
+  - Root recipe exposes `orientation` (`horizontal`/`vertical`), `align` (`start`/`center`/`end`), and `size` (`sm`/`md`/`lg`) axes — no color or surface styling, so it composes inside Card, Callout, etc.
+  - `useMediaBodyRecipe` sets `min-width: 0` to safely wrap long titles inside flex containers
+  - Designed for nesting (parent Media → child Media inside `MediaBody`) for comment threads and reply chains
+
+- [#208](https://github.com/styleframe-dev/styleframe/pull/208) [`787cf14`](https://github.com/styleframe-dev/styleframe/commit/787cf143c925ac9caacb3df1c72c3aeb2d626419) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `PageHero` recipe — a multi-part composable for full-width hero sections with color, size, orientation, alignment, and reverse axes
+  - New recipes: `usePageHeroRecipe`, `usePageHeroBodyRecipe`, `usePageHeroHeadlineRecipe`, `usePageHeroTitleRecipe`, `usePageHeroDescriptionRecipe`, `usePageHeroActionsRecipe`, `usePageHeroLinksRecipe`, `usePageHeroImageRecipe`
+  - Container exposes `color` (`light`/`dark`/`neutral` with adaptive dark mode), `size` (`sm`/`md`/`lg`), `orientation` (`vertical`/`horizontal`), `alignment` (`start`/`center`/`end`), and `reverse` axes
+  - Sub-recipes mirror the `size` and `alignment` axes and override alignment to `start` in horizontal orientation for correct two-column layout
+  - Adds a generic `useFilterUtility` and registers it in `useUtilitiesPreset`
+
+- [#209](https://github.com/styleframe-dev/styleframe/pull/209) [`3559b70`](https://github.com/styleframe-dev/styleframe/commit/3559b70dedcc13ad191c78869cd86407b8470604) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add pagination recipe with `usePaginationRecipe`, `usePaginationItemRecipe`, and `usePaginationEllipsisRecipe`. Supports 3 color modes (light, dark, neutral), 6 style variants (solid, outline, soft, subtle, ghost, link), 3 sizes (sm, md, lg), and active/disabled item states.
+
+### Patch Changes
+
+- Updated dependencies [[`c314dbc`](https://github.com/styleframe-dev/styleframe/commit/c314dbc78872df38efe72d7931faf86afce5ffcc)]:
+  - @styleframe/core@3.4.0
+
 ## 3.5.1
 
 ### Patch Changes

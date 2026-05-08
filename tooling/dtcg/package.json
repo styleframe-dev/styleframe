@@ -1,7 +1,7 @@
 {
 	"name": "@styleframe/dtcg",
 	"type": "module",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "DTCG (Design Tokens Community Group) format parser, validator, and serializer for Styleframe.",
 	"license": "MIT",
 	"keywords": [

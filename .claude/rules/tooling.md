@@ -17,7 +17,7 @@
 ## CLI (`tooling/cli/`)
 
 - Use commander for CLI interface
-- Commands: `init`, `build`, `dtcg export`, `figma import`
+- Commands: `init`, `build`, `dtcg export`, `dtcg import`
 - Always provide helpful error messages with recovery suggestions
 - See `tooling/cli/AGENTS.md` for CLI architecture
 

@@ -17,7 +17,7 @@ const s = styleframe({
         selector: ({ name, value, modifiers }) =>
             `._${name}:${value}${modifiers.map(m => `:${m}`).join('')}`,
     },
-    theme: {
+    themes: {
         selector: ({ name }) => `[data-theme="${name}"]`,
     },
 });
@@ -141,7 +141,13 @@ createPadding({ sm: ref(spacingSm) }, [hover, focus]);
 
 ### Spacing Utility Composables
 
-Spacing utilities (`useMarginUtility`, `usePaddingUtility`, `useGapUtility`, `useSpaceUtility`) support **multiplier values** that generate `calc()` expressions:
+Spacing utilities support **multiplier values** that generate `calc()` expressions:
+
+- `useMarginUtility`, `usePaddingUtility` — `theme/src/utilities/spacing/`
+- `useGapUtility` — `theme/src/utilities/flexbox-grid/` (lives with flex/grid utilities, not the spacing module)
+- `useSpaceUtility` — `theme/src/utilities/spacing/` (sets gap between adjacent children)
+
+All are exported from the `@styleframe/theme` barrel:
 
 ```ts
 import { useMarginUtility, usePaddingUtility, useGapUtility } from '@styleframe/theme';
@@ -276,7 +282,7 @@ Interpolates values into CSS strings.
 
 ```ts
 padding: css`${ref(spacingSm)} ${ref(spacingMd)}`
-animation: css`${fadeIn.name} ${ref(animationDuration)} ease-out`
+animation: css`${fadeIn.rule} ${ref(animationDuration)} ease-out`
 width: css`calc(100% - ${ref(sidebarWidth)})`
 background: css`linear-gradient(135deg, ${ref(colorPrimary)} 0%, ${ref(colorSecondary)} 100%)`
 ```
@@ -293,7 +299,7 @@ Defines CSS animations.
 - `name`: string - Animation name
 - `frames`: object - Keyframe stops
 
-**Returns:** Keyframe token with `.name` property
+**Returns:** AtRule token; the animation name is exposed on `.rule`
 
 ```ts
 const fadeIn = keyframes('fade-in', {
@@ -302,7 +308,7 @@ const fadeIn = keyframes('fade-in', {
 });
 
 selector('.animate', {
-    animation: `${fadeIn.name} 0.3s ease-out`,
+    animation: `${fadeIn.rule} 0.3s ease-out`,
 });
 ```
 
@@ -369,9 +375,9 @@ atRule('property', '--gradient-angle', {
 
 ## Merging
 
-### merge(...instances)
+### merge(base, ...instances)
 
-Combines multiple Styleframe instances.
+Combines multiple Styleframe instances. The first argument is the base; subsequent instances merge into it.
 
 ```ts
 import { merge } from 'styleframe';

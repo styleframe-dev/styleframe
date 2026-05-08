@@ -1,5 +1,13 @@
 # @styleframe/core
 
+## 3.4.0
+
+### Minor Changes
+
+- [#203](https://github.com/styleframe-dev/styleframe/pull/203) [`c314dbc`](https://github.com/styleframe-dev/styleframe/commit/c314dbc78872df38efe72d7931faf86afce5ffcc) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Track variable references in `root._usage.variables` for future transpiler optimizations
+  - Add `_usage: { variables: Set<string> }` to `Root` type and initialize in `createRoot()`
+  - Record variable names whenever `ref()` is called or `@`-prefixed syntax is resolved
+
 ## 3.3.0
 
 ### Minor Changes

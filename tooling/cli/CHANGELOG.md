@@ -1,5 +1,95 @@
 # @styleframe/cli
 
+## 4.0.0
+
+### Major Changes
+
+- [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - **BREAKING**: rename `styleframe figma export` → `styleframe dtcg export`.
+
+  The CLI command now lives under a top-level `dtcg` subcommand to reflect that it produces a generic spec-conformant DTCG document, not a Figma-specific format. The DTCG → Figma value conversion (rem→px, ms passthrough, etc.) lives in the `@styleframe/figma` plugin, which consumes the JSON.
+
+  `styleframe figma import` is unchanged — it generates Styleframe TypeScript code from a Figma-flavoured DTCG export.
+
+  Migration:
+
+  ```diff
+  - styleframe figma export -o tokens.json
+  + styleframe dtcg export -o tokens.json
+  ```
+
+  The `--baseFontSize` flag has been removed from the export — base font size is applied by the Figma plugin during import (default 16). Any CI scripts referring to the old command must be updated.
+
+### Minor Changes
+
+- [#213](https://github.com/styleframe-dev/styleframe/pull/213) [`24eebba`](https://github.com/styleframe-dev/styleframe/commit/24eebba87c8fa6fc6822e18d67f4c0412192e793) Thanks [@alexgrozav](https://github.com/alexgrozav)! - **BREAKING**: rename `styleframe figma import` → `styleframe dtcg import`.
+
+  The CLI command now lives under the `dtcg` subcommand alongside `dtcg export`. The command takes a generic spec-conformant DTCG JSON file (whether produced by the `@styleframe/figma` plugin or any other DTCG-compatible tool) and generates Styleframe TypeScript code — there is nothing Figma-specific about it. The top-level `figma` subcommand has been removed; the namespace is reserved for future commands that genuinely interact with the Figma API.
+
+  All flags are unchanged (`--input`/`-i`, `--output`/`-o`, `--composables`, `--rem`, `--baseFontSize`, `--instanceName`).
+
+  Migration:
+
+  ```diff
+  - styleframe figma import -i tokens.json
+  + styleframe dtcg import -i tokens.json
+  ```
+
+  Any CI scripts referring to the old command must be updated.
+
+### Patch Changes
+
+- [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix DTCG export from `@styleframe/cli`: variables now get the correct `$type` and references are preserved as aliases.
+
+  The previous CLI flow piped Styleframe AST through a lossy `FigmaExportFormat` intermediate, then through `figmaTypeToDtcg("STRING") → "fontFamily"` — so most variables ended up tagged as `fontFamily` in the resulting JSON. References were silently replaced with empty strings, and CSS template expressions like `${ref(a)} * ${ref(b)}` were joined into garbage like `" * "`.
+
+  **`@styleframe/dtcg`** gains a new `classifyValue(value, {path?})` helper plus `parseCubicBezier` and `easingKeywordToBezier`. The classifier combines value-content detection with optional path heuristics so callers get a single canonical `{type, value}` pair without per-package guessing.
+
+  **`@styleframe/cli`** now builds the DTCG document directly from the Styleframe `Root`. A small evaluator pre-resolves `Reference` chains and pure-arithmetic CSS templates so computed variables (e.g. `scale.min-powers.*`) emit concrete numbers instead of being skipped or corrupted. Unevaluable expressions (involving `clamp()`, `vw`, etc.) are preserved with a `dev.styleframe.expression` extension, surfaced in a diagnostics summary at the end of the run.
+
+  **`@styleframe/figma`** uses the same classifier with the Figma variable name as a path hint. `figmaTypeToDtcg("STRING")` no longer claims everything is a `fontFamily`; instead callers should use the new `classifyFigmaVariable(variable, value)` which correctly identifies durations under `duration/*`, easings under `easing/*`, stroke styles, and font weights. STRING values whose name gives no usable hint are emitted with a `dev.styleframe.unknownType` extension rather than silently mistyped.
+
+  Round-trip lossiness across Styleframe ↔ DTCG ↔ Figma is now documented in `tooling/dtcg/AGENTS.md`.
+
+- [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix `dtcg export`: fluid font-size tokens (and any other tokens whose value reduces to a `calc()` mixing `100vw`, `rem`, and `px` literals) are now normalised to a concrete pixel value using the project's `fluid.max-width` (default 1440) instead of being emitted as opaque `calc(...)` expressions with a `dev.styleframe.unknownType` extension.
+
+  Previously every `font-size.*` token in a config that used `useFluidFontSizeDesignTokens` shipped to Figma as a useless `STRING` variable holding the raw `calc(...)` formula. They now ship as spec-conformant `dimension` tokens (`{value, unit: "px"}`) that the Figma plugin renders as real numeric variables (`font-size/md = 18`, `font-size/lg = 22.5`, etc.).
+
+  The substitution runs only as a fallback after the standard arithmetic check fails, so well-formed numeric expressions are unaffected. Affected tokens carry a `dev.styleframe.fluidBound: "max"` extension so the derivation is auditable. The export run reports `Normalised <n> fluid token(s) using max viewport (<n>px).`
+
+- [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix dark mode round-trip from Styleframe → DTCG → Figma.
+
+  Previously, `styleframe dtcg export` emitted a `tokens.resolver.json` that the Figma plugin had no way to consume — the plugin UI accepted only one file and its import handler always called the single-mode `fromDTCG()`. As a result, dark mode values never reached Figma. The exported resolver was also malformed: `default` referenced a non-existent context, and the resolver lacked a `set` linking to the base `tokens.json`, so any spec-conformant consumer would have failed too.
+
+  **`@styleframe/cli`** — `buildDTCG` now emits a self-contained resolver: `resolutionOrder` begins with a `set` referencing the base tokens file (controllable via `tokensSourceRef`), every theme contributes a capitalized context (`dark` → `Dark`), and a `Default` context (with no overrides) covers the unthemed mode. `default` correctly points at `Default`. Override tokens also carry `$type` so the `mergeDocuments` token-level replacement preserves typing — without this, dark color values lost their `color` type and downstream consumers (e.g. Figma) couldn't convert them, falling back to default white.
+
+  **`@styleframe/figma`** — the plugin UI exposes a second drop slot for `tokens.resolver.json`. When a resolver is provided, `code.ts` routes through `fromDTCGResolver` with an in-memory file loader so each declared context becomes a Figma mode populated with the correct per-mode values.
+
+- [#211](https://github.com/styleframe-dev/styleframe/pull/211) [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix two regressions in DTCG export uncovered by dogfooding the storybook config:
+
+  **Keyword-classification ambiguity.** The previous classifier matched `FONT_WEIGHT_KEYWORDS` and `STROKE_STYLE_KEYWORDS` on value content alone — but `"normal"` is a perfectly valid value for `letter-spacing`, `font-style`, and `line-height`, not just `font-weight`. Same for `"thin"`/`"medium"`/`"thick"` which are CSS border-width shorthand keywords. The result was that `border-width`, `font-style`, `letter-spacing`, and similar tokens were misclassified as `fontWeight` whenever their alias chain bottomed out at one of these CSS keywords.
+
+  The fix: keyword-based detectors now only fire when the path also indicates the corresponding category (`font-weight` segment for fontWeight, `border-style`/`outline-style`/`stroke` for strokeStyle, `font-family` for fontFamily). Callers that don't supply a path still get the keyword-based behaviour for back-compat. Tokens with no resolvable type emit a `dev.styleframe.unknownType` extension instead of a wrong `$type`.
+
+  **Parent/child path collisions wiped out children.** Styleframe configs commonly define both a parent variable (e.g. `border-width` aliased to `border-width.thin`) AND its child variants (`border-width.thin`, `border-width.medium`, `border-width.thick`). The previous `setNestedToken` logic unconditionally overwrote the slot, so depending on processing order either the parent or all the children were silently lost.
+
+  The fix: `setNestedToken` now uses the spec's reserved `$root` slot for parent tokens that coexist with siblings — a pattern explicitly defined in the Format Module 2025.10 for "group with a base value plus variants". Children survive alongside the parent, and the walker / validator / Figma plugin import all recognise `$root` as the parent's effective leaf.
+
+  The CLI also gains a one-line tip in its diagnostic output explaining that "untyped" tokens are usually CSS keywords with no DTCG equivalent.
+
+  **Numeric-string misclassification as colour.** `classifyValue("100")` and similar 3-character numeric strings were incorrectly classified as `$type: "color"` because culori's `parse()` interprets them as shorthand CSS hex (`"100"` → `#100`). Z-index tokens like `z-index.dropdown = "100"` consequently appeared as sRGB color variables in the exported JSON.
+
+  The fix: `classifyValue` now only forwards strings to culori that structurally look like CSS colors — those starting with `#`, containing `(` (function notation), or beginning with an ASCII letter (named color). Plain numeric strings are excluded before reaching the parser.
+
+  **Plugin import crash on viewport-relative units.** Importing a `tokens.json` that contained any `{value: 100, unit: "vw"}` dimension token caused the entire Figma plugin import to throw `Cannot convert "100vw" to a Figma FLOAT`. The exception propagated through the entire import, leaving all variables (including colors) at their default `#FFFFFF`.
+
+  The fix: `dtcgDimensionToFloat` now returns `undefined` for unsupported units (vw, vh, dvw, svw, etc.) instead of throwing, and `fromDTCG` silently skips variables whose value cannot be converted rather than crashing the whole batch. Colors and other tokens now import correctly even when the document contains fluid/viewport tokens.
+
+  **Out-of-gamut sRGB clamping.** Converting oklch colours to Figma's sRGB RGBA could produce slightly negative channel values (e.g. `r = -4.21e-15`) due to floating-point rounding in the matrix multiplication. The fix clamps `r`, `g`, and `b` to `[0, 1]` in `dtcgColorToFigmaRgba`.
+
+- Updated dependencies [[`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f), [`8826eda`](https://github.com/styleframe-dev/styleframe/commit/8826edad3fcb2e969024a586a20c2059229d958f)]:
+  - @styleframe/dtcg@1.1.0
+  - @styleframe/figma@2.0.0
+
 ## 3.0.0
 
 ### Major Changes
