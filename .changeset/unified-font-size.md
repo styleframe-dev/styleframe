@@ -1,6 +1,6 @@
 ---
-"@styleframe/theme": major
-"styleframe": major
+"@styleframe/theme": minor
+"styleframe": minor
 ---
 
 Unify fluid and fixed font sizes under `useFontSizeDesignTokens`. Tuple `[min, max]` and object `{ min, max }` values are now treated as **absolute pixel ranges** and routed through `useFluidClamp`; plain `TokenValue` values stay static. The same call accepts mixed fluid + fixed entries.
