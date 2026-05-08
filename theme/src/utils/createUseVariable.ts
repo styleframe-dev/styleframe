@@ -1,12 +1,15 @@
 import {
 	isKeyReferenceValue,
 	type DeclarationsCallbackContext,
+	type Reference,
 	type TokenValue,
 	type Variable,
 } from "@styleframe/core";
 import type { CamelCase } from "scule";
 import { camelCase } from "scule";
 import type { ExportKeys } from "../types";
+import { useFluidClamp } from "../variables/fluid/useFluidClamp";
+import { type RangeInput, isRangeInput } from "./normalizeRange";
 
 /**
  * Creates a generic composable function for a CSS property.
@@ -44,6 +47,20 @@ import type { ExportKeys } from "../types";
  *   loose: "1.75",
  * });
  * ```
+ *
+ * @example
+ * ```typescript
+ * // Fluid-aware composable: ranges are clamped between viewport breakpoints.
+ * const useFontSize = createUseVariable("font-size", { fluid: true });
+ *
+ * const s = styleframe();
+ * useFluidViewportDesignTokens(s);
+ * const { fontSize, fontSizeMd, fontSizeSm } = useFontSize(s, {
+ *   default: "@font-size.md",
+ *   md: [16, 18],          // fluid: clamp 16px → 18px
+ *   sm: "0.8rem",           // fixed
+ * });
+ * ```
  */
 export function createUseVariable<
 	PropertyName extends string,
@@ -51,6 +68,7 @@ export function createUseVariable<
 	Delimiter extends string = ".",
 	Defaults extends Record<string, PropertyType> = Record<string, PropertyType>,
 	MergeDefaults extends boolean = false,
+	Fluid extends boolean = false,
 >(
 	propertyName: PropertyName,
 	{
@@ -58,22 +76,44 @@ export function createUseVariable<
 		mergeDefaults = false as MergeDefaults,
 		transform = (value) => value as TokenValue,
 		delimiter = "." as Delimiter,
+		fluid = false as Fluid,
 	}: {
 		defaults?: Defaults;
 		mergeDefaults?: MergeDefaults;
 		transform?: (value: PropertyType) => TokenValue;
 		delimiter?: Delimiter;
+		/**
+		 * When `true`, tuple `[min, max]` and object `{ min, max }` values are
+		 * passed through `useFluidClamp` to produce a viewport-interpolated CSS
+		 * expression. Plain values flow through `transform` as usual.
+		 *
+		 * The composable's call signature gains a `breakpoint?: Variable | Reference`
+		 * option (defaulting to `s.ref('fluid.breakpoint')`).
+		 */
+		fluid?: Fluid;
 	} = {},
 ) {
 	type WithDefaults<T> = MergeDefaults extends true ? Defaults & T : T;
+	type Value = Fluid extends true
+		? PropertyType | RangeInput<PropertyType>
+		: PropertyType;
+	type DefaultsWidened = Defaults extends Record<string, Value>
+		? Defaults
+		: Record<string, Value>;
 
 	return function useVariable<
 		Context extends DeclarationsCallbackContext = DeclarationsCallbackContext,
-		T extends Record<string, PropertyType> = Defaults,
+		T extends Record<string, Value> = DefaultsWidened,
 	>(
 		s: Context,
 		tokens?: T,
-		{ default: isDefault = true }: { default?: boolean } = {},
+		{
+			default: isDefault = true,
+			breakpoint,
+		}: {
+			default?: boolean;
+			breakpoint?: Variable | Reference;
+		} = {},
 	): ExportKeys<PropertyName, WithDefaults<T>, Delimiter> {
 		const result: Record<string, Variable<string>> = {};
 
@@ -91,14 +131,23 @@ export function createUseVariable<
 		const createVariableName = (key: string) =>
 			`${propertyName}${key === "default" ? "" : `${delimiter}${key}`}` as const;
 
+		const resolvedBreakpoint = fluid
+			? (breakpoint ?? s.ref("fluid.breakpoint"))
+			: breakpoint;
+
 		for (const [key, value] of pairs) {
 			const variableName = createVariableName(key);
 			const exportName: CamelCase<typeof variableName> =
 				camelCase(variableName);
 
-			const variableValue = isKeyReferenceValue(value)
-				? (value as unknown as TokenValue)
-				: transform(value);
+			let variableValue: TokenValue;
+			if (isKeyReferenceValue(value)) {
+				variableValue = value as unknown as TokenValue;
+			} else if (fluid && isRangeInput<TokenValue>(value)) {
+				variableValue = useFluidClamp(s, value, resolvedBreakpoint);
+			} else {
+				variableValue = transform(value as PropertyType);
+			}
 
 			result[exportName] = s.variable(variableName, variableValue, {
 				default: isDefault,

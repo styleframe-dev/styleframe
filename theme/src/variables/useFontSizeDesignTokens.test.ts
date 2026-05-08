@@ -283,6 +283,178 @@ describe("useFontSizeDesignTokens", () => {
 		expect(sizes.fontSize3xl.value).toBe("2.5rem");
 	});
 
+	describe("fluid ranges", () => {
+		it("should treat tuple values as absolute pixel ranges and emit calc()", () => {
+			const s = styleframe();
+			const { fontSizeMd } = useFontSizeDesignTokens(s, {
+				md: [16, 18],
+			});
+
+			expect(fontSizeMd.name).toBe("font-size.md");
+			expect(fontSizeMd.value).toEqual(
+				expect.objectContaining({ type: "css" }),
+			);
+
+			const css = consumeCSS(fontSizeMd, s.options);
+			expect(css).toContain("calc(");
+			expect(css).toContain("16 / 16 * 1rem");
+			expect(css).toContain("(18 - 16)");
+			expect(css).toContain("var(--fluid--breakpoint)");
+		});
+
+		it("should accept the object form { min, max }", () => {
+			const s = styleframe();
+			const { fontSizeMd } = useFontSizeDesignTokens(s, {
+				md: { min: 16, max: 18 },
+			});
+
+			const css = consumeCSS(fontSizeMd, s.options);
+			expect(css).toContain("calc(");
+			expect(css).toContain("16 / 16 * 1rem");
+		});
+
+		it("should produce identical CSS for tuple and object forms", () => {
+			const tupleS = styleframe();
+			const { fontSizeMd: tupleMd } = useFontSizeDesignTokens(tupleS, {
+				md: [16, 18],
+			});
+
+			const objectS = styleframe();
+			const { fontSizeMd: objectMd } = useFontSizeDesignTokens(objectS, {
+				md: { min: 16, max: 18 },
+			});
+
+			expect(consumeCSS(objectMd, objectS.options)).toBe(
+				consumeCSS(tupleMd, tupleS.options),
+			);
+		});
+
+		it("should mix fluid ranges and fixed values in the same call", () => {
+			const s = styleframe();
+			const { fontSize, fontSizeMd, fontSizeSmall } = useFontSizeDesignTokens(
+				s,
+				{
+					default: "@font-size.md",
+					md: [16, 18],
+					small: "0.8rem",
+				},
+			);
+
+			// Fluid: range → calc()
+			expect(fontSizeMd.value).toEqual(
+				expect.objectContaining({ type: "css" }),
+			);
+			// Fixed: pass-through string
+			expect(fontSizeSmall.value).toBe("0.8rem");
+			// Reference: @-prefixed string short-circuits to a Reference token
+			expect(fontSize.value).toEqual({
+				type: "reference",
+				name: "font-size.md",
+				fallback: undefined,
+			});
+		});
+
+		it("should resolve @-references inside tuples", () => {
+			const s = styleframe();
+			s.variable("custom-multiplier", 1.5, { default: true });
+
+			const { fontSizeLg } = useFontSizeDesignTokens(s, {
+				lg: ["@custom-multiplier", "@custom-multiplier"],
+			});
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("var(--custom-multiplier)");
+			expect(css).not.toContain("@custom-multiplier");
+			expect(fontSizeLg.name).toBe("font-size.lg");
+		});
+
+		it("should accept Variable references inside tuples", () => {
+			const s = styleframe();
+			const minMultiplier = s.variable("scale-min", 1.2);
+			const maxMultiplier = s.variable("scale-max", 1.25);
+
+			const { fontSizeLg } = useFontSizeDesignTokens(s, {
+				lg: [s.ref(minMultiplier), s.ref(maxMultiplier)],
+			});
+
+			expect(fontSizeLg.value).toEqual(
+				expect.objectContaining({ type: "css" }),
+			);
+		});
+
+		it("should accept CSS expressions inside tuples", () => {
+			const s = styleframe();
+			s.variable("scale.min-powers.1", 1.2, { default: true });
+			s.variable("scale.max-powers.1", 1.25, { default: true });
+
+			const { fontSizeLg } = useFontSizeDesignTokens(s, {
+				lg: [
+					s.css`16 * ${s.ref("scale.min-powers.1")}`,
+					s.css`18 * ${s.ref("scale.max-powers.1")}`,
+				],
+			});
+
+			expect(fontSizeLg.name).toBe("font-size.lg");
+
+			const css = consumeCSS(s.root, s.options);
+			expect(css).toContain("16 * var(--scale--min-powers--1)");
+			expect(css).toContain("18 * var(--scale--max-powers--1)");
+		});
+
+		it("should default the breakpoint reference to fluid.breakpoint", () => {
+			const s = styleframe();
+			const { fontSizeMd } = useFontSizeDesignTokens(s, {
+				md: [16, 18],
+			});
+
+			const css = consumeCSS(fontSizeMd, s.options);
+			expect(css).toContain("var(--fluid--breakpoint)");
+		});
+
+		it("should accept a custom breakpoint via options", () => {
+			const s = styleframe();
+			const customBreakpoint = s.variable("custom-bp", "75vw");
+
+			const { fontSizeMd } = useFontSizeDesignTokens(
+				s,
+				{ md: [16, 18] },
+				{ breakpoint: customBreakpoint },
+			);
+
+			const css = consumeCSS(fontSizeMd, s.options);
+			expect(css).toContain("var(--custom-bp)");
+			expect(css).not.toContain("var(--fluid--breakpoint)");
+		});
+
+		it("should accept a custom breakpoint reference via options", () => {
+			const s = styleframe();
+			const customBreakpoint = s.variable("custom-bp", "50vw");
+
+			const { fontSizeMd } = useFontSizeDesignTokens(
+				s,
+				{ md: [16, 18] },
+				{ breakpoint: s.ref(customBreakpoint) },
+			);
+
+			const css = consumeCSS(fontSizeMd, s.options);
+			expect(css).toContain("var(--custom-bp)");
+		});
+
+		it("should not emit font-size.min/max base vars (no longer needed)", () => {
+			const s = styleframe();
+			useFontSizeDesignTokens(s, {
+				md: [16, 18],
+			});
+
+			expect(s.root.variables.some((v) => v.name === "font-size.min")).toBe(
+				false,
+			);
+			expect(s.root.variables.some((v) => v.name === "font-size.max")).toBe(
+				false,
+			);
+		});
+	});
+
 	describe("type safety", () => {
 		it("should preserve exact font size names in return type", () => {
 			const s = styleframe();

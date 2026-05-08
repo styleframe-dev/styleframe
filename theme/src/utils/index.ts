@@ -5,4 +5,5 @@ export * from "./createUseUtility";
 export * from "./createUseDerivedVariable";
 export * from "./createUseVariable";
 export * from "./mergeElementOptions";
+export * from "./normalizeRange";
 export * from "./registerElementThemes";

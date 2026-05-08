@@ -1780,25 +1780,24 @@ describe("useDesignTokensPreset", () => {
 			expect(result.fluidMaxWidth).toBeDefined();
 			expect(result.scaleMin).toBeDefined();
 			expect(result.scaleMax).toBeDefined();
-			expect(result.fontSizeMin).toBeDefined();
-			expect(result.fontSizeMax).toBeDefined();
 
 			const css = consumeCSS(s.root, s.options);
 			expect(css).toContain("--fluid--min-width:");
 			expect(css).toContain("--fluid--max-width:");
 			expect(css).toContain("--fluid--breakpoint:");
-			expect(css).toContain("--font-size--min:");
-			expect(css).toContain("--font-size--max:");
-			// Static font-size is replaced by a clamp() expression
+			// Static font-size is replaced by a calc() fluid expression with
+			// the absolute pixel base baked in (font-size.min/max vars are gone)
 			expect(css).not.toContain("--font-size--md: 1rem");
 			expect(css).toContain("--font-size--md: calc(");
+			expect(css).not.toContain("--font-size--min:");
+			expect(css).not.toContain("--font-size--max:");
 		});
 
 		it("should throw when fluidViewport is false but fluidFontSize is enabled (default)", () => {
 			const s = styleframe();
 			expect(() =>
 				useDesignTokensPreset(s, { fluidViewport: false }),
-			).toThrowError(/fluid-scale.*requires.*fluidViewport/);
+			).toThrowError(/font-size.*fluid mode requires.*fluidViewport/);
 		});
 
 		it("should opt out cleanly when both fluidFontSize and fluidViewport are false", () => {
@@ -1823,8 +1822,6 @@ describe("useDesignTokensPreset", () => {
 			const result = useDesignTokensPreset(s, { fluidFontSize: true });
 
 			expect(result.fontSize).toBeDefined();
-			expect(result.fontSizeMin).toBeDefined();
-			expect(result.fontSizeMax).toBeDefined();
 			expect(result.fontSizeMd).toBeDefined();
 			expect(result.fluidBreakpoint).toBeDefined();
 			expect(result.fluidMinWidth).toBeDefined();
@@ -1836,8 +1833,10 @@ describe("useDesignTokensPreset", () => {
 			expect(css).toContain("--fluid--min-width: 320");
 			expect(css).toContain("--fluid--max-width: 1440");
 			expect(css).toContain("--fluid--breakpoint:");
-			expect(css).toContain("--font-size--min: 16");
-			expect(css).toContain("--font-size--max: 18");
+			// font-size.min/max runtime vars are no longer emitted; the absolute
+			// pixel base (16, 18) is baked directly into each font-size calc()
+			expect(css).not.toContain("--font-size--min:");
+			expect(css).not.toContain("--font-size--max:");
 			// scale.min/max default to references into the static scale set
 			expect(css).toContain("--scale--min: var(--scale--major-second);");
 			expect(css).toContain("--scale--max: var(--scale--major-third);");
@@ -1861,27 +1860,27 @@ describe("useDesignTokensPreset", () => {
 			expect(css).toContain("--scale--max: 1.333");
 		});
 
-		it("should auto-disable static font-size when fluid font-size will run", () => {
+		it("should let user fontSize config win over fluid defaults (mixed static + fluid)", () => {
 			const s = styleframe();
 			useDesignTokensPreset(s, {
 				fontSize: { sm: "0.875rem", md: "1rem" },
 			});
 
 			const css = consumeCSS(s.root, s.options);
-			// Custom static fontSize is silently dropped by the default fluid scale.
-			expect(css).not.toContain("--font-size--md: 1rem");
-			expect(css).toContain("--font-size--md: calc(");
+			// User's static fontSize values take precedence over fluid defaults
+			expect(css).toContain("--font-size--md: 1rem");
+			expect(css).toContain("--font-size--sm: 0.875rem");
 		});
 
-		it("should honor a custom fluidFontSize base and values", () => {
+		it("should honor a custom fluidFontSize base and values (absolute pixel ranges)", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				fluidFontSize: {
 					base: { min: 14, max: 20 },
 					values: {
-						sm: [0.875, 0.9],
-						md: [1, 1.1],
-						lg: [1.25, 1.5],
+						sm: [12, 14],
+						md: [14, 16],
+						lg: [18, 24],
 						default: "@font-size.md",
 					},
 				},
@@ -1892,10 +1891,13 @@ describe("useDesignTokensPreset", () => {
 			expect(result.fontSizeLg).toBeDefined();
 
 			const css = consumeCSS(s.root, s.options);
-			expect(css).toContain("--font-size--min: 14");
-			expect(css).toContain("--font-size--max: 20");
+			// Absolute pixel ranges generate calc() expressions per key
 			expect(css).toContain("--font-size--sm: calc(");
+			expect(css).toContain("--font-size--md: calc(");
 			expect(css).toContain("--font-size--lg: calc(");
+			// font-size.min/max base vars are not emitted in the unified API
+			expect(css).not.toContain("--font-size--min:");
+			expect(css).not.toContain("--font-size--max:");
 		});
 
 		it("should honor a custom fluidViewport range", () => {
@@ -1933,7 +1935,7 @@ describe("useDesignTokensPreset", () => {
 					fluidViewport: false,
 					fluidFontSize: true,
 				}),
-			).toThrowError(/fluid-scale.*requires.*fluidViewport/);
+			).toThrowError(/font-size.*fluid mode requires.*fluidViewport/);
 		});
 
 		it("should throw when scale is false but fluidFontSize is enabled (default)", () => {
