@@ -781,8 +781,9 @@ describe("createUseVariable", () => {
 			expect(size.value).toEqual(expect.objectContaining({ type: "css" }));
 
 			const css = consumeCSS(size, s.options);
-			expect(css).toContain("calc(");
-			expect(css).toContain("var(--fluid--breakpoint)");
+			expect(css).toEqual(
+				"--size: calc((16 / 16 * 1rem) + (18 - 16) * var(--fluid--breakpoint));",
+			);
 		});
 
 		it("should pass object-form ranges through useFluidClamp", () => {
@@ -830,8 +831,9 @@ describe("createUseVariable", () => {
 			);
 
 			const css = consumeCSS(size, s.options);
-			expect(css).toContain("var(--custom-bp)");
-			expect(css).not.toContain("var(--fluid--breakpoint)");
+			expect(css).toEqual(
+				"--size: calc((16 / 16 * 1rem) + (18 - 16) * var(--custom-bp));",
+			);
 		});
 
 		it("should still short-circuit @-prefixed reference strings", () => {

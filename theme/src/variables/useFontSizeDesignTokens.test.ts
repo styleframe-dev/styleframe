@@ -296,10 +296,9 @@ describe("useFontSizeDesignTokens", () => {
 			);
 
 			const css = consumeCSS(fontSizeMd, s.options);
-			expect(css).toContain("calc(");
-			expect(css).toContain("16 / 16 * 1rem");
-			expect(css).toContain("(18 - 16)");
-			expect(css).toContain("var(--fluid--breakpoint)");
+			expect(css).toEqual(
+				"--font-size--md: calc((16 / 16 * 1rem) + (18 - 16) * var(--fluid--breakpoint));",
+			);
 		});
 
 		it("should accept the object form { min, max }", () => {
@@ -309,8 +308,9 @@ describe("useFontSizeDesignTokens", () => {
 			});
 
 			const css = consumeCSS(fontSizeMd, s.options);
-			expect(css).toContain("calc(");
-			expect(css).toContain("16 / 16 * 1rem");
+			expect(css).toEqual(
+				"--font-size--md: calc((16 / 16 * 1rem) + (18 - 16) * var(--fluid--breakpoint));",
+			);
 		});
 
 		it("should produce identical CSS for tuple and object forms", () => {
@@ -363,8 +363,10 @@ describe("useFontSizeDesignTokens", () => {
 			});
 
 			const css = consumeCSS(s.root, s.options);
-			expect(css).toContain("var(--custom-multiplier)");
-			expect(css).not.toContain("@custom-multiplier");
+			expect(css).toEqual(`:root {
+\t--custom-multiplier: 1.5;
+\t--font-size--lg: calc((var(--custom-multiplier) / 16 * 1rem) + (var(--custom-multiplier) - var(--custom-multiplier)) * var(--fluid--breakpoint));
+}`);
 			expect(fontSizeLg.name).toBe("font-size.lg");
 		});
 
@@ -397,8 +399,11 @@ describe("useFontSizeDesignTokens", () => {
 			expect(fontSizeLg.name).toBe("font-size.lg");
 
 			const css = consumeCSS(s.root, s.options);
-			expect(css).toContain("16 * var(--scale--min-powers--1)");
-			expect(css).toContain("18 * var(--scale--max-powers--1)");
+			expect(css).toEqual(`:root {
+\t--scale--min-powers--1: 1.2;
+\t--scale--max-powers--1: 1.25;
+\t--font-size--lg: calc((16 * var(--scale--min-powers--1) / 16 * 1rem) + (18 * var(--scale--max-powers--1) - 16 * var(--scale--min-powers--1)) * var(--fluid--breakpoint));
+}`);
 		});
 
 		it("should default the breakpoint reference to fluid.breakpoint", () => {
@@ -408,7 +413,9 @@ describe("useFontSizeDesignTokens", () => {
 			});
 
 			const css = consumeCSS(fontSizeMd, s.options);
-			expect(css).toContain("var(--fluid--breakpoint)");
+			expect(css).toEqual(
+				"--font-size--md: calc((16 / 16 * 1rem) + (18 - 16) * var(--fluid--breakpoint));",
+			);
 		});
 
 		it("should accept a custom breakpoint via options", () => {
@@ -422,8 +429,9 @@ describe("useFontSizeDesignTokens", () => {
 			);
 
 			const css = consumeCSS(fontSizeMd, s.options);
-			expect(css).toContain("var(--custom-bp)");
-			expect(css).not.toContain("var(--fluid--breakpoint)");
+			expect(css).toEqual(
+				"--font-size--md: calc((16 / 16 * 1rem) + (18 - 16) * var(--custom-bp));",
+			);
 		});
 
 		it("should accept a custom breakpoint reference via options", () => {
@@ -437,7 +445,9 @@ describe("useFontSizeDesignTokens", () => {
 			);
 
 			const css = consumeCSS(fontSizeMd, s.options);
-			expect(css).toContain("var(--custom-bp)");
+			expect(css).toEqual(
+				"--font-size--md: calc((16 / 16 * 1rem) + (18 - 16) * var(--custom-bp));",
+			);
 		});
 
 		it("should not emit font-size.min/max base vars (no longer needed)", () => {

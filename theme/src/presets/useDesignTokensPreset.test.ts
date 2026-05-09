@@ -1788,9 +1788,9 @@ describe("useDesignTokensPreset", () => {
 			// Static font-size is replaced by a calc() fluid expression with
 			// the absolute pixel base baked in (font-size.min/max vars are gone)
 			expect(css).not.toContain("--font-size--md: 1rem");
-			expect(css).toContain("--font-size--md: calc(");
-			expect(css).not.toContain("--font-size--min:");
-			expect(css).not.toContain("--font-size--max:");
+			expect(consumeCSS(result.fontSizeMd, s.options)).toEqual(
+				"--font-size--md: calc((16 * var(--scale--min-powers--0) / 16 * 1rem) + (18 * var(--scale--max-powers--0) - 16 * var(--scale--min-powers--0)) * var(--fluid--breakpoint));",
+			);
 		});
 
 		it("should throw when fluidViewport is false but fluidFontSize is enabled (default)", () => {
@@ -1835,8 +1835,9 @@ describe("useDesignTokensPreset", () => {
 			expect(css).toContain("--fluid--breakpoint:");
 			// font-size.min/max runtime vars are no longer emitted; the absolute
 			// pixel base (16, 18) is baked directly into each font-size calc()
-			expect(css).not.toContain("--font-size--min:");
-			expect(css).not.toContain("--font-size--max:");
+			expect(consumeCSS(result.fontSizeMd, s.options)).toEqual(
+				"--font-size--md: calc((16 * var(--scale--min-powers--0) / 16 * 1rem) + (18 * var(--scale--max-powers--0) - 16 * var(--scale--min-powers--0)) * var(--fluid--breakpoint));",
+			);
 			// scale.min/max default to references into the static scale set
 			expect(css).toContain("--scale--min: var(--scale--major-second);");
 			expect(css).toContain("--scale--max: var(--scale--major-third);");
@@ -1862,27 +1863,27 @@ describe("useDesignTokensPreset", () => {
 
 		it("should let user fontSize config win over fluid defaults (mixed static + fluid)", () => {
 			const s = styleframe();
-			useDesignTokensPreset(s, {
+			const result = useDesignTokensPreset(s, {
 				fontSize: { sm: "0.875rem", md: "1rem" },
 			});
 
-			const css = consumeCSS(s.root, s.options);
 			// User's static fontSize values take precedence over fluid defaults
-			expect(css).toContain("--font-size--md: 1rem");
-			expect(css).toContain("--font-size--sm: 0.875rem");
+			expect(consumeCSS(result.fontSizeMd, s.options)).toEqual(
+				"--font-size--md: 1rem;",
+			);
+			expect(consumeCSS(result.fontSizeSm, s.options)).toEqual(
+				"--font-size--sm: 0.875rem;",
+			);
 		});
 
-		it("should honor a custom fluidFontSize base and values (absolute pixel ranges)", () => {
+		it("should honor absolute pixel ranges passed via fontSize", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
-				fluidFontSize: {
-					base: { min: 14, max: 20 },
-					values: {
-						sm: [12, 14],
-						md: [14, 16],
-						lg: [18, 24],
-						default: "@font-size.md",
-					},
+				fontSize: {
+					sm: [12, 14],
+					md: [14, 16],
+					lg: [18, 24],
+					default: "@font-size.md",
 				},
 			});
 
@@ -1890,14 +1891,16 @@ describe("useDesignTokensPreset", () => {
 			expect(result.fontSizeMd).toBeDefined();
 			expect(result.fontSizeLg).toBeDefined();
 
-			const css = consumeCSS(s.root, s.options);
 			// Absolute pixel ranges generate calc() expressions per key
-			expect(css).toContain("--font-size--sm: calc(");
-			expect(css).toContain("--font-size--md: calc(");
-			expect(css).toContain("--font-size--lg: calc(");
-			// font-size.min/max base vars are not emitted in the unified API
-			expect(css).not.toContain("--font-size--min:");
-			expect(css).not.toContain("--font-size--max:");
+			expect(consumeCSS(result.fontSizeSm, s.options)).toEqual(
+				"--font-size--sm: calc((12 / 16 * 1rem) + (14 - 12) * var(--fluid--breakpoint));",
+			);
+			expect(consumeCSS(result.fontSizeMd, s.options)).toEqual(
+				"--font-size--md: calc((14 / 16 * 1rem) + (16 - 14) * var(--fluid--breakpoint));",
+			);
+			expect(consumeCSS(result.fontSizeLg, s.options)).toEqual(
+				"--font-size--lg: calc((18 / 16 * 1rem) + (24 - 18) * var(--fluid--breakpoint));",
+			);
 		});
 
 		it("should honor a custom fluidViewport range", () => {
