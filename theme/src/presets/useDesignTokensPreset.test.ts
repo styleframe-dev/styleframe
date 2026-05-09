@@ -306,6 +306,49 @@ describe("useDesignTokensPreset", () => {
 		});
 	});
 
+	describe("meta.merge: false (replace)", () => {
+		it("should replace defaults entirely for spacing", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				meta: { merge: false },
+				spacing: { sm: "0.5rem", lg: "2rem" },
+			});
+
+			const spacingKeys = Object.keys(result).filter((k) =>
+				k.startsWith("spacing"),
+			);
+			// Only the keys present in the custom record exist
+			expect(spacingKeys.sort()).toEqual(["spacingLg", "spacingSm"]);
+		});
+
+		it("should replace defaults entirely for colors", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				meta: { merge: false },
+				colors: { brand: "#ff0000" },
+				borderColor: false,
+				themes: { dark: { colors: false, borderColor: false } },
+			});
+
+			expect(result.colorBrand).toBeDefined();
+			// @ts-expect-error - colorPrimary doesn't exist when defaults are replaced
+			result.colorPrimary;
+		});
+
+		it("should replace defaults entirely for borderRadius type-level", () => {
+			const s = styleframe();
+			const result = useDesignTokensPreset(s, {
+				meta: { merge: false },
+				borderRadius: { sm: "2px", xl: "16px" },
+			});
+
+			expect(result.borderRadiusSm).toBeDefined();
+			expect(result.borderRadiusXl).toBeDefined();
+			// @ts-expect-error - borderRadiusMd is not in custom config (replace mode)
+			result.borderRadiusMd;
+		});
+	});
+
 	describe("meta.colors configuration", () => {
 		it("should generate color lightness variations by default", () => {
 			const s = styleframe();
@@ -568,10 +611,10 @@ describe("useDesignTokensPreset", () => {
 				},
 			});
 
-			const colorKeys = Object.keys(result).filter((k) =>
-				k.startsWith("color"),
+			const variationKeys = Object.keys(result).filter((k) =>
+				/^color[A-Z][a-zA-Z]*(?:\d+|Shade\d+|Tint\d+)$/.test(k),
 			);
-			expect(colorKeys).toEqual(["colorPrimary"]);
+			expect(variationKeys).toEqual([]);
 		});
 	});
 
@@ -734,13 +777,14 @@ describe("useDesignTokensPreset", () => {
 			expect(resultKeys.some((n) => n.startsWith("colorSuccess"))).toBe(true);
 		});
 
-		it("should handle empty custom values object", () => {
+		it("should handle empty custom values object under replace mode", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				meta: { merge: false },
 				spacing: {},
 			});
 
-			// No spacing keys should exist since config was empty
+			// No spacing keys should exist since config was empty and merge is off
 			const spacingKeys = Object.keys(result).filter((k) =>
 				k.startsWith("spacing"),
 			);
@@ -750,6 +794,7 @@ describe("useDesignTokensPreset", () => {
 		it("should not create scalePowers when scale doesn't include scale variable", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
+				meta: { merge: false },
 				fluidFontSize: false,
 				scale: {
 					base: "1.25",
@@ -779,18 +824,18 @@ describe("useDesignTokensPreset", () => {
 	});
 
 	describe("type safety", () => {
-		it("should infer custom spacing keys in return type", () => {
+		it("should merge custom spacing keys with defaults in return type", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				spacing: { sm: "0.5rem", md: "1rem" },
 			});
 
-			// These should compile and exist
+			// Custom keys are inferred
 			expect(result.spacingSm).toBeDefined();
 			expect(result.spacingMd).toBeDefined();
-
-			// @ts-expect-error - spacingLg is not in custom config
-			result.spacingLg;
+			// Default keys are preserved under the merge default
+			expect(result.spacingLg).toBeDefined();
+			expect(result.spacing2xs).toBeDefined();
 		});
 
 		it("should type disabled domains correctly", () => {
@@ -821,7 +866,7 @@ describe("useDesignTokensPreset", () => {
 			expect(result.fontSizeMd).toBeDefined();
 		});
 
-		it("should infer custom borderRadius keys", () => {
+		it("should merge custom borderRadius keys with defaults", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				borderRadius: { none: "0", sm: "2px", xl: "16px" },
@@ -830,12 +875,11 @@ describe("useDesignTokensPreset", () => {
 			expect(result.borderRadiusNone).toBeDefined();
 			expect(result.borderRadiusSm).toBeDefined();
 			expect(result.borderRadiusXl).toBeDefined();
-
-			// @ts-expect-error - borderRadiusMd is not in custom config
-			result.borderRadiusMd;
+			// Default key preserved under the merge default
+			expect(result.borderRadiusMd).toBeDefined();
 		});
 
-		it("should infer custom fontSize keys", () => {
+		it("should merge custom fontSize keys with defaults", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				fluidFontSize: false,
@@ -844,12 +888,11 @@ describe("useDesignTokensPreset", () => {
 
 			expect(result.fontSizeXs).toBeDefined();
 			expect(result.fontSizeBase).toBeDefined();
-
-			// @ts-expect-error - fontSizeLg is not in custom config
-			result.fontSizeLg;
+			// Default key preserved under the merge default
+			expect(result.fontSizeLg).toBeDefined();
 		});
 
-		it("should infer custom breakpoint keys", () => {
+		it("should merge custom breakpoint keys with defaults", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				breakpoint: { mobile: 480, tablet: 768, desktop: 1024 },
@@ -858,12 +901,11 @@ describe("useDesignTokensPreset", () => {
 			expect(result.breakpointMobile).toBeDefined();
 			expect(result.breakpointTablet).toBeDefined();
 			expect(result.breakpointDesktop).toBeDefined();
-
-			// @ts-expect-error - breakpointSm is not in custom config
-			result.breakpointSm;
+			// Default key preserved under the merge default
+			expect(result.breakpointSm).toBeDefined();
 		});
 
-		it("should infer custom easing keys", () => {
+		it("should merge custom easing keys with defaults", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				easing: {
@@ -874,9 +916,8 @@ describe("useDesignTokensPreset", () => {
 
 			expect(result.easingLinear).toBeDefined();
 			expect(result.easingBounce).toBeDefined();
-
-			// @ts-expect-error - easingEaseIn is not in custom config
-			result.easingEaseIn;
+			// Default key preserved under the merge default
+			expect(result.easingEaseIn).toBeDefined();
 		});
 
 		it("should type scalePowers as undefined when scale is false", () => {
@@ -902,19 +943,19 @@ describe("useDesignTokensPreset", () => {
 				easing: false,
 			});
 
-			// Custom spacing works
+			// Custom spacing key works
 			expect(result.spacingSm).toBeDefined();
-			// @ts-expect-error - spacingMd is not in custom config
-			result.spacingMd;
+			// Default spacing keys are preserved under the merge default
+			expect(result.spacingMd).toBeDefined();
 
 			// borderRadius is disabled
 			// @ts-expect-error - borderRadiusMd doesn't exist when disabled
 			result.borderRadiusMd;
 
-			// colors is strongly typed for base colors
+			// colors is strongly typed for base + custom colors
 			expect(result.colorBrand).toBeDefined();
-			// @ts-expect-error - colorPrimary is not in custom config
-			result.colorPrimary;
+			// Default colors are merged in alongside the custom one
+			expect(result.colorPrimary).toBeDefined();
 
 			// easing is disabled
 			// @ts-expect-error - easingLinear doesn't exist when disabled
@@ -982,7 +1023,7 @@ describe("useDesignTokensPreset", () => {
 			expect(result.colorPrimaryTint1500).not.toBeDefined();
 		});
 
-		it("should infer custom fontWeight keys", () => {
+		it("should merge custom fontWeight keys with defaults", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				fontWeight: { light: "300", regular: "400", bold: "700" },
@@ -991,12 +1032,11 @@ describe("useDesignTokensPreset", () => {
 			expect(result.fontWeightLight).toBeDefined();
 			expect(result.fontWeightRegular).toBeDefined();
 			expect(result.fontWeightBold).toBeDefined();
-
-			// @ts-expect-error - fontWeightMedium is not in custom config
-			result.fontWeightMedium;
+			// Default key preserved under the merge default
+			expect(result.fontWeightMedium).toBeDefined();
 		});
 
-		it("should infer custom lineHeight keys", () => {
+		it("should merge custom lineHeight keys with defaults", () => {
 			const s = styleframe();
 			const result = useDesignTokensPreset(s, {
 				lineHeight: { tight: "1.25", normal: "1.5", loose: "2" },
@@ -1005,9 +1045,8 @@ describe("useDesignTokensPreset", () => {
 			expect(result.lineHeightTight).toBeDefined();
 			expect(result.lineHeightNormal).toBeDefined();
 			expect(result.lineHeightLoose).toBeDefined();
-
-			// @ts-expect-error - lineHeightRelaxed is not in custom config
-			result.lineHeightRelaxed;
+			// Default key preserved under the merge default
+			expect(result.lineHeightRelaxed).toBeDefined();
 		});
 	});
 
@@ -1373,8 +1412,9 @@ describe("useDesignTokensPreset", () => {
 			result.colorErrorShade100;
 			result.colorErrorTint100;
 
-			// @ts-expect-error - colorSuccess is not in custom config
+			// Default colors are merged in alongside the custom overrides
 			result.colorSuccess;
+			result.colorSuccess500;
 		});
 
 		it("should return scalePowers when scale is enabled", () => {
@@ -1546,6 +1586,8 @@ describe("useDesignTokensPreset", () => {
 					dark: { colors: false, borderColor: false },
 				},
 				meta: {
+					// Disable merge so themes.default cannot fill in via defaults either
+					merge: false,
 					colors: {
 						generateLevels: false,
 						generateShades: false,

@@ -472,8 +472,13 @@ import {
  */
 export interface UtilitiesMetaConfig {
 	/**
-	 * When true, custom values are merged with defaults instead of replacing them.
-	 * Custom values override defaults with the same key.
+	 * Controls how custom utility values combine with defaults.
+	 *
+	 * - `true` (default): custom values are merged with defaults. Custom values
+	 *   override defaults with the same key; default keys not present in the
+	 *   custom record are preserved.
+	 * - `false`: custom values replace the defaults entirely for any utility
+	 *   that is supplied a custom record.
 	 */
 	merge?: boolean;
 }
@@ -483,8 +488,8 @@ export interface UtilitiesMetaConfig {
  *
  * - Omit or set to `undefined` to use default values
  * - Set to `false` to disable the utility category entirely
- * - Provide a custom record to use custom values
- * - Set `meta.merge` to `true` to merge custom values with defaults
+ * - Provide a custom record to merge custom values with defaults
+ * - Set `meta.merge` to `false` to replace defaults entirely with the custom record
  */
 export interface UtilitiesPresetConfig {
 	meta?: UtilitiesMetaConfig;
@@ -646,16 +651,16 @@ export interface UtilitiesPresetConfig {
  * // Use all defaults
  * const utilities = useUtilitiesPreset(s);
  *
- * // Customize specific utilities
+ * // Customize specific utilities — custom values are merged with defaults
  * const utilities = useUtilitiesPreset(s, {
- *     display: { flex: "flex", block: "block", hidden: "none" },
+ *     cursor: { custom: "url('custom.cur'), auto" },
  *     position: false, // Disable position utilities
  * });
  *
- * // Merge custom values with defaults
+ * // Replace defaults entirely with the custom record
  * const utilities = useUtilitiesPreset(s, {
- *     meta: { merge: true },
- *     cursor: { custom: "url('custom.cur'), auto" },
+ *     meta: { merge: false },
+ *     display: { flex: "flex", block: "block", hidden: "none" },
  * });
  *
  * // Now you can use the creator functions to define additional utility values
@@ -666,7 +671,7 @@ export function useUtilitiesPreset(
 	s: Styleframe,
 	config: UtilitiesPresetConfig = {},
 ) {
-	const shouldMerge = config.meta?.merge === true;
+	const shouldMerge = config.meta?.merge !== false;
 
 	/**
 	 * Helper to resolve utility options from the names config
