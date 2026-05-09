@@ -450,7 +450,7 @@ describe("useFontSizeDesignTokens", () => {
 			);
 		});
 
-		it("should not emit font-size.min/max base vars (no longer needed)", () => {
+		it("should not emit font-size.min/max when not provided in values", () => {
 			const s = styleframe();
 			useFontSizeDesignTokens(s, {
 				md: [16, 18],

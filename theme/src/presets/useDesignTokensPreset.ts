@@ -24,13 +24,14 @@ import {
 	darkModeColorValues,
 	durationValues,
 	easingValues,
+	fluidFontSizeBaseValues,
+	fluidScalePowerByKey,
 	fluidScaleValues,
 	fluidViewportValues,
 	fontFamilyValues,
 	fontSizeStaticValues,
 	fontStyleValues,
 	fontWeightValues,
-	getFontSizeFluidValues,
 	letterSpacingValues,
 	lineHeightValues,
 	scalePowerValues,
@@ -194,7 +195,21 @@ const domains = [
 				);
 			}
 
-			const fluidDefaults = getFontSizeFluidValues(s);
+			const fluidDefaults: Record<string, FontSizeValue> = {
+				...fluidFontSizeBaseValues,
+			};
+			for (const [key, power] of Object.entries(fluidScalePowerByKey) as [
+				string,
+				number | null,
+			][]) {
+				fluidDefaults[key] =
+					power === null
+						? "@font-size.md"
+						: [
+								s.css`${s.ref("font-size.min")} * ${s.ref(`scale.min-powers.${power}`)}`,
+								s.css`${s.ref("font-size.max")} * ${s.ref(`scale.max-powers.${power}`)}`,
+							];
+			}
 
 			const resolvedValues: Record<string, FontSizeValue> =
 				config.fontSize !== undefined
@@ -663,10 +678,12 @@ export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
 		| false;
 	/**
 	 * Fluid font size configuration. When enabled (the default), the `font-size`
-	 * domain uses a fluid scale seeded from `getFontSizeFluidValues()` so each
-	 * `font-size.*` variable interpolates across the viewport. Pass `false` to
-	 * fall back to static rems. To customise individual sizes, pass explicit
-	 * fluid ranges via the `fontSize` option (e.g. `fontSize: { md: [16, 18] }`).
+	 * domain emits `--font-size--min` and `--font-size--max` as configurable
+	 * pixel-base CSS variables (defaulting to 16/18) and each `font-size.*`
+	 * variable interpolates across the viewport via `var(--font-size--min)` /
+	 * `var(--font-size--max)`. Pass `false` to fall back to static rems. To
+	 * customise individual sizes, pass explicit fluid ranges via the `fontSize`
+	 * option (e.g. `fontSize: { md: [16, 18] }`).
 	 *
 	 * - `undefined` / `true` (default): fluid scale enabled
 	 * - `false`: disable. The `font-size` domain falls back to static rems.

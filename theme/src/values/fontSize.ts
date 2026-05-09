@@ -1,4 +1,4 @@
-import type { DeclarationsCallbackContext, TokenValue } from "@styleframe/core";
+import type { TokenValue } from "@styleframe/core";
 import type { RangeInput } from "../utils/normalizeRange";
 
 export type FontSizeValue = TokenValue | RangeInput<TokenValue>;
@@ -29,7 +29,7 @@ export const fluidFontSizeBaseValues = {
  * Map from fluid font-size keys to their scale power. `null` is the special
  * `default` key, which references `@font-size.md` rather than a power.
  */
-const fluidScalePowerByKey = {
+export const fluidScalePowerByKey = {
 	default: null,
 	"3xs": -4,
 	"2xs": -3,
@@ -45,33 +45,3 @@ const fluidScalePowerByKey = {
 
 export type FontSizeFluidKey = keyof typeof fluidScalePowerByKey;
 export type FontSizeFluidDefaults = Record<FontSizeFluidKey, FontSizeValue>;
-
-/**
- * Build the fluid font-size defaults. Each non-default key resolves to a
- * `[min, max]` pair of CSS expressions multiplying the absolute pixel base by
- * a power of the fluid scale (`@scale.min-powers.<n>` / `@scale.max-powers.<n>`),
- * preserving the live link to user-configurable scale ratios.
- */
-export function getFontSizeFluidValues(
-	s: DeclarationsCallbackContext,
-	base: { min: number; max: number } = fluidFontSizeBaseValues,
-): FontSizeFluidDefaults {
-	const { min, max } = base;
-	const { css, ref } = s;
-
-	const result = {} as Record<FontSizeFluidKey, FontSizeValue>;
-	for (const [key, power] of Object.entries(fluidScalePowerByKey) as [
-		FontSizeFluidKey,
-		number | null,
-	][]) {
-		if (power === null) {
-			result[key] = "@font-size.md";
-		} else {
-			result[key] = [
-				css`${min} * ${ref(`scale.min-powers.${power}`)}`,
-				css`${max} * ${ref(`scale.max-powers.${power}`)}`,
-			];
-		}
-	}
-	return result;
-}

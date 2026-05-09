@@ -17,9 +17,8 @@ useFontSizeDesignTokens(s, {
 Breaking changes:
 
 - `useFluidFontSizeDesignTokens` is removed. Pass ranges directly to `useFontSizeDesignTokens` instead.
-- The runtime `font-size.min` / `font-size.max` variables (plus `fontSizeMin` / `fontSizeMax` on the preset result) are no longer emitted; absolute pixel values are baked into each fluid `calc()` expression.
 - `useDesignTokensPreset`'s `fluidFontSize.values` config now expects the unified `FontSizeValue` (`TokenValue | RangeInput<TokenValue>`) per key. Existing `[min, max]` / `{ min, max }` shapes still work but are interpreted as **absolute pixels**, not multipliers of a base.
 - When `fluidFontSize` is enabled and the user passes their own `fontSize` config, those values now win over the fluid defaults instead of being silently dropped.
-- `fontSizeValues` is renamed to `fontSizeStaticValues`; a new `getFontSizeFluidValues(s, base)` builder produces the fluid-aware defaults.
+- `fontSizeValues` is renamed to `fontSizeStaticValues`. The pixel base used by the default fluid scale is emitted as configurable CSS variables (`--font-size--min: 16;` / `--font-size--max: 18;`); each fluid `font-size.*` `calc()` references them via `var()`, so the base can be retargeted by overriding those custom properties.
 
 Internal: `createUseVariable` gains a `fluid?: boolean` opt-in flag plus a `breakpoint` options-bag arg on the returned composable, so any composable can adopt range-aware values with a single line.
