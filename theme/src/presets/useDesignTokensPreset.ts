@@ -494,9 +494,10 @@ type GetDomainConfig<
 
 /**
  * Extracts the merge flag from config by structural matching.
- * Returns `true` only when config literally has `meta: { merge: true }`.
+ * Returns `false` only when config literally has `meta: { merge: false }`.
+ * The default is `true` — partial overrides merge with defaults.
  */
-type ExtractMerge<T> = T extends { meta: { merge: true } } ? true : false;
+type ExtractMerge<T> = T extends { meta: { merge: false } } ? false : true;
 
 /**
  * Resolves which value record to use based on config:
@@ -507,7 +508,7 @@ type ExtractMerge<T> = T extends { meta: { merge: true } } ? true : false;
 type ResolveTokens<
 	TConfig,
 	TDefault extends Record<string, unknown>,
-	TMerge extends boolean = false,
+	TMerge extends boolean = true,
 > = TConfig extends false
 	? never
 	: TConfig extends undefined
@@ -526,7 +527,7 @@ type FlatTokenResult<
 	TConfig,
 	TPrefix extends string,
 	TDefault extends Record<string, unknown>,
-	TMerge extends boolean = false,
+	TMerge extends boolean = true,
 > = TConfig extends false
 	? {}
 	: ExportKeys<TPrefix, ResolveTokens<TConfig, TDefault, TMerge>>;
@@ -566,10 +567,10 @@ type AllColorVariations<TColors extends Record<string, string>> =
 /**
  * Resolves which color record to use based on config and merge flag.
  */
-type ResolvedColors<TColors, TMerge extends boolean> = TColors extends Record<
-	string,
-	string
->
+type ResolvedColors<
+	TColors,
+	TMerge extends boolean = true,
+> = TColors extends Record<string, string>
 	? [TMerge] extends [true]
 		? Omit<DefaultColors, keyof TColors> & TColors
 		: TColors
@@ -581,7 +582,7 @@ type ResolvedColors<TColors, TMerge extends boolean> = TColors extends Record<
  */
 type FlatColorResult<
 	TColors,
-	TMerge extends boolean = false,
+	TMerge extends boolean = true,
 > = TColors extends false
 	? {}
 	: ExportKeys<"color", ResolvedColors<TColors, TMerge>, "."> &
@@ -615,8 +616,13 @@ export interface ColorsMetaConfig extends ColorGenerationFlags {
  */
 export interface MetaConfig {
 	/**
-	 * When true, custom values are merged with defaults instead of replacing them.
-	 * Custom values override defaults with the same key.
+	 * Controls how custom domain records combine with defaults.
+	 *
+	 * - `true` (default): custom values are merged with defaults. Custom values
+	 *   override defaults with the same key; default keys not present in the
+	 *   custom record are preserved.
+	 * - `false`: custom values replace the defaults entirely for any domain
+	 *   that is supplied a custom record.
 	 */
 	merge?: boolean;
 	colors?: ColorsMetaConfig;
@@ -625,7 +631,7 @@ export interface MetaConfig {
 /**
  * Meta configuration with merge option typed for inference
  */
-export type MetaConfigWithMerge<TMerge extends boolean = false> = Omit<
+export type MetaConfigWithMerge<TMerge extends boolean = true> = Omit<
 	MetaConfig,
 	"merge"
 > & {
@@ -637,10 +643,10 @@ export type MetaConfigWithMerge<TMerge extends boolean = false> = Omit<
  *
  * - Omit or set to `undefined` to use default values
  * - Set to `false` to disable the domain entirely
- * - Provide a custom record to use custom values
- * - Set `meta.merge` to `true` to merge custom values with defaults
+ * - Provide a custom record to merge custom values with defaults
+ * - Set `meta.merge` to `false` to replace defaults entirely with the custom record
  */
-export interface DesignTokensPresetConfig<TMerge extends boolean = false> {
+export interface DesignTokensPresetConfig<TMerge extends boolean = true> {
 	spacing?: Record<string, TokenValue> | false;
 	borderColor?: Record<string, TokenValue> | false;
 	borderWidth?: Record<string, TokenValue> | false;
@@ -834,7 +840,7 @@ type FluidScaleResult<TConfig> = IsFluidFontSizeEnabled<TConfig> extends true
  */
 export type DesignTokensPresetResult<
 	TConfig = {},
-	TMerge extends boolean = false,
+	TMerge extends boolean = true,
 > = FlatSimpleDomainResults<TConfig, TMerge> &
 	FlatColorResult<GetDomainConfig<TConfig, "colors", DefaultColors>, TMerge> &
 	ScalePowersResult<GetDomainConfig<TConfig, "scale", typeof scaleValues>> &
@@ -963,7 +969,7 @@ function collectThemeNames(
  */
 export function useDesignTokensPreset(
 	s: Styleframe,
-): DesignTokensPresetResult<{}, false>;
+): DesignTokensPresetResult<{}, true>;
 export function useDesignTokensPreset<
 	TConfig extends DesignTokensPresetConfig<boolean>,
 >(
@@ -974,7 +980,7 @@ export function useDesignTokensPreset(
 	s: Styleframe,
 	config: DesignTokensPresetConfig<boolean> = {},
 ): DesignTokensPresetResult {
-	const shouldMerge = config.meta?.merge === true;
+	const shouldMerge = config.meta?.merge !== false;
 	const defaultThemeOverrides = config.themes?.default;
 
 	const result: Record<string, Variable | TokenValue> = {};
