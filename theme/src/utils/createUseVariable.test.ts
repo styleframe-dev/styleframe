@@ -770,6 +770,99 @@ describe("createUseVariable", () => {
 		});
 	});
 
+	describe("fluid option", () => {
+		it("should pass tuple values through useFluidClamp", () => {
+			const useSize = createUseVariable("size", { fluid: true });
+			const s = styleframe();
+			const { size } = useSize(s, {
+				default: [16, 18],
+			});
+
+			expect(size.value).toEqual(expect.objectContaining({ type: "css" }));
+
+			const css = consumeCSS(size, s.options);
+			expect(css).toEqual(
+				"--size: calc((16 / 16 * 1rem) + (18 - 16) * var(--fluid--breakpoint));",
+			);
+		});
+
+		it("should pass object-form ranges through useFluidClamp", () => {
+			const useSize = createUseVariable("size", { fluid: true });
+			const s = styleframe();
+			const { size } = useSize(s, {
+				default: { min: 16, max: 18 },
+			});
+
+			expect(size.value).toEqual(expect.objectContaining({ type: "css" }));
+		});
+
+		it("should keep plain TokenValue values as-is", () => {
+			const useSize = createUseVariable("size", { fluid: true });
+			const s = styleframe();
+			const { sizeSmall } = useSize(s, {
+				small: "0.8rem",
+			});
+
+			expect(sizeSmall.value).toBe("0.8rem");
+		});
+
+		it("should mix fluid and fixed values in the same call", () => {
+			const useSize = createUseVariable("size", { fluid: true });
+			const s = styleframe();
+			const { size, sizeSmall, sizeLarge } = useSize(s, {
+				default: [16, 18],
+				small: "0.8rem",
+				large: { min: 24, max: 32 },
+			});
+
+			expect(size.value).toEqual(expect.objectContaining({ type: "css" }));
+			expect(sizeSmall.value).toBe("0.8rem");
+			expect(sizeLarge.value).toEqual(expect.objectContaining({ type: "css" }));
+		});
+
+		it("should accept a breakpoint override via options", () => {
+			const useSize = createUseVariable("size", { fluid: true });
+			const s = styleframe();
+			const customBp = s.variable("custom-bp", "75vw");
+			const { size } = useSize(
+				s,
+				{ default: [16, 18] },
+				{ breakpoint: customBp },
+			);
+
+			const css = consumeCSS(size, s.options);
+			expect(css).toEqual(
+				"--size: calc((16 / 16 * 1rem) + (18 - 16) * var(--custom-bp));",
+			);
+		});
+
+		it("should still short-circuit @-prefixed reference strings", () => {
+			const useSize = createUseVariable("size", { fluid: true });
+			const s = styleframe();
+			const { size, sizeAlias } = useSize(s, {
+				default: [16, 18],
+				alias: "@size",
+			});
+
+			expect(size.value).toEqual(expect.objectContaining({ type: "css" }));
+			expect(sizeAlias.value).toEqual({
+				type: "reference",
+				name: "size",
+			});
+		});
+
+		it("should not affect non-fluid composables", () => {
+			const useSize = createUseVariable("size");
+			const s = styleframe();
+			const { sizeSmall } = useSize(s, {
+				small: "0.8rem",
+			});
+			expect(sizeSmall.value).toBe("0.8rem");
+			// font-size--min/max are not auto-emitted in non-fluid mode
+			expect(s.root.variables.some((v) => v.name === "size.min")).toBe(false);
+		});
+	});
+
 	describe("delimiter option", () => {
 		it("should use custom delimiter", () => {
 			const useColor = createUseVariable("color", {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
-import { fontSizeValues } from "@styleframe/theme";
+import { fontSizeStaticValues } from "@styleframe/theme";
 import FontSizeSwatch from "../../src/components/design-tokens/typography/FontSizeSwatch.vue";
 import StoryGrid from "../../src/components/primitives/StoryGrid.vue";
 
@@ -10,7 +10,7 @@ const meta = {
 	argTypes: {
 		value: {
 			control: "select",
-			options: Object.keys(fontSizeValues),
+			options: Object.keys(fontSizeStaticValues),
 		},
 	},
 } satisfies Meta<typeof FontSizeSwatch>;
@@ -22,7 +22,7 @@ export const AllFontSizes: StoryObj = {
 	render: () => ({
 		components: { FontSizeSwatch, StoryGrid },
 		setup() {
-			return { items: Object.keys(fontSizeValues) };
+			return { items: Object.keys(fontSizeStaticValues) };
 		},
 		template: `
 			<StoryGrid :items="items" layout="list">

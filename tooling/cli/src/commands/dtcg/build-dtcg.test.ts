@@ -2,8 +2,8 @@ import type { Root, Theme, Variable } from "@styleframe/core";
 import type { CSS, Reference, TokenValue } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import {
-	useFluidFontSizeDesignTokens,
 	useFluidViewportDesignTokens,
+	useFontSizeDesignTokens,
 } from "@styleframe/theme";
 import { describe, expect, it } from "vitest";
 import { buildDTCG } from "./build-dtcg";
@@ -270,11 +270,7 @@ describe("buildDTCG", () => {
 	it("normalises fluid font-size tokens to {value, unit} dimensions at the max bound", () => {
 		const s = styleframe();
 		useFluidViewportDesignTokens(s); // fluid.min-width=320, fluid.max-width=1440
-		useFluidFontSizeDesignTokens(
-			s,
-			{ min: 16, max: 18 },
-			{ md: { min: 1, max: 1 } },
-		);
+		useFontSizeDesignTokens(s, { md: [16, 18] });
 
 		const { tokens, fluidNormalisedCount, maxViewport } = buildDTCG(
 			s.root as Root,
@@ -292,11 +288,7 @@ describe("buildDTCG", () => {
 	it("uses a project-overridden fluid.max-width for the substitution viewport", () => {
 		const s = styleframe();
 		useFluidViewportDesignTokens(s, { minWidth: 320, maxWidth: 1920 });
-		useFluidFontSizeDesignTokens(
-			s,
-			{ min: 16, max: 24 },
-			{ md: { min: 1, max: 1 } },
-		);
+		useFontSizeDesignTokens(s, { md: [16, 24] });
 
 		const { tokens, maxViewport } = buildDTCG(s.root as Root);
 		const md = (tokens["font-size"] as unknown as Record<string, any>)

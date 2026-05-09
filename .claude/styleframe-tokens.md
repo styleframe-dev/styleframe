@@ -339,53 +339,28 @@ selector('.hero', {
 ```ts
 import {
     useFluidViewportDesignTokens,
-    useFluidFontSizeDesignTokens,
-    useScaleDesignTokens,
-    useScalePowersDesignTokens,
-    scaleValues,
+    useFontSizeDesignTokens,
 } from '@styleframe/theme';
 
-// Set up fluid viewport range (320px - 1440px)
 useFluidViewportDesignTokens(s);
 
-// Define scales for mobile and desktop
-const { scaleMin, scaleMax } = useScaleDesignTokens(s, {
-    ...scaleValues,
-    min: '@scale.minor-third',   // Minor Third (1.2) for mobile
-    max: '@scale.major-third'    // Major Third (1.25) for desktop
-});
-
-// Calculate scale powers
-const scaleMinPowers = useScalePowersDesignTokens(s, scaleMin);
-const scaleMaxPowers = useScalePowersDesignTokens(s, scaleMax);
-
-// Generate fluid font sizes
+// The `useFontSizeDesignTokens` composable is fluid-aware: tuple/object
+// values become fluid clamps, plain values stay static.
 const {
     fontSize,
-    fontSizeXs,
     fontSizeSm,
     fontSizeMd,
     fontSizeLg,
-    fontSizeXl,
-    fontSize2xl,
-} = useFluidFontSizeDesignTokens(s,
-    { min: 16, max: 18 },  // Base font size range (16px on mobile, 18px on desktop)
-    {
-        xs: { min: scaleMinPowers[-2], max: scaleMaxPowers[-2] },
-        sm: { min: scaleMinPowers[-1], max: scaleMaxPowers[-1] },
-        md: { min: scaleMinPowers[0], max: scaleMaxPowers[0] },
-        lg: { min: scaleMinPowers[1], max: scaleMaxPowers[1] },
-        xl: { min: scaleMinPowers[2], max: scaleMaxPowers[2] },
-        '2xl': { min: scaleMinPowers[3], max: scaleMaxPowers[3] },
-        default: '@font-size.md'
-    }
-);
+} = useFontSizeDesignTokens(s, {
+    default: '@font-size.md',
+    sm: '0.875rem',                  // fixed
+    md: [16, 18],                    // fluid (tuple of absolute pixels)
+    lg: { min: 18, max: 24 },        // fluid (object form)
+});
 
-// Apply to elements
 selector('body', { fontSize: ref(fontSize) });
-selector('h1', { fontSize: ref(fontSize2xl) });
-selector('h2', { fontSize: ref(fontSizeXl) });
-selector('h3', { fontSize: ref(fontSizeLg) });
+selector('h2', { fontSize: ref(fontSizeMd) });
+selector('h1', { fontSize: ref(fontSizeLg) });
 ```
 
 ---
@@ -396,7 +371,7 @@ selector('h3', { fontSize: ref(fontSizeLg) });
 |------------|---------|----------|
 | `useFluidViewportDesignTokens()` | Set up fluid viewport ranges | Define min/max viewport widths |
 | `useFluidClamp()` | Create fluid `calc()` calculations | Custom fluid properties (spacing, sizing) |
-| `useFluidFontSizeDesignTokens()` | Generate fluid typography scales | Complete fluid type systems |
+| `useFontSizeDesignTokens()` | Unified static + fluid typography | Mix fluid and fixed font sizes |
 
 ---
 
