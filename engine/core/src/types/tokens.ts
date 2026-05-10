@@ -218,5 +218,6 @@ export type Root = {
 	_registry: Map<string, Container | Root | Theme>;
 	_usage: {
 		variables: Set<string>;
+		utilities: Set<string>;
 	};
 };

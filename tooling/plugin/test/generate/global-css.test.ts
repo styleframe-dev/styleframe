@@ -61,8 +61,32 @@ describe("generateGlobalCSS", () => {
 
 		const result = await generateGlobalCSS(state, false, { silent: true });
 
-		expect(transpile).toHaveBeenCalledWith(mockInstance, { type: "css" });
+		expect(transpile).toHaveBeenCalledWith(mockInstance, {
+			type: "css",
+			purge: true,
+			scanner: false,
+		});
 		expect(result).toEqual({ code: ".button { color: red; }" });
+	});
+
+	it("allows disabling purge via transpiler options", async () => {
+		const mockInstance = {} as Styleframe;
+		const state = createMockState(mockInstance);
+
+		vi.mocked(transpile).mockResolvedValue({
+			files: [{ name: "styles.css", content: "" }],
+		});
+
+		await generateGlobalCSS(state, false, {
+			silent: true,
+			transpiler: { purge: false },
+		});
+
+		expect(transpile).toHaveBeenCalledWith(mockInstance, {
+			type: "css",
+			purge: false,
+			scanner: false,
+		});
 	});
 
 	it("should concatenate multiple CSS files", async () => {

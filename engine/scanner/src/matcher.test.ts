@@ -18,7 +18,7 @@ function createMockRoot(
 		type: "root",
 		id: "test-id",
 		_registry: new Map(),
-		_usage: { variables: new Set() },
+		_usage: { variables: new Set(), utilities: new Set() },
 		declarations: {},
 		utilities,
 		modifiers,

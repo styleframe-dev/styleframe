@@ -131,6 +131,90 @@ describe("registerMatchedUtilities", () => {
 		expect(factory.values.length).toBe(valueCountBefore);
 	});
 
+	it("tracks existing matches in _usage.utilities even though they are not re-registered", () => {
+		const s = styleframe();
+		const { utility, ref, variable } = s;
+
+		const spacing = variable("spacing.sm", "0.5rem");
+		const createMargin = utility("margin", ({ value }) => ({
+			margin: value,
+		}));
+		createMargin({ sm: ref(spacing) });
+
+		const factory = s.root.utilities.find((u) => u.name === "margin")!;
+
+		const matches: UtilityMatch[] = [
+			{
+				parsed: createParsedUtility({ name: "margin", value: "sm" }),
+				factory,
+				modifierFactories: [],
+				exists: true,
+			},
+		];
+
+		registerMatchedUtilities(s.root, matches);
+
+		expect(s.root._usage.utilities.has("_margin:sm")).toBe(true);
+	});
+
+	it("tracks all matched utilities in _usage.utilities", () => {
+		const s = styleframe();
+		const { utility, modifier } = s;
+
+		const hover = modifier("hover", ({ declarations }) => ({
+			"&:hover": declarations,
+		}));
+		utility("margin", ({ value }) => ({ margin: value }));
+
+		const factory = s.root.utilities.find((u) => u.name === "margin")!;
+
+		const matches: UtilityMatch[] = [
+			{
+				parsed: createParsedUtility({
+					name: "margin",
+					value: "sm",
+					modifiers: [],
+				}),
+				factory,
+				modifierFactories: [],
+				exists: false,
+			},
+			{
+				parsed: createParsedUtility({
+					name: "margin",
+					value: "sm",
+					modifiers: ["hover"],
+					raw: "_hover:margin:sm",
+				}),
+				factory,
+				modifierFactories: [hover],
+				exists: false,
+			},
+		];
+
+		registerMatchedUtilities(s.root, matches);
+
+		expect(s.root._usage.utilities.has("_margin:sm")).toBe(true);
+		expect(s.root._usage.utilities.has("_hover:margin:sm")).toBe(true);
+	});
+
+	it("does not track matches without a factory", () => {
+		const s = styleframe();
+
+		const matches: UtilityMatch[] = [
+			{
+				parsed: createParsedUtility({ name: "unknown", value: "sm" }),
+				factory: null,
+				modifierFactories: [],
+				exists: false,
+			},
+		];
+
+		registerMatchedUtilities(s.root, matches);
+
+		expect(s.root._usage.utilities.size).toBe(0);
+	});
+
 	it("skips matches with no factory", () => {
 		const s = styleframe();
 

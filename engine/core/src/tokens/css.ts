@@ -6,19 +6,29 @@ import type {
 	TokenValue,
 	Variable,
 } from "../types";
-import { isAtRule, isVariable } from "../typeGuards";
+import { isAtRule, isRef, isVariable } from "../typeGuards";
 import { createRefFunction } from "./ref";
 import { parseAtReferences } from "./resolve";
 
-export function createCssFunction(_parent: Container, _root: Root) {
-	const ref = createRefFunction(_parent, _root);
+export function createCssFunction(_parent: Container, root: Root) {
+	const ref = createRefFunction(_parent, root);
+
+	const parseAndTrack = (str: string): TokenValue[] => {
+		const parts = parseAtReferences(str);
+		for (const part of parts) {
+			if (isRef(part)) {
+				root._usage.variables.add(part.name);
+			}
+		}
+		return parts;
+	};
 
 	return function css(
 		strings: TemplateStringsArray,
 		...interpolations: (TokenValue | Variable | AtRule)[]
 	): CSS {
 		const value = strings.reduce<TokenValue[]>((acc, str, i) => {
-			acc.push(...parseAtReferences(str));
+			acc.push(...parseAndTrack(str));
 
 			if (i < interpolations.length) {
 				const interpolation = interpolations[i];
@@ -31,7 +41,7 @@ export function createCssFunction(_parent: Container, _root: Root) {
 					typeof interpolation === "string" &&
 					interpolation.includes("@")
 				) {
-					acc.push(...parseAtReferences(interpolation));
+					acc.push(...parseAndTrack(interpolation));
 				} else {
 					acc.push(interpolation);
 				}

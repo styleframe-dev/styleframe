@@ -1,8 +1,11 @@
 import type { Root, StyleframeOptions } from "@styleframe/core";
 import {
+	createModifierFunction,
 	createRefFunction,
 	createRoot,
 	createSelectorFunction,
+	createThemeFunction,
+	createUtilityFunction,
 	createVariableFunction,
 } from "@styleframe/core";
 import { consume } from "./consume";
@@ -13,6 +16,9 @@ describe("createRootConsumer", () => {
 	let variable: ReturnType<typeof createVariableFunction>;
 	let ref: ReturnType<typeof createRefFunction>;
 	let selector: ReturnType<typeof createSelectorFunction>;
+	let theme: ReturnType<typeof createThemeFunction>;
+	let utility: ReturnType<typeof createUtilityFunction>;
+	let modifier: ReturnType<typeof createModifierFunction>;
 
 	const consumeRoot = createRootConsumer(consume);
 	const options: StyleframeOptions = {};
@@ -22,6 +28,9 @@ describe("createRootConsumer", () => {
 		variable = createVariableFunction(root, root);
 		ref = createRefFunction(root, root);
 		selector = createSelectorFunction(root, root);
+		theme = createThemeFunction(root, root);
+		utility = createUtilityFunction(root, root);
+		modifier = createModifierFunction(root, root);
 	});
 
 	it("should handle empty root", () => {
@@ -349,5 +358,244 @@ h1, h2, h3 {
 \t
 \tdisplay: block;
 }`);
+	});
+
+	describe("purge", () => {
+		it("emits unused variables when context is omitted (default off)", () => {
+			variable("used", "#0066ff");
+			variable("unused", "#ff0000");
+			selector(".btn", { color: "@used" });
+
+			const result = consumeRoot(root, options);
+
+			expect(result).toBe(`:root {
+\t--used: #0066ff;
+\t--unused: #ff0000;
+}
+
+.btn {
+\tcolor: var(--used);
+}`);
+		});
+
+		it("emits unused variables when purge is false", () => {
+			variable("used", "#0066ff");
+			variable("unused", "#ff0000");
+			selector(".btn", { color: "@used" });
+
+			const result = consumeRoot(root, options, { purge: false });
+
+			expect(result).toBe(`:root {
+\t--used: #0066ff;
+\t--unused: #ff0000;
+}
+
+.btn {
+\tcolor: var(--used);
+}`);
+		});
+
+		it("drops every root variable when none are referenced", () => {
+			variable("a", "1px");
+			variable("b", "2px");
+
+			const result = consumeRoot(root, options, { purge: true });
+
+			expect(result).toBe("");
+		});
+
+		it("keeps only referenced variables and drops the rest", () => {
+			variable("used", "#0066ff");
+			variable("unused", "#ff0000");
+			selector(".btn", { color: "@used" });
+
+			const result = consumeRoot(root, options, { purge: true });
+
+			expect(result).toBe(`:root {
+\t--used: #0066ff;
+}
+
+.btn {
+\tcolor: var(--used);
+}`);
+		});
+
+		it("drops theme overrides for unreferenced variables", () => {
+			variable("text", "#000");
+			variable("brand", "#0066ff");
+			selector(".btn", { color: "@text" });
+
+			theme("dark", ({ variable: v }) => {
+				v("text", "#fff");
+				v("brand", "#3399ff");
+			});
+
+			const result = consumeRoot(root, options, { purge: true });
+
+			expect(result).toBe(`:root {
+\t--text: #000;
+}
+
+.btn {
+\tcolor: var(--text);
+}
+
+.dark-theme, [data-theme="dark"] {
+\t--text: #fff;
+}`);
+		});
+
+		it("keeps theme overrides for referenced variables", () => {
+			variable("text", "#000");
+			selector(".btn", { color: "@text" });
+
+			theme("dark", ({ variable: v }) => {
+				v("text", "#fff");
+			});
+
+			const result = consumeRoot(root, options, { purge: true });
+
+			expect(result).toBe(`:root {
+\t--text: #000;
+}
+
+.btn {
+\tcolor: var(--text);
+}
+
+.dark-theme, [data-theme="dark"] {
+\t--text: #fff;
+}`);
+		});
+
+		it("keeps a transitively-referenced variable even when its referrer is unused", () => {
+			// `primary` references `base` in its default; `base` is in _usage even though
+			// `primary` is never referenced from a selector. Documents v1 over-keeping.
+			variable("base", "#0066ff");
+			variable("primary", "@base");
+
+			const result = consumeRoot(root, options, { purge: true });
+
+			expect(result).toBe(`:root {
+\t--base: #0066ff;
+}`);
+		});
+
+		it("does not purge variables defined inside a selector", () => {
+			variable("unused-root", "#000");
+			selector(".card", ({ variable: v }) => {
+				v("card-bg", "#fff");
+				return { backgroundColor: "@card-bg" };
+			});
+
+			const result = consumeRoot(root, options, { purge: true });
+
+			expect(result).toBe(`.card {
+\t--card-bg: #fff;
+\t
+\tbackground-color: var(--card-bg);
+}`);
+		});
+	});
+
+	describe("purge utilities", () => {
+		it("does not purge utilities when only purge is true (no scanner)", () => {
+			const createMargin = utility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			createMargin({ sm: "0.5rem", md: "1rem" });
+
+			const result = consumeRoot(root, options, { purge: true });
+
+			expect(result).toContain("margin: 0.5rem");
+			expect(result).toContain("margin: 1rem");
+		});
+
+		it("does not purge utilities when only scanner is true (no purge)", () => {
+			const createMargin = utility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			createMargin({ sm: "0.5rem", md: "1rem" });
+
+			const result = consumeRoot(root, options, { scanner: true });
+
+			expect(result).toContain("margin: 0.5rem");
+			expect(result).toContain("margin: 1rem");
+		});
+
+		it("drops unused utilities when purge and scanner are both true", () => {
+			const createMargin = utility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			createMargin({ sm: "0.5rem", md: "1rem" });
+
+			root._usage.utilities.add("_margin:sm");
+
+			const result = consumeRoot(root, options, {
+				purge: true,
+				scanner: true,
+			});
+
+			expect(result).toContain("margin: 0.5rem");
+			expect(result).not.toContain("margin: 1rem");
+		});
+
+		it("drops all utilities when none are tracked", () => {
+			const createMargin = utility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			createMargin({ sm: "0.5rem" });
+
+			const result = consumeRoot(root, options, {
+				purge: true,
+				scanner: true,
+			});
+
+			expect(result).not.toContain("margin:");
+		});
+
+		it("preserves non-utility children when purging utilities", () => {
+			const createMargin = utility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			createMargin({ sm: "0.5rem" });
+			selector(".btn", { display: "flex" });
+
+			const result = consumeRoot(root, options, {
+				purge: true,
+				scanner: true,
+			});
+
+			expect(result).not.toContain("margin:");
+			expect(result).toContain("display: flex");
+		});
+
+		it("drops compound modifier utilities when not tracked", () => {
+			const dark = modifier("dark", ({ declarations }) => ({
+				"@media (prefers-color-scheme: dark)": declarations,
+			}));
+			const focus = modifier("focus", ({ declarations }) => ({
+				"&:focus": declarations,
+			}));
+
+			const createColor = utility("color", ({ value }) => ({
+				color: value,
+			}));
+
+			createColor({ primary: "#006cff" }, [dark, focus, [dark, focus]]);
+
+			// Only track the base utility
+			root._usage.utilities.add("_color:primary");
+
+			const result = consumeRoot(root, options, {
+				purge: true,
+				scanner: true,
+			});
+
+			expect(result).toContain("_color\\:primary");
+			expect(result).not.toContain("_dark:color");
+			expect(result).not.toContain("_focus:color");
+			expect(result).not.toContain("_dark:focus:color");
+		});
 	});
 });

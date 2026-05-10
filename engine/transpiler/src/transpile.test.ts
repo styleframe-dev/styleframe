@@ -2,6 +2,7 @@ import type { Styleframe, StyleframeOptions } from "@styleframe/core";
 import {
 	createAtRuleFunction,
 	createCssFunction,
+	createRecipeFunction,
 	createRefFunction,
 	createSelectorFunction,
 	createThemeFunction,
@@ -20,6 +21,7 @@ describe("transpile", () => {
 	let theme: ReturnType<typeof createThemeFunction>;
 	let atRule: ReturnType<typeof createAtRuleFunction>;
 	let utility: ReturnType<typeof createUtilityFunction>;
+	let recipe: ReturnType<typeof createRecipeFunction>;
 
 	beforeEach(() => {
 		instance = styleframe();
@@ -31,6 +33,7 @@ describe("transpile", () => {
 			theme = theme,
 			atRule = atRule,
 			utility = utility,
+			recipe = recipe,
 		} = instance);
 	});
 
@@ -835,6 +838,375 @@ body {
 ._space\\:large {
 \tmargin-bottom: 16px;
 }`);
+		});
+	});
+
+	describe("with purge", () => {
+		const cssBlock = (content: string): string => {
+			const match = content.match(/^:root \{([\s\S]*?)\n\}/);
+			return match ? match[1]! : "";
+		};
+
+		it("keeps variables referenced via ref() inside a selector", async () => {
+			const used = variable("used", "#0066ff");
+			variable("unused", "#ff0000");
+			selector(".btn", { color: ref(used) });
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--used: #0066ff");
+			expect(content).not.toContain("--unused:");
+			expect(content).toContain("color: var(--used)");
+		});
+
+		it("keeps variables referenced as a ref() fallback", async () => {
+			variable("text", "#000");
+			variable("primary", "#0066ff");
+			variable("unused", "#ff0000");
+			selector(".btn", { color: ref("text", "@primary") });
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(cssBlock(content)).toContain("--text: #000");
+			expect(cssBlock(content)).toContain("--primary: #0066ff");
+			expect(content).not.toContain("--unused:");
+		});
+
+		it("keeps variables referenced inside a css`` template literal", async () => {
+			variable("from", "#0066ff");
+			variable("to", "#ff6c00");
+			variable("unused", "#000");
+			selector(".btn", {
+				background: css`linear-gradient(@from, @to)`,
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--from: #0066ff");
+			expect(content).toContain("--to: #ff6c00");
+			expect(content).not.toContain("--unused:");
+			expect(content).toContain(
+				"background: linear-gradient(var(--from), var(--to))",
+			);
+		});
+
+		it("keeps variables interpolated into a css`` template literal", async () => {
+			const from = variable("from", "#0066ff");
+			const to = variable("to", "#ff6c00");
+			variable("unused", "#000");
+			selector(".btn", {
+				background: css`linear-gradient(${from}, ${to})`,
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--from: #0066ff");
+			expect(content).toContain("--to: #ff6c00");
+			expect(content).not.toContain("--unused:");
+			expect(content).toContain(
+				"background: linear-gradient(var(--from), var(--to))",
+			);
+		});
+
+		it("keeps variables interpolated as @-strings into a css`` template literal", async () => {
+			variable("from", "#0066ff");
+			variable("to", "#ff6c00");
+			variable("unused", "#000");
+			const dynamicFrom = "@from";
+			const dynamicTo = "@to";
+			selector(".btn", {
+				background: css`linear-gradient(${dynamicFrom}, ${dynamicTo})`,
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--from: #0066ff");
+			expect(content).toContain("--to: #ff6c00");
+			expect(content).not.toContain("--unused:");
+			expect(content).toContain(
+				"background: linear-gradient(var(--from), var(--to))",
+			);
+		});
+
+		it("keeps variables referenced inside an at-rule", async () => {
+			variable("brand", "#0066ff");
+			variable("unused", "#000");
+			atRule("supports", "(display: grid)", {
+				color: "@brand",
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--brand: #0066ff");
+			expect(content).not.toContain("--unused:");
+			expect(content).toContain("@supports (display: grid)");
+			expect(content).toContain("color: var(--brand)");
+		});
+
+		it("keeps variables referenced inside an @media block", async () => {
+			variable("mobile-padding", "8px");
+			variable("unused", "#000");
+			atRule("media", "(max-width: 600px)", ({ selector: s }) => {
+				s(".container", { padding: "@mobile-padding" });
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--mobile-padding: 8px");
+			expect(content).not.toContain("--unused:");
+			expect(content).toContain("padding: var(--mobile-padding)");
+		});
+
+		it("keeps variables referenced via utility autogenerate (@-string)", async () => {
+			variable("color.primary", "#0066ff");
+			variable("color.secondary", "#999");
+			variable("unused", "#000");
+
+			const colorUtility = utility("color", ({ value }) => ({
+				color: value,
+			}));
+			colorUtility(["@color.primary"]);
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--color--primary: #0066ff");
+			expect(content).not.toContain("--color--secondary:");
+			expect(content).not.toContain("--unused:");
+		});
+
+		it("keeps variables referenced via namespace utility autogenerate", async () => {
+			variable("color.primary", "#0066ff");
+			variable("color.secondary", "#999");
+			variable("unused", "#000");
+
+			const colorUtility = utility("color", ({ value }) => ({ color: value }), {
+				namespace: "color",
+			});
+			colorUtility(["@primary"]);
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--color--primary: #0066ff");
+			expect(content).not.toContain("--color--secondary:");
+			expect(content).not.toContain("--unused:");
+		});
+
+		it("keeps variables referenced inside recipe base", async () => {
+			variable("color.primary", "#0066ff");
+			variable("color.unused", "#000");
+			utility("color", ({ value }) => ({ color: value }));
+
+			recipe({
+				name: "label",
+				base: { color: "@color.primary" },
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--color--primary: #0066ff");
+			expect(content).not.toContain("--color--unused:");
+		});
+
+		it("keeps variables referenced inside recipe variants", async () => {
+			variable("color.primary", "#0066ff");
+			variable("color.secondary", "#ff6c00");
+			variable("color.unused", "#000");
+			utility("background", ({ value }) => ({ background: value }));
+
+			recipe({
+				name: "button",
+				variants: {
+					tone: {
+						primary: { background: "@color.primary" },
+						secondary: { background: "@color.secondary" },
+					},
+				},
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--color--primary: #0066ff");
+			expect(content).toContain("--color--secondary: #ff6c00");
+			expect(content).not.toContain("--color--unused:");
+		});
+
+		it("keeps variables referenced inside recipe compoundVariants.css", async () => {
+			variable("color.primary-shade", "#003a99");
+			variable("color.unused", "#000");
+			utility("background", ({ value }) => ({ background: value }));
+
+			recipe({
+				name: "button",
+				variants: {
+					tone: { primary: {}, secondary: {} },
+				},
+				compoundVariants: [
+					{
+						match: { tone: "primary" },
+						css: { background: "@color.primary-shade" },
+					},
+				],
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--color--primary-shade: #003a99");
+			expect(content).not.toContain("--color--unused:");
+		});
+
+		it("preserves a chain when a theme override references another variable", async () => {
+			// `text` is the only thing referenced from a selector. The dark theme overrides
+			// `text` with `@brand`, which adds `brand` to _usage. So both `text` and `brand`
+			// must survive purge — `text` because the selector uses it, `brand` because the
+			// theme override does.
+			variable("text", "#000");
+			variable("brand", "#0066ff");
+			variable("unused", "#fff");
+			selector(".btn", { color: "@text" });
+
+			theme("dark", ({ variable: v }) => {
+				v("text", "@brand");
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("--text: #000");
+			expect(content).toContain("--brand: #0066ff");
+			expect(content).not.toContain("--unused:");
+			// Theme override of `text` is kept and resolves to the brand reference.
+			expect(content).toContain(
+				`.dark-theme, [data-theme="dark"] {\n\t--text: var(--brand);\n}`,
+			);
+		});
+
+		it("purges across a comprehensive realistic config", async () => {
+			// Mix of every surface: variables, selectors, css template, ref(),
+			// at-rules, utilities, namespaced utilities, recipes, themes.
+			// Several variables are intentionally never referenced and must be dropped.
+			variable("color.primary", "#0066ff");
+			variable("color.secondary", "#ff6c00");
+			variable("color.muted", "#666");
+			variable("color.unused", "#000");
+			variable("spacing.sm", "8px");
+			variable("spacing.unused", "999px");
+
+			utility("color", ({ value }) => ({ color: value }), {
+				namespace: "color",
+			});
+			const padding = utility("padding", ({ value }) => ({ padding: value }));
+
+			selector(".body", { color: ref("color.primary") });
+			selector(".alt", {
+				background: css`linear-gradient(@color.secondary, white)`,
+			});
+			atRule("media", "(min-width: 600px)", ({ selector: s }) => {
+				s(".container", { padding: "@spacing.sm" });
+			});
+
+			padding(["@spacing.sm"]);
+
+			recipe({
+				name: "card",
+				base: { color: "@color.muted" },
+				variants: {
+					tone: {
+						primary: { color: "@color.primary" },
+					},
+				},
+			});
+
+			theme("dark", ({ variable: v }) => {
+				v("color.primary", "#3399ff");
+				v("color.unused", "#111"); // override of unused — should be dropped
+			});
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			// Used variables are emitted in :root
+			expect(content).toContain("--color--primary: #0066ff");
+			expect(content).toContain("--color--secondary: #ff6c00");
+			expect(content).toContain("--color--muted: #666");
+			expect(content).toContain("--spacing--sm: 8px");
+
+			// Unused variables are absent everywhere
+			expect(content).not.toContain("--color--unused");
+			expect(content).not.toContain("--spacing--unused");
+
+			// Theme override of a used variable is kept; override of an unused one is dropped
+			expect(content).toContain(
+				`.dark-theme, [data-theme="dark"] {\n\t--color--primary: #3399ff;\n}`,
+			);
+		});
+
+		it("does not purge utilities when scanner is not set", async () => {
+			const createMargin = utility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			createMargin({ sm: "0.5rem", md: "1rem" });
+
+			const output = await transpile(instance, { purge: true });
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("margin: 0.5rem");
+			expect(content).toContain("margin: 1rem");
+		});
+
+		it("purges unused utilities when purge and scanner are both true", async () => {
+			const createMargin = utility("margin", ({ value }) => ({
+				margin: value,
+			}));
+			createMargin({ sm: "0.5rem", md: "1rem" });
+
+			instance.root._usage.utilities.add("_margin:sm");
+
+			const output = await transpile(instance, {
+				purge: true,
+				scanner: true,
+			});
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("margin: 0.5rem");
+			expect(content).not.toContain("margin: 1rem");
+		});
+
+		it("preserves recipe-tracked utilities during purge", async () => {
+			utility("padding", ({ value }) => ({ padding: value }));
+			utility("background", ({ value }) => ({ background: value }));
+
+			variable("color.primary", "#006cff");
+
+			recipe({
+				name: "button",
+				base: { padding: "1rem" },
+				variants: {
+					color: {
+						primary: { background: "@color.primary" },
+					},
+				},
+			});
+
+			const output = await transpile(instance, {
+				purge: true,
+				scanner: true,
+			});
+			const content = output.files[0]!.content;
+
+			expect(content).toContain("padding: 1rem");
+			expect(content).toContain("background: var(--color--primary)");
 		});
 	});
 });
