@@ -1,0 +1,42 @@
+import { createUseRecipe } from "../../utils/createUseRecipe";
+
+/**
+ * Chat message actions row recipe — flex layout for action buttons displayed
+ * below the bubble. Hover-reveal is a markup concern (e.g., opacity toggled
+ * on the parent message group), not a recipe variant.
+ */
+export const useChatMessageActionsRecipe = createUseRecipe(
+	"chat-message-actions",
+	{
+		base: {
+			display: "flex",
+			flexDirection: "row",
+			gap: "@0.25",
+			marginTop: "@0.25",
+		},
+		variants: {
+			color: {
+				light: {},
+				dark: {},
+				neutral: {},
+			},
+			variant: {
+				solid: {},
+				outline: {},
+				soft: {},
+				subtle: {},
+				naked: {},
+			},
+			size: {
+				sm: { gap: "@0.125", marginTop: "@0.125" },
+				md: { gap: "@0.25", marginTop: "@0.25" },
+				lg: { gap: "@0.375", marginTop: "@0.375" },
+			},
+		},
+		defaultVariants: {
+			color: "neutral",
+			variant: "subtle",
+			size: "md",
+		},
+	},
+);

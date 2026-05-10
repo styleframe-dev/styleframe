@@ -4,6 +4,7 @@ export * from "./button";
 export * from "./button-group";
 export * from "./callout";
 export * from "./card";
+export * from "./chat-message";
 export * from "./chip";
 export * from "./dropdown";
 export * from "./hamburger-menu";
