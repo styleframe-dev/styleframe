@@ -9,6 +9,16 @@ Hero Section -------------------------------------------------------------------
 
 ::gradient-page-hero
 
+:::video{ class="rounded" }
+---
+autoplay: true
+loop: true
+muted: true
+playsinline: true
+src: /assets/video/styleframe-figma.mp4
+---
+:::
+
 #title
 Export Styleframe Design Tokens [to Figma]{.text-primary} and Back
 
