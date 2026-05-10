@@ -16,24 +16,24 @@ export function createRootConsumer(consume: ConsumeFunction) {
 		options: StyleframeOptions,
 		context?: TranspileContext,
 	) {
-		const purge = context?.purge ?? false;
+		const treeshake = context?.treeshake ?? false;
 		const scanner = context?.scanner ?? false;
 
 		const usage = instance._usage.variables;
-		const keep = (variable: Variable) => !purge || usage.has(variable.name);
+		const keep = (variable: Variable) => !treeshake || usage.has(variable.name);
 
 		const filterVariables = <T extends { variables: Variable[] }>(
 			container: T,
 		): T =>
-			purge
+			treeshake
 				? { ...container, variables: container.variables.filter(keep) }
 				: container;
 
-		const purgeUtilities = purge && scanner;
+		const treeshakeUtilities = treeshake && scanner;
 		const usedUtilities = instance._usage.utilities;
 		const keepChild = (child: ContainerChild): boolean => {
 			if (child.type !== "utility") return true;
-			if (!purgeUtilities) return true;
+			if (!treeshakeUtilities) return true;
 			return usedUtilities.has(
 				defaultUtilitySelectorFn({
 					name: child.name,
@@ -44,7 +44,7 @@ export function createRootConsumer(consume: ConsumeFunction) {
 		};
 
 		const filtered = filterVariables(instance);
-		const rootForEmit = purgeUtilities
+		const rootForEmit = treeshakeUtilities
 			? { ...filtered, children: filtered.children.filter(keepChild) }
 			: filtered;
 		const themesForEmit = instance.themes.map(filterVariables);

@@ -63,13 +63,13 @@ describe("generateGlobalCSS", () => {
 
 		expect(transpile).toHaveBeenCalledWith(mockInstance, {
 			type: "css",
-			purge: true,
+			treeshake: true,
 			scanner: false,
 		});
 		expect(result).toEqual({ code: ".button { color: red; }" });
 	});
 
-	it("allows disabling purge via transpiler options", async () => {
+	it("allows disabling treeshake via transpiler options", async () => {
 		const mockInstance = {} as Styleframe;
 		const state = createMockState(mockInstance);
 
@@ -79,12 +79,12 @@ describe("generateGlobalCSS", () => {
 
 		await generateGlobalCSS(state, false, {
 			silent: true,
-			transpiler: { purge: false },
+			transpiler: { treeshake: false },
 		});
 
 		expect(transpile).toHaveBeenCalledWith(mockInstance, {
 			type: "css",
-			purge: false,
+			treeshake: false,
 			scanner: false,
 		});
 	});

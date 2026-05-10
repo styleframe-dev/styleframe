@@ -360,7 +360,7 @@ h1, h2, h3 {
 }`);
 	});
 
-	describe("purge", () => {
+	describe("treeshake", () => {
 		it("emits unused variables when context is omitted (default off)", () => {
 			variable("used", "#0066ff");
 			variable("unused", "#ff0000");
@@ -378,12 +378,12 @@ h1, h2, h3 {
 }`);
 		});
 
-		it("emits unused variables when purge is false", () => {
+		it("emits unused variables when treeshake is false", () => {
 			variable("used", "#0066ff");
 			variable("unused", "#ff0000");
 			selector(".btn", { color: "@used" });
 
-			const result = consumeRoot(root, options, { purge: false });
+			const result = consumeRoot(root, options, { treeshake: false });
 
 			expect(result).toBe(`:root {
 \t--used: #0066ff;
@@ -399,7 +399,7 @@ h1, h2, h3 {
 			variable("a", "1px");
 			variable("b", "2px");
 
-			const result = consumeRoot(root, options, { purge: true });
+			const result = consumeRoot(root, options, { treeshake: true });
 
 			expect(result).toBe("");
 		});
@@ -409,7 +409,7 @@ h1, h2, h3 {
 			variable("unused", "#ff0000");
 			selector(".btn", { color: "@used" });
 
-			const result = consumeRoot(root, options, { purge: true });
+			const result = consumeRoot(root, options, { treeshake: true });
 
 			expect(result).toBe(`:root {
 \t--used: #0066ff;
@@ -430,7 +430,7 @@ h1, h2, h3 {
 				v("brand", "#3399ff");
 			});
 
-			const result = consumeRoot(root, options, { purge: true });
+			const result = consumeRoot(root, options, { treeshake: true });
 
 			expect(result).toBe(`:root {
 \t--text: #000;
@@ -453,7 +453,7 @@ h1, h2, h3 {
 				v("text", "#fff");
 			});
 
-			const result = consumeRoot(root, options, { purge: true });
+			const result = consumeRoot(root, options, { treeshake: true });
 
 			expect(result).toBe(`:root {
 \t--text: #000;
@@ -474,21 +474,21 @@ h1, h2, h3 {
 			variable("base", "#0066ff");
 			variable("primary", "@base");
 
-			const result = consumeRoot(root, options, { purge: true });
+			const result = consumeRoot(root, options, { treeshake: true });
 
 			expect(result).toBe(`:root {
 \t--base: #0066ff;
 }`);
 		});
 
-		it("does not purge variables defined inside a selector", () => {
+		it("does not treeshake variables defined inside a selector", () => {
 			variable("unused-root", "#000");
 			selector(".card", ({ variable: v }) => {
 				v("card-bg", "#fff");
 				return { backgroundColor: "@card-bg" };
 			});
 
-			const result = consumeRoot(root, options, { purge: true });
+			const result = consumeRoot(root, options, { treeshake: true });
 
 			expect(result).toBe(`.card {
 \t--card-bg: #fff;
@@ -498,20 +498,20 @@ h1, h2, h3 {
 		});
 	});
 
-	describe("purge utilities", () => {
-		it("does not purge utilities when only purge is true (no scanner)", () => {
+	describe("treeshake utilities", () => {
+		it("does not treeshake utilities when only treeshake is true (no scanner)", () => {
 			const createMargin = utility("margin", ({ value }) => ({
 				margin: value,
 			}));
 			createMargin({ sm: "0.5rem", md: "1rem" });
 
-			const result = consumeRoot(root, options, { purge: true });
+			const result = consumeRoot(root, options, { treeshake: true });
 
 			expect(result).toContain("margin: 0.5rem");
 			expect(result).toContain("margin: 1rem");
 		});
 
-		it("does not purge utilities when only scanner is true (no purge)", () => {
+		it("does not treeshake utilities when only scanner is true (no treeshake)", () => {
 			const createMargin = utility("margin", ({ value }) => ({
 				margin: value,
 			}));
@@ -523,7 +523,7 @@ h1, h2, h3 {
 			expect(result).toContain("margin: 1rem");
 		});
 
-		it("drops unused utilities when purge and scanner are both true", () => {
+		it("drops unused utilities when treeshake and scanner are both true", () => {
 			const createMargin = utility("margin", ({ value }) => ({
 				margin: value,
 			}));
@@ -532,7 +532,7 @@ h1, h2, h3 {
 			root._usage.utilities.add("_margin:sm");
 
 			const result = consumeRoot(root, options, {
-				purge: true,
+				treeshake: true,
 				scanner: true,
 			});
 
@@ -547,7 +547,7 @@ h1, h2, h3 {
 			createMargin({ sm: "0.5rem" });
 
 			const result = consumeRoot(root, options, {
-				purge: true,
+				treeshake: true,
 				scanner: true,
 			});
 
@@ -562,7 +562,7 @@ h1, h2, h3 {
 			selector(".btn", { display: "flex" });
 
 			const result = consumeRoot(root, options, {
-				purge: true,
+				treeshake: true,
 				scanner: true,
 			});
 
@@ -588,7 +588,7 @@ h1, h2, h3 {
 			root._usage.utilities.add("_color:primary");
 
 			const result = consumeRoot(root, options, {
-				purge: true,
+				treeshake: true,
 				scanner: true,
 			});
 

@@ -25,14 +25,14 @@ export async function transpile(
 	instance: Styleframe,
 	{
 		type = "all",
-		purge = false,
+		treeshake = false,
 		scanner = false,
 		consumers = { css: consumeCSS, ts: consumeTS, dts: consumeDTS },
 	}: TranspileOptions = {},
 ): Promise<Output> {
 	const output: Output = { files: [] };
 	const options = instance.options;
-	const context: TranspileContext = { purge, scanner };
+	const context: TranspileContext = { treeshake, scanner };
 
 	if (isInstanceLicenseRequired(instance)) {
 		const validationInfo = await getInstanceLicenseValidationInfo(instance);

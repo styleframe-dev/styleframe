@@ -841,7 +841,7 @@ body {
 		});
 	});
 
-	describe("with purge", () => {
+	describe("with treeshake", () => {
 		const cssBlock = (content: string): string => {
 			const match = content.match(/^:root \{([\s\S]*?)\n\}/);
 			return match ? match[1]! : "";
@@ -852,7 +852,7 @@ body {
 			variable("unused", "#ff0000");
 			selector(".btn", { color: ref(used) });
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--used: #0066ff");
@@ -866,7 +866,7 @@ body {
 			variable("unused", "#ff0000");
 			selector(".btn", { color: ref("text", "@primary") });
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(cssBlock(content)).toContain("--text: #000");
@@ -882,7 +882,7 @@ body {
 				background: css`linear-gradient(@from, @to)`,
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--from: #0066ff");
@@ -901,7 +901,7 @@ body {
 				background: css`linear-gradient(${from}, ${to})`,
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--from: #0066ff");
@@ -922,7 +922,7 @@ body {
 				background: css`linear-gradient(${dynamicFrom}, ${dynamicTo})`,
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--from: #0066ff");
@@ -940,7 +940,7 @@ body {
 				color: "@brand",
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--brand: #0066ff");
@@ -956,7 +956,7 @@ body {
 				s(".container", { padding: "@mobile-padding" });
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--mobile-padding: 8px");
@@ -974,7 +974,7 @@ body {
 			}));
 			colorUtility(["@color.primary"]);
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--color--primary: #0066ff");
@@ -992,7 +992,7 @@ body {
 			});
 			colorUtility(["@primary"]);
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--color--primary: #0066ff");
@@ -1010,7 +1010,7 @@ body {
 				base: { color: "@color.primary" },
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--color--primary: #0066ff");
@@ -1033,7 +1033,7 @@ body {
 				},
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--color--primary: #0066ff");
@@ -1059,7 +1059,7 @@ body {
 				],
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--color--primary-shade: #003a99");
@@ -1069,7 +1069,7 @@ body {
 		it("preserves a chain when a theme override references another variable", async () => {
 			// `text` is the only thing referenced from a selector. The dark theme overrides
 			// `text` with `@brand`, which adds `brand` to _usage. So both `text` and `brand`
-			// must survive purge — `text` because the selector uses it, `brand` because the
+			// must survive treeshake — `text` because the selector uses it, `brand` because the
 			// theme override does.
 			variable("text", "#000");
 			variable("brand", "#0066ff");
@@ -1080,7 +1080,7 @@ body {
 				v("text", "@brand");
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("--text: #000");
@@ -1092,7 +1092,7 @@ body {
 			);
 		});
 
-		it("purges across a comprehensive realistic config", async () => {
+		it("treeshakes across a comprehensive realistic config", async () => {
 			// Mix of every surface: variables, selectors, css template, ref(),
 			// at-rules, utilities, namespaced utilities, recipes, themes.
 			// Several variables are intentionally never referenced and must be dropped.
@@ -1133,7 +1133,7 @@ body {
 				v("color.unused", "#111"); // override of unused — should be dropped
 			});
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			// Used variables are emitted in :root
@@ -1152,20 +1152,20 @@ body {
 			);
 		});
 
-		it("does not purge utilities when scanner is not set", async () => {
+		it("does not treeshake utilities when scanner is not set", async () => {
 			const createMargin = utility("margin", ({ value }) => ({
 				margin: value,
 			}));
 			createMargin({ sm: "0.5rem", md: "1rem" });
 
-			const output = await transpile(instance, { purge: true });
+			const output = await transpile(instance, { treeshake: true });
 			const content = output.files[0]!.content;
 
 			expect(content).toContain("margin: 0.5rem");
 			expect(content).toContain("margin: 1rem");
 		});
 
-		it("purges unused utilities when purge and scanner are both true", async () => {
+		it("treeshakes unused utilities when treeshake and scanner are both true", async () => {
 			const createMargin = utility("margin", ({ value }) => ({
 				margin: value,
 			}));
@@ -1174,7 +1174,7 @@ body {
 			instance.root._usage.utilities.add("_margin:sm");
 
 			const output = await transpile(instance, {
-				purge: true,
+				treeshake: true,
 				scanner: true,
 			});
 			const content = output.files[0]!.content;
@@ -1183,7 +1183,7 @@ body {
 			expect(content).not.toContain("margin: 1rem");
 		});
 
-		it("preserves recipe-tracked utilities during purge", async () => {
+		it("preserves recipe-tracked utilities during treeshake", async () => {
 			utility("padding", ({ value }) => ({ padding: value }));
 			utility("background", ({ value }) => ({ background: value }));
 
@@ -1200,7 +1200,7 @@ body {
 			});
 
 			const output = await transpile(instance, {
-				purge: true,
+				treeshake: true,
 				scanner: true,
 			});
 			const content = output.files[0]!.content;

@@ -10,7 +10,7 @@ export type Output = {
 };
 
 export type TranspileContext = {
-	purge?: boolean;
+	treeshake?: boolean;
 	scanner?: boolean;
 };
 
@@ -22,7 +22,7 @@ export type ConsumeFunction = (
 
 export type TranspileOptions = {
 	type?: "css" | "ts" | "dts" | "all";
-	purge?: boolean;
+	treeshake?: boolean;
 	scanner?: boolean;
 	consumers?: {
 		css: ConsumeFunction;
