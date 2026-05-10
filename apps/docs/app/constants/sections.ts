@@ -18,9 +18,10 @@ export const DOCS_SECTIONS = [
 		slug: "theme",
 		folder: [
 			"03.design-tokens",
-			"04.components",
-			"05.utilities",
-			"06.modifiers",
+			"04.elements",
+			"05.components",
+			"06.utilities",
+			"07.modifiers",
 		],
 		label: "Theme",
 		icon: "i-lucide-palette",

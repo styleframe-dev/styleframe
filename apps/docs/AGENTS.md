@@ -10,11 +10,13 @@ content/docs/
 ├── 02.api/                 # Core API reference (variables, selectors, utilities, recipes, etc.)
 ├── 03.design-tokens/       # Color, spacing, typography, scale, breakpoint tokens
 │   └── 02.composables/     # Individual design token composable pages
-├── 04.components/          # Component recipes (Badge, Button, etc.)
+├── 04.elements/            # HTML element base styles (body, headings, links, lists, etc.)
+│   └── 02.composables/     # Individual element composable pages
+├── 05.components/          # Component recipes (Badge, Button, etc.)
 │   └── 02.composables/     # Individual component composable pages
-├── 05.utilities/           # Utility categories (spacing, layout, typography, etc.)
+├── 06.utilities/           # Utility categories (spacing, layout, typography, etc.)
 │   └── 02.composables/     # Individual utility composable pages
-└── 06.modifiers/           # Pseudo-state, form-state, aria, structural, etc.
+└── 07.modifiers/           # Pseudo-state, form-state, aria, structural, etc.
     └── 02.composables/     # Individual modifier composable pages
 ```
 
@@ -22,7 +24,7 @@ content/docs/
 
 - **Getting Started** → `01.getting-started/`
 - **API Reference** → `02.api/`
-- **Theme** → bundles `03.design-tokens/`, `04.components/`, `05.utilities/`, `06.modifiers/`
+- **Theme** → bundles `03.design-tokens/`, `04.elements/`, `05.components/`, `06.utilities/`, `07.modifiers/`
 
 **Numbering convention:** Directories and files use `NN.` prefixes for ordering (e.g., `01.introduction.md`, `06.colors.md`). Index files use `00.index.md`. Subdirectories follow the same pattern.
 
@@ -196,7 +198,7 @@ Document `@styleframe/theme` composables. Each composable (e.g., `useColorDesign
 
 Include default value tables and tips about `as const` usage. End with Best Practices and FAQ.
 
-### Utility Pages (`05.utilities/`)
+### Utility Pages (`06.utilities/`)
 
 Document utility composables. Show:
 1. Basic usage with the utility creator function
@@ -206,7 +208,7 @@ Document utility composables. Show:
 
 Class name format: `_property-name:value` (e.g., `_margin:sm`), with modifier prefix: `_hover:margin:sm`.
 
-### Modifier Pages (`06.modifiers/`)
+### Modifier Pages (`07.modifiers/`)
 
 Document modifier composables. Each modifier gets its own H2 with tabbed Code/Output/Usage. Include:
 1. Individual modifier functions (e.g., `useHoverModifier`)
@@ -214,7 +216,7 @@ Document modifier composables. Each modifier gets its own H2 with tabbed Code/Ou
 3. CSS selector mapping table
 4. Combined modifier examples
 
-### Component Pages (`04.components/`)
+### Component Pages (`05.components/`)
 
 Document pre-built recipes. Include:
 1. Registration with `useButtonRecipe(s)` etc.
