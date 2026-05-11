@@ -25,7 +25,12 @@ export async function generateGlobalCSS(
 		isBuild,
 	});
 
-	const result = await transpile(state.globalInstance, { type: "css" });
+	const result = await transpile(state.globalInstance, {
+		type: "css",
+		treeshake: true,
+		...options.transpiler,
+		scanner: !!options.scanner?.content?.length,
+	});
 	const css = result.files.map((f) => f.content).join("\n");
 
 	if (!options.silent) {

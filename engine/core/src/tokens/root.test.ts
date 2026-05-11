@@ -27,6 +27,7 @@ describe("createRoot", () => {
 				_registry: expect.any(Map),
 				_usage: {
 					variables: expect.any(Set),
+					utilities: expect.any(Set),
 				},
 				declarations: {},
 				utilities: [],

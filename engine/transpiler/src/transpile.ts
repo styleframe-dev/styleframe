@@ -7,7 +7,12 @@ import { consume as consumeCSS } from "./consume/css";
 import { consume as consumeDTS } from "./consume/dts";
 import { consume as consumeTS } from "./consume/ts";
 import { addLicenseWatermark } from "./license";
-import type { Output, OutputFile, TranspileOptions } from "./types";
+import type {
+	Output,
+	OutputFile,
+	TranspileContext,
+	TranspileOptions,
+} from "./types";
 
 export function createFile(name: string, content: string = ""): OutputFile {
 	return {
@@ -20,11 +25,14 @@ export async function transpile(
 	instance: Styleframe,
 	{
 		type = "all",
+		treeshake = false,
+		scanner = false,
 		consumers = { css: consumeCSS, ts: consumeTS, dts: consumeDTS },
 	}: TranspileOptions = {},
 ): Promise<Output> {
 	const output: Output = { files: [] };
 	const options = instance.options;
+	const context: TranspileContext = { treeshake, scanner };
 
 	if (isInstanceLicenseRequired(instance)) {
 		const validationInfo = await getInstanceLicenseValidationInfo(instance);
@@ -36,7 +44,7 @@ export async function transpile(
 	if (type === "all" || type === "css") {
 		const indexFile = createFile(
 			"index.css",
-			consumers.css(instance.root, options),
+			consumers.css(instance.root, options, context),
 		);
 		output.files.push(indexFile);
 	}

@@ -9,7 +9,7 @@ export interface StyleframeOutput {
 export async function transpileStyleframe(
 	instance: Styleframe,
 ): Promise<StyleframeOutput> {
-	const output = await transpile(instance);
+	const output = await transpile(instance, { treeshake: true, scanner: true });
 	let css = "";
 	let ts = "";
 	for (const file of output.files) {

@@ -384,7 +384,7 @@ describe("mergeContainers", () => {
 					},
 				],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 			const b: Root = {
 				type: "root",
@@ -406,7 +406,7 @@ describe("mergeContainers", () => {
 					},
 				],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 
 			const result = mergeContainers(a, b);
@@ -439,7 +439,7 @@ describe("mergeContainers", () => {
 				children: [],
 				themes: [],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 			const b: Root = {
 				type: "root",
@@ -461,7 +461,7 @@ describe("mergeContainers", () => {
 				children: [],
 				themes: [],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 
 			const result = mergeContainers(a, b);
@@ -489,7 +489,7 @@ describe("mergeContainers", () => {
 				children: [],
 				themes: [],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 			const b: Root = {
 				type: "root",
@@ -508,7 +508,7 @@ describe("mergeContainers", () => {
 				children: [],
 				themes: [],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 
 			const result = mergeContainers(a, b);
@@ -536,7 +536,7 @@ describe("mergeContainers", () => {
 				children: [],
 				themes: [],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 			const b: Root = {
 				type: "root",
@@ -555,7 +555,7 @@ describe("mergeContainers", () => {
 				children: [],
 				themes: [],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 
 			const result = mergeContainers(a, b);
@@ -600,7 +600,7 @@ describe("mergeContainers", () => {
 				children: [],
 				themes: [],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 			const b: Root = {
 				type: "root",
@@ -613,7 +613,7 @@ describe("mergeContainers", () => {
 				children: [],
 				themes: [],
 				_registry: new Map(),
-				_usage: { variables: new Set() },
+				_usage: { variables: new Set(), utilities: new Set() },
 			};
 
 			const result = mergeContainers(a, b);

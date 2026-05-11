@@ -15,6 +15,7 @@ export function createRoot(): Root {
 		_registry: new Map(),
 		_usage: {
 			variables: new Set(),
+			utilities: new Set(),
 		},
 	};
 

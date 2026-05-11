@@ -1,3 +1,4 @@
+import { defaultUtilitySelectorFn } from "../defaults";
 import { isRef } from "../typeGuards";
 import type {
 	Container,
@@ -498,6 +499,17 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 				if (modifierFactory) {
 					modifierFactories.push(modifierFactory);
 				}
+			}
+
+			const generated = utilityFactory.autogenerate(entry.value);
+			for (const key of Object.keys(generated)) {
+				root._usage.utilities.add(
+					defaultUtilitySelectorFn({
+						name: utilityFactory.name,
+						value: key,
+						modifiers: entry.modifiers,
+					}),
+				);
 			}
 
 			// Call create with the value and modifiers (if any)

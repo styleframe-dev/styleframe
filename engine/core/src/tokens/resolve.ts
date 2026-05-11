@@ -1,5 +1,25 @@
-import { isKeyReferenceValue, isRef } from "../typeGuards";
+import { isCSS, isKeyReferenceValue, isRef } from "../typeGuards";
 import type { CSS, Container, Reference, Root, TokenValue } from "../types";
+
+/**
+ * Records a variable name in `root._usage.variables` for any Reference
+ * embedded in the given value (either the value itself or any Reference
+ * parts inside a CSS object).
+ */
+export function trackReferenceUsage(root: Root, value: TokenValue): void {
+	if (isRef(value)) {
+		root._usage.variables.add(value.name);
+		return;
+	}
+
+	if (isCSS(value)) {
+		for (const part of value.value) {
+			if (isRef(part)) {
+				root._usage.variables.add(part.name);
+			}
+		}
+	}
+}
 
 export type RefFunction = (variable: string, fallback?: string) => Reference;
 

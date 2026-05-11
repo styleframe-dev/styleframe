@@ -1,4 +1,5 @@
 import type { ModifierFactory, Root, UtilityFactory } from "@styleframe/core";
+import { defaultUtilitySelectorFn } from "@styleframe/core";
 import type { ParsedUtility, UtilityMatch } from "./types";
 
 interface RegistrationEntry {
@@ -27,6 +28,18 @@ export function registerMatchedUtilities(
 	_root: Root,
 	matches: UtilityMatch[],
 ): number {
+	for (const match of matches) {
+		if (match.factory) {
+			_root._usage.utilities.add(
+				defaultUtilitySelectorFn({
+					name: match.parsed.name,
+					value: match.parsed.value,
+					modifiers: match.parsed.modifiers,
+				}),
+			);
+		}
+	}
+
 	const unregistered = matches.filter((m) => m.factory !== null && !m.exists);
 
 	if (unregistered.length === 0) {
