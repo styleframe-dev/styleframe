@@ -4,7 +4,13 @@ import { useChatMessageActionsRecipe } from "./index";
 
 function createInstance() {
 	const s = styleframe();
-	for (const name of ["display", "flexDirection", "gap", "marginTop"]) {
+	for (const name of [
+		"display",
+		"flexDirection",
+		"justifyContent",
+		"gap",
+		"marginTop",
+	]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
 	useDarkModifier(s);
@@ -77,6 +83,7 @@ describe("useChatMessageActionsRecipe", () => {
 			color: "neutral",
 			variant: "subtle",
 			size: "md",
+			side: "start",
 		});
 	});
 

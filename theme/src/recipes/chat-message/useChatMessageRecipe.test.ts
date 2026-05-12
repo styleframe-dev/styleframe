@@ -83,7 +83,7 @@ describe("useChatMessageRecipe", () => {
 			expect(recipe.variants!.side).toEqual({
 				start: { justifyContent: "flex-start" },
 				end: {
-					justifyContent: "flex-end",
+					justifyContent: "flex-start",
 					flexDirection: "row-reverse",
 				},
 			});

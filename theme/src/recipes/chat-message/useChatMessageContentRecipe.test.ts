@@ -10,7 +10,7 @@ function createInstance() {
 		"borderColor",
 		"borderRadius",
 		"background",
-		"maxWidth",
+		"alignSelf",
 		"lineHeight",
 		"color",
 		"paddingTop",
@@ -43,7 +43,6 @@ describe("useChatMessageContentRecipe", () => {
 			borderColor: "transparent",
 			borderRadius: "@border-radius.md",
 			background: "transparent",
-			maxWidth: "75%",
 			lineHeight: "@line-height.normal",
 		});
 	});
@@ -126,6 +125,7 @@ describe("useChatMessageContentRecipe", () => {
 			color: "neutral",
 			size: "md",
 			variant: "subtle",
+			side: "start",
 		});
 	});
 
