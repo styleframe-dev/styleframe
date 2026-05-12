@@ -3,8 +3,7 @@ const { framework, frameworks } = useFramework();
 const slots = useSlots();
 
 const current = computed(
-	() =>
-		frameworks.find((f) => f.value === framework.value) ?? frameworks[0],
+	() => frameworks.find((f) => f.value === framework.value) ?? frameworks[0],
 );
 
 const fallback = computed(() => {
