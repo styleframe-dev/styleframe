@@ -36,7 +36,7 @@ export const useChatMessageRecipe = createUseRecipe("chat-message", {
 				justifyContent: "flex-start",
 			},
 			end: {
-				justifyContent: "flex-end",
+				justifyContent: "flex-start",
 				flexDirection: "row-reverse",
 			},
 		},

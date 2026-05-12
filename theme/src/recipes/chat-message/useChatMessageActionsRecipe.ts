@@ -20,6 +20,10 @@ export const useChatMessageActionsRecipe = createUseRecipe(
 				dark: {},
 				neutral: {},
 			},
+			side: {
+				start: {},
+				end: { justifyContent: "flex-end" },
+			},
 			variant: {
 				solid: {},
 				outline: {},
@@ -37,6 +41,7 @@ export const useChatMessageActionsRecipe = createUseRecipe(
 			color: "neutral",
 			variant: "subtle",
 			size: "md",
+			side: "start",
 		},
 	},
 );

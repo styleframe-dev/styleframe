@@ -15,7 +15,6 @@ export const useChatMessageContentRecipe = createUseRecipe(
 			borderColor: "transparent",
 			borderRadius: "@border-radius.md",
 			background: "transparent",
-			maxWidth: "75%",
 			lineHeight: "@line-height.normal",
 		},
 		variants: {
@@ -23,6 +22,10 @@ export const useChatMessageContentRecipe = createUseRecipe(
 				light: {},
 				dark: {},
 				neutral: {},
+			},
+			side: {
+				start: {},
+				end: { alignSelf: "flex-end" },
 			},
 			size: {
 				sm: {
@@ -218,6 +221,7 @@ export const useChatMessageContentRecipe = createUseRecipe(
 			color: "neutral",
 			size: "md",
 			variant: "subtle",
+			side: "start",
 		},
 	},
 );
