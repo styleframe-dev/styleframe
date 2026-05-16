@@ -65,6 +65,35 @@ describe("registerMatchedUtilities", () => {
 		expect(factory.values.some((v) => v.key === "[16px]")).toBe(true);
 	});
 
+	it("converts underscores to spaces in arbitrary values", () => {
+		const s = styleframe();
+		const { utility } = s;
+
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		const factory = s.root.utilities.find((u) => u.name === "padding")!;
+		const matches: UtilityMatch[] = [
+			{
+				parsed: createParsedUtility({
+					name: "padding",
+					value: "[10px_20px]",
+					isArbitrary: true,
+					arbitraryValue: "10px_20px",
+				}),
+				factory,
+				modifierFactories: [],
+				exists: false,
+			},
+		];
+
+		const count = registerMatchedUtilities(s.root, matches);
+
+		expect(count).toBe(1);
+		expect(factory.values.some((v) => v.key === "[10px_20px]")).toBe(true);
+		const registered = factory.values.find((v) => v.key === "[10px_20px]")!;
+		expect(registered.value).toBe("10px 20px");
+	});
+
 	it("registers values with modifiers", () => {
 		const s = styleframe();
 		const { utility, modifier } = s;

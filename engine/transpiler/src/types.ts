@@ -1,4 +1,4 @@
-import type { StyleframeOptions } from "@styleframe/core";
+import type { ShorteningMap, StyleframeOptions } from "@styleframe/core";
 
 export type OutputFile = {
 	name: string;
@@ -12,6 +12,7 @@ export type Output = {
 export type TranspileContext = {
 	treeshake?: boolean;
 	scanner?: boolean;
+	shortMap?: ShorteningMap;
 };
 
 export type ConsumeFunction = (
@@ -24,6 +25,12 @@ export type TranspileOptions = {
 	type?: "css" | "ts" | "dts" | "all";
 	treeshake?: boolean;
 	scanner?: boolean;
+	minify?: boolean;
+	minifyOptions?: {
+		properties?: Record<string, string>;
+		values?: Record<string, string>;
+		modifiers?: Record<string, string>;
+	};
 	consumers?: {
 		css: ConsumeFunction;
 		ts: ConsumeFunction;

@@ -6,6 +6,7 @@ export type {
 	RuntimeModifierDeclarationsBlock,
 	RuntimeVariantDeclarationsBlock,
 	RuntimeVariantDeclarationsValue,
+	ShorteningMap,
 } from "@styleframe/core";
 
 /**
