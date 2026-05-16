@@ -69,7 +69,7 @@ describe("generateGlobalCSS", () => {
 			treeshake: true,
 			scanner: false,
 			minify: false,
-			minifyDefaults: undefined,
+			minifyOptions: undefined,
 		});
 		expect(result).toEqual({ code: ".button { color: red; }" });
 	});
@@ -92,7 +92,7 @@ describe("generateGlobalCSS", () => {
 			treeshake: false,
 			scanner: false,
 			minify: false,
-			minifyDefaults: undefined,
+			minifyOptions: undefined,
 		});
 	});
 

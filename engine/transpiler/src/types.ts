@@ -26,7 +26,7 @@ export type TranspileOptions = {
 	treeshake?: boolean;
 	scanner?: boolean;
 	minify?: boolean;
-	minifyDefaults?: {
+	minifyOptions?: {
 		properties?: Record<string, string>;
 		values?: Record<string, string>;
 		modifiers?: Record<string, string>;

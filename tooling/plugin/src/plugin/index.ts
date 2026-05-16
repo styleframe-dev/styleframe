@@ -304,10 +304,10 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 			// Consumer face: return aggregated exports
 			if (id === RESOLVED_VIRTUAL_CONSUMER_ID) {
 				const minify = isBuildCommand && options.minify !== false;
-				const minifyDefaults =
+				const minifyOptions =
 					typeof options.minify === "object" ? options.minify : undefined;
 				return {
-					code: await generateConsumerModule(state, minify, minifyDefaults),
+					code: await generateConsumerModule(state, minify, minifyOptions),
 				};
 			}
 

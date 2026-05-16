@@ -9,7 +9,7 @@ import type { PluginGlobalState } from "../state";
 export async function generateConsumerModule(
 	state: PluginGlobalState,
 	minify = false,
-	minifyDefaults?: TranspileOptions["minifyDefaults"],
+	minifyOptions?: TranspileOptions["minifyOptions"],
 ): Promise<string> {
 	if (!state.globalInstance) {
 		return `// Styleframe not initialized`;
@@ -18,7 +18,7 @@ export async function generateConsumerModule(
 	const result = await transpile(state.globalInstance, {
 		type: "ts",
 		minify,
-		minifyDefaults,
+		minifyOptions,
 	});
 	return result.files.find((f) => f.name === "index.ts")?.content ?? "";
 }

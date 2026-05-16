@@ -30,7 +30,7 @@ export async function transpile(
 		treeshake = false,
 		scanner = false,
 		minify = false,
-		minifyDefaults,
+		minifyOptions,
 		consumers = { css: consumeCSS, ts: consumeTS, dts: consumeDTS },
 	}: TranspileOptions = {},
 ): Promise<Output> {
@@ -39,7 +39,7 @@ export async function transpile(
 	const context: TranspileContext = { treeshake, scanner };
 
 	if (minify) {
-		const shortMap = generateShorteningMap(instance.root, minifyDefaults);
+		const shortMap = generateShorteningMap(instance.root, minifyOptions);
 		context.shortMap = shortMap;
 	}
 

@@ -51,7 +51,7 @@ describe("generateConsumerModule", () => {
 		expect(transpile).toHaveBeenCalledWith(mockInstance, {
 			type: "ts",
 			minify: false,
-			minifyDefaults: undefined,
+			minifyOptions: undefined,
 		});
 		expect(result).toBe("export const button = {};");
 	});

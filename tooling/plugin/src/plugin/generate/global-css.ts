@@ -32,12 +32,12 @@ export async function generateGlobalCSS(
 	const minifyConfig =
 		typeof options.minify === "object" ? options.minify : undefined;
 	const minify = isBuild && options.minify !== false;
-	const minifyDefaults = minify ? minifyConfig : undefined;
+	const minifyOptions = minify ? minifyConfig : undefined;
 
 	if (minify && state.globalInstance) {
 		const shortMap = generateShorteningMap(
 			state.globalInstance.root,
-			minifyDefaults,
+			minifyOptions,
 		);
 		state.classNameLookup = buildClassNameLookup(
 			state.globalInstance.root,
@@ -51,7 +51,7 @@ export async function generateGlobalCSS(
 		...options.transpiler,
 		scanner: !!options.scanner?.content?.length,
 		minify,
-		minifyDefaults,
+		minifyOptions,
 	});
 	const css = result.files.map((f) => f.content).join("\n");
 
