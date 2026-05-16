@@ -33,7 +33,7 @@ export function createRootConsumer(consume: ConsumeFunction) {
 		// Add imports and generate recipe exports
 		if (hasRecipes) {
 			parts.push(`import { createRecipe } from '@styleframe/runtime';
-import type { RecipeRuntime } from '@styleframe/runtime';
+import type { RecipeRuntime, RecipeVariantProps } from '@styleframe/runtime';
 `);
 			parts.push(consume(instance.recipes, options));
 		}
