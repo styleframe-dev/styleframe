@@ -46,6 +46,7 @@ describe("createRecipeConsumer", () => {
     "variants": {}
 } as const satisfies RecipeRuntime;
 
+export type ButtonProps = RecipeVariantProps<typeof buttonRecipe>;
 export const button = createRecipe("button", buttonRecipe);
 `);
 	});
@@ -97,6 +98,7 @@ export const button = createRecipe("button", buttonRecipe);
     }
 } as const satisfies RecipeRuntime;
 
+export type ButtonProps = RecipeVariantProps<typeof buttonRecipe>;
 export const button = createRecipe("button", buttonRecipe);
 `);
 	});
@@ -159,6 +161,7 @@ export const button = createRecipe("button", buttonRecipe);
     }
 } as const satisfies RecipeRuntime;
 
+export type ButtonProps = RecipeVariantProps<typeof buttonRecipe>;
 export const button = createRecipe("button", buttonRecipe);
 `);
 	});
@@ -191,6 +194,7 @@ export const button = createRecipe("button", buttonRecipe);
     "variants": {}
 } as const satisfies RecipeRuntime;
 
+export type CardProps = RecipeVariantProps<typeof cardRecipe>;
 export const card = createRecipe("card", cardRecipe);
 `);
 	});
@@ -255,6 +259,7 @@ export const card = createRecipe("card", cardRecipe);
     }
 } as const satisfies RecipeRuntime;
 
+export type ChipProps = RecipeVariantProps<typeof chipRecipe>;
 export const chip = createRecipe("chip", chipRecipe);
 `);
 	});
@@ -339,6 +344,7 @@ export const chip = createRecipe("chip", chipRecipe);
     ]
 } as const satisfies RecipeRuntime;
 
+export type BadgeProps = RecipeVariantProps<typeof badgeRecipe>;
 export const badge = createRecipe("badge", badgeRecipe);
 `);
 	});
@@ -434,6 +440,7 @@ export const badge = createRecipe("badge", badgeRecipe);
     ]
 } as const satisfies RecipeRuntime;
 
+export type InputProps = RecipeVariantProps<typeof inputRecipe>;
 export const input = createRecipe("input", inputRecipe);
 `);
 	});
@@ -452,6 +459,7 @@ export const input = createRecipe("input", inputRecipe);
     "variants": {}
 } as const satisfies RecipeRuntime;
 
+export type MinimalProps = RecipeVariantProps<typeof minimalRecipe>;
 export const minimal = createRecipe("minimal", minimalRecipe);
 `);
 	});
@@ -479,6 +487,7 @@ export const minimal = createRecipe("minimal", minimalRecipe);
     "variants": {}
 } as const satisfies RecipeRuntime;
 
+export type SimpleProps = RecipeVariantProps<typeof simpleRecipe>;
 export const simple = createRecipe("simple", simpleRecipe);
 `);
 	});
@@ -503,6 +512,7 @@ export const simple = createRecipe("simple", simpleRecipe);
     "variants": {}
 } as const satisfies RecipeRuntime;
 
+export type PrimaryButtonProps = RecipeVariantProps<typeof PrimaryButtonRecipe>;
 export const PrimaryButton = createRecipe("PrimaryButton", PrimaryButtonRecipe);
 `);
 	});
@@ -525,6 +535,7 @@ export const PrimaryButton = createRecipe("PrimaryButton", PrimaryButtonRecipe);
     "variants": {}
 } as const satisfies RecipeRuntime;
 
+export type PrimaryButtonProps = RecipeVariantProps<typeof primaryButtonRecipe>;
 export const primaryButton = createRecipe("primaryButton", primaryButtonRecipe);
 `);
 	});
@@ -547,6 +558,7 @@ export const primaryButton = createRecipe("primaryButton", primaryButtonRecipe);
     "variants": {}
 } as const satisfies RecipeRuntime;
 
+export type PrimaryButtonProps = RecipeVariantProps<typeof primaryButtonRecipe>;
 export const primaryButton = createRecipe("primary-button", primaryButtonRecipe);
 `);
 	});
@@ -648,6 +660,7 @@ export const primaryButton = createRecipe("primary-button", primaryButtonRecipe)
     }
 } as const satisfies RecipeRuntime;
 
+export type AlertProps = RecipeVariantProps<typeof alertRecipe>;
 export const alert = createRecipe("alert", alertRecipe);
 `);
 	});
@@ -666,6 +679,9 @@ export const alert = createRecipe("alert", alertRecipe);
 		const result = consumeRecipe(instance, options);
 
 		expect(result).toContain("const myComponentRecipe = {");
+		expect(result).toContain(
+			"export type MyComponentProps = RecipeVariantProps<typeof myComponentRecipe>;",
+		);
 		expect(result).toContain(
 			`export const myComponent = createRecipe("myComponent", myComponentRecipe);`,
 		);
@@ -766,6 +782,7 @@ export const alert = createRecipe("alert", alertRecipe);
     "variants": {}
 } as const satisfies RecipeRuntime;
 
+export type ButtonProps = RecipeVariantProps<typeof buttonRecipe>;
 export const button = createRecipe("button", buttonRecipe);
 `);
 	});
@@ -799,6 +816,7 @@ export const button = createRecipe("button", buttonRecipe);
     }
 } as const satisfies RecipeRuntime;
 
+export type ToggleProps = RecipeVariantProps<typeof toggleRecipe>;
 export const toggle = createRecipe("toggle", toggleRecipe);
 `);
 	});
@@ -836,6 +854,7 @@ export const toggle = createRecipe("toggle", toggleRecipe);
     }
 } as const satisfies RecipeRuntime;
 
+export type PlaceholderProps = RecipeVariantProps<typeof placeholderRecipe>;
 export const placeholder = createRecipe("placeholder", placeholderRecipe);
 `);
 	});
@@ -927,6 +946,7 @@ export const placeholder = createRecipe("placeholder", placeholderRecipe);
     ]
 } as const satisfies RecipeRuntime;
 
+export type MatrixProps = RecipeVariantProps<typeof matrixRecipe>;
 export const matrix = createRecipe("matrix", matrixRecipe);
 `);
 	});
@@ -991,6 +1011,9 @@ export const matrix = createRecipe("matrix", matrixRecipe);
 		const result = consumeRecipe(instance, options);
 
 		expect(result).toContain(
+			"export type ExportedProps = RecipeVariantProps<typeof exportedRecipe>;",
+		);
+		expect(result).toContain(
 			`export const exported = createRecipe("exported", exportedRecipe);`,
 		);
 	});
@@ -1017,6 +1040,7 @@ export const matrix = createRecipe("matrix", matrixRecipe);
 			result,
 		).toEqual(`const noRuntimeRecipe = {} as const satisfies RecipeRuntime;
 
+export type NoRuntimeProps = RecipeVariantProps<typeof noRuntimeRecipe>;
 export const noRuntime = createRecipe("noRuntime", noRuntimeRecipe);
 `);
 	});

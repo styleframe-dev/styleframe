@@ -38,7 +38,12 @@ describe("createRecipeConsumer (dts)", () => {
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toContain('disabled?: "true" | "false" | boolean');
+		expect(result).toContain(
+			'export type ButtonProps = { disabled?: "true" | "false" | boolean }',
+		);
+		expect(result).toContain(
+			"export const button: (props?: ButtonProps) => string;",
+		);
 	});
 
 	it("should not include boolean when variant has only true key", () => {
@@ -58,6 +63,7 @@ describe("createRecipeConsumer (dts)", () => {
 
 		expect(result).toContain('rounded?: "true"');
 		expect(result).not.toContain("boolean");
+		expect(result).toContain("(props?: ButtonProps) => string;");
 	});
 
 	it("should not include boolean for normal string variants", () => {
@@ -77,7 +83,10 @@ describe("createRecipeConsumer (dts)", () => {
 
 		const result = consumeRecipe(instance, options);
 
-		expect(result).toContain('size?: "sm" | "md" | "lg"');
+		expect(result).toContain(
+			'export type ButtonProps = { size?: "sm" | "md" | "lg" }',
+		);
+		expect(result).toContain("(props?: ButtonProps) => string;");
 		expect(result).not.toContain("boolean");
 	});
 
@@ -104,5 +113,76 @@ describe("createRecipeConsumer (dts)", () => {
 
 		expect(result).toContain('disabled?: "true" | "false" | boolean');
 		expect(result).toContain('size?: "sm" | "md"');
+		expect(result).toContain("(props?: ButtonProps) => string;");
+	});
+
+	it("should generate PascalCase props type name from export name", () => {
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		const instance = recipe({
+			name: "card-header",
+			base: {},
+			variants: {
+				size: {
+					sm: { padding: "1rem" },
+				},
+			},
+		});
+
+		const result = consumeRecipe(instance, options);
+
+		expect(result).toContain("export type CardHeaderProps =");
+		expect(result).toContain("(props?: CardHeaderProps) => string;");
+	});
+
+	it("should handle PascalCase export names", () => {
+		const instance = recipe({
+			name: "PrimaryButton",
+			base: {},
+			variants: {},
+		});
+
+		const result = consumeRecipe(instance, options);
+
+		expect(result).toContain("export type PrimaryButtonProps =");
+		expect(result).toContain("(props?: PrimaryButtonProps) => string;");
+	});
+
+	it("should generate props type from _exportName when set", () => {
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		const instance = recipe({
+			name: "my-tab",
+			base: {},
+			variants: {
+				state: {
+					active: { padding: "1rem" },
+					inactive: { padding: "0.5rem" },
+				},
+			},
+		});
+		instance._exportName = "pgTab";
+
+		const result = consumeRecipe(instance, options);
+
+		expect(result).toContain("export type PgTabProps =");
+		expect(result).toContain(
+			"export const pgTab: (props?: PgTabProps) => string;",
+		);
+	});
+
+	it("should generate empty props type for recipes without variants", () => {
+		const instance = recipe({
+			name: "divider",
+			base: {},
+			variants: {},
+		});
+
+		const result = consumeRecipe(instance, options);
+
+		expect(result).toContain(
+			"export type DividerProps = Record<string, never>;",
+		);
+		expect(result).toContain("(props?: DividerProps) => string;");
 	});
 });
