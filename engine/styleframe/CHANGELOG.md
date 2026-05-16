@@ -1,5 +1,39 @@
 # styleframe
 
+## 3.7.0
+
+### Minor Changes
+
+- [#221](https://github.com/styleframe-dev/styleframe/pull/221) [`6d406c2`](https://github.com/styleframe-dev/styleframe/commit/6d406c289b39c666a3fb7468aa3ec08f5a6d316b) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `treeshake` option to remove unused variables from CSS output.
+
+  `root._usage` now tracks both `variables` and `utilities` referenced during config execution and scanner registration. The transpiler's new `treeshake: true` option filters `root.variables` and theme variables down to only those present in `_usage.variables`. The plugin enables treeshaking by default when generating global CSS.
+
+- [#215](https://github.com/styleframe-dev/styleframe/pull/215) [`43f8f4f`](https://github.com/styleframe-dev/styleframe/commit/43f8f4f322d120def777262277aa40c5d84736a8) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Unify fluid and fixed font sizes under `useFontSizeDesignTokens`. Tuple `[min, max]` and object `{ min, max }` values are now treated as **absolute pixel ranges** and routed through `useFluidClamp`; plain `TokenValue` values stay static. The same call accepts mixed fluid + fixed entries.
+
+  ```ts
+  useFontSizeDesignTokens(s, {
+    default: "@font-size.md",
+    md: [16, 18], // fluid
+    sm: "0.8rem", // fixed
+    lg: { min: 18, max: 24 }, // fluid (object form)
+  });
+  ```
+
+  Breaking changes:
+  - `useFluidFontSizeDesignTokens` is removed. Pass ranges directly to `useFontSizeDesignTokens` instead.
+  - `useDesignTokensPreset`'s `fluidFontSize.values` config now expects the unified `FontSizeValue` (`TokenValue | RangeInput<TokenValue>`) per key. Existing `[min, max]` / `{ min, max }` shapes still work but are interpreted as **absolute pixels**, not multipliers of a base.
+  - When `fluidFontSize` is enabled and the user passes their own `fontSize` config, those values now win over the fluid defaults instead of being silently dropped.
+  - `fontSizeValues` is renamed to `fontSizeStaticValues`. The pixel base used by the default fluid scale is emitted as configurable CSS variables (`--font-size--min: 16;` / `--font-size--max: 18;`); each fluid `font-size.*` `calc()` references them via `var()`, so the base can be retargeted by overriding those custom properties.
+
+  Internal: `createUseVariable` gains a `fluid?: boolean` opt-in flag plus a `breakpoint` options-bag arg on the returned composable, so any composable can adopt range-aware values with a single line.
+
+### Patch Changes
+
+- Updated dependencies [[`6d406c2`](https://github.com/styleframe-dev/styleframe/commit/6d406c289b39c666a3fb7468aa3ec08f5a6d316b)]:
+  - @styleframe/core@3.5.0
+  - @styleframe/transpiler@3.3.0
+  - @styleframe/plugin@3.3.0
+
 ## 3.6.0
 
 ### Minor Changes

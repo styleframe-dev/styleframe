@@ -37,7 +37,7 @@ export function createRootConsumer(consume: ConsumeFunction) {
 		if (hasRecipes) {
 			const importParts = [
 				"import { createRecipe } from '@styleframe/runtime';",
-				"import type { RecipeRuntime } from '@styleframe/runtime';",
+				"import type { RecipeRuntime, RecipeVariantProps } from '@styleframe/runtime';",
 			];
 
 			if (context?.shortMap) {
