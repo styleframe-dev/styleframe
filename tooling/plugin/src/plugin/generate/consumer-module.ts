@@ -1,3 +1,4 @@
+import type { TranspileOptions } from "@styleframe/transpiler";
 import { transpile } from "@styleframe/transpiler";
 import type { PluginGlobalState } from "../state";
 
@@ -7,12 +8,17 @@ import type { PluginGlobalState } from "../state";
  */
 export async function generateConsumerModule(
 	state: PluginGlobalState,
+	minify = false,
+	minifyDefaults?: TranspileOptions["minifyDefaults"],
 ): Promise<string> {
 	if (!state.globalInstance) {
 		return `// Styleframe not initialized`;
 	}
 
-	// Use the transpiler to generate TypeScript output for all recipes and selectors
-	const result = await transpile(state.globalInstance, { type: "ts" });
+	const result = await transpile(state.globalInstance, {
+		type: "ts",
+		minify,
+		minifyDefaults,
+	});
 	return result.files.find((f) => f.name === "index.ts")?.content ?? "";
 }

@@ -1,4 +1,4 @@
-import type { Styleframe } from "@styleframe/core";
+import type { Styleframe, StyleframeOptions } from "@styleframe/core";
 import {
 	isInstanceLicenseRequired,
 	getInstanceLicenseValidationInfo,
@@ -6,7 +6,9 @@ import {
 import { consume as consumeCSS } from "./consume/css";
 import { consume as consumeDTS } from "./consume/dts";
 import { consume as consumeTS } from "./consume/ts";
+import { defaultUtilitySelectorFn } from "./defaults";
 import { addLicenseWatermark } from "./license";
+import { generateShorteningMap, shortenUtilityOptions } from "./minify";
 import type {
 	Output,
 	OutputFile,
@@ -27,12 +29,19 @@ export async function transpile(
 		type = "all",
 		treeshake = false,
 		scanner = false,
+		minify = false,
+		minifyDefaults,
 		consumers = { css: consumeCSS, ts: consumeTS, dts: consumeDTS },
 	}: TranspileOptions = {},
 ): Promise<Output> {
 	const output: Output = { files: [] };
 	const options = instance.options;
 	const context: TranspileContext = { treeshake, scanner };
+
+	if (minify) {
+		const shortMap = generateShorteningMap(instance.root, minifyDefaults);
+		context.shortMap = shortMap;
+	}
 
 	if (isInstanceLicenseRequired(instance)) {
 		const validationInfo = await getInstanceLicenseValidationInfo(instance);
@@ -42,9 +51,10 @@ export async function transpile(
 	}
 
 	if (type === "all" || type === "css") {
+		const cssOptions = createCSSOptions(options, context);
 		const indexFile = createFile(
 			"index.css",
-			consumers.css(instance.root, options, context),
+			consumers.css(instance.root, cssOptions, context),
 		);
 		output.files.push(indexFile);
 	}
@@ -52,7 +62,7 @@ export async function transpile(
 	if (type === "all" || type === "ts") {
 		const indexFile = createFile(
 			"index.ts",
-			consumers.ts(instance.root, options),
+			consumers.ts(instance.root, options, context),
 		);
 		output.files.push(indexFile);
 	}
@@ -66,4 +76,23 @@ export async function transpile(
 	}
 
 	return output;
+}
+
+function createCSSOptions(
+	options: StyleframeOptions,
+	context: TranspileContext,
+): StyleframeOptions {
+	if (!context.shortMap) return options;
+
+	const baseSelectorFn =
+		options.utilities?.selector ?? defaultUtilitySelectorFn;
+
+	return {
+		...options,
+		utilities: {
+			...options.utilities,
+			selector: (opts) =>
+				baseSelectorFn(shortenUtilityOptions(opts, context.shortMap!)),
+		},
+	};
 }

@@ -35,4 +35,15 @@ export interface Options {
 		/** Custom utility class syntax configuration */
 		utilities?: ScannerUtilitiesConfig;
 	};
+	/** Shorten utility class names in production builds (default: true when building) */
+	minify?:
+		| boolean
+		| {
+				/** Override default short names for properties */
+				properties?: Record<string, string>;
+				/** Override default short names for values */
+				values?: Record<string, string>;
+				/** Override default short names for modifiers */
+				modifiers?: Record<string, string>;
+		  };
 }

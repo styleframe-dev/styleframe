@@ -1,6 +1,6 @@
 import type { Recipe, StyleframeOptions } from "@styleframe/core";
 import { capitalizeFirst } from "@styleframe/core";
-import type { ConsumeFunction } from "../../types";
+import type { ConsumeFunction, TranspileContext } from "../../types";
 import { isUppercase, toCamelCase } from "../../utils";
 
 /**
@@ -11,6 +11,7 @@ export function createRecipeConsumer(_consume: ConsumeFunction) {
 	return function consumeRecipe(
 		instance: Recipe,
 		_options: StyleframeOptions,
+		context?: TranspileContext,
 	): string {
 		// Use _exportName if present, otherwise derive from recipe name
 		let exportConstant = instance._exportName;
@@ -18,7 +19,6 @@ export function createRecipeConsumer(_consume: ConsumeFunction) {
 		if (!exportConstant) {
 			exportConstant = toCamelCase(instance.name);
 
-			// Handle PascalCase names
 			if (instance.name[0] && isUppercase(instance.name[0])) {
 				exportConstant = capitalizeFirst(exportConstant);
 			}
@@ -26,6 +26,7 @@ export function createRecipeConsumer(_consume: ConsumeFunction) {
 
 		const recipeConstant = `${exportConstant}Recipe`;
 		const runtime = instance._runtime ?? {};
+		const shortMapArg = context?.shortMap ? ", __shortMap" : "";
 
 		return `const ${recipeConstant} = ${JSON.stringify(
 			runtime,
@@ -33,7 +34,7 @@ export function createRecipeConsumer(_consume: ConsumeFunction) {
 			4,
 		)} as const satisfies RecipeRuntime;
 
-export const ${exportConstant} = createRecipe("${instance.name}", ${recipeConstant});
+export const ${exportConstant} = createRecipe("${instance.name}", ${recipeConstant}${shortMapArg});
 `;
 	};
 }

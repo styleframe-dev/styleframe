@@ -29,6 +29,8 @@ export interface PluginGlobalState {
 	loadingFiles: Set<string>;
 	/** Whether initial discovery has completed */
 	initialized: boolean;
+	/** Full-to-short class name lookup (populated during minified builds) */
+	classNameLookup: Record<string, string> | null;
 }
 
 /**
@@ -46,6 +48,7 @@ export function createPluginState(configPath: string): PluginGlobalState {
 		files: new Map(),
 		loadingFiles: new Set(),
 		initialized: false,
+		classNameLookup: null,
 	};
 }
 
@@ -89,4 +92,5 @@ export function resetState(state: PluginGlobalState): void {
 	state.files.clear();
 	state.loadingFiles.clear();
 	state.initialized = false;
+	state.classNameLookup = null;
 }
