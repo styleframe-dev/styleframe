@@ -260,17 +260,19 @@ headline: Developer Workflow
     ---
 
 ```bash
-# Export Styleframe variables to DTCG format
-npx styleframe dtcg export \
+# Export Styleframe variables to Figma-compatible format
+npx styleframe figma export \
         --config styleframe.config.ts \
-        --output tokens.json \
+        --output tokens/ \
         --collection "Design Tokens"
 
 # Output:
 # Loading configuration from "styleframe.config.ts"...
 # Building DTCG document...
-# Wrote 42 tokens to "tokens.json"
-# Exported 42 tokens in DTCG format to "tokens.json"
+# Flattening to Figma-compatible format...
+# Wrote "tokens/Default.tokens.json" (450 tokens)
+# Wrote "tokens/Dark.tokens.json" (450 tokens)
+# Exported 450 tokens as 2 Figma-compatible mode file(s)
 ```
 
     ::::

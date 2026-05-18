@@ -1,11 +1,12 @@
 import path from "node:path";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, stat, writeFile } from "node:fs/promises";
 import { defineCommand } from "citty";
 import consola from "consola";
-import type { DTCGDocument } from "@styleframe/dtcg";
+import type { DTCGDocument, DTCGResolverDocument } from "@styleframe/dtcg";
 import {
 	generateStyleframeCode,
 	fromDTCG,
+	fromDTCGResolver,
 	type FigmaExportFormat,
 } from "@styleframe/figma";
 
@@ -17,7 +18,7 @@ export default defineCommand({
 	args: {
 		input: {
 			type: "string",
-			description: "Input DTCG JSON file path",
+			description: "Input DTCG JSON file or directory containing tokens.json",
 			required: true,
 			alias: ["i"],
 			valueHint: "path",
@@ -57,19 +58,21 @@ export default defineCommand({
 		const baseFontSize = Number.parseInt(args.baseFontSize, 10) || 16;
 
 		consola.info(
-			`Reading JSON from "${path.relative(process.cwd(), inputPath)}"...`,
+			`Reading from "${path.relative(process.cwd(), inputPath)}"...`,
 		);
 
 		let data: FigmaExportFormat;
 		try {
-			const content = await readFile(inputPath, "utf-8");
-			const rawData = JSON.parse(content) as DTCGDocument;
+			const inputStat = await stat(inputPath);
 
-			// Convert from DTCG format to internal format
-			data = fromDTCG(rawData);
+			if (inputStat.isDirectory()) {
+				data = await readFromDirectory(inputPath);
+			} else {
+				data = await readFromFile(inputPath);
+			}
 		} catch (error) {
 			consola.error(
-				`Failed to read or parse input file: ${error instanceof Error ? error.message : error}`,
+				`Failed to read or parse input: ${error instanceof Error ? error.message : error}`,
 			);
 			process.exit(1);
 		}
@@ -100,3 +103,61 @@ export default defineCommand({
 		consola.info(`\nOutput: ${path.relative(process.cwd(), outputPath)}`);
 	},
 });
+
+async function readFromDirectory(dirPath: string): Promise<FigmaExportFormat> {
+	const tokensPath = path.join(dirPath, "tokens.json");
+	const content = await readFile(tokensPath, "utf-8");
+	const tokensDoc = JSON.parse(content) as DTCGDocument;
+
+	const resolverPath = path.join(dirPath, "tokens.resolver.json");
+	const resolverDoc = await tryReadJson<DTCGResolverDocument>(resolverPath);
+
+	if (resolverDoc) {
+		consola.info(
+			`Found resolver: "${path.relative(process.cwd(), resolverPath)}"`,
+		);
+		return fromDTCGResolver(resolverDoc, {
+			fileLoader: async (ref) => {
+				if (ref === "tokens.json") return tokensDoc;
+				throw new Error(
+					`Resolver references "${ref}" but only "tokens.json" was found`,
+				);
+			},
+		});
+	}
+
+	return fromDTCG(tokensDoc);
+}
+
+async function readFromFile(filePath: string): Promise<FigmaExportFormat> {
+	const content = await readFile(filePath, "utf-8");
+	const tokensDoc = JSON.parse(content) as DTCGDocument;
+
+	const resolverPath = filePath.replace(/\.json$/, ".resolver.json");
+	const resolverDoc = await tryReadJson<DTCGResolverDocument>(resolverPath);
+
+	if (resolverDoc) {
+		consola.info(
+			`Auto-detected resolver: "${path.relative(process.cwd(), resolverPath)}"`,
+		);
+		return fromDTCGResolver(resolverDoc, {
+			fileLoader: async (ref) => {
+				if (ref === path.basename(filePath)) return tokensDoc;
+				throw new Error(
+					`Resolver references "${ref}" but only "${path.basename(filePath)}" was provided`,
+				);
+			},
+		});
+	}
+
+	return fromDTCG(tokensDoc);
+}
+
+async function tryReadJson<T>(filePath: string): Promise<T | undefined> {
+	try {
+		const content = await readFile(filePath, "utf-8");
+		return JSON.parse(content) as T;
+	} catch {
+		return undefined;
+	}
+}

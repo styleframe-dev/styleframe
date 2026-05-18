@@ -1,4 +1,4 @@
-import { writeFile } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { Root } from "@styleframe/core";
 import { loadConfiguration } from "@styleframe/loader";
@@ -21,8 +21,8 @@ export default defineCommand({
 		},
 		output: {
 			type: "string",
-			description: "Output JSON file path",
-			default: "tokens.json",
+			description: "Output directory for DTCG files",
+			default: ".",
 			alias: ["o"],
 			valueHint: "path",
 		},
@@ -35,7 +35,7 @@ export default defineCommand({
 	},
 	async run({ args }) {
 		const configPath = path.resolve(args.config);
-		const outputPath = path.resolve(args.output);
+		const outputDir = path.resolve(args.output);
 
 		consola.info(
 			`Loading configuration from "${path.relative(process.cwd(), configPath)}"...`,
@@ -55,12 +55,15 @@ export default defineCommand({
 			maxViewport,
 		} = buildDTCG(root, {
 			collectionName: args.collection,
-			tokensSourceRef: path.basename(outputPath),
+			tokensSourceRef: "tokens.json",
 		});
 
-		await writeFile(outputPath, `${JSON.stringify(tokens, null, 2)}\n`);
+		await mkdir(outputDir, { recursive: true });
+
+		const tokensPath = path.join(outputDir, "tokens.json");
+		await writeFile(tokensPath, `${JSON.stringify(tokens, null, 2)}\n`);
 		consola.info(
-			`Wrote ${emittedCount} tokens to "${path.relative(process.cwd(), outputPath)}"`,
+			`Wrote ${emittedCount} tokens to "${path.relative(process.cwd(), tokensPath)}"`,
 		);
 
 		if (fluidNormalisedCount > 0) {
@@ -70,7 +73,7 @@ export default defineCommand({
 		}
 
 		if (resolver) {
-			const resolverPath = outputPath.replace(/\.json$/, ".resolver.json");
+			const resolverPath = path.join(outputDir, "tokens.resolver.json");
 			await writeFile(resolverPath, `${JSON.stringify(resolver, null, 2)}\n`);
 			consola.info(
 				`Wrote resolver to "${path.relative(process.cwd(), resolverPath)}"`,
@@ -94,7 +97,7 @@ export default defineCommand({
 		}
 
 		consola.success(
-			`Exported ${emittedCount} tokens in DTCG format to "${path.relative(process.cwd(), outputPath)}"`,
+			`Exported ${emittedCount} tokens in DTCG format to "${path.relative(process.cwd(), outputDir)}"`,
 		);
 	},
 });

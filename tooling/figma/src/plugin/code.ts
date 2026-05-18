@@ -19,13 +19,10 @@ import { isDTCGFormat } from "./shared";
  */
 interface ImportMessage {
 	type: "import";
-	data: FigmaExportFormat | DTCGDocument;
+	data?: FigmaExportFormat | DTCGDocument;
+	/** Per-mode token documents (from `styleframe figma export`). */
+	modes?: Record<string, DTCGDocument>;
 	resolver?: DTCGResolverDocument;
-	/**
-	 * Filename the user uploaded `data` as. Used to satisfy `$ref` lookups in
-	 * the resolver document — the in-memory loader returns `data` for any ref
-	 * matching this name. Defaults to `"tokens.json"` when omitted.
-	 */
 	tokensRef?: string;
 }
 
@@ -71,7 +68,12 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
 	try {
 		switch (msg.type) {
 			case "import":
-				await handleImport(msg.data, msg.resolver, msg.tokensRef);
+				await handleImport(
+					msg.data,
+					msg.resolver,
+					msg.tokensRef,
+					msg.modes as Record<string, DTCGDocument> | undefined,
+				);
 				break;
 			case "export":
 				await handleExport(msg.collectionId);
@@ -108,12 +110,40 @@ async function sendCollections(): Promise<void> {
  * Import variables from JSON data (supports both DTCG and legacy formats)
  */
 async function handleImport(
-	rawData: FigmaExportFormat | DTCGDocument,
+	rawData: FigmaExportFormat | DTCGDocument | undefined,
 	resolver?: DTCGResolverDocument,
 	tokensRef?: string,
+	perModeDocs?: Record<string, DTCGDocument>,
 ): Promise<void> {
 	let data: FigmaExportFormat;
-	if (resolver && isDTCGFormat(rawData)) {
+
+	if (perModeDocs && Object.keys(perModeDocs).length > 0) {
+		const modeNames = Object.keys(perModeDocs);
+		const allModes: string[] = [];
+		const variableMap = new Map<string, FigmaExportVariable>();
+
+		for (const modeName of modeNames) {
+			const modeDoc = perModeDocs[modeName]!;
+			const modeData = fromDTCG(modeDoc, { defaultModeName: modeName });
+			if (!allModes.includes(modeName)) allModes.push(modeName);
+			for (const v of modeData.variables) {
+				const existing = variableMap.get(v.name);
+				if (existing) {
+					Object.assign(existing.values, v.values);
+				} else {
+					variableMap.set(v.name, { ...v, values: { ...v.values } });
+				}
+			}
+		}
+
+		data = {
+			collection: fromDTCG(perModeDocs[modeNames[0]!]!).collection,
+			modes: allModes,
+			variables: [...variableMap.values()],
+		};
+	} else if (!rawData) {
+		throw new Error("No token data provided");
+	} else if (resolver && isDTCGFormat(rawData)) {
 		// Multi-mode flow: every resolver context becomes a Figma mode. The
 		// resolver references the base tokens by `$ref` (typically
 		// "tokens.json"); the Figma plugin sandbox can't fetch URLs, so we
@@ -170,11 +200,17 @@ async function handleImport(
 		}
 	}
 
-	// Create a map to track created variables for alias resolution
-	const variableMap = new Map<string, Variable>();
-
 	// Get existing variables once
 	const existingVariables = await figma.variables.getLocalVariablesAsync();
+
+	// Create a map to track created variables for alias resolution.
+	// Seed with ALL existing local variables so that alias targets in
+	// other collections (e.g. primitives imported separately) and alias
+	// variables processed later in the second pass can be found.
+	const variableMap = new Map<string, Variable>();
+	for (const fv of existingVariables) {
+		variableMap.set(fv.name, fv);
+	}
 
 	// First pass: create all non-alias variables
 	for (const v of variables) {
@@ -212,13 +248,27 @@ async function handleImport(
 			const modeId = modeIdMap.get(modeName);
 			if (!modeId) continue;
 
-			const figmaValue = convertToFigmaValue(value, v.type);
-			if (figmaValue !== null) {
-				figmaVar.setValueForMode(modeId, figmaValue);
+			if (isVariableAlias(value)) {
+				const aliasTarget = variableMap.get(value.id);
+				if (aliasTarget) {
+					figmaVar.setValueForMode(modeId, {
+						type: "VARIABLE_ALIAS",
+						id: aliasTarget.id,
+					});
+				} else {
+					console.warn(
+						`Alias target "${value.id}" not found for "${v.name}" mode "${modeName}"`,
+					);
+				}
 			} else {
-				console.warn(
-					`Skipped value for "${v.name}" (mode "${modeName}"): cannot store ${typeof value} in a ${v.type} variable`,
-				);
+				const figmaValue = convertToFigmaValue(value, v.type);
+				if (figmaValue !== null) {
+					figmaVar.setValueForMode(modeId, figmaValue);
+				} else {
+					console.warn(
+						`Skipped value for "${v.name}" (mode "${modeName}"): cannot store ${typeof value} in a ${v.type} variable`,
+					);
+				}
 			}
 		}
 
@@ -250,14 +300,35 @@ async function handleImport(
 			);
 		}
 
-		// Set alias for default mode
-		const defaultModeId = modeIdMap.get(modes[0] ?? "Default");
-		if (defaultModeId) {
-			figmaVar.setValueForMode(defaultModeId, {
-				type: "VARIABLE_ALIAS",
-				id: targetVar.id,
-			});
+		for (const [modeName, value] of Object.entries(v.values)) {
+			const modeId = modeIdMap.get(modeName);
+			if (!modeId) continue;
+
+			if (isVariableAlias(value)) {
+				const modeTargetVar = variableMap.get(value.id);
+				if (modeTargetVar) {
+					figmaVar.setValueForMode(modeId, {
+						type: "VARIABLE_ALIAS",
+						id: modeTargetVar.id,
+					});
+				} else {
+					console.warn(
+						`Alias target "${value.id}" not found for "${v.name}" mode "${modeName}"`,
+					);
+				}
+			} else {
+				const figmaValue = convertToFigmaValue(value, v.type);
+				if (figmaValue !== null) {
+					figmaVar.setValueForMode(modeId, figmaValue);
+				} else {
+					console.warn(
+						`Skipped value for "${v.name}" (mode "${modeName}"): cannot store ${typeof value} in a ${v.type} variable`,
+					);
+				}
+			}
 		}
+
+		variableMap.set(v.name, figmaVar);
 	}
 
 	figma.ui.postMessage({

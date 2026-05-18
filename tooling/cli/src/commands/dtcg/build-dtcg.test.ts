@@ -298,4 +298,31 @@ describe("buildDTCG", () => {
 		// At the locked max viewport (1920px), the formula reduces to max=24.
 		expect(md.$value).toEqual({ value: 24, unit: "px" });
 	});
+
+	it("emits theme overrides under $root when the base token was promoted to $root", () => {
+		const root = makeRoot(
+			[
+				v("color.gray-200", "#e5e7eb"),
+				v("color.gray-700", "#374151"),
+				v("border-color", ref("color.gray-200")),
+				v("border-color.primary", ref("color.primary")),
+				v("color.primary", "#007a99"),
+			],
+			[theme("dark", [v("border-color", ref("color.gray-700"))])],
+		);
+		const { resolver } = buildDTCG(root);
+		expect(resolver).toBeDefined();
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const darkContext = resolver!.modifiers!["theme"]!.contexts[
+			"Dark"
+		] as unknown as Record<string, unknown>[];
+		expect(darkContext).toHaveLength(1);
+		const overrideDoc = darkContext[0] as Record<string, unknown>;
+		const bc = overrideDoc["border-color"] as Record<string, unknown>;
+		expect(bc.$root).toBeDefined();
+		expect((bc.$root as Record<string, unknown>).$value).toBe(
+			"{color.gray-700}",
+		);
+		expect(bc.$value).toBeUndefined();
+	});
 });

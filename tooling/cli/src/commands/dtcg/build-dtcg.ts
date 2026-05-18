@@ -158,6 +158,22 @@ function setNestedToken(
 	}
 }
 
+function hasRootToken(doc: DTCGDocument, dotPath: string): boolean {
+	const segments = dotPath.split(".");
+	let cursor: unknown = doc;
+	for (const segment of segments) {
+		if (typeof cursor !== "object" || cursor === null || Array.isArray(cursor))
+			return false;
+		cursor = (cursor as Record<string, unknown>)[segment];
+	}
+	return (
+		typeof cursor === "object" &&
+		cursor !== null &&
+		!Array.isArray(cursor) &&
+		"$root" in (cursor as object)
+	);
+}
+
 function setNestedOverride(
 	context: Record<string, unknown>,
 	dotPath: string,
@@ -437,9 +453,12 @@ export function buildDTCG(
 					continue;
 				}
 
+				const overridePath = hasRootToken(tokens, variable.name)
+					? `${variable.name}.$root`
+					: variable.name;
 				setNestedOverride(
 					contextDoc as unknown as Record<string, unknown>,
-					variable.name,
+					overridePath,
 					themeValue,
 					themeType,
 				);

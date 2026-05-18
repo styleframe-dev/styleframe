@@ -294,6 +294,114 @@ describe("fromDTCGResolver (multi-mode)", () => {
 		expect(bg?.values["dark"]).toEqual({ r: 0, g: 0, b: 0, a: 1 });
 	});
 
+	it("preserves alias values for all modes, not just the default", async () => {
+		const lightTokens = {
+			color: {
+				$type: "color" as const,
+				border: { $value: "{base.gray-200}" },
+			},
+		};
+		const darkTokens = {
+			color: {
+				$type: "color" as const,
+				border: { $value: "{base.gray-700}" },
+			},
+		};
+
+		const loader = async (ref: string) => {
+			if (ref === "light.json") return lightTokens;
+			if (ref === "dark.json") return darkTokens;
+			throw new Error(`unknown ref ${ref}`);
+		};
+
+		const resolver: DTCGResolverDocument = {
+			version: "2025.10",
+			modifiers: {
+				theme: {
+					contexts: {
+						light: [{ $ref: "light.json" }],
+						dark: [{ $ref: "dark.json" }],
+					},
+					default: "light",
+				},
+			},
+			resolutionOrder: [{ $ref: "#/modifiers/theme" }],
+		};
+
+		const result = await fromDTCGResolver(resolver, { fileLoader: loader });
+		const border = result.variables.find((v) => v.name === "color/border");
+		expect(border).toBeDefined();
+		expect(border?.aliasTo).toBe("base/gray-200");
+		expect(border?.values["light"]).toEqual({
+			type: "VARIABLE_ALIAS",
+			id: "base/gray-200",
+		});
+		expect(border?.values["dark"]).toEqual({
+			type: "VARIABLE_ALIAS",
+			id: "base/gray-700",
+		});
+	});
+
+	it("produces concrete default and alias non-default when alias chain is only resolvable in default mode", async () => {
+		const baseTokens = {
+			color: {
+				$type: "color" as const,
+				primary: {
+					$value: { colorSpace: "srgb", components: [0, 0.478, 0.6] },
+				},
+			},
+			"border-color": {
+				$type: "color" as const,
+				primary: { $value: "{color.primary}" },
+			},
+		};
+		const darkOverrides = {
+			color: {
+				$type: "color" as const,
+				primary: { $value: "{shade.primary-800}" },
+			},
+		};
+
+		const loader = async (ref: string) => {
+			if (ref === "base.json") return baseTokens;
+			throw new Error(`unknown ref ${ref}`);
+		};
+
+		const resolver: DTCGResolverDocument = {
+			version: "2025.10",
+			modifiers: {
+				theme: {
+					contexts: {
+						light: [],
+						dark: [darkOverrides],
+					},
+					default: "light",
+				},
+			},
+			resolutionOrder: [
+				{ type: "set", sources: [{ $ref: "base.json" }] },
+				{ $ref: "#/modifiers/theme" },
+			],
+		};
+
+		const result = await fromDTCGResolver(resolver, { fileLoader: loader });
+		const border = result.variables.find(
+			(v) => v.name === "border-color/primary",
+		);
+		expect(border).toBeDefined();
+		expect(border?.aliasTo).toBeUndefined();
+		expect(border?.values["light"]).toEqual({
+			r: 0,
+			g: 0.478,
+			b: 0.6,
+			a: 1,
+		});
+		expect(border?.values["dark"]).toEqual({
+			type: "VARIABLE_ALIAS",
+			id: "shade/primary-800",
+		});
+	});
+
 	it("throws when the named modifier doesn't exist", async () => {
 		const resolver: DTCGResolverDocument = {
 			version: "2025.10",
