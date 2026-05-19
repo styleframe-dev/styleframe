@@ -66,21 +66,56 @@ const { data: navigation } = await useAsyncData(
 				const sectionPath = `/docs/${section.slug}`;
 				let result: ContentNavigationItem[];
 				if (Array.isArray(section.folder)) {
-					const unwrapped =
+					const rootIdx =
+						"rootFolder" in section ? (section.rootFolder as number) : -1;
+					const rootWrapper =
 						localeResult.length === 1 && localeResult[0].path === sectionPath
-							? (localeResult[0].children ?? [])
-							: localeResult;
-					result = section.folder
-						.map((folder) =>
-							unwrapped.find(
-								(item) =>
-									item.path ===
-									`${sectionPath}/${folder.replace(/^\d+\./, "")}`,
-							),
-						)
-						.filter(
-							(item): item is ContentNavigationItem => item !== undefined,
+							? localeResult[0]
+							: null;
+					const allItems = rootWrapper
+						? (rootWrapper.children ?? [])
+						: localeResult;
+
+					if (rootIdx >= 0) {
+						const nonRootPaths = new Set(
+							section.folder
+								.filter((_, i) => i !== rootIdx)
+								.map((f) => `${sectionPath}/${f.replace(/^\d+\./, "")}`),
 						);
+						const items: ContentNavigationItem[] = [];
+						for (let i = 0; i < section.folder.length; i++) {
+							if (i === rootIdx) {
+								items.push({
+									...(rootWrapper ?? {}),
+									title: rootWrapper?.title ?? section.label,
+									path: sectionPath,
+									children: allItems.filter(
+										(item) => !nonRootPaths.has(item.path),
+									),
+								} as ContentNavigationItem);
+							} else {
+								const found = allItems.find(
+									(item) =>
+										item.path ===
+										`${sectionPath}/${section.folder[i].replace(/^\d+\./, "")}`,
+								);
+								if (found) items.push(found);
+							}
+						}
+						result = items;
+					} else {
+						result = section.folder
+							.map((folder) =>
+								allItems.find(
+									(item) =>
+										item.path ===
+										`${sectionPath}/${folder.replace(/^\d+\./, "")}`,
+								),
+							)
+							.filter(
+								(item): item is ContentNavigationItem => item !== undefined,
+							);
+					}
 				} else {
 					result = localeResult;
 				}
