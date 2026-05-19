@@ -38,9 +38,15 @@ const buildDocsSource = (
 		};
 	}
 
-	return folders.map((folder) => ({
+	const rootIndex =
+		"rootFolder" in section ? (section.rootFolder as number) : -1;
+
+	return folders.map((folder, index) => ({
 		include: `${pathPrefix}docs/${folder}/**/*.{md,yml}`,
-		prefix: `${baseUrl}/${folder.replace(/^\d+\./, "")}`,
+		prefix:
+			index === rootIndex
+				? baseUrl
+				: `${baseUrl}/${folder.replace(/^\d+\./, "")}`,
 	}));
 };
 
