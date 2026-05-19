@@ -1,5 +1,6 @@
 import type { ModifierFactory, Root, UtilityFactory } from "@styleframe/core";
 import { defaultUtilitySelectorFn } from "@styleframe/core";
+import { createDynamicUtilities } from "./dynamic";
 import type { ParsedUtility, UtilityMatch } from "./types";
 
 interface RegistrationEntry {
@@ -28,6 +29,8 @@ export function registerMatchedUtilities(
 	_root: Root,
 	matches: UtilityMatch[],
 ): number {
+	createDynamicUtilities(_root, matches);
+
 	for (const match of matches) {
 		if (match.factory) {
 			_root._usage.utilities.add(
