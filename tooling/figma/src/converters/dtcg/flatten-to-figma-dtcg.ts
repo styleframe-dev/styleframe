@@ -130,40 +130,40 @@ function flattenSingleDocument(
 	diagnostics: FlattenDiagnostic[],
 ): DTCGDocument {
 	const inherited = applyInheritance(doc);
-	const rootGroups = collectRootGroups(inherited);
 	const groupTypeMap = collectGroupTypes(inherited);
 	const output: DTCGDocument = {};
+	const entries = [...walk(inherited)];
+	const flattenedTypeMap = new Map<string, FigmaDTCGType>();
 
-	for (const { path, token } of walk(inherited)) {
-		const value = token.$value;
+	for (const { path, token } of entries) {
+		if (isAlias(token.$value)) continue;
 		const richType =
 			(token.$type as DTCGTokenType | undefined) ?? groupTypeMap.get(path);
-
-		if (isAlias(value)) {
-			const aliasPath = parseAlias(value);
-			const rewritten = rootGroups.has(aliasPath)
-				? `{${aliasPath}.$root}`
-				: value;
-			const targetType = resolveAliasType(inherited, aliasPath);
-			const figmaType = richTypeToFigmaDtcg(targetType);
-			const flat: DTCGAnyToken = {
-				$type: figmaType as DTCGAnyToken["$type"],
-				$value: rewritten as DTCGAnyToken["$value"],
-			};
-			if (token.$extensions) flat.$extensions = token.$extensions;
-			setNestedToken(output, path, flat);
-			continue;
-		}
-
 		const { type: figmaType, value: figmaValue } = flattenValue(
-			value,
+			token.$value,
 			richType,
 			path,
 			diagnostics,
 		);
+		flattenedTypeMap.set(path, figmaType);
 		const flat: DTCGAnyToken = {
 			$type: figmaType as DTCGAnyToken["$type"],
 			$value: figmaValue as DTCGAnyToken["$value"],
+		};
+		if (token.$extensions) flat.$extensions = token.$extensions;
+		setNestedToken(output, path, flat);
+	}
+
+	for (const { path, token } of entries) {
+		if (!isAlias(token.$value)) continue;
+		const aliasPath = parseAlias(token.$value);
+		const leafPath = resolveAliasToLeaf(inherited, aliasPath);
+		const figmaType =
+			flattenedTypeMap.get(leafPath) ??
+			richTypeToFigmaDtcg(resolveAliasType(inherited, leafPath));
+		const flat: DTCGAnyToken = {
+			$type: figmaType as DTCGAnyToken["$type"],
+			$value: `{${leafPath}}` as DTCGAnyToken["$value"],
 		};
 		if (token.$extensions) flat.$extensions = token.$extensions;
 		setNestedToken(output, path, flat);
@@ -208,36 +208,6 @@ function collectGroupTypesRecursive(
 	}
 }
 
-function collectRootGroups(doc: DTCGDocument): Set<string> {
-	const groups = new Set<string>();
-	collectRootGroupsRecursive(
-		doc as unknown as Record<string, unknown>,
-		"",
-		groups,
-	);
-	return groups;
-}
-
-function collectRootGroupsRecursive(
-	node: Record<string, unknown>,
-	currentPath: string,
-	groups: Set<string>,
-): void {
-	if ("$value" in node) return;
-	if ("$root" in node && currentPath) groups.add(currentPath);
-	for (const [key, child] of Object.entries(node)) {
-		if (key.startsWith("$")) continue;
-		if (child !== null && typeof child === "object" && !Array.isArray(child)) {
-			const childPath = currentPath ? `${currentPath}.${key}` : key;
-			collectRootGroupsRecursive(
-				child as Record<string, unknown>,
-				childPath,
-				groups,
-			);
-		}
-	}
-}
-
 function resolveAliasType(
 	doc: DTCGDocument,
 	aliasPath: string,
@@ -248,6 +218,48 @@ function resolveAliasType(
 		return resolveAliasType(doc, parseAlias(target.$value));
 	}
 	return target.$type as DTCGTokenType | undefined;
+}
+
+/**
+ * Resolve an alias path to a leaf token path. If the target is a group
+ * with a `$root` token (i.e. the group IS also a token), follow the
+ * `$root`'s alias chain until we reach a leaf token. Figma's native DTCG
+ * import only resolves aliases to leaf tokens — `{spacing}` fails when
+ * `spacing` is a group, even if it has `$root`.
+ */
+function resolveAliasToLeaf(
+	doc: DTCGDocument,
+	aliasPath: string,
+	seen = new Set<string>(),
+): string {
+	if (seen.has(aliasPath)) return aliasPath;
+	seen.add(aliasPath);
+
+	const token = lookupToken(doc, aliasPath);
+	if (token) return aliasPath;
+
+	const segments = splitPath(aliasPath);
+	let cursor: unknown = doc;
+	for (const seg of segments) {
+		if (typeof cursor !== "object" || cursor === null) return aliasPath;
+		cursor = (cursor as Record<string, unknown>)[seg];
+	}
+
+	if (
+		typeof cursor === "object" &&
+		cursor !== null &&
+		"$root" in (cursor as object)
+	) {
+		const root = (cursor as Record<string, unknown>).$root as
+			| DTCGAnyToken
+			| undefined;
+		if (root && isAlias(root.$value)) {
+			const nextPath = parseAlias(root.$value);
+			return resolveAliasToLeaf(doc, nextPath, seen);
+		}
+	}
+
+	return aliasPath;
 }
 
 function richTypeToFigmaDtcg(

@@ -242,6 +242,70 @@ describe("fromDTCG (single-mode)", () => {
 			"border-width/thin",
 		]);
 	});
+
+	it("resolves aliases to $root targets without the $root suffix", () => {
+		const doc: DTCGDocument = {
+			spacing: {
+				$root: {
+					$type: "dimension",
+					$value: "{spacing.md}",
+				},
+				md: {
+					$type: "dimension",
+					$value: { value: 16, unit: "px" },
+				},
+			},
+			address: {
+				"margin-bottom": {
+					$type: "dimension",
+					$value: "{spacing.$root}",
+				},
+			},
+		} as unknown as DTCGDocument;
+		const result = fromDTCG(doc);
+		const margin = result.variables.find(
+			(v) => v.name === "address/margin-bottom",
+		);
+		expect(margin?.aliasTo).toBe("spacing");
+		expect(margin?.values["Default"]).toEqual({
+			type: "VARIABLE_ALIAS",
+			id: "spacing",
+		});
+	});
+
+	it("restores BOOLEAN type from dev.styleframe.boolean extension", () => {
+		const doc: DTCGDocument = {
+			feature: {
+				enabled: {
+					$value: "true",
+					$type: "string",
+					$extensions: { "dev.styleframe": { boolean: true } },
+				},
+			},
+		} as unknown as DTCGDocument;
+		const result = fromDTCG(doc);
+		const enabled = result.variables.find((v) => v.name === "feature/enabled");
+		expect(enabled?.type).toBe("BOOLEAN");
+		expect(enabled?.values["Default"]).toBe(true);
+	});
+
+	it("restores BOOLEAN false value from extension", () => {
+		const doc: DTCGDocument = {
+			feature: {
+				disabled: {
+					$value: "false",
+					$type: "string",
+					$extensions: { "dev.styleframe": { boolean: true } },
+				},
+			},
+		} as unknown as DTCGDocument;
+		const result = fromDTCG(doc);
+		const disabled = result.variables.find(
+			(v) => v.name === "feature/disabled",
+		);
+		expect(disabled?.type).toBe("BOOLEAN");
+		expect(disabled?.values["Default"]).toBe(false);
+	});
 });
 
 describe("fromDTCGResolver (multi-mode)", () => {

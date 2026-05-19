@@ -90,16 +90,37 @@ function setNestedToken(
 	token: DTCGAnyToken,
 ): void {
 	const segments = figmaName.split("/");
+	if (segments.length === 0) return;
+
 	let cursor = doc as unknown as Record<string, unknown>;
 	for (let i = 0; i < segments.length - 1; i++) {
 		const segment = segments[i] as string;
-		const next = cursor[segment];
-		if (typeof next !== "object" || next === null || Array.isArray(next)) {
+		const existing = cursor[segment];
+		if (
+			existing === undefined ||
+			typeof existing !== "object" ||
+			existing === null
+		) {
 			cursor[segment] = {} as DTCGGroup;
+		} else if ("$value" in (existing as object)) {
+			cursor[segment] = { $root: existing };
 		}
 		cursor = cursor[segment] as Record<string, unknown>;
 	}
-	cursor[segments[segments.length - 1] as string] = token as never;
+
+	const leafKey = segments[segments.length - 1] as string;
+	const existing = cursor[leafKey];
+	if (
+		existing !== undefined &&
+		typeof existing === "object" &&
+		existing !== null &&
+		!Array.isArray(existing) &&
+		!("$value" in (existing as object))
+	) {
+		(existing as Record<string, unknown>).$root = token;
+	} else {
+		cursor[leafKey] = token as never;
+	}
 }
 
 function setNestedOverride(
@@ -129,7 +150,28 @@ function variableToToken(
 	variable: FigmaExportVariable,
 	defaultMode: string,
 ): DTCGAnyToken | undefined {
-	if (variable.type === "BOOLEAN") return undefined; // DTCG has no boolean
+	if (variable.type === "BOOLEAN") {
+		if (variable.aliasTo !== undefined) {
+			const token: DTCGAnyToken = {
+				$value: formatAlias(figmaPathToDtcg(variable.aliasTo)),
+				$extensions: { "dev.styleframe": { boolean: true } },
+			};
+			if (variable.description !== undefined) {
+				token.$description = variable.description;
+			}
+			return token;
+		}
+		const defaultValue = variable.values[defaultMode];
+		const token: DTCGAnyToken = {
+			$value: String(defaultValue ?? false),
+			$type: "string" as DTCGAnyToken["$type"],
+			$extensions: { "dev.styleframe": { boolean: true } },
+		};
+		if (variable.description !== undefined) {
+			token.$description = variable.description;
+		}
+		return token;
+	}
 
 	if (variable.aliasTo !== undefined) {
 		// Aliases carry no inherent type — a future improvement could look up
@@ -180,6 +222,9 @@ export function toDTCG(
 
 	const tokens: DTCGDocument = {};
 	if (includeSchema) tokens.$schema = schemaUrl;
+	tokens.$extensions = {
+		"dev.styleframe": { collection: data.collection },
+	};
 
 	// One context per non-default mode. Each context holds an inline source
 	// document containing only the override values.
@@ -189,11 +234,6 @@ export function toDTCG(
 	for (const variable of data.variables) {
 		const token = variableToToken(variable, defaultMode);
 		if (!token) {
-			if (variable.type === "BOOLEAN") {
-				console.warn(
-					`Skipping Figma BOOLEAN variable "${variable.name}" — no DTCG equivalent`,
-				);
-			}
 			continue;
 		}
 		setNestedToken(tokens, variable.name, token);
@@ -204,14 +244,22 @@ export function toDTCG(
 		for (const mode of overrideModes) {
 			const modeValue = variable.values[mode];
 			if (modeValue === undefined) continue;
-			const classified = classifyFigmaValue(variable, modeValue);
-			if (!classified) continue;
-			if (valuesEqual(classified.value, defaultDtcgValue)) continue;
+
+			let overrideValue: DTCGTokenValue | undefined;
+			if (variable.type === "BOOLEAN") {
+				overrideValue = String(modeValue);
+			} else {
+				const classified = classifyFigmaValue(variable, modeValue);
+				if (classified) overrideValue = classified.value;
+			}
+
+			if (overrideValue === undefined) continue;
+			if (valuesEqual(overrideValue, defaultDtcgValue)) continue;
 			const dtcgPath = figmaPathToDtcg(variable.name);
 			setNestedOverride(
 				contexts[mode] as unknown as Record<string, unknown>,
 				dtcgPath,
-				classified.value,
+				overrideValue,
 			);
 		}
 	}

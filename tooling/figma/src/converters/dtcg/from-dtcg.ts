@@ -61,13 +61,44 @@ function pathToFigmaName(path: string): string {
 	return dtcgPathToFigma(path);
 }
 
+function isBooleanToken(token: DTCGAnyToken): boolean {
+	const ext = token.$extensions as Record<string, unknown> | undefined;
+	const sf = ext?.["dev.styleframe"] as Record<string, unknown> | undefined;
+	return sf?.boolean === true;
+}
+
 function tokenToFigmaVariable(
 	path: string,
 	token: DTCGAnyToken,
 	modeName: string,
 ): FigmaExportVariable {
-	const requestedType = dtcgTypeToFigma(token.$type);
 	const figmaName = pathToFigmaName(path);
+
+	if (isBooleanToken(token)) {
+		const conversion = dtcgValueToFigma(token.$value, "STRING");
+		const values: Record<string, FigmaVariableValue> = {};
+		let aliasTo: string | undefined;
+		if (conversion.kind === "alias") {
+			values[modeName] = { type: "VARIABLE_ALIAS", id: conversion.id };
+			aliasTo = conversion.id;
+		} else {
+			const raw =
+				conversion.kind === "value" ? conversion.value : conversion.value;
+			values[modeName] = (raw === "true") as FigmaVariableValue;
+		}
+		const variable: FigmaExportVariable = {
+			name: figmaName,
+			styleframeName: path,
+			type: "BOOLEAN",
+			values,
+		};
+		if (token.$description !== undefined)
+			variable.description = token.$description;
+		if (aliasTo !== undefined) variable.aliasTo = aliasTo;
+		return variable;
+	}
+
+	const requestedType = dtcgTypeToFigma(token.$type);
 	const conversion = dtcgValueToFigma(token.$value, requestedType);
 
 	const values: Record<string, FigmaVariableValue> = {};
@@ -81,9 +112,6 @@ function tokenToFigmaVariable(
 		resolvedType = conversion.figmaType;
 		values[modeName] = conversion.value as FigmaVariableValue;
 	} else {
-		// `kind: "fallback"` — never silently drop. Downgrade the variable to
-		// STRING so the original CSS literal (e.g. `"100vw"`, `"1rem"` for
-		// unsupported units) survives the round-trip into Figma.
 		resolvedType = "STRING";
 		values[modeName] = conversion.value;
 	}
@@ -167,7 +195,8 @@ export async function fromDTCGResolver(
 		const inherited = applyInheritance(resolved);
 		for (const { path, token } of walk(inherited)) {
 			const figmaName = pathToFigmaName(path);
-			const requestedType = dtcgTypeToFigma(token.$type);
+			const isBoolean = isBooleanToken(token);
+			const requestedType = isBoolean ? "STRING" : dtcgTypeToFigma(token.$type);
 			const conversion = dtcgValueToFigma(token.$value, requestedType);
 
 			let acc = accumulators.get(figmaName);
@@ -176,7 +205,7 @@ export async function fromDTCGResolver(
 					variable: {
 						name: figmaName,
 						styleframeName: path,
-						type: requestedType,
+						type: isBoolean ? "BOOLEAN" : requestedType,
 						values: {},
 					},
 				};
@@ -192,17 +221,19 @@ export async function fromDTCGResolver(
 				};
 				acc.variable.values[modeName] = aliasValue;
 				if (modeName === defaultContext) acc.variable.aliasTo = conversion.id;
+			} else if (isBoolean) {
+				const raw =
+					conversion.kind === "value" ? conversion.value : conversion.value;
+				acc.variable.values[modeName] = (raw === "true") as FigmaVariableValue;
+				if (modeName === defaultContext) {
+					acc.variable.type = "BOOLEAN";
+				}
 			} else if (conversion.kind === "value") {
-				// First mode that supplies a concrete value sets the variable's
-				// resolved Figma type. Subsequent modes that disagree fall through
-				// to `fallback` handling below if needed.
 				if (modeName === defaultContext) {
 					acc.variable.type = conversion.figmaType;
 				}
 				acc.variable.values[modeName] = conversion.value as FigmaVariableValue;
 			} else {
-				// fallback — preserve the original CSS as a STRING. Downgrade the
-				// variable type to STRING so Figma can store the literal.
 				if (modeName === defaultContext) {
 					acc.variable.type = "STRING";
 				}

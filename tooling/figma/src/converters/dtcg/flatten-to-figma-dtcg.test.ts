@@ -223,7 +223,7 @@ describe("flattenToFigmaDTCG (single-mode)", () => {
 		expect(token.$value).toBe("{color.primary}");
 	});
 
-	it("rewrites alias to $root when target is a group with $root", async () => {
+	it("preserves alias to group with $root without rewriting", async () => {
 		const doc: DTCGDocument = {
 			"font-family": {
 				$type: "fontFamily",
@@ -238,7 +238,7 @@ describe("flattenToFigmaDTCG (single-mode)", () => {
 		const token = (modes.Default!.body as Record<string, unknown>)[
 			"font-family"
 		] as Record<string, unknown>;
-		expect(token.$value).toBe("{font-family.$root}");
+		expect(token.$value).toBe("{font-family}");
 	});
 
 	it("emits untyped tokens as string", async () => {
@@ -270,6 +270,24 @@ describe("flattenToFigmaDTCG (single-mode)", () => {
 		const sm = spacing.sm as Record<string, unknown>;
 		expect(sm.$type).toBe("number");
 		expect(sm.$value).toBe(8);
+	});
+
+	it("aliases to keyword fontWeight get $type string, not number", async () => {
+		const doc: DTCGDocument = {
+			"font-weight": {
+				$type: "fontWeight",
+				$root: { $value: "{font-weight.normal}" },
+				normal: { $value: "normal" },
+				bold: { $value: 700 },
+			},
+		} as unknown as DTCGDocument;
+		const { modes } = await flattenToFigmaDTCG(doc);
+		const fw = modes.Default!["font-weight"] as Record<string, unknown>;
+		const root = fw.$root as Record<string, unknown>;
+		expect(root.$type).toBe("string");
+		expect(root.$value).toBe("{font-weight.normal}");
+		const bold = fw.bold as Record<string, unknown>;
+		expect(bold.$type).toBe("number");
 	});
 
 	it("uses custom default mode name", async () => {

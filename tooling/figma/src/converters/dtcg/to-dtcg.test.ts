@@ -1,4 +1,8 @@
-import type { DTCGDocument, DTCGResolverDocument } from "@styleframe/dtcg";
+import type {
+	DTCGAnyToken,
+	DTCGDocument,
+	DTCGResolverDocument,
+} from "@styleframe/dtcg";
 import { describe, expect, it, vi } from "vitest";
 import type { FigmaExportFormat } from "../../types";
 import { toDTCG } from "./to-dtcg";
@@ -99,8 +103,7 @@ describe("toDTCG (single-mode)", () => {
 		expect(accent.$value).toBe("{color.primary}");
 	});
 
-	it("drops BOOLEAN variables with a warning", () => {
-		const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+	it("maps BOOLEAN variables to string with dev.styleframe.boolean extension", () => {
 		const data: FigmaExportFormat = {
 			collection: "X",
 			modes: ["Default"],
@@ -113,11 +116,13 @@ describe("toDTCG (single-mode)", () => {
 			],
 		};
 		const { tokens } = toDTCG(data);
+		const token = (tokens.feature as DTCGDocument).enabled as DTCGAnyToken;
+		expect(token).toBeDefined();
+		expect(token.$value).toBe("true");
+		expect(token.$type).toBe("string");
 		expect(
-			(tokens.feature as DTCGDocument | undefined)?.enabled,
-		).toBeUndefined();
-		expect(warnSpy).toHaveBeenCalled();
-		warnSpy.mockRestore();
+			(token.$extensions as Record<string, unknown>)?.["dev.styleframe"],
+		).toEqual({ boolean: true });
 	});
 });
 
@@ -196,6 +201,74 @@ describe("toDTCG (multi-mode)", () => {
 		const { resolver } = toDTCG(data, { modifierName: "size" });
 		expect(resolver?.modifiers?.size?.contexts.lg).toBeDefined();
 		expect(resolver?.resolutionOrder[0]).toEqual({ $ref: "#/modifiers/size" });
+	});
+});
+
+describe("toDTCG ($root handling)", () => {
+	it("promotes group-level alias to $root when children exist", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
+			modes: ["Default"],
+			variables: [
+				{
+					name: "scale",
+					type: "FLOAT",
+					values: {
+						Default: { type: "VARIABLE_ALIAS", id: "scale/minor-third" },
+					},
+					aliasTo: "scale/minor-third",
+				},
+				{
+					name: "scale/minor-third",
+					type: "FLOAT",
+					values: { Default: 1.2 },
+				},
+				{
+					name: "scale/major-third",
+					type: "FLOAT",
+					values: { Default: 1.25 },
+				},
+			],
+		};
+		const { tokens } = toDTCG(data);
+		const scale = tokens.scale as Record<string, unknown>;
+		expect(scale.$root).toBeDefined();
+		expect((scale.$root as DTCGAnyToken).$value).toBe("{scale.minor-third}");
+		expect(scale["minor-third"]).toBeDefined();
+		expect(scale["major-third"]).toBeDefined();
+	});
+
+	it("promotes to $root when children are placed before the group-level token", () => {
+		const data: FigmaExportFormat = {
+			collection: "X",
+			modes: ["Default"],
+			variables: [
+				{
+					name: "spacing/sm",
+					type: "FLOAT",
+					values: { Default: 4 },
+				},
+				{
+					name: "spacing/md",
+					type: "FLOAT",
+					values: { Default: 8 },
+				},
+				{
+					name: "spacing",
+					type: "FLOAT",
+					values: {
+						Default: { type: "VARIABLE_ALIAS", id: "spacing/md" },
+					},
+					aliasTo: "spacing/md",
+				},
+			],
+		};
+		const { tokens } = toDTCG(data);
+		const spacing = tokens.spacing as Record<string, unknown>;
+		expect(spacing.$root).toBeDefined();
+		expect((spacing.$root as DTCGAnyToken).$value).toBe("{spacing.md}");
+		expect(spacing.sm).toBeDefined();
+		expect(spacing.md).toBeDefined();
 	});
 });
 

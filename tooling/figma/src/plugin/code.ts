@@ -29,6 +29,7 @@ interface ImportMessage {
 interface ExportMessage {
 	type: "export";
 	collectionId?: string;
+	modeId?: string;
 }
 
 interface GetCollectionsMessage {
@@ -76,7 +77,7 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
 				);
 				break;
 			case "export":
-				await handleExport(msg.collectionId);
+				await handleExport(msg.collectionId, msg.modeId);
 				break;
 			case "get-collections":
 				await sendCollections();
@@ -345,7 +346,10 @@ async function handleImport(
 /**
  * Export variables to JSON format
  */
-async function handleExport(collectionId?: string): Promise<void> {
+async function handleExport(
+	collectionId?: string,
+	modeId?: string,
+): Promise<void> {
 	const collections = await figma.variables.getLocalVariableCollectionsAsync();
 	let collection: VariableCollection | undefined;
 
@@ -359,8 +363,11 @@ async function handleExport(collectionId?: string): Promise<void> {
 		throw new Error("No variable collection found");
 	}
 
-	const modes = collection.modes.map((m) => m.name);
-	const modeIdToName = new Map(collection.modes.map((m) => [m.modeId, m.name]));
+	const exportModes = modeId
+		? collection.modes.filter((m) => m.modeId === modeId)
+		: collection.modes;
+	const modes = exportModes.map((m) => m.name);
+	const modeIdToName = new Map(exportModes.map((m) => [m.modeId, m.name]));
 
 	const variables: FigmaExportVariable[] = [];
 	const variableIdToName = new Map<string, string>();
@@ -380,8 +387,8 @@ async function handleExport(collectionId?: string): Promise<void> {
 		const values: Record<string, unknown> = {};
 		let aliasTo: string | undefined;
 
-		for (const [modeId, value] of Object.entries(figmaVar.valuesByMode)) {
-			const modeName = modeIdToName.get(modeId);
+		for (const [valModeId, value] of Object.entries(figmaVar.valuesByMode)) {
+			const modeName = modeIdToName.get(valModeId);
 			if (!modeName) continue;
 
 			if (isVariableAlias(value)) {

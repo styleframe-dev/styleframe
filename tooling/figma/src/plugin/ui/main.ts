@@ -38,6 +38,7 @@ let loadedResolverData: DTCGResolverDocument | null = null;
 const collectionSelect = document.getElementById(
 	"collection-select",
 ) as HTMLSelectElement;
+const modeSelect = document.getElementById("mode-select") as HTMLSelectElement;
 const refreshBtn = document.getElementById("refresh-btn")!;
 const exportBtn = document.getElementById("export-btn") as HTMLButtonElement;
 const exportOutput = document.getElementById(
@@ -74,6 +75,7 @@ function init(): void {
 	fileDropZone.addEventListener("drop", handleDrop);
 
 	// Export handlers
+	collectionSelect.addEventListener("change", updateModeSelect);
 	refreshBtn.addEventListener("click", requestCollections);
 	exportBtn.addEventListener("click", handleExport);
 	copyBtn.addEventListener("click", handleCopy);
@@ -362,11 +364,31 @@ function requestCollections(): void {
 }
 
 /**
+ * Update the mode dropdown based on the currently selected collection.
+ */
+function updateModeSelect(): void {
+	const selectedId = collectionSelect.value;
+	const collection = collections.find((c) => c.id === selectedId);
+
+	modeSelect.innerHTML = '<option value="">All modes</option>';
+
+	if (collection && collection.modes.length > 1) {
+		modeSelect.innerHTML += collection.modes
+			.map((m) => `<option value="${m.id}">${m.name}</option>`)
+			.join("");
+	}
+}
+
+/**
  * Handle export button click
  */
 function handleExport(): void {
 	const collectionId = collectionSelect.value || undefined;
-	parent.postMessage({ pluginMessage: { type: "export", collectionId } }, "*");
+	const modeId = modeSelect.value || undefined;
+	parent.postMessage(
+		{ pluginMessage: { type: "export", collectionId, modeId } },
+		"*",
+	);
 	exportBtn.disabled = true;
 }
 
@@ -453,6 +475,7 @@ function updateCollections(newCollections: Collection[]): void {
 		)
 		.join("");
 
+	updateModeSelect();
 	exportBtn.disabled = false;
 }
 
@@ -502,10 +525,10 @@ window.onmessage = (event: MessageEvent) => {
 
 		case "export-complete": {
 			exportOutput.value = JSON.stringify(msg.result, null, 2);
-			// Extract variable count and collection from DTCG format
-			const exportedVars = extractDTCGVariables(msg.result);
+			const tokensDoc = msg.result.tokens ?? msg.result;
+			const exportedVars = extractDTCGVariables(tokensDoc);
 			const collectionName =
-				msg.result.$extensions?.["dev.styleframe"]?.collection || "Collection";
+				tokensDoc.$extensions?.["dev.styleframe"]?.collection || "Collection";
 			showStatus(
 				exportStatus,
 				"success",

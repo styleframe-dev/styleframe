@@ -210,6 +210,17 @@ describe("dtcgValueToFigma", () => {
 		});
 	});
 
+	it("strips .$root suffix from alias paths", () => {
+		expect(dtcgValueToFigma("{spacing.$root}", "FLOAT")).toEqual({
+			kind: "alias",
+			id: "spacing",
+		});
+		expect(dtcgValueToFigma("{font-family.$root}", "STRING")).toEqual({
+			kind: "alias",
+			id: "font-family",
+		});
+	});
+
 	it("converts color objects", () => {
 		expect(
 			dtcgValueToFigma({ colorSpace: "srgb", components: [0, 0, 0] }, "COLOR"),

@@ -108,6 +108,17 @@ export default defineCommand({
 function countTokens(doc: Record<string, unknown>): number {
 	let count = 0;
 	for (const [key, value] of Object.entries(doc)) {
+		if (key === "$root") {
+			if (
+				typeof value === "object" &&
+				value !== null &&
+				!Array.isArray(value) &&
+				"$value" in value
+			) {
+				count++;
+			}
+			continue;
+		}
 		if (key.startsWith("$")) continue;
 		if (typeof value === "object" && value !== null && !Array.isArray(value)) {
 			if ("$value" in value) {
