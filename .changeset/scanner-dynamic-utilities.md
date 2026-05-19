@@ -1,4 +1,5 @@
 ---
+"styleframe": minor
 "@styleframe/scanner": minor
 ---
 
