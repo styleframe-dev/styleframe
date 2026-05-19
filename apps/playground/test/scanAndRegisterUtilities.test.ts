@@ -82,7 +82,7 @@ describe("scanAndRegisterUtilities", () => {
 	it("reports diagnostics for classes whose factory is missing", () => {
 		const s = styleframe();
 
-		const appVue = `<template><p class="_margin:sm" /></template>`;
+		const appVue = `<template><p class="_unknown-prop:sm" /></template>`;
 
 		const result = scanAndRegisterUtilities(s, [
 			{ content: appVue, filePath: "App.vue" },
@@ -92,8 +92,8 @@ describe("scanAndRegisterUtilities", () => {
 		expect(result.registered).toEqual([]);
 		expect(result.diagnostics).toEqual([
 			{
-				raw: "_margin:sm",
-				name: "margin",
+				raw: "_unknown-prop:sm",
+				name: "unknown-prop",
 				value: "sm",
 				modifiers: [],
 				factoryFound: false,
