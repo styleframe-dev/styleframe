@@ -67,12 +67,9 @@ const { data: navigation } = await useAsyncData(
 				let result: ContentNavigationItem[];
 				if (Array.isArray(section.folder)) {
 					const rootIdx =
-						"rootFolder" in section
-							? (section.rootFolder as number)
-							: -1;
+						"rootFolder" in section ? (section.rootFolder as number) : -1;
 					const rootWrapper =
-						localeResult.length === 1 &&
-						localeResult[0].path === sectionPath
+						localeResult.length === 1 && localeResult[0].path === sectionPath
 							? localeResult[0]
 							: null;
 					const allItems = rootWrapper
@@ -83,22 +80,17 @@ const { data: navigation } = await useAsyncData(
 						const nonRootPaths = new Set(
 							section.folder
 								.filter((_, i) => i !== rootIdx)
-								.map(
-									(f) =>
-										`${sectionPath}/${f.replace(/^\d+\./, "")}`,
-								),
+								.map((f) => `${sectionPath}/${f.replace(/^\d+\./, "")}`),
 						);
 						const items: ContentNavigationItem[] = [];
 						for (let i = 0; i < section.folder.length; i++) {
 							if (i === rootIdx) {
 								items.push({
 									...(rootWrapper ?? {}),
-									title:
-										rootWrapper?.title ?? section.label,
+									title: rootWrapper?.title ?? section.label,
 									path: sectionPath,
 									children: allItems.filter(
-										(item) =>
-											!nonRootPaths.has(item.path),
+										(item) => !nonRootPaths.has(item.path),
 									),
 								} as ContentNavigationItem);
 							} else {
@@ -121,8 +113,7 @@ const { data: navigation } = await useAsyncData(
 								),
 							)
 							.filter(
-								(item): item is ContentNavigationItem =>
-									item !== undefined,
+								(item): item is ContentNavigationItem => item !== undefined,
 							);
 					}
 				} else {
