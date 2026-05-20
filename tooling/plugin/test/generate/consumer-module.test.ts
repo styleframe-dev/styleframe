@@ -23,6 +23,7 @@ describe("generateConsumerModule", () => {
 		files: new Map(),
 		loadingFiles: new Set(),
 		initialized: false,
+		classNameLookup: null,
 	});
 
 	beforeEach(() => {
@@ -47,7 +48,11 @@ describe("generateConsumerModule", () => {
 
 		const result = await generateConsumerModule(state);
 
-		expect(transpile).toHaveBeenCalledWith(mockInstance, { type: "ts" });
+		expect(transpile).toHaveBeenCalledWith(mockInstance, {
+			type: "ts",
+			minify: false,
+			minifyOptions: undefined,
+		});
 		expect(result).toBe("export const button = {};");
 	});
 

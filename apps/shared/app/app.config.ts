@@ -41,11 +41,21 @@ export default defineAppConfig({
 		title: "On this page",
 		// Customize links
 		bottom: {
-			// Title of the bottom table of contents
-			title: "Community",
-			// URL of your repository content folder
+			title: "Resources",
 			edit: "https://github.com/styleframe-dev/styleframe/edit/main/docs/content",
 			links: [
+				{
+					icon: "i-simple-icons-storybook",
+					label: "Storybook",
+					to: "https://storybook.styleframe.dev",
+					target: "_blank",
+				},
+				{
+					icon: "i-simple-icons-playwright",
+					label: "Playground",
+					to: "https://play.styleframe.dev",
+					target: "_blank",
+				},
 				{
 					icon: "i-lucide-star",
 					label: "Star on GitHub",
@@ -53,9 +63,15 @@ export default defineAppConfig({
 					target: "_blank",
 				},
 				{
-					icon: "i-material-symbols:award-star",
-					label: "Purchase a license",
-					to: "https://www.styleframe.dev/pricing",
+					icon: "i-lucide-file-text",
+					label: "Changelog",
+					to: "https://github.com/styleframe-dev/styleframe/blob/main/CHANGELOG.md",
+					target: "_blank",
+				},
+				{
+					icon: "i-simple-icons-discord",
+					label: "Community",
+					to: "https://discord.com/invite/KCVwuGz44M",
 					target: "_blank",
 				},
 			],

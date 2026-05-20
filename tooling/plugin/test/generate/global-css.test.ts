@@ -5,6 +5,8 @@ import type { Styleframe } from "@styleframe/core";
 
 vi.mock("@styleframe/transpiler", () => ({
 	transpile: vi.fn(),
+	generateShorteningMap: vi.fn(() => ({ p: {}, v: {}, m: {} })),
+	buildClassNameLookup: vi.fn(() => ({})),
 }));
 
 vi.mock("@styleframe/license", () => ({
@@ -37,6 +39,7 @@ describe("generateGlobalCSS", () => {
 		files: new Map(),
 		loadingFiles: new Set(),
 		initialized: false,
+		classNameLookup: null,
 	});
 
 	beforeEach(() => {
@@ -65,6 +68,8 @@ describe("generateGlobalCSS", () => {
 			type: "css",
 			treeshake: true,
 			scanner: false,
+			minify: false,
+			minifyOptions: undefined,
 		});
 		expect(result).toEqual({ code: ".button { color: red; }" });
 	});
@@ -86,6 +91,8 @@ describe("generateGlobalCSS", () => {
 			type: "css",
 			treeshake: false,
 			scanner: false,
+			minify: false,
+			minifyOptions: undefined,
 		});
 	});
 

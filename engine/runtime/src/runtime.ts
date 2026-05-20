@@ -6,6 +6,7 @@ import type {
 	RuntimeVariantDeclarationsBlock,
 	RuntimeVariantDeclarationsValue,
 	RuntimeVariantOptions,
+	ShorteningMap,
 } from "./types";
 
 /**
@@ -21,22 +22,30 @@ function toClassName(
 	utilityName: string,
 	value: string | boolean,
 	modifiers: string[] = [],
+	shortMap?: ShorteningMap,
 ): string {
-	// Convert camelCase to kebab-case
 	const kebabName = utilityName.replace(
 		/[A-Z]/g,
 		(letter) => `-${letter.toLowerCase()}`,
 	);
 
-	// Build the modifier prefix if any
-	const modifierPrefix = modifiers.length > 0 ? `${modifiers.join(":")}:` : "";
+	const resolvedUtilityName = shortMap?.p[kebabName] ?? kebabName;
+	const resolvedModifiers = shortMap
+		? modifiers.map((m) => shortMap.m[m] ?? m)
+		: modifiers;
+	const modifierPrefix =
+		resolvedModifiers.length > 0 ? `${resolvedModifiers.join(":")}:` : "";
 
-	// If value is true, return just the utility name without a value
 	if (value === true) {
-		return `_${modifierPrefix}${kebabName}`;
+		return `_${modifierPrefix}${resolvedUtilityName}`;
 	}
 
-	return `_${modifierPrefix}${kebabName}:${value}`;
+	const resolvedValue =
+		shortMap && typeof value === "string"
+			? (shortMap.v[value] ?? value)
+			: value;
+
+	return `_${modifierPrefix}${resolvedUtilityName}:${resolvedValue}`;
 }
 
 /**
@@ -147,6 +156,7 @@ function processDeclarationsBlock(
 export function createRecipe<R extends RecipeRuntime>(
 	name: string,
 	runtime: R,
+	shortMap?: ShorteningMap,
 ): (props?: RecipeVariantProps<R>) => string {
 	return (props = {} as RecipeVariantProps<R>) => {
 		// Track all declarations in a map to handle overrides
@@ -229,7 +239,7 @@ export function createRecipe<R extends RecipeRuntime>(
 			// We need to extract just the utility name for toClassName
 			const utilityName =
 				modifiers.length > 0 ? key.slice(modifiers.join(":").length + 1) : key;
-			classNames.push(toClassName(utilityName, value, modifiers));
+			classNames.push(toClassName(utilityName, value, modifiers, shortMap));
 		}
 
 		// Append compound variant classNames after utility classes

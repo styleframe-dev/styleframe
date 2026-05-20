@@ -46,6 +46,7 @@ import {
 	getFilesToInvalidate,
 	isTrackedDependency,
 } from "./dependency-graph";
+import { transformSourceClassNames } from "./transform";
 
 // Matches the source file: ./button.styleframe.ts
 const STYLEFRAME_SOURCE_REGEX = /\.styleframe\.ts$/;
@@ -302,7 +303,12 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 
 			// Consumer face: return aggregated exports
 			if (id === RESOLVED_VIRTUAL_CONSUMER_ID) {
-				return { code: await generateConsumerModule(state) };
+				const minify = isBuildCommand && options.minify !== false;
+				const minifyOptions =
+					typeof options.minify === "object" ? options.minify : undefined;
+				return {
+					code: await generateConsumerModule(state, minify, minifyOptions),
+				};
 			}
 
 			// Global CSS: all styles from global instance
@@ -331,6 +337,21 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 						code: result.code,
 						map: result.map || null,
 					};
+				}
+
+				if (
+					isBuildCommand &&
+					options.minify !== false &&
+					state.classNameLookup &&
+					!isVirtualTsModule
+				) {
+					const { code: transformed, changed } = transformSourceClassNames(
+						code,
+						state.classNameLookup,
+					);
+					if (changed) {
+						return { code: transformed, map: null };
+					}
 				}
 
 				return null;

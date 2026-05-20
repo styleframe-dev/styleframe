@@ -5,7 +5,7 @@ import type {
 	StyleframeOptions,
 } from "@styleframe/core";
 import { isSelector } from "@styleframe/core";
-import type { ConsumeFunction } from "../../types";
+import type { ConsumeFunction, TranspileContext } from "../../types";
 
 /**
  * Collects selectors with _exportName from children.
@@ -19,7 +19,11 @@ function collectExportedSelectors(children: ContainerChild[]): Selector[] {
 }
 
 export function createRootConsumer(consume: ConsumeFunction) {
-	return function consumeRoot(instance: Root, options: StyleframeOptions) {
+	return function consumeRoot(
+		instance: Root,
+		options: StyleframeOptions,
+		context?: TranspileContext,
+	) {
 		const exportedSelectors = collectExportedSelectors(instance.children);
 		const hasRecipes = instance.recipes.length > 0;
 		const hasSelectors = exportedSelectors.length > 0;
@@ -30,15 +34,29 @@ export function createRootConsumer(consume: ConsumeFunction) {
 
 		const parts: string[] = [];
 
-		// Add imports and generate recipe exports
 		if (hasRecipes) {
-			parts.push(`import { createRecipe } from '@styleframe/runtime';
-import type { RecipeRuntime } from '@styleframe/runtime';
-`);
-			parts.push(consume(instance.recipes, options));
+			const importParts = [
+				"import { createRecipe } from '@styleframe/runtime';",
+				"import type { RecipeRuntime, RecipeVariantProps } from '@styleframe/runtime';",
+			];
+
+			if (context?.shortMap) {
+				importParts.push(
+					"import type { ShorteningMap } from '@styleframe/runtime';",
+				);
+			}
+
+			parts.push(`${importParts.join("\n")}\n`);
+
+			if (context?.shortMap) {
+				parts.push(
+					`const __shortMap: ShorteningMap = ${JSON.stringify(context.shortMap)} as const;\n`,
+				);
+			}
+
+			parts.push(consume(instance.recipes, options, context));
 		}
 
-		// Generate selector exports
 		if (hasSelectors) {
 			parts.push(consume(exportedSelectors, options));
 		}

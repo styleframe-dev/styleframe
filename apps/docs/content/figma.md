@@ -41,7 +41,7 @@ Sync your design tokens between Figma and code. Import and export W3C DTCG forma
     ---
     color: neutral
     size: xl
-    to: /docs/getting-started/tooling/figma-plugin
+    to: /docs/getting-started/integrations/figma-plugin
     variant: outline
     ---
     Read plugin documentation
@@ -350,7 +350,7 @@ Install the Figma plugin, export your Styleframe config, and sync your design to
     ---
     color: neutral
     size: xl
-    to: /docs/getting-started/tooling/figma-plugin
+    to: /docs/getting-started/integrations/figma-plugin
     variant: outline
     ---
     Read plugin documentation
