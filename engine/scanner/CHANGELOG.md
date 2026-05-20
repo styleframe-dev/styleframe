@@ -1,5 +1,22 @@
 # @styleframe/scanner
 
+## 3.2.0
+
+### Minor Changes
+
+- [#228](https://github.com/styleframe-dev/styleframe/pull/228) [`770ecca`](https://github.com/styleframe-dev/styleframe/commit/770ecca2dbf3cb4afa7406e310ba74b0dfcfdad7) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add dynamic utility creation for unmatched CSS properties.
+
+  Automatically creates utility factories on-the-fly for unmatched class names that correspond to known CSS properties. Enables fallback support for arbitrary CSS values without pre-registration (e.g., `_display:flex`, `_background:[red]`). Includes comprehensive test coverage for dynamic factory creation, deduplication, and modifier preservation.
+
+### Patch Changes
+
+- [#226](https://github.com/styleframe-dev/styleframe/pull/226) [`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add build-time utility class name shortening for production builds.
+
+  Generates shortening maps at transpile time with collision-safe abbreviation and built-in defaults for common CSS properties. Hashes long arbitrary values for stable compact names. Supports underscore-as-space in arbitrary values (`_padding:[10px_20px]`). Exposes `minify` plugin option with user-overridable defaults.
+
+- Updated dependencies [[`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412)]:
+  - @styleframe/core@3.6.0
+
 ## 3.1.2
 
 ### Patch Changes

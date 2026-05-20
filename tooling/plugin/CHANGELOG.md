@@ -1,5 +1,19 @@
 # @styleframe/plugin
 
+## 3.4.0
+
+### Minor Changes
+
+- [#226](https://github.com/styleframe-dev/styleframe/pull/226) [`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add build-time utility class name shortening for production builds.
+
+  Generates shortening maps at transpile time with collision-safe abbreviation and built-in defaults for common CSS properties. Hashes long arbitrary values for stable compact names. Supports underscore-as-space in arbitrary values (`_padding:[10px_20px]`). Exposes `minify` plugin option with user-overridable defaults.
+
+### Patch Changes
+
+- Updated dependencies [[`770ecca`](https://github.com/styleframe-dev/styleframe/commit/770ecca2dbf3cb4afa7406e310ba74b0dfcfdad7), [`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412), [`6941920`](https://github.com/styleframe-dev/styleframe/commit/6941920a50e560e4686aebd154bb6aea4c59c258)]:
+  - @styleframe/scanner@3.2.0
+  - @styleframe/transpiler@3.4.0
+
 ## 3.3.0
 
 ### Minor Changes

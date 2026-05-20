@@ -1,5 +1,34 @@
 # styleframe
 
+## 3.8.0
+
+### Minor Changes
+
+- [#228](https://github.com/styleframe-dev/styleframe/pull/228) [`770ecca`](https://github.com/styleframe-dev/styleframe/commit/770ecca2dbf3cb4afa7406e310ba74b0dfcfdad7) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add dynamic utility creation for unmatched CSS properties.
+
+  Automatically creates utility factories on-the-fly for unmatched class names that correspond to known CSS properties. Enables fallback support for arbitrary CSS values without pre-registration (e.g., `_display:flex`, `_background:[red]`). Includes comprehensive test coverage for dynamic factory creation, deduplication, and modifier preservation.
+
+- [#226](https://github.com/styleframe-dev/styleframe/pull/226) [`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add build-time utility class name shortening for production builds.
+
+  Generates shortening maps at transpile time with collision-safe abbreviation and built-in defaults for common CSS properties. Hashes long arbitrary values for stable compact names. Supports underscore-as-space in arbitrary values (`_padding:[10px_20px]`). Exposes `minify` plugin option with user-overridable defaults.
+
+- [#224](https://github.com/styleframe-dev/styleframe/pull/224) [`6941920`](https://github.com/styleframe-dev/styleframe/commit/6941920a50e560e4686aebd154bb6aea4c59c258) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Export named Props types from `virtual:styleframe` for each recipe (e.g. `import { button, type ButtonProps } from 'virtual:styleframe'`).
+
+### Patch Changes
+
+- [#222](https://github.com/styleframe-dev/styleframe/pull/222) [`80f84dd`](https://github.com/styleframe-dev/styleframe/commit/80f84dd9c32ec3361c69b30f5a9c725b2e1b8fc2) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix `chat-message` recipe `side="end"` alignment.
+
+  The `side="end"` variant now correctly packs the avatar and content group to the right side of the container. Three issues were resolved:
+  - Root recipe: `justify-content` was `flex-end` which, combined with `flex-direction: row-reverse`, pushed items to the left. Changed to `flex-start`.
+  - Content recipe: added `side` variant with `alignSelf: flex-end` so the bubble right-aligns within its column stack.
+  - Actions recipe: added `side` variant with `justifyContent: flex-end` so action buttons align under the bubble.
+
+- Updated dependencies [[`19e9866`](https://github.com/styleframe-dev/styleframe/commit/19e986618c669546972924840189fc5f16f1a1cd), [`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412), [`6941920`](https://github.com/styleframe-dev/styleframe/commit/6941920a50e560e4686aebd154bb6aea4c59c258)]:
+  - @styleframe/cli@4.1.0
+  - @styleframe/core@3.6.0
+  - @styleframe/transpiler@3.4.0
+  - @styleframe/plugin@3.4.0
+
 ## 3.7.0
 
 ### Minor Changes

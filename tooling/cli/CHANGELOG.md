@@ -1,5 +1,26 @@
 # @styleframe/cli
 
+## 4.1.0
+
+### Minor Changes
+
+- [#229](https://github.com/styleframe-dev/styleframe/pull/229) [`19e9866`](https://github.com/styleframe-dev/styleframe/commit/19e986618c669546972924840189fc5f16f1a1cd) Thanks [@alexgrozav](https://github.com/alexgrozav)! - **Fix:** Resolve critical token loss bug in Figma plugin export where 121 of 464 variables were dropped due to `setNestedToken` overwriting group subtrees instead of promoting parent tokens to `$root`.
+
+  **Feature:** Add mode selector dropdown to Figma plugin Export tab for filtering variables by specific theme/mode before export.
+
+  **Feature:** Add CLI commands for Figma-compatible DTCG sync: `figma export` and `figma import` enable bidirectional token synchronization between Figma collections and design token files.
+
+  **Improvement:** Embed collection metadata in DTCG output via `$extensions.dev.styleframe.collection` for better round-trip awareness.
+
+  **Improvement:** Restore BOOLEAN variable support by converting to string type with `dev.styleframe.boolean: true` extension metadata.
+
+  **Fix:** Correct UI variable count display to read from `msg.result.tokens` instead of wrapper object, ensuring accurate exported variable count and collection name extraction.
+
+### Patch Changes
+
+- Updated dependencies [[`19e9866`](https://github.com/styleframe-dev/styleframe/commit/19e986618c669546972924840189fc5f16f1a1cd)]:
+  - @styleframe/figma@2.1.0
+
 ## 4.0.0
 
 ### Major Changes
