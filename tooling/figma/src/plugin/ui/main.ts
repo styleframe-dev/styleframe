@@ -26,26 +26,19 @@ const fileInput = document.getElementById("file-input") as HTMLInputElement;
 const fileSelected = document.getElementById("file-selected")!;
 const fileName = document.getElementById("file-name")!;
 const fileClearBtn = document.getElementById("file-clear-btn")!;
-const resolverDropZone = document.getElementById("resolver-drop-zone")!;
-const resolverInput = document.getElementById(
-	"resolver-input",
-) as HTMLInputElement;
-const resolverSelected = document.getElementById("resolver-selected")!;
-const resolverName = document.getElementById("resolver-name")!;
-const resolverClearBtn = document.getElementById("resolver-clear-btn")!;
 const importBtn = document.getElementById("import-btn") as HTMLButtonElement;
 const importPreview = document.getElementById("import-preview")!;
 const importStatus = document.getElementById("import-status")!;
 
-// Store the loaded JSON data
-let loadedImportData: unknown = null;
+// Store loaded files — auto-classified into tokens and resolver
+let loadedTokenFiles: Array<{ name: string; data: unknown }> = [];
 let loadedResolverData: DTCGResolverDocument | null = null;
-let loadedTokensRef: string | null = null;
 
 // Export elements
 const collectionSelect = document.getElementById(
 	"collection-select",
 ) as HTMLSelectElement;
+const modeSelect = document.getElementById("mode-select") as HTMLSelectElement;
 const refreshBtn = document.getElementById("refresh-btn")!;
 const exportBtn = document.getElementById("export-btn") as HTMLButtonElement;
 const exportOutput = document.getElementById(
@@ -72,26 +65,17 @@ function init(): void {
 		});
 	});
 
-	// Import handlers - file picker
+	// Import handlers
 	fileDropZone.addEventListener("click", () => fileInput.click());
 	fileInput.addEventListener("change", handleFileSelect);
 	fileClearBtn.addEventListener("click", handleFileClear);
 	importBtn.addEventListener("click", handleImport);
-
-	// Drag and drop handlers
 	fileDropZone.addEventListener("dragover", handleDragOver);
 	fileDropZone.addEventListener("dragleave", handleDragLeave);
 	fileDropZone.addEventListener("drop", handleDrop);
 
-	// Resolver drop zone handlers
-	resolverDropZone.addEventListener("click", () => resolverInput.click());
-	resolverInput.addEventListener("change", handleResolverFileSelect);
-	resolverClearBtn.addEventListener("click", handleResolverClear);
-	resolverDropZone.addEventListener("dragover", handleResolverDragOver);
-	resolverDropZone.addEventListener("dragleave", handleResolverDragLeave);
-	resolverDropZone.addEventListener("drop", handleResolverDrop);
-
 	// Export handlers
+	collectionSelect.addEventListener("change", updateModeSelect);
 	refreshBtn.addEventListener("click", requestCollections);
 	exportBtn.addEventListener("click", handleExport);
 	copyBtn.addEventListener("click", handleCopy);
@@ -142,163 +126,109 @@ function handleDrop(e: DragEvent): void {
 	e.stopPropagation();
 	fileDropZone.classList.remove("drag-over");
 
-	const files = e.dataTransfer?.files;
-	if (files && files.length > 0) {
-		const file = files[0];
-		if (
-			file &&
-			(file.type === "application/json" || file.name.endsWith(".json"))
-		) {
-			processFile(file);
-		} else {
-			showStatus(importStatus, "error", "Please select a JSON file");
+	const fileList = e.dataTransfer?.files;
+	if (!fileList || fileList.length === 0) return;
+
+	const jsonFiles: File[] = [];
+	for (let i = 0; i < fileList.length; i++) {
+		const file = fileList[i]!;
+		if (file.type === "application/json" || file.name.endsWith(".json")) {
+			jsonFiles.push(file);
 		}
 	}
+
+	if (jsonFiles.length === 0) {
+		showStatus(importStatus, "error", "Please select JSON file(s)");
+		return;
+	}
+
+	processFiles(jsonFiles);
 }
 
 /**
  * Handle file input change
  */
 function handleFileSelect(): void {
-	const file = fileInput.files?.[0];
-	if (file) {
-		processFile(file);
-	}
+	const fileList = fileInput.files;
+	if (!fileList || fileList.length === 0) return;
+	const files: File[] = [];
+	for (let i = 0; i < fileList.length; i++) files.push(fileList[i]!);
+	processFiles(files);
 }
 
 /**
- * Process the selected file
+ * Read a File as text using FileReader (promisified).
  */
-function processFile(file: File): void {
+function readFileAsText(file: File): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onload = (e) => resolve(e.target?.result as string);
+		reader.onerror = () => reject(new Error(`Failed to read ${file.name}`));
+		reader.readAsText(file);
+	});
+}
+
+/**
+ * Process one or more dropped/selected files. Auto-classifies each as
+ * a resolver or a token document, accumulating into the shared state.
+ */
+async function processFiles(files: File[]): Promise<void> {
 	hideStatus(importStatus);
 
-	const reader = new FileReader();
-	reader.onload = (e) => {
-		try {
-			const content = e.target?.result as string;
-			const data = JSON.parse(content);
+	try {
+		const results = await Promise.all(
+			files.map(async (file) => {
+				const content = await readFileAsText(file);
+				return { name: file.name, data: JSON.parse(content) };
+			}),
+		);
+
+		for (const { name, data } of results) {
 			if (isDTCGResolver(data)) {
-				throw new Error(
-					"Resolver file dropped in tokens slot. Use the resolver slot below for tokens.resolver.json.",
-				);
+				loadedResolverData = data;
+			} else {
+				loadedTokenFiles.push({ name, data });
 			}
-			const variables = getPreviewVariables(data);
-
-			// Store the data for import
-			loadedImportData = data;
-			loadedTokensRef = file.name;
-
-			// Show file selected state
-			fileDropZone
-				.querySelector(".file-drop-content")
-				?.setAttribute("hidden", "");
-			fileSelected.removeAttribute("hidden");
-			fileName.textContent = file.name;
-
-			// Render preview
-			renderPreview(variables);
-			importBtn.disabled = false;
-		} catch (error) {
-			const message = error instanceof Error ? error.message : "Invalid JSON";
-			importPreview.innerHTML = `<div class="preview-empty" style="color: var(--color-error)">${message}</div>`;
-			importBtn.disabled = true;
-			loadedImportData = null;
-			loadedTokensRef = null;
 		}
-	};
 
-	reader.onerror = () => {
-		showStatus(importStatus, "error", "Failed to read file");
-		loadedImportData = null;
-		loadedTokensRef = null;
-	};
-
-	reader.readAsText(file);
-}
-
-/**
- * Process the selected resolver file
- */
-function processResolverFile(file: File): void {
-	hideStatus(importStatus);
-
-	const reader = new FileReader();
-	reader.onload = (e) => {
-		try {
-			const content = e.target?.result as string;
-			const data = JSON.parse(content);
-			if (!isDTCGResolver(data)) {
-				throw new Error(
-					'Not a DTCG Resolver document (missing version "2025.10" or resolutionOrder).',
-				);
-			}
-
-			loadedResolverData = data;
-
-			resolverDropZone
-				.querySelector(".file-drop-content")
-				?.setAttribute("hidden", "");
-			resolverSelected.removeAttribute("hidden");
-			resolverName.textContent = file.name;
-		} catch (error) {
-			const message = error instanceof Error ? error.message : "Invalid JSON";
-			showStatus(importStatus, "error", message);
-			loadedResolverData = null;
+		if (loadedTokenFiles.length === 0) {
+			throw new Error("No token files found — only resolver(s) detected");
 		}
-	};
 
-	reader.onerror = () => {
-		showStatus(importStatus, "error", "Failed to read resolver file");
+		const allNames = loadedTokenFiles.map((f) => f.name);
+		if (loadedResolverData) allNames.push("(resolver)");
+
+		fileDropZone
+			.querySelector(".file-drop-content")
+			?.setAttribute("hidden", "");
+		fileSelected.removeAttribute("hidden");
+		fileName.textContent = allNames.join(", ");
+
+		const variables = getMergedPreviewVariables();
+		renderPreview(variables);
+		importBtn.disabled = false;
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Invalid JSON";
+		importPreview.innerHTML = `<div class="preview-empty" style="color: var(--color-error)">${message}</div>`;
+		importBtn.disabled = true;
+		loadedTokenFiles = [];
 		loadedResolverData = null;
-	};
-
-	reader.readAsText(file);
-}
-
-function handleResolverDragOver(e: DragEvent): void {
-	e.preventDefault();
-	e.stopPropagation();
-	resolverDropZone.classList.add("drag-over");
-}
-
-function handleResolverDragLeave(e: DragEvent): void {
-	e.preventDefault();
-	e.stopPropagation();
-	resolverDropZone.classList.remove("drag-over");
-}
-
-function handleResolverDrop(e: DragEvent): void {
-	e.preventDefault();
-	e.stopPropagation();
-	resolverDropZone.classList.remove("drag-over");
-
-	const files = e.dataTransfer?.files;
-	const file = files?.[0];
-	if (
-		file &&
-		(file.type === "application/json" || file.name.endsWith(".json"))
-	) {
-		processResolverFile(file);
-	} else if (file) {
-		showStatus(importStatus, "error", "Please select a JSON file");
 	}
 }
 
-function handleResolverFileSelect(): void {
-	const file = resolverInput.files?.[0];
-	if (file) processResolverFile(file);
-}
-
-function handleResolverClear(e: Event): void {
-	e.stopPropagation();
-	resolverInput.value = "";
-	loadedResolverData = null;
-
-	resolverDropZone
-		.querySelector(".file-drop-content")
-		?.removeAttribute("hidden");
-	resolverSelected.setAttribute("hidden", "");
-	resolverName.textContent = "";
+/**
+ * Merge preview variables from all loaded token files (de-duplicated).
+ */
+function getMergedPreviewVariables(): PreviewVariable[] {
+	const seen = new Map<string, PreviewVariable>();
+	for (const { data } of loadedTokenFiles) {
+		const vars = getPreviewVariables(data);
+		for (const v of vars) {
+			if (!seen.has(v.name)) seen.set(v.name, v);
+		}
+	}
+	if (seen.size === 0) throw new Error("No variables found in files");
+	return [...seen.values()];
 }
 
 /**
@@ -307,16 +237,15 @@ function handleResolverClear(e: Event): void {
 function handleFileClear(e: Event): void {
 	e.stopPropagation();
 	fileInput.value = "";
-	loadedImportData = null;
-	loadedTokensRef = null;
+	loadedTokenFiles = [];
+	loadedResolverData = null;
 
-	// Reset UI
 	fileDropZone.querySelector(".file-drop-content")?.removeAttribute("hidden");
 	fileSelected.setAttribute("hidden", "");
 	fileName.textContent = "";
 
 	importPreview.innerHTML =
-		'<div class="preview-empty">Select a JSON file to preview variables</div>';
+		'<div class="preview-empty">Select JSON file(s) to preview variables</div>';
 	importBtn.disabled = true;
 	hideStatus(importStatus);
 }
@@ -381,23 +310,50 @@ function renderPreview(variables: PreviewVariable[]): void {
  * Handle import button click
  */
 function handleImport(): void {
-	if (!loadedImportData) {
+	if (loadedTokenFiles.length === 0) {
 		showStatus(importStatus, "error", "No file loaded");
 		return;
 	}
 
-	parent.postMessage(
-		{
-			pluginMessage: {
-				type: "import",
-				data: loadedImportData,
-				resolver: loadedResolverData ?? undefined,
-				tokensRef: loadedTokensRef ?? undefined,
+	if (loadedTokenFiles.length > 1) {
+		const modes: Record<string, unknown> = {};
+		for (const { name, data } of loadedTokenFiles) {
+			const modeName = extractModeName(data, name);
+			modes[modeName] = data;
+		}
+		parent.postMessage({ pluginMessage: { type: "import", modes } }, "*");
+	} else {
+		const { name, data } = loadedTokenFiles[0]!;
+		parent.postMessage(
+			{
+				pluginMessage: {
+					type: "import",
+					data,
+					resolver: loadedResolverData ?? undefined,
+					tokensRef: name,
+				},
 			},
-		},
-		"*",
-	);
+			"*",
+		);
+	}
+
 	importBtn.disabled = true;
+}
+
+function extractModeName(data: unknown, filename: string): string {
+	if (typeof data === "object" && data !== null) {
+		const ext = (data as Record<string, unknown>).$extensions;
+		if (typeof ext === "object" && ext !== null) {
+			const figmaMode = (ext as Record<string, unknown>)["com.figma.modeName"];
+			if (typeof figmaMode === "string") return figmaMode;
+			const sfExt = (ext as Record<string, unknown>)["dev.styleframe"];
+			if (typeof sfExt === "object" && sfExt !== null) {
+				const modeName = (sfExt as Record<string, unknown>).modeName;
+				if (typeof modeName === "string") return modeName;
+			}
+		}
+	}
+	return filename.replace(/\.tokens\.json$/, "").replace(/\.json$/, "");
 }
 
 /**
@@ -408,11 +364,31 @@ function requestCollections(): void {
 }
 
 /**
+ * Update the mode dropdown based on the currently selected collection.
+ */
+function updateModeSelect(): void {
+	const selectedId = collectionSelect.value;
+	const collection = collections.find((c) => c.id === selectedId);
+
+	modeSelect.innerHTML = '<option value="">All modes</option>';
+
+	if (collection && collection.modes.length > 1) {
+		modeSelect.innerHTML += collection.modes
+			.map((m) => `<option value="${m.id}">${m.name}</option>`)
+			.join("");
+	}
+}
+
+/**
  * Handle export button click
  */
 function handleExport(): void {
 	const collectionId = collectionSelect.value || undefined;
-	parent.postMessage({ pluginMessage: { type: "export", collectionId } }, "*");
+	const modeId = modeSelect.value || undefined;
+	parent.postMessage(
+		{ pluginMessage: { type: "export", collectionId, modeId } },
+		"*",
+	);
 	exportBtn.disabled = true;
 }
 
@@ -499,6 +475,7 @@ function updateCollections(newCollections: Collection[]): void {
 		)
 		.join("");
 
+	updateModeSelect();
 	exportBtn.disabled = false;
 }
 
@@ -548,10 +525,10 @@ window.onmessage = (event: MessageEvent) => {
 
 		case "export-complete": {
 			exportOutput.value = JSON.stringify(msg.result, null, 2);
-			// Extract variable count and collection from DTCG format
-			const exportedVars = extractDTCGVariables(msg.result);
+			const tokensDoc = msg.result.tokens ?? msg.result;
+			const exportedVars = extractDTCGVariables(tokensDoc);
 			const collectionName =
-				msg.result.$extensions?.["dev.styleframe"]?.collection || "Collection";
+				tokensDoc.$extensions?.["dev.styleframe"]?.collection || "Collection";
 			showStatus(
 				exportStatus,
 				"success",

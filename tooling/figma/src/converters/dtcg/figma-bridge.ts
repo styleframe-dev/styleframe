@@ -263,9 +263,12 @@ export function dtcgValueToFigma(
 	figmaType: FigmaVariableType,
 ): DtcgFigmaConversion {
 	if (isAlias(value)) {
+		const aliasPath = (value as DTCGAlias)
+			.slice(1, -1)
+			.replace(/\.\$root$/, "");
 		return {
 			kind: "alias",
-			id: dtcgPathToFigma((value as DTCGAlias).slice(1, -1)),
+			id: dtcgPathToFigma(aliasPath),
 		};
 	}
 
