@@ -1,5 +1,20 @@
 # @styleframe/transpiler
 
+## 3.4.0
+
+### Minor Changes
+
+- [#226](https://github.com/styleframe-dev/styleframe/pull/226) [`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add build-time utility class name shortening for production builds.
+
+  Generates shortening maps at transpile time with collision-safe abbreviation and built-in defaults for common CSS properties. Hashes long arbitrary values for stable compact names. Supports underscore-as-space in arbitrary values (`_padding:[10px_20px]`). Exposes `minify` plugin option with user-overridable defaults.
+
+- [#224](https://github.com/styleframe-dev/styleframe/pull/224) [`6941920`](https://github.com/styleframe-dev/styleframe/commit/6941920a50e560e4686aebd154bb6aea4c59c258) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Export named Props types from `virtual:styleframe` for each recipe (e.g. `import { button, type ButtonProps } from 'virtual:styleframe'`).
+
+### Patch Changes
+
+- Updated dependencies [[`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412)]:
+  - @styleframe/core@3.6.0
+
 ## 3.3.0
 
 ### Minor Changes

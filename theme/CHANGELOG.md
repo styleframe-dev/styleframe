@@ -1,5 +1,19 @@
 # @styleframe/theme
 
+## 3.7.1
+
+### Patch Changes
+
+- [#222](https://github.com/styleframe-dev/styleframe/pull/222) [`80f84dd`](https://github.com/styleframe-dev/styleframe/commit/80f84dd9c32ec3361c69b30f5a9c725b2e1b8fc2) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix `chat-message` recipe `side="end"` alignment.
+
+  The `side="end"` variant now correctly packs the avatar and content group to the right side of the container. Three issues were resolved:
+  - Root recipe: `justify-content` was `flex-end` which, combined with `flex-direction: row-reverse`, pushed items to the left. Changed to `flex-start`.
+  - Content recipe: added `side` variant with `alignSelf: flex-end` so the bubble right-aligns within its column stack.
+  - Actions recipe: added `side` variant with `justifyContent: flex-end` so action buttons align under the bubble.
+
+- Updated dependencies [[`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412)]:
+  - @styleframe/core@3.6.0
+
 ## 3.7.0
 
 ### Minor Changes
