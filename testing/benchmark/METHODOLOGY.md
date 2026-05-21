@@ -1,96 +1,118 @@
 # Benchmark Methodology
 
-Symmetric comparison of CSS bundle size, HTML class density, and build speed between Styleframe and Tailwind CSS v4. Both sides define recipe abstractions, render identical variant grids, and use JIT/treeshaking to emit only used CSS.
+Symmetric comparison of CSS output size, HTML class density, and visual parity between Styleframe and Tailwind CSS v4. Both sides declare the same design tokens, register equivalent utilities, and use the same HTML structure — only class naming conventions differ.
 
 ## Symmetry guarantees
 
 | Dimension | Styleframe | Tailwind |
 |---|---|---|
-| Recipe abstraction | `createRecipe()` from `@styleframe/runtime` | Programmatic mapper (equivalent to CVA) |
-| Variant combos | From shared `ShowcaseSpec` | From same shared `ShowcaseSpec` |
-| CSS treeshaking | Scanner + `treeshake: true` | JIT scans HTML (built-in) |
-| HTML structure | `renderShowcaseSection()` | Same `renderShowcaseSection()` |
-| Design tokens | `useDesignTokensPreset` | `@theme` generated from SF variables |
+| Design tokens | Hand-written `variable()` calls in `config.ts` | Hand-written `@theme` block in `config.css` |
+| Token values | Identical hex colors, rem spacing, px borders | Same values, Tailwind naming (`--color-*`, `--spacing-*`) |
+| Utilities | Registered via `utility()` with `ref()` to tokens | Built-in from `@theme` token namespaces |
+| HTML structure | Shared `page()` template function | Same `page()` function, different class slots |
+| CSS treeshaking | Scanner + `treeshake: true, scanner: true` | JIT scans `@source` HTML (built-in) |
+| Visual verification | Playwright screenshots via `pnpm run visual` | Same |
 
-Both pages render the exact same HTML structure (same elements, same nesting, same text content). Only `class="..."` attribute values differ.
+## Configurations
+
+| Configuration | Description |
+|---|---|
+| **Tailwind v4** | `@theme { --*: initial; ... }` with only benchmark tokens. No Preflight. |
+| **Styleframe** | Long utility names: `_padding-inline:xl`, `_background:primary` |
+| **SF Minified** | Same as Styleframe with `minify: true` — shortened class names |
+| **SF Shorthand** | Tailwind-style short names: `_px:xl`, `_bg:primary` |
+
+## Design tokens (shared)
+
+Both configs declare the same 30+ tokens with identical values:
+
+- **Colors:** primary (5 shades), success (4), error (4), neutral (7), white, black, background, surface, text, text-weak
+- **Spacing:** xs (0.25rem), sm (0.5rem), md (0.75rem), lg (1rem), xl (1.5rem), 2xl (2rem), 60 (15rem)
+- **Typography:** font-size xs/sm/md/lg, font-weight normal/medium/semibold/bold, line-height tight/normal
+- **Borders:** border-width thin (1px), border-radius sm/md/lg/full
+- **Max-width:** sm (24rem), md (28rem), lg (32rem), xl (36rem), 2xl (42rem)
+
+Styleframe tokens are in `src/styleframe/config.ts`. Tailwind tokens are in `src/tailwind/config.css`. Both files are hand-written and auditable side-by-side.
 
 ## What's measured
 
 | Metric | How |
 |---|---|
-| Raw HTML/CSS | `Buffer.byteLength(content, 'utf-8')` of body markup and CSS bundle |
+| Raw HTML | `Buffer.byteLength(bodyContent, 'utf-8')` — body only, excludes `<head>` |
+| Raw CSS | `Buffer.byteLength(css, 'utf-8')` |
 | Gzipped HTML/CSS | `zlib.gzipSync(content, { level: 6 }).length` (level 6 = HTTP server default) |
 | Gzipped total | `zlib.gzipSync(html + css, { level: 6 }).length` |
-| Class count | Regex extract `class="..."`, split by whitespace |
-| Build speed (in-process) | Programmatic API, after warmup iteration, median of 5 |
-| Build speed (CLI cold) | `child_process.spawnSync`, fresh process per iteration, median of 5 |
+| Class count | Regex extract `class="..."` values, split by whitespace |
+| Avg classes/element | Total classes / elements with class attributes |
+| P95 classes/element | 95th percentile of per-element class counts |
 
-## What's built
+## Pages
 
-A component showcase page rendering 10 Styleframe recipes in a representative subset of their variant combinations:
+Five realistic pages, each written three times (Styleframe long, Styleframe shorthand, Tailwind) with identical HTML structure:
 
-- **Colors:** primary, success, error, neutral (4 of 9)
-- **Variants:** solid, outline, soft (3 of up to 6)
-- **Sizes:** sm, md, lg (3 of 5)
+| Page | Description | Sections |
+|---|---|---|
+| **Dashboard** | SaaS admin panel | Nav, sidebar, hero, stat cards, alerts, team table, form, chat, footer |
+| **Marketing** | Landing page | Nav, hero, features grid, testimonials, pricing tiers, CTA, footer |
+| **Blog** | Article page | Header, article with headings/lists/blockquote/code, sidebar, comments, footer |
+| **E-commerce** | Product listing | Header, breadcrumbs, filters, 3×3 product grid, pagination, cart summary, footer |
+| **Settings** | App settings | Header, tabs, profile form, notification toggles, security section, danger zone |
 
-Both pages render the exact same variant grid, generated by `renderShowcaseSection()` from shared `ShowcaseSpec` definitions.
+Each page file is in `src/pages/` and exports a `PageSpec` with all three variants. The shared `page()` template function takes a class-slot object — proving the HTML structure is identical across variants.
 
-## How Tailwind recipes work
+## Visual verification
 
-Each Styleframe recipe function produces a class string like `button _display:[inline-flex] _background:primary _color:white ...`. A programmatic class-name mapper (`src/tailwind/recipes/class-mapper.ts`) converts each Styleframe utility class to its Tailwind equivalent:
+Run `pnpm run visual` to launch Playwright, screenshot all pages × all variants at 1280×800, and save to `results/screenshots/`. Image size ratios between Tailwind and Styleframe are reported — 99.5%+ indicates near pixel-identical rendering.
 
-| Styleframe | Tailwind |
-|---|---|
-| `_display:[inline-flex]` | `inline-flex` |
-| `_background:color.primary` | `bg-primary` |
-| `_hover:background:color.primary-tint-50` | `hover:bg-primary-tint-50` |
-| `_padding-inline:md` | `px-md` |
+## Tailwind CSS constant-size behavior
 
-This produces the same number of classes per element on both sides, using the naming conventions of each framework. The mapper is equivalent to what a developer would write using CVA or Tailwind Variants.
+Tailwind v4 emits a fixed CSS size per `@theme` configuration regardless of which classes are used. The `@theme` block generates `:root` variables, `@property` rules, and `@layer` structure that constitute a baseline overhead. This is visible in the data: Tailwind's CSS is identical across all five pages (6,846 B raw per page).
 
-## Design token alignment
-
-Tailwind is configured to match Styleframe's defaults. Styleframe is the canonical source.
-
-- The Tailwind `input.css` includes a `@theme { ... }` block generated by `src/tailwind/theme-mapper.ts`
-- The mapper reads `instance.root.variables` and emits matching `--color-*`, `--spacing-*`, `--radius-*` tokens
-- Includes shade/tint tokens (`--color-primary-shade-50`, `--color-primary-tint-50`, etc.) needed by recipe compounds
-
-## What's included on each side
-
-**Styleframe** (via theme presets):
-- `useDesignTokensPreset` — full color scales, spacing, typography, shadows, breakpoints
-- `useSanitizePreset` — CSS reset
-- `useGlobalPreset` — base element styling
-- `useUtilitiesPreset` — full utility set
-- `useModifiersPreset` — pseudo-state/element/media modifiers
-- 53 recipe registrations (10 base + sub-parts)
-
-**Tailwind** (via `@import "tailwindcss"`):
-- Preflight — CSS reset
-- Default utility set (JIT-scoped to used classes)
-- `@theme` block from `theme-mapper.ts`
-
-Both include CSS resets. Treeshaking is enabled on both sides — only CSS for rendered elements is emitted.
-
-## Variable treeshaking
-
-Verified in `engine/transpiler/src/consume/css/root.ts:22-23`: `_usage.variables` is honored when `treeshake: true`. Variables marked via `ref()` calls (`engine/core/src/tokens/ref.ts:22`) and utility declarations (`engine/core/src/tokens/utility.ts`) are kept; unused variables are removed.
+Styleframe's CSS varies per page because its scanner + treeshaking only emits `:root` variables and utility rules that are actually referenced in the HTML.
 
 ## Caveats
 
-**Tailwind side uses a class-name mapper, not hand-authored CVA definitions.** The mapper converts Styleframe recipe output to Tailwind class names programmatically. This produces the same number of classes per element but the visual output may not be pixel-identical — it's structurally equivalent.
+**No presets or resets.** Neither side uses CSS resets (no Preflight, no `useSanitizePreset`). Both configs are built from scratch with only the tokens and utilities needed for the benchmark pages.
 
-**Internal API usage.** The benchmark accesses `recipe._runtime` (underscore-prefixed, internal) to generate Styleframe class strings via `createRecipe()`. If this contract changes, the benchmark must be updated.
+**No recipes.** This benchmark compares utility-class output only. Recipe comparison (Styleframe `recipe()` vs Tailwind + CVA) is a separate concern not covered here.
 
-**CSS size gap is expected.** Styleframe's CSS includes design token variables (fluid typography, color scales, spacing system) as CSS custom properties. Tailwind also includes custom properties but fewer (only tokens referenced by used utilities). The remaining gap reflects the design-system overhead Styleframe provides.
+**Tailwind auto-discovery.** Tailwind v4 scans content files from the git root by default. Despite per-page `@source` directives, the CLI may scan additional files. The constant CSS size across pages reflects this behavior.
 
-**In-process timing asymmetry.** Styleframe timing includes the scanner pipeline (`quickScan` + `matchUtilities` + `registerMatchedUtilities`). Tailwind timing uses pre-extracted candidates. The CLI cold-start numbers are the more apples-to-apples comparison.
+**Object syntax required for literal values.** Styleframe utility values that are CSS keywords (e.g., `flex`, `center`, `solid`) must be registered with object syntax `{ flex: "flex" }`, not array syntax `["flex"]`. Array syntax treats strings as token references, producing `var(--flex)` instead of `flex`.
 
 ## Reproduction
 
 ```bash
 pnpm install
-pnpm --filter @styleframe/testing-benchmark run measure
-cat testing/benchmark/results/report.md
+pnpm --filter @styleframe/testing-benchmark run measure    # Build + measure all pages
+pnpm --filter @styleframe/testing-benchmark run visual     # Screenshot comparison
+
+cat testing/benchmark/results/report.md                    # View results
+open testing/benchmark/results/screenshots/                # View screenshots
+```
+
+## File structure
+
+```
+src/
+  styleframe/
+    config.ts              # Tokens + utilities (long names)
+    config-shorthand.ts    # Tokens + utilities (short names)
+    build.ts               # Scanner → transpile → write HTML + CSS
+  tailwind/
+    config.css             # @theme tokens (must match config.ts)
+    build.ts               # Write HTML → run CLI → read CSS
+  pages/
+    dashboard.ts           # 3 variants sharing one page() template
+    marketing.ts
+    blog.ts
+    ecommerce.ts
+    settings.ts
+  measure.ts               # Build all pages, measure sizes, write report
+  visual-compare.ts        # Playwright screenshot comparison
+  template.ts              # HTML document wrapper
+  types.ts                 # PageSpec, SizeMeasurement, etc.
+  utils/
+    size.ts                # Byte/gzip measurement
+    report.ts              # Markdown table formatter
 ```
