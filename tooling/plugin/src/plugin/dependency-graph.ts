@@ -1,4 +1,9 @@
-import { importree, getAffectedFiles, type ImportTree } from "importree";
+import {
+	importree,
+	getAffectedFiles,
+	type ImportTree,
+	type ImportEdge,
+} from "importree";
 
 export interface DependencyGraph {
 	trackedFiles: Set<string>;
@@ -49,28 +54,28 @@ export async function buildDependencyGraph(
 
 function mergeImportTrees(trees: ImportTree[]): ImportTree {
 	const files = new Set<string>();
-	const graph: Record<string, string[]> = {};
-	const reverseGraph: Record<string, string[]> = {};
+	const graph: Record<string, ImportEdge[]> = {};
+	const reverseGraph: Record<string, ImportEdge[]> = {};
 	const externals = new Set<string>();
 
 	for (const tree of trees) {
 		for (const file of tree.files) {
 			files.add(file);
 		}
-		for (const [key, deps] of Object.entries(tree.graph)) {
+		for (const [key, edges] of Object.entries(tree.graph)) {
 			const existing = graph[key] ?? [];
-			for (const dep of deps) {
-				if (!existing.includes(dep)) {
-					existing.push(dep);
+			for (const edge of edges) {
+				if (!existing.some((e) => e.path === edge.path)) {
+					existing.push(edge);
 				}
 			}
 			graph[key] = existing;
 		}
-		for (const [key, dependents] of Object.entries(tree.reverseGraph)) {
+		for (const [key, edges] of Object.entries(tree.reverseGraph)) {
 			const existing = reverseGraph[key] ?? [];
-			for (const dep of dependents) {
-				if (!existing.includes(dep)) {
-					existing.push(dep);
+			for (const edge of edges) {
+				if (!existing.some((e) => e.path === edge.path)) {
+					existing.push(edge);
 				}
 			}
 			reverseGraph[key] = existing;
