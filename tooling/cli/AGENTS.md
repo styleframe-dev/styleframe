@@ -55,7 +55,7 @@ Initializes a new Styleframe project in the target directory.
 1. Creates `styleframe.config.ts` with a basic template (skips if exists)
 2. Creates or updates `tsconfig.json` — adds includes for `styleframe.config.ts`, `*.styleframe.ts`, `.styleframe/**/*.d.ts`
 3. Adds dependencies to `package.json`:
-   - **devDependencies:** `styleframe`, `@styleframe/cli`, `@styleframe/core`, `@styleframe/license`, `@styleframe/loader`, `@styleframe/plugin`, `@styleframe/pro`, `@styleframe/theme`, `@styleframe/transpiler`
+   - **devDependencies:** `styleframe`, `@styleframe/cli`, `@styleframe/core`, `@styleframe/license`, `@styleframe/loader`, `@styleframe/plugin`, `@styleframe/theme`, `@styleframe/transpiler`
    - **dependencies:** `@styleframe/runtime`
 4. Auto-detects and updates framework config:
    - **Vite:** Adds `styleframe/plugin/vite` plugin to `vite.config.ts` via magicast
