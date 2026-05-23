@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 import { defineCommand, runMain } from "citty";
-import { description, version } from "./package";
 
 const main = defineCommand({
 	meta: {
 		name: "styleframe",
-		version,
-		description,
+		version: __CLI_VERSION__,
+		description: __CLI_DESCRIPTION__,
 	},
 	subCommands: {
 		init: () => import("./commands/init").then((m) => m.default),

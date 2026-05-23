@@ -1,0 +1,32 @@
+{
+	"name": "@styleframe/testing-benchmark",
+	"version": "0.0.1",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"measure": "tsx src/measure.ts",
+		"build:styleframe": "tsx src/styleframe/build.ts",
+		"build:tailwind": "tsx src/tailwind/build.ts",
+		"visual": "tsx src/visual-compare.ts",
+		"test:parity": "playwright test",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run --passWithNoTests"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.56.1",
+		"@vitest/coverage-v8": "catalog:",
+		"@styleframe/config-typescript": "workspace:^3.0.0",
+		"@styleframe/runtime": "workspace:^3.1.0",
+		"@styleframe/scanner": "workspace:^3.1.0",
+		"@styleframe/theme": "workspace:^3.7.0",
+		"@tailwindcss/cli": "4.1.17",
+		"@tailwindcss/node": "4.1.17",
+		"@types/node": "catalog:",
+		"playwright": "^1.56.1",
+		"styleframe": "workspace:^3.7.0",
+		"tailwindcss": "catalog:nuxt",
+		"tsx": "catalog:",
+		"typescript": "catalog:",
+		"vitest": "catalog:"
+	}
+}
