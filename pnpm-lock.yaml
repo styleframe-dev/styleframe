@@ -1165,8 +1165,8 @@ importers:
         specifier: '*'
         version: 0.25.10
       importree:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^2.0.0
+        version: 2.0.0
       jiti:
         specifier: 'catalog:'
         version: 2.6.1
@@ -6650,8 +6650,8 @@ packages:
     resolution: {integrity: sha512-rKtvo6a868b5Hu3heneU+L4yEQ4jYKLtjpnPeUdK7h0yzXGmyBTypknlkCvHFBqfX9YlorEiMM6Dnq/5atfHkw==}
     engines: {node: '>=8'}
 
-  importree@1.0.1:
-    resolution: {integrity: sha512-Ou/uhOL8MZagHNAWKsPyn2K+g39w0hxKELo/dAeZIgZC7/K2I5uJIzRma9y1zW0StxybIUgrhvlhDf5QKhXlUA==}
+  importree@2.0.0:
+    resolution: {integrity: sha512-2HCZB/T7UicttgiwnF0XsnjugjXqOm1C3gWUQJ0GyEc1JRmqbuiGqFdWl5GnSKmcFzBen5qzSbXz4LJC52Cavw==}
     engines: {node: '>=18'}
 
   impound@1.0.0:
@@ -16905,7 +16905,7 @@ snapshots:
 
   import-lazy@4.0.0: {}
 
-  importree@1.0.1: {}
+  importree@2.0.0: {}
 
   impound@1.0.0:
     dependencies:
