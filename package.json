@@ -12,7 +12,7 @@
 		"ci:changeset": "changeset",
 		"ci:publish": "pnpm run ci:prepublish && changeset publish",
 		"ci:version": "changeset version && pnpm run ci:postversion",
-		"ci:postversion": "pnpm install --no-frozen-lockfile && pnpm --filter @styleframe/cli run prebuild",
+		"ci:postversion": "pnpm install --no-frozen-lockfile",
 		"ci:prepublish": "pnpm build:nodocs",
 		"build": "turbo run build",
 		"build:nodocs": "turbo run build --filter './engine/*' --filter './tooling/*' --filter './theme'",

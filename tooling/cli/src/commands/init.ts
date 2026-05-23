@@ -88,17 +88,13 @@ export async function addPackageJsonDependencies(cwd: string) {
 		const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
 
 		if (!packageJson.devDependencies) packageJson.devDependencies = {};
-		packageJson.devDependencies["styleframe"] = "^3.0.0";
-		packageJson.devDependencies["@styleframe/cli"] = "^3.0.0";
-		packageJson.devDependencies["@styleframe/core"] = "^3.0.0";
-		packageJson.devDependencies["@styleframe/license"] = "^3.0.0";
-		packageJson.devDependencies["@styleframe/loader"] = "^3.0.0";
-		packageJson.devDependencies["@styleframe/plugin"] = "^3.0.0";
-		packageJson.devDependencies["@styleframe/theme"] = "^3.0.0";
-		packageJson.devDependencies["@styleframe/transpiler"] = "^3.0.0";
+		Object.assign(
+			packageJson.devDependencies,
+			__INIT_VERSIONS__.devDependencies,
+		);
 
 		if (!packageJson.dependencies) packageJson.dependencies = {};
-		packageJson.dependencies["@styleframe/runtime"] = "^3.0.0";
+		Object.assign(packageJson.dependencies, __INIT_VERSIONS__.dependencies);
 
 		await writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
