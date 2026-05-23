@@ -18,15 +18,6 @@ function getMajorVersionRange(packageDir: string): string {
 
 const cliPackageJson = readPackageJson(".");
 
-function getLicenseVersionRange(): string {
-	const yaml = readFileSync(
-		resolve(__dirname, "../../pnpm-workspace.yaml"),
-		"utf8",
-	);
-	const match = yaml.match(/"@styleframe\/license":\s*(\S+)/);
-	return match![1] as string;
-}
-
 export default createViteConfig("cli", __dirname, {
 	define: {
 		__CLI_VERSION__: JSON.stringify(cliPackageJson.version),
@@ -36,7 +27,6 @@ export default createViteConfig("cli", __dirname, {
 				styleframe: getMajorVersionRange("../../engine/styleframe"),
 				"@styleframe/cli": getMajorVersionRange("."),
 				"@styleframe/core": getMajorVersionRange("../../engine/core"),
-				"@styleframe/license": getLicenseVersionRange(),
 				"@styleframe/loader": getMajorVersionRange("../../engine/loader"),
 				"@styleframe/plugin": getMajorVersionRange("../plugin"),
 				"@styleframe/theme": getMajorVersionRange("../../theme"),
