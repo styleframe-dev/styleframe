@@ -10,7 +10,8 @@
 	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "tab"
+		"indentStyle": "tab",
+		"includes": ["**", "!testing/benchmark/src/tailwind/**"]
 	},
 	"linter": {
 		"enabled": true,

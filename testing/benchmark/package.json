@@ -14,6 +14,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.56.1",
+		"@vitest/coverage-v8": "catalog:",
 		"@styleframe/config-typescript": "workspace:^3.0.0",
 		"@styleframe/runtime": "workspace:^3.1.0",
 		"@styleframe/scanner": "workspace:^3.1.0",
