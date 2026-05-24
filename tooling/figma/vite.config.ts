@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
 		// Build the plugin sandbox code
 		// Figma's sandbox has limited ES support, so we target ES2017
 		return {
-			esbuild: {
+			oxc: {
 				target: "es2017",
 			},
 			build: {
@@ -26,11 +26,6 @@ export default defineConfig(({ mode }) => {
 					name: "code",
 					formats: ["iife"],
 					fileName: () => "code.js",
-				},
-				rollupOptions: {
-					output: {
-						inlineDynamicImports: true,
-					},
 				},
 				minify: false,
 				sourcemap: false,
@@ -45,7 +40,7 @@ export default defineConfig(({ mode }) => {
 		build: {
 			outDir: path.resolve(__dirname, "dist/plugin"),
 			emptyDirOnBuild: false,
-			rollupOptions: {
+			rolldownOptions: {
 				input: path.resolve(__dirname, "src/plugin/ui/ui.html"),
 				output: {
 					entryFileNames: "ui.js",

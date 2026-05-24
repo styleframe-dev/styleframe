@@ -1,6 +1,6 @@
 import type { DefinedCollection } from "@nuxt/content";
 import { defineContentConfig, defineCollection, z } from "@nuxt/content";
-import { asSitemapCollection } from "@nuxtjs/sitemap/content";
+import { defineSitemapSchema } from "@nuxtjs/sitemap/content";
 import { useNuxt } from "@nuxt/kit";
 import { DOCS_SECTIONS, type DocsSection } from "./app/constants/sections";
 
@@ -57,41 +57,43 @@ if (locales && Array.isArray(locales)) {
 	for (const locale of locales) {
 		const code = typeof locale === "string" ? locale : locale.code;
 
-		collections[`landing_${code}`] = defineCollection(
-			asSitemapCollection({
-				type: "page",
-				source: [{ include: `${code}/*.md` }],
+		collections[`landing_${code}`] = defineCollection({
+			type: "page",
+			source: [{ include: `${code}/*.md` }],
+			schema: z.object({
+				sitemap: defineSitemapSchema(),
 			}),
-		);
+		});
 
 		for (const section of DOCS_SECTIONS) {
-			collections[`docs_${section.key}_${code}`] = defineCollection(
-				asSitemapCollection({
-					type: "page",
-					source: buildDocsSource(section, `${code}/`, `/${code}`),
-					schema: createDocsSchema(),
+			collections[`docs_${section.key}_${code}`] = defineCollection({
+				type: "page",
+				source: buildDocsSource(section, `${code}/`, `/${code}`),
+				schema: createDocsSchema().extend({
+					sitemap: defineSitemapSchema(),
 				}),
-			);
+			});
 		}
 	}
 } else {
 	collections = {
-		landing: defineCollection(
-			asSitemapCollection({
-				type: "page",
-				source: [{ include: "*.md" }],
+		landing: defineCollection({
+			type: "page",
+			source: [{ include: "*.md" }],
+			schema: z.object({
+				sitemap: defineSitemapSchema(),
 			}),
-		),
+		}),
 	};
 
 	for (const section of DOCS_SECTIONS) {
-		collections[`docs_${section.key}`] = defineCollection(
-			asSitemapCollection({
-				type: "page",
-				source: buildDocsSource(section),
-				schema: createDocsSchema(),
+		collections[`docs_${section.key}`] = defineCollection({
+			type: "page",
+			source: buildDocsSource(section),
+			schema: createDocsSchema().extend({
+				sitemap: defineSitemapSchema(),
 			}),
-		);
+		});
 	}
 }
 
