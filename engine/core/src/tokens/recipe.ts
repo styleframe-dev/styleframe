@@ -503,13 +503,18 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 
 			const generated = utilityFactory.autogenerate(entry.value);
 			for (const key of Object.keys(generated)) {
-				root._usage.utilities.add(
-					defaultUtilitySelectorFn({
-						name: utilityFactory.name,
-						value: key,
-						modifiers: entry.modifiers,
-					}),
-				);
+				const selectorString = defaultUtilitySelectorFn({
+					name: utilityFactory.name,
+					value: key,
+					modifiers: entry.modifiers,
+				});
+
+				let recipeUtilities = root._usage.recipeUtilities.get(recipe.name);
+				if (!recipeUtilities) {
+					recipeUtilities = new Set();
+					root._usage.recipeUtilities.set(recipe.name, recipeUtilities);
+				}
+				recipeUtilities.add(selectorString);
 			}
 
 			// Call create with the value and modifiers (if any)
@@ -523,6 +528,25 @@ export function processRecipeUtilities(recipe: Recipe, root: Root): void {
 						: modifierFactories
 					: undefined,
 			);
+		}
+	}
+}
+
+/**
+ * Promotes recipe utility class names from `_usage.recipeUtilities` into `_usage.utilities`.
+ *
+ * When called without `recipeNames`, promotes all recipes (backward-compatible default).
+ * When called with a set of recipe names, only promotes matching entries.
+ */
+export function registerRecipeUtilities(
+	root: Root,
+	recipeNames?: Set<string>,
+): void {
+	for (const [name, classNames] of root._usage.recipeUtilities) {
+		if (!recipeNames || recipeNames.has(name)) {
+			for (const className of classNames) {
+				root._usage.utilities.add(className);
+			}
 		}
 	}
 }

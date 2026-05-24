@@ -4,6 +4,7 @@ import {
 	createRoot,
 	createUtilityFunction,
 } from "@styleframe/core";
+import type { TranspileContext } from "../../types";
 import { consume } from "./consume";
 import { createRootConsumer } from "./root";
 
@@ -507,6 +508,59 @@ export const simple = createRecipe("simple", simpleRecipe);
 		expect(result).toContain(
 			`export const myRecipe = createRecipe("myRecipe", myRecipeRecipe);`,
 		);
+	});
+
+	it("should emit only recipes in _usage.recipes when set is non-empty", () => {
+		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
+		recipe({ name: "card", base: { margin: "1rem" }, variants: {} });
+
+		root._usage.recipes.add("button");
+
+		const result = consumeRoot(root, options);
+
+		expect(result).toContain("export const button");
+		expect(result).not.toContain("export const card");
+	});
+
+	it("should include shortMap imports and constant when context has shortMap", () => {
+		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
+
+		const context: TranspileContext = {
+			shortMap: { p: { padding: "a" }, v: { "[1rem]": "b" }, m: {} },
+		};
+
+		const result = consumeRoot(root, options, context);
+
+		expect(result).toContain("ShorteningMap");
+		expect(result).toContain("__shortMap");
+		expect(result).toContain('"padding":"a"');
+	});
+
+	it("should emit exported selectors", () => {
+		root.children.push({
+			type: "selector",
+			id: "sel-1",
+			query: ".my-component",
+			declarations: {},
+			variables: [],
+			children: [],
+			_exportName: "myComponent",
+		});
+
+		const result = consumeRoot(root, options);
+
+		expect(result).toContain("myComponent");
+		expect(result).toContain(".my-component");
+	});
+
+	it("should emit all recipes when _usage.recipes is empty", () => {
+		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
+		recipe({ name: "card", base: { margin: "1rem" }, variants: {} });
+
+		const result = consumeRoot(root, options);
+
+		expect(result).toContain("export const button");
+		expect(result).toContain("export const card");
 	});
 
 	it("should handle recipe names with different casing", () => {

@@ -16,6 +16,8 @@ export function createRoot(): Root {
 		_usage: {
 			variables: new Set(),
 			utilities: new Set(),
+			recipes: new Set(),
+			recipeUtilities: new Map(),
 		},
 	};
 

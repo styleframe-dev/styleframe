@@ -43,7 +43,12 @@ function makeRoot(variables: Variable[], themes: Theme[] = []): Root {
 		children: [],
 		themes,
 		_registry: new Map(),
-		_usage: { variables: new Set(), utilities: new Set() },
+		_usage: {
+			variables: new Set(),
+			utilities: new Set(),
+			recipes: new Set(),
+			recipeUtilities: new Map(),
+		},
 	};
 }
 

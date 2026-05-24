@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import type { ModifierFactory, Root } from "../types";
 import { createAtRuleFunction, createMediaFunction } from "./atRule";
 import { createCssFunction } from "./css";
-import { createRecipeFunction } from "./recipe";
+import { createRecipeFunction, registerRecipeUtilities } from "./recipe";
 import { createRefFunction } from "./ref";
 import { createRoot } from "./root";
 import { createSelectorFunction } from "./selector";
@@ -401,13 +401,16 @@ describe("root._usage.utilities collection", () => {
 			utility("color", ({ value }) => ({ color: value }));
 		});
 
-		it("tracks utility class names from recipe base declarations", () => {
+		it("populates recipeUtilities map, not utilities directly", () => {
 			recipe({
 				name: "button",
 				base: { padding: "1rem" },
 			});
 
-			expect(trackedUtilities(root)).toEqual(["_padding:[1rem]"]);
+			expect(trackedUtilities(root)).toEqual([]);
+			expect(
+				Array.from(root._usage.recipeUtilities.get("button") ?? []),
+			).toEqual(["_padding:[1rem]"]);
 		});
 
 		it("tracks utility class names from recipe variant declarations", () => {
@@ -424,10 +427,9 @@ describe("root._usage.utilities collection", () => {
 				},
 			});
 
-			expect(trackedUtilities(root)).toEqual([
-				"_background:color.primary",
-				"_background:color.secondary",
-			]);
+			expect(
+				Array.from(root._usage.recipeUtilities.get("button") ?? []).sort(),
+			).toEqual(["_background:color.primary", "_background:color.secondary"]);
 		});
 
 		it("tracks only the modifier variant, not the side-effect base", () => {
@@ -451,9 +453,9 @@ describe("root._usage.utilities collection", () => {
 				},
 			});
 
-			expect(trackedUtilities(root)).toEqual([
-				"_hover:background:color.primary",
-			]);
+			expect(
+				Array.from(root._usage.recipeUtilities.get("button") ?? []),
+			).toEqual(["_hover:background:color.primary"]);
 		});
 
 		it("tracks base and modifier entries independently", () => {
@@ -479,7 +481,9 @@ describe("root._usage.utilities collection", () => {
 				},
 			});
 
-			expect(trackedUtilities(root)).toEqual([
+			expect(
+				Array.from(root._usage.recipeUtilities.get("button") ?? []).sort(),
+			).toEqual([
 				"_background:color.primary",
 				"_hover:background:color.primary-shade-50",
 			]);
@@ -501,9 +505,81 @@ describe("root._usage.utilities collection", () => {
 				],
 			});
 
+			expect(
+				Array.from(root._usage.recipeUtilities.get("button") ?? []),
+			).toEqual(["_background:color.primary-shade-50"]);
+		});
+
+		it("tracks multiple recipes independently", () => {
+			recipe({
+				name: "button",
+				base: { padding: "1rem" },
+			});
+			recipe({
+				name: "badge",
+				base: { background: "blue" },
+			});
+
+			expect(root._usage.recipeUtilities.size).toBe(2);
+			expect(root._usage.recipeUtilities.has("button")).toBe(true);
+			expect(root._usage.recipeUtilities.has("badge")).toBe(true);
+		});
+	});
+
+	describe("registerRecipeUtilities", () => {
+		beforeEach(() => {
+			utility("padding", ({ value }) => ({ padding: value }));
+			utility("background", ({ value }) => ({ background: value }));
+		});
+
+		it("promotes all recipe utilities when called without names", () => {
+			recipe({
+				name: "button",
+				base: { padding: "1rem" },
+			});
+			recipe({
+				name: "badge",
+				base: { background: "blue" },
+			});
+
+			registerRecipeUtilities(root);
+
 			expect(trackedUtilities(root)).toEqual([
-				"_background:color.primary-shade-50",
+				"_background:[blue]",
+				"_padding:[1rem]",
 			]);
+		});
+
+		it("promotes only named recipes when called with a set", () => {
+			recipe({
+				name: "button",
+				base: { padding: "1rem" },
+			});
+			recipe({
+				name: "badge",
+				base: { background: "blue" },
+			});
+
+			registerRecipeUtilities(root, new Set(["button"]));
+
+			expect(trackedUtilities(root)).toEqual(["_padding:[1rem]"]);
+		});
+
+		it("preserves shared utilities when one recipe is promoted", () => {
+			variable("color.primary", "#006cff");
+
+			recipe({
+				name: "button",
+				base: { background: "@color.primary" },
+			});
+			recipe({
+				name: "badge",
+				base: { background: "@color.primary" },
+			});
+
+			registerRecipeUtilities(root, new Set(["button"]));
+
+			expect(trackedUtilities(root)).toEqual(["_background:color.primary"]);
 		});
 	});
 

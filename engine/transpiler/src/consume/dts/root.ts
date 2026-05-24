@@ -21,7 +21,14 @@ function collectExportedSelectors(children: ContainerChild[]): Selector[] {
 export function createRootConsumer(consume: ConsumeFunction) {
 	return function consumeRoot(instance: Root, options: StyleframeOptions) {
 		const exportedSelectors = collectExportedSelectors(instance.children);
-		const hasRecipes = instance.recipes.length > 0;
+
+		const usedRecipes = instance._usage?.recipes;
+		const recipesToEmit =
+			usedRecipes && usedRecipes.size > 0
+				? instance.recipes.filter((r) => usedRecipes.has(r.name))
+				: instance.recipes;
+
+		const hasRecipes = recipesToEmit.length > 0;
 		const hasSelectors = exportedSelectors.length > 0;
 
 		const parts: string[] = [
@@ -37,7 +44,7 @@ export function createRootConsumer(consume: ConsumeFunction) {
 		// Add recipe exports
 		if (hasRecipes) {
 			parts.push("");
-			const recipeDeclarations = instance.recipes
+			const recipeDeclarations = recipesToEmit
 				.map((recipe) => consume(recipe, options))
 				.filter(Boolean);
 			parts.push(...recipeDeclarations);

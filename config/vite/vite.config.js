@@ -9,7 +9,10 @@ import { configDefaults as vitestConfig } from "vitest/config";
 export const createViteConfig = (name, cwd, options = {}) =>
 	defineConfig({
 		...options,
-		plugins: [dts({ bundleTypes: true }), ...(options.plugins ?? [])],
+		plugins: [
+			dts({ entryRoot: resolve(cwd, "src") }),
+			...(options.plugins ?? []),
+		],
 		build: {
 			...options.build,
 			lib: {

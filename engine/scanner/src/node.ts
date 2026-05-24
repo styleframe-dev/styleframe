@@ -9,6 +9,12 @@ import type {
 	ScanResult,
 	UtilityMatch,
 } from "./types";
+import type { ImportScanResult } from "./imports";
+import {
+	scanFileImports as scanFileImportsFn,
+	createEmptyImportScanResult,
+	mergeImportScanResults,
+} from "./imports";
 import { createCache, hashContent } from "./cache";
 import { DEFAULT_IGNORE_PATTERNS } from "./constants";
 import { extractClasses } from "./extractor";
@@ -188,11 +194,32 @@ export function createScanner(config: ScannerConfig): Scanner {
 		}
 	}
 
+	async function scanImports(moduleId: string): Promise<ImportScanResult> {
+		const filePaths = await getFilePaths();
+		const result = createEmptyImportScanResult();
+
+		for (const filePath of filePaths) {
+			const fileResult = scanFileImportsFn(filePath, moduleId);
+			mergeImportScanResults(result, fileResult);
+		}
+
+		return result;
+	}
+
+	function scanFileImportsMethod(
+		filePath: string,
+		moduleId: string,
+	): ImportScanResult {
+		return scanFileImportsFn(filePath, moduleId);
+	}
+
 	return {
 		scan,
 		scanFile,
 		scanContent,
 		match,
+		scanImports,
+		scanFileImports: scanFileImportsMethod,
 		watch,
 		invalidate,
 	};

@@ -20,6 +20,7 @@ export default createViteConfig("index", __dirname, {
 				"@styleframe/core",
 				"@styleframe/license",
 				"fast-glob",
+				"importree",
 			],
 		},
 	},

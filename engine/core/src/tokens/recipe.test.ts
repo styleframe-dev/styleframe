@@ -2,7 +2,11 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { Root } from "../types";
 import { hashValue } from "../utils/hash";
 import { createModifierFunction } from "./modifier";
-import { createRecipeFunction, processRecipeUtilities } from "./recipe";
+import {
+	createRecipeFunction,
+	processRecipeUtilities,
+	registerRecipeUtilities,
+} from "./recipe";
 import { createRoot } from "./root";
 import { createUtilityFunction } from "./utility";
 
@@ -1740,5 +1744,120 @@ describe("generateRecipeRuntime", () => {
 				className: "button--disabled",
 			},
 		]);
+	});
+
+	test("should populate _usage.recipeUtilities instead of _usage.utilities", () => {
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		recipe({
+			name: "button",
+			base: { padding: "1rem" },
+			variants: {},
+		});
+
+		expect(root._usage.utilities.size).toBe(0);
+		expect(root._usage.recipeUtilities.has("button")).toBe(true);
+		expect(root._usage.recipeUtilities.get("button")).toEqual(
+			new Set(["_padding:[1rem]"]),
+		);
+	});
+
+	test("should track multiple recipes independently in recipeUtilities", () => {
+		utility("padding", ({ value }) => ({ padding: value }));
+		utility("background", ({ value }) => ({ background: value }));
+
+		recipe({
+			name: "button",
+			base: { padding: "1rem" },
+			variants: {},
+		});
+
+		recipe({
+			name: "badge",
+			base: { background: "blue" },
+			variants: {},
+		});
+
+		expect(root._usage.recipeUtilities.size).toBe(2);
+		expect(root._usage.recipeUtilities.get("button")).toEqual(
+			new Set(["_padding:[1rem]"]),
+		);
+		expect(root._usage.recipeUtilities.get("badge")).toEqual(
+			new Set(["_background:[blue]"]),
+		);
+	});
+});
+
+describe("registerRecipeUtilities", () => {
+	let root: Root;
+	let recipe: ReturnType<typeof createRecipeFunction>;
+	let utility: ReturnType<typeof createUtilityFunction>;
+
+	beforeEach(() => {
+		root = createRoot();
+		recipe = createRecipeFunction(root, root);
+		utility = createUtilityFunction(root, root);
+	});
+
+	test("should promote all recipe utilities when called without names", () => {
+		utility("padding", ({ value }) => ({ padding: value }));
+		utility("background", ({ value }) => ({ background: value }));
+
+		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
+		recipe({ name: "badge", base: { background: "blue" }, variants: {} });
+
+		registerRecipeUtilities(root);
+
+		expect(root._usage.utilities).toEqual(
+			new Set(["_padding:[1rem]", "_background:[blue]"]),
+		);
+	});
+
+	test("should promote only named recipes when called with a set", () => {
+		utility("padding", ({ value }) => ({ padding: value }));
+		utility("background", ({ value }) => ({ background: value }));
+
+		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
+		recipe({ name: "badge", base: { background: "blue" }, variants: {} });
+
+		registerRecipeUtilities(root, new Set(["button"]));
+
+		expect(root._usage.utilities).toEqual(new Set(["_padding:[1rem]"]));
+	});
+
+	test("should preserve shared utilities when only one recipe is promoted", () => {
+		utility("background", ({ value }) => ({ background: value }));
+
+		root.variables.push({
+			type: "variable",
+			id: "v1",
+			name: "color.primary",
+			value: "#006cff",
+		});
+
+		recipe({
+			name: "button",
+			base: { background: "@color.primary" },
+			variants: {},
+		});
+		recipe({
+			name: "badge",
+			base: { background: "@color.primary" },
+			variants: {},
+		});
+
+		registerRecipeUtilities(root, new Set(["button"]));
+
+		expect(root._usage.utilities.has("_background:color.primary")).toBe(true);
+	});
+
+	test("should not promote anything when called with empty set", () => {
+		utility("padding", ({ value }) => ({ padding: value }));
+
+		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
+
+		registerRecipeUtilities(root, new Set());
+
+		expect(root._usage.utilities.size).toBe(0);
 	});
 });

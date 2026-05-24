@@ -2,12 +2,12 @@
 	"name": "@styleframe/theme",
 	"version": "3.7.0",
 	"type": "module",
-	"types": "./dist/theme.d.ts",
+	"types": "./dist/index.d.ts",
 	"module": "./dist/theme.js",
 	"main": "./dist/theme.umd.cjs",
 	"exports": {
 		".": {
-			"types": "./dist/theme.d.ts",
+			"types": "./dist/index.d.ts",
 			"import": "./dist/theme.js",
 			"require": "./dist/theme.umd.cjs"
 		}

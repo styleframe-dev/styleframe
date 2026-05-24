@@ -28,6 +28,8 @@ describe("createRoot", () => {
 				_usage: {
 					variables: expect.any(Set),
 					utilities: expect.any(Set),
+					recipes: expect.any(Set),
+					recipeUtilities: expect.any(Map),
 				},
 				declarations: {},
 				utilities: [],

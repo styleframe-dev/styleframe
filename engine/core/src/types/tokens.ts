@@ -219,5 +219,7 @@ export type Root = {
 	_usage: {
 		variables: Set<string>;
 		utilities: Set<string>;
+		recipes: Set<string>;
+		recipeUtilities: Map<string, Set<string>>;
 	};
 };

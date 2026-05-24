@@ -95,4 +95,31 @@ createCustomSpacing(["@sm", "@md", "@1.5", "auto"]);
 // ── Recipe test ─────────────────────────────────────────────────────────────
 export const badge = useBadgeRecipe(s);
 
+// ── Tree-shaking test: unused recipes with unique marker values ─────────────
+const { recipe } = s;
+
+recipe({
+	name: "alert",
+	base: { padding: "42px", borderWidth: "5px" },
+	variants: {
+		severity: {
+			info: { marginTop: "777px" },
+			warning: { marginBottom: "888px" },
+		},
+	},
+});
+
+recipe({
+	name: "tooltip",
+	base: { padding: "99px" },
+	variants: {
+		position: {
+			top: { borderWidth: "7px" },
+		},
+	},
+});
+
+// Tree-shaking test: unused variable (never referenced by any selector or used recipe)
+s.variable("unused.treeshake-marker", "999px");
+
 export default s;
