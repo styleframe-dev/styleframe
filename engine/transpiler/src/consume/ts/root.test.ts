@@ -509,6 +509,28 @@ export const simple = createRecipe("simple", simpleRecipe);
 		);
 	});
 
+	it("should emit only recipes in _usage.recipes when set is non-empty", () => {
+		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
+		recipe({ name: "card", base: { margin: "1rem" }, variants: {} });
+
+		root._usage.recipes.add("button");
+
+		const result = consumeRoot(root, options);
+
+		expect(result).toContain("export const button");
+		expect(result).not.toContain("export const card");
+	});
+
+	it("should emit all recipes when _usage.recipes is empty", () => {
+		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
+		recipe({ name: "card", base: { margin: "1rem" }, variants: {} });
+
+		const result = consumeRoot(root, options);
+
+		expect(result).toContain("export const button");
+		expect(result).toContain("export const card");
+	});
+
 	it("should handle recipe names with different casing", () => {
 		recipe({
 			name: "PascalCase",

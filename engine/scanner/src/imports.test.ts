@@ -184,7 +184,7 @@ describe("mergeImportScanResults", () => {
 		expect(a.specifiers).toEqual(new Set(["button", "badge"]));
 	});
 
-	it("ORs namespace and dynamic flags", () => {
+	it("ORs hasNamespace flag", () => {
 		const a = createEmptyImportScanResult();
 		const b = createEmptyImportScanResult();
 		b.hasNamespace = true;
@@ -193,5 +193,16 @@ describe("mergeImportScanResults", () => {
 
 		expect(a.hasNamespace).toBe(true);
 		expect(a.hasDynamic).toBe(false);
+	});
+
+	it("ORs hasDynamic flag", () => {
+		const a = createEmptyImportScanResult();
+		const b = createEmptyImportScanResult();
+		b.hasDynamic = true;
+
+		mergeImportScanResults(a, b);
+
+		expect(a.hasDynamic).toBe(true);
+		expect(a.hasNamespace).toBe(false);
 	});
 });
