@@ -6,7 +6,12 @@ export default defineConfig({
 	plugins: [
 		vue(),
 		styleframe({
-			content: ["./src/**/*.{vue,ts,tsx}", "./index.html"],
+			scanner: {
+				content: ["./src/**/*.{vue,ts,tsx}", "./index.html"],
+			},
+			recipes: {
+				include: ["tooltip"],
+			},
 		}),
 	],
 });

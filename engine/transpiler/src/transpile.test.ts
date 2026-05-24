@@ -1,4 +1,5 @@
 import type { Styleframe, StyleframeOptions } from "@styleframe/core";
+import { registerRecipeUtilities } from "@styleframe/core";
 import {
 	createAtRuleFunction,
 	createCssFunction,
@@ -1198,6 +1199,8 @@ body {
 					},
 				},
 			});
+
+			registerRecipeUtilities(instance.root);
 
 			const output = await transpile(instance, {
 				treeshake: true,

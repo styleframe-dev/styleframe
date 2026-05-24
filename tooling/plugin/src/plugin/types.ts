@@ -35,6 +35,13 @@ export interface Options {
 		/** Custom utility class syntax configuration */
 		utilities?: ScannerUtilitiesConfig;
 	};
+	/** Recipe tree-shaking options */
+	recipes?: {
+		/** Enable recipe-level tree-shaking (default: true for build, false for dev) */
+		treeshake?: boolean;
+		/** Recipe names to always include, even if not detected as imported */
+		include?: string[];
+	};
 	/** Shorten utility class names in production builds (default: true when building) */
 	minify?:
 		| boolean

@@ -9,3 +9,4 @@ export * from "./cache";
 export * from "./watcher";
 export * from "./constants";
 export * from "./types";
+export type { ImportScanResult } from "./imports";

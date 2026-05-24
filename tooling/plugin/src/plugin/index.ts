@@ -47,6 +47,7 @@ import {
 	isTrackedDependency,
 } from "./dependency-graph";
 import { transformSourceClassNames } from "./transform";
+import { registerRecipeUtilities } from "@styleframe/core";
 
 // Matches the source file: ./button.styleframe.ts
 const STYLEFRAME_SOURCE_REGEX = /\.styleframe\.ts$/;
@@ -115,7 +116,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 	};
 
 	// Reload all styleframe files with selective cache invalidation,
-	// re-scan content, and rebuild the dependency graph.
+	// re-scan content, rebuild the dependency graph, and re-register recipe utilities.
 	const reloadAndRescan = async (
 		files: string[],
 		filesToInvalidate?: string[],
@@ -131,6 +132,10 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 			await scanAndRegister(state, scannerState, {
 				silent: options.silent,
 			});
+		}
+
+		if (state.globalInstance) {
+			registerRecipeUtilities(state.globalInstance.root);
 		}
 
 		// Rebuild dependency graph after reload to capture any changed imports
@@ -234,6 +239,75 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					await scanAndRegister(state, scannerState, {
 						silent: options.silent,
 					});
+				}
+
+				// 7.5. Recipe import scanning and utility promotion
+				if (state.globalInstance) {
+					const shouldTreeshake = options.recipes?.treeshake ?? isBuildCommand;
+
+					if (shouldTreeshake && scannerState) {
+						const importResult =
+							await scannerState.scanner.scanImports("virtual:styleframe");
+
+						const root = state.globalInstance.root;
+						const recipeNames = new Set(root._usage.recipeUtilities.keys());
+
+						if (importResult.hasNamespace || importResult.hasDynamic) {
+							if (!options.silent) {
+								consola.warn(
+									`[styleframe] Namespace or dynamic import of virtual:styleframe detected. Including all recipes.`,
+								);
+							}
+							registerRecipeUtilities(root);
+						} else if (
+							importResult.specifiers.size === 0 &&
+							recipeNames.size > 0
+						) {
+							if (!options.silent) {
+								consola.warn(
+									`[styleframe] No recipe imports detected but ${recipeNames.size} recipe(s) registered. Including all recipes. Check scanner.content patterns.`,
+								);
+							}
+							registerRecipeUtilities(root);
+						} else {
+							const usedNames = new Set<string>();
+
+							for (const recipe of root.recipes) {
+								const exportName = recipe._exportName ?? recipe.name;
+								if (importResult.specifiers.has(exportName)) {
+									usedNames.add(recipe.name);
+								}
+							}
+
+							if (options.recipes?.include) {
+								for (const name of options.recipes.include) {
+									usedNames.add(name);
+								}
+							}
+
+							for (const name of usedNames) {
+								root._usage.recipes.add(name);
+							}
+
+							registerRecipeUtilities(root, usedNames);
+
+							if (!options.silent) {
+								const allNames = [...recipeNames];
+								const kept = allNames.filter((n) => usedNames.has(n));
+								const dropped = allNames.filter((n) => !usedNames.has(n));
+								if (dropped.length > 0) {
+									consola.info(
+										`[styleframe] Recipe tree-shaking: kept ${kept.length} of ${allNames.length} recipes (${kept.join(", ")})`,
+									);
+									consola.info(
+										`[styleframe] Recipe tree-shaking: dropped ${dropped.length} recipes (${dropped.join(", ")})`,
+									);
+								}
+							}
+						}
+					} else {
+						registerRecipeUtilities(state.globalInstance.root);
+					}
 				}
 
 				// 8. Add watch files (entry points + all tracked dependencies)
@@ -488,14 +562,53 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 							ctx.file,
 						);
 
-						if (hasNewValues) {
+						// Check for recipe import changes
+						let recipeImportsChanged = false;
+						const shouldTreeshake =
+							options.recipes?.treeshake ?? isBuildCommand;
+						if (shouldTreeshake && state.globalInstance) {
+							const fileImports = scannerState!.scanner.scanFileImports(
+								ctx.file,
+								"virtual:styleframe",
+							);
+							const root = state.globalInstance.root;
+							for (const recipe of root.recipes) {
+								const exportName = recipe._exportName ?? recipe.name;
+								if (
+									fileImports.specifiers.has(exportName) &&
+									!root._usage.recipes.has(recipe.name)
+								) {
+									root._usage.recipes.add(recipe.name);
+									registerRecipeUtilities(root, new Set([recipe.name]));
+									recipeImportsChanged = true;
+								}
+							}
+						}
+
+						if (hasNewValues || recipeImportsChanged) {
+							const modulesToInvalidate = [
+								...ctx.modules,
+							] as typeof ctx.modules;
 							const cssModule = await resolveModule(
 								RESOLVED_VIRTUAL_CSS_MODULE_ID,
 							);
+							if (cssModule)
+								modulesToInvalidate.push(
+									cssModule as (typeof ctx.modules)[number],
+								);
 
-							if (cssModule) {
-								return [cssModule, ...ctx.modules];
+							if (recipeImportsChanged) {
+								const consumerModule = await resolveModule(
+									RESOLVED_VIRTUAL_CONSUMER_ID,
+								);
+								if (consumerModule)
+									modulesToInvalidate.push(
+										consumerModule as (typeof ctx.modules)[number],
+									);
+								scheduleTypeGeneration();
 							}
+
+							return modulesToInvalidate;
 						}
 					} catch (error) {
 						consola.error(

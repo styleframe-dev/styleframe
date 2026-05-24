@@ -147,6 +147,13 @@ export interface Scanner {
 	scanContent(content: string, filePath?: string): ParsedUtility[];
 	/** Match parsed utilities against a root instance */
 	match(parsed: ParsedUtility[], root: Root): UtilityMatch[];
+	/** Scan all content files for imports of a specific module */
+	scanImports(moduleId: string): Promise<import("./imports").ImportScanResult>;
+	/** Scan a single file for imports of a specific module */
+	scanFileImports(
+		filePath: string,
+		moduleId: string,
+	): import("./imports").ImportScanResult;
 	/** Start watching content files for changes */
 	watch(callback: (result: ScanResult) => void): () => void;
 	/** Invalidate cache for a file or all files */

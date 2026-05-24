@@ -10,6 +10,7 @@ import UtilitiesAutogeneratePage from "./pages/UtilitiesAutogeneratePage.vue";
 import LayoutFlexboxPage from "./pages/LayoutFlexboxPage.vue";
 import BordersEffectsPage from "./pages/BordersEffectsPage.vue";
 import KeyframesPage from "./pages/KeyframesPage.vue";
+import TreeShakingPage from "./pages/TreeShakingPage.vue";
 
 export const router = createRouter({
 	history: createWebHashHistory(),
@@ -25,5 +26,6 @@ export const router = createRouter({
 		{ path: "/layout-flexbox", component: LayoutFlexboxPage },
 		{ path: "/borders-effects", component: BordersEffectsPage },
 		{ path: "/keyframes", component: KeyframesPage },
+		{ path: "/tree-shaking", component: TreeShakingPage },
 	],
 });

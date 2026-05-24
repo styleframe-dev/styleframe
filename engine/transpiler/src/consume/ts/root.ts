@@ -25,7 +25,14 @@ export function createRootConsumer(consume: ConsumeFunction) {
 		context?: TranspileContext,
 	) {
 		const exportedSelectors = collectExportedSelectors(instance.children);
-		const hasRecipes = instance.recipes.length > 0;
+
+		const usedRecipes = instance._usage?.recipes;
+		const recipesToEmit =
+			usedRecipes && usedRecipes.size > 0
+				? instance.recipes.filter((r) => usedRecipes.has(r.name))
+				: instance.recipes;
+
+		const hasRecipes = recipesToEmit.length > 0;
 		const hasSelectors = exportedSelectors.length > 0;
 
 		if (!hasRecipes && !hasSelectors) {
@@ -54,7 +61,7 @@ export function createRootConsumer(consume: ConsumeFunction) {
 				);
 			}
 
-			parts.push(consume(instance.recipes, options, context));
+			parts.push(consume(recipesToEmit, options, context));
 		}
 
 		if (hasSelectors) {
