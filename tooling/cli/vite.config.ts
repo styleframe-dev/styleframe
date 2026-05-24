@@ -50,7 +50,7 @@ export default createViteConfig("cli", __dirname, {
 			fileName: "index",
 			formats: ["es", "cjs"],
 		},
-		rollupOptions: {
+		rolldownOptions: {
 			external: [
 				"node:fs",
 				"node:fs/promises",

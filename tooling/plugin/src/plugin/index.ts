@@ -1,6 +1,6 @@
 import path from "node:path";
 import { consola } from "consola";
-import { transform as esbuildTransform } from "esbuild";
+import { transformWithOxc } from "vite";
 import type { Jiti } from "jiti";
 import type { UnpluginFactory } from "unplugin";
 import { createUnplugin } from "unplugin";
@@ -402,14 +402,12 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
 					id === RESOLVED_VIRTUAL_CONSUMER_ID;
 
 				if (isVirtualTsModule) {
-					const result = await esbuildTransform(code, {
-						loader: "ts",
-						format: "esm",
-						target: "esnext",
+					const result = await transformWithOxc(code, id, {
+						lang: "ts",
 					});
 					return {
 						code: result.code,
-						map: result.map || null,
+						map: result.map ?? null,
 					};
 				}
 

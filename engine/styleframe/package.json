@@ -112,7 +112,7 @@
 		"bumpp": "^10.1.0",
 		"tsdown": "^0.11.9",
 		"typescript": "^5.8.3",
-		"vitest": "^3.1.3"
+		"vitest": "catalog:"
 	},
 	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
 	"bugs": {
@@ -122,8 +122,5 @@
 		"type": "git",
 		"url": "git+https://github.com/styleframe-dev/styleframe.git"
 	},
-	"author": "Alex Grozav <alex@styleframe.dev>",
-	"overrides": {
-		"vite": "npm:rolldown-vite@latest"
-	}
+	"author": "Alex Grozav <alex@styleframe.dev>"
 }

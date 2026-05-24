@@ -43,7 +43,7 @@ if (page.value?.seo?.ogImage) {
 		twitterImage: page.value.seo.ogImage,
 	});
 } else {
-	defineOgImageComponent("Docs", {
+	defineOgImage("Docs", {
 		headline: "styleframe",
 		title,
 		description,

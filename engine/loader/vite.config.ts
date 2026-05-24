@@ -8,7 +8,7 @@ export default createViteConfig("loader", __dirname, {
 			fileName: "index",
 			formats: ["es", "cjs"],
 		},
-		rollupOptions: {
+		rolldownOptions: {
 			external: [
 				"node:fs",
 				"node:fs/promises",
