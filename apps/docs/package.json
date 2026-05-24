@@ -26,6 +26,7 @@
 		"nuxt": "catalog:nuxt",
 		"nuxt-llms": "catalog:nuxt",
 		"nuxt-og-image": "catalog:nuxt",
+		"satori": "^0.26.0",
 		"posthog-js": "catalog:nuxt",
 		"scule": "1.3.0",
 		"ufo": "1.6.1",
