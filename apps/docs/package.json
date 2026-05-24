@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@nuxt/content": "catalog:nuxt",
+		"@nuxt/fonts": "catalog:nuxt",
 		"@nuxt/image": "catalog:nuxt",
 		"@nuxt/scripts": "catalog:nuxt",
 		"@nuxt/ui": "catalog:nuxt",
