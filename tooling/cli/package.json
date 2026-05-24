@@ -61,8 +61,5 @@
 		"type": "git",
 		"url": "git+https://github.com/styleframe-dev/styleframe.git"
 	},
-	"author": "Alex Grozav <alex@styleframe.dev>",
-	"overrides": {
-		"vite": "npm:rolldown-vite@latest"
-	}
+	"author": "Alex Grozav <alex@styleframe.dev>"
 }

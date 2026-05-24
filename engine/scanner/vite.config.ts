@@ -14,7 +14,7 @@ export default createViteConfig("index", __dirname, {
 			fileName: (format: string, entryName: string) =>
 				`${entryName}.${format === "es" ? "js" : "cjs"}`,
 		},
-		rollupOptions: {
+		rolldownOptions: {
 			external: [
 				"node:fs/promises",
 				"@styleframe/core",

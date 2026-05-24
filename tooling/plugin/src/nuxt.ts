@@ -12,8 +12,11 @@ export default defineNuxtModule<ModuleOptions>({
 		configKey: "unpluginStarter",
 	},
 	defaults: {},
-	setup(options, _nuxt) {
-		addVitePlugin(vite(options));
-		addWebpackPlugin(webpack(options));
+	setup(options, nuxt) {
+		if (nuxt.options.builder === "@nuxt/webpack-builder") {
+			addWebpackPlugin(webpack(options));
+		} else {
+			addVitePlugin(vite(options));
+		}
 	},
 }) satisfies NuxtModule<ModuleOptions>;
