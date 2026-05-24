@@ -47,6 +47,22 @@ describe("createRootConsumer (dts)", () => {
 		expect(result).not.toContain("export const card");
 	});
 
+	it("should emit exported selectors", () => {
+		root.children.push({
+			type: "selector",
+			id: "sel-1",
+			query: ".my-component",
+			declarations: {},
+			variables: [],
+			children: [],
+			_exportName: "myComponent",
+		});
+
+		const result = consumeRoot(root, options);
+
+		expect(result).toContain("myComponent");
+	});
+
 	it("should return module declaration with no recipe exports when all recipes are filtered", () => {
 		recipe({ name: "button", base: {}, variants: { size: { sm: {} } } });
 

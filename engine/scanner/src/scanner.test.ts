@@ -13,11 +13,17 @@ vi.mock("node:fs/promises", () => ({
 	readFile: vi.fn(),
 }));
 
+vi.mock("importree", () => ({
+	parseImports: vi.fn(),
+}));
+
 import fg from "fast-glob";
 import { readFile } from "node:fs/promises";
+import { parseImports } from "importree";
 
 const mockFg = fg as unknown as ReturnType<typeof vi.fn>;
 const mockReadFile = readFile as unknown as ReturnType<typeof vi.fn>;
+const mockParseImports = parseImports as unknown as ReturnType<typeof vi.fn>;
 
 describe("createScanner", () => {
 	beforeEach(() => {
@@ -153,6 +159,105 @@ describe("createScanner", () => {
 
 			expect(result.length).toBe(1);
 			expect(result[0]!.name).toBe("margin");
+		});
+	});
+
+	describe("scanImports", () => {
+		it("should aggregate import specifiers across all content files", async () => {
+			mockFg.mockResolvedValue([
+				"/project/src/App.tsx",
+				"/project/src/Page.tsx",
+			]);
+			mockParseImports
+				.mockReturnValueOnce([
+					{ path: "virtual:styleframe", specifiers: ["button"] },
+				])
+				.mockReturnValueOnce([
+					{ path: "virtual:styleframe", specifiers: ["badge", "card"] },
+				]);
+
+			const scanner = createScanner({
+				content: ["./src/**/*.tsx"],
+				cwd: "/project",
+			});
+
+			const result = await scanner.scanImports("virtual:styleframe");
+
+			expect(result.specifiers).toEqual(new Set(["button", "badge", "card"]));
+			expect(result.hasNamespace).toBe(false);
+			expect(result.hasDynamic).toBe(false);
+		});
+
+		it("should detect namespace imports across files", async () => {
+			mockFg.mockResolvedValue(["/project/src/App.tsx"]);
+			mockParseImports.mockReturnValueOnce([
+				{ path: "virtual:styleframe", isNamespace: true },
+			]);
+
+			const scanner = createScanner({
+				content: ["./src/**/*.tsx"],
+				cwd: "/project",
+			});
+
+			const result = await scanner.scanImports("virtual:styleframe");
+
+			expect(result.hasNamespace).toBe(true);
+		});
+
+		it("should return empty result when no files match the module", async () => {
+			mockFg.mockResolvedValue(["/project/src/App.tsx"]);
+			mockParseImports.mockReturnValueOnce([
+				{ path: "other-module", specifiers: ["foo"] },
+			]);
+
+			const scanner = createScanner({
+				content: ["./src/**/*.tsx"],
+				cwd: "/project",
+			});
+
+			const result = await scanner.scanImports("virtual:styleframe");
+
+			expect(result.specifiers.size).toBe(0);
+		});
+	});
+
+	describe("scanFileImports", () => {
+		it("should scan a single file for imports of a specific module", () => {
+			mockParseImports.mockReturnValueOnce([
+				{ path: "virtual:styleframe", specifiers: ["button", "badge"] },
+			]);
+
+			const scanner = createScanner({
+				content: ["./src/**/*.tsx"],
+				cwd: "/project",
+			});
+
+			const result = scanner.scanFileImports(
+				"/project/src/App.tsx",
+				"virtual:styleframe",
+			);
+
+			expect(result.specifiers).toEqual(new Set(["button", "badge"]));
+		});
+
+		it("should return empty result when file cannot be parsed", () => {
+			mockParseImports.mockImplementationOnce(() => {
+				throw new Error("parse error");
+			});
+
+			const scanner = createScanner({
+				content: ["./src/**/*.tsx"],
+				cwd: "/project",
+			});
+
+			const result = scanner.scanFileImports(
+				"/project/src/broken.tsx",
+				"virtual:styleframe",
+			);
+
+			expect(result.specifiers.size).toBe(0);
+			expect(result.hasNamespace).toBe(false);
+			expect(result.hasDynamic).toBe(false);
 		});
 	});
 

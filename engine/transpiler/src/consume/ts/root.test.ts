@@ -4,6 +4,7 @@ import {
 	createRoot,
 	createUtilityFunction,
 } from "@styleframe/core";
+import type { TranspileContext } from "../../types";
 import { consume } from "./consume";
 import { createRootConsumer } from "./root";
 
@@ -519,6 +520,37 @@ export const simple = createRecipe("simple", simpleRecipe);
 
 		expect(result).toContain("export const button");
 		expect(result).not.toContain("export const card");
+	});
+
+	it("should include shortMap imports and constant when context has shortMap", () => {
+		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
+
+		const context: TranspileContext = {
+			shortMap: { "_padding:[1rem]": "a" },
+		};
+
+		const result = consumeRoot(root, options, context);
+
+		expect(result).toContain("ShorteningMap");
+		expect(result).toContain("__shortMap");
+		expect(result).toContain('"_padding:[1rem]"');
+	});
+
+	it("should emit exported selectors", () => {
+		root.children.push({
+			type: "selector",
+			id: "sel-1",
+			query: ".my-component",
+			declarations: {},
+			variables: [],
+			children: [],
+			_exportName: "myComponent",
+		});
+
+		const result = consumeRoot(root, options);
+
+		expect(result).toContain("myComponent");
+		expect(result).toContain(".my-component");
 	});
 
 	it("should emit all recipes when _usage.recipes is empty", () => {
