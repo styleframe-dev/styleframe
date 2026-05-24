@@ -98,7 +98,7 @@ watch(
 	},
 );
 
-defineOgImageComponent("Docs", {
+defineOgImage("Docs", {
 	headline: headline.value,
 });
 
