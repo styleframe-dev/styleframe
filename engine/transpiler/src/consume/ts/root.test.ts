@@ -526,14 +526,14 @@ export const simple = createRecipe("simple", simpleRecipe);
 		recipe({ name: "button", base: { padding: "1rem" }, variants: {} });
 
 		const context: TranspileContext = {
-			shortMap: { "_padding:[1rem]": "a" },
+			shortMap: { p: { padding: "a" }, v: { "[1rem]": "b" }, m: {} },
 		};
 
 		const result = consumeRoot(root, options, context);
 
 		expect(result).toContain("ShorteningMap");
 		expect(result).toContain("__shortMap");
-		expect(result).toContain('"_padding:[1rem]"');
+		expect(result).toContain('"padding":"a"');
 	});
 
 	it("should emit exported selectors", () => {
