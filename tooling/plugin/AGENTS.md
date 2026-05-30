@@ -168,7 +168,7 @@ Styleframe({
 // nuxt.config.ts
 export default defineNuxtConfig({
   modules: ['@styleframe/plugin/nuxt'],
-  unpluginStarter: {
+  styleframe: {
     // Options passed to the plugin
   },
 });

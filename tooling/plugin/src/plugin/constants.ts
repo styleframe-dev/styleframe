@@ -8,6 +8,9 @@ export const DEFAULT_OPTIONS: Options = {
 };
 
 export const PLUGIN_NAME = "styleframe";
+
+/** Default directory for generated type declarations and tsconfig. */
+export const DEFAULT_DTS_OUT_DIR = ".styleframe";
 export const IMPORT_V_PREFIX = "virtual:"; // Vite "virtual" module id prefix
 export const ROLLUP_V_PREFIX = "\0"; // Rollup "virtual" id prefix
 

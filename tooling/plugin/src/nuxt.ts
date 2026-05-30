@@ -1,6 +1,9 @@
+import path from "node:path";
 import type { NuxtModule } from "@nuxt/schema";
 import { addVitePlugin, addWebpackPlugin, defineNuxtModule } from "@nuxt/kit";
+import { DTS_TYPES_FILENAME } from "@styleframe/transpiler";
 import type { Options } from "./plugin";
+import { DEFAULT_DTS_OUT_DIR, VIRTUAL_TS_MODULE_ID } from "./plugin/constants";
 import vite from "./vite";
 import webpack from "./webpack";
 
@@ -8,8 +11,8 @@ export interface ModuleOptions extends Options {}
 
 export default defineNuxtModule<ModuleOptions>({
 	meta: {
-		name: "nuxt-unplugin-starter",
-		configKey: "unpluginStarter",
+		name: "styleframe",
+		configKey: "styleframe",
 	},
 	defaults: {},
 	setup(options, nuxt) {
@@ -18,5 +21,26 @@ export default defineNuxtModule<ModuleOptions>({
 		} else {
 			addVitePlugin(vite(options));
 		}
+
+		// Nuxt manages its own (multi-file) tsconfig, so consumers can't simply
+		// `extends` the generated `.styleframe/tsconfig.json` without clobbering
+		// Nuxt's `paths`. Instead, register the `virtual:styleframe` mapping
+		// directly into Nuxt's generated types so it merges with Nuxt's aliases.
+		if (options.dts?.enabled === false) {
+			return;
+		}
+
+		const outDir = options.dts?.outDir ?? DEFAULT_DTS_OUT_DIR;
+		const typesPath = path.resolve(
+			nuxt.options.rootDir,
+			outDir,
+			DTS_TYPES_FILENAME,
+		);
+
+		nuxt.hook("prepare:types", ({ tsConfig }) => {
+			tsConfig.compilerOptions ??= {};
+			tsConfig.compilerOptions.paths ??= {};
+			tsConfig.compilerOptions.paths[VIRTUAL_TS_MODULE_ID] = [typesPath];
+		});
 	},
 }) satisfies NuxtModule<ModuleOptions>;

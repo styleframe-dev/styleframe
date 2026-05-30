@@ -40,7 +40,7 @@ The transpiler uses a **consumer pattern** with three independent pipelines:
 |----------|-------------|---------|
 | **CSS** | `index.css` | Full stylesheet with variables, selectors, utilities, themes, at-rules |
 | **TS** | `index.ts` | Runtime recipe functions and exported selector constants |
-| **DTS** | `index.d.ts` | Type declarations for virtual modules (`virtual:styleframe`) |
+| **DTS** | `styleframe.d.ts`, `shims.d.ts`, `tsconfig.json` | Type declarations + wiring for the virtual modules (`virtual:styleframe`, `virtual:styleframe.css`) |
 
 ### Consumer Pipeline Flow
 
@@ -75,14 +75,24 @@ Styleframe root
 
 ### DTS Generation Flow
 
+The `dts` mode emits three concern-separated files:
+
 ```
-Styleframe root
-  → Root consumer (module declarations)
-    → declare module "virtual:styleframe" { ... }
-    → Recipe function types with variant props
-    → Selector string types
-    → declare module "virtual:styleframe.css" { ... }
+styleframe.d.ts  (Root consumer — top-level exports)
+  → export function styleframe(): Styleframe
+  → Recipe function types with variant props
+  → Selector string types
+
+shims.d.ts  (generateShims — ambient shim)
+  → declare module "virtual:styleframe.css" { const css: string; export default css }
+
+tsconfig.json  (generateTsconfig — extension point)
+  → compilerOptions.paths maps "virtual:styleframe" → "./styleframe.d.ts"
+  → include pulls in "./shims.d.ts"
 ```
+
+`virtual:styleframe` is resolved via the tsconfig `paths` mapping (projects extend
+`./.styleframe/tsconfig.json`), not via a `declare module` wrapper.
 
 ## API Reference
 
@@ -94,7 +104,8 @@ Main transpilation function. Converts a `Styleframe` instance into output files.
 import { transpile } from '@styleframe/transpiler';
 
 const output = await transpile(instance);
-// output.files: [{ name: "index.css", content: "..." }, { name: "index.ts", content: "..." }, { name: "index.d.ts", content: "..." }]
+// output.files: [{ name: "index.css", content: "..." }, { name: "index.ts", content: "..." }]
+// transpile(instance, { type: "dts" }) → [{ name: "styleframe.d.ts" }, { name: "shims.d.ts" }, { name: "tsconfig.json" }]
 
 // Generate only CSS
 const cssOnly = await transpile(instance, { type: 'css' });
