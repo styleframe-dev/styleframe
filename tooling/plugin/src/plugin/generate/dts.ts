@@ -33,12 +33,38 @@ export async function generateTypeDeclarations(
 	// Use transpiler's dts mode to generate type declarations
 	const result = await transpile(state.globalInstance, { type: "dts" });
 	const content =
-		result.files.find((f) => f.name === "index.d.ts")?.content ?? "";
+		result.files.find((f) => f.name === "styleframe.d.ts")?.content ?? "";
 
-	const outputPath = path.join(outDir, "styleframe.d.ts");
-	await fs.writeFile(outputPath, content);
+	await Promise.all([
+		fs.writeFile(path.join(outDir, "styleframe.d.ts"), content),
+		fs.writeFile(
+			path.join(outDir, "shims.d.ts"),
+			wrapDtsInDeclareModules(content),
+		),
+	]);
 
 	if (!silent) {
 		consola.success(`[styleframe] Generated type declarations.`);
 	}
+}
+
+function wrapDtsInDeclareModules(content: string): string {
+	const lines = content.split("\n");
+	const indented = lines
+		.slice(1)
+		.map((line) => (line ? `    ${line}` : ""))
+		.join("\n")
+		.trimEnd();
+
+	return [
+		'declare module "virtual:styleframe" {',
+		indented,
+		"}",
+		"",
+		'declare module "virtual:styleframe.css" {',
+		"    const css: string;",
+		"    export default css;",
+		"}",
+		"",
+	].join("\n");
 }

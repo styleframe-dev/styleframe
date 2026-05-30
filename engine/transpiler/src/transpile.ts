@@ -68,11 +68,11 @@ export async function transpile(
 	}
 
 	if (type === "dts") {
-		const indexFile = createFile(
-			"index.d.ts",
+		const styleframeFile = createFile(
+			"styleframe.d.ts",
 			consumers.dts(instance.root, options),
 		);
-		output.files.push(indexFile);
+		output.files.push(styleframeFile);
 	}
 
 	return output;
