@@ -1,5 +1,39 @@
 # @styleframe/cli
 
+## 4.1.0
+
+### Minor Changes
+
+- [#229](https://github.com/styleframe-dev/styleframe/pull/229) [`19e9866`](https://github.com/styleframe-dev/styleframe/commit/19e986618c669546972924840189fc5f16f1a1cd) Thanks [@alexgrozav](https://github.com/alexgrozav)! - **Fix:** Resolve critical token loss bug in Figma plugin export where 121 of 464 variables were dropped due to `setNestedToken` overwriting group subtrees instead of promoting parent tokens to `$root`.
+
+  **Feature:** Add mode selector dropdown to Figma plugin Export tab for filtering variables by specific theme/mode before export.
+
+  **Feature:** Add CLI commands for Figma-compatible DTCG sync: `figma export` and `figma import` enable bidirectional token synchronization between Figma collections and design token files.
+
+  **Improvement:** Embed collection metadata in DTCG output via `$extensions.dev.styleframe.collection` for better round-trip awareness.
+
+  **Improvement:** Restore BOOLEAN variable support by converting to string type with `dev.styleframe.boolean: true` extension metadata.
+
+  **Fix:** Correct UI variable count display to read from `msg.result.tokens` instead of wrapper object, ensuring accurate exported variable count and collection name extraction.
+
+### Patch Changes
+
+- [#231](https://github.com/styleframe-dev/styleframe/pull/231) [`c0cfbdc`](https://github.com/styleframe-dev/styleframe/commit/c0cfbdc65ddca0b5ea4a420902be2a23580b392f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Update `styleframe init` to install v3.x dependencies instead of v2.x. Remove `@styleframe/pro` from scaffolded dependencies.
+
+- [#235](https://github.com/styleframe-dev/styleframe/pull/235) [`6acd766`](https://github.com/styleframe-dev/styleframe/commit/6acd766eefc82139d8cd98dfb9b553449945d704) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Generate DTS output as two files that describe the virtual modules in two complementary forms. The transpiler's `dts` mode now emits:
+  - `styleframe.d.ts` — top-level exports describing the `virtual:styleframe` module
+  - `shims.d.ts` — self-contained ambient declarations: a `declare module "virtual:styleframe"` carrying the full typed exports, plus the `virtual:styleframe.css` string shim
+
+  Non-Vue consumers resolve both virtual modules from `shims.d.ts` alone (picked up via the `.styleframe/**/*.d.ts` include) with **zero `paths` configuration**. Vue consumers additionally map `virtual:styleframe` to `styleframe.d.ts` via a `compilerOptions.paths` entry, because `vue-tsc` won't resolve a bare-specifier ambient module imported inside a `.vue` SFC. `styleframe init` detects plain Vue projects (a `vue` dependency without `nuxt`) and writes that `paths` entry only for them, merging into any existing `paths`; non-Vue projects just get the includes. Nuxt is excluded because its module already injects the mapping via `prepare:types`, and writing `paths` into an `extends`-based Nuxt root tsconfig would replace (not merge) Nuxt's inherited aliases.
+
+  The Nuxt module registers the same `virtual:styleframe` path mapping into Nuxt's generated types via the `prepare:types` hook, so imports type-check without manual tsconfig changes. It also fixes the module's `configKey`/`name`, which were leftover `unpluginStarter` placeholders that caused `styleframe: {}` options in `nuxt.config` to be ignored.
+
+- [#233](https://github.com/styleframe-dev/styleframe/pull/233) [`0ef38e6`](https://github.com/styleframe-dev/styleframe/commit/0ef38e69ca941cefab31463c23980f52cae1541f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Migrate from Vite 7 to Vite 8 with native Rolldown integration. Replace esbuild transforms with Oxc in the plugin, rename `rollupOptions` to `rolldownOptions`, upgrade `vite-plugin-dts` v4 to v5 (`rollupTypes` → `bundleTypes`), and bump vitest from v3 to v4.
+
+- Updated dependencies [[`19e9866`](https://github.com/styleframe-dev/styleframe/commit/19e986618c669546972924840189fc5f16f1a1cd), [`0ef38e6`](https://github.com/styleframe-dev/styleframe/commit/0ef38e69ca941cefab31463c23980f52cae1541f)]:
+  - @styleframe/figma@2.1.0
+  - @styleframe/loader@3.0.2
+
 ## 4.0.0
 
 ### Major Changes

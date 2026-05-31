@@ -1,5 +1,21 @@
 # @styleframe/theme
 
+## 3.7.1
+
+### Patch Changes
+
+- [#222](https://github.com/styleframe-dev/styleframe/pull/222) [`80f84dd`](https://github.com/styleframe-dev/styleframe/commit/80f84dd9c32ec3361c69b30f5a9c725b2e1b8fc2) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix `chat-message` recipe `side="end"` alignment.
+
+  The `side="end"` variant now correctly packs the avatar and content group to the right side of the container. Three issues were resolved:
+  - Root recipe: `justify-content` was `flex-end` which, combined with `flex-direction: row-reverse`, pushed items to the left. Changed to `flex-start`.
+  - Content recipe: added `side` variant with `alignSelf: flex-end` so the bubble right-aligns within its column stack.
+  - Actions recipe: added `side` variant with `justifyContent: flex-end` so action buttons align under the bubble.
+
+- [#233](https://github.com/styleframe-dev/styleframe/pull/233) [`0ef38e6`](https://github.com/styleframe-dev/styleframe/commit/0ef38e69ca941cefab31463c23980f52cae1541f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Migrate from Vite 7 to Vite 8 with native Rolldown integration. Replace esbuild transforms with Oxc in the plugin, rename `rollupOptions` to `rolldownOptions`, upgrade `vite-plugin-dts` v4 to v5 (`rollupTypes` → `bundleTypes`), and bump vitest from v3 to v4.
+
+- Updated dependencies [[`c7ff8c8`](https://github.com/styleframe-dev/styleframe/commit/c7ff8c89776b2e117b0f45f3e1f8ca6695f24a29), [`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412), [`0ef38e6`](https://github.com/styleframe-dev/styleframe/commit/0ef38e69ca941cefab31463c23980f52cae1541f)]:
+  - @styleframe/core@3.6.0
+
 ## 3.7.0
 
 ### Minor Changes
