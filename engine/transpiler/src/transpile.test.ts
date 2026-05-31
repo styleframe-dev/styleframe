@@ -843,7 +843,7 @@ body {
 	});
 
 	describe("dts output", () => {
-		it("should produce styleframe.d.ts, shims.d.ts and tsconfig.json", async () => {
+		it("should produce styleframe.d.ts and shims.d.ts", async () => {
 			recipe({
 				name: "badge",
 				base: {},
@@ -855,7 +855,6 @@ body {
 			expect(output.files.map((f) => f.name)).toEqual([
 				"styleframe.d.ts",
 				"shims.d.ts",
-				"tsconfig.json",
 			]);
 		});
 
@@ -893,20 +892,6 @@ declare module "virtual:styleframe.css" {
 \texport default css;
 }
 `);
-		});
-
-		it("should produce tsconfig.json mapping virtual:styleframe to styleframe.d.ts", async () => {
-			const output = await transpile(instance, { type: "dts" });
-			const tsconfig = output.files.find((f) => f.name === "tsconfig.json");
-
-			expect(JSON.parse(tsconfig!.content)).toEqual({
-				compilerOptions: {
-					paths: {
-						"virtual:styleframe": ["./styleframe.d.ts"],
-					},
-				},
-				include: ["./shims.d.ts"],
-			});
 		});
 	});
 

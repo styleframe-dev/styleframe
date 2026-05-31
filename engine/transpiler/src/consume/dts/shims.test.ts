@@ -12,7 +12,7 @@ declare module "virtual:styleframe.css" {
 `);
 	});
 
-	it("should not declare the typed virtual:styleframe module (resolved via tsconfig paths)", () => {
+	it("should not declare the typed virtual:styleframe module (resolved via consumer tsconfig paths)", () => {
 		expect(generateShims()).not.toContain(
 			'declare module "virtual:styleframe"',
 		);

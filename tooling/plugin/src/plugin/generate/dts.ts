@@ -13,11 +13,14 @@ export interface TypeGeneratorOptions {
 /**
  * Generates type declarations for the styleframe virtual modules.
  *
- * Delegates to the transpiler's `dts` mode, which produces three
+ * Delegates to the transpiler's `dts` mode, which produces two
  * concern-separated files written verbatim to the output directory:
  * - `styleframe.d.ts` — top-level exports for `virtual:styleframe`
  * - `shims.d.ts`      — ambient shim for `virtual:styleframe.css`
- * - `tsconfig.json`   — extension point mapping `virtual:styleframe` to the exports
+ *
+ * Consumers resolve `virtual:styleframe` via a `compilerOptions.paths` mapping
+ * to `styleframe.d.ts` (written by `styleframe init`, or injected by the Nuxt
+ * module's `prepare:types` hook).
  */
 export async function generateTypeDeclarations(
 	state: PluginGlobalState,

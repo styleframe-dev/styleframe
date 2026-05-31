@@ -7,8 +7,8 @@ import { DTS_HEADER, VIRTUAL_CSS_MODULE_ID } from "./constants";
  *
  * Currently this covers `virtual:styleframe.css`, whose default export is the
  * generated stylesheet as a string. The typed `virtual:styleframe` module is
- * resolved via the tsconfig `paths` mapping to `styleframe.d.ts` instead — see
- * {@link generateTsconfig}.
+ * resolved separately, via a consumer-side `compilerOptions.paths` mapping to
+ * `styleframe.d.ts`, not via an ambient shim.
  */
 export function generateShims(): string {
 	const i = DEFAULT_INDENT;

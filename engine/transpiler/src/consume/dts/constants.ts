@@ -1,10 +1,13 @@
 /**
  * Shared constants for the DTS (TypeScript declaration) output pipeline.
  *
- * The DTS pipeline emits three concern-separated files:
+ * The DTS pipeline emits two concern-separated files:
  * - `styleframe.d.ts` — top-level exports (the `virtual:styleframe` module shape)
  * - `shims.d.ts`       — ambient shims for non-typed virtual modules (`virtual:styleframe.css`)
- * - `tsconfig.json`    — an extension point wiring `virtual:styleframe` imports to `styleframe.d.ts`
+ *
+ * Consumers resolve `virtual:styleframe` by mapping it to `styleframe.d.ts` via
+ * a `compilerOptions.paths` entry in their own tsconfig (written by
+ * `styleframe init`, or injected by the Nuxt module).
  */
 
 /** Header prepended to every generated declaration file. */
@@ -16,12 +19,6 @@ export const DTS_TYPES_FILENAME = "styleframe.d.ts";
 
 /** File holding ambient shims for non-typed virtual modules. */
 export const DTS_SHIMS_FILENAME = "shims.d.ts";
-
-/** File holding the tsconfig extension point. */
-export const DTS_TSCONFIG_FILENAME = "tsconfig.json";
-
-/** Specifier for the typed virtual module resolved via tsconfig `paths`. */
-export const VIRTUAL_MODULE_ID = "virtual:styleframe";
 
 /** Specifier for the CSS virtual module resolved via the ambient shim. */
 export const VIRTUAL_CSS_MODULE_ID = "virtual:styleframe.css";

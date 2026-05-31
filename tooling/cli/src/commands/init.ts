@@ -16,7 +16,12 @@ s.variable("color--primary", "blue");
 export default s;
 `;
 
-const styleframeExtends = "./.styleframe/tsconfig.json";
+const VIRTUAL_STYLEFRAME_MODULE = "virtual:styleframe";
+const STYLEFRAME_TYPES_PATH = "./.styleframe/styleframe.d.ts";
+
+const styleframePaths: Record<string, string[]> = {
+	[VIRTUAL_STYLEFRAME_MODULE]: [STYLEFRAME_TYPES_PATH],
+};
 
 const styleframeIncludes = [
 	"styleframe.config.ts",
@@ -25,7 +30,6 @@ const styleframeIncludes = [
 ];
 
 const tsconfigTemplate = {
-	extends: styleframeExtends,
 	compilerOptions: {
 		target: "ES2022",
 		module: "ESNext",
@@ -34,6 +38,7 @@ const tsconfigTemplate = {
 		noEmit: true,
 		skipLibCheck: true,
 		esModuleInterop: true,
+		paths: styleframePaths,
 	},
 	include: styleframeIncludes,
 };
@@ -52,31 +57,24 @@ export async function initializeConfigFile(cwd: string) {
 }
 
 /**
- * Ensures the config extends the generated styleframe tsconfig. Returns true if
- * the extension was added, false if it was already present. Handles `extends`
- * being absent, a single string, or an array of strings.
+ * Merges the `virtual:styleframe` paths entry into `compilerOptions.paths`,
+ * creating `compilerOptions`/`paths` if absent and preserving existing entries.
+ * Returns true if the entry was added, false if it was already mapped (so a
+ * user's own override is never clobbered).
  */
-function addExtends(config: Record<string, unknown>): boolean {
-	const current = config.extends;
+function addStyleframePaths(config: Record<string, unknown>): boolean {
+	const compilerOptions = (config.compilerOptions ??= {}) as Record<
+		string,
+		unknown
+	>;
+	const paths = (compilerOptions.paths ??= {}) as Record<string, unknown>;
 
-	if (current === undefined) {
-		config.extends = styleframeExtends;
-		return true;
+	if (VIRTUAL_STYLEFRAME_MODULE in paths) {
+		return false;
 	}
 
-	if (typeof current === "string") {
-		if (current === styleframeExtends) return false;
-		config.extends = [current, styleframeExtends];
-		return true;
-	}
-
-	if (Array.isArray(current)) {
-		if (current.includes(styleframeExtends)) return false;
-		current.push(styleframeExtends);
-		return true;
-	}
-
-	return false;
+	paths[VIRTUAL_STYLEFRAME_MODULE] = [STYLEFRAME_TYPES_PATH];
+	return true;
 }
 
 export async function initializeTsConfig(cwd: string) {
@@ -85,24 +83,19 @@ export async function initializeTsConfig(cwd: string) {
 	if (await fileExists(tsconfigPath)) {
 		const existingConfig = parseJsonc(
 			await readFile(tsconfigPath, "utf8"),
-		) as Record<string, string[] | unknown>;
+		) as Record<string, unknown>;
 
 		const added: string[] = [];
 
-		// Extend the generated tsconfig so `virtual:styleframe` imports resolve
-		// via its `paths` mapping. TypeScript accepts `extends` as a string or
-		// an array of strings (5.0+), so preserve any existing base config.
-		const extendAdded = addExtends(existingConfig);
-		if (extendAdded) {
-			added.push(`extends "${styleframeExtends}"`);
+		// Map `virtual:styleframe` to the generated declarations so imports
+		// type-check. A local `paths` entry merges into the consumer's own
+		// `paths` and degrades gracefully until the types are generated.
+		if (addStyleframePaths(existingConfig)) {
+			added.push(`paths "${VIRTUAL_STYLEFRAME_MODULE}"`);
 		}
 
 		// Add styleframe includes if not present
-		if (!existingConfig.include) {
-			existingConfig.include = [];
-		}
-
-		const includes = existingConfig.include as string[];
+		const includes = (existingConfig.include ??= []) as string[];
 		for (const pattern of styleframeIncludes) {
 			if (!includes.includes(pattern)) {
 				includes.push(pattern);

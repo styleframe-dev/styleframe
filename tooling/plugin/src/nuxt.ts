@@ -22,10 +22,10 @@ export default defineNuxtModule<ModuleOptions>({
 			addVitePlugin(vite(options));
 		}
 
-		// Nuxt manages its own (multi-file) tsconfig, so consumers can't simply
-		// `extends` the generated `.styleframe/tsconfig.json` without clobbering
-		// Nuxt's `paths`. Instead, register the `virtual:styleframe` mapping
-		// directly into Nuxt's generated types so it merges with Nuxt's aliases.
+		// Nuxt manages its own (multi-file) tsconfig, so register the
+		// `virtual:styleframe` mapping directly into Nuxt's generated types via
+		// the `prepare:types` hook — it merges with Nuxt's own `paths` aliases
+		// instead of fighting them.
 		if (options.dts?.enabled === false) {
 			return;
 		}

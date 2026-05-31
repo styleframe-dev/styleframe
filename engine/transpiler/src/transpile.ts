@@ -6,11 +6,9 @@ import {
 import { consume as consumeCSS } from "./consume/css";
 import {
 	DTS_SHIMS_FILENAME,
-	DTS_TSCONFIG_FILENAME,
 	DTS_TYPES_FILENAME,
 	consume as consumeDTS,
 	generateShims,
-	generateTsconfig,
 } from "./consume/dts";
 import { consume as consumeTS } from "./consume/ts";
 import { defaultUtilitySelectorFn } from "./defaults";
@@ -78,7 +76,6 @@ export async function transpile(
 		output.files.push(
 			createFile(DTS_TYPES_FILENAME, consumers.dts(instance.root, options)),
 			createFile(DTS_SHIMS_FILENAME, generateShims()),
-			createFile(DTS_TSCONFIG_FILENAME, generateTsconfig()),
 		);
 	}
 

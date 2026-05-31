@@ -4,4 +4,3 @@ export * from "./recipe";
 export * from "./root";
 export * from "./selector";
 export * from "./shims";
-export * from "./tsconfig";
