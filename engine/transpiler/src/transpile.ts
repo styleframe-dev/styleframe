@@ -4,7 +4,12 @@ import {
 	getInstanceLicenseValidationInfo,
 } from "@styleframe/license";
 import { consume as consumeCSS } from "./consume/css";
-import { consume as consumeDTS } from "./consume/dts";
+import {
+	DTS_SHIMS_FILENAME,
+	DTS_TYPES_FILENAME,
+	consume as consumeDTS,
+	generateShims,
+} from "./consume/dts";
 import { consume as consumeTS } from "./consume/ts";
 import { defaultUtilitySelectorFn } from "./defaults";
 import { addLicenseWatermark } from "./license";
@@ -68,11 +73,11 @@ export async function transpile(
 	}
 
 	if (type === "dts") {
-		const indexFile = createFile(
-			"index.d.ts",
-			consumers.dts(instance.root, options),
+		const typesContent = consumers.dts(instance.root, options);
+		output.files.push(
+			createFile(DTS_TYPES_FILENAME, typesContent),
+			createFile(DTS_SHIMS_FILENAME, generateShims(typesContent)),
 		);
-		output.files.push(indexFile);
 	}
 
 	return output;

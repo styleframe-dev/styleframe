@@ -53,7 +53,7 @@ Initializes a new Styleframe project in the target directory.
 **Actions performed:**
 
 1. Creates `styleframe.config.ts` with a basic template (skips if exists)
-2. Creates or updates `tsconfig.json` — adds includes for `styleframe.config.ts`, `*.styleframe.ts`, `.styleframe/**/*.d.ts`
+2. Creates or updates `tsconfig.json` — adds a `compilerOptions.paths` entry mapping `virtual:styleframe` → `./.styleframe/styleframe.d.ts`, plus includes for `styleframe.config.ts`, `*.styleframe.ts`, `.styleframe/**/*.d.ts`
 3. Adds dependencies to `package.json`:
    - **devDependencies:** `styleframe`, `@styleframe/cli`, `@styleframe/core`, `@styleframe/loader`, `@styleframe/plugin`, `@styleframe/theme`, `@styleframe/transpiler`
    - **dependencies:** `@styleframe/runtime`
@@ -63,7 +63,7 @@ Initializes a new Styleframe project in the target directory.
 
 **Edge cases:**
 - Skips file creation if file already exists (logs a warning)
-- Merges tsconfig includes rather than overwriting
+- Merges tsconfig `paths`/`include` rather than overwriting (idempotent; never clobbers an existing `virtual:styleframe` mapping)
 - Only adds missing dependencies to package.json
 - Warns with documentation URL if framework config is not found
 
@@ -176,6 +176,11 @@ export default s;
 
 ```json
 {
+    "compilerOptions": {
+        "paths": {
+            "virtual:styleframe": ["./.styleframe/styleframe.d.ts"]
+        }
+    },
     "include": [
         "styleframe.config.ts",
         "*.styleframe.ts",

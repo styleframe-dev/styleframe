@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { transpile } from "@styleframe/transpiler";
 import { consola } from "consola";
+import { DEFAULT_DTS_OUT_DIR } from "../constants";
 import type { PluginGlobalState } from "../state";
 
 export interface TypeGeneratorOptions {
@@ -9,11 +10,21 @@ export interface TypeGeneratorOptions {
 	outDir?: string;
 }
 
-const DEFAULT_OUT_DIR = ".styleframe";
-
 /**
- * Generates type declarations for virtual:styleframe module.
- * Uses the transpiler's dts mode to generate the types.
+ * Generates type declarations for the styleframe virtual modules.
+ *
+ * Delegates to the transpiler's `dts` mode, which produces two files written
+ * verbatim to the output directory:
+ * - `styleframe.d.ts` — top-level exports for `virtual:styleframe`
+ * - `shims.d.ts`      — self-contained ambient declarations: a `declare module
+ *   "virtual:styleframe"` with the full typed exports, plus the
+ *   `virtual:styleframe.css` shim
+ *
+ * Non-Vue consumers resolve both modules from `shims.d.ts` with zero `paths`
+ * config. Vue consumers additionally map `virtual:styleframe` to
+ * `styleframe.d.ts` via a `compilerOptions.paths` entry (written by `styleframe
+ * init` for Vue projects, or injected by the Nuxt module's `prepare:types` hook),
+ * since `vue-tsc` won't resolve the ambient module inside a `.vue` SFC.
  */
 export async function generateTypeDeclarations(
 	state: PluginGlobalState,
@@ -25,18 +36,19 @@ export async function generateTypeDeclarations(
 		return;
 	}
 
-	const outDir = path.resolve(cwd, options.outDir ?? DEFAULT_OUT_DIR);
+	const outDir = path.resolve(cwd, options.outDir ?? DEFAULT_DTS_OUT_DIR);
 
 	// Ensure output directory exists
 	await fs.mkdir(outDir, { recursive: true });
 
 	// Use transpiler's dts mode to generate type declarations
 	const result = await transpile(state.globalInstance, { type: "dts" });
-	const content =
-		result.files.find((f) => f.name === "index.d.ts")?.content ?? "";
 
-	const outputPath = path.join(outDir, "styleframe.d.ts");
-	await fs.writeFile(outputPath, content);
+	await Promise.all(
+		result.files.map((file) =>
+			fs.writeFile(path.join(outDir, file.name), file.content),
+		),
+	);
 
 	if (!silent) {
 		consola.success(`[styleframe] Generated type declarations.`);

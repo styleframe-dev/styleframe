@@ -40,7 +40,7 @@ The transpiler uses a **consumer pattern** with three independent pipelines:
 |----------|-------------|---------|
 | **CSS** | `index.css` | Full stylesheet with variables, selectors, utilities, themes, at-rules |
 | **TS** | `index.ts` | Runtime recipe functions and exported selector constants |
-| **DTS** | `index.d.ts` | Type declarations for virtual modules (`virtual:styleframe`) |
+| **DTS** | `styleframe.d.ts`, `shims.d.ts` | Type declarations for the virtual modules (`virtual:styleframe`, `virtual:styleframe.css`) |
 
 ### Consumer Pipeline Flow
 
@@ -75,14 +75,25 @@ Styleframe root
 
 ### DTS Generation Flow
 
+The `dts` mode emits the same typed exports in two complementary forms:
+
 ```
-Styleframe root
-  → Root consumer (module declarations)
-    → declare module "virtual:styleframe" { ... }
-    → Recipe function types with variant props
-    → Selector string types
-    → declare module "virtual:styleframe.css" { ... }
+styleframe.d.ts  (Root consumer — top-level exports)
+  → export function styleframe(): Styleframe
+  → Recipe function types with variant props
+  → Selector string types
+
+shims.d.ts  (generateShims — self-contained ambient declarations)
+  → declare module "virtual:styleframe" { …full typed exports… }
+  → declare module "virtual:styleframe.css" { const css: string; export default css }
 ```
+
+Non-Vue consumers resolve both virtual modules from `shims.d.ts` alone (picked
+up via `.styleframe/**/*.d.ts` includes) with zero `paths` configuration. Vue
+consumers additionally map `virtual:styleframe` to `styleframe.d.ts` via a
+`compilerOptions.paths` entry (`styleframe init` writes it for Vue projects; the
+Nuxt module injects it via `prepare:types`), because `vue-tsc` won't resolve a
+bare-specifier ambient module imported inside a `.vue` SFC.
 
 ## API Reference
 
@@ -94,7 +105,8 @@ Main transpilation function. Converts a `Styleframe` instance into output files.
 import { transpile } from '@styleframe/transpiler';
 
 const output = await transpile(instance);
-// output.files: [{ name: "index.css", content: "..." }, { name: "index.ts", content: "..." }, { name: "index.d.ts", content: "..." }]
+// output.files: [{ name: "index.css", content: "..." }, { name: "index.ts", content: "..." }]
+// transpile(instance, { type: "dts" }) → [{ name: "styleframe.d.ts" }, { name: "shims.d.ts" }]
 
 // Generate only CSS
 const cssOnly = await transpile(instance, { type: 'css' });

@@ -59,7 +59,7 @@ export function createRecipeConsumer(_consume: ConsumeFunction) {
 		const variantPropsType = generateVariantPropsType(instance._runtime);
 		const propsTypeName = `${capitalizeFirst(exportName)}Props`;
 
-		return `    export type ${propsTypeName} = ${variantPropsType};
-    export const ${exportName}: (props?: ${propsTypeName}) => string;`;
+		return `export type ${propsTypeName} = ${variantPropsType};
+export const ${exportName}: (props?: ${propsTypeName}) => string;`;
 	};
 }

@@ -16,6 +16,6 @@ export function createSelectorConsumer(_consume: ConsumeFunction) {
 			return "";
 		}
 
-		return `    export const ${instance._exportName}: string;`;
+		return `export const ${instance._exportName}: string;`;
 	};
 }

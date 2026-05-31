@@ -12,7 +12,8 @@
 		"noUncheckedSideEffectImports": true,
 
 		"paths": {
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"virtual:styleframe": ["./.styleframe/styleframe.d.ts"]
 		}
 	},
 	"include": [
@@ -20,6 +21,7 @@
 		"src/**/*.tsx",
 		"src/**/*.vue",
 		"src/**/*.raw",
-		"test/**/*.ts"
+		"test/**/*.ts",
+		".styleframe/**/*.d.ts"
 	]
 }
