@@ -1,5 +1,17 @@
 # @styleframe/playground
 
+## 0.1.4
+
+### Patch Changes
+
+- Updated dependencies [[`80f84dd`](https://github.com/styleframe-dev/styleframe/commit/80f84dd9c32ec3361c69b30f5a9c725b2e1b8fc2), [`c7ff8c8`](https://github.com/styleframe-dev/styleframe/commit/c7ff8c89776b2e117b0f45f3e1f8ca6695f24a29), [`770ecca`](https://github.com/styleframe-dev/styleframe/commit/770ecca2dbf3cb4afa7406e310ba74b0dfcfdad7), [`6acd766`](https://github.com/styleframe-dev/styleframe/commit/6acd766eefc82139d8cd98dfb9b553449945d704), [`83d39dd`](https://github.com/styleframe-dev/styleframe/commit/83d39ddaf1739a22d2cc8b4a6a509fa490e30fee), [`dc99d46`](https://github.com/styleframe-dev/styleframe/commit/dc99d4699046f5e5f3dcac965648fd50b0339412), [`6941920`](https://github.com/styleframe-dev/styleframe/commit/6941920a50e560e4686aebd154bb6aea4c59c258), [`0ef38e6`](https://github.com/styleframe-dev/styleframe/commit/0ef38e69ca941cefab31463c23980f52cae1541f)]:
+  - @styleframe/theme@3.7.1
+  - styleframe@3.8.0
+  - @styleframe/core@3.6.0
+  - @styleframe/scanner@3.2.0
+  - @styleframe/transpiler@3.4.0
+  - @styleframe/runtime@3.2.0
+
 ## 0.1.3
 
 ### Patch Changes
