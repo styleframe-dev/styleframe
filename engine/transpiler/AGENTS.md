@@ -75,7 +75,7 @@ Styleframe root
 
 ### DTS Generation Flow
 
-The `dts` mode emits two concern-separated files:
+The `dts` mode emits the same typed exports in two complementary forms:
 
 ```
 styleframe.d.ts  (Root consumer — top-level exports)
@@ -83,14 +83,17 @@ styleframe.d.ts  (Root consumer — top-level exports)
   → Recipe function types with variant props
   → Selector string types
 
-shims.d.ts  (generateShims — ambient shim)
+shims.d.ts  (generateShims — self-contained ambient declarations)
+  → declare module "virtual:styleframe" { …full typed exports… }
   → declare module "virtual:styleframe.css" { const css: string; export default css }
 ```
 
-`virtual:styleframe` is resolved by a consumer-side `compilerOptions.paths`
-mapping to `./.styleframe/styleframe.d.ts` (written by `styleframe init`, or
-injected into Nuxt's generated types by the Nuxt module), not via a `declare
-module` wrapper or a generated tsconfig.
+Non-Vue consumers resolve both virtual modules from `shims.d.ts` alone (picked
+up via `.styleframe/**/*.d.ts` includes) with zero `paths` configuration. Vue
+consumers additionally map `virtual:styleframe` to `styleframe.d.ts` via a
+`compilerOptions.paths` entry (`styleframe init` writes it for Vue projects; the
+Nuxt module injects it via `prepare:types`), because `vue-tsc` won't resolve a
+bare-specifier ambient module imported inside a `.vue` SFC.
 
 ## API Reference
 

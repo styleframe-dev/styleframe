@@ -1,13 +1,16 @@
 /**
  * Shared constants for the DTS (TypeScript declaration) output pipeline.
  *
- * The DTS pipeline emits two concern-separated files:
- * - `styleframe.d.ts` — top-level exports (the `virtual:styleframe` module shape)
- * - `shims.d.ts`       — ambient shims for non-typed virtual modules (`virtual:styleframe.css`)
- *
- * Consumers resolve `virtual:styleframe` by mapping it to `styleframe.d.ts` via
- * a `compilerOptions.paths` entry in their own tsconfig (written by
- * `styleframe init`, or injected by the Nuxt module).
+ * The DTS pipeline emits two files that describe the same exports in two forms:
+ * - `styleframe.d.ts` — top-level exports (the `virtual:styleframe` module shape).
+ *   Vue consumers map `virtual:styleframe` to this file via a
+ *   `compilerOptions.paths` entry, because `vue-tsc` won't resolve a
+ *   bare-specifier ambient module imported inside a `.vue` SFC.
+ * - `shims.d.ts` — self-contained ambient declarations: a `declare module
+ *   "virtual:styleframe"` carrying the full typed exports, plus the
+ *   `virtual:styleframe.css` string shim. Non-Vue consumers include this file
+ *   (via the `.styleframe/**\/*.d.ts` glob) and resolve both virtual modules
+ *   with zero `paths` configuration.
  */
 
 /** Header prepended to every generated declaration file. */
@@ -17,8 +20,11 @@ export const DTS_HEADER =
 /** File holding the top-level exports for the `virtual:styleframe` module. */
 export const DTS_TYPES_FILENAME = "styleframe.d.ts";
 
-/** File holding ambient shims for non-typed virtual modules. */
+/** File holding the self-contained ambient shims for the virtual modules. */
 export const DTS_SHIMS_FILENAME = "shims.d.ts";
+
+/** Specifier for the typed virtual module wrapped ambiently in `shims.d.ts`. */
+export const VIRTUAL_TS_MODULE_ID = "virtual:styleframe";
 
 /** Specifier for the CSS virtual module resolved via the ambient shim. */
 export const VIRTUAL_CSS_MODULE_ID = "virtual:styleframe.css";

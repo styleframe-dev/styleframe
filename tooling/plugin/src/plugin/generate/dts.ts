@@ -13,14 +13,18 @@ export interface TypeGeneratorOptions {
 /**
  * Generates type declarations for the styleframe virtual modules.
  *
- * Delegates to the transpiler's `dts` mode, which produces two
- * concern-separated files written verbatim to the output directory:
+ * Delegates to the transpiler's `dts` mode, which produces two files written
+ * verbatim to the output directory:
  * - `styleframe.d.ts` — top-level exports for `virtual:styleframe`
- * - `shims.d.ts`      — ambient shim for `virtual:styleframe.css`
+ * - `shims.d.ts`      — self-contained ambient declarations: a `declare module
+ *   "virtual:styleframe"` with the full typed exports, plus the
+ *   `virtual:styleframe.css` shim
  *
- * Consumers resolve `virtual:styleframe` via a `compilerOptions.paths` mapping
- * to `styleframe.d.ts` (written by `styleframe init`, or injected by the Nuxt
- * module's `prepare:types` hook).
+ * Non-Vue consumers resolve both modules from `shims.d.ts` with zero `paths`
+ * config. Vue consumers additionally map `virtual:styleframe` to
+ * `styleframe.d.ts` via a `compilerOptions.paths` entry (written by `styleframe
+ * init` for Vue projects, or injected by the Nuxt module's `prepare:types` hook),
+ * since `vue-tsc` won't resolve the ambient module inside a `.vue` SFC.
  */
 export async function generateTypeDeclarations(
 	state: PluginGlobalState,

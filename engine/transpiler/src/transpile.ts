@@ -73,9 +73,10 @@ export async function transpile(
 	}
 
 	if (type === "dts") {
+		const typesContent = consumers.dts(instance.root, options);
 		output.files.push(
-			createFile(DTS_TYPES_FILENAME, consumers.dts(instance.root, options)),
-			createFile(DTS_SHIMS_FILENAME, generateShims()),
+			createFile(DTS_TYPES_FILENAME, typesContent),
+			createFile(DTS_SHIMS_FILENAME, generateShims(typesContent)),
 		);
 	}
 

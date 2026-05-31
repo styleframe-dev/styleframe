@@ -5,11 +5,11 @@
 "@styleframe/cli": patch
 ---
 
-Restructure generated DTS output into two concern-separated files. The transpiler's `dts` mode now emits:
+Generate DTS output as two files that describe the virtual modules in two complementary forms. The transpiler's `dts` mode now emits:
 
 - `styleframe.d.ts` — top-level exports describing the `virtual:styleframe` module
-- `shims.d.ts` — ambient shim for the `virtual:styleframe.css` module only
+- `shims.d.ts` — self-contained ambient declarations: a `declare module "virtual:styleframe"` carrying the full typed exports, plus the `virtual:styleframe.css` string shim
 
-`virtual:styleframe` is resolved by a `compilerOptions.paths` entry mapping it to `styleframe.d.ts` (instead of a `declare module` wrapper), so the generated declarations stay clean and reusable. `styleframe init` writes that `paths` entry directly into the project's `tsconfig.json` (merging into any existing `paths`), so virtual-module imports type-check out of the box.
+Non-Vue consumers resolve both virtual modules from `shims.d.ts` alone (picked up via the `.styleframe/**/*.d.ts` include) with **zero `paths` configuration**. Vue consumers additionally map `virtual:styleframe` to `styleframe.d.ts` via a `compilerOptions.paths` entry, because `vue-tsc` won't resolve a bare-specifier ambient module imported inside a `.vue` SFC. `styleframe init` detects Vue projects (a `vue`/`nuxt` dependency) and writes that `paths` entry only for them, merging into any existing `paths`; non-Vue projects just get the includes.
 
 The Nuxt module registers the same `virtual:styleframe` path mapping into Nuxt's generated types via the `prepare:types` hook, so imports type-check without manual tsconfig changes. It also fixes the module's `configKey`/`name`, which were leftover `unpluginStarter` placeholders that caused `styleframe: {}` options in `nuxt.config` to be ignored.

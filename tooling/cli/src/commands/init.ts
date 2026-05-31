@@ -29,19 +29,58 @@ const styleframeIncludes = [
 	".styleframe/**/*.d.ts",
 ];
 
-const tsconfigTemplate = {
-	compilerOptions: {
-		target: "ES2022",
-		module: "ESNext",
-		moduleResolution: "bundler",
-		strict: true,
-		noEmit: true,
-		skipLibCheck: true,
-		esModuleInterop: true,
-		paths: styleframePaths,
-	},
-	include: styleframeIncludes,
-};
+interface TsConfigOptions {
+	/**
+	 * Whether to add a `compilerOptions.paths` entry mapping `virtual:styleframe`
+	 * to `styleframe.d.ts`. Required for type-checkers that cannot resolve a
+	 * bare-specifier ambient `declare module` (e.g. `vue-tsc` inside `.vue` SFCs).
+	 * When false, both virtual modules resolve from the ambient `shims.d.ts`
+	 * (picked up via the includes) with zero extra config.
+	 */
+	paths: boolean;
+}
+
+function buildTsconfigTemplate(options: TsConfigOptions) {
+	return {
+		compilerOptions: {
+			target: "ES2022",
+			module: "ESNext",
+			moduleResolution: "bundler",
+			strict: true,
+			noEmit: true,
+			skipLibCheck: true,
+			esModuleInterop: true,
+			...(options.paths ? { paths: styleframePaths } : {}),
+		},
+		include: styleframeIncludes,
+	};
+}
+
+/**
+ * Detects whether the project at `cwd` uses a type-checker that requires a
+ * `compilerOptions.paths` entry for the `virtual:styleframe` virtual module.
+ *
+ * Currently this means Vue (`vue-tsc` won't resolve a bare-specifier ambient
+ * `declare module` imported inside a `.vue` SFC). Detection checks for `vue` or
+ * `nuxt` in package.json dependencies.
+ */
+async function needsExplicitPaths(cwd: string): Promise<boolean> {
+	const packageJsonPath = path.join(cwd, "package.json");
+	if (!(await fileExists(packageJsonPath))) {
+		return false;
+	}
+
+	try {
+		const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+		const deps = {
+			...packageJson.dependencies,
+			...packageJson.devDependencies,
+		};
+		return "vue" in deps || "nuxt" in deps;
+	} catch {
+		return false;
+	}
+}
 
 export async function initializeConfigFile(cwd: string) {
 	const styleframeConfigPath = path.join(cwd, "styleframe.config.ts");
@@ -77,7 +116,10 @@ function addStyleframePaths(config: Record<string, unknown>): boolean {
 	return true;
 }
 
-export async function initializeTsConfig(cwd: string) {
+export async function initializeTsConfig(
+	cwd: string,
+	options: TsConfigOptions,
+) {
 	const tsconfigPath = path.join(cwd, "tsconfig.json");
 
 	if (await fileExists(tsconfigPath)) {
@@ -87,10 +129,13 @@ export async function initializeTsConfig(cwd: string) {
 
 		const added: string[] = [];
 
-		// Map `virtual:styleframe` to the generated declarations so imports
-		// type-check. A local `paths` entry merges into the consumer's own
-		// `paths` and degrades gracefully until the types are generated.
-		if (addStyleframePaths(existingConfig)) {
+		// Type-checkers that cannot resolve a bare-specifier ambient module
+		// (e.g. vue-tsc inside .vue SFCs) need an explicit paths entry mapping
+		// `virtual:styleframe` to the generated declarations. The entry merges
+		// into the consumer's own paths and degrades gracefully until the types
+		// are generated. Other type-checkers resolve from the ambient shims.d.ts
+		// (added via the includes below), so no paths entry is needed.
+		if (options.paths && addStyleframePaths(existingConfig)) {
 			added.push(`paths "${VIRTUAL_STYLEFRAME_MODULE}"`);
 		}
 
@@ -108,7 +153,10 @@ export async function initializeTsConfig(cwd: string) {
 			consola.success(`Added ${added.join(", ")} to tsconfig.json.`);
 		}
 	} else {
-		await writeFile(tsconfigPath, JSON.stringify(tsconfigTemplate, null, "\t"));
+		await writeFile(
+			tsconfigPath,
+			JSON.stringify(buildTsconfigTemplate(options), null, "\t"),
+		);
 		consola.success(`Created "tsconfig.json".`);
 	}
 }
@@ -171,7 +219,9 @@ export default defineCommand({
 		consola.info("Initializing...");
 
 		await initializeConfigFile(cwd);
-		await initializeTsConfig(cwd);
+		await initializeTsConfig(cwd, {
+			paths: await needsExplicitPaths(cwd),
+		});
 		await addPackageJsonDependencies(cwd);
 		await initializeFrameworkFile(cwd);
 	},
