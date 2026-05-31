@@ -61,8 +61,11 @@ function buildTsconfigTemplate(options: TsConfigOptions) {
  * `compilerOptions.paths` entry for the `virtual:styleframe` virtual module.
  *
  * Currently this means Vue (`vue-tsc` won't resolve a bare-specifier ambient
- * `declare module` imported inside a `.vue` SFC). Detection checks for `vue` or
- * `nuxt` in package.json dependencies.
+ * `declare module` imported inside a `.vue` SFC). Detection checks for `vue` in
+ * package.json dependencies and excludes Nuxt: the Nuxt module already injects
+ * the mapping into Nuxt's generated tsconfig via `prepare:types`, and writing
+ * `paths` into an `extends`-based root tsconfig would replace (not merge) Nuxt's
+ * inherited aliases.
  */
 async function needsExplicitPaths(cwd: string): Promise<boolean> {
 	const packageJsonPath = path.join(cwd, "package.json");
@@ -76,7 +79,7 @@ async function needsExplicitPaths(cwd: string): Promise<boolean> {
 			...packageJson.dependencies,
 			...packageJson.devDependencies,
 		};
-		return "vue" in deps || "nuxt" in deps;
+		return "vue" in deps && !("nuxt" in deps);
 	} catch {
 		return false;
 	}
