@@ -2,14 +2,14 @@
 	"name": "@styleframe/testing-integration",
 	"version": "0.0.1",
 	"type": "module",
-	"types": "./dist/theme.d.ts",
-	"module": "./dist/theme.js",
-	"main": "./dist/theme.umd.cjs",
+	"types": "./dist/index.d.ts",
+	"module": "./dist/testing-integration.js",
+	"main": "./dist/testing-integration.umd.cjs",
 	"exports": {
 		".": {
-			"types": "./dist/theme.d.ts",
-			"import": "./dist/theme.js",
-			"require": "./dist/theme.umd.cjs"
+			"types": "./dist/index.d.ts",
+			"import": "./dist/testing-integration.js",
+			"require": "./dist/testing-integration.umd.cjs"
 		}
 	},
 	"scripts": {
@@ -24,6 +24,7 @@
 		"test:e2e": "pnpm exec playwright test"
 	},
 	"devDependencies": {
+		"@microsoft/api-extractor": "catalog:",
 		"@playwright/test": "^1.56.1",
 		"@styleframe/config-typescript": "workspace:^3.0.0",
 		"@styleframe/config-vite": "workspace:^3.0.1",
