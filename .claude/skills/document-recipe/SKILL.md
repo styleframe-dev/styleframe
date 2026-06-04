@@ -45,7 +45,9 @@ Read the 2–3 most similar reference pages in full. Extract the conventions:
 - **Frontmatter:** `title` + `description`. No H1 in the body — the title renders from frontmatter.
 - **Section order:** Overview → Why use the X recipe? → Usage (`::steps{level="4"}`) → Colors → Variants → Sizes → Anatomy (multi-part only) → Accessibility → Customization → API Reference → Best Practices → FAQ (`::accordion`).
 - **Heading style:** sentence case, verb-first where it makes sense ("Why use the Badge recipe?", "Overriding defaults").
-- **Usage block:** `::steps{level="4"}` with three sub-steps: "Register the recipe" (`:::code-tree` with component `.styleframe.ts` + root `styleframe.config.ts`), "Build the component" (`:::tabs` with React + Vue tabs), "See it in action" (`::story-preview`).
+- **Usage block:** `::steps{level="4"}` with three sub-steps: "Register the recipe" (`:::code-tree` with component `.styleframe.ts` + root `styleframe.config.ts`), "Build the component" (`::framework-switcher` with `#vue`, `#react`, and `#other` slots), "See it in action" (`::story-preview`).
+- **Framework switcher:** the "Build the component" step MUST use `::framework-switcher` with `#vue`, `#react`, and `#other` slot markers (Vue first), not `:::tabs` / `::::tabs-item`. The switcher renders one synced toggle across the whole docs site, so a reader's framework choice persists between pages — per-page tabs don't. The toggle always offers all three options (React, Vanilla, Vue); the `#other` slot is the **Vanilla** view, so provide all three — if a slot is missing, the reader sees a "Not available for X — showing Y" fallback notice instead of code. Some older pages still use `:::tabs`; treat `::framework-switcher` as the standard and do not copy the tabs form. The `#vue` and `#react` slots show idiomatic component code; the `#other` (Vanilla) slot shows the runtime returning a class string applied to plain `.ts` + `.html` (see `card.md`).
+- **Code-fence languages:** use only languages the docs Shiki config loads (`apps/docs/nuxt.config.ts` → `content.build.markdown.highlight.langs`: `bash, diff, json, js, ts, html, css, vue, shell, mdc, md, yaml`). The React block's language token MUST be `ts`, NOT `tsx` (and never `jsx`) — `tsx` is not registered and renders unhighlighted. Put the `.tsx` extension in the filename label only, e.g. ` ```ts [src/components/<ComponentName>.tsx] `.
 - **Story-preview embed:** `::story-preview` with YAML front body `story: theme-recipes-<name>--<story>` and optional `panel: true` or `height: NNN`.
 - **Colors section:** opening sentence, a `::story-preview` of the default-color story, a "Color Reference" sub-heading with a table (`| Color | Token | Use Case |`) and a `::tip` admonition at the end.
 - **Variants section:** one sub-heading per variant style with a 1-sentence description and a `::story-preview` per variant.
@@ -154,8 +156,29 @@ export default s;
 
 Import the `<componentName>` runtime function from the virtual module and pass variant props to compute class names:
 
-:::tabs
-::::tabs-item{icon="i-devicon-react" label="React"}
+::framework-switcher
+
+#vue
+
+` ` `vue [src/components/<ComponentName>.vue]
+<script setup lang="ts">
+import { <componentName> } from "virtual:styleframe";
+
+const { color = "<default>", variant = "<default>", size = "<default>" } = defineProps<{
+	color?: /* union */;
+	variant?: /* union */;
+	size?: /* union */;
+}>();
+</script>
+
+<template>
+	<<element> :class="<componentName>({ color, variant, size })">
+		<slot />
+	</<element>>
+</template>
+` ` `
+
+#react
 
 ` ` `ts [src/components/<ComponentName>.tsx]
 import { <componentName> } from "virtual:styleframe";
@@ -178,29 +201,22 @@ export function <ComponentName>({
 }
 ` ` `
 
-::::
-::::tabs-item{icon="i-devicon-vuejs" label="Vue"}
+#other
 
-` ` `vue [src/components/<ComponentName>.vue]
-<script setup lang="ts">
+The `<componentName>()` runtime returns a class string. Apply it however your framework binds classes:
+
+` ` `ts [src/components/<component-name>.ts]
 import { <componentName> } from "virtual:styleframe";
 
-const { color = "<default>", variant = "<default>", size = "<default>" } = defineProps<{
-	color?: /* union */;
-	variant?: /* union */;
-	size?: /* union */;
-}>();
-</script>
-
-<template>
-	<<element> :class="<componentName>({ color, variant, size })">
-		<slot />
-	</<element>>
-</template>
+const classes = <componentName>({ color: "<default>", variant: "<default>", size: "<default>" });
+// → "<component-name> ..."
 ` ` `
 
-::::
-:::
+` ` `html [src/components/<component-name>.html]
+<<element> class="<component-name> ...">...</<element>>
+` ` `
+
+::
 
 #### See it in action
 
@@ -422,6 +438,7 @@ Compare the draft against the chosen reference page(s). In `<conformance>`, list
 
 - **Structural deviations:** section order, missing sections, extra sections.
 - **Formatting inconsistencies:** heading style, admonition syntax, code-block language tags, table column count.
+- **Framework switcher:** the "Build the component" step uses `::framework-switcher` with `#vue`, `#react`, and `#other` (Vanilla) slots (Vue first), not `:::tabs` / `::::tabs-item`. Flag the tabs form, or a missing `#other` slot, as a deviation.
 - **Story ID validity:** every `::story-preview` story ID must match an entry in `showcase.md`.
 - **Remaining `[VERIFY]` flags:** list them all.
 - **Confidence rating:** High (everything traceable to source + showcase) / Medium (a few `[VERIFY]` flags or mild deviations) / Low (significant gaps or invented behavior — must not ship without human review).
