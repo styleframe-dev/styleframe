@@ -15,7 +15,8 @@
 	},
 	"files": [
 		"vite.config.js",
-		"vite.config.d.ts"
+		"vite.config.d.ts",
+		"LICENSE"
 	],
 	"homepage": "https://styleframe.dev",
 	"repository": {
