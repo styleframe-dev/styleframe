@@ -9,7 +9,8 @@
 		".": "./tsconfig.json"
 	},
 	"files": [
-		"tsconfig.json"
+		"tsconfig.json",
+		"LICENSE"
 	],
 	"homepage": "https://styleframe.dev",
 	"repository": {
