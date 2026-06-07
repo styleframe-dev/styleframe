@@ -7,14 +7,24 @@
 	"main": "./dist/index.cjs",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.js"
+			},
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/index.cjs"
+			}
 		},
 		"./node": {
-			"types": "./dist/node.d.ts",
-			"import": "./dist/node.js",
-			"require": "./dist/node.cjs"
+			"import": {
+				"types": "./dist/node.d.mts",
+				"default": "./dist/node.js"
+			},
+			"require": {
+				"types": "./dist/node.d.cts",
+				"default": "./dist/node.cjs"
+			}
 		}
 	},
 	"files": [
@@ -39,6 +49,7 @@
 		"@styleframe/license": "catalog:"
 	},
 	"devDependencies": {
+		"@microsoft/api-extractor": "catalog:",
 		"@styleframe/config-typescript": "workspace:^3.0.0",
 		"@styleframe/config-vite": "workspace:^3.0.1",
 		"@styleframe/core": "workspace:^3.6.0",

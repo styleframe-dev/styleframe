@@ -7,9 +7,14 @@
 	"main": "./dist/styleframe.umd.cjs",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/styleframe.js",
-			"require": "./dist/styleframe.umd.cjs"
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/styleframe.js"
+			},
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/styleframe.umd.cjs"
+			}
 		}
 	},
 	"files": [
@@ -32,6 +37,7 @@
 		"@styleframe/license": "catalog:"
 	},
 	"devDependencies": {
+		"@microsoft/api-extractor": "catalog:",
 		"@styleframe/config-typescript": "workspace:^3.0.0",
 		"@styleframe/config-vite": "workspace:^3.0.1",
 		"@styleframe/license": "catalog:",

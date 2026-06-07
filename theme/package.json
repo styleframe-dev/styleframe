@@ -7,9 +7,14 @@
 	"main": "./dist/theme.umd.cjs",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/theme.js",
-			"require": "./dist/theme.umd.cjs"
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/theme.js"
+			},
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/theme.umd.cjs"
+			}
 		}
 	},
 	"files": [
@@ -26,6 +31,7 @@
 		"test:dev": "vitest --watch"
 	},
 	"devDependencies": {
+		"@microsoft/api-extractor": "catalog:",
 		"@styleframe/config-typescript": "workspace:^3.0.0",
 		"@styleframe/config-vite": "workspace:^3.0.1",
 		"@styleframe/core": "workspace:^3.6.0",

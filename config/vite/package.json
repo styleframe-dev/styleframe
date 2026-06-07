@@ -28,12 +28,14 @@
 		"url": "https://github.com/styleframe-dev/styleframe/issues"
 	},
 	"devDependencies": {
+		"@microsoft/api-extractor": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"vite": "catalog:",
 		"vitest": "catalog:",
 		"vite-plugin-dts": "catalog:"
 	},
 	"peerDependencies": {
+		"@microsoft/api-extractor": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"vite": "catalog:",
 		"vitest": "catalog:",
