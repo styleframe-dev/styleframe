@@ -3,12 +3,14 @@ import type { NuxtError } from "#app";
 import type { ContentNavigationItem, PageCollections } from "@nuxt/content";
 import * as nuxtUiLocales from "@nuxt/ui/locale";
 import { flattenNavigation } from "~/utils/flattenNavigation";
+import { foldNonRouteCategories } from "~/utils/foldNonRouteCategories";
 
 const props = defineProps<{
 	error: NuxtError;
 }>();
 
 const { locale, locales, isEnabled, t, switchLocalePath } = useDocusI18n();
+const appConfig = useAppConfig();
 
 const lang = computed(
 	() => nuxtUiLocales[locale.value as keyof typeof nuxtUiLocales]?.code || "en",
@@ -123,7 +125,13 @@ const { data: navigation } = await useAsyncData(
 				} else {
 					result = localeResult;
 				}
-				return [section.key, flattenNavigation(result)] as const;
+				return [
+					section.key,
+					foldNonRouteCategories(
+						flattenNavigation(result),
+						appConfig.nonRouteCategories ?? {},
+					),
+				] as const;
 			}),
 		);
 		return Object.fromEntries(results) as Record<

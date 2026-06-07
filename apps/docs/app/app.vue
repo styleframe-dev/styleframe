@@ -2,7 +2,7 @@
 import type { ContentNavigationItem, PageCollections } from "@nuxt/content";
 import * as nuxtUiLocales from "@nuxt/ui/locale";
 import { flattenNavigation } from "~/utils/flattenNavigation";
-import { foldCosmeticCategories } from "~/utils/foldCosmeticCategories";
+import { foldNonRouteCategories } from "~/utils/foldNonRouteCategories";
 
 const appConfig = useAppConfig();
 const { seo } = appConfig;
@@ -123,9 +123,9 @@ const { data: navigation } = await useAsyncData(
 				}
 				return [
 					section.key,
-					foldCosmeticCategories(
+					foldNonRouteCategories(
 						flattenNavigation(result),
-						appConfig.cosmeticCategories ?? {},
+						appConfig.nonRouteCategories ?? {},
 					),
 				] as const;
 			}),

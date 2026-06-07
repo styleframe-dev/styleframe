@@ -1,17 +1,17 @@
 import type { ContentNavigationItem } from "@nuxt/content";
-import type { CosmeticCategoryMeta } from "~/types/cosmetic-categories";
+import type { NonRouteCategoryMeta } from "~/types/non-route-categories";
 
 /**
- * Rebuilds the sidebar grouping for cosmetic categories.
+ * Rebuilds the sidebar grouping for non-route categories.
  *
  * Pages under a `route: false` folder are flattened in the URL, so the native
  * navigation tree lists them as direct children with the category level gone.
  * This re-nests each such page under a synthetic group node (rendered as a
  * non-navigating accordion header), matching pages to categories by `stem`.
  */
-export function foldCosmeticCategories(
+export function foldNonRouteCategories(
 	items: ContentNavigationItem[],
-	categories: Record<string, CosmeticCategoryMeta>,
+	categories: Record<string, NonRouteCategoryMeta>,
 ): ContentNavigationItem[] {
 	return items.map((node) => {
 		if (!node.children?.length) {
@@ -20,7 +20,7 @@ export function foldCosmeticCategories(
 		const passthrough: ContentNavigationItem[] = [];
 		const groups = new Map<
 			string,
-			{ meta: CosmeticCategoryMeta; children: ContentNavigationItem[] }
+			{ meta: NonRouteCategoryMeta; children: ContentNavigationItem[] }
 		>();
 		for (const child of node.children) {
 			const dir = child.stem
@@ -32,7 +32,7 @@ export function foldCosmeticCategories(
 				group.children.push(child);
 				groups.set(dir, group);
 			} else {
-				passthrough.push(foldCosmeticCategories([child], categories)[0]!);
+				passthrough.push(foldNonRouteCategories([child], categories)[0]!);
 			}
 		}
 		const groupNodes = [...groups.values()]

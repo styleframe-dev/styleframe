@@ -1,4 +1,4 @@
-export interface CosmeticCategoryMeta {
+export interface NonRouteCategoryMeta {
 	title: string;
 	icon?: string | false;
 	defaultOpen?: boolean;
@@ -7,6 +7,6 @@ export interface CosmeticCategoryMeta {
 
 declare module "nuxt/schema" {
 	interface AppConfig {
-		cosmeticCategories?: Record<string, CosmeticCategoryMeta>;
+		nonRouteCategories?: Record<string, NonRouteCategoryMeta>;
 	}
 }
