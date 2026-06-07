@@ -19,7 +19,7 @@ const variants = ["solid", "outline", "soft", "subtle"] as const;
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Badge",
+	title: "Theme/Recipes/Feedback/Badge",
 	component: Badge,
 	tags: ["autodocs"],
 	argTypes: {

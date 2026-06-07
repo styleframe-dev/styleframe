@@ -9,7 +9,7 @@ const variants = ["solid", "soft", "subtle"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Tooltip",
+	title: "Theme/Recipes/Overlays/Tooltip",
 	component: Tooltip,
 	tags: ["autodocs"],
 	parameters: {

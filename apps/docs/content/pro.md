@@ -40,7 +40,7 @@ Premium Features for Professional Design Systems
     ---
     icon: i-lucide-sparkles
     target: _blank
-    to: /docs/theme/design-tokens/composables/fluid-design
+    to: /docs/theme/design-tokens/fluid-design
     ---
     #title
     [Premium]{.text-primary} Composables
@@ -76,7 +76,7 @@ Premium Features for Professional Design Systems
     ---
     icon: i-lucide-zap
     target: _blank
-    to: /docs/theme/design-tokens/composables/fluid-design/viewport
+    to: /docs/theme/design-tokens/fluid-design/viewport
     ---
     #title
     [Performance]{.text-primary} Optimized
@@ -89,7 +89,7 @@ Premium Features for Professional Design Systems
     ---
     icon: i-lucide-book-open
     target: _blank
-    to: /docs/theme/design-tokens/composables/fluid-design
+    to: /docs/theme/design-tokens/fluid-design
     ---
     #title
     [Complete]{.text-primary} Documentation

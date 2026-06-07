@@ -26,7 +26,7 @@ const animations = [
 ] as const;
 
 const meta = {
-	title: "Theme/Recipes/Progress",
+	title: "Theme/Recipes/Feedback/Progress",
 	component: Progress,
 	tags: ["autodocs"],
 	parameters: {

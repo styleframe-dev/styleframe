@@ -159,7 +159,7 @@ More content.
 ```markdown
 ::story-preview
 ---
-story: theme-recipes-badge--default
+story: theme-recipes-feedback-badge--default
 panel: true
 ---
 ::

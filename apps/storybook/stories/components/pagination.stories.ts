@@ -19,7 +19,7 @@ const sizes = ["sm", "md", "lg"] as const;
 const orientations = ["horizontal", "vertical"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Pagination",
+	title: "Theme/Recipes/Navigation/Pagination",
 	component: Pagination,
 	tags: ["autodocs"],
 	parameters: {

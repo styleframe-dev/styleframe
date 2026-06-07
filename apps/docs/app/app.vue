@@ -2,8 +2,10 @@
 import type { ContentNavigationItem, PageCollections } from "@nuxt/content";
 import * as nuxtUiLocales from "@nuxt/ui/locale";
 import { flattenNavigation } from "~/utils/flattenNavigation";
+import { foldCosmeticCategories } from "~/utils/foldCosmeticCategories";
 
-const { seo } = useAppConfig();
+const appConfig = useAppConfig();
+const { seo } = appConfig;
 const site = useSiteConfig();
 const { locale, locales, isEnabled, switchLocalePath } = useDocusI18n();
 
@@ -119,7 +121,13 @@ const { data: navigation } = await useAsyncData(
 				} else {
 					result = localeResult;
 				}
-				return [section.key, flattenNavigation(result)] as const;
+				return [
+					section.key,
+					foldCosmeticCategories(
+						flattenNavigation(result),
+						appConfig.cosmeticCategories ?? {},
+					),
+				] as const;
 			}),
 		);
 		return Object.fromEntries(results) as Record<

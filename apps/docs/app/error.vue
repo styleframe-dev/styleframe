@@ -68,16 +68,49 @@ const { data: navigation } = await useAsyncData(
 					rootResult.find((item) => item.path === `/${locale.value}`)
 						?.children || rootResult;
 				const sectionPath = `/docs/${section.slug}`;
-				const unwrapped =
-					localeResult.length === 1 &&
-					localeResult[0].path === sectionPath &&
-					localeResult[0].page === false
-						? (localeResult[0].children ?? [])
+				let result: ContentNavigationItem[];
+				if (Array.isArray(section.folder)) {
+					const rootIdx =
+						"rootFolder" in section ? (section.rootFolder as number) : -1;
+					const rootWrapper =
+						localeResult.length === 1 && localeResult[0].path === sectionPath
+							? localeResult[0]
+							: null;
+					const allItems = rootWrapper
+						? (rootWrapper.children ?? [])
 						: localeResult;
-				const result = Array.isArray(section.folder)
-					? section.folder
+
+					if (rootIdx >= 0) {
+						const nonRootPaths = new Set(
+							section.folder
+								.filter((_, i) => i !== rootIdx)
+								.map((f) => `${sectionPath}/${f.replace(/^\d+\./, "")}`),
+						);
+						const items: ContentNavigationItem[] = [];
+						for (let i = 0; i < section.folder.length; i++) {
+							if (i === rootIdx) {
+								items.push({
+									...(rootWrapper ?? {}),
+									title: rootWrapper?.title ?? section.label,
+									path: sectionPath,
+									children: allItems.filter(
+										(item) => !nonRootPaths.has(item.path),
+									),
+								} as ContentNavigationItem);
+							} else {
+								const found = allItems.find(
+									(item) =>
+										item.path ===
+										`${sectionPath}/${section.folder[i].replace(/^\d+\./, "")}`,
+								);
+								if (found) items.push(found);
+							}
+						}
+						result = items;
+					} else {
+						result = section.folder
 							.map((folder) =>
-								unwrapped.find(
+								allItems.find(
 									(item) =>
 										item.path ===
 										`${sectionPath}/${folder.replace(/^\d+\./, "")}`,
@@ -85,8 +118,11 @@ const { data: navigation } = await useAsyncData(
 							)
 							.filter(
 								(item): item is ContentNavigationItem => item !== undefined,
-							)
-					: unwrapped;
+							);
+					}
+				} else {
+					result = localeResult;
+				}
 				return [section.key, flattenNavigation(result)] as const;
 			}),
 		);

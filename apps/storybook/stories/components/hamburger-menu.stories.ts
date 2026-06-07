@@ -17,7 +17,7 @@ const animations = [
 ] as const;
 
 const meta = {
-	title: "Theme/Recipes/HamburgerMenu",
+	title: "Theme/Recipes/Actions/HamburgerMenu",
 	component: HamburgerMenu,
 	tags: ["autodocs"],
 	parameters: {

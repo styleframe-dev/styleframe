@@ -48,7 +48,7 @@ Read the 2–3 most similar reference pages in full. Extract the conventions:
 - **Usage block:** `::steps{level="4"}` with three sub-steps: "Register the recipe" (`:::code-tree` with component `.styleframe.ts` + root `styleframe.config.ts`), "Build the component" (`::framework-switcher` with `#vue`, `#react`, and `#other` slots), "See it in action" (`::story-preview`).
 - **Framework switcher:** the "Build the component" step MUST use `::framework-switcher` with `#vue`, `#react`, and `#other` slot markers (Vue first), not `:::tabs` / `::::tabs-item`. The switcher renders one synced toggle across the whole docs site, so a reader's framework choice persists between pages — per-page tabs don't. The toggle always offers all three options (React, Vanilla, Vue); the `#other` slot is the **Vanilla** view, so provide all three — if a slot is missing, the reader sees a "Not available for X — showing Y" fallback notice instead of code. Some older pages still use `:::tabs`; treat `::framework-switcher` as the standard and do not copy the tabs form. The `#vue` and `#react` slots show idiomatic component code; the `#other` (Vanilla) slot shows the runtime returning a class string applied to plain `.ts` + `.html` (see `card.md`).
 - **Code-fence languages:** use only languages the docs Shiki config loads (`apps/docs/nuxt.config.ts` → `content.build.markdown.highlight.langs`: `bash, diff, json, js, ts, html, css, vue, shell, mdc, md, yaml`). The React block's language token MUST be `ts`, NOT `tsx` (and never `jsx`) — `tsx` is not registered and renders unhighlighted. Put the `.tsx` extension in the filename label only, e.g. ` ```ts [src/components/<ComponentName>.tsx] `.
-- **Story-preview embed:** `::story-preview` with YAML front body `story: theme-recipes-<name>--<story>` and optional `panel: true` or `height: NNN`.
+- **Story-preview embed:** `::story-preview` with YAML front body `story: theme-recipes-<category>-<component-name>--<story>` and optional `panel: true` or `height: NNN`. The story ID is Storybook's auto-generated ID from the story's `title: "Theme/Recipes/<Category>/<Component>"`, so it **always includes the category segment** (`actions`, `navigation`, `feedback`, `forms`, `overlays`, `layout`, `ai-chat`) &mdash; e.g. `theme-recipes-feedback-badge--default`, `theme-recipes-layout-pagehero--all-sizes`. PascalCase / multi-word titles collapse per Storybook's rules (`PageHero` &rarr; `pagehero`, `Button Group` &rarr; `button-group`). Take exact IDs from `showcase.md`; never hand-write them without the category segment.
 - **Colors section:** opening sentence, a `::story-preview` of the default-color story, a "Color Reference" sub-heading with a table (`| Color | Token | Use Case |`) and a `::tip` admonition at the end.
 - **Variants section:** one sub-heading per variant style with a 1-sentence description and a `::story-preview` per variant.
 - **Sizes section:** opening sentence, a `::story-preview` of the all-sizes story, and a reference table (`| Size | Font Size | Border Radius |` — adapt columns to the recipe).
@@ -222,7 +222,7 @@ const classes = <componentName>({ color: "<default>", variant: "<default>", size
 
 :::story-preview
 ---
-story: theme-recipes-<component-name>--default
+story: theme-recipes-<category>-<component-name>--default
 panel: true
 ---
 :::
@@ -235,7 +235,7 @@ panel: true
 
 ::story-preview
 ---
-story: theme-recipes-<component-name>--<default-color>
+story: theme-recipes-<category>-<component-name>--<default-color>
 panel: true
 ---
 ::
@@ -244,7 +244,7 @@ panel: true
 
 ::story-preview
 ---
-story: theme-recipes-<component-name>--all-variants
+story: theme-recipes-<category>-<component-name>--all-variants
 height: 420
 ---
 ::
@@ -273,7 +273,7 @@ height: 420
 <Description.>
 ::story-preview
 ---
-story: theme-recipes-<component-name>--solid
+story: theme-recipes-<category>-<component-name>--solid
 panel: true
 ---
 ::
@@ -282,7 +282,7 @@ panel: true
 <Description.>
 ::story-preview
 ---
-story: theme-recipes-<component-name>--outline
+story: theme-recipes-<category>-<component-name>--outline
 panel: true
 ---
 ::
@@ -291,7 +291,7 @@ panel: true
 <Description.>
 ::story-preview
 ---
-story: theme-recipes-<component-name>--soft
+story: theme-recipes-<category>-<component-name>--soft
 panel: true
 ---
 ::
@@ -300,7 +300,7 @@ panel: true
 <Description.>
 ::story-preview
 ---
-story: theme-recipes-<component-name>--subtle
+story: theme-recipes-<category>-<component-name>--subtle
 panel: true
 ---
 ::
@@ -311,7 +311,7 @@ panel: true
 
 ::story-preview
 ---
-story: theme-recipes-<component-name>--all-sizes
+story: theme-recipes-<category>-<component-name>--all-sizes
 height: 480
 ---
 ::
@@ -424,13 +424,13 @@ When you use the `filter` option, compound variants that reference filtered-out 
 
 **Substitutions:**
 
-- Replace every `<ComponentName>`, `<componentName>`, `<component-name>`, `<element>` with real values.
+- Replace every `<ComponentName>`, `<componentName>`, `<component-name>`, `<category>`, `<element>` with real values. `<category>` is the recipe's Storybook category slug (`actions`, `navigation`, `feedback`, `forms`, `overlays`, `layout`, `ai-chat`), matching its `title: "Theme/Recipes/<Category>/<Component>"` and its `05.components/<category>/` docs folder.
 - Replace every `/* union */` with the actual TypeScript union of recipe values (e.g., `"primary" | "secondary" | ...`).
 - Fill every `<!-- ... -->` placeholder with content derived from Phase 2.
 - Trim the Color Reference table to the colors the recipe actually supports (drop rows for colors not in `variants.color`).
 - Trim the Variants section to the variant styles the recipe actually supports.
 - Drop the **Anatomy** section for single-recipe components.
-- Every `::story-preview` story ID must exist in `showcase.md` (or be a story the showcase step would emit under the conventions). Flag missing IDs with `[VERIFY: story ID not found in showcase.md]`.
+- Every `::story-preview` story ID must exist in `showcase.md` (or be a story the showcase step would emit under the conventions) and must include the category segment (`theme-recipes-<category>-<component-name>--<story>`). Flag missing IDs with `[VERIFY: story ID not found in showcase.md]`.
 
 ### Phase 4: Conformance check — `<conformance>`
 
@@ -486,7 +486,7 @@ Before writing the final file:
 - [ ] Technical terms are defined on first use or linked.
 - [ ] All `[VERIFY]` flags preserved for human review.
 - [ ] Tone and voice match the reference pages (second person, imperative, bold lead phrases).
-- [ ] Every `::story-preview` story ID matches `showcase.md`.
+- [ ] Every `::story-preview` story ID matches `showcase.md` and includes the category segment (`theme-recipes-<category>-<component-name>--<story>`).
 - [ ] Cross-links use the correct prefixes: `/docs/api/recipes`, `/docs/theme/design-tokens/presets`.
 - [ ] Anatomy section is present for multi-part recipes and absent for single-recipe.
 - [ ] File written to `apps/docs/content/docs/04.components/02.composables/<nn>.<name>.md`.

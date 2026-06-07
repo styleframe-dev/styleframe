@@ -13,7 +13,7 @@ const aligns = ["start", "center", "end"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Media",
+	title: "Theme/Recipes/Layout/Media",
 	component: Media,
 	tags: ["autodocs"],
 	parameters: {

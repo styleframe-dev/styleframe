@@ -13,7 +13,7 @@ const sizes = ["sm", "md", "lg"] as const;
 const sides = ["start", "end"] as const;
 
 const meta = {
-	title: "Theme/Recipes/ChatMessage",
+	title: "Theme/Recipes/AI Chat/ChatMessage",
 	component: ChatMessage,
 	tags: ["autodocs"],
 	parameters: {

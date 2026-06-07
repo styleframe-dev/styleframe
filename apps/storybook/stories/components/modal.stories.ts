@@ -17,7 +17,7 @@ const variants = ["solid", "soft", "subtle"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Modal",
+	title: "Theme/Recipes/Overlays/Modal",
 	component: Modal,
 	tags: ["autodocs"],
 	parameters: {

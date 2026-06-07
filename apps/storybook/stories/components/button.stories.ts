@@ -26,7 +26,7 @@ const variants = [
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Button",
+	title: "Theme/Recipes/Actions/Button",
 	component: Button,
 	tags: ["autodocs"],
 	parameters: {
