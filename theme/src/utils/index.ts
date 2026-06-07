@@ -7,4 +7,3 @@ export * from "./createUseVariable";
 export * from "./mergeElementOptions";
 export * from "./normalizeRange";
 export * from "./registerElementThemes";
-export * from "./useFieldSelector";
