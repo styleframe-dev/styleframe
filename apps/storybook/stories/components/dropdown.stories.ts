@@ -13,7 +13,7 @@ const variants = ["solid", "soft", "subtle"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Dropdown",
+	title: "Theme/Recipes/Overlays/Dropdown",
 	component: Dropdown,
 	tags: ["autodocs"],
 	parameters: {

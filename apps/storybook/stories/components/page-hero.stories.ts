@@ -17,7 +17,7 @@ const orientations = ["vertical", "horizontal"] as const;
 const alignments = ["start", "center", "end"] as const;
 
 const meta = {
-	title: "Theme/Recipes/PageHero",
+	title: "Theme/Recipes/Layout/PageHero",
 	component: PageHero,
 	tags: ["autodocs"],
 	parameters: {

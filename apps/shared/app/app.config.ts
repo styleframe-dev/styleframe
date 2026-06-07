@@ -96,6 +96,16 @@ export default defineAppConfig({
 				linkLeadingIcon: "size-4 mr-1",
 				linkTrailing: "hidden",
 			},
+			compoundVariants: [
+				{
+					variant: "link",
+					active: false,
+					disabled: false,
+					class: {
+						linkLeadingIcon: "group-data-[state=open]:text-dimmed",
+					},
+				},
+			],
 			defaultVariants: {
 				variant: "link",
 			},

@@ -8,7 +8,7 @@ import BreadcrumbSizeGrid from "../../src/components/components/breadcrumb/previ
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Breadcrumb",
+	title: "Theme/Recipes/Navigation/Breadcrumb",
 	component: Breadcrumb,
 	tags: ["autodocs"],
 	parameters: {

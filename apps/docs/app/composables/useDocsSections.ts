@@ -1,7 +1,9 @@
 import type { ContentNavigationItem } from "@nuxt/content";
-import type { DocsSection } from "~/constants/sections";
 
-export type DocsSectionLink = DocsSection & {
+export type DocsSectionLink = {
+	label: string;
+	icon: string;
+	slug: string;
 	to: string;
 	active: boolean;
 };
@@ -26,14 +28,38 @@ export function useDocsSections() {
 		inject<Ref<Record<string, ContentNavigationItem[]> | null>>("navigation");
 
 	const sections = computed<DocsSectionLink[]>(() =>
-		DOCS_SECTIONS.map((section) => {
+		DOCS_SECTIONS.flatMap((section): DocsSectionLink[] => {
+			if (section.key === "theme") {
+				const tree = navigation?.value?.[section.key] ?? [];
+				const isThemeRoute = route.params.section === section.slug;
+				const activeSegment = themeSegmentFromPath(route.path);
+				return THEME_SUBSECTIONS.map((sub) => {
+					const folders = sub.folders as readonly string[];
+					const groups = tree.filter((group) =>
+						folders.includes(themeSegmentFromPath(group.path ?? "") ?? ""),
+					);
+					const firstPath = findFirstLeafPath(groups);
+					return {
+						label: sub.label,
+						icon: sub.icon,
+						slug: sub.slug,
+						to: firstPath || `/docs/${section.slug}/${sub.folders[0]}`,
+						active: isThemeRoute && folders.includes(activeSegment ?? ""),
+					};
+				});
+			}
+
 			const tree = navigation?.value?.[section.key];
 			const firstPath = findFirstLeafPath(tree);
-			return {
-				...section,
-				to: firstPath || `/docs/${section.slug}`,
-				active: route.params.section === section.slug,
-			};
+			return [
+				{
+					label: section.label,
+					icon: section.icon,
+					slug: section.slug,
+					to: firstPath || `/docs/${section.slug}`,
+					active: route.params.section === section.slug,
+				},
+			];
 		}),
 	);
 

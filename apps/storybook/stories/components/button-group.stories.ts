@@ -9,7 +9,7 @@ import ButtonGroupSizeGrid from "../../src/components/components/button-group/pr
 const orientations = ["horizontal", "vertical"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Button Group",
+	title: "Theme/Recipes/Actions/Button Group",
 	component: ButtonGroup,
 	tags: ["autodocs"],
 	parameters: {

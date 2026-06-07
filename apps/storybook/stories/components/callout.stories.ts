@@ -21,7 +21,7 @@ const sizes = ["sm", "md", "lg"] as const;
 const orientations = ["horizontal", "vertical"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Callout",
+	title: "Theme/Recipes/Feedback/Callout",
 	component: Callout,
 	tags: ["autodocs"],
 	parameters: {

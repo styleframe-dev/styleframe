@@ -14,7 +14,7 @@ const variants = ["solid", "soft", "subtle"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Card",
+	title: "Theme/Recipes/Layout/Card",
 	component: Card,
 	tags: ["autodocs"],
 	parameters: {

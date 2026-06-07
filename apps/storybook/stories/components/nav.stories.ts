@@ -11,7 +11,7 @@ const sizes = ["sm", "md", "lg"] as const;
 const orientations = ["horizontal", "vertical"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Nav",
+	title: "Theme/Recipes/Navigation/Nav",
 	component: Nav,
 	tags: ["autodocs"],
 	parameters: {

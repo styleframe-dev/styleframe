@@ -15,7 +15,7 @@ const variants = ["solid", "soft", "subtle"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Popover",
+	title: "Theme/Recipes/Overlays/Popover",
 	component: Popover,
 	tags: ["autodocs"],
 	parameters: {

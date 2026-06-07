@@ -27,7 +27,7 @@ const positions = [
 ] as const;
 
 const meta = {
-	title: "Theme/Recipes/Chip",
+	title: "Theme/Recipes/Feedback/Chip",
 	component: Chip,
 	tags: ["autodocs"],
 	parameters: {

@@ -111,7 +111,7 @@ const variants = [/* recipe variant values */] as const;
 const sizes = [/* recipe size values */] as const;
 
 const meta = {
-	title: "Theme/Recipes/<ComponentName>",
+	title: "Theme/Recipes/<Category>/<ComponentName>",
 	component: <ComponentName>,
 	tags: ["autodocs"],
 	argTypes: {
@@ -199,15 +199,15 @@ export const Default: Story = {
 
 #### Story IDs (track these — document-recipe reads them)
 
-The generated story IDs follow: `theme-recipes-<component-name>--<story-name>` (story name is kebab-case).
+The generated story IDs follow: `theme-recipes-<category>-<component-name>--<story-name>` (story name is kebab-case). The `<category>` segment is derived from the `title` above &mdash; `<Category>` is the recipe's group (`Actions`, `Navigation`, `Feedback`, `Forms`, `Overlays`, `Layout`, `AI Chat`) and `<category>` is its lowercase-hyphenated slug (`actions`, `navigation`, `feedback`, `forms`, `overlays`, `layout`, `ai-chat`). Pick the category that matches the recipe's existing sibling stories and its `apps/docs/content/docs/05.components/<category>/` docs folder. Omitting the category produces an ID that no `::story-preview` can resolve.
 
 Examples:
-- `theme-recipes-<name>--default`
-- `theme-recipes-<name>--all-variants`
-- `theme-recipes-<name>--all-sizes`
-- `theme-recipes-<name>--primary`, `--secondary`, etc.
-- `theme-recipes-<name>--solid`, `--outline`, etc.
-- `theme-recipes-<name>--extra-small`, `--small`, etc.
+- `theme-recipes-<category>-<name>--default`
+- `theme-recipes-<category>-<name>--all-variants`
+- `theme-recipes-<category>-<name>--all-sizes`
+- `theme-recipes-<category>-<name>--primary`, `--secondary`, etc.
+- `theme-recipes-<category>-<name>--solid`, `--outline`, etc.
+- `theme-recipes-<category>-<name>--extra-small`, `--small`, etc.
 
 Record every story ID in `showcase.md` so `document-recipe` can embed them in the docs page.
 
@@ -333,12 +333,12 @@ Each sub-part follows the same `<script setup>` + `computed classes` + `template
 <!-- Multi-part: list every sub-part Vue file -->
 
 ## Story IDs (used by document-recipe for ::story-preview embeds)
-- theme-recipes-<name>--default
-- theme-recipes-<name>--all-variants
-- theme-recipes-<name>--all-sizes
-- theme-recipes-<name>--<color> × N   (one line per color)
-- theme-recipes-<name>--<variant> × M (one line per variant)
-- theme-recipes-<name>--<size> × K    (one line per size)
+- theme-recipes-<category>-<name>--default
+- theme-recipes-<category>-<name>--all-variants
+- theme-recipes-<category>-<name>--all-sizes
+- theme-recipes-<category>-<name>--<color> × N   (one line per color)
+- theme-recipes-<category>-<name>--<variant> × M (one line per variant)
+- theme-recipes-<category>-<name>--<size> × K    (one line per size)
 
 ## Vue component props
 - color: <union type>

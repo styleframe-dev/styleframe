@@ -11,6 +11,7 @@ export default defineNuxtConfig({
 		resolve("./modules/optimizeDeps"),
 		"@nuxtjs/sitemap",
 		"@nuxt/content",
+		resolve("./modules/nonRouteCategories"),
 	],
 	content: {
 		build: {

@@ -8,7 +8,7 @@ const colors = ["primary", "light", "dark", "neutral"] as const;
 const sizes = ["auto", "sm", "md", "lg"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Spinner",
+	title: "Theme/Recipes/Feedback/Spinner",
 	component: Spinner,
 	tags: ["autodocs"],
 	parameters: {

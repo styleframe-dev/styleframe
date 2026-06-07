@@ -7,7 +7,7 @@ import SkeletonSizeGrid from "../../src/components/components/skeleton/preview/S
 const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Skeleton",
+	title: "Theme/Recipes/Feedback/Skeleton",
 	component: Skeleton,
 	tags: ["autodocs"],
 	parameters: {

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import Placeholder from "../../src/components/components/placeholder/Placeholder.vue";
 
 const meta = {
-	title: "Theme/Recipes/Placeholder",
+	title: "Theme/Recipes/Layout/Placeholder",
 	component: Placeholder,
 	tags: ["autodocs"],
 	parameters: {
