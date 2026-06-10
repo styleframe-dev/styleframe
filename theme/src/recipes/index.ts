@@ -19,4 +19,5 @@ export * from "./placeholder";
 export * from "./popover";
 export * from "./progress";
 export * from "./skeleton";
+export * from "./textarea";
 export * from "./tooltip";
