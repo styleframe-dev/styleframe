@@ -72,15 +72,15 @@ export const AllSizes: StoryObj = {
 
 // Colors
 export const Neutral: Story = {
-	args: { color: "neutral", checked: true, label: "Neutral" },
+	args: { color: "neutral", label: "Neutral" },
 };
 
 export const Light: Story = {
-	args: { color: "light", checked: true, label: "Light" },
+	args: { color: "light", label: "Light" },
 };
 
 export const Dark: Story = {
-	args: { color: "dark", checked: true, label: "Dark" },
+	args: { color: "dark", label: "Dark" },
 };
 
 // States
