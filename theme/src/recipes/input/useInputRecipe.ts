@@ -7,7 +7,7 @@ import { createUseRecipe } from "../../utils/createUseRecipe";
  * background, padding, focus ring via `:focus-within`); the nested input is
  * transparent and inherits typography.
  *
- * Supports color (light, dark, neutral), variant (default, soft, ghost),
+ * Supports color (light, dark, neutral), variant (solid, soft, ghost),
  * size, and three boolean axes — `invalid`, `disabled`, `readonly` — that
  * map to the equivalent native `<input>` attributes from the consumer.
  */
@@ -49,7 +49,7 @@ export const useInputRecipe = createUseRecipe(
 				neutral: {},
 			},
 			variant: {
-				default: {},
+				solid: {},
 				soft: {},
 				ghost: {},
 			},
@@ -95,7 +95,7 @@ export const useInputRecipe = createUseRecipe(
 		compoundVariants: [
 			// Light color (fixed across themes)
 			{
-				match: { color: "light" as const, variant: "default" as const },
+				match: { color: "light" as const, variant: "solid" as const },
 				css: {
 					background: "@color.white",
 					borderColor: "@color.gray-200",
@@ -148,7 +148,7 @@ export const useInputRecipe = createUseRecipe(
 
 			// Dark color (fixed across themes)
 			{
-				match: { color: "dark" as const, variant: "default" as const },
+				match: { color: "dark" as const, variant: "solid" as const },
 				css: {
 					background: "@color.gray-900",
 					borderColor: "@color.gray-700",
@@ -201,7 +201,7 @@ export const useInputRecipe = createUseRecipe(
 
 			// Neutral color (adaptive: light in light mode, dark in dark mode)
 			{
-				match: { color: "neutral" as const, variant: "default" as const },
+				match: { color: "neutral" as const, variant: "solid" as const },
 				css: {
 					background: "@color.white",
 					borderColor: "@color.gray-200",
@@ -298,7 +298,7 @@ export const useInputRecipe = createUseRecipe(
 		],
 		defaultVariants: {
 			color: "neutral",
-			variant: "default",
+			variant: "solid",
 			size: "md",
 			invalid: "false",
 			disabled: "false",

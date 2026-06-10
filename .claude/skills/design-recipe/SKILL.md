@@ -123,7 +123,7 @@ Otherwise, use the single-element pattern: the recipe class goes directly on the
 #### Architecture
 
 ```html
-<span class="input input--neutral input--default input--md">
+<span class="input input--neutral input--solid input--md">
   <span class="input-prefix input-prefix--md">$</span>   <!-- optional -->
   <input class="input-field" />
   <span class="input-suffix input-suffix--md">USD</span> <!-- optional -->
@@ -364,8 +364,8 @@ All values prefixed with `@` are design token references resolved at compile tim
 >
 > **Rules**:
 > - **Outer block**: `@color.text` resolves to dark text — correct for light-appearance variants.
-> - **Inside `&:dark` pinning a light-appearance variant** (e.g. `light` + `default`): use `@color.text-inverted` (which, in dark mode, resolves to the light-mode value) OR absolute tokens like `@color.gray-900`.
-> - **Inside `&:dark` pinning a dark-appearance variant** (e.g. `dark` + `default`): use absolute `@color.white`. Do **not** use `@color.text-inverted` — in dark mode it resolves to dark, producing dark-on-dark.
+> - **Inside `&:dark` pinning a light-appearance variant** (e.g. `light` + `solid`): use `@color.text-inverted` (which, in dark mode, resolves to the light-mode value) OR absolute tokens like `@color.gray-900`.
+> - **Inside `&:dark` pinning a dark-appearance variant** (e.g. `dark` + `solid`): use absolute `@color.white`. Do **not** use `@color.text-inverted` — in dark mode it resolves to dark, producing dark-on-dark.
 > - `@color.white`, `@color.black`, and the entire `@color.gray-50..950` scale are absolute and safe inside both blocks.
 >
 > Quick check: `@color.text*` tokens are only ever safe to copy into a `&:dark` block when the intent is "adapt to dark mode" (as for `neutral`); they are unsafe when the intent is "stay the same across modes" (as for `light`/`dark`).

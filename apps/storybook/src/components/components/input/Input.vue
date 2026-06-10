@@ -5,7 +5,7 @@ import { input, inputPrefix, inputSuffix } from "virtual:styleframe";
 const props = withDefaults(
 	defineProps<{
 		color?: "light" | "dark" | "neutral";
-		variant?: "default" | "soft" | "ghost";
+		variant?: "solid" | "soft" | "ghost";
 		size?: "sm" | "md" | "lg";
 		invalid?: boolean;
 		placeholder?: string;

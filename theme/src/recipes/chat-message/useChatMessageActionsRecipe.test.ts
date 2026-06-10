@@ -59,7 +59,7 @@ describe("useChatMessageActionsRecipe", () => {
 				"outline",
 				"soft",
 				"subtle",
-				"naked",
+				"ghost",
 			]);
 		});
 

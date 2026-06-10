@@ -29,7 +29,7 @@ export const useChatMessageActionsRecipe = createUseRecipe(
 				outline: {},
 				soft: {},
 				subtle: {},
-				naked: {},
+				ghost: {},
 			},
 			size: {
 				sm: { gap: "@0.125", marginTop: "@0.125" },

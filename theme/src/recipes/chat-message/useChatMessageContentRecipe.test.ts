@@ -59,7 +59,7 @@ describe("useChatMessageContentRecipe", () => {
 			]);
 		});
 
-		it("should have all style variants including outline and naked", () => {
+		it("should have all style variants including outline and ghost", () => {
 			const s = createInstance();
 			const recipe = useChatMessageContentRecipe(s);
 
@@ -68,15 +68,15 @@ describe("useChatMessageContentRecipe", () => {
 				"outline",
 				"soft",
 				"subtle",
-				"naked",
+				"ghost",
 			]);
 		});
 
-		it("should have naked variant that strips chrome", () => {
+		it("should have ghost variant that strips chrome", () => {
 			const s = createInstance();
 			const recipe = useChatMessageContentRecipe(s);
 
-			expect(recipe.variants!.variant.naked).toEqual({
+			expect(recipe.variants!.variant.ghost).toEqual({
 				background: "transparent",
 				borderColor: "transparent",
 				paddingTop: "0",
@@ -135,7 +135,7 @@ describe("useChatMessageContentRecipe", () => {
 			const recipe = useChatMessageContentRecipe(s);
 
 			// 3 colors × 4 visual variants (solid/outline/soft/subtle) = 12
-			// (naked has no compound entries — it strips chrome regardless of color)
+			// (ghost has no compound entries — it strips chrome regardless of color)
 			expect(recipe.compoundVariants).toHaveLength(12);
 		});
 
@@ -183,15 +183,15 @@ describe("useChatMessageContentRecipe", () => {
 			});
 		});
 
-		it("should have no compound variants for naked", () => {
+		it("should have no compound variants for ghost", () => {
 			const s = createInstance();
 			const recipe = useChatMessageContentRecipe(s);
 
-			const nakedEntries = recipe.compoundVariants!.filter(
-				(cv) => cv.match.variant === "naked",
+			const ghostEntries = recipe.compoundVariants!.filter(
+				(cv) => cv.match.variant === "ghost",
 			);
 
-			expect(nakedEntries).toHaveLength(0);
+			expect(ghostEntries).toHaveLength(0);
 		});
 	});
 

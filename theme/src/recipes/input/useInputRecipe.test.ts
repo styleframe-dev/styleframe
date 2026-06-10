@@ -111,7 +111,7 @@ describe("useInputRecipe", () => {
 			const recipe = useInputRecipe(s);
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual([
-				"default",
+				"solid",
 				"soft",
 				"ghost",
 			]);
@@ -186,7 +186,7 @@ describe("useInputRecipe", () => {
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
-			variant: "default",
+			variant: "solid",
 			size: "md",
 			invalid: "false",
 			disabled: "false",
@@ -203,16 +203,16 @@ describe("useInputRecipe", () => {
 			expect(recipe.compoundVariants).toHaveLength(12);
 		});
 
-		it("should have correct light default compound variant", () => {
+		it("should have correct light solid compound variant", () => {
 			const s = createInstance();
 			const recipe = useInputRecipe(s);
 
 			const cv = recipe.compoundVariants!.find(
-				(v) => v.match.color === "light" && v.match.variant === "default",
+				(v) => v.match.color === "light" && v.match.variant === "solid",
 			);
 
 			expect(cv).toEqual({
-				match: { color: "light", variant: "default" },
+				match: { color: "light", variant: "solid" },
 				css: {
 					background: "@color.white",
 					borderColor: "@color.gray-200",
@@ -261,16 +261,16 @@ describe("useInputRecipe", () => {
 			});
 		});
 
-		it("should have correct neutral default compound variant with adaptive dark mode", () => {
+		it("should have correct neutral solid compound variant with adaptive dark mode", () => {
 			const s = createInstance();
 			const recipe = useInputRecipe(s);
 
 			const cv = recipe.compoundVariants!.find(
-				(v) => v.match.color === "neutral" && v.match.variant === "default",
+				(v) => v.match.color === "neutral" && v.match.variant === "solid",
 			);
 
 			expect(cv).toEqual({
-				match: { color: "neutral", variant: "default" },
+				match: { color: "neutral", variant: "solid" },
 				css: {
 					background: "@color.white",
 					borderColor: "@color.gray-200",
@@ -427,13 +427,10 @@ describe("useInputRecipe", () => {
 		it("should filter variant axis", () => {
 			const s = createInstance();
 			const recipe = useInputRecipe(s, {
-				filter: { variant: ["default", "soft"] },
+				filter: { variant: ["solid", "soft"] },
 			});
 
-			expect(Object.keys(recipe.variants!.variant)).toEqual([
-				"default",
-				"soft",
-			]);
+			expect(Object.keys(recipe.variants!.variant)).toEqual(["solid", "soft"]);
 		});
 
 		it("should adjust default variants when filtered out", () => {
@@ -443,7 +440,7 @@ describe("useInputRecipe", () => {
 			});
 
 			expect(recipe.defaultVariants?.color).toBeUndefined();
-			expect(recipe.defaultVariants?.variant).toBe("default");
+			expect(recipe.defaultVariants?.variant).toBe("solid");
 			expect(recipe.defaultVariants?.size).toBe("md");
 		});
 	});

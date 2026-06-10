@@ -2,7 +2,7 @@
 import Input from "../Input.vue";
 
 const colors = ["neutral", "light", "dark"] as const;
-const variants = ["default", "soft", "ghost"] as const;
+const variants = ["solid", "soft", "ghost"] as const;
 </script>
 
 <template>
