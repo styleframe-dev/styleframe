@@ -43,6 +43,9 @@ const classes = computed(() => [
 		:aria-expanded="open ? 'true' : 'false'"
 		:class="classes"
 	>
+		<span v-if="slots.icon" class="select-icon" aria-hidden="true">
+			<slot name="icon" />
+		</span>
 		<template v-if="slots.default">
 			<slot />
 		</template>

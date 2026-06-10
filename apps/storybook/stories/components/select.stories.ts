@@ -120,6 +120,46 @@ export const Multiselect: StoryObj = {
 	}),
 };
 
+// Single selection with a leading icon — a country selector. The trigger shows
+// the selected value's flag; each option carries its own flag with a trailing
+// check on the selected row.
+export const CountrySelect: StoryObj = {
+	render: () => ({
+		components: { Select, SelectPanel, SelectOption },
+		setup() {
+			const countries = [
+				{ code: "us", flag: "🇺🇸", name: "United States" },
+				{ code: "gb", flag: "🇬🇧", name: "United Kingdom" },
+				{ code: "fr", flag: "🇫🇷", name: "France" },
+				{ code: "de", flag: "🇩🇪", name: "Germany" },
+				{ code: "jp", flag: "🇯🇵", name: "Japan" },
+			];
+			const selected = "us";
+			return { countries, selected };
+		},
+		template: `
+			<div class="select-wrapper">
+				<Select color="neutral" variant="solid" size="md" :open="true">
+					<template #icon>🇺🇸</template>
+					<span class="select-value">United States</span>
+				</Select>
+				<SelectPanel color="neutral" variant="solid" size="md">
+					<SelectOption
+						v-for="country in countries"
+						:key="country.code"
+						color="neutral"
+						variant="solid"
+						:selected="country.code === selected"
+					>
+						<template #icon>{{ country.flag }}</template>
+						{{ country.name }}
+					</SelectOption>
+				</SelectPanel>
+			</div>
+		`,
+	}),
+};
+
 // Color stories
 export const Neutral: Story = {
 	args: { color: "neutral" },

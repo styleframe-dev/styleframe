@@ -199,7 +199,7 @@ describe("useSelectRecipe", () => {
 	});
 
 	describe("setup callback", () => {
-		it("should register .select-value and .select.-open selectors", () => {
+		it("should register .select-value, .select-icon, and .select.-open selectors", () => {
 			const s = createInstance();
 			useSelectRecipe(s);
 
@@ -208,6 +208,7 @@ describe("useSelectRecipe", () => {
 				.map((child) => (child as { query: string }).query);
 
 			expect(queries).toContain(".select-value");
+			expect(queries).toContain(".select-icon");
 			expect(queries).toContain(".select.-open");
 		});
 	});

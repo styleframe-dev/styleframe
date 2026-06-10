@@ -188,6 +188,19 @@ describe("useSelectOptionRecipe", () => {
 				'.select-option[aria-selected="true"] .select-option-check',
 			);
 		});
+
+		it("should pin the check to the trailing edge via margin-left auto", () => {
+			const s = createInstance();
+			useSelectOptionRecipe(s);
+
+			const checkSelector = s.root.children.find(
+				(child) =>
+					child.type === "selector" &&
+					(child as { query: string }).query === ".select-option-check",
+			) as { declarations: Record<string, unknown> } | undefined;
+
+			expect(checkSelector?.declarations.marginLeft).toBe("auto");
+		});
 	});
 
 	describe("filter", () => {

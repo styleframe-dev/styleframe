@@ -27,6 +27,9 @@ const classes = computed(() =>
 
 <template>
 	<span :class="classes">
+		<span v-if="$slots.icon" class="select-icon" aria-hidden="true">
+			<slot name="icon" />
+		</span>
 		<slot>{{ props.label }}</slot>
 		<button
 			type="button"

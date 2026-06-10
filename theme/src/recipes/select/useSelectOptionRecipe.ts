@@ -237,12 +237,15 @@ export const useSelectOptionRecipe = createUseRecipe(
 	(s) => {
 		const { selector } = s;
 
-		// Leading check indicator — hidden until the option is selected.
+		// Trailing check indicator — pinned to the option's far edge via
+		// `margin-left: auto`, hidden until the option is selected. This frees the
+		// leading edge for an optional `.select-icon` (e.g. a country flag).
 		selector(".select-option-check", {
 			display: "inline-flex",
 			flexShrink: "0",
 			alignItems: "center",
 			justifyContent: "center",
+			marginLeft: "auto",
 			width: "1em",
 			height: "1em",
 			opacity: "0",

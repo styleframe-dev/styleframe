@@ -323,6 +323,19 @@ export const useSelectRecipe = createUseRecipe(
 			},
 		});
 
+		// Shared leading media slot (e.g. a country flag) — reused by the trigger's
+		// selected value, options, and chips. Sized in `em` so it scales with the
+		// surrounding font; `flex-shrink: 0` keeps it from being squished by a long
+		// label. The icon content (img/svg/emoji) is consumer-supplied.
+		selector(".select-icon", {
+			display: "inline-flex",
+			flexShrink: "0",
+			alignItems: "center",
+			justifyContent: "center",
+			width: "1.25em",
+			height: "1.25em",
+		});
+
 		// Keep the focus ring while the panel is open (consumer toggles `.-open`).
 		selector(".select.-open", {
 			outlineWidth: "2px",

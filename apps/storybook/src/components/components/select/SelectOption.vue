@@ -33,7 +33,10 @@ const classes = computed(() =>
 		:aria-disabled="disabled ? 'true' : undefined"
 		:class="classes"
 	>
-		<span class="select-option-check" aria-hidden="true">&checkmark;</span>
+		<span v-if="$slots.icon" class="select-icon" aria-hidden="true">
+			<slot name="icon" />
+		</span>
 		<slot>{{ props.label }}</slot>
+		<span class="select-option-check" aria-hidden="true">&checkmark;</span>
 	</li>
 </template>
