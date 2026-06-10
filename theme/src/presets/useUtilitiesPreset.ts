@@ -263,6 +263,7 @@ import {
 import {
 	useAccentColorUtility,
 	useAppearanceUtility,
+	useWebkitAppearanceUtility,
 	useCaretColorUtility,
 	useColorSchemeUtility,
 	useCursorUtility,
@@ -546,6 +547,7 @@ export interface UtilitiesPresetConfig {
 
 	// Interactivity
 	appearance?: Record<string, string> | false;
+	webkitAppearance?: Record<string, string> | false;
 	colorScheme?: Record<string, string> | false;
 	cursor?: Record<string, string> | false;
 	pointerEvents?: Record<string, string> | false;
@@ -763,6 +765,10 @@ export function useUtilitiesPreset(
 	const placeSelf = resolveValues(config.placeSelf, placeSelfValues);
 	const gridAutoFlow = resolveValues(config.gridAutoFlow, gridAutoFlowValues);
 	const appearance = resolveValues(config.appearance, appearanceValues);
+	const webkitAppearance = resolveValues(
+		config.webkitAppearance,
+		appearanceValues,
+	);
 	const colorScheme = resolveValues(config.colorScheme, colorSchemeValues);
 	const cursor = resolveValues(config.cursor, cursorValues);
 	const pointerEvents = resolveValues(
@@ -1120,6 +1126,14 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("appearance"),
 	);
 	if (appearance) createAppearanceUtility(appearance);
+
+	const createWebkitAppearanceUtility = useWebkitAppearanceUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("-webkit-appearance"),
+	);
+	if (webkitAppearance) createWebkitAppearanceUtility(webkitAppearance);
 
 	const createColorSchemeUtility = useColorSchemeUtility(
 		s,
@@ -2360,6 +2374,7 @@ export function useUtilitiesPreset(
 			resolveUtilityOptions("accent-color"),
 		),
 		createAppearanceUtility,
+		createWebkitAppearanceUtility,
 		createCaretColorUtility: useCaretColorUtility(
 			s,
 			undefined,
