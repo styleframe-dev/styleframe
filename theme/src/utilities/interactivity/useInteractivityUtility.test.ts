@@ -4,6 +4,7 @@ import { consumeCSS } from "@styleframe/transpiler";
 import {
 	useAccentColorUtility,
 	useAppearanceUtility,
+	useWebkitAppearanceUtility,
 	useCaretColorUtility,
 	useColorSchemeUtility,
 	useCursorUtility,
@@ -103,6 +104,51 @@ describe("useAppearanceUtility", () => {
 	it("should handle empty values object", () => {
 		const s = styleframe();
 		useAppearanceUtility(s, {});
+
+		expect(s.root.children).toHaveLength(0);
+	});
+});
+
+describe("useWebkitAppearanceUtility", () => {
+	it("should create utility instances with provided values", () => {
+		const s = styleframe();
+		useWebkitAppearanceUtility(s, { none: "none", auto: "auto" });
+
+		const utilities = s.root.children.filter(
+			(u): u is Utility => isUtility(u) && u.name === "-webkit-appearance",
+		);
+		expect(utilities).toHaveLength(2);
+	});
+
+	it("should set correct declarations", () => {
+		const s = styleframe();
+		useWebkitAppearanceUtility(s, { none: "none" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({ "-webkit-appearance": "none" });
+	});
+
+	it("should compile to correct CSS output", () => {
+		const s = styleframe();
+		useWebkitAppearanceUtility(s, { none: "none" });
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("-webkit-appearance: none;");
+	});
+
+	it("should use default values when called without arguments", () => {
+		const s = styleframe();
+		useWebkitAppearanceUtility(s);
+
+		const utilities = s.root.children.filter(
+			(u): u is Utility => isUtility(u) && u.name === "-webkit-appearance",
+		);
+		expect(utilities).toHaveLength(Object.keys(appearanceValues).length);
+	});
+
+	it("should handle empty values object", () => {
+		const s = styleframe();
+		useWebkitAppearanceUtility(s, {});
 
 		expect(s.root.children).toHaveLength(0);
 	});

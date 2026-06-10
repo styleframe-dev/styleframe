@@ -34,6 +34,24 @@ export const useAppearanceUtility = createUseUtility(
 );
 
 /**
+ * Create -webkit-appearance utility classes.
+ *
+ * The vendor-prefixed counterpart to `appearance`, used to reset native form
+ * control styling in Safari < 15.4. Shares the `appearanceValues` defaults.
+ *
+ * The declaration uses the explicit `-webkit-appearance` key (not the
+ * `WebkitAppearance` camelCase form) because the camelCase-to-kebab transform
+ * drops the leading dash, which would emit the invalid `webkit-appearance`.
+ */
+export const useWebkitAppearanceUtility = createUseUtility(
+	"-webkit-appearance",
+	({ value }) => ({
+		"-webkit-appearance": value,
+	}),
+	{ defaults: appearanceValues },
+);
+
+/**
  * Create caret-color utility classes.
  */
 export const useCaretColorUtility = createUseUtility(
