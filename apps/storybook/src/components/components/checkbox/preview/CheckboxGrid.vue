@@ -5,7 +5,12 @@ const colors = ["neutral", "light", "dark"] as const;
 const states = [
 	{ label: "unchecked", checked: false, indeterminate: false, disabled: false },
 	{ label: "checked", checked: true, indeterminate: false, disabled: false },
-	{ label: "indeterminate", checked: false, indeterminate: true, disabled: false },
+	{
+		label: "indeterminate",
+		checked: false,
+		indeterminate: true,
+		disabled: false,
+	},
 	{ label: "disabled", checked: false, indeterminate: false, disabled: true },
 	{
 		label: "disabled checked",
