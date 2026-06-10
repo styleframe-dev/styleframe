@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { computed, useSlots } from "vue";
-import { input, inputPrefix, inputSuffix } from "virtual:styleframe";
+import { textarea, textareaPrefix, textareaSuffix } from "virtual:styleframe";
 
 const props = withDefaults(
 	defineProps<{
 		color?: "light" | "dark" | "neutral";
 		variant?: "default" | "soft" | "ghost";
 		size?: "sm" | "md" | "lg";
+		resize?: "none" | "vertical" | "horizontal" | "both";
 		invalid?: boolean;
 		placeholder?: string;
 		modelValue?: string;
 		disabled?: boolean;
 		readonly?: boolean;
-		type?: string;
+		rows?: number;
 	}>(),
 	{
-		type: "text",
 		size: "md",
+		rows: 4,
 	},
 );
 
@@ -27,21 +28,22 @@ const emit = defineEmits<{
 const slots = useSlots();
 
 const wrapperClasses = computed(() =>
-	input({
+	textarea({
 		color: props.color,
 		variant: props.variant,
 		size: props.size,
+		resize: props.resize,
 		invalid: props.invalid ? "true" : "false",
 		disabled: props.disabled ? "true" : "false",
 		readonly: props.readonly ? "true" : "false",
 	}),
 );
 
-const prefixClasses = computed(() => inputPrefix({ size: props.size }));
-const suffixClasses = computed(() => inputSuffix({ size: props.size }));
+const prefixClasses = computed(() => textareaPrefix({ size: props.size }));
+const suffixClasses = computed(() => textareaSuffix({ size: props.size }));
 
 function onInput(event: Event) {
-	emit("update:modelValue", (event.target as HTMLInputElement).value);
+	emit("update:modelValue", (event.target as HTMLTextAreaElement).value);
 }
 </script>
 
@@ -50,9 +52,9 @@ function onInput(event: Event) {
 		<span v-if="slots.prefix" :class="prefixClasses">
 			<slot name="prefix" />
 		</span>
-		<input
-			class="input-field"
-			:type="type"
+		<textarea
+			class="textarea-field"
+			:rows="rows"
 			:placeholder="placeholder"
 			:value="modelValue"
 			:disabled="disabled"

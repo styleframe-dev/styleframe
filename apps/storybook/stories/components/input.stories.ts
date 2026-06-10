@@ -9,7 +9,7 @@ import InputGrid from "@/components/components/input/preview/InputGrid.vue";
 import InputSizeGrid from "@/components/components/input/preview/InputSizeGrid.vue";
 
 const colors = ["neutral", "light", "dark"] as const;
-const variants = ["solid", "soft", "ghost"] as const;
+const variants = ["default", "soft", "ghost"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
@@ -60,7 +60,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
 	args: {
 		color: "neutral",
-		variant: "solid",
+		variant: "default",
 		size: "md",
 		invalid: false,
 		placeholder: "Enter text...",
@@ -104,10 +104,10 @@ export const Dark: Story = {
 };
 
 // Variant stories
-export const Solid: Story = {
+export const DefaultVariant: Story = {
 	args: {
-		variant: "solid",
-		placeholder: "Solid variant",
+		variant: "default",
+		placeholder: "Default variant",
 	},
 };
 

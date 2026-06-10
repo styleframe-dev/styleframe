@@ -4,7 +4,7 @@ import {
 	useFocusWithinModifier,
 	useHoverModifier,
 } from "../../modifiers/usePseudoStateModifiers";
-import { useInputRecipe } from "./useInputRecipe";
+import { useTextareaRecipe } from "./useTextareaRecipe";
 
 function createInstance() {
 	const s = styleframe();
@@ -51,22 +51,22 @@ function createInstance() {
 	return s;
 }
 
-describe("useInputRecipe", () => {
+describe("useTextareaRecipe", () => {
 	it("should create a recipe with correct metadata", () => {
 		const s = createInstance();
-		const recipe = useInputRecipe(s);
+		const recipe = useTextareaRecipe(s);
 
 		expect(recipe.type).toBe("recipe");
-		expect(recipe.name).toBe("input");
+		expect(recipe.name).toBe("textarea");
 	});
 
 	it("should have correct base styles", () => {
 		const s = createInstance();
-		const recipe = useInputRecipe(s);
+		const recipe = useTextareaRecipe(s);
 
 		expect(recipe.base).toEqual({
-			display: "inline-flex",
-			alignItems: "center",
+			display: "flex",
+			alignItems: "flex-start",
 			fontFamily: "inherit",
 			fontSize: "@font-size.sm",
 			fontWeight: "@font-weight.normal",
@@ -97,7 +97,7 @@ describe("useInputRecipe", () => {
 	describe("variants", () => {
 		it("should have all color variants", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
 			expect(Object.keys(recipe.variants!.color)).toEqual([
 				"light",
@@ -108,7 +108,7 @@ describe("useInputRecipe", () => {
 
 		it("should have all style variants", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual([
 				"default",
@@ -119,7 +119,7 @@ describe("useInputRecipe", () => {
 
 		it("should have size variants with correct styles", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
 			expect(recipe.variants!.size).toEqual({
 				sm: {
@@ -149,9 +149,21 @@ describe("useInputRecipe", () => {
 			});
 		});
 
+		it("should have all resize variants", () => {
+			const s = createInstance();
+			const recipe = useTextareaRecipe(s);
+
+			expect(Object.keys(recipe.variants!.resize)).toEqual([
+				"none",
+				"vertical",
+				"horizontal",
+				"both",
+			]);
+		});
+
 		it("should have invalid boolean variants", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
 			expect(recipe.variants!.invalid).toEqual({
 				true: {},
@@ -161,7 +173,7 @@ describe("useInputRecipe", () => {
 
 		it("should have disabled boolean variants", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
 			expect(recipe.variants!.disabled).toEqual({
 				true: {},
@@ -171,7 +183,7 @@ describe("useInputRecipe", () => {
 
 		it("should have readonly boolean variants", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
 			expect(recipe.variants!.readonly).toEqual({
 				true: {},
@@ -182,12 +194,13 @@ describe("useInputRecipe", () => {
 
 	it("should have correct default variants", () => {
 		const s = createInstance();
-		const recipe = useInputRecipe(s);
+		const recipe = useTextareaRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
 			variant: "default",
 			size: "md",
+			resize: "vertical",
 			invalid: "false",
 			disabled: "false",
 			readonly: "false",
@@ -195,75 +208,18 @@ describe("useInputRecipe", () => {
 	});
 
 	describe("compound variants", () => {
-		it("should have 12 compound variants total", () => {
+		it("should have 16 compound variants total", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
-			// 3 colors × 3 variants = 9, plus 3 standalone (invalid, readonly, disabled)
-			expect(recipe.compoundVariants).toHaveLength(12);
-		});
-
-		it("should have correct light default compound variant", () => {
-			const s = createInstance();
-			const recipe = useInputRecipe(s);
-
-			const cv = recipe.compoundVariants!.find(
-				(v) => v.match.color === "light" && v.match.variant === "default",
-			);
-
-			expect(cv).toEqual({
-				match: { color: "light", variant: "default" },
-				css: {
-					background: "@color.white",
-					borderColor: "@color.gray-200",
-					color: "@color.text",
-					"&:hover": {
-						borderColor: "@color.gray-300",
-					},
-					"&:dark": {
-						background: "@color.white",
-						borderColor: "@color.gray-200",
-						color: "@color.text-inverted",
-					},
-					"&:dark:hover": {
-						borderColor: "@color.gray-300",
-					},
-				},
-			});
-		});
-
-		it("should have correct dark soft compound variant", () => {
-			const s = createInstance();
-			const recipe = useInputRecipe(s);
-
-			const cv = recipe.compoundVariants!.find(
-				(v) => v.match.color === "dark" && v.match.variant === "soft",
-			);
-
-			expect(cv).toEqual({
-				match: { color: "dark", variant: "soft" },
-				css: {
-					background: "@color.gray-800",
-					borderColor: "@color.gray-700",
-					color: "@color.gray-300",
-					"&:hover": {
-						borderColor: "@color.gray-600",
-					},
-					"&:dark": {
-						background: "@color.gray-800",
-						borderColor: "@color.gray-700",
-						color: "@color.gray-300",
-					},
-					"&:dark:hover": {
-						borderColor: "@color.gray-600",
-					},
-				},
-			});
+			// 3 colors × 3 variants = 9, plus 3 standalone states
+			// (invalid, readonly, disabled), plus 4 resize markers.
+			expect(recipe.compoundVariants).toHaveLength(16);
 		});
 
 		it("should have correct neutral default compound variant with adaptive dark mode", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
 			const cv = recipe.compoundVariants!.find(
 				(v) => v.match.color === "neutral" && v.match.variant === "default",
@@ -290,23 +246,9 @@ describe("useInputRecipe", () => {
 			});
 		});
 
-		it("should have correct ghost compound variant with transparent border", () => {
-			const s = createInstance();
-			const recipe = useInputRecipe(s);
-
-			const cv = recipe.compoundVariants!.find(
-				(v) => v.match.color === "neutral" && v.match.variant === "ghost",
-			);
-
-			expect(cv?.css).toMatchObject({
-				background: "transparent",
-				borderColor: "transparent",
-			});
-		});
-
 		it("should have correct invalid compound variant overriding border and focus-within ring", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
 			const cv = recipe.compoundVariants!.find(
 				(v) => v.match.invalid === "true",
@@ -332,29 +274,9 @@ describe("useInputRecipe", () => {
 			});
 		});
 
-		it("should have correct readonly compound variant with subtle background", () => {
-			const s = createInstance();
-			const recipe = useInputRecipe(s);
-
-			const cv = recipe.compoundVariants!.find(
-				(v) => v.match.readonly === "true",
-			);
-
-			expect(cv).toEqual({
-				match: { readonly: "true" },
-				css: {
-					background: "@color.gray-50",
-					cursor: "default",
-					"&:dark": {
-						background: "@color.gray-800",
-					},
-				},
-			});
-		});
-
 		it("should have correct disabled compound variant with dimmed styling", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s);
+			const recipe = useTextareaRecipe(s);
 
 			const cv = recipe.compoundVariants!.find(
 				(v) => v.match.disabled === "true",
@@ -369,28 +291,66 @@ describe("useInputRecipe", () => {
 				},
 			});
 		});
+
+		it("should map each resize value to a marker class", () => {
+			const s = createInstance();
+			const recipe = useTextareaRecipe(s);
+
+			expect(
+				recipe.compoundVariants!.find((v) => v.match.resize === "vertical"),
+			).toEqual({
+				match: { resize: "vertical" },
+				className: "-resize-vertical",
+			});
+			expect(
+				recipe.compoundVariants!.find((v) => v.match.resize === "both"),
+			).toEqual({
+				match: { resize: "both" },
+				className: "-resize-both",
+			});
+		});
 	});
 
 	describe("setup callback", () => {
-		it("should register a .input-field selector with transparent styling", () => {
+		it("should register a .textarea-field selector with transparent styling", () => {
 			const s = createInstance();
-			useInputRecipe(s);
+			useTextareaRecipe(s);
 
-			const inputFieldSelector = s.root.children.find(
+			const fieldSelector = s.root.children.find(
 				(child) =>
 					child.type === "selector" &&
-					(child as { query: string }).query === ".input-field",
-			) as { type: "selector"; query: string; children: unknown[] } | undefined;
+					(child as { query: string }).query === ".textarea-field",
+			);
 
-			expect(inputFieldSelector).toBeDefined();
-			expect(inputFieldSelector?.query).toBe(".input-field");
+			expect(fieldSelector).toBeDefined();
+		});
+
+		it("should register resize selectors targeting the nested field", () => {
+			const s = createInstance();
+			useTextareaRecipe(s);
+
+			const expectedQueries = [
+				".textarea.-resize-none .textarea-field",
+				".textarea.-resize-vertical .textarea-field",
+				".textarea.-resize-horizontal .textarea-field",
+				".textarea.-resize-both .textarea-field",
+			];
+
+			for (const query of expectedQueries) {
+				const rule = s.root.children.find(
+					(child) =>
+						child.type === "selector" &&
+						(child as { query: string }).query === query,
+				);
+				expect(rule, `missing resize selector: ${query}`).toBeDefined();
+			}
 		});
 	});
 
 	describe("config overrides", () => {
 		it("should allow overriding base styles", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s, {
+			const recipe = useTextareaRecipe(s, {
 				base: { display: "block" },
 			});
 
@@ -401,7 +361,7 @@ describe("useInputRecipe", () => {
 	describe("filter", () => {
 		it("should filter color variants", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s, {
+			const recipe = useTextareaRecipe(s, {
 				filter: { color: ["neutral"] },
 			});
 
@@ -410,40 +370,42 @@ describe("useInputRecipe", () => {
 
 		it("should prune compound variants when filtering colors", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s, {
+			const recipe = useTextareaRecipe(s, {
 				filter: { color: ["neutral"] },
 			});
 
-			// Every color-scoped compound variant should be for `neutral`;
-			// the standalone invalid/readonly/disabled compounds have no `color` field.
+			// Every color-scoped compound variant should be for `neutral`; the
+			// standalone state and resize compounds have no `color` field.
 			expect(
 				recipe.compoundVariants!.every(
 					(cv) => cv.match.color === undefined || cv.match.color === "neutral",
 				),
 			).toBe(true);
-			expect(recipe.compoundVariants!.length).toBeLessThan(12);
+			expect(recipe.compoundVariants!.length).toBeLessThan(16);
 		});
 
-		it("should filter variant axis", () => {
+		it("should keep resize variants when filtering colors", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s, {
-				filter: { variant: ["default", "soft"] },
+			const recipe = useTextareaRecipe(s, {
+				filter: { color: ["neutral"] },
 			});
 
-			expect(Object.keys(recipe.variants!.variant)).toEqual([
-				"default",
-				"soft",
+			expect(Object.keys(recipe.variants!.resize)).toEqual([
+				"none",
+				"vertical",
+				"horizontal",
+				"both",
 			]);
 		});
 
 		it("should adjust default variants when filtered out", () => {
 			const s = createInstance();
-			const recipe = useInputRecipe(s, {
+			const recipe = useTextareaRecipe(s, {
 				filter: { color: ["light"] },
 			});
 
 			expect(recipe.defaultVariants?.color).toBeUndefined();
-			expect(recipe.defaultVariants?.variant).toBe("default");
+			expect(recipe.defaultVariants?.resize).toBe("vertical");
 			expect(recipe.defaultVariants?.size).toBe("md");
 		});
 	});

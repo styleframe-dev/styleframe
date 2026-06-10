@@ -1,4 +1,4 @@
-import { createUseRecipe } from "../../utils/createUseRecipe";
+import { createFieldSlotRecipe } from "./createFieldRecipe";
 
 /**
  * Input prepend recipe — transparent leading slot inside an input group.
@@ -6,10 +6,4 @@ import { createUseRecipe } from "../../utils/createUseRecipe";
  * dropdown, plain text, ...) brings its own visual language; the
  * `input-group` wrapper provides the shared field surface behind it.
  */
-export const useInputPrependRecipe = createUseRecipe("input-prepend", {
-	base: {
-		display: "inline-flex",
-		alignItems: "center",
-		flexShrink: "0",
-	},
-});
+export const useInputPrependRecipe = createFieldSlotRecipe("input-prepend");
