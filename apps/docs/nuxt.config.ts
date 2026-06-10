@@ -99,6 +99,14 @@ export default defineNuxtConfig({
 		},
 	},
 	/**
+	 * Prerendering bakes every OG image at build time, so no runtime
+	 * generation endpoint is needed (or exposed unsigned).
+	 * @docs https://nuxtseo.com/og-image/guides/zero-runtime
+	 */
+	ogImage: {
+		zeroRuntime: true,
+	},
+	/**
 	 * @docs https://nuxt.com/modules/sitemap
 	 */
 	sitemap: {
