@@ -75,12 +75,62 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Single selection with leading icons — a country selector. The trigger shows
+// the selected value's flag; each option carries its own flag with a trailing
+// check on the selected row. Driven by the color / variant / size controls.
 export const Default: Story = {
 	args: {
 		color: "neutral",
 		variant: "solid",
 		size: "md",
 	},
+	render: (args) => ({
+		components: {
+			Select,
+			SelectPanel,
+			SelectOption,
+			SelectLabel,
+			SelectSeparator,
+		},
+		setup() {
+			const panelVariant =
+				args.variant === "ghost" ? "subtle" : (args.variant ?? "solid");
+			return { args, panelVariant };
+		},
+		template: `
+			<div class="select-wrapper">
+				<Select v-bind="args" :open="true">
+					<template #icon>🇺🇸</template>
+					<span class="select-value">United States</span>
+				</Select>
+				<SelectPanel :color="args.color" :variant="panelVariant" :size="args.size">
+					<SelectLabel :color="args.color" :size="args.size">Popular</SelectLabel>
+					<SelectOption :color="args.color" :variant="panelVariant" :size="args.size" :selected="true">
+						<template #icon>🇺🇸</template>
+						United States
+					</SelectOption>
+					<SelectOption :color="args.color" :variant="panelVariant" :size="args.size">
+						<template #icon>🇬🇧</template>
+						United Kingdom
+					</SelectOption>
+					<SelectOption :color="args.color" :variant="panelVariant" :size="args.size">
+						<template #icon>🇫🇷</template>
+						France
+					</SelectOption>
+					<SelectOption :color="args.color" :variant="panelVariant" :size="args.size">
+						<template #icon>🇩🇪</template>
+						Germany
+					</SelectOption>
+					<SelectSeparator :color="args.color" />
+					<SelectLabel :color="args.color" :size="args.size">Coming soon</SelectLabel>
+					<SelectOption :color="args.color" :variant="panelVariant" :size="args.size" :disabled="true">
+						<template #icon>🇯🇵</template>
+						Japan
+					</SelectOption>
+				</SelectPanel>
+			</div>
+		`,
+	}),
 };
 
 export const AllVariants: StoryObj = {
@@ -114,46 +164,6 @@ export const Multiselect: StoryObj = {
 					<SelectOption color="neutral" variant="solid" :selected="true">Product</SelectOption>
 					<SelectOption color="neutral" variant="solid">Marketing</SelectOption>
 					<SelectOption color="neutral" variant="solid">Sales</SelectOption>
-				</SelectPanel>
-			</div>
-		`,
-	}),
-};
-
-// Single selection with a leading icon — a country selector. The trigger shows
-// the selected value's flag; each option carries its own flag with a trailing
-// check on the selected row.
-export const CountrySelect: StoryObj = {
-	render: () => ({
-		components: { Select, SelectPanel, SelectOption },
-		setup() {
-			const countries = [
-				{ code: "us", flag: "🇺🇸", name: "United States" },
-				{ code: "gb", flag: "🇬🇧", name: "United Kingdom" },
-				{ code: "fr", flag: "🇫🇷", name: "France" },
-				{ code: "de", flag: "🇩🇪", name: "Germany" },
-				{ code: "jp", flag: "🇯🇵", name: "Japan" },
-			];
-			const selected = "us";
-			return { countries, selected };
-		},
-		template: `
-			<div class="select-wrapper">
-				<Select color="neutral" variant="solid" size="md" :open="true">
-					<template #icon>🇺🇸</template>
-					<span class="select-value">United States</span>
-				</Select>
-				<SelectPanel color="neutral" variant="solid" size="md">
-					<SelectOption
-						v-for="country in countries"
-						:key="country.code"
-						color="neutral"
-						variant="solid"
-						:selected="country.code === selected"
-					>
-						<template #icon>{{ country.flag }}</template>
-						{{ country.name }}
-					</SelectOption>
 				</SelectPanel>
 			</div>
 		`,
