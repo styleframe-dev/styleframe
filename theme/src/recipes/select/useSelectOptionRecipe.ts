@@ -45,12 +45,10 @@ export const useSelectOptionRecipe = createUseRecipe(
 				outlineColor: "@color.primary",
 				outlineOffset: "2px",
 			},
+			// Weight is theme- and color-independent; the selected background is
+			// set per color in compoundVariants so `light`/`dark` stay theme-fixed.
 			"&:aria-selected": {
 				fontWeight: "@font-weight.medium",
-				background: "@color.gray-100",
-			},
-			"&:dark:aria-selected": {
-				background: "@color.gray-800",
 			},
 			"&:disabled": {
 				cursor: "not-allowed",
@@ -225,6 +223,31 @@ export const useSelectOptionRecipe = createUseRecipe(
 					"&:dark:hover": { background: "@color.gray-750" },
 					"&:dark:focus": { background: "@color.gray-750" },
 					"&:dark:active": { background: "@color.gray-700" },
+				},
+			},
+
+			// Selected-row tint (per color so `light`/`dark` stay fixed across
+			// themes; only `neutral` adapts). Applied on top of the color×variant
+			// rules above for `[aria-selected="true"]` rows.
+			{
+				match: { color: "light" as const },
+				css: {
+					"&:aria-selected": { background: "@color.gray-100" },
+					"&:dark:aria-selected": { background: "@color.gray-100" },
+				},
+			},
+			{
+				match: { color: "dark" as const },
+				css: {
+					"&:aria-selected": { background: "@color.gray-800" },
+					"&:dark:aria-selected": { background: "@color.gray-800" },
+				},
+			},
+			{
+				match: { color: "neutral" as const },
+				css: {
+					"&:aria-selected": { background: "@color.gray-100" },
+					"&:dark:aria-selected": { background: "@color.gray-800" },
 				},
 			},
 		],

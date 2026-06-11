@@ -76,16 +76,14 @@ describe("useSelectOptionRecipe", () => {
 		const s = createInstance();
 		const recipe = useSelectOptionRecipe(s);
 
+		// The selected weight lives in base; the selected background is per-color
+		// (see compound variants) so `light`/`dark` stay theme-fixed.
 		expect(recipe.base).toMatchObject({
 			display: "flex",
 			width: "100%",
 			cursor: "pointer",
 			"&:aria-selected": {
 				fontWeight: "@font-weight.medium",
-				background: "@color.gray-100",
-			},
-			"&:dark:aria-selected": {
-				background: "@color.gray-800",
 			},
 			"&:disabled": {
 				cursor: "not-allowed",
@@ -97,6 +95,38 @@ describe("useSelectOptionRecipe", () => {
 				opacity: "0.75",
 				pointerEvents: "none",
 			},
+		});
+		// The adaptive background must NOT be in base.
+		expect(
+			(recipe.base as Record<string, Record<string, unknown>>)[
+				"&:aria-selected"
+			]?.background,
+		).toBeUndefined();
+	});
+
+	it("should keep the selected tint theme-fixed for light/dark, adaptive for neutral", () => {
+		const s = createInstance();
+		const recipe = useSelectOptionRecipe(s);
+
+		const colorOnly = (color: string) =>
+			recipe.compoundVariants!.find(
+				(cv) => cv.match.color === color && cv.match.variant === undefined,
+			);
+
+		// light stays light in both themes
+		expect(colorOnly("light")?.css).toEqual({
+			"&:aria-selected": { background: "@color.gray-100" },
+			"&:dark:aria-selected": { background: "@color.gray-100" },
+		});
+		// dark stays dark in both themes
+		expect(colorOnly("dark")?.css).toEqual({
+			"&:aria-selected": { background: "@color.gray-800" },
+			"&:dark:aria-selected": { background: "@color.gray-800" },
+		});
+		// neutral adapts
+		expect(colorOnly("neutral")?.css).toEqual({
+			"&:aria-selected": { background: "@color.gray-100" },
+			"&:dark:aria-selected": { background: "@color.gray-800" },
 		});
 	});
 
@@ -143,11 +173,12 @@ describe("useSelectOptionRecipe", () => {
 	});
 
 	describe("compound variants", () => {
-		it("should have 9 compound variants total", () => {
+		it("should have 12 compound variants total", () => {
 			const s = createInstance();
 			const recipe = useSelectOptionRecipe(s);
 
-			expect(recipe.compoundVariants).toHaveLength(9);
+			// 9 color×variant + 3 color-only selected-tint compounds
+			expect(recipe.compoundVariants).toHaveLength(12);
 		});
 
 		it("should have neutral solid hover/focus/active states", () => {
@@ -214,7 +245,8 @@ describe("useSelectOptionRecipe", () => {
 			expect(
 				recipe.compoundVariants!.every((cv) => cv.match.color === "neutral"),
 			).toBe(true);
-			expect(recipe.compoundVariants).toHaveLength(3);
+			// 3 neutral color×variant + 1 neutral color-only selected-tint compound
+			expect(recipe.compoundVariants).toHaveLength(4);
 		});
 	});
 });
