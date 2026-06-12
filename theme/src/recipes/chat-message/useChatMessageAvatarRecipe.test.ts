@@ -72,7 +72,7 @@ describe("useChatMessageAvatarRecipe", () => {
 				"outline",
 				"soft",
 				"subtle",
-				"naked",
+				"ghost",
 			]);
 		});
 

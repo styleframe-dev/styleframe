@@ -20,6 +20,7 @@ export * from "./placeholder";
 export * from "./popover";
 export * from "./progress";
 export * from "./radio";
+export * from "./select";
 export * from "./skeleton";
 export * from "./textarea";
 export * from "./tooltip";
