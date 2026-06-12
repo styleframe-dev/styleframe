@@ -33,7 +33,7 @@ export const useChatMessageAvatarRecipe = createUseRecipe(
 				outline: {},
 				soft: {},
 				subtle: {},
-				naked: {},
+				ghost: {},
 			},
 			size: {
 				sm: { width: "@1.5", height: "@1.5" },

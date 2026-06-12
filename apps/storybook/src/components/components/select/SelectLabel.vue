@@ -1,27 +1,25 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { chatMessageAvatar } from "virtual:styleframe";
+import { selectLabel } from "virtual:styleframe";
 
 const props = withDefaults(
 	defineProps<{
 		color?: "light" | "dark" | "neutral";
-		variant?: "solid" | "outline" | "soft" | "subtle" | "ghost";
 		size?: "sm" | "md" | "lg";
 	}>(),
 	{},
 );
 
 const classes = computed(() =>
-	chatMessageAvatar({
+	selectLabel({
 		color: props.color,
-		variant: props.variant,
 		size: props.size,
 	}),
 );
 </script>
 
 <template>
-	<div :class="classes">
+	<li role="presentation" :class="classes">
 		<slot />
-	</div>
+	</li>
 </template>
