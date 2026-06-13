@@ -59,11 +59,11 @@ export const useSidebarRecipe = createUseRecipe(
 				match: { color: "light" as const, variant: "solid" as const },
 				css: {
 					background: "@color.white",
-					color: "@color.text",
+					color: "@color.gray-900",
 					borderColor: "@color.gray-200",
 					"&:dark": {
 						background: "@color.white",
-						color: "@color.text-inverted",
+						color: "@color.gray-900",
 						borderColor: "@color.gray-200",
 					},
 				},
@@ -98,11 +98,11 @@ export const useSidebarRecipe = createUseRecipe(
 				match: { color: "dark" as const, variant: "solid" as const },
 				css: {
 					background: "@color.gray-900",
-					color: "@color.text-inverted",
+					color: "@color.gray-100",
 					borderColor: "@color.gray-700",
 					"&:dark": {
 						background: "@color.gray-900",
-						color: "@color.text",
+						color: "@color.gray-100",
 						borderColor: "@color.gray-700",
 					},
 				},

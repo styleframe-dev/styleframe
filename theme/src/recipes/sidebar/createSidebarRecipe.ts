@@ -115,11 +115,11 @@ export function createSidebarMenuButtonRecipe(name: string) {
 			{
 				match: { color: "light" as const, variant: "ghost" as const },
 				css: {
-					color: "@color.text",
+					color: "@color.gray-900",
 					"&:hover": { background: "@color.gray-100" },
 					"&:focus": { background: "@color.gray-100" },
 					"&:active": { background: "@color.gray-150" },
-					"&:dark": { color: "@color.text-inverted" },
+					"&:dark": { color: "@color.gray-900" },
 					"&:dark:hover": { background: "@color.gray-100" },
 					"&:dark:focus": { background: "@color.gray-100" },
 					"&:dark:active": { background: "@color.gray-150" },
@@ -222,12 +222,12 @@ export function createSidebarMenuButtonRecipe(name: string) {
 				match: { color: "light" as const, active: "true" as const },
 				css: {
 					background: "@color.gray-100",
-					color: "@color.text",
+					color: "@color.gray-900",
 					"&:hover": { background: "@color.gray-150" },
 					"&:focus": { background: "@color.gray-150" },
 					"&:dark": {
 						background: "@color.gray-100",
-						color: "@color.text-inverted",
+						color: "@color.gray-900",
 					},
 					"&:dark:hover": { background: "@color.gray-150" },
 					"&:dark:focus": { background: "@color.gray-150" },

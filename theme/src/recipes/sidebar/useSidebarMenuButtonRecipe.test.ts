@@ -218,6 +218,31 @@ describe("useSidebarMenuButtonRecipe", () => {
 			);
 			expect(activeIndex).toBeGreaterThan(variantIndex);
 		});
+
+		it("should use mode-independent text for the fixed light color", () => {
+			const s = createInstance();
+			const recipe = useSidebarMenuButtonRecipe(s);
+
+			// The `light` button sits on a fixed light surface, so its text must stay dark in
+			// both color schemes. Using the adaptive `@color.text` / `@color.text-inverted`
+			// tokens here renders light text under `prefers-color-scheme: dark` (when the
+			// design tokens are not in their `[data-theme="dark"]` values).
+			const lightGhost = recipe.compoundVariants!.find(
+				(cv) => cv.match.color === "light" && cv.match.variant === "ghost",
+			);
+			expect(lightGhost!.css!.color).toBe("@color.gray-900");
+			expect((lightGhost!.css!["&:dark"] as { color: string }).color).toBe(
+				"@color.gray-900",
+			);
+
+			const lightActive = recipe.compoundVariants!.find(
+				(cv) => cv.match.color === "light" && cv.match.active === "true",
+			);
+			expect(lightActive!.css!.color).toBe("@color.gray-900");
+			expect((lightActive!.css!["&:dark"] as { color: string }).color).toBe(
+				"@color.gray-900",
+			);
+		});
 	});
 
 	describe("config overrides", () => {

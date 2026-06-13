@@ -137,6 +137,44 @@ describe("useSidebarRecipe", () => {
 			});
 		});
 
+		it("should use mode-independent tokens for the fixed light and dark solid surfaces", () => {
+			const s = createInstance();
+			const recipe = useSidebarRecipe(s);
+
+			// `light`/`dark` are fixed across themes, so their text must not rely on the
+			// adaptive `@color.text` / `@color.text-inverted` tokens — those only swap under
+			// `[data-theme="dark"]`, while the `&:dark` modifier also fires on
+			// `prefers-color-scheme: dark`, which would flip the text to the wrong value and
+			// leave it unreadable on the fixed surface.
+			const lightSolid = recipe.compoundVariants!.find(
+				(cv) => cv.match.color === "light" && cv.match.variant === "solid",
+			);
+			expect(lightSolid!.css).toEqual({
+				background: "@color.white",
+				color: "@color.gray-900",
+				borderColor: "@color.gray-200",
+				"&:dark": {
+					background: "@color.white",
+					color: "@color.gray-900",
+					borderColor: "@color.gray-200",
+				},
+			});
+
+			const darkSolid = recipe.compoundVariants!.find(
+				(cv) => cv.match.color === "dark" && cv.match.variant === "solid",
+			);
+			expect(darkSolid!.css).toEqual({
+				background: "@color.gray-900",
+				color: "@color.gray-100",
+				borderColor: "@color.gray-700",
+				"&:dark": {
+					background: "@color.gray-900",
+					color: "@color.gray-100",
+					borderColor: "@color.gray-700",
+				},
+			});
+		});
+
 		it("should emit a -collapsed className hook", () => {
 			const s = createInstance();
 			const recipe = useSidebarRecipe(s);

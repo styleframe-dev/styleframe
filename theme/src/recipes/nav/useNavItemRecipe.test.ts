@@ -204,27 +204,27 @@ describe("useNavItemRecipe", () => {
 			expect(lightGhost).toEqual({
 				match: { color: "light", variant: "ghost" },
 				css: {
-					color: "@color.text",
+					color: "@color.gray-900",
 					"&:hover": {
-						color: "@color.text",
+						color: "@color.gray-900",
 						background: "@color.gray-100",
 					},
 					"&:focus": {
-						color: "@color.text",
+						color: "@color.gray-900",
 						background: "@color.gray-100",
 					},
 					"&:active": {
 						background: "@color.gray-200",
 					},
 					"&:dark": {
-						color: "@color.text-inverted",
+						color: "@color.gray-900",
 					},
 					"&:dark:hover": {
-						color: "@color.text-inverted",
+						color: "@color.gray-900",
 						background: "@color.gray-100",
 					},
 					"&:dark:focus": {
-						color: "@color.text-inverted",
+						color: "@color.gray-900",
 						background: "@color.gray-100",
 					},
 					"&:dark:active": {
@@ -245,7 +245,7 @@ describe("useNavItemRecipe", () => {
 			expect(lightLink).toEqual({
 				match: { color: "light", variant: "link" },
 				css: {
-					color: "@color.text",
+					color: "@color.gray-900",
 					"&:hover": {
 						color: "@color.gray-900",
 						textDecoration: "underline",
@@ -262,7 +262,7 @@ describe("useNavItemRecipe", () => {
 						textUnderlineOffset: "4px",
 					},
 					"&:dark": {
-						color: "@color.text-inverted",
+						color: "@color.gray-900",
 					},
 					"&:dark:hover": {
 						color: "@color.gray-900",
