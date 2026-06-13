@@ -6,7 +6,12 @@ export default defineNuxtModule({
 		extendViteConfig((config) => {
 			config.optimizeDeps ||= {};
 			config.optimizeDeps.include ||= [];
-			config.optimizeDeps.include.push("@nuxt/content > slugify");
+			config.optimizeDeps.include.push(
+				"@nuxt/content > slugify",
+				"@vueuse/core",
+				"motion-v",
+				"posthog-js",
+			);
 			config.optimizeDeps.include = config.optimizeDeps.include.map(
 				(id: string) =>
 					id.replace(/^@nuxt\/content > /, "docus > @nuxt/content > "),
