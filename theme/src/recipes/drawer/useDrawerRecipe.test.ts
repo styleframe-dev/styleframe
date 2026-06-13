@@ -36,6 +36,13 @@ function createInstance() {
 	return s;
 }
 
+function findSelector(s: ReturnType<typeof styleframe>, query: string) {
+	return s.root.children.find(
+		(child) =>
+			child.type === "selector" && (child as { query: string }).query === query,
+	);
+}
+
 describe("useDrawerRecipe", () => {
 	it("should create a recipe with correct metadata", () => {
 		const s = createInstance();
@@ -145,11 +152,11 @@ describe("useDrawerRecipe", () => {
 	});
 
 	describe("compound variants", () => {
-		it("should have 9 surface + 12 side × size = 21 compounds", () => {
+		it("should have 9 surface + 6 left/right width = 15 compounds", () => {
 			const s = createInstance();
 			const recipe = useDrawerRecipe(s);
 
-			expect(recipe.compoundVariants).toHaveLength(21);
+			expect(recipe.compoundVariants).toHaveLength(15);
 		});
 
 		it("should paint the neutral solid surface with adaptive dark mode", () => {
@@ -175,7 +182,7 @@ describe("useDrawerRecipe", () => {
 			});
 		});
 
-		it("should set width for horizontal sides and height for vertical sides", () => {
+		it("should set width for horizontal sides and leave vertical sides content-sized", () => {
 			const s = createInstance();
 			const recipe = useDrawerRecipe(s);
 
@@ -187,13 +194,25 @@ describe("useDrawerRecipe", () => {
 				css: { width: "20rem" },
 			});
 
-			const bottomLg = recipe.compoundVariants!.find(
-				(cv) => cv.match.side === "bottom" && cv.match.size === "lg",
+			// top/bottom drawers are sized by their content — no size compound
+			// sets their height
+			const verticalSizeCompound = recipe.compoundVariants!.find(
+				(cv) => cv.match.side === "top" || cv.match.side === "bottom",
 			);
-			expect(bottomLg).toEqual({
-				match: { side: "bottom", size: "lg" },
-				css: { height: "28rem" },
-			});
+			expect(verticalSizeCompound).toBeUndefined();
+		});
+	});
+
+	describe("setup", () => {
+		it("registers body-fill and section-pin selectors", () => {
+			const s = createInstance();
+			useDrawerRecipe(s);
+
+			// body grows to fill the panel and scrolls on overflow
+			expect(findSelector(s, ".drawer-body")).toBeDefined();
+			// header/footer keep their natural height
+			expect(findSelector(s, ".drawer-header")).toBeDefined();
+			expect(findSelector(s, ".drawer-footer")).toBeDefined();
 		});
 	});
 
