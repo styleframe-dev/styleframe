@@ -45,56 +45,56 @@ const shell = {
 	template: `
 		<div class="sidebar-shell">
 			<Sidebar v-bind="args">
-				<SidebarHeader>
-					<SidebarMenuButton :color="args.color" icon="◆" label="Acme Inc" />
+				<SidebarHeader :size="args.size">
+					<SidebarMenuButton :color="args.color" :size="args.size" icon="◆" label="Acme Inc" />
 				</SidebarHeader>
 				<SidebarSeparator :color="args.color" />
-				<SidebarContent>
-					<SidebarGroup>
+				<SidebarContent :size="args.size">
+					<SidebarGroup :size="args.size">
 						<div class="sidebar-group-header">
-							<SidebarGroupLabel :color="args.color">Platform</SidebarGroupLabel>
-							<SidebarGroupAction label="Add project">＋</SidebarGroupAction>
+							<SidebarGroupLabel :color="args.color" :size="args.size">Platform</SidebarGroupLabel>
+							<SidebarGroupAction :size="args.size" label="Add project">＋</SidebarGroupAction>
 						</div>
-						<SidebarMenu>
+						<SidebarMenu :size="args.size">
 							<SidebarMenuItem>
-								<SidebarMenuButton :color="args.color" icon="🏠" label="Dashboard" :active="true" />
+								<SidebarMenuButton :color="args.color" :size="args.size" icon="🏠" label="Dashboard" :active="true" />
 							</SidebarMenuItem>
 							<SidebarMenuItem>
-								<SidebarMenuButton :color="args.color" icon="📊" label="Analytics" />
-								<SidebarMenuBadge>12</SidebarMenuBadge>
+								<SidebarMenuButton :color="args.color" :size="args.size" icon="📊" label="Analytics" />
+								<SidebarMenuBadge :size="args.size">12</SidebarMenuBadge>
 							</SidebarMenuItem>
 							<SidebarMenuItem>
-								<SidebarMenuButton :color="args.color" icon="📁" label="Projects" />
-								<SidebarMenuAction label="More actions">⋯</SidebarMenuAction>
-								<SidebarMenuSub>
+								<SidebarMenuButton :color="args.color" :size="args.size" icon="📁" label="Projects" />
+								<SidebarMenuAction :size="args.size" label="More actions">⋯</SidebarMenuAction>
+								<SidebarMenuSub :size="args.size">
 									<SidebarMenuItem>
-										<SidebarMenuSubButton :color="args.color" label="Web app" :active="true" />
+										<SidebarMenuSubButton :color="args.color" :size="args.size" label="Web app" :active="true" />
 									</SidebarMenuItem>
 									<SidebarMenuItem>
-										<SidebarMenuSubButton :color="args.color" label="Mobile app" />
+										<SidebarMenuSubButton :color="args.color" :size="args.size" label="Mobile app" />
 									</SidebarMenuItem>
 								</SidebarMenuSub>
 							</SidebarMenuItem>
 						</SidebarMenu>
 					</SidebarGroup>
-					<SidebarGroup>
-						<SidebarGroupLabel :color="args.color">Account</SidebarGroupLabel>
-						<SidebarMenu>
+					<SidebarGroup :size="args.size">
+						<SidebarGroupLabel :color="args.color" :size="args.size">Account</SidebarGroupLabel>
+						<SidebarMenu :size="args.size">
 							<SidebarMenuItem>
-								<SidebarMenuButton :color="args.color" icon="⚙️" label="Settings" />
+								<SidebarMenuButton :color="args.color" :size="args.size" icon="⚙️" label="Settings" />
 							</SidebarMenuItem>
 							<SidebarMenuItem>
-								<SidebarMenuButton :color="args.color" icon="❓" label="Help" :disabled="true" />
+								<SidebarMenuButton :color="args.color" :size="args.size" icon="❓" label="Help" :disabled="true" />
 							</SidebarMenuItem>
 						</SidebarMenu>
 					</SidebarGroup>
 				</SidebarContent>
 				<SidebarSeparator :color="args.color" />
-				<SidebarFooter>
-					<SidebarMenuButton :color="args.color" icon="👤" label="shadcn" />
+				<SidebarFooter :size="args.size">
+					<SidebarMenuButton :color="args.color" :size="args.size" icon="👤" label="Jane Cooper" />
 				</SidebarFooter>
 			</Sidebar>
-			<SidebarInset>
+			<SidebarInset :size="args.size">
 				<strong>Dashboard</strong>
 				<span>The sidebar sits alongside this main content inset.</span>
 			</SidebarInset>
@@ -107,7 +107,7 @@ const meta = {
 	component: Sidebar,
 	tags: ["autodocs"],
 	parameters: {
-		layout: "padded",
+		layout: "fullscreen",
 	},
 	argTypes: {
 		color: {
@@ -144,7 +144,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
 	args: {
 		color: "neutral",
-		variant: "subtle",
+		variant: "solid",
 		size: "md",
 		collapsed: false,
 	},
@@ -153,13 +153,14 @@ export const Default: Story = {
 export const Collapsed: Story = {
 	args: {
 		color: "neutral",
-		variant: "subtle",
+		variant: "solid",
 		size: "md",
 		collapsed: true,
 	},
 };
 
 export const AllVariants: StoryObj = {
+	parameters: { layout: "padded" },
 	render: () => ({
 		components: { SidebarGrid },
 		template: "<SidebarGrid />",
@@ -167,6 +168,7 @@ export const AllVariants: StoryObj = {
 };
 
 export const AllSizes: StoryObj = {
+	parameters: { layout: "padded" },
 	render: () => ({
 		components: { SidebarSizeGrid },
 		template: "<SidebarSizeGrid />",

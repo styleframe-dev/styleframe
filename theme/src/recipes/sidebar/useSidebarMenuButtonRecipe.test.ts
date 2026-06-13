@@ -200,10 +200,10 @@ describe("useSidebarMenuButtonRecipe", () => {
 			expect(neutralActive).toEqual({
 				match: { color: "neutral", active: "true" },
 				css: {
-					background: "@color.gray-150",
+					background: "@color.gray-100",
 					color: "@color.text",
-					"&:hover": { background: "@color.gray-200" },
-					"&:focus": { background: "@color.gray-200" },
+					"&:hover": { background: "@color.gray-150" },
+					"&:focus": { background: "@color.gray-150" },
 					"&:dark": { background: "@color.gray-750", color: "@color.white" },
 					"&:dark:hover": { background: "@color.gray-700" },
 					"&:dark:focus": { background: "@color.gray-700" },

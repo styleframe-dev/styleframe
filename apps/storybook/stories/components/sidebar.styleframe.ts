@@ -39,24 +39,13 @@ export const sidebarInset = useSidebarInsetRecipe(s);
 
 // --- Story-layout helpers (demo composition only, not part of the recipe) ---
 
-// Gives the full-height panel a bounded frame so it renders inside the docs canvas.
-selector(".sidebar-demo", {
-	display: "flex",
-	height: "26rem",
-	maxWidth: "100%",
-	overflow: "hidden",
-	borderRadius: "@border-radius.lg",
-	boxShadow: "@box-shadow.md",
-});
-
-// App-shell layout: sidebar next to a main inset.
+// App-shell layout: sidebar next to a main inset. Fills the canvas height so the full
+// panel is visible without the content region scrolling.
 selector(".sidebar-shell", {
 	display: "flex",
 	width: "100%",
-	height: "26rem",
+	height: "100vh",
 	overflow: "hidden",
-	borderRadius: "@border-radius.lg",
-	boxShadow: "@box-shadow.md",
 });
 
 // Leading icon inside a menu button — kept square so the collapsed rail centers it.

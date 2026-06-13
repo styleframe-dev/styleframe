@@ -179,7 +179,7 @@ export const useSidebarRecipe = createUseRecipe(
 		],
 		defaultVariants: {
 			color: "neutral",
-			variant: "subtle",
+			variant: "solid",
 			size: "md",
 			collapsed: "false",
 		},

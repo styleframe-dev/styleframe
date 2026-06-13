@@ -99,7 +99,7 @@ describe("useSidebarRecipe", () => {
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
-			variant: "subtle",
+			variant: "solid",
 			size: "md",
 			collapsed: "false",
 		});
@@ -199,7 +199,7 @@ describe("useSidebarRecipe", () => {
 			});
 
 			expect(recipe.defaultVariants?.color).toBeUndefined();
-			expect(recipe.defaultVariants?.variant).toBe("subtle");
+			expect(recipe.defaultVariants?.variant).toBe("solid");
 			expect(recipe.defaultVariants?.collapsed).toBe("false");
 		});
 	});
