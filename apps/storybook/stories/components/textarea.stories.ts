@@ -2,9 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import Button from "@/components/components/button/Button.vue";
 import Textarea from "@/components/components/textarea/Textarea.vue";
-import TextareaGroup from "@/components/components/textarea/TextareaGroup.vue";
-import TextareaPrepend from "@/components/components/textarea/TextareaPrepend.vue";
-import TextareaAppend from "@/components/components/textarea/TextareaAppend.vue";
+import FieldGroup from "@/components/components/field-group/FieldGroup.vue";
 import TextareaGrid from "@/components/components/textarea/preview/TextareaGrid.vue";
 import TextareaSizeGrid from "@/components/components/textarea/preview/TextareaSizeGrid.vue";
 import TextareaResizeGrid from "@/components/components/textarea/preview/TextareaResizeGrid.vue";
@@ -243,71 +241,20 @@ export const WithPrefixAndSuffix: StoryObj = {
 	},
 };
 
-// External addon stories — demonstrate the multi-part group composition.
-// Prepend/append are transparent slots; drop in a real <Button> (or any
-// other component) and its own styling takes over.
-export const WithPrepend: StoryObj = {
+// Attached controls — stack the textarea with an action button as direct
+// children of a vertical FieldGroup; the seams merge into one unit. Set
+// `resize="none"` so the joined edge stays tidy.
+export const WithFieldGroup: StoryObj = {
 	render: (args) => ({
-		components: { Button, Textarea, TextareaGroup, TextareaPrepend },
+		components: { Button, Textarea, FieldGroup },
 		setup() {
 			return { args };
 		},
 		template: `
-			<TextareaGroup :size="args.size">
-				<TextareaPrepend>
-					<Button color="neutral" variant="outline" :size="args.size" label="Note" />
-				</TextareaPrepend>
-				<Textarea v-bind="args" placeholder="Add details..." />
-			</TextareaGroup>
-		`,
-	}),
-	args: {
-		size: "md",
-	},
-};
-
-export const WithAppend: StoryObj = {
-	render: (args) => ({
-		components: { Button, Textarea, TextareaGroup, TextareaAppend },
-		setup() {
-			return { args };
-		},
-		template: `
-			<TextareaGroup :size="args.size">
-				<Textarea v-bind="args" placeholder="Write your message..." />
-				<TextareaAppend>
-					<Button color="primary" variant="solid" :size="args.size" label="Send" />
-				</TextareaAppend>
-			</TextareaGroup>
-		`,
-	}),
-	args: {
-		size: "md",
-	},
-};
-
-export const WithPrependAndAppend: StoryObj = {
-	render: (args) => ({
-		components: {
-			Button,
-			Textarea,
-			TextareaGroup,
-			TextareaPrepend,
-			TextareaAppend,
-		},
-		setup() {
-			return { args };
-		},
-		template: `
-			<TextareaGroup :size="args.size">
-				<TextareaPrepend>
-					<Button color="neutral" variant="outline" :size="args.size" label="Note" />
-				</TextareaPrepend>
-				<Textarea v-bind="args" placeholder="Add details..." />
-				<TextareaAppend>
-					<Button color="primary" variant="solid" :size="args.size" label="Save" />
-				</TextareaAppend>
-			</TextareaGroup>
+			<FieldGroup orientation="vertical" block>
+				<Textarea v-bind="args" resize="none" placeholder="Write your message..." />
+				<Button color="primary" variant="solid" :size="args.size" label="Send" />
+			</FieldGroup>
 		`,
 	}),
 	args: {
