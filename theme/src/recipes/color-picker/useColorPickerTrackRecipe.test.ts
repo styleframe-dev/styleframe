@@ -24,8 +24,7 @@ describe("useColorPickerTrackRecipe", () => {
 
 		expect(recipe.base).toEqual({
 			position: "relative",
-			width: "@0.5",
-			borderRadius: "@border-radius.md",
+			borderRadius: "@border-radius.full",
 		});
 	});
 
@@ -43,16 +42,16 @@ describe("useColorPickerTrackRecipe", () => {
 			]);
 		});
 
-		it("should scale only the height per size to match the selector", () => {
+		it("should scale rail thickness (width) and height per size", () => {
 			const s = createInstance();
 			const recipe = useColorPickerTrackRecipe(s);
 
 			expect(recipe.variants!.size).toEqual({
-				xs: { height: "@9.5" },
-				sm: { height: "@10" },
-				md: { height: "@10.5" },
-				lg: { height: "@11" },
-				xl: { height: "@11.5" },
+				xs: { width: "@0.25", height: "@9.5" },
+				sm: { width: "@0.375", height: "@10" },
+				md: { width: "@0.5", height: "@10.5" },
+				lg: { width: "@0.75", height: "@11" },
+				xl: { width: "@1", height: "@11.5" },
 			});
 		});
 	});
@@ -87,10 +86,10 @@ describe("useColorPickerTrackRecipe", () => {
 	it("should support config overrides", () => {
 		const s = createInstance();
 		const recipe = useColorPickerTrackRecipe(s, {
-			base: { width: "@0.75" },
+			base: { borderRadius: "@border-radius.md" },
 		});
 
-		expect(recipe.base!.width).toBe("@0.75");
+		expect(recipe.base!.borderRadius).toBe("@border-radius.md");
 		expect(recipe.base!.position).toBe("relative");
 	});
 

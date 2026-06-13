@@ -1,28 +1,28 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Color picker track recipe — the narrow vertical hue slider.
+ * Color picker track recipe — the vertical hue slider.
  *
- * Paints the full 0→360° hue rainbow (a fixed color-model gradient, so the
- * stops are intentionally literal). Width is constant; height tracks the
- * selector's height per size so the two parts align. Drop a
- * `.color-picker-thumb` inside and position it vertically to mark the hue.
+ * A pill-shaped rail styled like the Slider track, filled edge-to-edge with the
+ * full 0→360° hue rainbow (a fixed color-model gradient, so the stops are
+ * intentionally literal). The rail thickness (width) scales per size like the
+ * Slider's rail, while the height tracks the selector so the two parts align.
+ * Drop a `.color-picker-thumb` inside and position it vertically to mark the hue.
  */
 export const useColorPickerTrackRecipe = createUseRecipe(
 	"color-picker-track",
 	{
 		base: {
 			position: "relative",
-			width: "@0.5",
-			borderRadius: "@border-radius.md",
+			borderRadius: "@border-radius.full",
 		},
 		variants: {
 			size: {
-				xs: { height: "@9.5" },
-				sm: { height: "@10" },
-				md: { height: "@10.5" },
-				lg: { height: "@11" },
-				xl: { height: "@11.5" },
+				xs: { width: "@0.25", height: "@9.5" },
+				sm: { width: "@0.375", height: "@10" },
+				md: { width: "@0.5", height: "@10.5" },
+				lg: { width: "@0.75", height: "@11" },
+				xl: { width: "@1", height: "@11.5" },
 			},
 		},
 		defaultVariants: {
