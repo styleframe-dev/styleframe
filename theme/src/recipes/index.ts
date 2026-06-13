@@ -9,6 +9,7 @@ export * from "./card";
 export * from "./chat-message";
 export * from "./checkbox";
 export * from "./chip";
+export * from "./color-picker";
 export * from "./dropdown";
 export * from "./field-group";
 export * from "./hamburger-menu";
