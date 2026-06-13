@@ -96,7 +96,7 @@ describe("useContextMenuItemRecipe", () => {
 			transitionDuration: "150ms",
 			textAlign: "left",
 			textDecoration: "none",
-			whiteSpace: "nowrap",
+			whiteSpace: "normal",
 			userSelect: "none",
 			outline: "none",
 			"&:focus-visible": {

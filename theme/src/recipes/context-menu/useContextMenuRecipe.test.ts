@@ -10,6 +10,7 @@ function createInstance() {
 		"flexDirection",
 		"flexBasis",
 		"minWidth",
+		"maxWidth",
 		"borderWidth",
 		"borderStyle",
 		"borderColor",
@@ -55,6 +56,7 @@ describe("useContextMenuRecipe", () => {
 			lineHeight: "@line-height.normal",
 			boxShadow: "@box-shadow.md",
 			zIndex: "@z-index.dropdown",
+			maxWidth: "@18",
 		});
 	});
 

@@ -22,6 +22,9 @@ export const useContextMenuItemRecipe = createMenuItemRecipe(
 		base: {
 			// Anchor for the absolutely positioned indicator slot.
 			position: "relative",
+			// Let long labels wrap within the panel's max-width instead of
+			// overflowing it (the shared item base sets `white-space: nowrap`).
+			whiteSpace: "normal",
 		},
 		variants: {
 			inset: {

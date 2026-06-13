@@ -38,6 +38,11 @@ const variants = ["solid", "soft", "subtle"] as const;
 export const useContextMenuSubTriggerRecipe = createMenuItemRecipe(
 	"context-menu-sub-trigger",
 	{
+		base: {
+			// Match the wrapping rows so the panel's max-width caps cleanly (the
+			// shared item base sets `white-space: nowrap`).
+			whiteSpace: "normal",
+		},
 		variants: {
 			open: {
 				true: {},

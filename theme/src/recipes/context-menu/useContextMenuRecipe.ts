@@ -6,6 +6,14 @@ import { createMenuPanelRecipe } from "../dropdown/createMenuRecipe";
  * and the 9 color×variant background combinations. Supports color (light, dark,
  * neutral), variant (solid, soft, subtle), and size axes.
  *
+ * Adds a `maxWidth` cap (between the shared `@12` min-width and `@18`) so a long
+ * label wraps instead of stretching the menu across the viewport. Pairs with the
+ * wrapping rows in `useContextMenuItemRecipe` / `useContextMenuSubTriggerRecipe`.
+ *
  * Built on the shared menu-surface builder (see `../dropdown/createMenuRecipe.ts`).
  */
-export const useContextMenuRecipe = createMenuPanelRecipe("context-menu");
+export const useContextMenuRecipe = createMenuPanelRecipe("context-menu", {
+	base: {
+		maxWidth: "@18",
+	},
+});
