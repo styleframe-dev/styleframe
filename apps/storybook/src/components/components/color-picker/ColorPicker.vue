@@ -18,7 +18,9 @@ const props = withDefaults(
 );
 
 const rootClasses = computed(() => colorPicker({ size: props.size }));
-const selectorClasses = computed(() => colorPickerSelector({ size: props.size }));
+const selectorClasses = computed(() =>
+	colorPickerSelector({ size: props.size }),
+);
 const trackClasses = computed(() => colorPickerTrack({ size: props.size }));
 const thumbClasses = computed(() => colorPickerThumb());
 
