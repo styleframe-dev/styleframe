@@ -11,6 +11,7 @@ export * from "./checkbox";
 export * from "./chip";
 export * from "./color-picker";
 export * from "./context-menu";
+export * from "./drawer";
 export * from "./dropdown";
 export * from "./field-group";
 export * from "./hamburger-menu";
