@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { buttonGroup } from "virtual:styleframe";
+import { fieldGroup } from "virtual:styleframe";
 
 const props = withDefaults(
 	defineProps<{
@@ -13,7 +13,7 @@ const props = withDefaults(
 <template>
 	<div
 		:class="
-			buttonGroup({
+			fieldGroup({
 				orientation: props.orientation,
 				block: props.block ? 'true' : 'false',
 			})

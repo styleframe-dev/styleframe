@@ -1,5 +1,5 @@
 import { styleframe } from "@styleframe/core";
-import { useButtonGroupRecipe } from "./useButtonGroupRecipe";
+import { useFieldGroupRecipe } from "./useFieldGroupRecipe";
 
 function createInstance() {
 	const s = styleframe();
@@ -9,6 +9,7 @@ function createInstance() {
 		"position",
 		"flexDirection",
 		"width",
+		"minWidth",
 		"flexBasis",
 		"flexGrow",
 		"borderTopRightRadius",
@@ -16,28 +17,41 @@ function createInstance() {
 		"borderRightWidth",
 		"borderTopLeftRadius",
 		"borderBottomLeftRadius",
-		"borderBottomRightRadius",
 		"borderBottomWidth",
-		"borderTopRightRadius",
-		"borderTopLeftRadius",
 	]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
 	return s;
 }
 
-describe("useButtonGroupRecipe", () => {
+function findSelector(s: ReturnType<typeof styleframe>, query: string) {
+	return s.root.children.find(
+		(child) =>
+			child.type === "selector" && (child as { query: string }).query === query,
+	) as { children: Array<{ type: string; query?: string }> } | undefined;
+}
+
+function findChildRule(
+	selector: { children: Array<{ type: string; query?: string }> } | undefined,
+	query: string,
+) {
+	return selector?.children.find(
+		(child) => child.type === "selector" && child.query === query,
+	) as { declarations?: Record<string, unknown> } | undefined;
+}
+
+describe("useFieldGroupRecipe", () => {
 	it("should create a recipe with correct metadata", () => {
 		const s = createInstance();
-		const recipe = useButtonGroupRecipe(s);
+		const recipe = useFieldGroupRecipe(s);
 
 		expect(recipe.type).toBe("recipe");
-		expect(recipe.name).toBe("button-group");
+		expect(recipe.name).toBe("field-group");
 	});
 
 	it("should have correct base styles", () => {
 		const s = createInstance();
-		const recipe = useButtonGroupRecipe(s);
+		const recipe = useFieldGroupRecipe(s);
 
 		expect(recipe.base).toEqual({
 			display: "inline-flex",
@@ -49,7 +63,7 @@ describe("useButtonGroupRecipe", () => {
 	describe("variants", () => {
 		it("should have orientation variants", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s);
+			const recipe = useFieldGroupRecipe(s);
 
 			expect(recipe.variants!.orientation).toEqual({
 				horizontal: { flexDirection: "row" },
@@ -59,7 +73,7 @@ describe("useButtonGroupRecipe", () => {
 
 		it("should have block variants", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s);
+			const recipe = useFieldGroupRecipe(s);
 
 			expect(recipe.variants!.block).toEqual({
 				true: { display: "flex", width: "100%" },
@@ -70,7 +84,7 @@ describe("useButtonGroupRecipe", () => {
 
 	it("should have correct default variants", () => {
 		const s = createInstance();
-		const recipe = useButtonGroupRecipe(s);
+		const recipe = useFieldGroupRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
 			orientation: "horizontal",
@@ -81,14 +95,14 @@ describe("useButtonGroupRecipe", () => {
 	describe("compound variants", () => {
 		it("should have 3 compound variants total", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s);
+			const recipe = useFieldGroupRecipe(s);
 
 			expect(recipe.compoundVariants).toHaveLength(3);
 		});
 
 		it("should have horizontal className compound variant", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s);
+			const recipe = useFieldGroupRecipe(s);
 
 			const horizontal = recipe.compoundVariants!.find(
 				(cv) => cv.match.orientation === "horizontal",
@@ -102,7 +116,7 @@ describe("useButtonGroupRecipe", () => {
 
 		it("should have vertical className compound variant", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s);
+			const recipe = useFieldGroupRecipe(s);
 
 			const vertical = recipe.compoundVariants!.find(
 				(cv) => cv.match.orientation === "vertical",
@@ -116,7 +130,7 @@ describe("useButtonGroupRecipe", () => {
 
 		it("should have block className compound variant", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s);
+			const recipe = useFieldGroupRecipe(s);
 
 			const block = recipe.compoundVariants!.find(
 				(cv) => cv.match.block === "true",
@@ -129,10 +143,62 @@ describe("useButtonGroupRecipe", () => {
 		});
 	});
 
+	describe("seam selectors", () => {
+		it("flattens horizontal seams and grows fields", () => {
+			const s = createInstance();
+			useFieldGroupRecipe(s);
+
+			const horizontal = findSelector(s, ".field-group.-horizontal");
+			expect(horizontal).toBeDefined();
+
+			expect(
+				findChildRule(horizontal, "& > *:not(:last-child)")?.declarations,
+			).toMatchObject({ borderRightWidth: "0" });
+			expect(
+				findChildRule(horizontal, "& > *:not(:first-child)")?.declarations,
+			).toMatchObject({ borderTopLeftRadius: "0" });
+
+			for (const query of ["& > .input", "& > .select", "& > .textarea"]) {
+				expect(findChildRule(horizontal, query)?.declarations).toMatchObject({
+					flexGrow: "1",
+					minWidth: "0",
+				});
+			}
+		});
+
+		it("flattens vertical seams", () => {
+			const s = createInstance();
+			useFieldGroupRecipe(s);
+
+			const vertical = findSelector(s, ".field-group.-vertical");
+			expect(vertical).toBeDefined();
+
+			expect(
+				findChildRule(vertical, "& > *:not(:last-child)")?.declarations,
+			).toMatchObject({ borderBottomWidth: "0" });
+			expect(
+				findChildRule(vertical, "& > *:not(:first-child)")?.declarations,
+			).toMatchObject({ borderTopLeftRadius: "0" });
+		});
+
+		it("equal-fills buttons in block mode", () => {
+			const s = createInstance();
+			useFieldGroupRecipe(s);
+
+			const block = findSelector(s, ".field-group.-block");
+			expect(block).toBeDefined();
+
+			expect(findChildRule(block, "& > .button")?.declarations).toMatchObject({
+				flexBasis: "0",
+				flexGrow: "1",
+			});
+		});
+	});
+
 	describe("config overrides", () => {
 		it("should allow overriding base styles", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s, {
+			const recipe = useFieldGroupRecipe(s, {
 				base: { display: "flex" },
 			});
 
@@ -145,7 +211,7 @@ describe("useButtonGroupRecipe", () => {
 	describe("filter", () => {
 		it("should filter orientation variants", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s, {
+			const recipe = useFieldGroupRecipe(s, {
 				filter: { orientation: ["horizontal"] },
 			});
 
@@ -154,7 +220,7 @@ describe("useButtonGroupRecipe", () => {
 
 		it("should prune compound variants when filtering orientation", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s, {
+			const recipe = useFieldGroupRecipe(s, {
 				filter: { orientation: ["horizontal"] },
 			});
 
@@ -167,7 +233,7 @@ describe("useButtonGroupRecipe", () => {
 
 		it("should adjust default variants when filtered out", () => {
 			const s = createInstance();
-			const recipe = useButtonGroupRecipe(s, {
+			const recipe = useFieldGroupRecipe(s, {
 				filter: { orientation: ["vertical"] },
 			});
 

@@ -1,10 +1,7 @@
 import {
 	useInputRecipe,
-	useInputGroupRecipe,
 	useInputPrefixRecipe,
 	useInputSuffixRecipe,
-	useInputPrependRecipe,
-	useInputAppendRecipe,
 } from "@styleframe/theme";
 import { styleframe } from "virtual:styleframe";
 
@@ -13,11 +10,8 @@ const { selector } = s;
 
 // Initialize input recipes
 export const input = useInputRecipe(s);
-export const inputGroup = useInputGroupRecipe(s);
 export const inputPrefix = useInputPrefixRecipe(s);
 export const inputSuffix = useInputSuffixRecipe(s);
-export const inputPrepend = useInputPrependRecipe(s);
-export const inputAppend = useInputAppendRecipe(s);
 
 // Container styles for story layout
 selector(".input-grid", {

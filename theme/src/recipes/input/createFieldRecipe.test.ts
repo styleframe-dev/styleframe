@@ -6,9 +6,7 @@ import {
 } from "../../modifiers/usePseudoStateModifiers";
 import {
 	createFieldAddonRecipe,
-	createFieldGroupRecipe,
 	createFieldRecipe,
-	createFieldSlotRecipe,
 	useFieldSelector,
 } from "./createFieldRecipe";
 
@@ -51,13 +49,6 @@ function createInstance() {
 		"whiteSpace",
 		"userSelect",
 		"gap",
-		"position",
-		"borderTopLeftRadius",
-		"borderBottomLeftRadius",
-		"borderTopRightRadius",
-		"borderBottomRightRadius",
-		"borderLeftWidth",
-		"borderRightWidth",
 	]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
@@ -174,47 +165,6 @@ describe("createFieldAddonRecipe", () => {
 			paddingLeft: "@0.5",
 			gap: "@0.375",
 		});
-	});
-});
-
-describe("createFieldSlotRecipe", () => {
-	it("builds a transparent slot with no variants", () => {
-		const s = createInstance();
-		const recipe = createFieldSlotRecipe("demo-prepend")(s);
-
-		expect(recipe.name).toBe("demo-prepend");
-		expect(recipe.base).toEqual({
-			display: "inline-flex",
-			alignItems: "center",
-			flexShrink: "0",
-		});
-		expect(recipe.variants).toBeUndefined();
-	});
-});
-
-describe("createFieldGroupRecipe", () => {
-	it("builds a group and registers seam selectors named for the field", () => {
-		const s = createInstance();
-		const recipe = createFieldGroupRecipe("demo")(s);
-
-		expect(recipe.name).toBe("demo-group");
-
-		const groupSelector = findSelector(s, ".demo-group") as
-			| { children: Array<{ type: string; query?: string }> }
-			| undefined;
-		expect(groupSelector).toBeDefined();
-
-		for (const query of [
-			".demo-prepend + .demo",
-			".demo-prepend > *:first-child",
-			".demo:has(+ .demo-append)",
-			".demo-append > *:last-child",
-		]) {
-			const rule = groupSelector?.children.find(
-				(child) => child.type === "selector" && child.query === query,
-			);
-			expect(rule, `missing seam rule: ${query}`).toBeDefined();
-		}
 	});
 });
 
