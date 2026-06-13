@@ -19,6 +19,9 @@ function createInstance() {
 		"boxSizing",
 		"display",
 		"flexShrink",
+		"borderWidth",
+		"borderStyle",
+		"borderColor",
 		"borderRadius",
 		"backgroundColor",
 		"backgroundImage",
@@ -75,10 +78,12 @@ describe("useSwitchFieldRecipe", () => {
 			boxSizing: "border-box",
 			display: "inline-block",
 			cursor: "pointer",
+			borderWidth: "@border-width.thin",
+			borderStyle: "@border-style.solid",
 			borderRadius: "@border-radius.full",
 			backgroundRepeat: "no-repeat",
 			backgroundPosition: "2px center",
-			transitionProperty: "background-color, background-position",
+			transitionProperty: "background-color, background-position, border-color",
 		});
 	});
 
@@ -97,6 +102,7 @@ describe("useSwitchFieldRecipe", () => {
 
 		expect(recipe.base?.["&:checked"]).toEqual({
 			backgroundColor: "@color.primary",
+			borderColor: "@color.primary",
 			backgroundPosition: "calc(100% - 2px) center",
 		});
 	});
@@ -166,11 +172,14 @@ describe("useSwitchFieldRecipe", () => {
 			);
 			expect(cv?.css).toEqual({
 				backgroundColor: "@color.gray-300",
+				borderColor: "@color.gray-300",
 				"&:dark": {
 					backgroundColor: "@color.gray-700",
+					borderColor: "@color.gray-700",
 				},
 				"&:dark:checked": {
 					backgroundColor: "@color.primary",
+					borderColor: "@color.primary",
 				},
 			});
 		});
@@ -184,6 +193,7 @@ describe("useSwitchFieldRecipe", () => {
 			);
 			expect(light?.css).toEqual({
 				backgroundColor: "@color.gray-300",
+				borderColor: "@color.gray-300",
 			});
 		});
 	});

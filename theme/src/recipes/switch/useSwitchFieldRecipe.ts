@@ -30,15 +30,18 @@ export const useSwitchFieldRecipe = createUseRecipe("switch-field", {
 		display: "inline-block",
 		flexShrink: "0",
 		cursor: "pointer",
+		borderWidth: "@border-width.thin",
+		borderStyle: "@border-style.solid",
 		borderRadius: "@border-radius.full",
 		backgroundImage: knobImage,
 		backgroundRepeat: "no-repeat",
 		backgroundPosition: "2px center",
-		transitionProperty: "background-color, background-position",
+		transitionProperty: "background-color, background-position, border-color",
 		transitionDuration: "150ms",
 		transitionTimingFunction: "@easing.ease-in-out",
 		"&:checked": {
 			backgroundColor: "@color.primary",
+			borderColor: "@color.primary",
 			backgroundPosition: "calc(100% - 2px) center",
 		},
 		"&:focus-visible": {
@@ -83,6 +86,7 @@ export const useSwitchFieldRecipe = createUseRecipe("switch-field", {
 			match: { color: "light" as const },
 			css: {
 				backgroundColor: "@color.gray-300",
+				borderColor: "@color.gray-300",
 			},
 		},
 		// Dark track — fixed across themes.
@@ -90,6 +94,7 @@ export const useSwitchFieldRecipe = createUseRecipe("switch-field", {
 			match: { color: "dark" as const },
 			css: {
 				backgroundColor: "@color.gray-700",
+				borderColor: "@color.gray-700",
 			},
 		},
 		// Neutral track — adaptive. The `&:dark` unchecked rule gains
@@ -99,11 +104,14 @@ export const useSwitchFieldRecipe = createUseRecipe("switch-field", {
 			match: { color: "neutral" as const },
 			css: {
 				backgroundColor: "@color.gray-300",
+				borderColor: "@color.gray-300",
 				"&:dark": {
 					backgroundColor: "@color.gray-700",
+					borderColor: "@color.gray-700",
 				},
 				"&:dark:checked": {
 					backgroundColor: "@color.primary",
+					borderColor: "@color.primary",
 				},
 			},
 		},
