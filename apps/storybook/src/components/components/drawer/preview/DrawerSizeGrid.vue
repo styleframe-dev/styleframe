@@ -15,7 +15,7 @@ const sizeTitles: Record<string, string> = {
 </script>
 
 <template>
-	<div class="drawer-grid">
+	<div class="drawer-size-grid">
 		<div v-for="size in sizes" :key="size">
 			<div class="drawer-label">{{ sizeTitles[size] }} ({{ size }})</div>
 			<div class="drawer-stage">

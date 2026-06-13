@@ -27,7 +27,13 @@ selector(".drawer-section", {
 
 selector(".drawer-grid", {
 	display: "grid",
-	gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+	gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+	gap: "@spacing.lg",
+});
+
+selector(".drawer-size-grid", {
+	display: "grid",
+	gridTemplateColumns: "repeat(auto-fill, minmax(480px, 1fr))",
 	gap: "@spacing.lg",
 });
 
