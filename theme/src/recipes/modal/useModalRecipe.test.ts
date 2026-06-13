@@ -14,6 +14,9 @@ function createInstance() {
 		"borderColor",
 		"borderRadius",
 		"overflow",
+		"width",
+		"height",
+		"maxWidth",
 		"fontSize",
 		"lineHeight",
 		"boxShadow",
@@ -103,6 +106,31 @@ describe("useModalRecipe", () => {
 				},
 			});
 		});
+
+		it("should have fullscreen variant with true and false keys", () => {
+			const s = createInstance();
+			const recipe = useModalRecipe(s);
+
+			expect(Object.keys(recipe.variants!.fullscreen)).toEqual([
+				"true",
+				"false",
+			]);
+		});
+
+		it("should have correct fullscreen variant styles", () => {
+			const s = createInstance();
+			const recipe = useModalRecipe(s);
+
+			expect(recipe.variants!.fullscreen).toEqual({
+				true: {
+					width: "100%",
+					height: "100%",
+					maxWidth: "none",
+					borderRadius: "0",
+				},
+				false: {},
+			});
+		});
 	});
 
 	it("should have correct default variants", () => {
@@ -113,6 +141,7 @@ describe("useModalRecipe", () => {
 			color: "neutral",
 			variant: "solid",
 			size: "md",
+			fullscreen: "false",
 		});
 	});
 

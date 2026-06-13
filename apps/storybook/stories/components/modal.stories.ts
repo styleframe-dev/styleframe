@@ -39,6 +39,10 @@ const meta = {
 			options: sizes,
 			description: "The size of the modal",
 		},
+		fullscreen: {
+			control: "boolean",
+			description: "Fill the viewport and square the corners",
+		},
 	},
 	render: (args) => ({
 		components: {
@@ -176,11 +180,11 @@ export const Fullscreen: Story = {
 		template: `
 			<Button label="Open Fullscreen Modal" @click="isOpen = true" />
 			<ModalOverlay v-show="isOpen">
-				<Modal v-bind="args" style="width: 100vw; height: 100vh; max-width: 100vw; border-radius: 0;">
+				<Modal v-bind="args" :fullscreen="true">
 					<ModalHeader v-bind="args">
 						<ModalTitle>Fullscreen Modal</ModalTitle>
 					</ModalHeader>
-					<ModalBody v-bind="args" style="flex: 1;">
+					<ModalBody v-bind="args" :fullscreen="true">
 						<ModalDescription>This modal takes up the entire viewport.</ModalDescription>
 					</ModalBody>
 					<ModalFooter v-bind="args">
