@@ -5,6 +5,235 @@ import {
 } from "../../utils/createUseRecipe";
 
 /**
+ * The shared field surface as a compound-variant array: the nine color×variant
+ * combinations plus the `invalid` and `disabled` state overrides, and
+ * optionally the `readonly` state. Extracted so sibling recipes can paint the
+ * exact same surface without re-declaring it — the Input/Textarea wrappers
+ * consume it with the `:focus-within` ring and the read-only state, while the
+ * OTP cell consumes it directly on the `<input>` with a `:focus-visible` ring
+ * and no read-only state.
+ *
+ * Order matters: `invalid` precedes `readonly`/`disabled` so its error border
+ * wins over the color/variant rules but can still be dimmed by the disabled
+ * state. Like the builders below, it is intentionally not re-exported from the
+ * package barrel — it is internal to the field recipes family.
+ */
+export function fieldSurfaceCompoundVariants({
+	focusModifier = "focus-within",
+	includeReadonly = true,
+}: {
+	focusModifier?: "focus-within" | "focus-visible";
+	includeReadonly?: boolean;
+} = {}): NonNullable<RecipeConfig["compoundVariants"]> {
+	return [
+		// Light color (fixed across themes)
+		{
+			match: { color: "light", variant: "default" },
+			css: {
+				background: "@color.white",
+				borderColor: "@color.gray-200",
+				color: "@color.text",
+				"&:hover": {
+					borderColor: "@color.gray-300",
+				},
+				"&:dark": {
+					background: "@color.white",
+					borderColor: "@color.gray-200",
+					color: "@color.text-inverted",
+				},
+				"&:dark:hover": {
+					borderColor: "@color.gray-300",
+				},
+			},
+		},
+		{
+			match: { color: "light", variant: "soft" },
+			css: {
+				background: "@color.gray-100",
+				borderColor: "@color.gray-200",
+				color: "@color.text",
+				"&:hover": {
+					borderColor: "@color.gray-300",
+				},
+				"&:dark": {
+					background: "@color.gray-100",
+					borderColor: "@color.gray-200",
+					color: "@color.text-inverted",
+				},
+				"&:dark:hover": {
+					borderColor: "@color.gray-300",
+				},
+			},
+		},
+		{
+			match: { color: "light", variant: "ghost" },
+			css: {
+				background: "transparent",
+				borderColor: "transparent",
+				color: "@color.text",
+				"&:dark": {
+					background: "transparent",
+					borderColor: "transparent",
+					color: "@color.text-inverted",
+				},
+			},
+		},
+
+		// Dark color (fixed across themes)
+		{
+			match: { color: "dark", variant: "default" },
+			css: {
+				background: "@color.gray-900",
+				borderColor: "@color.gray-700",
+				color: "@color.white",
+				"&:hover": {
+					borderColor: "@color.gray-600",
+				},
+				"&:dark": {
+					background: "@color.gray-900",
+					borderColor: "@color.gray-700",
+					color: "@color.white",
+				},
+				"&:dark:hover": {
+					borderColor: "@color.gray-600",
+				},
+			},
+		},
+		{
+			match: { color: "dark", variant: "soft" },
+			css: {
+				background: "@color.gray-800",
+				borderColor: "@color.gray-700",
+				color: "@color.gray-300",
+				"&:hover": {
+					borderColor: "@color.gray-600",
+				},
+				"&:dark": {
+					background: "@color.gray-800",
+					borderColor: "@color.gray-700",
+					color: "@color.gray-300",
+				},
+				"&:dark:hover": {
+					borderColor: "@color.gray-600",
+				},
+			},
+		},
+		{
+			match: { color: "dark", variant: "ghost" },
+			css: {
+				background: "transparent",
+				borderColor: "transparent",
+				color: "@color.gray-300",
+				"&:dark": {
+					background: "transparent",
+					borderColor: "transparent",
+					color: "@color.gray-300",
+				},
+			},
+		},
+
+		// Neutral color (adaptive: light in light mode, dark in dark mode)
+		{
+			match: { color: "neutral", variant: "default" },
+			css: {
+				background: "@color.white",
+				borderColor: "@color.gray-200",
+				color: "@color.text",
+				"&:hover": {
+					borderColor: "@color.gray-300",
+				},
+				"&:dark": {
+					background: "@color.gray-900",
+					borderColor: "@color.gray-700",
+					color: "@color.white",
+				},
+				"&:dark:hover": {
+					borderColor: "@color.gray-600",
+				},
+			},
+		},
+		{
+			match: { color: "neutral", variant: "soft" },
+			css: {
+				background: "@color.gray-100",
+				borderColor: "@color.gray-200",
+				color: "@color.text",
+				"&:hover": {
+					borderColor: "@color.gray-300",
+				},
+				"&:dark": {
+					background: "@color.gray-800",
+					borderColor: "@color.gray-700",
+					color: "@color.gray-300",
+				},
+				"&:dark:hover": {
+					borderColor: "@color.gray-600",
+				},
+			},
+		},
+		{
+			match: { color: "neutral", variant: "ghost" },
+			css: {
+				background: "transparent",
+				borderColor: "transparent",
+				color: "@color.text",
+				"&:dark": {
+					background: "transparent",
+					borderColor: "transparent",
+					color: "@color.white",
+				},
+			},
+		},
+
+		// Invalid state — overrides border and focus ring to error color.
+		{
+			match: { invalid: "true" },
+			css: {
+				borderColor: "@color.error",
+				"&:hover": {
+					borderColor: "@color.error",
+				},
+				[`&:${focusModifier}`]: {
+					outlineColor: "@color.error",
+				},
+				"&:dark": {
+					borderColor: "@color.error",
+				},
+				"&:dark:hover": {
+					borderColor: "@color.error",
+				},
+			},
+		},
+
+		// Read-only state — subtle background shift, default cursor.
+		...(includeReadonly
+			? [
+					{
+						match: { readonly: "true" },
+						css: {
+							background: "@color.gray-50",
+							cursor: "default",
+							"&:dark": {
+								background: "@color.gray-800",
+							},
+						},
+					},
+				]
+			: []),
+
+		// Disabled state — dim, not-allowed cursor, block interaction.
+		{
+			match: { disabled: "true" },
+			css: {
+				opacity: "0.5",
+				cursor: "not-allowed",
+				pointerEvents: "none",
+			},
+		},
+	];
+}
+
+/**
  * Builds a field-wrapper recipe (`.input` / `.textarea`). Merges the shared
  * field surface with per-field `extras` (e.g. the `display`/`alignItems` base
  * deltas, or textarea's `resize` axis) and registers the transparent nested
@@ -129,211 +358,11 @@ export function createFieldRecipe<
 			} as typeof fieldRecipeVariants & ExtraVariants,
 			/**
 			 * The 12 compound variants: 9 color×variant combinations plus the invalid,
-			 * read-only, and disabled state overrides. Order matters &mdash; invalid is
-			 * placed before read-only and disabled so its error border wins over the
-			 * color/variant rules but can still be dimmed by the disabled state.
+			 * read-only, and disabled state overrides, from the shared field surface
+			 * (`:focus-within` ring, read-only included), then any per-field extras.
 			 */
 			compoundVariants: [
-				// Light color (fixed across themes)
-				{
-					match: { color: "light", variant: "default" },
-					css: {
-						background: "@color.white",
-						borderColor: "@color.gray-200",
-						color: "@color.text",
-						"&:hover": {
-							borderColor: "@color.gray-300",
-						},
-						"&:dark": {
-							background: "@color.white",
-							borderColor: "@color.gray-200",
-							color: "@color.text-inverted",
-						},
-						"&:dark:hover": {
-							borderColor: "@color.gray-300",
-						},
-					},
-				},
-				{
-					match: { color: "light", variant: "soft" },
-					css: {
-						background: "@color.gray-100",
-						borderColor: "@color.gray-200",
-						color: "@color.text",
-						"&:hover": {
-							borderColor: "@color.gray-300",
-						},
-						"&:dark": {
-							background: "@color.gray-100",
-							borderColor: "@color.gray-200",
-							color: "@color.text-inverted",
-						},
-						"&:dark:hover": {
-							borderColor: "@color.gray-300",
-						},
-					},
-				},
-				{
-					match: { color: "light", variant: "ghost" },
-					css: {
-						background: "transparent",
-						borderColor: "transparent",
-						color: "@color.text",
-						"&:dark": {
-							background: "transparent",
-							borderColor: "transparent",
-							color: "@color.text-inverted",
-						},
-					},
-				},
-
-				// Dark color (fixed across themes)
-				{
-					match: { color: "dark", variant: "default" },
-					css: {
-						background: "@color.gray-900",
-						borderColor: "@color.gray-700",
-						color: "@color.white",
-						"&:hover": {
-							borderColor: "@color.gray-600",
-						},
-						"&:dark": {
-							background: "@color.gray-900",
-							borderColor: "@color.gray-700",
-							color: "@color.white",
-						},
-						"&:dark:hover": {
-							borderColor: "@color.gray-600",
-						},
-					},
-				},
-				{
-					match: { color: "dark", variant: "soft" },
-					css: {
-						background: "@color.gray-800",
-						borderColor: "@color.gray-700",
-						color: "@color.gray-300",
-						"&:hover": {
-							borderColor: "@color.gray-600",
-						},
-						"&:dark": {
-							background: "@color.gray-800",
-							borderColor: "@color.gray-700",
-							color: "@color.gray-300",
-						},
-						"&:dark:hover": {
-							borderColor: "@color.gray-600",
-						},
-					},
-				},
-				{
-					match: { color: "dark", variant: "ghost" },
-					css: {
-						background: "transparent",
-						borderColor: "transparent",
-						color: "@color.gray-300",
-						"&:dark": {
-							background: "transparent",
-							borderColor: "transparent",
-							color: "@color.gray-300",
-						},
-					},
-				},
-
-				// Neutral color (adaptive: light in light mode, dark in dark mode)
-				{
-					match: { color: "neutral", variant: "default" },
-					css: {
-						background: "@color.white",
-						borderColor: "@color.gray-200",
-						color: "@color.text",
-						"&:hover": {
-							borderColor: "@color.gray-300",
-						},
-						"&:dark": {
-							background: "@color.gray-900",
-							borderColor: "@color.gray-700",
-							color: "@color.white",
-						},
-						"&:dark:hover": {
-							borderColor: "@color.gray-600",
-						},
-					},
-				},
-				{
-					match: { color: "neutral", variant: "soft" },
-					css: {
-						background: "@color.gray-100",
-						borderColor: "@color.gray-200",
-						color: "@color.text",
-						"&:hover": {
-							borderColor: "@color.gray-300",
-						},
-						"&:dark": {
-							background: "@color.gray-800",
-							borderColor: "@color.gray-700",
-							color: "@color.gray-300",
-						},
-						"&:dark:hover": {
-							borderColor: "@color.gray-600",
-						},
-					},
-				},
-				{
-					match: { color: "neutral", variant: "ghost" },
-					css: {
-						background: "transparent",
-						borderColor: "transparent",
-						color: "@color.text",
-						"&:dark": {
-							background: "transparent",
-							borderColor: "transparent",
-							color: "@color.white",
-						},
-					},
-				},
-
-				// Invalid state — overrides border and focus ring to error color.
-				{
-					match: { invalid: "true" },
-					css: {
-						borderColor: "@color.error",
-						"&:hover": {
-							borderColor: "@color.error",
-						},
-						"&:focus-within": {
-							outlineColor: "@color.error",
-						},
-						"&:dark": {
-							borderColor: "@color.error",
-						},
-						"&:dark:hover": {
-							borderColor: "@color.error",
-						},
-					},
-				},
-
-				// Read-only state — subtle background shift, default cursor.
-				{
-					match: { readonly: "true" },
-					css: {
-						background: "@color.gray-50",
-						cursor: "default",
-						"&:dark": {
-							background: "@color.gray-800",
-						},
-					},
-				},
-
-				// Disabled state — dim, not-allowed cursor, block interaction.
-				{
-					match: { disabled: "true" },
-					css: {
-						opacity: "0.5",
-						cursor: "not-allowed",
-						pointerEvents: "none",
-					},
-				},
+				...fieldSurfaceCompoundVariants(),
 				...(extras.compoundVariants ?? []),
 			],
 			/** Shared default selections (everything except textarea's `resize`). */
@@ -386,72 +415,6 @@ export function createFieldAddonRecipe(
 			size: "md",
 		},
 	});
-}
-
-/**
- * Builds a transparent outside slot recipe (prepend/append). Owns no surface;
- * the slotted content brings its own visual language.
- */
-export function createFieldSlotRecipe(name: string) {
-	return createUseRecipe(name, {
-		base: {
-			display: "inline-flex",
-			alignItems: "center",
-			flexShrink: "0",
-		},
-	});
-}
-
-/**
- * Builds the group layout coordinator (`.${name}-group`) that flattens the
- * border radii where `.${name}-prepend` / `.${name}-append` meet `.${name}`.
- */
-export function createFieldGroupRecipe(name: string) {
-	return createUseRecipe(
-		`${name}-group`,
-		{
-			base: {
-				display: "inline-flex",
-				alignItems: "stretch",
-				width: "100%",
-				position: "relative",
-			},
-			variants: {
-				size: {
-					sm: {},
-					md: {},
-					lg: {},
-				},
-			},
-			defaultVariants: {
-				size: "md",
-			},
-		},
-		(s) => {
-			const { selector } = s;
-
-			selector(`.${name}-group`, {
-				[`.${name}-prepend + .${name}`]: {
-					borderTopLeftRadius: "0",
-					borderBottomLeftRadius: "0",
-					borderLeftWidth: "0",
-				},
-				[`.${name}-prepend > *:first-child`]: {
-					borderTopRightRadius: "0",
-					borderBottomRightRadius: "0",
-				},
-				[`.${name}:has(+ .${name}-append)`]: {
-					borderTopRightRadius: "0",
-					borderBottomRightRadius: "0",
-					borderRightWidth: "0",
-				},
-				[`.${name}-append > *:last-child`]: {
-					borderTopLeftRadius: "0",
-					borderBottomLeftRadius: "0",
-				},
-			});
-		},
-	);
 }
 
 /**
