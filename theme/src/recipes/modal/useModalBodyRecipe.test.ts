@@ -24,6 +24,7 @@ function createInstance() {
 		"paddingLeft",
 		"paddingRight",
 		"gap",
+		"flexGrow",
 		"borderBottomWidth",
 		"borderBottomStyle",
 		"borderBottomColor",
@@ -90,6 +91,23 @@ describe("useModalBodyRecipe", () => {
 		});
 	});
 
+	it("should have fullscreen variant with true and false keys", () => {
+		const s = createInstance();
+		const recipe = useModalBodyRecipe(s);
+
+		expect(Object.keys(recipe.variants!.fullscreen)).toEqual(["true", "false"]);
+	});
+
+	it("should have correct fullscreen variant styles", () => {
+		const s = createInstance();
+		const recipe = useModalBodyRecipe(s);
+
+		expect(recipe.variants!.fullscreen).toEqual({
+			true: { flexGrow: "1" },
+			false: {},
+		});
+	});
+
 	it("should have correct default variants", () => {
 		const s = createInstance();
 		const recipe = useModalBodyRecipe(s);
@@ -98,6 +116,7 @@ describe("useModalBodyRecipe", () => {
 			color: "neutral",
 			variant: "solid",
 			size: "md",
+			fullscreen: "false",
 		});
 	});
 
