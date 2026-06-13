@@ -24,4 +24,5 @@ export * from "./radio";
 export * from "./select";
 export * from "./skeleton";
 export * from "./textarea";
+export * from "./switch";
 export * from "./tooltip";
