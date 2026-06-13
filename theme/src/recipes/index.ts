@@ -1,3 +1,4 @@
+export * from "./accordion";
 export * from "./avatar";
 export * from "./badge";
 export * from "./breadcrumb";
@@ -16,6 +17,7 @@ export * from "./media";
 export * from "./spinner";
 export * from "./modal";
 export * from "./nav";
+export * from "./otp";
 export * from "./page-hero";
 export * from "./pagination";
 export * from "./placeholder";
