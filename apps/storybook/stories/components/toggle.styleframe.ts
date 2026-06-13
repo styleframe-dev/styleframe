@@ -37,4 +37,28 @@ selector(".toggle-label", {
 	minWidth: "120px",
 });
 
+// Custom example — font-weight segmented picker (the "Aa" + label cell)
+selector(".toggle-weight", {
+	display: "flex",
+	flexDirection: "column",
+	alignItems: "center",
+	gap: "@spacing.sm",
+	minWidth: "48px",
+});
+
+selector(".toggle-weight-glyph", {
+	fontSize: "@font-size.xl",
+	lineHeight: "1",
+});
+
+selector(".toggle-weight-glyph.-light", { fontWeight: "@font-weight.light" });
+selector(".toggle-weight-glyph.-normal", { fontWeight: "@font-weight.normal" });
+selector(".toggle-weight-glyph.-medium", { fontWeight: "@font-weight.medium" });
+selector(".toggle-weight-glyph.-bold", { fontWeight: "@font-weight.bold" });
+
+selector(".toggle-weight-label", {
+	fontSize: "@font-size.2xs",
+	color: "@color.text-weak",
+});
+
 export default s;

@@ -2,7 +2,7 @@
 import Toggle from "../Toggle.vue";
 
 const colors = ["light", "dark", "neutral"] as const;
-const variants = ["ghost", "outline"] as const;
+const variants = ["solid", "outline", "ghost"] as const;
 const states = [
 	{ name: "off", pressed: false, disabled: false },
 	{ name: "on", pressed: true, disabled: false },

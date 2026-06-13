@@ -5,7 +5,7 @@ import ToggleGrid from "@/components/components/toggle/preview/ToggleGrid.vue";
 import ToggleSizeGrid from "@/components/components/toggle/preview/ToggleSizeGrid.vue";
 
 const colors = ["light", "dark", "neutral"] as const;
-const variants = ["ghost", "outline"] as const;
+const variants = ["solid", "outline", "ghost"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
@@ -92,10 +92,10 @@ export const Neutral: Story = {
 };
 
 // Variant stories
-export const Ghost: Story = {
+export const Solid: Story = {
 	args: {
-		variant: "ghost",
-		label: "Ghost",
+		variant: "solid",
+		label: "Solid",
 	},
 };
 
@@ -103,6 +103,13 @@ export const Outline: Story = {
 	args: {
 		variant: "outline",
 		label: "Outline",
+	},
+};
+
+export const Ghost: Story = {
+	args: {
+		variant: "ghost",
+		label: "Ghost",
 	},
 };
 

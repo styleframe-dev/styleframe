@@ -4,6 +4,7 @@ import ToggleGroup from "@/components/components/toggle/ToggleGroup.vue";
 import Toggle from "@/components/components/toggle/Toggle.vue";
 import FieldGroup from "@/components/components/field-group/FieldGroup.vue";
 import ToggleGroupGrid from "@/components/components/toggle/preview/ToggleGroupGrid.vue";
+import ToggleCustomGrid from "@/components/components/toggle/preview/ToggleCustomGrid.vue";
 
 const orientations = ["horizontal", "vertical"] as const;
 const sizes = ["sm", "md", "lg"] as const;
@@ -111,5 +112,14 @@ export const Connected: StoryObj = {
 				<Toggle variant="outline" label="Right" />
 			</FieldGroup>
 		`,
+	}),
+};
+
+// Custom — a font-weight picker built from outline toggles joined with field-group,
+// each cell showing "Aa" at its weight plus a label.
+export const Custom: StoryObj = {
+	render: () => ({
+		components: { ToggleCustomGrid },
+		template: "<ToggleCustomGrid />",
 	}),
 };

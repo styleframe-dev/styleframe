@@ -5,7 +5,7 @@ import { toggle } from "virtual:styleframe";
 const props = withDefaults(
 	defineProps<{
 		color?: "light" | "dark" | "neutral";
-		variant?: "ghost" | "outline";
+		variant?: "solid" | "outline" | "ghost";
 		size?: "sm" | "md" | "lg";
 		pressed?: boolean;
 		disabled?: boolean;

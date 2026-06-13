@@ -131,12 +131,11 @@ describe("useToggleRecipe", () => {
 			const recipe = useToggleRecipe(s);
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual([
-				"ghost",
+				"solid",
 				"outline",
+				"ghost",
 			]);
-			expect(recipe.variants!.variant.ghost).toEqual({
-				background: "transparent",
-			});
+			expect(recipe.variants!.variant.solid).toEqual({});
 		});
 
 		it("should have size variants with correct styles", () => {
@@ -162,17 +161,31 @@ describe("useToggleRecipe", () => {
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
-			variant: "ghost",
+			variant: "solid",
 			size: "md",
 		});
 	});
 
 	describe("compound variants", () => {
-		it("should have 6 compound variants", () => {
+		it("should have 9 compound variants", () => {
 			const s = createInstance();
 			const recipe = useToggleRecipe(s);
 
-			expect(recipe.compoundVariants).toHaveLength(6);
+			expect(recipe.compoundVariants).toHaveLength(9);
+		});
+
+		it("should give solid a resting background and keep outline/ghost transparent at rest", () => {
+			const s = createInstance();
+			const recipe = useToggleRecipe(s);
+
+			const cssFor = (variant: string) =>
+				recipe.compoundVariants!.find(
+					(v) => v.match.color === "neutral" && v.match.variant === variant,
+				)!.css as Record<string, unknown>;
+
+			expect(cssFor("solid").background).toBe("@color.gray-100");
+			expect(cssFor("outline").background).toBeUndefined();
+			expect(cssFor("ghost").background).toBeUndefined();
 		});
 
 		it("should reuse the :active fill on :aria-pressed for every compound variant", () => {
@@ -185,22 +198,23 @@ describe("useToggleRecipe", () => {
 			}
 		});
 
-		it("should adapt the neutral/ghost variant in dark mode and re-assert the pressed fill", () => {
+		it("should adapt the neutral/solid variant in dark mode and re-assert the pressed fill", () => {
 			const s = createInstance();
 			const recipe = useToggleRecipe(s);
 
 			const cv = recipe.compoundVariants!.find(
-				(v) => v.match.color === "neutral" && v.match.variant === "ghost",
+				(v) => v.match.color === "neutral" && v.match.variant === "solid",
 			);
 			expect(cv?.css).toEqual({
 				color: "@color.text",
-				"&:hover": { background: "@color.gray-100" },
-				"&:focus": { background: "@color.gray-100" },
-				"&:active": { background: "@color.gray-200" },
-				"&:aria-pressed": { background: "@color.gray-200" },
-				"&:dark": { color: "@color.gray-200" },
-				"&:dark:hover": { background: "@color.gray-800" },
-				"&:dark:focus": { background: "@color.gray-800" },
+				background: "@color.gray-100",
+				"&:hover": { background: "@color.gray-150" },
+				"&:focus": { background: "@color.gray-150" },
+				"&:active": { background: "@color.gray-150" },
+				"&:aria-pressed": { background: "@color.gray-150" },
+				"&:dark": { color: "@color.gray-200", background: "@color.gray-800" },
+				"&:dark:hover": { background: "@color.gray-750" },
+				"&:dark:focus": { background: "@color.gray-750" },
 				"&:dark:active": { background: "@color.gray-750" },
 				"&:dark:aria-pressed": { background: "@color.gray-750" },
 			});
@@ -216,10 +230,10 @@ describe("useToggleRecipe", () => {
 			expect(light?.css).toEqual({
 				color: "@color.gray-700",
 				borderColor: "@color.gray-300",
-				"&:hover": { background: "@color.gray-100" },
-				"&:focus": { background: "@color.gray-100" },
-				"&:active": { background: "@color.gray-200" },
-				"&:aria-pressed": { background: "@color.gray-200" },
+				"&:hover": { background: "@color.gray-150" },
+				"&:focus": { background: "@color.gray-150" },
+				"&:active": { background: "@color.gray-150" },
+				"&:aria-pressed": { background: "@color.gray-150" },
 			});
 		});
 	});
@@ -243,7 +257,7 @@ describe("useToggleRecipe", () => {
 			});
 
 			expect(Object.keys(recipe.variants!.color)).toEqual(["neutral"]);
-			expect(recipe.compoundVariants).toHaveLength(2);
+			expect(recipe.compoundVariants).toHaveLength(3);
 		});
 
 		it("should adjust default variants when filtered out", () => {
