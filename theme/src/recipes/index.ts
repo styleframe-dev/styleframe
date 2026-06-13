@@ -21,5 +21,6 @@ export * from "./popover";
 export * from "./progress";
 export * from "./select";
 export * from "./skeleton";
+export * from "./tabs";
 export * from "./textarea";
 export * from "./tooltip";
