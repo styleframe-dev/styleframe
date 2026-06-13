@@ -5,7 +5,7 @@ import { chatMessageActions } from "virtual:styleframe";
 const props = withDefaults(
 	defineProps<{
 		color?: "light" | "dark" | "neutral";
-		variant?: "solid" | "outline" | "soft" | "subtle" | "naked";
+		variant?: "solid" | "outline" | "soft" | "subtle" | "ghost";
 		size?: "sm" | "md" | "lg";
 	}>(),
 	{},
