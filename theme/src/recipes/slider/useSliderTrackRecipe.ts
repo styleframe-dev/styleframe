@@ -79,13 +79,15 @@ export const useSliderTrackRecipe = createUseRecipe("slider-track", {
 		},
 
 		// Vertical size overrides — swap rail thickness from height to width.
+		// The rail must fill the root's length (height: 100%) so the range's
+		// percentage height resolves; only its thickness moves to the width axis.
 		...sizes.map((size) => ({
 			match: {
 				orientation: "vertical" as const,
 				size: size as (typeof sizes)[number],
 			},
 			css: {
-				height: "auto",
+				height: "100%",
 				width: railSizeMap[size],
 			},
 		})),

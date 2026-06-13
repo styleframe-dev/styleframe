@@ -130,7 +130,7 @@ describe("useSliderTrackRecipe", () => {
 			expect(verticalMd).toEqual({
 				match: { orientation: "vertical", size: "md" },
 				css: {
-					height: "auto",
+					height: "100%",
 					width: "@0.5",
 				},
 			});
