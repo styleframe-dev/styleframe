@@ -7,6 +7,7 @@ function createInstance() {
 	for (const name of [
 		"display",
 		"flexDirection",
+		"flexGrow",
 		"gap",
 		"paddingTop",
 		"paddingBottom",
