@@ -46,12 +46,32 @@ const props = withDefaults(
 
 const weekdayLabels = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const monthNames = [
-	"January", "February", "March", "April", "May", "June",
-	"July", "August", "September", "October", "November", "December",
+	"January",
+	"February",
+	"March",
+	"April",
+	"May",
+	"June",
+	"July",
+	"August",
+	"September",
+	"October",
+	"November",
+	"December",
 ];
 const monthLabels = [
-	"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+	"Jan",
+	"Feb",
+	"Mar",
+	"Apr",
+	"May",
+	"Jun",
+	"Jul",
+	"Aug",
+	"Sep",
+	"Oct",
+	"Nov",
+	"Dec",
 ];
 const presetLabels = ["Today", "Yesterday", "Last 7 days", "Last 30 days"];
 
@@ -108,7 +128,11 @@ function isoMonth(year: number, month: number): string {
 	return `${year}-${String(month + 1).padStart(2, "0")}`;
 }
 
-function inMonth(iso: string | undefined, year: number, month: number): boolean {
+function inMonth(
+	iso: string | undefined,
+	year: number,
+	month: number,
+): boolean {
 	return iso?.startsWith(isoMonth(year, month)) ?? false;
 }
 
@@ -118,7 +142,8 @@ function inYear(iso: string | undefined, year: number): boolean {
 
 function captionFor(m: Month): string {
 	if (props.type === "month") return String(m.year);
-	if (props.type === "year") return `${yearStart.value} – ${yearStart.value + 11}`;
+	if (props.type === "year")
+		return `${yearStart.value} – ${yearStart.value + 11}`;
 	return m.label;
 }
 
