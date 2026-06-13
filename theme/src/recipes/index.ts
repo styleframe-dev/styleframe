@@ -14,6 +14,7 @@ export * from "./media";
 export * from "./spinner";
 export * from "./modal";
 export * from "./nav";
+export * from "./otp";
 export * from "./page-hero";
 export * from "./pagination";
 export * from "./placeholder";
