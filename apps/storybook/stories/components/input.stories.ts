@@ -2,9 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
 import Button from "@/components/components/button/Button.vue";
 import Input from "@/components/components/input/Input.vue";
-import InputGroup from "@/components/components/input/InputGroup.vue";
-import InputPrepend from "@/components/components/input/InputPrepend.vue";
-import InputAppend from "@/components/components/input/InputAppend.vue";
+import FieldGroup from "@/components/components/field-group/FieldGroup.vue";
 import InputGrid from "@/components/components/input/preview/InputGrid.vue";
 import InputSizeGrid from "@/components/components/input/preview/InputSizeGrid.vue";
 
@@ -222,65 +220,20 @@ export const WithPrefixAndSuffix: StoryObj = {
 	},
 };
 
-// External addon stories — demonstrate the multi-part group composition.
-// Prepend/append are transparent slots; drop in a real <Button> (or any
-// other component) and its own styling takes over.
-export const WithPrepend: StoryObj = {
+// Attached controls — group the input with buttons (or any bordered control)
+// as direct children of a FieldGroup; the seams merge into one unit.
+export const WithFieldGroup: StoryObj = {
 	render: (args) => ({
-		components: { Button, Input, InputGroup, InputPrepend },
+		components: { Button, Input, FieldGroup },
 		setup() {
 			return { args };
 		},
 		template: `
-			<InputGroup :size="args.size">
-				<InputPrepend>
-					<Button color="neutral" variant="outline" :size="args.size" label="https://" />
-				</InputPrepend>
-				<Input v-bind="args" placeholder="example.com" />
-			</InputGroup>
-		`,
-	}),
-	args: {
-		size: "md",
-	},
-};
-
-export const WithAppend: StoryObj = {
-	render: (args) => ({
-		components: { Button, Input, InputGroup, InputAppend },
-		setup() {
-			return { args };
-		},
-		template: `
-			<InputGroup :size="args.size">
-				<Input v-bind="args" placeholder="Search..." />
-				<InputAppend>
-					<Button color="primary" variant="solid" :size="args.size" label="Search" />
-				</InputAppend>
-			</InputGroup>
-		`,
-	}),
-	args: {
-		size: "md",
-	},
-};
-
-export const WithPrependAndAppend: StoryObj = {
-	render: (args) => ({
-		components: { Button, Input, InputGroup, InputPrepend, InputAppend },
-		setup() {
-			return { args };
-		},
-		template: `
-			<InputGroup :size="args.size">
-				<InputPrepend>
-					<Button color="neutral" variant="outline" :size="args.size" label="USD" />
-				</InputPrepend>
+			<FieldGroup>
+				<Button color="neutral" variant="outline" :size="args.size" label="USD" />
 				<Input v-bind="args" placeholder="0.00" />
-				<InputAppend>
-					<Button color="primary" variant="solid" :size="args.size" label="Submit" />
-				</InputAppend>
-			</InputGroup>
+				<Button color="primary" variant="solid" :size="args.size" label="Submit" />
+			</FieldGroup>
 		`,
 	}),
 	args: {
