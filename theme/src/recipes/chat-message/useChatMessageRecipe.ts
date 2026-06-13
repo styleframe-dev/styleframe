@@ -29,7 +29,7 @@ export const useChatMessageRecipe = createUseRecipe("chat-message", {
 			outline: {},
 			soft: {},
 			subtle: {},
-			naked: {},
+			ghost: {},
 		},
 		side: {
 			start: {

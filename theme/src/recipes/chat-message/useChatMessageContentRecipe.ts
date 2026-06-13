@@ -3,7 +3,7 @@ import { createUseRecipe } from "../../utils/createUseRecipe";
 /**
  * Chat message content recipe — the bubble itself. Owns the
  * color × variant compound matrix (12 entries: 3 colors × 4 visual variants).
- * The naked variant strips bubble chrome (transparent bg, no border, no
+ * The ghost variant strips bubble chrome (transparent bg, no border, no
  * padding) — used for assistant turns that should read as inline prose.
  */
 export const useChatMessageContentRecipe = createUseRecipe(
@@ -55,7 +55,7 @@ export const useChatMessageContentRecipe = createUseRecipe(
 				outline: {},
 				soft: {},
 				subtle: {},
-				naked: {
+				ghost: {
 					background: "transparent",
 					borderColor: "transparent",
 					paddingTop: "0",

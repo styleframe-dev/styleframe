@@ -4,7 +4,7 @@ import ChatMessageAvatar from "../ChatMessageAvatar.vue";
 import ChatMessageContent from "../ChatMessageContent.vue";
 
 const colors = ["neutral", "light", "dark"] as const;
-const variants = ["solid", "outline", "soft", "subtle", "naked"] as const;
+const variants = ["solid", "outline", "soft", "subtle", "ghost"] as const;
 const sides = ["start", "end"] as const;
 
 const initial = (color: string) => color.charAt(0).toUpperCase();

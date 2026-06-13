@@ -8,7 +8,7 @@ import ChatMessageGrid from "@/components/components/chat-message/preview/ChatMe
 import ChatMessageSizeGrid from "@/components/components/chat-message/preview/ChatMessageSizeGrid.vue";
 
 const colors = ["neutral", "light", "dark"] as const;
-const variants = ["solid", "outline", "soft", "subtle", "naked"] as const;
+const variants = ["solid", "outline", "soft", "subtle", "ghost"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 const sides = ["start", "end"] as const;
 
@@ -124,8 +124,8 @@ export const Subtle: Story = {
 	args: { variant: "subtle" },
 };
 
-export const Naked: Story = {
-	args: { variant: "naked" },
+export const Ghost: Story = {
+	args: { variant: "ghost" },
 };
 
 // Size stories
