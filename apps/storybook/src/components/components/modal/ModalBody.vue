@@ -7,6 +7,7 @@ const props = withDefaults(
 		color?: "light" | "dark" | "neutral";
 		variant?: "solid" | "soft" | "subtle";
 		size?: "sm" | "md" | "lg";
+		fullscreen?: boolean;
 	}>(),
 	{},
 );
@@ -16,6 +17,7 @@ const classes = computed(() =>
 		color: props.color,
 		variant: props.variant,
 		size: props.size,
+		fullscreen: props.fullscreen ? "true" : "false",
 	}),
 );
 </script>

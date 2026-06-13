@@ -1,10 +1,7 @@
 import {
 	useTextareaRecipe,
-	useTextareaGroupRecipe,
 	useTextareaPrefixRecipe,
 	useTextareaSuffixRecipe,
-	useTextareaPrependRecipe,
-	useTextareaAppendRecipe,
 } from "@styleframe/theme";
 import { styleframe } from "virtual:styleframe";
 
@@ -13,11 +10,8 @@ const { selector } = s;
 
 // Initialize textarea recipes
 export const textarea = useTextareaRecipe(s);
-export const textareaGroup = useTextareaGroupRecipe(s);
 export const textareaPrefix = useTextareaPrefixRecipe(s);
 export const textareaSuffix = useTextareaSuffixRecipe(s);
-export const textareaPrepend = useTextareaPrependRecipe(s);
-export const textareaAppend = useTextareaAppendRecipe(s);
 
 // Container styles for story layout
 selector(".textarea-grid", {
