@@ -1,4 +1,5 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
+import { overlaySurfaceCompoundVariants } from "./createOverlayRecipes";
 
 /**
  * Modal container recipe.
@@ -40,124 +41,7 @@ export const useModalRecipe = createUseRecipe("modal", {
 			},
 		},
 	},
-	compoundVariants: [
-		// Light color (neutral light-mode values, fixed across themes)
-		{
-			match: { color: "light" as const, variant: "solid" as const },
-			css: {
-				background: "@color.white",
-				color: "@color.text",
-				borderColor: "@color.gray-200",
-				"&:dark": {
-					background: "@color.white",
-					color: "@color.text-inverted",
-					borderColor: "@color.gray-200",
-				},
-			},
-		},
-		{
-			match: { color: "light" as const, variant: "soft" as const },
-			css: {
-				background: "@color.gray-100",
-				color: "@color.gray-700",
-				"&:dark": {
-					background: "@color.gray-100",
-					color: "@color.gray-700",
-				},
-			},
-		},
-		{
-			match: { color: "light" as const, variant: "subtle" as const },
-			css: {
-				background: "@color.gray-100",
-				color: "@color.gray-700",
-				borderColor: "@color.gray-200",
-				"&:dark": {
-					background: "@color.gray-100",
-					color: "@color.gray-700",
-					borderColor: "@color.gray-200",
-				},
-			},
-		},
-
-		// Dark color (neutral dark-mode values, fixed across themes)
-		{
-			match: { color: "dark" as const, variant: "solid" as const },
-			css: {
-				background: "@color.gray-900",
-				color: "@color.text-inverted",
-				borderColor: "@color.gray-700",
-				"&:dark": {
-					background: "@color.gray-900",
-					color: "@color.text",
-					borderColor: "@color.gray-700",
-				},
-			},
-		},
-		{
-			match: { color: "dark" as const, variant: "soft" as const },
-			css: {
-				background: "@color.gray-800",
-				color: "@color.gray-300",
-				"&:dark": {
-					background: "@color.gray-800",
-					color: "@color.gray-300",
-				},
-			},
-		},
-		{
-			match: { color: "dark" as const, variant: "subtle" as const },
-			css: {
-				background: "@color.gray-800",
-				color: "@color.gray-300",
-				borderColor: "@color.gray-700",
-				"&:dark": {
-					background: "@color.gray-800",
-					color: "@color.gray-300",
-					borderColor: "@color.gray-700",
-				},
-			},
-		},
-
-		// Neutral color (adaptive: light in light mode, dark in dark mode)
-		{
-			match: { color: "neutral" as const, variant: "solid" as const },
-			css: {
-				background: "@color.white",
-				color: "@color.text",
-				borderColor: "@color.gray-200",
-				"&:dark": {
-					background: "@color.gray-900",
-					color: "@color.white",
-					borderColor: "@color.gray-700",
-				},
-			},
-		},
-		{
-			match: { color: "neutral" as const, variant: "soft" as const },
-			css: {
-				background: "@color.gray-100",
-				color: "@color.gray-700",
-				"&:dark": {
-					background: "@color.gray-800",
-					color: "@color.gray-300",
-				},
-			},
-		},
-		{
-			match: { color: "neutral" as const, variant: "subtle" as const },
-			css: {
-				background: "@color.gray-100",
-				color: "@color.gray-700",
-				borderColor: "@color.gray-200",
-				"&:dark": {
-					background: "@color.gray-800",
-					color: "@color.gray-300",
-					borderColor: "@color.gray-700",
-				},
-			},
-		},
-	],
+	compoundVariants: [...overlaySurfaceCompoundVariants],
 	defaultVariants: {
 		color: "neutral",
 		variant: "solid",

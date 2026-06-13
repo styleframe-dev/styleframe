@@ -1,56 +1,6 @@
-import { createUseRecipe } from "../../utils/createUseRecipe";
+import { createOverlayBodyRecipe } from "./createOverlayRecipes";
 
 /**
- * Modal body recipe for main content area.
+ * Modal body recipe for the main content area.
  */
-export const useModalBodyRecipe = createUseRecipe("modal-body", {
-	base: {
-		display: "flex",
-		flexDirection: "column",
-		gap: "@0.5",
-		paddingTop: "@0.75",
-		paddingBottom: "@0.75",
-		paddingLeft: "@1",
-		paddingRight: "@1",
-	},
-	variants: {
-		color: {
-			light: {},
-			dark: {},
-			neutral: {},
-		},
-		variant: {
-			solid: {},
-			soft: {},
-			subtle: {},
-		},
-		size: {
-			sm: {
-				paddingTop: "@0.5",
-				paddingBottom: "@0.5",
-				paddingLeft: "@0.75",
-				paddingRight: "@0.75",
-				gap: "@0.375",
-			},
-			md: {
-				paddingTop: "@0.75",
-				paddingBottom: "@0.75",
-				paddingLeft: "@1",
-				paddingRight: "@1",
-				gap: "@0.5",
-			},
-			lg: {
-				paddingTop: "@1",
-				paddingBottom: "@1",
-				paddingLeft: "@1.25",
-				paddingRight: "@1.25",
-				gap: "@0.75",
-			},
-		},
-	},
-	defaultVariants: {
-		color: "neutral",
-		variant: "solid",
-		size: "md",
-	},
-});
+export const useModalBodyRecipe = createOverlayBodyRecipe("modal");
