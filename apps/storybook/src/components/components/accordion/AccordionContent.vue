@@ -29,8 +29,11 @@ const bodyClasses = computed(() =>
 
 <template>
 	<div :class="contentClasses" :data-state="open ? 'open' : 'closed'">
-		<div :class="bodyClasses">
-			<slot />
+		<!-- Overflow clip (styled by the content recipe's `> *` selector) -->
+		<div>
+			<div :class="bodyClasses">
+				<slot />
+			</div>
 		</div>
 	</div>
 </template>

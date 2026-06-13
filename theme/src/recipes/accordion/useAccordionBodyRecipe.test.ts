@@ -4,8 +4,6 @@ import { useAccordionBodyRecipe } from "./index";
 function createInstance() {
 	const s = styleframe();
 	for (const name of [
-		"overflow",
-		"minHeight",
 		"fontSize",
 		"paddingTop",
 		"paddingBottom",
@@ -26,14 +24,13 @@ describe("useAccordionBodyRecipe", () => {
 		expect(recipe.name).toBe("accordion-body");
 	});
 
-	it("should clip overflow so the grid row can collapse", () => {
+	it("should keep the base padding-free (the clip wrapper owns overflow)", () => {
 		const s = createInstance();
 		const recipe = useAccordionBodyRecipe(s);
 
-		expect(recipe.base).toEqual({
-			overflow: "hidden",
-			minHeight: "0",
-		});
+		// Padding lives only on the size variants, never on the base — the grid
+		// child clip (styled by the content recipe) carries overflow/min-height.
+		expect(recipe.base).toEqual({});
 	});
 
 	it("should scale padding and font with size", () => {
