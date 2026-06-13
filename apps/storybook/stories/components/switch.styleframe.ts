@@ -1,20 +1,15 @@
-import {
-	useToggleRecipe,
-	useToggleFieldRecipe,
-	useToggleGroupRecipe,
-} from "@styleframe/theme";
+import { useSwitchRecipe, useSwitchFieldRecipe } from "@styleframe/theme";
 import { styleframe } from "virtual:styleframe";
 
 const s = styleframe();
 const { selector } = s;
 
-// Initialize toggle recipes
-export const toggle = useToggleRecipe(s);
-export const toggleField = useToggleFieldRecipe(s);
-export const toggleGroup = useToggleGroupRecipe(s);
+// Initialize switch recipes
+export const switchRecipe = useSwitchRecipe(s);
+export const switchField = useSwitchFieldRecipe(s);
 
 // Container styles for story layout
-selector(".toggle-grid", {
+selector(".switch-grid", {
 	display: "flex",
 	flexWrap: "wrap",
 	gap: "@spacing.md",
@@ -22,21 +17,21 @@ selector(".toggle-grid", {
 	alignItems: "flex-start",
 });
 
-selector(".toggle-section", {
+selector(".switch-section", {
 	display: "flex",
 	flexDirection: "column",
 	gap: "@spacing.lg",
 	padding: "@spacing.md",
 });
 
-selector(".toggle-row", {
+selector(".switch-row", {
 	display: "flex",
 	flexWrap: "wrap",
 	gap: "@spacing.md",
 	alignItems: "center",
 });
 
-selector(".toggle-label", {
+selector(".switch-label", {
 	fontSize: "@font-size.sm",
 	fontWeight: "@font-weight.semibold",
 	minWidth: "120px",

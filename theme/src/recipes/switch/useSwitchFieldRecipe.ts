@@ -1,7 +1,7 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Toggle field recipe — sits on the native `<input type="checkbox" role="switch">`.
+ * Switch field recipe — sits on the native `<input type="checkbox" role="switch">`.
  *
  * Renders a sliding pill switch with no extra markup. The native element drives
  * every state: the track is a full-radius pill, the knob is a white circle
@@ -22,7 +22,7 @@ import { createUseRecipe } from "../../utils/createUseRecipe";
 const knobImage =
 	"url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='8' fill='white'/%3E%3C/svg%3E\")";
 
-export const useToggleFieldRecipe = createUseRecipe("toggle-field", {
+export const useSwitchFieldRecipe = createUseRecipe("switch-field", {
 	base: {
 		appearance: "none",
 		WebkitAppearance: "none",

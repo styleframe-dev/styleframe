@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { toggle, toggleField } from "virtual:styleframe";
+import { switchRecipe, switchField } from "virtual:styleframe";
 
 const props = withDefaults(
 	defineProps<{
@@ -15,9 +15,9 @@ const props = withDefaults(
 	},
 );
 
-const wrapperClasses = computed(() => toggle({ size: props.size }));
+const wrapperClasses = computed(() => switchRecipe({ size: props.size }));
 const fieldClasses = computed(() =>
-	toggleField({ color: props.color, size: props.size }),
+	switchField({ color: props.color, size: props.size }),
 );
 </script>
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { styleframe } from "@styleframe/core";
 import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
-import { useToggleRecipe } from "./useToggleRecipe";
+import { useSwitchRecipe } from "./useSwitchRecipe";
 
 function createInstance() {
 	const s = styleframe();
@@ -22,18 +22,18 @@ function createInstance() {
 	return s;
 }
 
-describe("useToggleRecipe", () => {
+describe("useSwitchRecipe", () => {
 	it("should create a recipe with correct metadata", () => {
 		const s = createInstance();
-		const recipe = useToggleRecipe(s);
+		const recipe = useSwitchRecipe(s);
 
 		expect(recipe.type).toBe("recipe");
-		expect(recipe.name).toBe("toggle");
+		expect(recipe.name).toBe("switch");
 	});
 
 	it("should have correct base styles", () => {
 		const s = createInstance();
-		const recipe = useToggleRecipe(s);
+		const recipe = useSwitchRecipe(s);
 
 		expect(recipe.base).toMatchObject({
 			display: "inline-flex",
@@ -47,7 +47,7 @@ describe("useToggleRecipe", () => {
 	describe("variants", () => {
 		it("should have size variants with correct styles", () => {
 			const s = createInstance();
-			const recipe = useToggleRecipe(s);
+			const recipe = useSwitchRecipe(s);
 
 			expect(Object.keys(recipe.variants!.size)).toEqual(["sm", "md", "lg"]);
 			expect(recipe.variants!.size.md).toEqual({
@@ -59,14 +59,14 @@ describe("useToggleRecipe", () => {
 
 	it("should have correct default variants", () => {
 		const s = createInstance();
-		const recipe = useToggleRecipe(s);
+		const recipe = useSwitchRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({ size: "md" });
 	});
 
 	it("should not define compound variants", () => {
 		const s = createInstance();
-		const recipe = useToggleRecipe(s);
+		const recipe = useSwitchRecipe(s);
 
 		expect(recipe.compoundVariants ?? []).toHaveLength(0);
 	});
@@ -74,7 +74,7 @@ describe("useToggleRecipe", () => {
 	describe("config overrides", () => {
 		it("should allow overriding base styles", () => {
 			const s = createInstance();
-			const recipe = useToggleRecipe(s, {
+			const recipe = useSwitchRecipe(s, {
 				base: { display: "flex" },
 			});
 
@@ -85,7 +85,7 @@ describe("useToggleRecipe", () => {
 	describe("filter", () => {
 		it("should filter size variants", () => {
 			const s = createInstance();
-			const recipe = useToggleRecipe(s, {
+			const recipe = useSwitchRecipe(s, {
 				filter: { size: ["md"] },
 			});
 
@@ -94,7 +94,7 @@ describe("useToggleRecipe", () => {
 
 		it("should adjust default variants when filtered out", () => {
 			const s = createInstance();
-			const recipe = useToggleRecipe(s, {
+			const recipe = useSwitchRecipe(s, {
 				filter: { size: ["sm"] },
 			});
 

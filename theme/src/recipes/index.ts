@@ -21,5 +21,5 @@ export * from "./popover";
 export * from "./progress";
 export * from "./skeleton";
 export * from "./textarea";
-export * from "./toggle";
+export * from "./switch";
 export * from "./tooltip";

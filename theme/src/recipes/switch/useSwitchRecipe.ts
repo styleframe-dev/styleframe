@@ -1,16 +1,16 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Toggle wrapper recipe — sits on the `<label>` that wraps a
- * `<input class="toggle-field">` and its text. Owns the inline layout
+ * Switch wrapper recipe — sits on the `<label>` that wraps a
+ * `<input class="switch-field">` and its text. Owns the inline layout
  * (gap, alignment), label typography, and dims the label when the nested
- * field is disabled. The visual switch lives on `toggle-field`.
+ * field is disabled. The visual switch lives on `switch-field`.
  *
  * The disabled-label dimming uses `:has()`, which is a raw CSS selector rather
  * than a registered modifier, so it is declared via the `setup` callback.
  */
-export const useToggleRecipe = createUseRecipe(
-	"toggle",
+export const useSwitchRecipe = createUseRecipe(
+	"switch",
 	{
 		base: {
 			display: "inline-flex",
@@ -44,7 +44,7 @@ export const useToggleRecipe = createUseRecipe(
 		const { selector } = s;
 
 		// Dim the label when the nested field is disabled.
-		selector(".toggle:has(.toggle-field:disabled)", {
+		selector(".switch:has(.switch-field:disabled)", {
 			opacity: "0.5",
 			cursor: "not-allowed",
 		});

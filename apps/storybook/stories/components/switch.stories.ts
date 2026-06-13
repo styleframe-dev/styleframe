@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
 
-import Toggle from "@/components/components/toggle/Toggle.vue";
-import ToggleGrid from "@/components/components/toggle/preview/ToggleGrid.vue";
-import ToggleSizeGrid from "@/components/components/toggle/preview/ToggleSizeGrid.vue";
+import Switch from "@/components/components/switch/Switch.vue";
+import SwitchGrid from "@/components/components/switch/preview/SwitchGrid.vue";
+import SwitchSizeGrid from "@/components/components/switch/preview/SwitchSizeGrid.vue";
 
 const colors = ["neutral", "light", "dark"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 
 const meta = {
-	title: "Theme/Recipes/Forms/Toggle",
-	component: Toggle,
+	title: "Theme/Recipes/Forms/Switch",
+	component: Switch,
 	tags: ["autodocs"],
 	parameters: {
 		layout: "padded",
@@ -18,27 +18,27 @@ const meta = {
 		color: {
 			control: "select",
 			options: colors,
-			description: "The color of the toggle track surface",
+			description: "The color of the switch track surface",
 		},
 		size: {
 			control: "select",
 			options: sizes,
-			description: "The size of the toggle",
+			description: "The size of the switch",
 		},
 		checked: {
 			control: "boolean",
-			description: "Whether the toggle is on",
+			description: "Whether the switch is on",
 		},
 		disabled: {
 			control: "boolean",
-			description: "Whether the toggle is disabled",
+			description: "Whether the switch is disabled",
 		},
 		label: {
 			control: "text",
-			description: "The toggle label",
+			description: "The switch label",
 		},
 	},
-} satisfies Meta<typeof Toggle>;
+} satisfies Meta<typeof Switch>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -54,15 +54,15 @@ export const Default: Story = {
 
 export const AllStates: StoryObj = {
 	render: () => ({
-		components: { ToggleGrid },
-		template: "<ToggleGrid />",
+		components: { SwitchGrid },
+		template: "<SwitchGrid />",
 	}),
 };
 
 export const AllSizes: StoryObj = {
 	render: () => ({
-		components: { ToggleSizeGrid },
-		template: "<ToggleSizeGrid />",
+		components: { SwitchSizeGrid },
+		template: "<SwitchSizeGrid />",
 	}),
 };
 

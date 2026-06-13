@@ -9,7 +9,7 @@ import { useFocusVisibleModifier } from "../../modifiers/usePseudoStateModifiers
 import { useDesignTokensPreset } from "../../presets/useDesignTokensPreset";
 import { useUtilitiesPreset } from "../../presets/useUtilitiesPreset";
 import { useModifiersPreset } from "../../presets/useModifiersPreset";
-import { useToggleFieldRecipe } from "./useToggleFieldRecipe";
+import { useSwitchFieldRecipe } from "./useSwitchFieldRecipe";
 
 function createInstance() {
 	const s = styleframe();
@@ -46,13 +46,13 @@ function createInstance() {
 	return s;
 }
 
-describe("useToggleFieldRecipe", () => {
+describe("useSwitchFieldRecipe", () => {
 	it("should create a recipe with correct metadata", () => {
 		const s = createInstance();
-		const recipe = useToggleFieldRecipe(s);
+		const recipe = useSwitchFieldRecipe(s);
 
 		expect(recipe.type).toBe("recipe");
-		expect(recipe.name).toBe("toggle-field");
+		expect(recipe.name).toBe("switch-field");
 	});
 
 	it("should build against the design-tokens, utilities, and modifiers presets", () => {
@@ -63,12 +63,12 @@ describe("useToggleFieldRecipe", () => {
 
 		// Reproduces the real init environment: every declared property must
 		// resolve to a registered utility (e.g. -webkit-appearance).
-		expect(() => useToggleFieldRecipe(s)).not.toThrow();
+		expect(() => useSwitchFieldRecipe(s)).not.toThrow();
 	});
 
 	it("should have correct base styles", () => {
 		const s = createInstance();
-		const recipe = useToggleFieldRecipe(s);
+		const recipe = useSwitchFieldRecipe(s);
 
 		expect(recipe.base).toMatchObject({
 			appearance: "none",
@@ -84,7 +84,7 @@ describe("useToggleFieldRecipe", () => {
 
 	it("should paint a white knob as an SVG background image", () => {
 		const s = createInstance();
-		const recipe = useToggleFieldRecipe(s);
+		const recipe = useSwitchFieldRecipe(s);
 
 		const image = recipe.base?.backgroundImage as string;
 		expect(image).toContain("data:image/svg+xml");
@@ -93,7 +93,7 @@ describe("useToggleFieldRecipe", () => {
 
 	it("should fill the track with primary and slide the knob right when checked", () => {
 		const s = createInstance();
-		const recipe = useToggleFieldRecipe(s);
+		const recipe = useSwitchFieldRecipe(s);
 
 		expect(recipe.base?.["&:checked"]).toEqual({
 			backgroundColor: "@color.primary",
@@ -103,7 +103,7 @@ describe("useToggleFieldRecipe", () => {
 
 	it("should style focus-visible and disabled states", () => {
 		const s = createInstance();
-		const recipe = useToggleFieldRecipe(s);
+		const recipe = useSwitchFieldRecipe(s);
 
 		expect(recipe.base?.["&:focus-visible"]).toMatchObject({
 			outlineColor: "@color.primary",
@@ -117,7 +117,7 @@ describe("useToggleFieldRecipe", () => {
 	describe("variants", () => {
 		it("should have all color variants", () => {
 			const s = createInstance();
-			const recipe = useToggleFieldRecipe(s);
+			const recipe = useSwitchFieldRecipe(s);
 
 			expect(Object.keys(recipe.variants!.color)).toEqual([
 				"light",
@@ -128,7 +128,7 @@ describe("useToggleFieldRecipe", () => {
 
 		it("should have size variants with correct styles", () => {
 			const s = createInstance();
-			const recipe = useToggleFieldRecipe(s);
+			const recipe = useSwitchFieldRecipe(s);
 
 			expect(Object.keys(recipe.variants!.size)).toEqual(["sm", "md", "lg"]);
 			expect(recipe.variants!.size.md).toEqual({
@@ -141,7 +141,7 @@ describe("useToggleFieldRecipe", () => {
 
 	it("should have correct default variants", () => {
 		const s = createInstance();
-		const recipe = useToggleFieldRecipe(s);
+		const recipe = useSwitchFieldRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
 			color: "neutral",
@@ -152,14 +152,14 @@ describe("useToggleFieldRecipe", () => {
 	describe("compound variants", () => {
 		it("should have 3 compound variants", () => {
 			const s = createInstance();
-			const recipe = useToggleFieldRecipe(s);
+			const recipe = useSwitchFieldRecipe(s);
 
 			expect(recipe.compoundVariants).toHaveLength(3);
 		});
 
 		it("should set the neutral unchecked track and re-assert the checked fill in dark mode", () => {
 			const s = createInstance();
-			const recipe = useToggleFieldRecipe(s);
+			const recipe = useSwitchFieldRecipe(s);
 
 			const cv = recipe.compoundVariants!.find(
 				(v) => v.match.color === "neutral",
@@ -177,7 +177,7 @@ describe("useToggleFieldRecipe", () => {
 
 		it("should keep fixed light/dark tracks free of dark overrides", () => {
 			const s = createInstance();
-			const recipe = useToggleFieldRecipe(s);
+			const recipe = useSwitchFieldRecipe(s);
 
 			const light = recipe.compoundVariants!.find(
 				(v) => v.match.color === "light",
@@ -191,7 +191,7 @@ describe("useToggleFieldRecipe", () => {
 	describe("config overrides", () => {
 		it("should allow overriding base styles", () => {
 			const s = createInstance();
-			const recipe = useToggleFieldRecipe(s, {
+			const recipe = useSwitchFieldRecipe(s, {
 				base: { display: "block" },
 			});
 
@@ -202,7 +202,7 @@ describe("useToggleFieldRecipe", () => {
 	describe("filter", () => {
 		it("should filter color variants and prune compound variants", () => {
 			const s = createInstance();
-			const recipe = useToggleFieldRecipe(s, {
+			const recipe = useSwitchFieldRecipe(s, {
 				filter: { color: ["neutral"] },
 			});
 
@@ -212,7 +212,7 @@ describe("useToggleFieldRecipe", () => {
 
 		it("should adjust default variants when filtered out", () => {
 			const s = createInstance();
-			const recipe = useToggleFieldRecipe(s, {
+			const recipe = useSwitchFieldRecipe(s, {
 				filter: { color: ["light"] },
 			});
 

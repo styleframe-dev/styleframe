@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Toggle from "../Toggle.vue";
+import Switch from "../Switch.vue";
 
 const sizes = ["sm", "md", "lg"] as const;
 const sizeTitles: Record<string, string> = {
@@ -10,12 +10,12 @@ const sizeTitles: Record<string, string> = {
 </script>
 
 <template>
-	<div class="toggle-section">
+	<div class="switch-section">
 		<div v-for="size in sizes" :key="size">
-			<div class="toggle-label">{{ size }}</div>
-			<div class="toggle-row">
-				<Toggle :size="size" :label="sizeTitles[size]" />
-				<Toggle :size="size" checked label="On" />
+			<div class="switch-label">{{ size }}</div>
+			<div class="switch-row">
+				<Switch :size="size" :label="sizeTitles[size]" />
+				<Switch :size="size" checked label="On" />
 			</div>
 		</div>
 	</div>
