@@ -7,6 +7,7 @@ export * from "./card";
 export * from "./chat-message";
 export * from "./checkbox";
 export * from "./chip";
+export * from "./context-menu";
 export * from "./dropdown";
 export * from "./hamburger-menu";
 export * from "./input";
