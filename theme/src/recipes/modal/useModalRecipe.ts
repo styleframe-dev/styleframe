@@ -39,6 +39,15 @@ export const useModalRecipe = createUseRecipe("modal", {
 				borderRadius: "@border-radius.lg",
 			},
 		},
+		fullscreen: {
+			true: {
+				width: "100%",
+				height: "100%",
+				maxWidth: "none",
+				borderRadius: "0",
+			},
+			false: {},
+		},
 	},
 	compoundVariants: [
 		// Light color (neutral light-mode values, fixed across themes)
@@ -162,5 +171,6 @@ export const useModalRecipe = createUseRecipe("modal", {
 		color: "neutral",
 		variant: "solid",
 		size: "md",
+		fullscreen: "false",
 	},
 });

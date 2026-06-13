@@ -47,10 +47,15 @@ export const useModalBodyRecipe = createUseRecipe("modal-body", {
 				gap: "@0.75",
 			},
 		},
+		fullscreen: {
+			true: { flexGrow: "1" },
+			false: {},
+		},
 	},
 	defaultVariants: {
 		color: "neutral",
 		variant: "solid",
 		size: "md",
+		fullscreen: "false",
 	},
 });
