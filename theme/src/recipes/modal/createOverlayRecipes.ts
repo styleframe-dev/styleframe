@@ -420,8 +420,15 @@ export function createOverlayBodyRecipe(name: string) {
 					gap: "@0.75",
 				},
 			},
+			fullscreen: {
+				true: { flexGrow: "1" },
+				false: {},
+			},
 		},
-		defaultVariants: sectionDefaultVariants,
+		defaultVariants: {
+			...sectionDefaultVariants,
+			fullscreen: "false",
+		} as const,
 	});
 }
 
