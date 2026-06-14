@@ -14,13 +14,8 @@ export interface MediaPreferenceModifiers {
 
 export function useDarkModifier(s: Styleframe): ModifierFactory {
 	return s.modifier("dark", ({ declarations, variables, children }) => ({
-		"@media (prefers-color-scheme: dark)": {
-			declarations,
-			variables,
-			children,
-		},
 		':is(.dark-theme, [data-theme="dark"]) &': {
-			declarations: { ...declarations },
+			declarations,
 			variables,
 			children,
 		},

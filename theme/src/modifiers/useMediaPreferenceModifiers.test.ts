@@ -40,7 +40,7 @@ describe("useMediaPreferenceModifiers", () => {
 		expect(css).toContain("._dark\\:background-color\\:primary {");
 	});
 
-	it("should generate dark modifier with both media query and theme selectors", () => {
+	it("should generate dark modifier with theme selectors only (no media query)", () => {
 		const s = styleframe();
 		const { dark } = useMediaPreferenceModifiers(s);
 
@@ -50,7 +50,7 @@ describe("useMediaPreferenceModifiers", () => {
 		createBg({ primary: "#006cff" }, [dark]);
 
 		const css = consumeCSS(s.root, s.options);
-		expect(css).toContain("@media (prefers-color-scheme: dark)");
+		expect(css).not.toContain("@media (prefers-color-scheme: dark)");
 		expect(css).toContain(".dark-theme");
 		expect(css).toContain('[data-theme="dark"]');
 	});
