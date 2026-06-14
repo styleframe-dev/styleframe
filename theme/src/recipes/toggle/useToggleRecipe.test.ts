@@ -174,7 +174,7 @@ describe("useToggleRecipe", () => {
 			expect(recipe.compoundVariants).toHaveLength(9);
 		});
 
-		it("should give solid a resting background and keep outline/ghost transparent at rest", () => {
+		it("should give solid a filled surface, outline a border, and ghost neither at rest", () => {
 			const s = createInstance();
 			const recipe = useToggleRecipe(s);
 
@@ -183,18 +183,26 @@ describe("useToggleRecipe", () => {
 					(v) => v.match.color === "neutral" && v.match.variant === variant,
 				)!.css as Record<string, unknown>;
 
-			expect(cssFor("solid").background).toBe("@color.gray-100");
+			// solid mirrors the button's solid resting surface: filled + subtle border.
+			expect(cssFor("solid").background).toBe("@color.white");
+			expect(cssFor("solid").borderColor).toBe("@color.gray-200");
+			// outline is transparent with a border; ghost is transparent with none.
 			expect(cssFor("outline").background).toBeUndefined();
+			expect(cssFor("outline").borderColor).toBe("@color.gray-300");
 			expect(cssFor("ghost").background).toBeUndefined();
+			expect(cssFor("ghost").borderColor).toBeUndefined();
 		});
 
-		it("should reuse the :active fill on :aria-pressed for every compound variant", () => {
+		it("should reuse the :hover fill on :aria-pressed for every compound variant", () => {
 			const s = createInstance();
 			const recipe = useToggleRecipe(s);
 
 			for (const cv of recipe.compoundVariants!) {
 				const css = cv.css as Record<string, Record<string, string>>;
-				expect(css["&:aria-pressed"]).toEqual(css["&:active"]);
+				expect(css["&:aria-pressed"]).toEqual(css["&:hover"]);
+				if (css["&:dark:hover"]) {
+					expect(css["&:dark:aria-pressed"]).toEqual(css["&:dark:hover"]);
+				}
 			}
 		});
 
@@ -206,34 +214,47 @@ describe("useToggleRecipe", () => {
 				(v) => v.match.color === "neutral" && v.match.variant === "solid",
 			);
 			expect(cv?.css).toEqual({
+				background: "@color.white",
 				color: "@color.text",
-				background: "@color.gray-100",
-				"&:hover": { background: "@color.gray-150" },
-				"&:focus": { background: "@color.gray-150" },
-				"&:active": { background: "@color.gray-150" },
-				"&:aria-pressed": { background: "@color.gray-150" },
-				"&:dark": { color: "@color.gray-200", background: "@color.gray-800" },
-				"&:dark:hover": { background: "@color.gray-750" },
-				"&:dark:focus": { background: "@color.gray-750" },
+				borderColor: "@color.gray-200",
+				"&:hover": { background: "@color.gray-100" },
+				"&:focus": { background: "@color.gray-100" },
+				"&:active": { background: "@color.gray-200" },
+				"&:aria-pressed": { background: "@color.gray-100" },
+				"&:dark": {
+					background: "@color.gray-900",
+					color: "@color.white",
+					borderColor: "@color.gray-800",
+				},
+				"&:dark:hover": { background: "@color.gray-800" },
+				"&:dark:focus": { background: "@color.gray-800" },
 				"&:dark:active": { background: "@color.gray-750" },
-				"&:dark:aria-pressed": { background: "@color.gray-750" },
+				"&:dark:aria-pressed": { background: "@color.gray-800" },
 			});
 		});
 
-		it("should keep fixed light/dark surfaces free of dark overrides", () => {
+		it("should keep light and dark surfaces fixed by re-asserting them under :dark", () => {
 			const s = createInstance();
 			const recipe = useToggleRecipe(s);
 
-			const light = recipe.compoundVariants!.find(
-				(v) => v.match.color === "light" && v.match.variant === "outline",
-			);
-			expect(light?.css).toEqual({
-				color: "@color.gray-700",
-				borderColor: "@color.gray-300",
-				"&:hover": { background: "@color.gray-150" },
-				"&:focus": { background: "@color.gray-150" },
-				"&:active": { background: "@color.gray-150" },
-				"&:aria-pressed": { background: "@color.gray-150" },
+			const darkBlockFor = (color: string) =>
+				(
+					recipe.compoundVariants!.find(
+						(v) => v.match.color === color && v.match.variant === "solid",
+					)!.css as Record<string, unknown>
+				)["&:dark"];
+
+			// The light surface stays white in dark mode (text flips to keep contrast).
+			expect(darkBlockFor("light")).toEqual({
+				background: "@color.white",
+				color: "@color.text-inverted",
+				borderColor: "@color.gray-200",
+			});
+			// The dark surface stays gray-900 in dark mode.
+			expect(darkBlockFor("dark")).toEqual({
+				background: "@color.gray-900",
+				color: "@color.white",
+				borderColor: "@color.gray-800",
 			});
 		});
 	});
