@@ -34,4 +34,5 @@ export * from "./slider";
 export * from "./tabs";
 export * from "./textarea";
 export * from "./switch";
+export * from "./toggle";
 export * from "./tooltip";
