@@ -92,27 +92,27 @@ export const useNavItemRecipe = createUseRecipe("nav-item", {
 		{
 			match: { color: "light" as const, variant: "ghost" as const },
 			css: {
-				color: "@color.text",
+				color: "@color.gray-900",
 				"&:hover": {
-					color: "@color.text",
+					color: "@color.gray-900",
 					background: "@color.gray-100",
 				},
 				"&:focus": {
-					color: "@color.text",
+					color: "@color.gray-900",
 					background: "@color.gray-100",
 				},
 				"&:active": {
 					background: "@color.gray-200",
 				},
 				"&:dark": {
-					color: "@color.text-inverted",
+					color: "@color.gray-900",
 				},
 				"&:dark:hover": {
-					color: "@color.text-inverted",
+					color: "@color.gray-900",
 					background: "@color.gray-100",
 				},
 				"&:dark:focus": {
-					color: "@color.text-inverted",
+					color: "@color.gray-900",
 					background: "@color.gray-100",
 				},
 				"&:dark:active": {
@@ -123,7 +123,7 @@ export const useNavItemRecipe = createUseRecipe("nav-item", {
 		{
 			match: { color: "light" as const, variant: "link" as const },
 			css: {
-				color: "@color.text",
+				color: "@color.gray-900",
 				"&:hover": {
 					color: "@color.gray-900",
 					textDecoration: "underline",
@@ -140,7 +140,7 @@ export const useNavItemRecipe = createUseRecipe("nav-item", {
 					textUnderlineOffset: "4px",
 				},
 				"&:dark": {
-					color: "@color.text-inverted",
+					color: "@color.gray-900",
 				},
 				"&:dark:hover": {
 					color: "@color.gray-900",
