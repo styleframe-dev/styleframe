@@ -10,6 +10,10 @@ import { useSidebarGroupActionRecipe } from "./index";
 function createInstance() {
 	const s = styleframe();
 	for (const name of [
+		"position",
+		"top",
+		"right",
+		"transform",
 		"display",
 		"alignItems",
 		"justifyContent",

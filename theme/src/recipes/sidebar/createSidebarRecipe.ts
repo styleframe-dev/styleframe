@@ -270,12 +270,17 @@ export function createSidebarMenuButtonRecipe(name: string) {
 
 /**
  * Builds a square, muted icon button (`.sidebar-menu-action` / `.sidebar-group-action`)
- * that sits at the trailing edge of a menu item or group header. Transparent at rest with a
- * neutral-adaptive hover surface; sized square via the `size` axis.
+ * absolutely anchored to the trailing edge of its menu item or group header (which must be
+ * `position: relative`). Transparent at rest with a neutral-adaptive hover surface; sized
+ * square via the `size` axis.
  */
 export function createSidebarActionRecipe(name: string) {
 	return createUseRecipe(name, {
 		base: {
+			position: "absolute",
+			top: "50%",
+			right: "0.5rem",
+			transform: "translateY(-50%)",
 			display: "inline-flex",
 			alignItems: "center",
 			justifyContent: "center",

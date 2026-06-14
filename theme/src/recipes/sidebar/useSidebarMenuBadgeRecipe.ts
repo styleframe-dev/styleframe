@@ -1,12 +1,18 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Sidebar menu badge recipe. A small count/status chip aligned to the trailing edge of a menu
- * item. Muted, neutral-adaptive surface with tabular numerals; the `size` axis scales its
- * height, padding, and font. Hidden when the sidebar is collapsed.
+ * Sidebar menu badge recipe. A small count/status chip absolutely anchored to the trailing
+ * edge of its menu item (which must be `position: relative`). Muted, neutral-adaptive surface
+ * with tabular numerals; the `size` axis scales its height, padding, and font. Hidden when the
+ * sidebar is collapsed.
  */
 export const useSidebarMenuBadgeRecipe = createUseRecipe("sidebar-menu-badge", {
 	base: {
+		position: "absolute",
+		top: "50%",
+		right: "0.5rem",
+		transform: "translateY(-50%)",
+		pointerEvents: "none",
 		display: "inline-flex",
 		alignItems: "center",
 		justifyContent: "center",

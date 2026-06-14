@@ -5,6 +5,11 @@ import { useSidebarMenuBadgeRecipe } from "./index";
 function createInstance() {
 	const s = styleframe();
 	for (const name of [
+		"position",
+		"top",
+		"right",
+		"transform",
+		"pointerEvents",
 		"display",
 		"alignItems",
 		"justifyContent",
@@ -40,6 +45,11 @@ describe("useSidebarMenuBadgeRecipe", () => {
 		const recipe = useSidebarMenuBadgeRecipe(s);
 
 		expect(recipe.base).toEqual({
+			position: "absolute",
+			top: "50%",
+			right: "0.5rem",
+			transform: "translateY(-50%)",
+			pointerEvents: "none",
 			display: "inline-flex",
 			alignItems: "center",
 			justifyContent: "center",

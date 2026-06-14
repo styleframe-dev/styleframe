@@ -58,38 +58,18 @@ selector(".sidebar-menu-button-icon", {
 	height: "1.25em",
 });
 
-// Menu item row: anchors the trailing action/badge over the full-width button.
+// Menu item: the relative context the menu button's badge/action absolutely anchor to.
 selector(".sidebar-menu-item", {
 	position: "relative",
 	display: "flex",
 	flexDirection: "column",
 });
 
-selector(".sidebar-menu-item > .sidebar-menu-action", {
-	position: "absolute",
-	top: "0.375rem",
-	right: "0.375rem",
-});
-
-selector(".sidebar-menu-item > .sidebar-menu-badge", {
-	position: "absolute",
-	top: "0.5rem",
-	right: "0.5rem",
-	pointerEvents: "none",
-});
-
-// Group header row: anchors the trailing group action.
+// Group header: the relative context the group action absolutely anchors to.
 selector(".sidebar-group-header", {
 	position: "relative",
 	display: "flex",
 	alignItems: "center",
-});
-
-selector(".sidebar-group-header > .sidebar-group-action", {
-	position: "absolute",
-	top: "50%",
-	right: "0.375rem",
-	transform: "translateY(-50%)",
 });
 
 // Preview grid containers.
