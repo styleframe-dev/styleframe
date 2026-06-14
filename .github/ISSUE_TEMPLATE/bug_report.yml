@@ -1,0 +1,121 @@
+name: 🐞 Bug Report
+description: Report a reproducible bug or regression in Styleframe.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report! A clear, minimal
+        reproduction is the single most helpful thing you can provide.
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight checklist
+      options:
+        - label: I searched [existing issues](https://github.com/styleframe-dev/styleframe/issues) and found no duplicate.
+          required: true
+        - label: I reproduced this on the latest version of Styleframe.
+          required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise summary of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Configure styleframe.config.ts with ...
+        2. Add a *.styleframe.ts file that ...
+        3. Run the build / dev server
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: >
+        Paste a minimal `styleframe.config.ts` + `*.styleframe.ts` pair, or link a
+        minimal repo / StackBlitz. Reports without a reproduction may be closed.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen instead?
+    validations:
+      required: true
+  - type: dropdown
+    id: package
+    attributes:
+      label: Affected package
+      options:
+        - "Not sure / multiple"
+        - styleframe
+        - "@styleframe/core"
+        - "@styleframe/theme"
+        - "@styleframe/plugin"
+        - "@styleframe/cli"
+        - "@styleframe/transpiler"
+        - "@styleframe/loader"
+        - "@styleframe/runtime"
+        - "@styleframe/scanner"
+        - "@styleframe/figma"
+        - "@styleframe/dtcg"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Styleframe version
+      description: Output of `npm ls styleframe` or the version in your package.json.
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: bundler
+    attributes:
+      label: Bundler / framework
+      options:
+        - Vite
+        - Nuxt
+        - Webpack
+        - Rollup
+        - Rspack
+        - esbuild
+        - Astro
+        - Farm
+        - Bun
+        - Not applicable
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: "Run `npx envinfo --system --binaries --npmPackages '{styleframe,@styleframe/*}'` and paste the output."
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or error output
+      description: Paste any console output, stack traces, or build errors.
+      render: shell
+    validations:
+      required: false
+  - type: checkboxes
+    id: coc
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow this project's [Code of Conduct](https://github.com/styleframe-dev/styleframe/blob/main/.github/CODE_OF_CONDUCT.md).
+          required: true
