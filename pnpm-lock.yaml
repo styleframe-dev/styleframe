@@ -697,7 +697,7 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/typescript
       '@styleframe/config-vite':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../config/vite
       '@styleframe/license':
         specifier: 'catalog:'
@@ -734,16 +734,16 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/typescript
       '@styleframe/config-vite':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../config/vite
       '@styleframe/core':
-        specifier: workspace:^3.6.0
+        specifier: workspace:^3.6.1
         version: link:../core
       '@styleframe/license':
         specifier: 'catalog:'
         version: 2.0.2
       '@styleframe/transpiler':
-        specifier: workspace:^3.4.0
+        specifier: workspace:^3.4.1
         version: link:../transpiler
       '@vitest/coverage-v8':
         specifier: 'catalog:'
@@ -773,10 +773,10 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/typescript
       '@styleframe/config-vite':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../config/vite
       '@styleframe/core':
-        specifier: workspace:^3.6.0
+        specifier: workspace:^3.6.1
         version: link:../core
       '@vitest/coverage-v8':
         specifier: 'catalog:'
@@ -810,10 +810,10 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/typescript
       '@styleframe/config-vite':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../config/vite
       '@styleframe/core':
-        specifier: workspace:^3.6.0
+        specifier: workspace:^3.6.1
         version: link:../core
       '@styleframe/license':
         specifier: 'catalog:'
@@ -837,7 +837,7 @@ importers:
   engine/styleframe:
     dependencies:
       '@styleframe/cli':
-        specifier: workspace:^4.1.0
+        specifier: workspace:^4.1.1
         version: link:../../tooling/cli
       '@styleframe/license':
         specifier: 'catalog:'
@@ -847,16 +847,16 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/typescript
       '@styleframe/core':
-        specifier: workspace:^3.6.0
+        specifier: workspace:^3.6.1
         version: link:../core
       '@styleframe/loader':
-        specifier: workspace:^3.0.2
+        specifier: workspace:^3.0.3
         version: link:../loader
       '@styleframe/plugin':
         specifier: workspace:^3.4.0
         version: link:../../tooling/plugin
       '@styleframe/transpiler':
-        specifier: workspace:^3.4.0
+        specifier: workspace:^3.4.1
         version: link:../transpiler
       '@types/node':
         specifier: ^22.15.17
@@ -890,10 +890,10 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/typescript
       '@styleframe/config-vite':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../config/vite
       '@styleframe/core':
-        specifier: workspace:^3.6.0
+        specifier: workspace:^3.6.1
         version: link:../core
       '@styleframe/license':
         specifier: 'catalog:'
@@ -981,10 +981,10 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/typescript
       '@styleframe/config-vite':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../config/vite
       '@styleframe/theme':
-        specifier: workspace:^3.7.1
+        specifier: workspace:^3.8.0
         version: link:../../theme
       '@types/node':
         specifier: 'catalog:'
@@ -1002,7 +1002,7 @@ importers:
         specifier: ^0.10.0
         version: 0.10.0
       styleframe:
-        specifier: workspace:^3.8.0
+        specifier: workspace:^3.9.0
         version: link:../../engine/styleframe
       tsx:
         specifier: 'catalog:'
@@ -1039,13 +1039,13 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../config/typescript
       '@styleframe/config-vite':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../config/vite
       '@styleframe/core':
-        specifier: workspace:^3.6.0
+        specifier: workspace:^3.6.1
         version: link:../engine/core
       '@styleframe/transpiler':
-        specifier: workspace:^3.4.0
+        specifier: workspace:^3.4.1
         version: link:../engine/transpiler
       '@vitest/coverage-v8':
         specifier: 'catalog:'
@@ -1088,19 +1088,19 @@ importers:
         specifier: workspace:^3.0.0
         version: link:../../config/typescript
       '@styleframe/config-vite':
-        specifier: workspace:^3.0.1
+        specifier: workspace:^3.1.0
         version: link:../../config/vite
       '@styleframe/core':
-        specifier: workspace:^3.6.0
+        specifier: workspace:^3.6.1
         version: link:../../engine/core
       '@styleframe/license':
         specifier: 'catalog:'
         version: 2.0.2
       '@styleframe/loader':
-        specifier: workspace:^3.0.2
+        specifier: workspace:^3.0.3
         version: link:../../engine/loader
       '@styleframe/theme':
-        specifier: workspace:^3.7.1
+        specifier: workspace:^3.8.0
         version: link:../../theme
       '@vitest/coverage-v8':
         specifier: 'catalog:'
@@ -1268,16 +1268,16 @@ importers:
   tooling/plugin/playground:
     devDependencies:
       '@styleframe/runtime':
-        specifier: workspace:^3.2.0
+        specifier: workspace:^3.2.1
         version: link:../../../engine/runtime
       '@styleframe/theme':
-        specifier: workspace:^3.7.1
+        specifier: workspace:^3.8.0
         version: link:../../../theme
       '@vitejs/plugin-vue':
         specifier: catalog:nuxt
         version: 6.0.7(vite@8.0.14(@types/node@24.10.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.44.0)(tsx@4.20.6)(yaml@2.9.0))(vue@3.5.34(typescript@5.9.3))
       styleframe:
-        specifier: workspace:^3.8.0
+        specifier: workspace:^3.9.0
         version: link:../../../engine/styleframe
       vite:
         specifier: 'catalog:'

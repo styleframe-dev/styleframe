@@ -1,5 +1,17 @@
 # @styleframe/playground
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [[`ed847bb`](https://github.com/styleframe-dev/styleframe/commit/ed847bbe64414b921a52d413cf09d89a4d51fc13), [`a3f98c8`](https://github.com/styleframe-dev/styleframe/commit/a3f98c8b53cdfb8194917a520b072da3fe41db20), [`4ace91d`](https://github.com/styleframe-dev/styleframe/commit/4ace91d5e15020c29d585848ee66f6250946b2d1), [`e299dd2`](https://github.com/styleframe-dev/styleframe/commit/e299dd26cabf809ba74dd22d79f3a22b99c8a266), [`bd07eb2`](https://github.com/styleframe-dev/styleframe/commit/bd07eb238aa9e714644e459104063dc928f1b484), [`2188938`](https://github.com/styleframe-dev/styleframe/commit/2188938a5eec1e694ea54101b884dccde3f38b5e), [`bf74401`](https://github.com/styleframe-dev/styleframe/commit/bf74401f58c9d178150fa163e98b18042e4e69f3), [`2994375`](https://github.com/styleframe-dev/styleframe/commit/299437563582b7b91ecceeaed197defa267f7f4c), [`5264a57`](https://github.com/styleframe-dev/styleframe/commit/5264a577cd667fdf88192341a281cb4d553e0a80), [`d758990`](https://github.com/styleframe-dev/styleframe/commit/d7589909ca21bff0c92c950f2dae2be5d1cce6e3), [`760c167`](https://github.com/styleframe-dev/styleframe/commit/760c1677f1927c143b090a7020e1f5bc3ccf9f33), [`e316dea`](https://github.com/styleframe-dev/styleframe/commit/e316dea099d3b2cfdceb37fb9d4b7d06f773863f), [`aaf8f94`](https://github.com/styleframe-dev/styleframe/commit/aaf8f947526cdeb2d7bda6f473ff739d36e1a5a3), [`7faecd4`](https://github.com/styleframe-dev/styleframe/commit/7faecd40ff07a57b22204d143b2153230f857aec), [`e4ba4cf`](https://github.com/styleframe-dev/styleframe/commit/e4ba4cfc35f24f66e5b5207f8096ebb89ee06ab1), [`ef61c3e`](https://github.com/styleframe-dev/styleframe/commit/ef61c3e84e7dfe8bd6a09463e3bf9b201a387ea1), [`689d959`](https://github.com/styleframe-dev/styleframe/commit/689d95988e4870dc8b261b9aed891208a29d8353), [`4ace91d`](https://github.com/styleframe-dev/styleframe/commit/4ace91d5e15020c29d585848ee66f6250946b2d1), [`3475d9e`](https://github.com/styleframe-dev/styleframe/commit/3475d9e0a71ace6545e0c1ff7047d36f97fb633d), [`593963d`](https://github.com/styleframe-dev/styleframe/commit/593963d861df8175b7ea333d5e1eeed29fcbeab4), [`6f28e83`](https://github.com/styleframe-dev/styleframe/commit/6f28e83167cc44955eef5ec3637d5b4c17c58603), [`f20f0ae`](https://github.com/styleframe-dev/styleframe/commit/f20f0aec9f38a29e209c61b7b427c78e62be4494)]:
+  - @styleframe/theme@3.8.0
+  - styleframe@3.9.0
+  - @styleframe/core@3.6.1
+  - @styleframe/runtime@3.2.1
+  - @styleframe/scanner@3.2.1
+  - @styleframe/transpiler@3.4.1
+
 ## 0.1.4
 
 ### Patch Changes

@@ -1,5 +1,102 @@
 # styleframe
 
+## 3.9.0
+
+### Minor Changes
+
+- [#247](https://github.com/styleframe-dev/styleframe/pull/247) [`ed847bb`](https://github.com/styleframe-dev/styleframe/commit/ed847bbe64414b921a52d413cf09d89a4d51fc13) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Accordion recipe.
+
+  Adds a multi-part Accordion recipe composed of five composables: `useAccordionRecipe`, `useAccordionItemRecipe`, `useAccordionTriggerRecipe`, `useAccordionBodyRecipe`, and `useAccordionContentRecipe`. Supports `primary`, `secondary`, `light`, `dark`, and `neutral` colors and `sm`, `md`, and `lg` sizes. The trigger uses a chevron icon that rotates via a CSS transition when the item is in the `open` state (driven by the `[open]` attribute on `<details>`). Each part is independently composable and all five are re-exported from the `@styleframe/theme` barrel.
+
+- [#249](https://github.com/styleframe-dev/styleframe/pull/249) [`a3f98c8`](https://github.com/styleframe-dev/styleframe/commit/a3f98c8b53cdfb8194917a520b072da3fe41db20) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Avatar, AvatarBadge, and AvatarGroup recipes.
+
+  Adds `useAvatarRecipe`, `useAvatarBadgeRecipe`, and `useAvatarGroupRecipe` to `@styleframe/theme`. The Avatar supports `color`, `size` (`xs`–`xl`), and `shape` (`circle` / `square`) variants. The AvatarBadge overlays a status indicator with configurable `color`, `size`, and `position` (all four corners). AvatarGroup stacks avatars with a configurable `size` and `max` overlap, rendering a `+N` overflow badge when the count exceeds the limit.
+
+- [#250](https://github.com/styleframe-dev/styleframe/pull/250) [`e299dd2`](https://github.com/styleframe-dev/styleframe/commit/e299dd26cabf809ba74dd22d79f3a22b99c8a266) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Calendar recipe.
+
+  Adds `useCalendarRecipe()` and `useCalendarDayRecipe()` composables for building date, month, and year pickers. The calendar supports `day`, `month`, and `year` display types, `single` and `range` selection modes, and `light`, `dark`, and `neutral` surface colors across `sm`, `md`, and `lg` sizes. The day recipe handles `selected`, `today`, `disabled`, `inRange`, `rangeStart`, and `rangeEnd` states via compound variants.
+
+- [#244](https://github.com/styleframe-dev/styleframe/pull/244) [`bd07eb2`](https://github.com/styleframe-dev/styleframe/commit/bd07eb238aa9e714644e459104063dc928f1b484) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Checkbox, CheckboxField, and CheckboxGroup recipes.
+
+  Adds three Inkline-style form-control recipes built on the native `<input type="checkbox">`. The `useCheckboxFieldRecipe()` composable styles the box with `appearance: none` and an SVG checkmark/dash `background-image`; `:checked`, `:indeterminate`, `:disabled`, and `:focus-visible` states are driven by native pseudo-classes. The `useCheckboxRecipe()` composable wraps the label, and `useCheckboxGroupRecipe()` lays out a set with `vertical` / `horizontal` orientation. All three support `light`, `dark`, and `neutral` surface colors and `sm` / `md` / `lg` sizes.
+
+  Also adds `useWebkitAppearanceUtility` (`-webkit-appearance`) to `@styleframe/theme` and registers it in `useUtilitiesPreset`, enabling recipes to set the vendor-prefixed appearance property.
+
+- [#254](https://github.com/styleframe-dev/styleframe/pull/254) [`2188938`](https://github.com/styleframe-dev/styleframe/commit/2188938a5eec1e694ea54101b884dccde3f38b5e) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `color-picker` recipe — a 4-part color picker control.
+
+  Adds `useColorPickerRecipe`, `useColorPickerSelectorRecipe`, `useColorPickerTrackRecipe`, and `useColorPickerThumbRecipe` to `@styleframe/theme`. The root follows the standard color (light/dark/neutral), size (xs/sm/md/lg/xl), and variant (solid/soft/ghost) axes with disabled and invalid state handling. The selector renders the gradient canvas area, the track renders the hue/alpha slider rail, and the thumb renders the draggable handle shared across both.
+
+- [#260](https://github.com/styleframe-dev/styleframe/pull/260) [`bf74401`](https://github.com/styleframe-dev/styleframe/commit/bf74401f58c9d178150fa163e98b18042e4e69f3) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `context-menu` recipe — a 6-part right-click context menu.
+
+  Adds `useContextMenuRecipe`, `useContextMenuItemRecipe`, `useContextMenuSubTriggerRecipe`, `useContextMenuLabelRecipe`, `useContextMenuSeparatorRecipe`, and `useContextMenuShortcutRecipe` to `@styleframe/theme`. The panel and item styling mirror the Dropdown family (color: light/dark/neutral, variant: solid/soft/subtle, size: sm/md/lg), with a sub-trigger arrow indicator and an inline keyboard shortcut slot.
+
+  Extracts shared menu-surface logic into `createMenuRecipe.ts` in the dropdown folder, which the Dropdown, Select panel, and Context Menu recipes all now delegate to — eliminating ~1100 lines of duplicated compound-variant declarations.
+
+- [#262](https://github.com/styleframe-dev/styleframe/pull/262) [`2994375`](https://github.com/styleframe-dev/styleframe/commit/299437563582b7b91ecceeaed197defa267f7f4c) Thanks [@alexgrozav](https://github.com/alexgrozav)! - The built-in `dark` modifier is now theme-driven. It no longer emits `@media (prefers-color-scheme: dark)`; `_dark:` / `&:dark` now respond solely to `.dark-theme` / `[data-theme="dark"]`, matching the values set by the `dark` theme. This fixes light surfaces showing inverted (unreadable) text when the OS is in dark mode but no `data-theme` is set.
+
+  Migration: to follow the operating-system preference, mirror it into `data-theme` — e.g. `window.matchMedia('(prefers-color-scheme: dark)')` → set `document.documentElement.dataset.theme`. See the theme-switcher guide.
+
+- [#251](https://github.com/styleframe-dev/styleframe/pull/251) [`d758990`](https://github.com/styleframe-dev/styleframe/commit/d7589909ca21bff0c92c950f2dae2be5d1cce6e3) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `field-group` recipe and replace the per-field grouping recipes with it.
+
+  Adds `useFieldGroupRecipe` — an explicit, composable wrapper (modeled on Nuxt UI's FieldGroup) that joins bordered controls (buttons, inputs, selects, badges) placed as **direct children** into one unit, merging border radii and collapsing the inner border at the seams. Supports `orientation` (horizontal/vertical) and `block` mode; in a horizontal group inputs/selects/textareas flex-grow while buttons stay intrinsic.
+
+  Replaces the per-field grouping recipes, which are superseded by `useFieldGroupRecipe`:
+  - Removed `useButtonGroupRecipe` — a group of buttons now works the same way as direct children of a field group.
+  - Removed `useInputGroupRecipe`, `useInputPrependRecipe`, and `useInputAppendRecipe` — attach a control outside an input by making it a direct child of a field group.
+  - Removed the internal `createFieldSlotRecipe` and `createFieldGroupRecipe` builders.
+
+  Inline `useInputPrefixRecipe` / `useInputSuffixRecipe` (and the textarea equivalents) are unchanged.
+
+- [#253](https://github.com/styleframe-dev/styleframe/pull/253) [`e316dea`](https://github.com/styleframe-dev/styleframe/commit/e316dea099d3b2cfdceb37fb9d4b7d06f773863f) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add fullscreen variant to modal and modal-body recipes.
+
+  Adds a `fullscreen` boolean variant to `useModalRecipe` (fills the viewport with `width: 100%`, `height: 100%`, `max-width: none`, and `border-radius: 0`) and a matching variant to `useModalBodyRecipe` (`flex-grow: 1`) so the footer stays pinned to the bottom. Pass `fullscreen="true"` to both the container and the body to opt in.
+
+- [#252](https://github.com/styleframe-dev/styleframe/pull/252) [`aaf8f94`](https://github.com/styleframe-dev/styleframe/commit/aaf8f947526cdeb2d7bda6f473ff739d36e1a5a3) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add OTP recipe with shared field surface abstraction.
+
+  Adds `useOtpRecipe` and `useOtpCellRecipe` for styling one-time password inputs. The cell recipe targets a single `<input>` with `:focus-visible` ring and supports the full color × variant × size matrix matching Input/Textarea parity.
+
+  Extracts `fieldSurfaceCompoundVariants()` from `createFieldRecipe` so the OTP cell can share the same nine color×variant surface declarations without duplication.
+
+- [#245](https://github.com/styleframe-dev/styleframe/pull/245) [`7faecd4`](https://github.com/styleframe-dev/styleframe/commit/7faecd40ff07a57b22204d143b2153230f857aec) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Radio, RadioField, and RadioGroup recipes.
+
+  Adds three form-control recipes built on the native `<input type="radio">`. The `useRadioFieldRecipe()` composable styles the radio indicator with `appearance: none` and a filled inner circle driven by a `background-image`; `:checked`, `:disabled`, and `:focus-visible` states are driven by native pseudo-classes. The `useRadioRecipe()` composable wraps the label, and `useRadioGroupRecipe()` lays out a set with `vertical` / `horizontal` orientation. All three support `light`, `dark`, and `neutral` surface colors and `sm` / `md` / `lg` sizes.
+
+- [#243](https://github.com/styleframe-dev/styleframe/pull/243) [`e4ba4cf`](https://github.com/styleframe-dev/styleframe/commit/e4ba4cfc35f24f66e5b5207f8096ebb89ee06ab1) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `select` recipe — a 7-part multi-select form control.
+
+  Adds `useSelectRecipe`, `useSelectPanelRecipe`, `useSelectOptionRecipe`, `useSelectChipRecipe`, `useSelectArrowRecipe`, `useSelectLabelRecipe`, and `useSelectSeparatorRecipe` to `@styleframe/theme`. The trigger follows the Input recipe's structure (color: light/dark/neutral, size, invalid/disabled/readonly states) with a `solid`/`soft`/`ghost` variant axis, the panel and options mirror Dropdown (solid/soft/subtle), and the chips mirror Badge (Container-3 palette) with a nested `.select-chip-remove` dismiss button. The chevron rotates via `.-open`/`data-open`.
+
+  Supports both single- and multi-selection. A shared `.select-icon` slot adds a leading icon/media element (e.g. a country flag) to the trigger's selected value, options, and chips. Selected options are driven by `aria-selected`, with the `.select-option-check` indicator pinned to the trailing edge so the leading edge is free for an icon.
+
+- [#258](https://github.com/styleframe-dev/styleframe/pull/258) [`ef61c3e`](https://github.com/styleframe-dev/styleframe/commit/ef61c3e84e7dfe8bd6a09463e3bf9b201a387ea1) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `sidebar` recipe — a 16-part navigation sidebar component.
+
+  Adds `useSidebarRecipe`, `useSidebarContentRecipe`, `useSidebarHeaderRecipe`, `useSidebarFooterRecipe`, `useSidebarInsetRecipe`, `useSidebarGroupRecipe`, `useSidebarGroupLabelRecipe`, `useSidebarGroupActionRecipe`, `useSidebarSeparatorRecipe`, `useSidebarMenuRecipe`, `useSidebarMenuButtonRecipe`, `useSidebarMenuActionRecipe`, `useSidebarMenuBadgeRecipe`, `useSidebarMenuSubRecipe`, and `useSidebarMenuSubButtonRecipe` to `@styleframe/theme`.
+
+  The root sidebar supports `side` (left/right), `variant` (sidebar/floating/inset), and `collapsible` (offcanvas/icon/none) axes, with responsive collapse behavior driven by `data-state` and `data-collapsible`. Menu buttons follow the Input recipe's color palette with `size` and `variant` (default/outline/ghost) axes. Includes full Storybook showcase and documentation.
+
+- [#256](https://github.com/styleframe-dev/styleframe/pull/256) [`689d959`](https://github.com/styleframe-dev/styleframe/commit/689d95988e4870dc8b261b9aed891208a29d8353) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add `slider` recipe — a 4-part range input component.
+
+  Adds `useSliderRecipe`, `useSliderTrackRecipe`, `useSliderRangeRecipe`, and `useSliderThumbRecipe` to `@styleframe/theme`. The root follows the standard color (light/dark/neutral), size (xs/sm/md/lg/xl), and orientation (horizontal/vertical) axes with disabled and invalid states. The track renders the unfilled groove, the range fills the selected region, and the thumb is the draggable handle with focus-ring, hover, and active states.
+
+- [#246](https://github.com/styleframe-dev/styleframe/pull/246) [`3475d9e`](https://github.com/styleframe-dev/styleframe/commit/3475d9e0a71ace6545e0c1ff7047d36f97fb633d) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Switch and SwitchField recipes.
+
+  Adds two form-control recipes built on the native `<input type="checkbox" role="switch">`. The `useSwitchFieldRecipe()` composable styles a pill-shaped track with a sliding white knob; `:checked` recolors the track to `@color.primary` and translates the knob, `:focus-visible` shows a focus ring, and `:disabled` dims the control — all driven by native pseudo-classes with zero runtime JavaScript. The `useSwitchRecipe()` composable wraps the label with inline layout, gap, and label typography. Both support `light`, `dark`, and `neutral` surface colors and `sm` / `md` / `lg` sizes.
+
+- [#261](https://github.com/styleframe-dev/styleframe/pull/261) [`f20f0ae`](https://github.com/styleframe-dev/styleframe/commit/f20f0aec9f38a29e209c61b7b427c78e62be4494) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Add Toggle and ToggleGroup recipes.
+
+  Adds two interactive button recipes: `useToggleRecipe()` styles a single toggleable button with pressed/active states driven by `aria-pressed`, and `useToggleGroupRecipe()` composes multiple toggles into a segmented control with connected borders. Both support `solid`, `outline`, `soft`, `subtle`, and `ghost` variants, `primary`, `secondary`, `success`, `info`, `warning`, `error`, and `neutral` colors, and `xs` / `sm` / `md` / `lg` / `xl` sizes.
+
+### Patch Changes
+
+- [#264](https://github.com/styleframe-dev/styleframe/pull/264) [`760c167`](https://github.com/styleframe-dev/styleframe/commit/760c1677f1927c143b090a7020e1f5bc3ccf9f33) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Use `gray-50` instead of `gray-100` for soft and subtle variants in callout, card, modal, popover, and tooltip recipes.
+
+- [#238](https://github.com/styleframe-dev/styleframe/pull/238) [`4ace91d`](https://github.com/styleframe-dev/styleframe/commit/4ace91d5e15020c29d585848ee66f6250946b2d1) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Emit explicit `.d.mts` and `.d.cts` type declarations per export condition so `import` and `require` consumers each resolve a correctly-formatted declaration file.
+
+- Updated dependencies [[`4ace91d`](https://github.com/styleframe-dev/styleframe/commit/4ace91d5e15020c29d585848ee66f6250946b2d1)]:
+  - @styleframe/core@3.6.1
+  - @styleframe/loader@3.0.3
+  - @styleframe/transpiler@3.4.1
+  - @styleframe/cli@4.1.1
+
 ## 3.8.0
 
 ### Minor Changes
