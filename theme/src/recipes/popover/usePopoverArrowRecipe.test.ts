@@ -153,15 +153,15 @@ describe("usePopoverArrowRecipe", () => {
 			expect(lightSoft).toEqual({
 				match: { color: "light", variant: "soft" },
 				css: {
-					borderTopColor: "@color.gray-100",
+					borderTopColor: "@color.gray-50",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 				},
 			});

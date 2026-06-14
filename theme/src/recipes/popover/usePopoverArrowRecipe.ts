@@ -69,15 +69,15 @@ export const usePopoverArrowRecipe = createUseRecipe(
 			{
 				match: { color: "light" as const, variant: "soft" as const },
 				css: {
-					borderTopColor: "@color.gray-100",
+					borderTopColor: "@color.gray-50",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 				},
 			},
@@ -86,13 +86,13 @@ export const usePopoverArrowRecipe = createUseRecipe(
 				css: {
 					borderTopColor: "@color.gray-200",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
 						borderTopColor: "@color.gray-200",
 					},
 					"&:dark:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 				},
 			},
@@ -163,9 +163,9 @@ export const usePopoverArrowRecipe = createUseRecipe(
 			{
 				match: { color: "neutral" as const, variant: "soft" as const },
 				css: {
-					borderTopColor: "@color.gray-100",
+					borderTopColor: "@color.gray-50",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
 						borderTopColor: "@color.gray-800",
@@ -180,7 +180,7 @@ export const usePopoverArrowRecipe = createUseRecipe(
 				css: {
 					borderTopColor: "@color.gray-200",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
 						borderTopColor: "@color.gray-700",

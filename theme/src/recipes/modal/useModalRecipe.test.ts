@@ -234,7 +234,7 @@ describe("useModalRecipe", () => {
 			expect(neutralSubtle).toEqual({
 				match: { color: "neutral", variant: "subtle" },
 				css: {
-					background: "@color.gray-100",
+					background: "@color.gray-50",
 					color: "@color.gray-700",
 					borderColor: "@color.gray-200",
 					"&:dark": {

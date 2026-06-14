@@ -79,10 +79,10 @@ export const useTooltipRecipe = createUseRecipe("tooltip", {
 		{
 			match: { color: "light" as const, variant: "soft" as const },
 			css: {
-				background: "@color.gray-100",
+				background: "@color.gray-50",
 				color: "@color.gray-700",
 				"&:dark": {
-					background: "@color.gray-100",
+					background: "@color.gray-50",
 					color: "@color.gray-700",
 				},
 			},
@@ -90,11 +90,11 @@ export const useTooltipRecipe = createUseRecipe("tooltip", {
 		{
 			match: { color: "light" as const, variant: "subtle" as const },
 			css: {
-				background: "@color.gray-100",
+				background: "@color.gray-50",
 				color: "@color.gray-700",
 				borderColor: "@color.gray-300",
 				"&:dark": {
-					background: "@color.gray-100",
+					background: "@color.gray-50",
 					color: "@color.gray-700",
 					borderColor: "@color.gray-300",
 				},
@@ -157,7 +157,7 @@ export const useTooltipRecipe = createUseRecipe("tooltip", {
 		{
 			match: { color: "neutral" as const, variant: "soft" as const },
 			css: {
-				background: "@color.gray-100",
+				background: "@color.gray-50",
 				color: "@color.gray-700",
 				"&:dark": {
 					background: "@color.gray-800",
@@ -168,7 +168,7 @@ export const useTooltipRecipe = createUseRecipe("tooltip", {
 		{
 			match: { color: "neutral" as const, variant: "subtle" as const },
 			css: {
-				background: "@color.gray-100",
+				background: "@color.gray-50",
 				color: "@color.gray-700",
 				borderColor: "@color.gray-300",
 				"&:dark": {
@@ -255,15 +255,15 @@ export const useTooltipArrowRecipe = createUseRecipe(
 			{
 				match: { color: "light" as const, variant: "soft" as const },
 				css: {
-					borderTopColor: "@color.gray-100",
+					borderTopColor: "@color.gray-50",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 				},
 			},
@@ -272,13 +272,13 @@ export const useTooltipArrowRecipe = createUseRecipe(
 				css: {
 					borderTopColor: "@color.gray-300",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
 						borderTopColor: "@color.gray-300",
 					},
 					"&:dark:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 				},
 			},
@@ -349,9 +349,9 @@ export const useTooltipArrowRecipe = createUseRecipe(
 			{
 				match: { color: "neutral" as const, variant: "soft" as const },
 				css: {
-					borderTopColor: "@color.gray-100",
+					borderTopColor: "@color.gray-50",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
 						borderTopColor: "@color.gray-800",
@@ -366,7 +366,7 @@ export const useTooltipArrowRecipe = createUseRecipe(
 				css: {
 					borderTopColor: "@color.gray-300",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
 						borderTopColor: "@color.gray-600",

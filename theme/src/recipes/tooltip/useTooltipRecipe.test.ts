@@ -235,7 +235,7 @@ describe("useTooltipRecipe", () => {
 			expect(neutralSubtle).toEqual({
 				match: { color: "neutral", variant: "subtle" },
 				css: {
-					background: "@color.gray-100",
+					background: "@color.gray-50",
 					color: "@color.gray-700",
 					borderColor: "@color.gray-300",
 					"&:dark": {
@@ -460,7 +460,7 @@ describe("useTooltipArrowRecipe", () => {
 				css: {
 					borderTopColor: "@color.gray-300",
 					"&:after": {
-						borderTopColor: "@color.gray-100",
+						borderTopColor: "@color.gray-50",
 					},
 					"&:dark": {
 						borderTopColor: "@color.gray-600",
