@@ -41,7 +41,7 @@
 		"test:dev": "vitest --watch"
 	},
 	"dependencies": {
-		"fast-glob": "^3.3.2",
+		"fast-glob": "^3.3.3",
 		"importree": "^2.0.1"
 	},
 	"peerDependencies": {
@@ -50,9 +50,9 @@
 	},
 	"devDependencies": {
 		"@microsoft/api-extractor": "catalog:",
-		"@styleframe/config-typescript": "workspace:^3.0.0",
-		"@styleframe/config-vite": "workspace:^3.0.1",
-		"@styleframe/core": "workspace:^3.6.0",
+		"@styleframe/config-typescript": "workspace:^",
+		"@styleframe/config-vite": "workspace:^",
+		"@styleframe/core": "workspace:^",
 		"@styleframe/license": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",

@@ -36,16 +36,16 @@
 		"test": "vitest run"
 	},
 	"dependencies": {
-		"@styleframe/core": "workspace:^3.6.0",
-		"@styleframe/dtcg": "workspace:^1.1.0",
+		"@styleframe/core": "workspace:^",
+		"@styleframe/dtcg": "workspace:^",
 		"culori": "^4.0.2"
 	},
 	"devDependencies": {
-		"@figma/plugin-typings": "^1.103.0",
-		"@styleframe/config-typescript": "workspace:^3.0.0",
+		"@figma/plugin-typings": "^1.128.0",
+		"@styleframe/config-typescript": "workspace:^",
 		"@vitest/coverage-v8": "catalog:",
-		"tsdown": "^0.12.0",
-		"typescript": "^5.8.3",
+		"tsdown": "^0.12.9",
+		"typescript": "^5.9.3",
 		"vite": "catalog:",
 		"vite-plugin-singlefile": "^2.3.3",
 		"vitest": "catalog:"

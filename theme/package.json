@@ -32,10 +32,10 @@
 	},
 	"devDependencies": {
 		"@microsoft/api-extractor": "catalog:",
-		"@styleframe/config-typescript": "workspace:^3.0.0",
-		"@styleframe/config-vite": "workspace:^3.0.1",
-		"@styleframe/core": "workspace:^3.6.0",
-		"@styleframe/transpiler": "workspace:^3.4.0",
+		"@styleframe/config-typescript": "workspace:^",
+		"@styleframe/config-vite": "workspace:^",
+		"@styleframe/core": "workspace:^",
+		"@styleframe/transpiler": "workspace:^",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
@@ -56,7 +56,7 @@
 	"author": "Alex Grozav <alex@styleframe.dev>",
 	"dependencies": {
 		"culori": "^4.0.2",
-		"defu": "^6.1.4",
+		"defu": "^6.1.7",
 		"scule": "^1.3.0"
 	}
 }

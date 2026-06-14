@@ -32,14 +32,14 @@
 	},
 	"devDependencies": {
 		"@microsoft/api-extractor": "catalog:",
-		"@styleframe/config-typescript": "workspace:^3.0.0",
-		"@styleframe/config-vite": "workspace:^3.0.1",
-		"@styleframe/core": "workspace:^3.6.0",
+		"@styleframe/config-typescript": "workspace:^",
+		"@styleframe/config-vite": "workspace:^",
+		"@styleframe/core": "workspace:^",
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
-		"vitest": "catalog:",
-		"vite-plugin-dts": "catalog:"
+		"vite-plugin-dts": "catalog:",
+		"vitest": "catalog:"
 	},
 	"peerDependencies": {
 		"@styleframe/core": "workspace:^3.6.0"
