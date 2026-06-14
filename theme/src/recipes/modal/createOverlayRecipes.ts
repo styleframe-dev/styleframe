@@ -37,10 +37,10 @@ export const overlaySurfaceCompoundVariants: NonNullable<
 	{
 		match: { color: "light", variant: "soft" },
 		css: {
-			background: "@color.gray-100",
+			background: "@color.gray-50",
 			color: "@color.gray-700",
 			"&:dark": {
-				background: "@color.gray-100",
+				background: "@color.gray-50",
 				color: "@color.gray-700",
 			},
 		},
@@ -48,11 +48,11 @@ export const overlaySurfaceCompoundVariants: NonNullable<
 	{
 		match: { color: "light", variant: "subtle" },
 		css: {
-			background: "@color.gray-100",
+			background: "@color.gray-50",
 			color: "@color.gray-700",
 			borderColor: "@color.gray-200",
 			"&:dark": {
-				background: "@color.gray-100",
+				background: "@color.gray-50",
 				color: "@color.gray-700",
 				borderColor: "@color.gray-200",
 			},
@@ -115,7 +115,7 @@ export const overlaySurfaceCompoundVariants: NonNullable<
 	{
 		match: { color: "neutral", variant: "soft" },
 		css: {
-			background: "@color.gray-100",
+			background: "@color.gray-50",
 			color: "@color.gray-700",
 			"&:dark": {
 				background: "@color.gray-800",
@@ -126,7 +126,7 @@ export const overlaySurfaceCompoundVariants: NonNullable<
 	{
 		match: { color: "neutral", variant: "subtle" },
 		css: {
-			background: "@color.gray-100",
+			background: "@color.gray-50",
 			color: "@color.gray-700",
 			borderColor: "@color.gray-200",
 			"&:dark": {
