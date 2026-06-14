@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discord Community
+    url: https://discord.gg/KCVwuGz44M
+    about: Ask questions and chat with the community in real time.
+  - name: 📖 Documentation
+    url: https://styleframe.dev/docs
+    about: Browse the docs first — your answer may already be there.
+  - name: 💡 GitHub Discussions
+    url: https://github.com/styleframe-dev/styleframe/discussions
+    about: Share ideas or ask open-ended questions.

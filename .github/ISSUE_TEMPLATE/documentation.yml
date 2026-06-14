@@ -1,0 +1,51 @@
+name: 📖 Documentation
+description: Report an issue or suggest an improvement to the docs.
+title: "[Docs]: "
+labels: ["documentation", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the documentation! Point us at the page and tell
+        us what's wrong or missing.
+  - type: input
+    id: page
+    attributes:
+      label: Page URL
+      description: Link to the affected documentation page, if applicable.
+      placeholder: https://styleframe.dev/docs/...
+    validations:
+      required: false
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Issue type
+      options:
+        - Incorrect or outdated
+        - Missing content
+        - Unclear or confusing
+        - Typo or formatting
+        - Example doesn't work
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is wrong, missing, or confusing?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested improvement
+      description: How would you word or structure it instead?
+    validations:
+      required: false
+  - type: checkboxes
+    id: coc
+    attributes:
+      label: Code of Conduct
+      options:
+        - label: I agree to follow this project's [Code of Conduct](https://github.com/styleframe-dev/styleframe/blob/main/.github/CODE_OF_CONDUCT.md).
+          required: true
