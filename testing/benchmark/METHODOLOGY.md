@@ -4,23 +4,23 @@ Symmetric comparison of CSS output size, HTML class density, and visual parity b
 
 ## Symmetry guarantees
 
-| Dimension | Styleframe | Tailwind |
-|---|---|---|
-| Design tokens | Hand-written `variable()` calls in `config.ts` | Hand-written `@theme` block in `config.css` |
-| Token values | Identical hex colors, rem spacing, px borders | Same values, Tailwind naming (`--color-*`, `--spacing-*`) |
-| Utilities | Registered via `utility()` with `ref()` to tokens | Built-in from `@theme` token namespaces |
-| HTML structure | Shared `page()` template function | Same `page()` function, different class slots |
-| CSS treeshaking | Scanner + `treeshake: true, scanner: true` | JIT scans `@source` HTML (built-in) |
-| Visual verification | Playwright screenshots via `pnpm run visual` | Same |
+| Dimension           | Styleframe                                        | Tailwind                                                  |
+| ------------------- | ------------------------------------------------- | --------------------------------------------------------- |
+| Design tokens       | Hand-written `variable()` calls in `config.ts`    | Hand-written `@theme` block in `config.css`               |
+| Token values        | Identical hex colors, rem spacing, px borders     | Same values, Tailwind naming (`--color-*`, `--spacing-*`) |
+| Utilities           | Registered via `utility()` with `ref()` to tokens | Built-in from `@theme` token namespaces                   |
+| HTML structure      | Shared `page()` template function                 | Same `page()` function, different class slots             |
+| CSS treeshaking     | Scanner + `treeshake: true, scanner: true`        | JIT scans `@source` HTML (built-in)                       |
+| Visual verification | Playwright screenshots via `pnpm run visual`      | Same                                                      |
 
 ## Configurations
 
-| Configuration | Description |
-|---|---|
-| **Tailwind v4** | `@theme { --*: initial; ... }` with only benchmark tokens. No Preflight. |
-| **Styleframe** | Long utility names: `_padding-inline:xl`, `_background:primary` |
-| **SF Minified** | Same as Styleframe with `minify: true` — shortened class names |
-| **SF Shorthand** | Tailwind-style short names: `_px:xl`, `_bg:primary` |
+| Configuration    | Description                                                              |
+| ---------------- | ------------------------------------------------------------------------ |
+| **Tailwind v4**  | `@theme { --*: initial; ... }` with only benchmark tokens. No Preflight. |
+| **Styleframe**   | Long utility names: `_padding-inline:xl`, `_background:primary`          |
+| **SF Minified**  | Same as Styleframe with `minify: true` — shortened class names           |
+| **SF Shorthand** | Tailwind-style short names: `_px:xl`, `_bg:primary`                      |
 
 ## Design tokens (shared)
 
@@ -36,27 +36,27 @@ Styleframe tokens are in `src/styleframe/config.ts`. Tailwind tokens are in `src
 
 ## What's measured
 
-| Metric | How |
-|---|---|
-| Raw HTML | `Buffer.byteLength(bodyContent, 'utf-8')` — body only, excludes `<head>` |
-| Raw CSS | `Buffer.byteLength(css, 'utf-8')` |
-| Gzipped HTML/CSS | `zlib.gzipSync(content, { level: 6 }).length` (level 6 = HTTP server default) |
-| Gzipped total | `zlib.gzipSync(html + css, { level: 6 }).length` |
-| Class count | Regex extract `class="..."` values, split by whitespace |
-| Avg classes/element | Total classes / elements with class attributes |
-| P95 classes/element | 95th percentile of per-element class counts |
+| Metric              | How                                                                           |
+| ------------------- | ----------------------------------------------------------------------------- |
+| Raw HTML            | `Buffer.byteLength(bodyContent, 'utf-8')` — body only, excludes `<head>`      |
+| Raw CSS             | `Buffer.byteLength(css, 'utf-8')`                                             |
+| Gzipped HTML/CSS    | `zlib.gzipSync(content, { level: 6 }).length` (level 6 = HTTP server default) |
+| Gzipped total       | `zlib.gzipSync(html + css, { level: 6 }).length`                              |
+| Class count         | Regex extract `class="..."` values, split by whitespace                       |
+| Avg classes/element | Total classes / elements with class attributes                                |
+| P95 classes/element | 95th percentile of per-element class counts                                   |
 
 ## Pages
 
 Five realistic pages, each written three times (Styleframe long, Styleframe shorthand, Tailwind) with identical HTML structure:
 
-| Page | Description | Sections |
-|---|---|---|
-| **Dashboard** | SaaS admin panel | Nav, sidebar, hero, stat cards, alerts, team table, form, chat, footer |
-| **Marketing** | Landing page | Nav, hero, features grid, testimonials, pricing tiers, CTA, footer |
-| **Blog** | Article page | Header, article with headings/lists/blockquote/code, sidebar, comments, footer |
-| **E-commerce** | Product listing | Header, breadcrumbs, filters, 3×3 product grid, pagination, cart summary, footer |
-| **Settings** | App settings | Header, tabs, profile form, notification toggles, security section, danger zone |
+| Page           | Description      | Sections                                                                         |
+| -------------- | ---------------- | -------------------------------------------------------------------------------- |
+| **Dashboard**  | SaaS admin panel | Nav, sidebar, hero, stat cards, alerts, team table, form, chat, footer           |
+| **Marketing**  | Landing page     | Nav, hero, features grid, testimonials, pricing tiers, CTA, footer               |
+| **Blog**       | Article page     | Header, article with headings/lists/blockquote/code, sidebar, comments, footer   |
+| **E-commerce** | Product listing  | Header, breadcrumbs, filters, 3×3 product grid, pagination, cart summary, footer |
+| **Settings**   | App settings     | Header, tabs, profile form, notification toggles, security section, danger zone  |
 
 Each page file is in `src/pages/` and exports a `PageSpec` with all three variants. The shared `page()` template function takes a class-slot object — proving the HTML structure is identical across variants.
 

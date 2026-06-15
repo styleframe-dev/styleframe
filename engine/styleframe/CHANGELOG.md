@@ -157,10 +157,10 @@
 
   ```ts
   useFontSizeDesignTokens(s, {
-    default: "@font-size.md",
-    md: [16, 18], // fluid
-    sm: "0.8rem", // fixed
-    lg: { min: 18, max: 24 }, // fluid (object form)
+  	default: "@font-size.md",
+  	md: [16, 18], // fluid
+  	sm: "0.8rem", // fixed
+  	lg: { min: 18, max: 24 }, // fluid (object form)
   });
   ```
 

@@ -94,9 +94,13 @@ apps/storybook/
 The global Styleframe instance applies three presets and global styles:
 
 ```ts
-import { useDesignTokensPreset, useModifiersPreset, useUtilitiesPreset } from '@styleframe/theme';
-import { styleframe } from 'styleframe';
-import { useGlobalStyles } from './src/theme';
+import {
+	useDesignTokensPreset,
+	useModifiersPreset,
+	useUtilitiesPreset,
+} from "@styleframe/theme";
+import { styleframe } from "styleframe";
+import { useGlobalStyles } from "./src/theme";
 
 const s = styleframe();
 
@@ -112,15 +116,15 @@ export default s;
 
 Seven addons configured in `.storybook/main.ts`:
 
-| Addon | Purpose |
-|-------|---------|
-| `@chromatic-com/storybook` | Visual regression testing |
-| `@storybook/addon-vitest` | Vitest integration for story testing |
-| `@storybook/addon-a11y` | Accessibility violation detection |
-| `@storybook/addon-docs` | Auto-generated documentation |
-| `@storybook/addon-onboarding` | Onboarding UI |
-| `@storybook/addon-themes` | Theme switching |
-| `@vueless/storybook-dark-mode` | Dark mode toggle |
+| Addon                          | Purpose                              |
+| ------------------------------ | ------------------------------------ |
+| `@chromatic-com/storybook`     | Visual regression testing            |
+| `@storybook/addon-vitest`      | Vitest integration for story testing |
+| `@storybook/addon-a11y`        | Accessibility violation detection    |
+| `@storybook/addon-docs`        | Auto-generated documentation         |
+| `@storybook/addon-onboarding`  | Onboarding UI                        |
+| `@storybook/addon-themes`      | Theme switching                      |
+| `@vueless/storybook-dark-mode` | Dark mode toggle                     |
 
 ### Preview Settings
 
@@ -144,76 +148,80 @@ Seven addons configured in `.storybook/main.ts`:
 Stories live in `src/**/*.stories.ts` and follow Storybook's CSF (Component Story Format):
 
 ```ts
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import Component from './components/Component.vue';
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import Component from "./components/Component.vue";
 
 const meta = {
-    title: 'Category/Subcategory/Name',
-    component: Component,
-    tags: ['autodocs'],
-    argTypes: { /* control definitions */ },
+	title: "Category/Subcategory/Name",
+	component: Component,
+	tags: ["autodocs"],
+	argTypes: {
+		/* control definitions */
+	},
 } satisfies Meta<typeof Component>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-    args: { /* default prop values */ },
+	args: {
+		/* default prop values */
+	},
 };
 ```
 
 ### Story Organization
 
-| Category | Path Pattern | Description |
-|----------|-------------|-------------|
-| `Theme/Recipes/Button` | `src/button.stories.ts` | Button recipe variants |
-| `Theme/Recipes/Badge` | `src/badge.stories.ts` | Badge recipe variants |
-| `Design Tokens/Colors/*` | `src/design-tokens/color*.stories.ts` | Color token visualization |
-| `Design Tokens/Typography/*` | `src/design-tokens/font*.stories.ts` | Typography tokens |
-| `Design Tokens/Spacing` | `src/design-tokens/spacing.stories.ts` | Spacing tokens |
-| `Design Tokens/Borders/*` | `src/design-tokens/border*.stories.ts` | Border tokens |
-| `Design Tokens/Effects/*` | `src/design-tokens/box-shadow.stories.ts` | Effect tokens |
+| Category                     | Path Pattern                              | Description               |
+| ---------------------------- | ----------------------------------------- | ------------------------- |
+| `Theme/Recipes/Button`       | `src/button.stories.ts`                   | Button recipe variants    |
+| `Theme/Recipes/Badge`        | `src/badge.stories.ts`                    | Badge recipe variants     |
+| `Design Tokens/Colors/*`     | `src/design-tokens/color*.stories.ts`     | Color token visualization |
+| `Design Tokens/Typography/*` | `src/design-tokens/font*.stories.ts`      | Typography tokens         |
+| `Design Tokens/Spacing`      | `src/design-tokens/spacing.stories.ts`    | Spacing tokens            |
+| `Design Tokens/Borders/*`    | `src/design-tokens/border*.stories.ts`    | Border tokens             |
+| `Design Tokens/Effects/*`    | `src/design-tokens/box-shadow.stories.ts` | Effect tokens             |
 
 ### Design Token Story Pattern
 
 Each design token story imports values from `@styleframe/theme`, renders a grid of swatch components:
 
 ```ts
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { colorValues } from '@styleframe/theme';
-import ColorSwatch from '../components/ColorSwatch.vue';
-import StoryGrid from '../components/StoryGrid.vue';
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { colorValues } from "@styleframe/theme";
+import ColorSwatch from "../components/ColorSwatch.vue";
+import StoryGrid from "../components/StoryGrid.vue";
 
 const meta = {
-    title: 'Design Tokens/Colors/Color',
-    component: ColorSwatch,
-    tags: ['autodocs'],
-    argTypes: {
-        value: { control: 'select', options: Object.keys(colorValues) },
-    },
+	title: "Design Tokens/Colors/Color",
+	component: ColorSwatch,
+	tags: ["autodocs"],
+	argTypes: {
+		value: { control: "select", options: Object.keys(colorValues) },
+	},
 } satisfies Meta<typeof ColorSwatch>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const AllColors: StoryObj = {
-    render: () => ({
-        components: { ColorSwatch, StoryGrid },
-        setup() {
-            return { items: Object.keys(colorValues) };
-        },
-        template: `
+	render: () => ({
+		components: { ColorSwatch, StoryGrid },
+		setup() {
+			return { items: Object.keys(colorValues) };
+		},
+		template: `
             <StoryGrid :items="items">
                 <template #default="{ item }">
                     <ColorSwatch :name="item" :value="item" :label="item" />
                 </template>
             </StoryGrid>
         `,
-    }),
+	}),
 };
 
 export const Primary: Story = {
-    args: { name: 'primary', value: 'primary' },
+	args: { name: "primary", value: "primary" },
 };
 ```
 
@@ -227,30 +235,35 @@ Components import recipe functions from `virtual:styleframe` and apply them via 
 
 ```vue
 <script setup lang="ts">
-import { button } from 'virtual:styleframe';
+import { button } from "virtual:styleframe";
 
-const props = withDefaults(defineProps<{
-    color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error';
-    variant?: 'solid' | 'outline' | 'soft' | 'subtle' | 'ghost' | 'link';
-    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-    label?: string;
-    disabled?: boolean;
-}>(), {
-    color: 'primary',
-    variant: 'solid',
-    size: 'md',
-    label: 'Button',
-    disabled: false,
-});
+const props = withDefaults(
+	defineProps<{
+		color?: "primary" | "secondary" | "success" | "info" | "warning" | "error";
+		variant?: "solid" | "outline" | "soft" | "subtle" | "ghost" | "link";
+		size?: "xs" | "sm" | "md" | "lg" | "xl";
+		label?: string;
+		disabled?: boolean;
+	}>(),
+	{
+		color: "primary",
+		variant: "solid",
+		size: "md",
+		label: "Button",
+		disabled: false,
+	},
+);
 </script>
 
 <template>
-    <button
-        :class="button({ color: props.color, variant: props.variant, size: props.size })"
-        :disabled="props.disabled"
-    >
-        {{ props.label }}
-    </button>
+	<button
+		:class="
+			button({ color: props.color, variant: props.variant, size: props.size })
+		"
+		:disabled="props.disabled"
+	>
+		{{ props.label }}
+	</button>
 </template>
 ```
 
@@ -259,20 +272,20 @@ const props = withDefaults(defineProps<{
 Each component's styles live in a co-located `.styleframe.ts` file:
 
 ```ts
-import { useButtonRecipe } from '@styleframe/theme';
-import { styleframe } from 'virtual:styleframe';
+import { useButtonRecipe } from "@styleframe/theme";
+import { styleframe } from "virtual:styleframe";
 
 const s = styleframe();
 const { selector } = s;
 
 export const button = useButtonRecipe(s);
 
-selector('.button-grid', {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '@spacing.md',
-    padding: '@spacing.md',
-    alignItems: 'center',
+selector(".button-grid", {
+	display: "flex",
+	flexWrap: "wrap",
+	gap: "@spacing.md",
+	padding: "@spacing.md",
+	alignItems: "center",
 });
 
 export default s;
@@ -291,12 +304,12 @@ Swatch components visualize individual design token values. Each follows this pa
 
 Reusable building blocks in `src/components/primitives/`:
 
-| Component | Purpose |
-|-----------|---------|
-| `SwatchCard` | Card with slots: default (preview), `#name`, `#label` |
-| `SwatchRow` | Horizontal row with name and value display |
-| `ProgressBar` | Visual bar for proportional values |
-| `BarChart` | Chart for comparative values |
+| Component     | Purpose                                               |
+| ------------- | ----------------------------------------------------- |
+| `SwatchCard`  | Card with slots: default (preview), `#name`, `#label` |
+| `SwatchRow`   | Horizontal row with name and value display            |
+| `ProgressBar` | Visual bar for proportional values                    |
+| `BarChart`    | Chart for comparative values                          |
 
 Shared tokens for primitives are in `primitives/tokens.styleframe.ts` (colors, spacing, typography, dimensions used across all swatch components).
 

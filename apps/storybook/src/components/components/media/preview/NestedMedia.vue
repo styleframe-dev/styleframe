@@ -31,9 +31,7 @@ import MediaTitle from "../MediaTitle.vue";
 
 						<Media class="_margin-top:0.75">
 							<MediaFigure size="sm">
-								<div class="media-avatar _width:[32px] _height:[32px]">
-									AG
-								</div>
+								<div class="media-avatar _width:[32px] _height:[32px]">AG</div>
 							</MediaFigure>
 							<MediaBody size="sm">
 								<MediaTitle size="sm">Alex Grozav</MediaTitle>

@@ -8,7 +8,9 @@ defineProps<{
 </script>
 
 <template>
-	<div :class="['swatch-card', orientation ? `swatch-card--${orientation}` : '']">
+	<div
+		:class="['swatch-card', orientation ? `swatch-card--${orientation}` : '']"
+	>
 		<div class="swatch-card__body">
 			<slot>
 				<div :class="['swatch-card__preview', previewClass]" />

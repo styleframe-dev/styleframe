@@ -15,26 +15,14 @@ const variants = ["ghost", "link"] as const;
 			<div class="nav-row">
 				<div v-for="color in colors" :key="`${variant}-${color}`">
 					<Nav>
-						<NavItem :color="color" :variant="variant" href="#">
-							Home
-						</NavItem>
-						<NavItem
-							:color="color"
-							:variant="variant"
-							href="#"
-							active
-						>
+						<NavItem :color="color" :variant="variant" href="#"> Home </NavItem>
+						<NavItem :color="color" :variant="variant" href="#" active>
 							About
 						</NavItem>
 						<NavItem :color="color" :variant="variant" href="#">
 							Contact
 						</NavItem>
-						<NavItem
-							:color="color"
-							:variant="variant"
-							href="#"
-							disabled
-						>
+						<NavItem :color="color" :variant="variant" href="#" disabled>
 							Disabled
 						</NavItem>
 					</Nav>

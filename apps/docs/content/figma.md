@@ -9,14 +9,16 @@ Hero Section -------------------------------------------------------------------
 
 ::gradient-page-hero
 
-:::video{ class="rounded" }
----
+## :::video{ class="rounded" }
+
 autoplay: true
 loop: true
 muted: true
 playsinline: true
 src: /assets/video/styleframe-figma.mp4
+
 ---
+
 :::
 
 #title
@@ -26,16 +28,20 @@ Export Styleframe Design Tokens [to Figma]{.text-primary} and Back
 Sync your design tokens between Figma and code. Import and export W3C DTCG format JSON with full multi-mode support for light and dark themes, completely free.
 
 #links
-    :::u-button
-    ---
-    color: primary
-    size: xl
-    to: https://www.figma.com/community/plugin/1597716416772135340/styleframe
-    trailing-icon: i-lucide-arrow-right
-    target: _blank
-    ---
-    Install Figma plugin
-    :::
+:::u-button
+
+---
+
+color: primary
+size: xl
+to: https://www.figma.com/community/plugin/1597716416772135340/styleframe
+trailing-icon: i-lucide-arrow-right
+target: \_blank
+
+---
+
+Install Figma plugin
+:::
 
     :::u-button
     ---
@@ -46,6 +52,7 @@ Sync your design tokens between Figma and code. Import and export W3C DTCG forma
     ---
     Read plugin documentation
     :::
+
 ::
 
 <!--
@@ -60,12 +67,14 @@ A First-Class Token Synchronization Layer
 Your code is your source of truth. Export it to the industry-standard Design Tokens Community Group format. Compatible with Figma, Style Dictionary, Tokens Studio, and other tools.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-code-2
-    ---
-    #title
-    [Code-First]{.text-primary} Architecture
+:::u-page-feature
+
+---
+
+## icon: i-lucide-code-2
+
+#title
+[Code-First]{.text-primary} Architecture
 
     #description
     Your Styleframe config is the single source of truth. Define tokens in TypeScript, export to Figma. When code changes, designers stay in sync.
@@ -92,7 +101,7 @@ Your code is your source of truth. Export it to the industry-standard Design Tok
     #description
     Light, dark, and custom themes are modeled using DTCG modifiers. Modes remain explicit, structured, and code-friendly.
     :::
-    
+
     :::u-page-feature
     ---
     icon: i-lucide-arrow-left-right
@@ -103,7 +112,7 @@ Your code is your source of truth. Export it to the industry-standard Design Tok
     #description
     Import DTCG tokens into Figma or export Figma Variables back to JSON. Both directions preserve structure, aliases, and semantics.
     :::
-    
+
     :::u-page-feature
     ---
     icon: i-lucide-terminal
@@ -125,16 +134,16 @@ Your code is your source of truth. Export it to the industry-standard Design Tok
     #description
     No subscription. No seat limits. The CLI and Figma plugin are free and open source. Your design system, your rules.
     :::
+
 ::
 
 <!--
 Import Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-default"}
----
-orientation: horizontal
----
+## ::u-page-section{class="border-t border-default"}
+
+## orientation: horizontal
 
 ![Styleframe - Import Design Tokens into Figma](/assets/images/figma-import.png)
 
@@ -145,12 +154,14 @@ orientation: horizontal
 Drop a Styleframe DTCG JSON file into the plugin. Preview variables and modes before importing, then create a Figma variable collection with one click. All types mapped correctly.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-upload
-    ---
-    #title
-    [Drag & Drop]{.text-primary}
+:::u-page-feature
+
+---
+
+## icon: i-lucide-upload
+
+#title
+[Drag & Drop]{.text-primary}
 
     #description
     Drop your tokens.json file into the plugin. Preview everything before committing to the import.
@@ -177,16 +188,18 @@ Drop a Styleframe DTCG JSON file into the plugin. Preview variables and modes be
     #description
     Color, dimension, number, and string types are validated before import. Invalid tokens are flagged, not silently dropped.
     :::
+
 ::
 
 <!--
 Export Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section
----
+## ::u-page-section
+
 orientation: horizontal
 reverse: true
+
 ---
 
 ![Styleframe - Export Design Tokens from Figma](/assets/images/figma-export.png)
@@ -198,12 +211,14 @@ reverse: true
 Select a Figma variable collection and export it to the Styleframe W3C DTCG format. Copy the JSON or save it as a file. Aliases are preserved as proper token references.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-mouse-pointer-click
-    ---
-    #title
-    [One-Click]{.text-primary} Export
+:::u-page-feature
+
+---
+
+## icon: i-lucide-mouse-pointer-click
+
+#title
+[One-Click]{.text-primary} Export
 
     #description
     Select a collection, click export. The plugin handles type conversion, alias mapping, and mode organization automatically.
@@ -232,26 +247,31 @@ Select a Figma variable collection and export it to the Styleframe W3C DTCG form
     :::
 
 #links
-    :::u-button
-    ---
-    color: neutral
-    icon: i-lucide-external-link
-    to: https://www.designtokens.org/
-    target: _blank
-    variant: outline
-    ---
-    Learn about DTCG Format
-    :::
+:::u-button
+
+---
+
+color: neutral
+icon: i-lucide-external-link
+to: https://www.designtokens.org/
+target: \_blank
+variant: outline
+
+---
+
+Learn about DTCG Format
+:::
 ::
 
 <!--
 CLI Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-default"}
----
+## ::u-page-section{class="border-t border-default"}
+
 orientation: horizontal
 headline: Developer Workflow
+
 ---
 
     ::::browser-frame
@@ -277,7 +297,6 @@ npx styleframe figma export \
 
     ::::
 
-
 #title
 Automate with the CLI
 
@@ -285,12 +304,14 @@ Automate with the CLI
 Export design tokens directly from your Styleframe config. Run in CI/CD pipelines to keep Figma tokens in sync with every code change. No manual exports, no drift.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-git-branch
-    ---
-    #title
-    [Git-Integrated]{.text-primary} Workflow
+:::u-page-feature
+
+---
+
+## icon: i-lucide-git-branch
+
+#title
+[Git-Integrated]{.text-primary} Workflow
 
     #description
     Export tokens on every commit. Track changes in version control alongside your code. Review token updates in pull requests.
@@ -308,25 +329,28 @@ Export design tokens directly from your Styleframe config. Run in CI/CD pipeline
     :::
 
 #links
-    :::u-button
-    ---
-    color: neutral
-    icon: i-lucide-book-open
-    to: /docs/getting-started/tooling/cli#dtcg
-    variant: outline
-    ---
-    CLI Documentation
-    :::
+:::u-button
+
+---
+
+color: neutral
+icon: i-lucide-book-open
+to: /docs/getting-started/tooling/cli#dtcg
+variant: outline
+
+---
+
+CLI Documentation
+:::
 ::
 
 <!--
 CTA Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-b border-default"}
----
-variant: primary
----
+## ::u-page-section{class="border-t border-b border-default"}
+
+## variant: primary
 
 #title
 Sync Design Tokens to Figma in [Minutes]{.text-primary}
@@ -335,16 +359,20 @@ Sync Design Tokens to Figma in [Minutes]{.text-primary}
 Install the Figma plugin, export your Styleframe config, and sync your design tokens. No subscriptions, no setup complexity.
 
 #links
-    :::u-button
-    ---
-    color: primary
-    size: xl
-    to: https://www.figma.com/community/plugin/1597716416772135340/styleframe
-    trailing-icon: i-lucide-arrow-right
-    target: _blank
-    ---
-    Install Figma plugin
-    :::
+:::u-button
+
+---
+
+color: primary
+size: xl
+to: https://www.figma.com/community/plugin/1597716416772135340/styleframe
+trailing-icon: i-lucide-arrow-right
+target: \_blank
+
+---
+
+Install Figma plugin
+:::
 
     :::u-button
     ---
@@ -355,4 +383,5 @@ Install the Figma plugin, export your Styleframe config, and sync your design to
     ---
     Read plugin documentation
     :::
+
 ::

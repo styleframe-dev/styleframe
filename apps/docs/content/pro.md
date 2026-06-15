@@ -16,15 +16,19 @@ Build Faster with styleframe [Pro]{.text-primary}
 Create beautiful design systems with mathematical precision. Premium composables and advanced features built on top of styleframe.
 
 #links
-    :::u-button
-    ---
-    color: primary
-    size: xl
-    to: /pricing
-    trailing-icon: i-lucide-arrow-right
-    ---
-    Get it now
-    :::
+:::u-button
+
+---
+
+color: primary
+size: xl
+to: /pricing
+trailing-icon: i-lucide-arrow-right
+
+---
+
+Get it now
+:::
 ::
 
 <!--
@@ -36,15 +40,19 @@ Features Section ---------------------------------------------------------------
 Premium Features for Professional Design Systems
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-sparkles
-    target: _blank
-    to: /docs/theme/design-tokens/fluid-design
-    ---
-    #title
-    [Premium]{.text-primary} Composables
-    
+:::u-page-feature
+
+---
+
+icon: i-lucide-sparkles
+target: \_blank
+to: /docs/theme/design-tokens/fluid-design
+
+---
+
+#title
+[Premium]{.text-primary} Composables
+
     #description
     Advanced design system tools built on styleframe's type-safe API. Production-ready, fully tested.
     :::
@@ -80,7 +88,7 @@ Premium Features for Professional Design Systems
     ---
     #title
     [Performance]{.text-primary} Optimized
-    
+
     #description
     Smaller CSS bundles mean faster page loads. All of our composables are optimized for best performance.
     :::
@@ -93,20 +101,20 @@ Premium Features for Professional Design Systems
     ---
     #title
     [Complete]{.text-primary} Documentation
-    
+
     #description
     In-depth guides, examples, and best practices. Get up and running in minutes with clear instructions.
     :::
-:: 
+
+::
 
 <!--
 Pricing Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-b border-default"}
----
-variant: primary
----
+## ::u-page-section{class="border-t border-b border-default"}
+
+## variant: primary
 
 #title
 Simple, Transparent Pricing

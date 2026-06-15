@@ -57,9 +57,9 @@ apps/playground/
 
 **Two Styleframe contexts, isolated by an iframe.**
 
-| Context | Compiled by | Where CSS lives | Runtime |
-|---|---|---|---|
-| Shell UI | `@styleframe/plugin/vite` at dev/build time | `<style>` in parent document | `@styleframe/runtime` bundled into parent |
+| Context             | Compiled by                                          | Where CSS lives                  | Runtime                                           |
+| ------------------- | ---------------------------------------------------- | -------------------------------- | ------------------------------------------------- |
+| Shell UI            | `@styleframe/plugin/vite` at dev/build time          | `<style>` in parent document     | `@styleframe/runtime` bundled into parent         |
 | User-edited preview | `esbuild-wasm` + `@styleframe/transpiler` at runtime | `<style>` inside iframe `srcdoc` | `@styleframe/runtime` loaded via iframe importmap |
 
 The iframe has `sandbox="allow-scripts allow-same-origin"` so it can fetch blob URLs and use an importmap. Cross-file imports between user files are rewritten to blob URLs:
@@ -71,14 +71,14 @@ The iframe has `sandbox="allow-scripts allow-same-origin"` so it can fetch blob 
 
 `runPipeline(input)` runs these sequentially, and returns `{ ok: false, stage, error }` if any step throws:
 
-| Stage | Input | Output |
-|---|---|---|
-| `config-transform` | user's `styleframe.config.ts` source | compiled JS |
-| `config-eval` | compiled JS | `Styleframe` instance |
-| `transpile` | `Styleframe` instance | `{ css, ts }` from `@styleframe/transpiler` |
-| `config-compile` | `ts` | compiled JS module for the iframe |
-| `vue` | App + Component SFC sources | compiled ESM modules |
-| `assemble` | all of the above + Vue/runtime URLs | `srcdoc` string |
+| Stage              | Input                                | Output                                      |
+| ------------------ | ------------------------------------ | ------------------------------------------- |
+| `config-transform` | user's `styleframe.config.ts` source | compiled JS                                 |
+| `config-eval`      | compiled JS                          | `Styleframe` instance                       |
+| `transpile`        | `Styleframe` instance                | `{ css, ts }` from `@styleframe/transpiler` |
+| `config-compile`   | `ts`                                 | compiled JS module for the iframe           |
+| `vue`              | App + Component SFC sources          | compiled ESM modules                        |
+| `assemble`         | all of the above + Vue/runtime URLs  | `srcdoc` string                             |
 
 On success, the parent assigns `iframe.srcdoc = srcdoc` and revokes the previous run's blob URLs.
 

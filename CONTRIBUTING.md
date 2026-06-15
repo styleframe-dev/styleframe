@@ -20,12 +20,12 @@ the preferred channel for [bug reports](#bug-reports), [feature requests](#featu
 and [submitting pull requests](#pull-requests), but please respect the following
 restrictions:
 
-* Please **do not** use the issue tracker for personal support requests.
+- Please **do not** use the issue tracker for personal support requests.
 
-* Please **do not** get off track in issues. Keep the discussion on topic and
+- Please **do not** get off track in issues. Keep the discussion on topic and
   respect the opinions of others.
 
-* Please **do not** post comments consisting solely of "+1" or ":thumbsup:".
+- Please **do not** post comments consisting solely of "+1" or ":thumbsup:".
   Use [GitHub's "reactions" feature](https://github.com/blog/2119-add-reactions-to-pull-requests-issues-and-comments)
   instead. We reserve the right to delete comments which violate this rule.
 
@@ -69,7 +69,7 @@ Example:
 
 ## Feature requests
 
-Feature requests are welcome! When opening a feature request, it's up to *you* to make a strong case to convince the project's developers of the merits of this feature. Please provide as much detail and context as possible.
+Feature requests are welcome! When opening a feature request, it's up to _you_ to make a strong case to convince the project's developers of the merits of this feature. Please provide as much detail and context as possible.
 
 When adding a new feature to the library, make sure you update the documentation package as well.
 
@@ -153,7 +153,7 @@ included in the project:
    ```
 
 8. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/)
-    with a clear title and description against the `main` branch.
+   with a clear title and description against the `main` branch.
 
 **Important!** By submitting a patch, you agree to allow the project owners to
 license your work under the terms of the [MIT License](LICENSE).
@@ -198,22 +198,22 @@ Linting is handled by [Oxlint](https://oxc.rs/docs/guide/usage/linter).
 
 3. The monorepo is organized into the following workspaces:
 
-   | Directory | Package | Purpose |
-   |-----------|---------|---------|
-   | `engine/core` | `@styleframe/core` | Token AST and factory methods |
-   | `engine/transpiler` | `@styleframe/transpiler` | AST to CSS/TS/DTS code generation |
-   | `engine/loader` | `@styleframe/loader` | Config loading and HMR |
-   | `engine/runtime` | `@styleframe/runtime` | Browser-side recipe class generation |
-   | `engine/scanner` | `@styleframe/scanner` | Content scanning for utility extraction |
-   | `engine/styleframe` | `styleframe` | Barrel package re-exporting all APIs |
-   | `theme` | `@styleframe/theme` | Design tokens, modifiers, utilities, recipes |
-   | `tooling/plugin` | `@styleframe/plugin` | Build tool integration (Vite, Webpack, Nuxt, etc.) |
-   | `tooling/cli` | `@styleframe/cli` | CLI for init, build, and DTCG sync |
-   | `tooling/figma` | `@styleframe/figma` | Figma variable sync |
-   | `tooling/dtcg` | `@styleframe/dtcg` | W3C DTCG format support |
-   | `testing/integration` | — | Playwright end-to-end tests |
-   | `apps/docs` | — | Documentation site (Nuxt Content) |
-   | `apps/storybook` | — | Storybook design system showcase |
+   | Directory             | Package                  | Purpose                                            |
+   | --------------------- | ------------------------ | -------------------------------------------------- |
+   | `engine/core`         | `@styleframe/core`       | Token AST and factory methods                      |
+   | `engine/transpiler`   | `@styleframe/transpiler` | AST to CSS/TS/DTS code generation                  |
+   | `engine/loader`       | `@styleframe/loader`     | Config loading and HMR                             |
+   | `engine/runtime`      | `@styleframe/runtime`    | Browser-side recipe class generation               |
+   | `engine/scanner`      | `@styleframe/scanner`    | Content scanning for utility extraction            |
+   | `engine/styleframe`   | `styleframe`             | Barrel package re-exporting all APIs               |
+   | `theme`               | `@styleframe/theme`      | Design tokens, modifiers, utilities, recipes       |
+   | `tooling/plugin`      | `@styleframe/plugin`     | Build tool integration (Vite, Webpack, Nuxt, etc.) |
+   | `tooling/cli`         | `@styleframe/cli`        | CLI for init, build, and DTCG sync                 |
+   | `tooling/figma`       | `@styleframe/figma`      | Figma variable sync                                |
+   | `tooling/dtcg`        | `@styleframe/dtcg`       | W3C DTCG format support                            |
+   | `testing/integration` | —                        | Playwright end-to-end tests                        |
+   | `apps/docs`           | —                        | Documentation site (Nuxt Content)                  |
+   | `apps/storybook`      | —                        | Storybook design system showcase                   |
 
    For detailed architecture and per-package conventions, see [`AGENTS.md`](AGENTS.md).
 

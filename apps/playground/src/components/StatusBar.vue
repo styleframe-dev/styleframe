@@ -24,11 +24,17 @@ defineProps<{
 		<div :class="pgStatusBarGroup({ align: 'start' })">
 			<span :class="pgStatusBarItem()">
 				<span
-					:class="pgStatusBarDot({ tone: (problems ?? 0) > 0 ? 'error' : 'success' })"
+					:class="
+						pgStatusBarDot({ tone: (problems ?? 0) > 0 ? 'error' : 'success' })
+					"
 					aria-hidden="true"
 				/>
 				<span>
-					{{ (problems ?? 0) === 0 ? "No problems" : `${problems} problem${problems === 1 ? "" : "s"}` }}
+					{{
+						(problems ?? 0) === 0
+							? "No problems"
+							: `${problems} problem${problems === 1 ? "" : "s"}`
+					}}
 				</span>
 			</span>
 			<span v-if="version" :class="pgStatusBarItem()">

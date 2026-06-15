@@ -64,13 +64,16 @@ apps/app/
 Supabase handles all authentication. The `@nuxtjs/supabase` module auto-redirects unauthenticated users to `/login`.
 
 **Public pages** (excluded from auth redirect):
+
 - `/login`, `/signup`, `/confirm`, `/debug`, `/forgot-password`, `/reset-password`
 
 **Auth methods:**
+
 - Email/password sign-in and sign-up
 - GitHub OAuth (implicit flow with `detectSessionInUrl`)
 
 **OAuth callback flow:**
+
 1. User clicks "Log in with GitHub"
 2. Supabase redirects to GitHub
 3. GitHub redirects back to `/confirm`
@@ -78,6 +81,7 @@ Supabase handles all authentication. The `@nuxtjs/supabase` module auto-redirect
 5. On error, displays the error from query parameters
 
 **Password reset flow:**
+
 1. User submits email on `/forgot-password`
 2. Supabase sends reset link pointing to `/reset-password`
 3. User sets new password on `/reset-password`
@@ -106,7 +110,9 @@ activateLicense(supabase: SupabaseClient, { label: string, key: string }): Promi
 ## Layouts
 
 ### `default` — Dashboard layout
+
 Sidebar navigation with:
+
 - "Activate License" (active item)
 - "Customer Portal" (external link to Polar)
 - "Log Out"
@@ -114,6 +120,7 @@ Sidebar navigation with:
 Uses `UPage`, `UPageAside`, `UNavigationMenu` from Nuxt UI.
 
 ### `auth` — Authentication layout
+
 Centered card with `MorphingGradientBackground` (from shared layer). Used by login, signup, confirm, logout, forgot-password, reset-password, and debug pages.
 
 ---
@@ -121,6 +128,7 @@ Centered card with `MorphingGradientBackground` (from shared layer). Used by log
 ## Internationalization
 
 `useAppI18n()` composable wraps `@nuxtjs/i18n` with a graceful fallback when i18n is disabled:
+
 - Returns static `"en"` locale and manual `t()` function that traverses the English JSON
 - When enabled, delegates to `useI18n()`, `useLocalePath()`, `useSwitchLocalePath()`
 
@@ -147,24 +155,24 @@ NUXT_PUBLIC_POSTHOG_DEFAULTS=                # PostHog defaults date
 
 Defined in `nuxt.schema.ts` using `@nuxt/content/preview` fields. Configurable sections:
 
-| Section | Keys |
-|---------|------|
-| `ui.colors` | `primary`, `neutral` |
-| `ui.icons` | `search`, `dark`, `light`, `external`, `chevron`, `hash` |
-| `seo` | `title`, `description` |
-| `header` | `title`, `logo.light`, `logo.dark`, `logo.alt` |
-| `socials` | Object of social links |
-| `toc` | `title`, `bottom.title`, `bottom.links` |
-| `github` | `url`, `branch`, `rootDir` |
+| Section     | Keys                                                     |
+| ----------- | -------------------------------------------------------- |
+| `ui.colors` | `primary`, `neutral`                                     |
+| `ui.icons`  | `search`, `dark`, `light`, `external`, `chevron`, `hash` |
+| `seo`       | `title`, `description`                                   |
+| `header`    | `title`, `logo.light`, `logo.dark`, `logo.alt`           |
+| `socials`   | Object of social links                                   |
+| `toc`       | `title`, `bottom.title`, `bottom.links`                  |
+| `github`    | `url`, `branch`, `rootDir`                               |
 
 ---
 
 ## Route Rules
 
-| Path | Redirect |
-|------|----------|
+| Path       | Redirect                             |
+| ---------- | ------------------------------------ |
 | `/privacy` | `https://www.styleframe.dev/privacy` |
-| `/terms` | `https://www.styleframe.dev/terms` |
+| `/terms`   | `https://www.styleframe.dev/terms`   |
 | `/license` | `https://www.styleframe.dev/license` |
 
 ---
@@ -172,6 +180,7 @@ Defined in `nuxt.schema.ts` using `@nuxt/content/preview` fields. Configurable s
 ## Shared Layer
 
 The app extends `../shared` which provides:
+
 - **Modules:** `@nuxt/ui`, `@nuxt/image`, `@nuxt/scripts`, `@nuxtjs/robots`, `nuxt-og-image`, `nuxt-llms`
 - **Plugins:** `i18n.ts`, `posthog.client.ts`
 - **Components:** `MorphingGradientBackground.vue`

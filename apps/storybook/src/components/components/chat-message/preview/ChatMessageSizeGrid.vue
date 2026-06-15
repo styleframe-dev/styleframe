@@ -24,8 +24,12 @@ const sizeTitles: Record<string, string> = {
 							This is a {{ sizeTitles[size].toLowerCase() }} assistant message.
 						</ChatMessageContent>
 						<ChatMessageActions :size="size">
-							<button class="chat-message-action-button" type="button">Copy</button>
-							<button class="chat-message-action-button" type="button">Regenerate</button>
+							<button class="chat-message-action-button" type="button">
+								Copy
+							</button>
+							<button class="chat-message-action-button" type="button">
+								Regenerate
+							</button>
 						</ChatMessageActions>
 					</div>
 				</ChatMessage>

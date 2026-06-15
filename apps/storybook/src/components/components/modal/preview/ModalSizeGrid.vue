@@ -24,7 +24,15 @@ const sizeWidths: Record<string, string> = {
 		<div v-for="size in sizes" :key="size">
 			<div class="modal-label">{{ sizeTitles[size] }} ({{ size }})</div>
 			<div
-				style="position: relative; background: rgba(0, 0, 0, 0.75); border-radius: 8px; padding: 24px; display: flex; align-items: center; justify-content: center;"
+				style="
+					position: relative;
+					background: rgba(0, 0, 0, 0.75);
+					border-radius: 8px;
+					padding: 24px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+				"
 			>
 				<Modal
 					:size="size"
@@ -34,11 +42,13 @@ const sizeWidths: Record<string, string> = {
 						<ModalTitle>{{ sizeTitles[size] }} Modal</ModalTitle>
 					</ModalHeader>
 					<ModalBody :size="size">
-						<ModalDescription>This is a {{ size }} modal showing the {{ sizeTitles[size].toLowerCase() }} size variant.</ModalDescription>
+						<ModalDescription
+							>This is a {{ size }} modal showing the
+							{{ sizeTitles[size].toLowerCase() }} size
+							variant.</ModalDescription
+						>
 					</ModalBody>
-					<ModalFooter :size="size">
-						Footer content
-					</ModalFooter>
+					<ModalFooter :size="size"> Footer content </ModalFooter>
 				</Modal>
 			</div>
 		</div>

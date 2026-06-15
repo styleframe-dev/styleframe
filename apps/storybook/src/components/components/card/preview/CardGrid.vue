@@ -23,10 +23,15 @@ const variants = ["solid", "soft", "subtle"] as const;
 					style="max-width: 300px"
 				>
 					<CardHeader :color="color" :variant="variant">
-						<CardTitle>{{ variant.charAt(0).toUpperCase() + variant.slice(1) }} {{ color.charAt(0).toUpperCase() + color.slice(1) }}</CardTitle>
+						<CardTitle
+							>{{ variant.charAt(0).toUpperCase() + variant.slice(1) }}
+							{{ color.charAt(0).toUpperCase() + color.slice(1) }}</CardTitle
+						>
 					</CardHeader>
 					<CardBody>
-						<CardDescription>This is a {{ variant }} {{ color }} card.</CardDescription>
+						<CardDescription
+							>This is a {{ variant }} {{ color }} card.</CardDescription
+						>
 					</CardBody>
 					<CardFooter :color="color" :variant="variant">
 						Footer content

@@ -1,18 +1,27 @@
 {
 	"name": "styleframe",
 	"version": "3.9.0",
+	"description": "From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.",
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
+	"bugs": {
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"license": "MIT",
+	"author": "Alex Grozav <alex@styleframe.dev>",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
+	},
 	"bin": {
 		"styleframe": "./dist/cli.js"
 	},
-	"description": "From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.",
-	"type": "module",
-	"license": "MIT",
 	"files": [
 		"dist",
 		"LICENSE",
 		"CHANGELOG.md",
 		"README.md"
 	],
+	"type": "module",
 	"sideEffects": false,
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
@@ -154,18 +163,12 @@
 		"@styleframe/cli": "workspace:^4.1.1",
 		"@styleframe/license": "catalog:"
 	},
-	"peerDependencies": {
-		"@styleframe/plugin": "workspace:^3.4.0",
-		"@styleframe/core": "workspace:^3.6.1",
-		"@styleframe/loader": "workspace:^3.0.3",
-		"@styleframe/transpiler": "workspace:^3.4.1"
-	},
 	"devDependencies": {
-		"@styleframe/config-typescript": "workspace:^3.0.0",
 		"@styleframe/cli": "workspace:^4.1.1",
-		"@styleframe/plugin": "workspace:^3.4.0",
+		"@styleframe/config-typescript": "workspace:^3.0.0",
 		"@styleframe/core": "workspace:^3.6.1",
 		"@styleframe/loader": "workspace:^3.0.3",
+		"@styleframe/plugin": "workspace:^3.4.0",
 		"@styleframe/transpiler": "workspace:^3.4.1",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
@@ -174,13 +177,10 @@
 		"typescript": "catalog:",
 		"vitest": "catalog:"
 	},
-	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
-	"bugs": {
-		"url": "https://github.com/styleframe-dev/styleframe/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/styleframe-dev/styleframe.git"
-	},
-	"author": "Alex Grozav <alex@styleframe.dev>"
+	"peerDependencies": {
+		"@styleframe/core": "workspace:^3.6.1",
+		"@styleframe/loader": "workspace:^3.0.3",
+		"@styleframe/plugin": "workspace:^3.4.0",
+		"@styleframe/transpiler": "workspace:^3.4.1"
+	}
 }

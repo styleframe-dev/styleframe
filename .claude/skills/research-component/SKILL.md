@@ -85,17 +85,20 @@ Present a concise summary to the user before writing the artifact. Write the art
 # Component: <Name>
 
 ## Metadata
+
 - Type: <interactive | static | container | layout | minimal>
 - Multi-part: <yes | no>
 - Color pattern: <Full | Container | Minimal | None>
 - HTML element: <div | span | button | a | ...>
 
 ## Summary
+
 <1-3 sentences capturing the purpose of the component and where it fits in a typical UI>
 
 ## Library findings
 
 ### <library name> (e.g., Nuxt UI)
+
 - URL: <source URL>
 - Variant axes: <color, size, variant, radius, orientation, ...>
 - Variant values:
@@ -107,9 +110,11 @@ Present a concise summary to the user before writing the artifact. Write the art
 - Accessibility: <ARIA roles, keyboard patterns, focus management>
 
 ### <next library>
+
 ...
 
 ## Cross-library observations
+
 - Common axes across libraries: <...>
 - Divergent axes: <...>
 - Notable patterns to adopt: <...>

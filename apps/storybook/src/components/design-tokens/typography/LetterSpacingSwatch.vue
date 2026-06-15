@@ -10,7 +10,12 @@ const props = defineProps<{
 
 <template>
 	<SwatchCard :name="name">
-		<span :class="['letter-spacing-swatch__preview', letterSpacingSwatch({ variant: value })]">
+		<span
+			:class="[
+				'letter-spacing-swatch__preview',
+				letterSpacingSwatch({ variant: value }),
+			]"
+		>
 			Letter Spacing
 		</span>
 	</SwatchCard>

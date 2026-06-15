@@ -29,7 +29,12 @@ pnpm add @styleframe/dtcg
 ## Usage
 
 ```ts
-import { parse, resolveAliases, applyInheritance, validate } from "@styleframe/dtcg";
+import {
+	parse,
+	resolveAliases,
+	applyInheritance,
+	validate,
+} from "@styleframe/dtcg";
 
 const doc = parse(jsonString);
 const errors = validate(doc);

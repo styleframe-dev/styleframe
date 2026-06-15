@@ -21,7 +21,7 @@ README.md @alexgrozav
 *.yml @alexgrozav
 tsconfig.json @alexgrozav
 turbo.json @alexgrozav
-biome.json @alexgrozav
+.oxfmtrc.json @alexgrozav
 
 # Package management
 package.json @alexgrozav

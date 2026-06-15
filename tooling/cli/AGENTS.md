@@ -46,9 +46,9 @@ src/
 
 Initializes a new Styleframe project in the target directory.
 
-| Argument | Type | Default | Aliases | Description |
-|----------|------|---------|---------|-------------|
-| `cwd` | `string` | `process.cwd()` | `d`, `dir` | Directory to initialize |
+| Argument | Type     | Default         | Aliases    | Description             |
+| -------- | -------- | --------------- | ---------- | ----------------------- |
+| `cwd`    | `string` | `process.cwd()` | `d`, `dir` | Directory to initialize |
 
 **Actions performed:**
 
@@ -62,6 +62,7 @@ Initializes a new Styleframe project in the target directory.
    - **Nuxt:** Adds `styleframe/plugin/nuxt` module to `nuxt.config.ts` via magicast
 
 **Edge cases:**
+
 - Skips file creation if file already exists (logs a warning)
 - Merges tsconfig `paths`/`include` rather than overwriting (idempotent; never clobbers an existing `virtual:styleframe` mapping)
 - Only adds missing dependencies to package.json
@@ -73,13 +74,14 @@ Initializes a new Styleframe project in the target directory.
 
 Builds Styleframe configuration into output artifacts.
 
-| Argument | Type | Default | Aliases | Description |
-|----------|------|---------|---------|-------------|
-| `entry` | `string` (positional) | `styleframe.config.ts` | — | Entry point file |
-| `outputDir` | `string` | `styleframe` | `o`, `out` | Output directory |
-| `clean` | `boolean` | `false` | — | Clean output directory before build |
+| Argument    | Type                  | Default                | Aliases    | Description                         |
+| ----------- | --------------------- | ---------------------- | ---------- | ----------------------------------- |
+| `entry`     | `string` (positional) | `styleframe.config.ts` | —          | Entry point file                    |
+| `outputDir` | `string`              | `styleframe`           | `o`, `out` | Output directory                    |
+| `clean`     | `boolean`             | `false`                | —          | Clean output directory before build |
 
 **Behavior:**
+
 - Loads configuration using `@styleframe/loader`
 - Transpiles and builds Styleframe definitions
 - Outputs artifacts to the specified directory
@@ -91,13 +93,14 @@ Builds Styleframe configuration into output artifacts.
 
 Exports Styleframe variables to spec-conformant DTCG (Design Tokens Community Group) JSON. Themed configurations also emit a sibling `*.resolver.json` document.
 
-| Argument | Type | Default | Aliases | Description |
-|----------|------|---------|---------|-------------|
-| `config` | `string` | `styleframe.config.ts` | `c` | Styleframe config file path |
-| `output` | `string` | `tokens.json` | `o` | Output JSON file path |
-| `collection` | `string` | `Design Tokens` | `n`, `name` | Collection name embedded in the export |
+| Argument     | Type     | Default                | Aliases     | Description                            |
+| ------------ | -------- | ---------------------- | ----------- | -------------------------------------- |
+| `config`     | `string` | `styleframe.config.ts` | `c`         | Styleframe config file path            |
+| `output`     | `string` | `tokens.json`          | `o`         | Output JSON file path                  |
+| `collection` | `string` | `Design Tokens`        | `n`, `name` | Collection name embedded in the export |
 
 **Processing pipeline:**
+
 1. Loads Styleframe configuration via `@styleframe/loader`
 2. Extracts root + theme variables
 3. Reduces each `TokenValue` to a primitive via `evaluate.ts`
@@ -112,14 +115,14 @@ Exports Styleframe variables to spec-conformant DTCG (Design Tokens Community Gr
 
 Generates Styleframe TypeScript code from DTCG format JSON.
 
-| Argument | Type | Default | Aliases | Description |
-|----------|------|---------|---------|-------------|
-| `input` | `string` | **(required)** | `i` | Input DTCG JSON file path |
-| `output` | `string` | `tokens.styleframe.ts` | `o` | Output TypeScript file path |
-| `composables` | `boolean` | `true` | — | Use `@styleframe/theme` composables (`useColor`, `useSpacing`, etc.) |
-| `rem` | `boolean` | `false` | — | Use rem units for dimensions instead of px |
-| `baseFontSize` | `string` | `16` | — | Base font size for px→rem conversion |
-| `instanceName` | `string` | `s` | — | Styleframe instance variable name |
+| Argument       | Type      | Default                | Aliases | Description                                                          |
+| -------------- | --------- | ---------------------- | ------- | -------------------------------------------------------------------- |
+| `input`        | `string`  | **(required)**         | `i`     | Input DTCG JSON file path                                            |
+| `output`       | `string`  | `tokens.styleframe.ts` | `o`     | Output TypeScript file path                                          |
+| `composables`  | `boolean` | `true`                 | —       | Use `@styleframe/theme` composables (`useColor`, `useSpacing`, etc.) |
+| `rem`          | `boolean` | `false`                | —       | Use rem units for dimensions instead of px                           |
+| `baseFontSize` | `string`  | `16`                   | —       | Base font size for px→rem conversion                                 |
+| `instanceName` | `string`  | `s`                    | —       | Styleframe instance variable name                                    |
 
 **Output:** TypeScript file with Styleframe variable definitions, themes, and optional composable usage. Logs summary with variable and theme counts.
 
@@ -143,9 +146,9 @@ All commands use citty's `defineCommand()` pattern with typed argument definitio
 
 ### Utility Functions
 
-| Function | Purpose |
-|----------|---------|
-| `fileExists(path)` | Async file existence check using `fs/promises` |
+| Function              | Purpose                                                                |
+| --------------------- | ---------------------------------------------------------------------- |
+| `fileExists(path)`    | Async file existence check using `fs/promises`                         |
 | `parseJsonc(content)` | Parses JSON with comments — handles `//`, `/* */`, and trailing commas |
 
 ### Build System
@@ -176,22 +179,23 @@ export default s;
 
 ```json
 {
-    "compilerOptions": {
-        "paths": {
-            "virtual:styleframe": ["./.styleframe/styleframe.d.ts"]
-        }
-    },
-    "include": [
-        "styleframe.config.ts",
-        "*.styleframe.ts",
-        ".styleframe/**/*.d.ts"
-    ]
+	"compilerOptions": {
+		"paths": {
+			"virtual:styleframe": ["./.styleframe/styleframe.d.ts"]
+		}
+	},
+	"include": [
+		"styleframe.config.ts",
+		"*.styleframe.ts",
+		".styleframe/**/*.d.ts"
+	]
 }
 ```
 
 ### DTCG Format (Figma Sync)
 
 The export/import commands use DTCG (Design Tokens Community Group) format JSON, which includes:
+
 - Collection name
 - Modes (`Default` + theme names)
 - Variables with type (`COLOR`, `NUMBER`, `STRING`, `BOOLEAN`), per-mode values, and optional aliases (references)
@@ -203,14 +207,15 @@ The export/import commands use DTCG (Design Tokens Community Group) format JSON,
 
 The CLI sits at the **build and initialization layer** of Styleframe:
 
-| Phase | What it does | Packages used |
-|-------|-------------|---------------|
-| **Init** | Scaffolds project, installs deps, configures build tools | `magicast` |
-| **Build** | Loads config, transpiles, generates output | `@styleframe/loader` |
-| **DTCG export** | Emits spec-conformant tokens.json (and resolver) | `@styleframe/loader`, `@styleframe/dtcg` |
-| **Figma import** | Generates Styleframe code from a Figma export | `@styleframe/figma` |
+| Phase            | What it does                                             | Packages used                            |
+| ---------------- | -------------------------------------------------------- | ---------------------------------------- |
+| **Init**         | Scaffolds project, installs deps, configures build tools | `magicast`                               |
+| **Build**        | Loads config, transpiles, generates output               | `@styleframe/loader`                     |
+| **DTCG export**  | Emits spec-conformant tokens.json (and resolver)         | `@styleframe/loader`, `@styleframe/dtcg` |
+| **Figma import** | Generates Styleframe code from a Figma export            | `@styleframe/figma`                      |
 
 **Framework integrations:**
+
 - **Vite:** Plugin at `styleframe/plugin/vite`
 - **Nuxt:** Module at `styleframe/plugin/nuxt`
 

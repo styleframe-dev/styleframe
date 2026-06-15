@@ -10,6 +10,8 @@ const props = defineProps<{
 
 <template>
 	<SwatchCard :name="name">
-		<div :class="['spacing-swatch__preview', spacingSwatch({ variant: value })]" />
+		<div
+			:class="['spacing-swatch__preview', spacingSwatch({ variant: value })]"
+		/>
 	</SwatchCard>
 </template>
