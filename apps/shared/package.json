@@ -23,11 +23,11 @@
 	},
 	"devDependencies": {
 		"@iconify-json/devicon": "1.2.62",
-		"@iconify-json/lucide": "1.2.69",
-		"@iconify-json/material-symbols": "1.2.65",
+		"@iconify-json/lucide": "1.2.112",
+		"@iconify-json/material-symbols": "1.2.78",
 		"@iconify-json/mdi": "1.2.3",
-		"@iconify-json/simple-icons": "1.2.54",
-		"@iconify-json/vscode-icons": "1.2.31",
+		"@iconify-json/simple-icons": "1.2.86",
+		"@iconify-json/vscode-icons": "1.2.57",
 		"@nuxt/kit": "catalog:nuxt",
 		"@nuxt/test-utils": "catalog:nuxt"
 	}

@@ -41,7 +41,7 @@
 		"test:dev": "vitest --watch"
 	},
 	"dependencies": {
-		"fast-glob": "^3.3.2",
+		"fast-glob": "^3.3.3",
 		"importree": "^2.0.1"
 	},
 	"peerDependencies": {

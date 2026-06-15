@@ -38,8 +38,8 @@
 		"@vitest/coverage-v8": "catalog:",
 		"typescript": "catalog:",
 		"vite": "catalog:",
-		"vitest": "catalog:",
-		"vite-plugin-dts": "catalog:"
+		"vite-plugin-dts": "catalog:",
+		"vitest": "catalog:"
 	},
 	"peerDependencies": {
 		"@styleframe/core": "workspace:^3.6.1"
