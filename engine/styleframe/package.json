@@ -1,6 +1,6 @@
 {
 	"name": "styleframe",
-	"version": "3.8.0",
+	"version": "3.9.0",
 	"bin": {
 		"styleframe": "./dist/cli.js"
 	},
@@ -151,22 +151,22 @@
 		"release": "bumpp && npm publish"
 	},
 	"dependencies": {
-		"@styleframe/cli": "workspace:^",
+		"@styleframe/cli": "workspace:^4.1.1",
 		"@styleframe/license": "catalog:"
 	},
 	"peerDependencies": {
-		"@styleframe/core": "workspace:^3.6.0",
-		"@styleframe/loader": "workspace:^3.0.2",
 		"@styleframe/plugin": "workspace:^3.4.0",
-		"@styleframe/transpiler": "workspace:^3.4.0"
+		"@styleframe/core": "workspace:^3.6.1",
+		"@styleframe/loader": "workspace:^3.0.3",
+		"@styleframe/transpiler": "workspace:^3.4.1"
 	},
 	"devDependencies": {
-		"@styleframe/cli": "workspace:^4.1.0",
-		"@styleframe/config-typescript": "workspace:^",
-		"@styleframe/core": "workspace:^",
-		"@styleframe/loader": "workspace:^",
-		"@styleframe/plugin": "workspace:^",
-		"@styleframe/transpiler": "workspace:^",
+		"@styleframe/config-typescript": "workspace:^3.0.0",
+		"@styleframe/cli": "workspace:^4.1.1",
+		"@styleframe/plugin": "workspace:^3.4.0",
+		"@styleframe/core": "workspace:^3.6.1",
+		"@styleframe/loader": "workspace:^3.0.3",
+		"@styleframe/transpiler": "workspace:^3.4.1",
 		"@types/node": "^22.19.21",
 		"@vitest/coverage-v8": "catalog:",
 		"bumpp": "^10.4.1",

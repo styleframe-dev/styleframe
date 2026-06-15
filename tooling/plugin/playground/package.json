@@ -8,10 +8,10 @@
 		"start": "vite"
 	},
 	"devDependencies": {
-		"@styleframe/runtime": "workspace:^",
-		"@styleframe/theme": "workspace:^",
+		"@styleframe/runtime": "workspace:^3.2.1",
+		"@styleframe/theme": "workspace:^3.8.0",
 		"@vitejs/plugin-vue": "catalog:nuxt",
-		"styleframe": "workspace:^",
+		"styleframe": "workspace:^3.9.0",
 		"vite": "catalog:",
 		"vite-plugin-inspect": "12.0.0-beta.3",
 		"vue": "catalog:nuxt"

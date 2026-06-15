@@ -1,6 +1,6 @@
 {
 	"name": "@styleframe/cli",
-	"version": "4.1.0",
+	"version": "4.1.1",
 	"description": "A command-line interface for styleframe.",
 	"type": "module",
 	"types": "./dist/index.d.ts",
@@ -41,16 +41,16 @@
 		"magicast": "^0.5.3"
 	},
 	"peerDependencies": {
-		"@styleframe/loader": "workspace:^3.0.2"
+		"@styleframe/loader": "workspace:^3.0.3"
 	},
 	"devDependencies": {
 		"@microsoft/api-extractor": "catalog:",
-		"@styleframe/config-typescript": "workspace:^",
-		"@styleframe/config-vite": "workspace:^",
-		"@styleframe/core": "workspace:^",
+		"@styleframe/config-typescript": "workspace:^3.0.0",
+		"@styleframe/config-vite": "workspace:^3.1.0",
+		"@styleframe/core": "workspace:^3.6.1",
 		"@styleframe/license": "catalog:",
-		"@styleframe/loader": "workspace:^",
-		"@styleframe/theme": "workspace:^",
+		"@styleframe/theme": "workspace:^3.8.0",
+		"@styleframe/loader": "workspace:^3.0.3",
 		"@vitest/coverage-v8": "catalog:",
 		"tsx": "catalog:",
 		"typescript": "catalog:",
