@@ -1,10 +1,19 @@
 {
 	"name": "@styleframe/testing-integration",
 	"version": "0.0.1",
+	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
+	"bugs": {
+		"url": "https://github.com/styleframe-dev/styleframe/issues"
+	},
+	"author": "Alex Grozav <alex@styleframe.dev>",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/styleframe-dev/styleframe.git"
+	},
 	"type": "module",
-	"types": "./dist/index.d.ts",
-	"module": "./dist/testing-integration.js",
 	"main": "./dist/testing-integration.umd.cjs",
+	"module": "./dist/testing-integration.js",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
@@ -23,6 +32,10 @@
 		"test:dev": "vitest --watch",
 		"test:e2e": "pnpm exec playwright test"
 	},
+	"dependencies": {
+		"culori": "^4.0.2",
+		"scule": "^1.3.0"
+	},
 	"devDependencies": {
 		"@microsoft/api-extractor": "catalog:",
 		"@playwright/test": "^1.56.1",
@@ -40,18 +53,5 @@
 		"vite": "catalog:",
 		"vite-plugin-dts": "catalog:",
 		"vitest": "catalog:"
-	},
-	"homepage": "https://github.com/styleframe-dev/styleframe#readme",
-	"bugs": {
-		"url": "https://github.com/styleframe-dev/styleframe/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/styleframe-dev/styleframe.git"
-	},
-	"author": "Alex Grozav <alex@styleframe.dev>",
-	"dependencies": {
-		"culori": "^4.0.2",
-		"scule": "^1.3.0"
 	}
 }

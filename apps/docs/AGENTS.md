@@ -39,7 +39,7 @@ Every page starts with YAML frontmatter:
 title: Page Title
 description: A brief description of the page content.
 navigation:
-    icon: i-lucide-icon-name
+  icon: i-lucide-icon-name
 ---
 ```
 
@@ -94,7 +94,7 @@ export default s;
 
 \`\`\`css [styleframe/index.css]
 :root {
-    --color--primary: #006cff;
+--color--primary: #006cff;
 }
 \`\`\`
 
@@ -102,6 +102,7 @@ export default s;
 :::tabs-item{icon="i-lucide-layout" label="Usage"}
 
 \`\`\`html
+
 <div class="_background-color:primary">Content</div>
 \`\`\`
 
@@ -110,7 +111,8 @@ export default s;
 ```
 
 **Key rules:**
-- Code blocks include file path labels in square brackets: `` ```ts [styleframe.config.ts] ```, `` ```css [styleframe/index.css] ```.
+
+- Code blocks include file path labels in square brackets: ` ```ts [styleframe.config.ts] ```, ` `css [styleframe/index.css] `.
 - The Code tab shows TypeScript (the Styleframe config). The Output tab shows the generated CSS. The Usage tab shows HTML with utility classes.
 - Use `"styleframe"` for core imports and `"@styleframe/theme"` for theme composables.
 - Always end config files with `export default s;`.
@@ -146,9 +148,11 @@ export default s;
 ::steps{level="4"}
 
 #### Step Title
+
 Step content here.
 
 #### Another Step
+
 More content.
 
 ::
@@ -157,11 +161,13 @@ More content.
 ### Story Previews (Component demos)
 
 ```markdown
-::story-preview
----
+## ::story-preview
+
 story: theme-recipes-feedback-badge--default
 panel: true
+
 ---
+
 ::
 ```
 
@@ -192,6 +198,7 @@ Document core Styleframe methods. Each method gets an H2 heading with the functi
 ### Design Token Pages (`03.design-tokens/`)
 
 Document `@styleframe/theme` composables. Each composable (e.g., `useColorDesignTokens`, `useColorLevelDesignTokens`) gets its own H2 section. Show:
+
 1. Default usage with tabbed Code/Output
 2. Custom values variant
 3. Extending defaults variant
@@ -201,6 +208,7 @@ Include default value tables and tips about `as const` usage. End with Best Prac
 ### Utility Pages (`06.utilities/`)
 
 Document utility composables. Show:
+
 1. Basic usage with the utility creator function
 2. Directional variants (for spacing, border, etc.) in a reference table
 3. Modifier integration (hover, focus, etc.)
@@ -211,6 +219,7 @@ Class name format: `_property-name:value` (e.g., `_margin:sm`), with modifier pr
 ### Modifier Pages (`07.modifiers/`)
 
 Document modifier composables. Each modifier gets its own H2 with tabbed Code/Output/Usage. Include:
+
 1. Individual modifier functions (e.g., `useHoverModifier`)
 2. Batch function (e.g., `usePseudoStateModifiers`)
 3. CSS selector mapping table
@@ -219,6 +228,7 @@ Document modifier composables. Each modifier gets its own H2 with tabbed Code/Ou
 ### Component Pages (`05.components/`)
 
 Document pre-built recipes. Include:
+
 1. Registration with `useButtonRecipe(s)` etc.
 2. Story preview component for visual demo
 3. Variant tables (colors, sizes, styles)

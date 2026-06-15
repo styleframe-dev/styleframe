@@ -38,7 +38,7 @@ Bridging into a Styleframe AST is the consumer's responsibility (see `@stylefram
 ```ts
 import { parse, parseResolver } from "@styleframe/dtcg";
 
-const tokenDoc = parse(jsonString);            // throws ParseError on invalid JSON / shape
+const tokenDoc = parse(jsonString); // throws ParseError on invalid JSON / shape
 const resolverDoc = parseResolver(jsonString); // for .resolver.json files
 ```
 
@@ -53,11 +53,16 @@ const errors = validate(tokenDoc); // ValidationError[]
 ### Aliases
 
 ```ts
-import { isAlias, parseAlias, formatAlias, resolveAliases } from "@styleframe/dtcg";
+import {
+	isAlias,
+	parseAlias,
+	formatAlias,
+	resolveAliases,
+} from "@styleframe/dtcg";
 
-isAlias("{color.primary}");        // → true
-parseAlias("{color.primary}");     // → "color.primary"
-formatAlias("color.primary");      // → "{color.primary}"
+isAlias("{color.primary}"); // → true
+parseAlias("{color.primary}"); // → "color.primary"
+formatAlias("color.primary"); // → "{color.primary}"
 
 // Transitive — A → B → C all flattened. Throws CircularReferenceError on cycles.
 const resolved = resolveAliases(tokenDoc);
@@ -77,10 +82,14 @@ const inherited = applyInheritance(tokenDoc);
 ```ts
 import { resolveResolver } from "@styleframe/dtcg";
 
-const resolved = await resolveResolver(resolverDoc, { theme: "dark" }, async (ref) => {
-  // user-supplied loader: ref → JSON
-  return JSON.parse(await fs.readFile(ref, "utf8"));
-});
+const resolved = await resolveResolver(
+	resolverDoc,
+	{ theme: "dark" },
+	async (ref) => {
+		// user-supplied loader: ref → JSON
+		return JSON.parse(await fs.readFile(ref, "utf8"));
+	},
+);
 ```
 
 ### Per-type helpers
@@ -102,7 +111,11 @@ composite.border.parse(...);
 ### Classification (value + path → DTCG type)
 
 ```ts
-import { classifyValue, easingKeywordToBezier, parseCubicBezier } from "@styleframe/dtcg";
+import {
+	classifyValue,
+	easingKeywordToBezier,
+	parseCubicBezier,
+} from "@styleframe/dtcg";
 
 classifyValue("#ff0000");
 // → { type: "color", value: { colorSpace: "srgb", components: [1, 0, 0] } }
@@ -116,8 +129,8 @@ classifyValue("ease-in", { path: "easing.ease-in" });
 classifyValue("Inter", { path: "font-family.body" });
 // → { type: "fontFamily", value: "Inter" }
 
-classifyValue("frosted");                      // → undefined (caller decides)
-classifyValue("{color.primary}");              // → undefined (alias has no inherent type)
+classifyValue("frosted"); // → undefined (caller decides)
+classifyValue("{color.primary}"); // → undefined (alias has no inherent type)
 ```
 
 `classifyValue` is the single source of truth for "what DTCG type does this value have?" used by both the Styleframe CLI and the Figma plugin's export path. Value detection runs first; the optional `path` hint disambiguates ambiguous cases (e.g. a numeric `700` could be a fontWeight, a unitless number, or a duration in ms — only the path can decide).
@@ -126,12 +139,12 @@ classifyValue("{color.primary}");              // → undefined (alias has no in
 
 DTCG sits between richer source models (Styleframe AST) and simpler consumer models (Figma's flat variable system). Conversions in either direction lose information at well-defined points. Tools should make these losses explicit to users.
 
-| Direction | Survives | Lost or transformed |
-|---|---|---|
-| **Styleframe → DTCG** (via `@styleframe/cli`) | Primitives, `ref()` calls (as DTCG aliases), pure-arithmetic computed expressions (resolved to concrete values), themes (as resolver modifier contexts) | Computed expressions involving CSS-only constructs (`clamp()`, `vw`, `calc()` with non-numeric refs) emit a `dev.styleframe.expression` extension instead of a typed token; booleans skipped (DTCG has no boolean) |
-| **DTCG → Figma** (via `@styleframe/figma` plugin import) | color, dimension, duration (FLOAT), cubicBezier (STRING), fontFamily (STRING), fontWeight (FLOAT), strokeStyle (STRING), aliases | Composite types (border, shadow, gradient, typography) skipped — Figma has no native equivalent; wide-gamut colors converted to sRGB |
-| **Figma → DTCG** (via plugin export) | Path-disambiguated types: `duration/*` → duration, `font-weight/*` → fontWeight, `easing/*` → cubicBezier, `font-family/*` → fontFamily, `border-style/*` → strokeStyle | Booleans skipped; STRING values whose name gives no hint are emitted with a `dev.styleframe.unknownType` extension and no `$type` |
-| **Round-trip** Styleframe → Figma → Styleframe | color, dimension, duration, fontFamily, fontWeight, strokeStyle | Computed expressions are pre-evaluated and become primitives (one-way); composite types vanish on the Figma leg |
+| Direction                                                | Survives                                                                                                                                                                | Lost or transformed                                                                                                                                                                                                |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Styleframe → DTCG** (via `@styleframe/cli`)            | Primitives, `ref()` calls (as DTCG aliases), pure-arithmetic computed expressions (resolved to concrete values), themes (as resolver modifier contexts)                 | Computed expressions involving CSS-only constructs (`clamp()`, `vw`, `calc()` with non-numeric refs) emit a `dev.styleframe.expression` extension instead of a typed token; booleans skipped (DTCG has no boolean) |
+| **DTCG → Figma** (via `@styleframe/figma` plugin import) | color, dimension, duration (FLOAT), cubicBezier (STRING), fontFamily (STRING), fontWeight (FLOAT), strokeStyle (STRING), aliases                                        | Composite types (border, shadow, gradient, typography) skipped — Figma has no native equivalent; wide-gamut colors converted to sRGB                                                                               |
+| **Figma → DTCG** (via plugin export)                     | Path-disambiguated types: `duration/*` → duration, `font-weight/*` → fontWeight, `easing/*` → cubicBezier, `font-family/*` → fontFamily, `border-style/*` → strokeStyle | Booleans skipped; STRING values whose name gives no hint are emitted with a `dev.styleframe.unknownType` extension and no `$type`                                                                                  |
+| **Round-trip** Styleframe → Figma → Styleframe           | color, dimension, duration, fontFamily, fontWeight, strokeStyle                                                                                                         | Computed expressions are pre-evaluated and become primitives (one-way); composite types vanish on the Figma leg                                                                                                    |
 
 ## Errors
 

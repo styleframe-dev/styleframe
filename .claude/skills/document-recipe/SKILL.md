@@ -161,6 +161,7 @@ Import the `<componentName>` runtime function from the virtual module and pass v
 #vue
 
 ` ` `vue [src/components/<ComponentName>.vue]
+
 <script setup lang="ts">
 import { <componentName> } from "virtual:styleframe";
 
@@ -184,20 +185,20 @@ const { color = "<default>", variant = "<default>", size = "<default>" } = defin
 import { <componentName> } from "virtual:styleframe";
 
 interface <ComponentName>Props {
-	color?: /* union */;
-	variant?: /* union */;
-	size?: /* union */;
-	children?: React.ReactNode;
+color?: /_ union _/;
+variant?: /_ union _/;
+size?: /_ union _/;
+children?: React.ReactNode;
 }
 
 export function <ComponentName>({
-	color = "<default>",
-	variant = "<default>",
-	size = "<default>",
-	children,
+color = "<default>",
+variant = "<default>",
+size = "<default>",
+children,
 }: <ComponentName>Props) {
-	const classes = <componentName>({ color, variant, size });
-	return <<element> className={classes}>{children}</<element>>;
+const classes = <componentName>({ color, variant, size });
+return <<element> className={classes}>{children}</<element>>;
 }
 ` ` `
 
@@ -220,11 +221,13 @@ const classes = <componentName>({ color: "<default>", variant: "<default>", size
 
 #### See it in action
 
-:::story-preview
----
+## :::story-preview
+
 story: theme-recipes-<category>-<component-name>--default
 panel: true
+
 ---
+
 :::
 
 ::
@@ -233,33 +236,37 @@ panel: true
 
 <Description of the color system for this component.>
 
-::story-preview
----
+## ::story-preview
+
 story: theme-recipes-<category>-<component-name>--<default-color>
 panel: true
+
 ---
+
 ::
 
 ### Color Reference
 
-::story-preview
----
+## ::story-preview
+
 story: theme-recipes-<category>-<component-name>--all-variants
 height: 420
+
 ---
+
 ::
 
-| Color | Token | Use Case |
-|-------|-------|----------|
-| `primary` | `@color.primary` | Default actions, links, key information |
-| `secondary` | `@color.secondary` | Secondary information, neutral states |
-| `success` | `@color.success` | Positive states, confirmations, completions |
-| `info` | `@color.info` | Informational messages, tips, highlights |
-| `warning` | `@color.warning` | Caution states, pending actions |
-| `error` | `@color.error` | Error states, destructive actions, alerts |
-| `light` | `@color.white` / `@color.gray-*` | Light surfaces, stays light in dark mode |
-| `dark` | `@color.gray-900` | Dark surfaces, stays dark in light mode |
-| `neutral` | Adaptive (light <-> dark) | Default color, adapts to the current color scheme |
+| Color       | Token                            | Use Case                                          |
+| ----------- | -------------------------------- | ------------------------------------------------- |
+| `primary`   | `@color.primary`                 | Default actions, links, key information           |
+| `secondary` | `@color.secondary`               | Secondary information, neutral states             |
+| `success`   | `@color.success`                 | Positive states, confirmations, completions       |
+| `info`      | `@color.info`                    | Informational messages, tips, highlights          |
+| `warning`   | `@color.warning`                 | Caution states, pending actions                   |
+| `error`     | `@color.error`                   | Error states, destructive actions, alerts         |
+| `light`     | `@color.white` / `@color.gray-*` | Light surfaces, stays light in dark mode          |
+| `dark`      | `@color.gray-900`                | Dark surfaces, stays dark in light mode           |
+| `neutral`   | Adaptive (light <-> dark)        | Default color, adapts to the current color scheme |
 
 ::tip
 **Pro tip:** Use semantic color names that describe purpose, not appearance.
@@ -270,65 +277,88 @@ height: 420
 <Description of variant styles and count.>
 
 ### Solid
+
 <Description.>
 ::story-preview
+
 ---
+
 story: theme-recipes-<category>-<component-name>--solid
 panel: true
+
 ---
+
 ::
 
 ### Outline
+
 <Description.>
 ::story-preview
+
 ---
+
 story: theme-recipes-<category>-<component-name>--outline
 panel: true
+
 ---
+
 ::
 
 ### Soft
+
 <Description.>
 ::story-preview
+
 ---
+
 story: theme-recipes-<category>-<component-name>--soft
 panel: true
+
 ---
+
 ::
 
 ### Subtle
+
 <Description.>
 ::story-preview
+
 ---
+
 story: theme-recipes-<category>-<component-name>--subtle
 panel: true
+
 ---
+
 ::
 
 ## Sizes
 
 <Description of size system.>
 
-::story-preview
----
+## ::story-preview
+
 story: theme-recipes-<category>-<component-name>--all-sizes
 height: 480
+
 ---
+
 ::
 
 | Size | Font Size | Border Radius |
-|------|-----------|---------------|
+| ---- | --------- | ------------- |
+
 <!-- Fill based on recipe size values -->
 
 ## Anatomy
 
 <!-- Multi-part recipes only. Omit this section for single-recipe components. -->
 
-| Part | Recipe | Role |
-|------|--------|------|
-| `<componentName>` | `use<ComponentName>Recipe` | Root container |
+| Part                    | Recipe                           | Role           |
+| ----------------------- | -------------------------------- | -------------- |
+| `<componentName>`       | `use<ComponentName>Recipe`       | Root container |
 | `<componentName>Header` | `use<ComponentName>HeaderRecipe` | Header section |
-| `<componentName>Body` | `use<ComponentName>BodyRecipe` | Main content |
+| `<componentName>Body`   | `use<ComponentName>BodyRecipe`   | Main content   |
 | `<componentName>Footer` | `use<ComponentName>FooterRecipe` | Footer actions |
 
 ## Accessibility
@@ -370,23 +400,23 @@ Creates a full <component-name> recipe with all variants and compound variant st
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `s` | `Styleframe` | The Styleframe instance |
-| `options` | `DeepPartial<RecipeConfig>` | Optional overrides for the recipe configuration |
-| `options.base` | `VariantDeclarationsBlock` | Custom base styles |
-| `options.variants` | `Variants` | Custom variant definitions |
-| `options.defaultVariants` | `Record<keyof Variants, string>` | Default variant values |
-| `options.compoundVariants` | `CompoundVariant[]` | Custom compound variant definitions |
-| `options.filter` | `Record<string, string[]>` | Limit which variant values are generated |
+| Parameter                  | Type                             | Description                                     |
+| -------------------------- | -------------------------------- | ----------------------------------------------- |
+| `s`                        | `Styleframe`                     | The Styleframe instance                         |
+| `options`                  | `DeepPartial<RecipeConfig>`      | Optional overrides for the recipe configuration |
+| `options.base`             | `VariantDeclarationsBlock`       | Custom base styles                              |
+| `options.variants`         | `Variants`                       | Custom variant definitions                      |
+| `options.defaultVariants`  | `Record<keyof Variants, string>` | Default variant values                          |
+| `options.compoundVariants` | `CompoundVariant[]`              | Custom compound variant definitions             |
+| `options.filter`           | `Record<string, string[]>`       | Limit which variant values are generated        |
 
 **Variants:**
 
-| Variant | Options | Default |
-|---------|---------|---------|
-| `color` | <!-- list --> | `<default>` |
+| Variant   | Options       | Default     |
+| --------- | ------------- | ----------- |
+| `color`   | <!-- list --> | `<default>` |
 | `variant` | <!-- list --> | `<default>` |
-| `size` | <!-- list --> | `<default>` |
+| `size`    | <!-- list --> | `<default>` |
 
 <!-- For multi-recipe, add one `### use<Name><Part>Recipe(s, options?)` section per sub-recipe. -->
 
@@ -453,19 +483,23 @@ Write the final doc file to `apps/docs/content/docs/04.components/02.composables
 # Documentation: <Name>
 
 ## Reference pages used
+
 - apps/docs/content/docs/04.components/02.composables/<reference>.md
 - <additional references>
 
 ## Final doc path
+
 apps/docs/content/docs/04.components/02.composables/<nn>.<name>.md
 
 ## Remaining [VERIFY] flags
+
 - <file:line — verification needed>
 - ...
 
 ## Confidence: <High | Medium | Low>
 
 ## Conformance deviations
+
 - <section X: observed behavior vs reference>
 - ...
 ```

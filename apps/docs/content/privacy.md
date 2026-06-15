@@ -1,11 +1,14 @@
 ::u-page-hero
 #title
+
 # Privacy Policy
+
 ::
 
 ::u-container{.prose-container}
 
 ## 1. Introduction
+
 Safeguarding your privacy is important to us. Styleframe is committed to protecting your privacy and adhering to relevant laws and regulations regarding any personal data we may collect about you, including through our Website, [styleframe.dev](https://styleframe.dev), and other platforms we manage. Styleframe encompasses the entity behind the open-source UI framework known as Styleframe, as well as its commercial version, Styleframe Pro.
 
 This Privacy Policy (**"_Policy_"**) describes how Pixevil Creative Web SRL (**"_the Company_"**, **"_Styleframe_"**, **"_styleframe_"**, **"_we_"**, **"_us_"**, or **"_our_"**) collects, protects and uses the personally identifiable information (**"_Personal Information_"**) you (**"_User_"**, **"_you_"**, or **"_your_"**) may provide through the Styleframe website ([styleframe.dev](https://styleframe.dev)) or in the course of purchasing any Styleframe products (collectively, **"_Website_"**).
@@ -94,7 +97,6 @@ We may integrate information provided voluntarily with data obtained from other 
 We strive to protect your personal information with commercially acceptable means against loss, theft, and unauthorized access, disclosure, copying, use, or modification. Despite our efforts, we remind you that no electronic transmission or storage method is entirely secure.
 
 It is your responsibility to choose a password and ensure its robustness to safeguard your information within our services. This includes maintaining the confidentiality and security of any passwords linked to your personal information and accounts.
-
 
 ## 10. How Long We Keep Your Personal Information
 

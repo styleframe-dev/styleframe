@@ -38,21 +38,21 @@ Load `.context/recipe-<component-name>/research.md`. Using its metadata and libr
 
 #### Color pattern
 
-| Pattern | Colors in `variants.color` | Example recipes |
-|---------|----------------------------|-----------------|
-| **Full** | 6 semantic (`primary`, `secondary`, `success`, `info`, `warning`, `error`) + `light`, `dark`, `neutral` (9 total) | badge, button, callout, chip |
-| **Container** | `light`, `dark`, `neutral` only (3 total) | card, modal, tooltip, popover |
-| **Minimal** | `primary`, `light`, `dark`, `neutral` (4 total) | spinner |
-| **None** | No `color` axis (layout-only) | nav, button-group |
+| Pattern       | Colors in `variants.color`                                                                                        | Example recipes               |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| **Full**      | 6 semantic (`primary`, `secondary`, `success`, `info`, `warning`, `error`) + `light`, `dark`, `neutral` (9 total) | badge, button, callout, chip  |
+| **Container** | `light`, `dark`, `neutral` only (3 total)                                                                         | card, modal, tooltip, popover |
+| **Minimal**   | `primary`, `light`, `dark`, `neutral` (4 total)                                                                   | spinner                       |
+| **None**      | No `color` axis (layout-only)                                                                                     | nav, button-group             |
 
 #### Variant-style pattern
 
-| Pattern | Variant styles | Used by |
-|---------|----------------|---------|
-| **Interactive** | `solid`, `outline`, `soft`, `subtle`, `ghost`, `link` | button |
-| **Display** | `solid`, `outline`, `soft`, `subtle` | badge, chip, callout |
-| **Container** | `solid`, `soft`, `subtle` (no `outline`) | card, modal, popover |
-| **Minimal / custom** | whatever the component needs | spinner (2-axis: color+size only) |
+| Pattern              | Variant styles                                        | Used by                           |
+| -------------------- | ----------------------------------------------------- | --------------------------------- |
+| **Interactive**      | `solid`, `outline`, `soft`, `subtle`, `ghost`, `link` | button                            |
+| **Display**          | `solid`, `outline`, `soft`, `subtle`                  | badge, chip, callout              |
+| **Container**        | `solid`, `soft`, `subtle` (no `outline`)              | card, modal, popover              |
+| **Minimal / custom** | whatever the component needs                          | spinner (2-axis: color+size only) |
 
 #### Base-style template
 
@@ -87,12 +87,12 @@ Choose one (both are valid patterns in the existing codebase):
 
 Default matrix (derive from the research; adjust only with a reason):
 
-| Component type | Default color | Default variant | Default size |
-|----------------|---------------|-----------------|--------------|
-| Interactive | `primary` | `solid` | `md` |
-| Container / feedback | `neutral` | `solid` | `md` |
-| Display (badge) | `neutral` | `solid` | `sm` |
-| Non-semantic containers (card, modal) | `neutral` | `solid` | `md` |
+| Component type                        | Default color | Default variant | Default size |
+| ------------------------------------- | ------------- | --------------- | ------------ |
+| Interactive                           | `primary`     | `solid`         | `md`         |
+| Container / feedback                  | `neutral`     | `solid`         | `md`         |
+| Display (badge)                       | `neutral`     | `solid`         | `sm`         |
+| Non-semantic containers (card, modal) | `neutral`     | `solid`         | `md`         |
 
 Every axis in `variants` must have a corresponding entry in `defaultVariants`.
 
@@ -124,9 +124,11 @@ Otherwise, use the single-element pattern: the recipe class goes directly on the
 
 ```html
 <span class="input input--neutral input--solid input--md">
-  <span class="input-prefix input-prefix--md">$</span>   <!-- optional -->
-  <input class="input-field" />
-  <span class="input-suffix input-suffix--md">USD</span> <!-- optional -->
+	<span class="input-prefix input-prefix--md">$</span>
+	<!-- optional -->
+	<input class="input-field" />
+	<span class="input-suffix input-suffix--md">USD</span>
+	<!-- optional -->
 </span>
 ```
 
@@ -140,33 +142,33 @@ The wrapper recipe's `setup(s)` callback registers the inner-field selector:
 
 ```ts
 (s) => {
-  const { selector } = s;
-  selector(".<name>-field", {
-    flexGrow: "1",
-    minWidth: "0",
-    width: "100%",
-    background: "transparent",
-    border: "none",
-    outline: "none",
-    padding: "0",
-    color: "inherit",
-    fontFamily: "inherit",
-    fontSize: "inherit",
-    fontWeight: "inherit",
-    lineHeight: "inherit",
-    "&::placeholder": { color: "@color.text-weakest" },
-  });
-}
+	const { selector } = s;
+	selector(".<name>-field", {
+		flexGrow: "1",
+		minWidth: "0",
+		width: "100%",
+		background: "transparent",
+		border: "none",
+		outline: "none",
+		padding: "0",
+		color: "inherit",
+		fontFamily: "inherit",
+		fontSize: "inherit",
+		fontWeight: "inherit",
+		lineHeight: "inherit",
+		"&::placeholder": { color: "@color.text-weakest" },
+	});
+};
 ```
 
 #### Four-slot addon taxonomy (only when addons are needed)
 
-| Slot | Position | Recipe | Has its own background/border? | Typical use |
-|------|----------|--------|-------------------------------|-------------|
-| `#prefix` | INSIDE the field, inline with text | `<name>-prefix` | No — shares the wrapper's field | Icon, currency symbol, leading indicator |
-| `#suffix` | INSIDE the field, inline with text | `<name>-suffix` | No — shares the wrapper's field | Unit label, reveal toggle, inline clear |
-| `#prepend` | OUTSIDE the field, joined on the left | `<name>-prepend` + `<name>-group` | Yes — stands as its own block | Protocol selector, country code |
-| `#append` | OUTSIDE the field, joined on the right | `<name>-append` + `<name>-group` | Yes — stands as its own block | Currency code, domain suffix |
+| Slot       | Position                               | Recipe                            | Has its own background/border?  | Typical use                              |
+| ---------- | -------------------------------------- | --------------------------------- | ------------------------------- | ---------------------------------------- |
+| `#prefix`  | INSIDE the field, inline with text     | `<name>-prefix`                   | No — shares the wrapper's field | Icon, currency symbol, leading indicator |
+| `#suffix`  | INSIDE the field, inline with text     | `<name>-suffix`                   | No — shares the wrapper's field | Unit label, reveal toggle, inline clear  |
+| `#prepend` | OUTSIDE the field, joined on the left  | `<name>-prepend` + `<name>-group` | Yes — stands as its own block   | Protocol selector, country code          |
+| `#append`  | OUTSIDE the field, joined on the right | `<name>-append` + `<name>-group`  | Yes — stands as its own block   | Currency code, domain suffix             |
 
 **Naming rule**: **prefix/suffix = inline (inside the field); prepend/append = block (outside the field)**. This mirrors the Inkline convention — do not conflate them.
 
@@ -323,22 +325,22 @@ base: {
 
 All values prefixed with `@` are design token references resolved at compile time.
 
-| Syntax | Resolves to | Example |
-|--------|-------------|---------|
-| `@color.<name>` | Color token | `"@color.primary"` |
-| `@color.<name>-<level>` | Color level (absolute lightness) | `"@color.primary-700"` |
-| `@color.<name>-shade-<n>` | Darker shade (relative) | `"@color.primary-shade-50"` |
-| `@color.<name>-tint-<n>` | Lighter tint (relative) | `"@color.primary-tint-50"` |
-| `@font-size.<size>` | Font size | `"@font-size.sm"` |
-| `@font-weight.<weight>` | Font weight | `"@font-weight.medium"` |
-| `@border-width.<width>` | Border width | `"@border-width.thin"` |
-| `@border-style.<style>` | Border style | `"@border-style.solid"` |
-| `@border-radius.<size>` | Border radius | `"@border-radius.md"` |
-| `@line-height.<name>` | Line height | `"@line-height.normal"` |
-| `@easing.<name>` | Easing function | `"@easing.ease-in-out"` |
-| `@box-shadow.<size>` | Box shadow | `"@box-shadow.md"` |
-| `@z-index.<level>` | Z-index | `"@z-index.dropdown"` |
-| `@<number>` | Spacing multiplier | `"@0.75"` |
+| Syntax                    | Resolves to                      | Example                     |
+| ------------------------- | -------------------------------- | --------------------------- |
+| `@color.<name>`           | Color token                      | `"@color.primary"`          |
+| `@color.<name>-<level>`   | Color level (absolute lightness) | `"@color.primary-700"`      |
+| `@color.<name>-shade-<n>` | Darker shade (relative)          | `"@color.primary-shade-50"` |
+| `@color.<name>-tint-<n>`  | Lighter tint (relative)          | `"@color.primary-tint-50"`  |
+| `@font-size.<size>`       | Font size                        | `"@font-size.sm"`           |
+| `@font-weight.<weight>`   | Font weight                      | `"@font-weight.medium"`     |
+| `@border-width.<width>`   | Border width                     | `"@border-width.thin"`      |
+| `@border-style.<style>`   | Border style                     | `"@border-style.solid"`     |
+| `@border-radius.<size>`   | Border radius                    | `"@border-radius.md"`       |
+| `@line-height.<name>`     | Line height                      | `"@line-height.normal"`     |
+| `@easing.<name>`          | Easing function                  | `"@easing.ease-in-out"`     |
+| `@box-shadow.<size>`      | Box shadow                       | `"@box-shadow.md"`          |
+| `@z-index.<level>`        | Z-index                          | `"@z-index.dropdown"`       |
+| `@<number>`               | Spacing multiplier               | `"@0.75"`                   |
 
 ### Available token values
 
@@ -363,13 +365,13 @@ All values prefixed with `@` are design token references resolved at compile tim
 > ⚠️ **Footgun**: `@color.text`, `@color.text-inverted`, `@color.text-weak`, `@color.text-weaker`, and `@color.text-weakest` are **mode-relative** — they resolve to different RGB values in light vs. dark mode. When a `&:dark` block is meant to **fix** a variant's appearance across themes (e.g., the `light` color variant must keep a white background and dark text in both light and dark mode), a mode-relative token inside `&:dark` flips the meaning and produces the wrong colour.
 >
 > **Rules**:
+>
 > - **Outer block**: `@color.text` resolves to dark text — correct for light-appearance variants.
 > - **Inside `&:dark` pinning a light-appearance variant** (e.g. `light` + `solid`): use `@color.text-inverted` (which, in dark mode, resolves to the light-mode value) OR absolute tokens like `@color.gray-900`.
 > - **Inside `&:dark` pinning a dark-appearance variant** (e.g. `dark` + `solid`): use absolute `@color.white`. Do **not** use `@color.text-inverted` — in dark mode it resolves to dark, producing dark-on-dark.
 > - `@color.white`, `@color.black`, and the entire `@color.gray-50..950` scale are absolute and safe inside both blocks.
 >
 > Quick check: `@color.text*` tokens are only ever safe to copy into a `&:dark` block when the intent is "adapt to dark mode" (as for `neutral`); they are unsafe when the intent is "stay the same across modes" (as for `light`/`dark`).
-
 
 ---
 
@@ -379,6 +381,7 @@ All values prefixed with `@` are design token references resolved at compile tim
 # Design: <Name>
 
 ## Classification
+
 - Component type: <interactive | static | container | layout | minimal>
 - HTML element: <...>
 - Color pattern: <Full | Container | Minimal | None>
@@ -386,7 +389,9 @@ All values prefixed with `@` are design token references resolved at compile tim
 - Base template: <interactive | display | container | sectioned container>
 
 ## Variant axes
+
 ### color
+
 <list of color values>
 ### variant
 <list of variant styles>
@@ -396,19 +401,24 @@ All values prefixed with `@` are design token references resolved at compile tim
 <values>
 
 ## Compound-variant strategy
+
 <flatMap | map-per-style | manual | mixed> — <one-sentence reason>
 
 ## Default variants
+
 color=<x>, variant=<y>, size=<z>, <customAxis=v>
 
 ## Sub-recipes (if multi-part)
+
 - <sub-name>: axes=[color, variant, size], role=<e.g., header>
 - <sub-name>: axes=[size], role=<e.g., body>
 
 ## Setup callback (if needed)
+
 <e.g., register @keyframes for spinner; register :focus-visible selectors>
 
 ## Notes for implement/showcase/document
+
 - <anything design-level that isn't obvious from the list above — e.g., "neutral color must adapt to dark mode", "orientation defaults to horizontal">
 
 ## Approved by user: yes

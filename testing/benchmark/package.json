@@ -1,8 +1,8 @@
 {
 	"name": "@styleframe/testing-benchmark",
 	"version": "0.0.1",
-	"type": "module",
 	"private": true,
+	"type": "module",
 	"scripts": {
 		"measure": "tsx src/measure.ts",
 		"build:styleframe": "tsx src/styleframe/build.ts",
@@ -14,7 +14,6 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.56.1",
-		"@vitest/coverage-v8": "catalog:",
 		"@styleframe/config-typescript": "workspace:^3.0.0",
 		"@styleframe/runtime": "workspace:^3.1.0",
 		"@styleframe/scanner": "workspace:^3.1.0",
@@ -22,6 +21,7 @@
 		"@tailwindcss/cli": "4.1.17",
 		"@tailwindcss/node": "4.1.17",
 		"@types/node": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
 		"playwright": "^1.56.1",
 		"styleframe": "workspace:^3.7.0",
 		"tailwindcss": "catalog:nuxt",

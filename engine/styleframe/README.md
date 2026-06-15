@@ -63,19 +63,19 @@ const spacing = variable("spacing--md", "1rem");
 
 // Create styles
 selector(".button", {
-    backgroundColor: ref(colorPrimary),
-    padding: ref(spacing),
-    borderRadius: "4px",
-    color: "white",
+	backgroundColor: ref(colorPrimary),
+	padding: ref(spacing),
+	borderRadius: "4px",
+	color: "white",
 
-    "&:hover": {
-        opacity: 0.9,
-    },
+	"&:hover": {
+		opacity: 0.9,
+	},
 });
 
 // Add dark theme
 theme("dark", (ctx) => {
-    ctx.variable(colorPrimary, "#60a5fa");
+	ctx.variable(colorPrimary, "#60a5fa");
 });
 
 export default s;

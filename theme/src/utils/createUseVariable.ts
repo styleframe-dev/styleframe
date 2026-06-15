@@ -97,9 +97,8 @@ export function createUseVariable<
 	type Value = Fluid extends true
 		? PropertyType | RangeInput<PropertyType>
 		: PropertyType;
-	type DefaultsWidened = Defaults extends Record<string, Value>
-		? Defaults
-		: Record<string, Value>;
+	type DefaultsWidened =
+		Defaults extends Record<string, Value> ? Defaults : Record<string, Value>;
 
 	return function useVariable<
 		Context extends DeclarationsCallbackContext = DeclarationsCallbackContext,

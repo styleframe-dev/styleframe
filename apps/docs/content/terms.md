@@ -1,11 +1,11 @@
 ::u-page-hero
 #title
+
 # Terms of Service
+
 ::
 
 ::u-container{.prose-container}
-
-
 
 ## 1. Introduction
 
@@ -17,13 +17,11 @@ Pixevil Creative Web SRL, a limited liability company (**"_the Company_", "_Styl
 
 Styleframe offers [styleframe.dev](https://styleframe.dev) ("Website"), including all subdomains, information, tools, and services available from this _Website_ to you ("User", "you"), conditioned upon your acceptance of all terms, conditions, policies, and notices stated here.
 
-
 ### 1.3. Effective Date
 
 These _Terms of Service_ are effective as of 30 September 2025.
 
 Last updated: 30 September 2025
-
 
 ## 2. Definitions
 
@@ -61,7 +59,7 @@ Please read these _Terms of Service_ carefully before accessing or using our web
 
 ### 3.2. Changes to the Terms of Service
 
-Any new features or tools which are added to the current store shall also be subject to the _Terms of Service_. You can review the most current version of the _Terms of Service_ at any time on this page. 
+Any new features or tools which are added to the current store shall also be subject to the _Terms of Service_. You can review the most current version of the _Terms of Service_ at any time on this page.
 
 We reserve the right to update, change or replace any part of these _Terms of Service_ by posting updates and/or changes to our website. It is your responsibility to check this page periodically for changes. Your continued use of or access to the website following the posting of any changes constitutes acceptance of those changes.
 
@@ -93,7 +91,7 @@ Your use of the Service is at your sole risk. The service is provided on an "as 
 
 You may not use our products for any illegal or unauthorized purpose. In your use of the Service, you must not violate any laws in your jurisdiction, including but not limited to copyright laws.
 
-#### 5.2.2. Prohibited Actions 
+#### 5.2.2. Prohibited Actions
 
 You must not transmit any worms, viruses, or any code of a destructive nature.
 
@@ -123,7 +121,7 @@ You must not modify, adapt, or hack the Service or modify another website so as 
 
 #### 5.6.1. Prohibited Behavior
 
-Verbal, physical, written, or other abuse (including threats of abuse or retribution) of any Styleframe customer, employee, member, or officer will result in immediate account termination. 
+Verbal, physical, written, or other abuse (including threats of abuse or retribution) of any Styleframe customer, employee, member, or officer will result in immediate account termination.
 
 #### 5.6.2. Spam and Unsolicited Communication
 
@@ -150,7 +148,6 @@ Should any conflict arise between the provisions of these _Terms of Service_ and
 ### 6.4. Updates and Communication
 
 We will communicate any updates to the _Styleframe Pro License Agreement_ through the online store and via email to our current users. Users are responsible for regularly reviewing the License Agreement for any changes that may affect their use of Styleframe Pro.
-
 
 ## 7. Accuracy, Completeness, and Timeliness of Information
 
@@ -210,7 +207,7 @@ You expressly agree that your use of, or inability to use, the _Service_ is at y
 
 ### 14.2. Disclaimer
 
-_Styleframe_ makes only the guarantee in [Guarantee](#_141-guarantee). Otherwise, *the Company* provides _Styleframe Pro_ entirely as is, without any warranty at all. THE TERMS SET FORTH HEREIN ARE EXCLUSIVE AND IN LIEU OF ALL OTHER EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS WHATSOEVER, WHETHER STATUTORY, COMMONLAW, OR OTHERWISE, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR PARTICULAR PURPOSE AND SATISFACTORY QUALITY. CUSTOMER EXPRESSLY WAIVES ANY RIGHTS THAT IT MIGHT OTHERWISE HAVE.
+_Styleframe_ makes only the guarantee in [Guarantee](#_141-guarantee). Otherwise, _the Company_ provides _Styleframe Pro_ entirely as is, without any warranty at all. THE TERMS SET FORTH HEREIN ARE EXCLUSIVE AND IN LIEU OF ALL OTHER EXPRESS AND IMPLIED WARRANTIES AND CONDITIONS WHATSOEVER, WHETHER STATUTORY, COMMONLAW, OR OTHERWISE, INCLUDING BUT NOT LIMITED TO IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR PARTICULAR PURPOSE AND SATISFACTORY QUALITY. CUSTOMER EXPRESSLY WAIVES ANY RIGHTS THAT IT MIGHT OTHERWISE HAVE.
 
 ### 14.3. Limitation of Liability
 

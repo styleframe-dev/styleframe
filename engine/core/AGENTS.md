@@ -14,10 +14,22 @@
 Everything starts with creating a Styleframe instance. The instance holds a `Root` AST node and provides factory methods for building the design system declaratively. All tokens are registered on the root and later compiled to CSS by downstream packages.
 
 ```ts
-import { styleframe } from 'styleframe';
+import { styleframe } from "styleframe";
 
 const s = styleframe();
-const { variable, ref, selector, utility, modifier, recipe, theme, atRule, keyframes, media, css } = s;
+const {
+	variable,
+	ref,
+	selector,
+	utility,
+	modifier,
+	recipe,
+	theme,
+	atRule,
+	keyframes,
+	media,
+	css,
+} = s;
 
 export default s;
 ```
@@ -32,12 +44,12 @@ Creates a new Styleframe instance with all token creation methods.
 
 **Options:**
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `indent` | `string` | Indentation string for output |
-| `variables.name` | `(options: { name: string }) => string` | Custom CSS variable naming function |
+| Option               | Type                                              | Description                          |
+| -------------------- | ------------------------------------------------- | ------------------------------------ |
+| `indent`             | `string`                                          | Indentation string for output        |
+| `variables.name`     | `(options: { name: string }) => string`           | Custom CSS variable naming function  |
 | `utilities.selector` | `(options: { name, value, modifiers }) => string` | Custom utility class naming function |
-| `themes.selector` | `(options: { name: string }) => string` | Custom theme selector function |
+| `themes.selector`    | `(options: { name: string }) => string`           | Custom theme selector function       |
 
 **Returns:** `Styleframe` — an object with `id`, `root`, `options`, and all token creation methods.
 
@@ -54,9 +66,9 @@ Creates a CSS custom property token.
 **Returns:** `Variable<Name>` token.
 
 ```ts
-const colorPrimary = variable('color.primary', '#006cff');
-const spacing = variable('spacing', '1rem', { default: true });
-const colorAccent = variable('color.accent', ref(colorPrimary));
+const colorPrimary = variable("color.primary", "#006cff");
+const spacing = variable("spacing", "1rem", { default: true });
+const colorAccent = variable("color.accent", ref(colorPrimary));
 ```
 
 ---
@@ -69,8 +81,8 @@ Creates a reference to a CSS variable, resolved to `var(--name)` at compile time
 - **`fallback`** (`string`) — Optional fallback value.
 
 ```ts
-backgroundColor: ref(colorPrimary)
-color: ref('color.text', '#333')
+backgroundColor: ref(colorPrimary);
+color: ref("color.text", "#333");
 ```
 
 **Shorthand:** Use `@`-prefixed strings in declaration values: `"@color.primary"`.
@@ -87,17 +99,17 @@ Creates a CSS selector rule.
 Supports nested selectors (`'&:hover'`, `'.child'`), nested `@media`, and nested `@supports` via object keys.
 
 ```ts
-selector('.button', {
-    padding: ref(spacing),
-    '&:hover': { opacity: 0.9 },
-    '@media (min-width: 768px)': { padding: '2rem' },
+selector(".button", {
+	padding: ref(spacing),
+	"&:hover": { opacity: 0.9 },
+	"@media (min-width: 768px)": { padding: "2rem" },
 });
 
 // Callback form for complex nesting
-selector('.container', ({ selector, media }) => {
-    selector('.inner', { padding: '1rem' });
-    media('(min-width: 768px)', { padding: '2rem' });
-    return { display: 'flex' };
+selector(".container", ({ selector, media }) => {
+	selector(".inner", { padding: "1rem" });
+	media("(min-width: 768px)", { padding: "2rem" });
+	return { display: "flex" };
 });
 ```
 
@@ -114,13 +126,13 @@ Creates a utility class generator. Returns a **creator function** that must be c
 **Returns:** `UtilityCreatorFn` — call with `(values, modifiers?)`.
 
 ```ts
-const createPadding = utility('padding', ({ value }) => ({ padding: value }));
+const createPadding = utility("padding", ({ value }) => ({ padding: value }));
 
 // Object syntax (explicit keys)
 createPadding({ sm: ref(spacingSm), md: ref(spacingMd) });
 
 // Array syntax (auto-generated keys)
-createPadding([ref(spacingSm), '@spacing.md', '1rem']);
+createPadding([ref(spacingSm), "@spacing.md", "1rem"]);
 
 // With modifiers
 createPadding({ sm: ref(spacingSm) }, [hover, focus]);
@@ -141,13 +153,13 @@ Creates a reusable modifier that wraps utility declarations.
 - **`factory`** (`(ctx) => DeclarationsBlock | void`) — Receives `{ declarations, variables, children, key?, selector }`.
 
 ```ts
-const hover = modifier('hover', ({ declarations }) => ({
-    '&:hover': declarations,
+const hover = modifier("hover", ({ declarations }) => ({
+	"&:hover": declarations,
 }));
 
 // Multi-key modifier (for breakpoints)
-const responsive = modifier(['sm', 'md', 'lg'], ({ key, declarations }) => ({
-    [`@media (min-width: ${breakpoints[key]}px)`]: declarations,
+const responsive = modifier(["sm", "md", "lg"], ({ key, declarations }) => ({
+	[`@media (min-width: ${breakpoints[key]}px)`]: declarations,
 }));
 ```
 
@@ -157,35 +169,35 @@ const responsive = modifier(['sm', 'md', 'lg'], ({ key, declarations }) => ({
 
 Creates a component variant system with base styles, variants, defaults, and compound variants.
 
-| Config Key | Type | Description |
-|------------|------|-------------|
-| `name` | `string` | Recipe name (base class) |
-| `base` | `VariantDeclarationsBlock` | Always-applied utility declarations |
-| `variants` | `Record<string, Record<string, VariantDeclarationsBlock>>` | Variant group definitions |
-| `defaultVariants` | `Record<string, string>` | Default variant selections |
-| `compoundVariants` | `Array<{ match, css }>` | Conditional variant combinations |
+| Config Key         | Type                                                       | Description                         |
+| ------------------ | ---------------------------------------------------------- | ----------------------------------- |
+| `name`             | `string`                                                   | Recipe name (base class)            |
+| `base`             | `VariantDeclarationsBlock`                                 | Always-applied utility declarations |
+| `variants`         | `Record<string, Record<string, VariantDeclarationsBlock>>` | Variant group definitions           |
+| `defaultVariants`  | `Record<string, string>`                                   | Default variant selections          |
+| `compoundVariants` | `Array<{ match, css }>`                                    | Conditional variant combinations    |
 
 ```ts
 recipe({
-    name: 'button',
-    base: { borderWidth: ref(borderWidthThin), borderStyle: 'solid' },
-    variants: {
-        color: {
-            primary: { background: ref(colorPrimary), color: ref(colorWhite) },
-            secondary: { background: ref(colorSecondary) },
-        },
-        size: {
-            sm: { padding: ref(spacingSm) },
-            md: { padding: ref(spacingMd) },
-        },
-    },
-    defaultVariants: { color: 'primary', size: 'md' },
-    compoundVariants: [
-        {
-            match: { color: 'primary', disabled: false },
-            css: { hover: { background: '@color.primary-dark' } },
-        },
-    ],
+	name: "button",
+	base: { borderWidth: ref(borderWidthThin), borderStyle: "solid" },
+	variants: {
+		color: {
+			primary: { background: ref(colorPrimary), color: ref(colorWhite) },
+			secondary: { background: ref(colorSecondary) },
+		},
+		size: {
+			sm: { padding: ref(spacingSm) },
+			md: { padding: ref(spacingMd) },
+		},
+	},
+	defaultVariants: { color: "primary", size: "md" },
+	compoundVariants: [
+		{
+			match: { color: "primary", disabled: false },
+			css: { hover: { background: "@color.primary-dark" } },
+		},
+	],
 });
 ```
 
@@ -201,10 +213,10 @@ Creates a theme variant scoped to `[data-theme="name"]`.
 - **`callback`** (`(ctx) => void`) — Receives `{ variable, selector }` for overriding variables and selectors within the theme scope.
 
 ```ts
-theme('dark', (ctx) => {
-    ctx.variable(colorBackground, '#18181b');
-    ctx.variable(colorText, '#ffffff');
-    ctx.selector('.card', { boxShadow: '0 4px 6px rgba(0,0,0,0.3)' });
+theme("dark", (ctx) => {
+	ctx.variable(colorBackground, "#18181b");
+	ctx.variable(colorText, "#ffffff");
+	ctx.selector(".card", { boxShadow: "0 4px 6px rgba(0,0,0,0.3)" });
 });
 ```
 
@@ -217,16 +229,20 @@ theme('dark', (ctx) => {
 Interpolates token values into CSS strings for complex expressions.
 
 ```ts
-padding: css`${ref(spacingSm)} ${ref(spacingMd)}`
-width: css`calc(100% - ${ref(sidebarWidth)})`
-background: css`linear-gradient(135deg, ${ref(colorPrimary)} 0%, ${ref(colorSecondary)} 100%)`
+padding: css`
+	${ref(spacingSm)} ${ref(spacingMd)}
+`;
+width: css`calc(100% - ${ref(sidebarWidth)})`;
+background: css`linear-gradient(135deg, ${ref(colorPrimary)} 0%, ${ref(colorSecondary)} 100%)`;
 ```
 
 Supports `@variablename` notation inline — `@name` is automatically converted to a variable reference:
 
 ```ts
-border: css`1px solid @color.primary`
-padding: css`@spacing.x @spacing.y`
+border: css`1px solid @color.primary`;
+padding: css`
+	@spacing.x @spacing.y;
+`;
 ```
 
 ---
@@ -241,13 +257,13 @@ Defines a CSS `@keyframes` animation.
 **Returns:** AtRule token with a `.rule` property containing the animation name.
 
 ```ts
-const fadeIn = keyframes('fade-in', {
-    '0%': { opacity: 0, transform: 'translateY(10px)' },
-    '100%': { opacity: 1, transform: 'translateY(0)' },
+const fadeIn = keyframes("fade-in", {
+	"0%": { opacity: 0, transform: "translateY(10px)" },
+	"100%": { opacity: 1, transform: "translateY(0)" },
 });
 
-selector('.animated', {
-    animation: `${fadeIn.rule} 0.3s ease-out`,
+selector(".animated", {
+	animation: `${fadeIn.rule} 0.3s ease-out`,
 });
 ```
 
@@ -258,17 +274,17 @@ selector('.animated', {
 Creates `@media` rules.
 
 ```ts
-media('(min-width: 768px)', ({ selector }) => {
-    selector('.container', { maxWidth: '750px' });
+media("(min-width: 768px)", ({ selector }) => {
+	selector(".container", { maxWidth: "750px" });
 });
 ```
 
 Can also be used inline in selectors via object keys:
 
 ```ts
-selector('.container', {
-    padding: '1rem',
-    '@media (min-width: 768px)': { padding: '2rem' },
+selector(".container", {
+	padding: "1rem",
+	"@media (min-width: 768px)": { padding: "2rem" },
 });
 ```
 
@@ -279,13 +295,13 @@ selector('.container', {
 Creates arbitrary CSS at-rules (`@supports`, `@font-face`, `@layer`, `@container`, `@property`).
 
 ```ts
-atRule('supports', '(display: grid)', ({ selector }) => {
-    selector('.grid', { display: 'grid' });
+atRule("supports", "(display: grid)", ({ selector }) => {
+	selector(".grid", { display: "grid" });
 });
 
-atRule('font-face', '', {
-    fontFamily: "'CustomFont'",
-    src: "url('font.woff2') format('woff2')",
+atRule("font-face", "", {
+	fontFamily: "'CustomFont'",
+	src: "url('font.woff2') format('woff2')",
 });
 ```
 
@@ -296,11 +312,12 @@ atRule('font-face', '', {
 Combines multiple Styleframe instances into one.
 
 ```ts
-import { merge } from 'styleframe';
+import { merge } from "styleframe";
 const s = merge(base, components, themes);
 ```
 
 **Merge behavior:**
+
 - Variables: Later instances override earlier ones.
 - Arrays (utilities, modifiers, recipes, children): Concatenated.
 - Themes with the same name: Merged together.
@@ -329,7 +346,11 @@ Root
 
 ```ts
 type PrimitiveTokenValue = number | string | boolean | null | undefined;
-type TokenValue = PrimitiveTokenValue | Reference | CSS | Array<PrimitiveTokenValue | Reference | CSS>;
+type TokenValue =
+	| PrimitiveTokenValue
+	| Reference
+	| CSS
+	| Array<PrimitiveTokenValue | Reference | CSS>;
 ```
 
 ---
@@ -338,41 +359,41 @@ type TokenValue = PrimitiveTokenValue | Reference | CSS | Array<PrimitiveTokenVa
 
 All exported from `styleframe`:
 
-| Function | Checks for |
-|----------|-----------|
-| `isVariable(value)` | Variable token |
-| `isRef(value)` | Reference token |
-| `isSelector(value)` | Selector token |
-| `isAtRule(value)` | AtRule token |
-| `isCSS(value)` | CSS template token |
-| `isUtility(value)` | Utility token |
-| `isModifier(value)` | ModifierFactory token |
-| `isRecipe(value)` | Recipe token |
-| `isTheme(value)` | Theme token |
-| `isRoot(value)` | Root token |
-| `isToken(value, type)` | Generic token check |
-| `isContainer(value)` | Container interface |
-| `isStyleframe(value)` | Styleframe instance |
+| Function                       | Checks for            |
+| ------------------------------ | --------------------- |
+| `isVariable(value)`            | Variable token        |
+| `isRef(value)`                 | Reference token       |
+| `isSelector(value)`            | Selector token        |
+| `isAtRule(value)`              | AtRule token          |
+| `isCSS(value)`                 | CSS template token    |
+| `isUtility(value)`             | Utility token         |
+| `isModifier(value)`            | ModifierFactory token |
+| `isRecipe(value)`              | Recipe token          |
+| `isTheme(value)`               | Theme token           |
+| `isRoot(value)`                | Root token            |
+| `isToken(value, type)`         | Generic token check   |
+| `isContainer(value)`           | Container interface   |
+| `isStyleframe(value)`          | Styleframe instance   |
 | `isPrimitiveTokenValue(value)` | Primitive token value |
-| `isTokenValue(value)` | Any token value |
+| `isTokenValue(value)`          | Any token value       |
 
 ---
 
 ## Utility Functions
 
-| Function | Description |
-|----------|-------------|
-| `merge(base, ...instances)` | Merge Styleframe instances |
-| `hashValue(value)` | DJB2 hash for CSS-safe strings (7-char hex) |
-| `deepClone(value)` | Deep clone with circular reference support |
-| `generateRandomId(prefix?, length?)` | Generate random ID strings |
-| `getVariable(root, name)` | Look up a variable by name (throws if not found) |
-| `getUtility(root, name)` | Look up a utility by name (throws if not found) |
-| `getModifier(root, name)` | Look up a modifier by name (throws if not found) |
-| `isTokenEqual(a, b)` | Deep equality check for token values |
-| `classNameToCssSelector(className)` | Escape class name for CSS selectors |
-| `capitalizeFirst(str)` | Capitalize first letter |
-| `transformUtilityKey(options)` | Transform utility class names with namespaces |
+| Function                             | Description                                      |
+| ------------------------------------ | ------------------------------------------------ |
+| `merge(base, ...instances)`          | Merge Styleframe instances                       |
+| `hashValue(value)`                   | DJB2 hash for CSS-safe strings (7-char hex)      |
+| `deepClone(value)`                   | Deep clone with circular reference support       |
+| `generateRandomId(prefix?, length?)` | Generate random ID strings                       |
+| `getVariable(root, name)`            | Look up a variable by name (throws if not found) |
+| `getUtility(root, name)`             | Look up a utility by name (throws if not found)  |
+| `getModifier(root, name)`            | Look up a modifier by name (throws if not found) |
+| `isTokenEqual(a, b)`                 | Deep equality check for token values             |
+| `classNameToCssSelector(className)`  | Escape class name for CSS selectors              |
+| `capitalizeFirst(str)`               | Capitalize first letter                          |
+| `transformUtilityKey(options)`       | Transform utility class names with namespaces    |
 
 ---
 
@@ -380,20 +401,20 @@ All exported from `styleframe`:
 
 When building reusable composable functions:
 
-| Type | Naming Pattern | Example |
-|------|---------------|---------|
-| Variables | `use<Context>Variables()` | `useColorVariables(s)` |
-| Selectors | `use<Context>Selectors()` | `useButtonSelectors(s)` |
+| Type      | Naming Pattern            | Example                  |
+| --------- | ------------------------- | ------------------------ |
+| Variables | `use<Context>Variables()` | `useColorVariables(s)`   |
+| Selectors | `use<Context>Selectors()` | `useButtonSelectors(s)`  |
 | Utilities | `use<Context>Utilities()` | `useSpacingUtilities(s)` |
-| Recipes | `use<Context>Recipe()` | `useButtonRecipe(s)` |
+| Recipes   | `use<Context>Recipe()`    | `useButtonRecipe(s)`     |
 
 Composable variables must use `{ default: true }` to prevent overwriting:
 
 ```ts
 export function useColorVariables(s: Styleframe) {
-    const { variable, ref } = s;
-    const colorPrimary = variable('color.primary', '#006cff', { default: true });
-    return { colorPrimary };
+	const { variable, ref } = s;
+	const colorPrimary = variable("color.primary", "#006cff", { default: true });
+	return { colorPrimary };
 }
 ```
 

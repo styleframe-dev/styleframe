@@ -14,16 +14,16 @@ Runtime module loading and configuration management for the Styleframe CSS-in-Ty
 
 ```ts
 import {
-  loadConfiguration,
-  watchConfiguration,
-  loadModule,
-  loadExtensionModule,
-  trackExports,
-  build,
-  createLoader,
-  createSharedJiti,
-  clearJitiCache,
-  clearAllJitiCache,
+	loadConfiguration,
+	watchConfiguration,
+	loadModule,
+	loadExtensionModule,
+	trackExports,
+	build,
+	createLoader,
+	createSharedJiti,
+	clearJitiCache,
+	clearAllJitiCache,
 } from "@styleframe/loader";
 ```
 
@@ -58,8 +58,8 @@ Load a `styleframe.config` file and return the `Styleframe` instance. Returns a 
 
 ```ts
 const instance = await loadConfiguration({
-  cwd: process.cwd(),       // Working directory (default: process.cwd())
-  entry: "styleframe.config" // Config file name without extension (default: "styleframe.config")
+	cwd: process.cwd(), // Working directory (default: process.cwd())
+	entry: "styleframe.config", // Config file name without extension (default: "styleframe.config")
 });
 ```
 
@@ -71,10 +71,14 @@ Watch a config file for changes and reload on update. Throws if the config file 
 
 ```ts
 const { config, configFile, unwatch } = await watchConfiguration({
-  cwd: process.cwd(),
-  entry: "styleframe.config",
-  onUpdate: (newConfig) => { /* handle updated config */ },
-  onError: (error) => { /* handle errors or file deletion */ },
+	cwd: process.cwd(),
+	entry: "styleframe.config",
+	onUpdate: (newConfig) => {
+		/* handle updated config */
+	},
+	onError: (error) => {
+		/* handle errors or file deletion */
+	},
 });
 
 // Stop watching
@@ -86,14 +90,18 @@ await unwatch();
 Load a TypeScript/JavaScript module, validate its default export as a `Styleframe` instance, and track recipe/selector exports.
 
 ```ts
-const { module, instance, exports } = await loadModule("/path/to/file.styleframe.ts", {
-  alias: { "virtual:config": "/path/to/styleframe.config.ts" },
-  validateInstance: true,  // Default: true
-  jiti: sharedJitiInstance // Optional: reuse a shared jiti instance
-});
+const { module, instance, exports } = await loadModule(
+	"/path/to/file.styleframe.ts",
+	{
+		alias: { "virtual:config": "/path/to/styleframe.config.ts" },
+		validateInstance: true, // Default: true
+		jiti: sharedJitiInstance, // Optional: reuse a shared jiti instance
+	},
+);
 ```
 
 **Throws** if:
+
 - Default export is missing
 - Default export is not a `Styleframe` instance (when `validateInstance: true`)
 
@@ -103,8 +111,8 @@ Load a module without validating the default export. Use for extension files tha
 
 ```ts
 const { module, exports } = await loadExtensionModule("/path/to/extension.ts", {
-  alias: { "virtual:config": "/path/to/styleframe.config.ts" },
-  jiti: sharedJitiInstance
+	alias: { "virtual:config": "/path/to/styleframe.config.ts" },
+	jiti: sharedJitiInstance,
 });
 ```
 
@@ -123,9 +131,11 @@ Transpile a `Styleframe` instance to CSS and write files to disk. Validates the 
 
 ```ts
 await build(instance, {
-  clean: true,                 // Remove output dir before writing (default: true)
-  outputDir: "./styleframe",   // Output directory (default: "./styleframe")
-  transpiler: { /* TranspileOptions */ }
+	clean: true, // Remove output dir before writing (default: true)
+	outputDir: "./styleframe", // Output directory (default: "./styleframe")
+	transpiler: {
+		/* TranspileOptions */
+	},
 });
 ```
 
@@ -137,7 +147,7 @@ Create a jiti instance with no caching (fresh imports every time).
 
 ```ts
 const jiti = createLoader("/project/root", {
-  "virtual:config": "/path/to/config.ts"
+	"virtual:config": "/path/to/config.ts",
 });
 ```
 
@@ -184,31 +194,31 @@ const exists = await directoryExists("./output");
 
 ```ts
 interface ExportInfo {
-  name: string;                    // Export name (e.g., "buttonRecipe")
-  type: "recipe" | "selector";    // Type of export
+	name: string; // Export name (e.g., "buttonRecipe")
+	type: "recipe" | "selector"; // Type of export
 }
 
 interface LoadModuleOptions {
-  alias?: Record<string, string>;  // jiti alias for virtual modules
-  validateInstance?: boolean;      // Validate default export (default: true)
-  jiti?: Jiti;                     // Shared jiti instance
+	alias?: Record<string, string>; // jiti alias for virtual modules
+	validateInstance?: boolean; // Validate default export (default: true)
+	jiti?: Jiti; // Shared jiti instance
 }
 
 interface LoadModuleResult {
-  module: Record<string, unknown>;
-  instance: Styleframe;
-  exports: Map<string, ExportInfo>;
+	module: Record<string, unknown>;
+	instance: Styleframe;
+	exports: Map<string, ExportInfo>;
 }
 
 interface LoadExtensionModuleResult {
-  module: Record<string, unknown>;
-  exports: Map<string, ExportInfo>;
+	module: Record<string, unknown>;
+	exports: Map<string, ExportInfo>;
 }
 
 type BuildOptions = {
-  clean?: boolean;
-  outputDir?: string;
-  transpiler?: TranspileOptions;
+	clean?: boolean;
+	outputDir?: string;
+	transpiler?: TranspileOptions;
 };
 ```
 
@@ -230,12 +240,12 @@ Also re-exports `Jiti` and `JitiOptions` types from `jiti`.
 
 ## Source Files
 
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Re-exports all public API |
-| `src/config.ts` | Configuration loading and file watching |
+| File            | Purpose                                         |
+| --------------- | ----------------------------------------------- |
+| `src/index.ts`  | Re-exports all public API                       |
+| `src/config.ts` | Configuration loading and file watching         |
 | `src/module.ts` | Module loading, validation, and export tracking |
-| `src/build.ts` | CSS transpilation and file output |
-| `src/jiti.ts` | Jiti instance creation and cache management |
-| `src/types.ts` | TypeScript interfaces |
-| `src/utils.ts` | Filesystem utilities |
+| `src/build.ts`  | CSS transpilation and file output               |
+| `src/jiti.ts`   | Jiti instance creation and cache management     |
+| `src/types.ts`  | TypeScript interfaces                           |
+| `src/utils.ts`  | Filesystem utilities                            |

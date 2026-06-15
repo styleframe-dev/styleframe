@@ -1,7 +1,7 @@
 {
 	"name": "@styleframe/storybook",
-	"private": true,
 	"version": "0.0.0",
+	"private": true,
 	"type": "module",
 	"scripts": {
 		"dev": "storybook dev -p 6006",
@@ -29,9 +29,9 @@
 		"@vitest/browser-playwright": "^4.1.7",
 		"@vitest/coverage-v8": "catalog:",
 		"@vue/tsconfig": "catalog:nuxt",
+		"@vueless/storybook-dark-mode": "^10.0.7",
 		"playwright": "^1.57.0",
 		"storybook": "^10.4.1",
-		"@vueless/storybook-dark-mode": "^10.0.7",
 		"typescript": "catalog:",
 		"vite": "catalog:nuxt",
 		"vitest": "catalog:",

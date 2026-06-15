@@ -49,15 +49,15 @@ const showImage = computed(() => Boolean(props.src) && !failed.value);
 
 <template>
 	<span :class="classes">
-		<img
-			v-if="showImage"
-			:src="src"
-			:alt="alt"
-			@error="failed = true"
-		/>
+		<img v-if="showImage" :src="src" :alt="alt" @error="failed = true" />
 		<template v-else>
 			<slot>{{ label }}</slot>
 		</template>
-		<AvatarBadge v-if="status" :color="status" :size="size" :position="statusPosition" />
+		<AvatarBadge
+			v-if="status"
+			:color="status"
+			:size="size"
+			:position="statusPosition"
+		/>
 	</span>
 </template>

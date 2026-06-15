@@ -80,9 +80,9 @@ testing/integration/
 
 ## Scripts
 
-| Script | Description |
-|--------|-------------|
-| `start` | Full CI pipeline: setup in temp dir, test, cleanup |
-| `setup` | One-time setup of `.app/` for local development |
-| `update` | Re-copy fixtures and rebuild `.app/` |
+| Script     | Description                                             |
+| ---------- | ------------------------------------------------------- |
+| `start`    | Full CI pipeline: setup in temp dir, test, cleanup      |
+| `setup`    | One-time setup of `.app/` for local development         |
+| `update`   | Re-copy fixtures and rebuild `.app/`                    |
 | `test:e2e` | Run Playwright tests against `.app/` (or `PROJECT_DIR`) |

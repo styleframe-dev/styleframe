@@ -25,30 +25,42 @@ Use this package instead of importing from `@styleframe/core`, `@styleframe/load
 
 This package is a **barrel package** — it contains no implementation of its own. Every source file is a re-export from the corresponding `@styleframe/*` sub-package:
 
-| Entry Point | Re-exports From | Purpose |
-|-------------|----------------|---------|
-| `styleframe` | `@styleframe/core` | Core API: `styleframe()`, `merge()`, token factories, type guards, utilities |
-| `styleframe/loader` | `@styleframe/loader` | Config loading, module loading, build, jiti cache management |
-| `styleframe/transpiler` | `@styleframe/transpiler` | AST-to-CSS transpilation |
-| `styleframe/cli` | `@styleframe/cli` | CLI entry point (`#!/usr/bin/env node`) |
-| `styleframe/plugin/vite` | `@styleframe/plugin/vite` | Vite/Rolldown plugin |
-| `styleframe/plugin/webpack` | `@styleframe/plugin/webpack` | Webpack plugin |
-| `styleframe/plugin/rspack` | `@styleframe/plugin/rspack` | Rspack plugin |
-| `styleframe/plugin/rollup` | `@styleframe/plugin/rollup` | Rollup plugin |
-| `styleframe/plugin/esbuild` | `@styleframe/plugin/esbuild` | esbuild plugin |
-| `styleframe/plugin/astro` | `@styleframe/plugin/astro` | Astro integration |
-| `styleframe/plugin/nuxt` | `@styleframe/plugin/nuxt` | Nuxt module |
-| `styleframe/plugin/farm` | `@styleframe/plugin/farm` | Farm plugin |
+| Entry Point                 | Re-exports From              | Purpose                                                                      |
+| --------------------------- | ---------------------------- | ---------------------------------------------------------------------------- |
+| `styleframe`                | `@styleframe/core`           | Core API: `styleframe()`, `merge()`, token factories, type guards, utilities |
+| `styleframe/loader`         | `@styleframe/loader`         | Config loading, module loading, build, jiti cache management                 |
+| `styleframe/transpiler`     | `@styleframe/transpiler`     | AST-to-CSS transpilation                                                     |
+| `styleframe/cli`            | `@styleframe/cli`            | CLI entry point (`#!/usr/bin/env node`)                                      |
+| `styleframe/plugin/vite`    | `@styleframe/plugin/vite`    | Vite/Rolldown plugin                                                         |
+| `styleframe/plugin/webpack` | `@styleframe/plugin/webpack` | Webpack plugin                                                               |
+| `styleframe/plugin/rspack`  | `@styleframe/plugin/rspack`  | Rspack plugin                                                                |
+| `styleframe/plugin/rollup`  | `@styleframe/plugin/rollup`  | Rollup plugin                                                                |
+| `styleframe/plugin/esbuild` | `@styleframe/plugin/esbuild` | esbuild plugin                                                               |
+| `styleframe/plugin/astro`   | `@styleframe/plugin/astro`   | Astro integration                                                            |
+| `styleframe/plugin/nuxt`    | `@styleframe/plugin/nuxt`    | Nuxt module                                                                  |
+| `styleframe/plugin/farm`    | `@styleframe/plugin/farm`    | Farm plugin                                                                  |
 
 ## Usage
 
 ### Core API
 
 ```ts
-import { styleframe, merge } from 'styleframe';
+import { styleframe, merge } from "styleframe";
 
 const s = styleframe();
-const { variable, ref, selector, utility, modifier, recipe, theme, atRule, keyframes, media, css } = s;
+const {
+	variable,
+	ref,
+	selector,
+	utility,
+	modifier,
+	recipe,
+	theme,
+	atRule,
+	keyframes,
+	media,
+	css,
+} = s;
 
 export default s;
 ```
@@ -61,45 +73,50 @@ Each plugin is a default export:
 
 ```ts
 // vite.config.ts
-import styleframe from 'styleframe/plugin/vite';
+import styleframe from "styleframe/plugin/vite";
 
 export default defineConfig({
-    plugins: [styleframe()],
+	plugins: [styleframe()],
 });
 ```
 
 ```ts
 // webpack.config.js
-import styleframe from 'styleframe/plugin/webpack';
+import styleframe from "styleframe/plugin/webpack";
 
 module.exports = {
-    plugins: [styleframe()],
+	plugins: [styleframe()],
 };
 ```
 
 ```ts
 // astro.config.mjs
-import styleframe from 'styleframe/plugin/astro';
+import styleframe from "styleframe/plugin/astro";
 
 export default defineConfig({
-    integrations: [styleframe()],
+	integrations: [styleframe()],
 });
 ```
 
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-    modules: ['styleframe/plugin/nuxt'],
+	modules: ["styleframe/plugin/nuxt"],
 });
 ```
 
 ### Loader
 
 ```ts
-import { loadConfiguration, loadModule, build, createSharedJiti } from 'styleframe/loader';
+import {
+	loadConfiguration,
+	loadModule,
+	build,
+	createSharedJiti,
+} from "styleframe/loader";
 
 const instance = await loadConfiguration({ cwd: process.cwd() });
-await build(instance, { outputDir: './styleframe' });
+await build(instance, { outputDir: "./styleframe" });
 ```
 
 See `@styleframe/loader` AGENTS.md for the full loader API reference.
@@ -107,7 +124,7 @@ See `@styleframe/loader` AGENTS.md for the full loader API reference.
 ### Transpiler
 
 ```ts
-import { transpile } from 'styleframe/transpiler';
+import { transpile } from "styleframe/transpiler";
 ```
 
 ### CLI
@@ -120,20 +137,20 @@ The CLI binary is at `./dist/cli.cjs` and invokes the main function from `@style
 
 ## Source Files
 
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Re-exports all of `@styleframe/core` |
-| `src/cli.ts` | CLI entry point — imports and runs `@styleframe/cli` |
-| `src/loader.ts` | Re-exports all of `@styleframe/loader` |
-| `src/transpiler.ts` | Re-exports all of `@styleframe/transpiler` |
-| `src/plugin/vite.ts` | Default export from `@styleframe/plugin/vite` |
-| `src/plugin/webpack.ts` | Default export from `@styleframe/plugin/webpack` |
-| `src/plugin/rspack.ts` | Default export from `@styleframe/plugin/rspack` |
-| `src/plugin/rollup.ts` | Default export from `@styleframe/plugin/rollup` |
-| `src/plugin/esbuild.ts` | Default export from `@styleframe/plugin/esbuild` |
-| `src/plugin/astro.ts` | Default export from `@styleframe/plugin/astro` |
-| `src/plugin/nuxt.ts` | Default export from `@styleframe/plugin/nuxt` |
-| `src/plugin/farm.ts` | Default export from `@styleframe/plugin/farm` |
+| File                    | Purpose                                              |
+| ----------------------- | ---------------------------------------------------- |
+| `src/index.ts`          | Re-exports all of `@styleframe/core`                 |
+| `src/cli.ts`            | CLI entry point — imports and runs `@styleframe/cli` |
+| `src/loader.ts`         | Re-exports all of `@styleframe/loader`               |
+| `src/transpiler.ts`     | Re-exports all of `@styleframe/transpiler`           |
+| `src/plugin/vite.ts`    | Default export from `@styleframe/plugin/vite`        |
+| `src/plugin/webpack.ts` | Default export from `@styleframe/plugin/webpack`     |
+| `src/plugin/rspack.ts`  | Default export from `@styleframe/plugin/rspack`      |
+| `src/plugin/rollup.ts`  | Default export from `@styleframe/plugin/rollup`      |
+| `src/plugin/esbuild.ts` | Default export from `@styleframe/plugin/esbuild`     |
+| `src/plugin/astro.ts`   | Default export from `@styleframe/plugin/astro`       |
+| `src/plugin/nuxt.ts`    | Default export from `@styleframe/plugin/nuxt`        |
+| `src/plugin/farm.ts`    | Default export from `@styleframe/plugin/farm`        |
 
 ## Best Practices
 

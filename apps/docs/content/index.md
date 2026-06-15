@@ -7,31 +7,29 @@ description: From simple UI styles to full Design Systems, write code using Styl
 Hero Section ----------------------------------------------------------------------------------------------
 -->
 
-::gradient-page-hero
----
-orientation: horizontal
----
+## ::gradient-page-hero
 
-::browser-frame
----
-title: styleframe.config.ts
----
+## orientation: horizontal
+
+## ::browser-frame
+
+## title: styleframe.config.ts
 
 ```ts
-import { styleframe } from 'styleframe';
-import { useColorDesignTokens } from '@styleframe/theme';
+import { styleframe } from "styleframe";
+import { useColorDesignTokens } from "@styleframe/theme";
 
 const s = styleframe();
 const { variable, ref, selector } = s;
 
-const spacing = variable('spacing', '1rem');
+const spacing = variable("spacing", "1rem");
 const { colorPrimary } = useColorDesignTokens(s, {
-    primary: '#318fa0',
+	primary: "#318fa0",
 });
 
-selector('.button', {
-    backgroundColor: ref(colorPrimary),
-    padding: ref(spacing),
+selector(".button", {
+	backgroundColor: ref(colorPrimary),
+	padding: ref(spacing),
 });
 
 export default s;
@@ -40,21 +38,25 @@ export default s;
 ::
 
 #title
-Type-safe Composable CSS 
+Type-safe Composable CSS
 
 #description
 From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API.
 
 #links
-    :::u-button
-    ---
-    color: primary
-    size: xl
-    to: /docs/getting-started/introduction
-    trailing-icon: i-lucide-arrow-right
-    ---
-    Get started
-    :::
+:::u-button
+
+---
+
+color: primary
+size: xl
+to: /docs/getting-started/introduction
+trailing-icon: i-lucide-arrow-right
+
+---
+
+Get started
+:::
 
     :::u-button
     ---
@@ -67,6 +69,7 @@ From simple UI styles to full Design Systems, write code using Styleframe’s po
     ---
     Star on GitHub
     :::
+
 ::
 
 <!--
@@ -78,15 +81,19 @@ Features Section ---------------------------------------------------------------
 Built for Excellent Developer Experience
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-shield-check
-    target: _blank
-    to: /docs/api
-    ---
-    #title
-    [Type-safe]{.text-primary} CSS API
-    
+:::u-page-feature
+
+---
+
+icon: i-lucide-shield-check
+target: \_blank
+to: /docs/api
+
+---
+
+#title
+[Type-safe]{.text-primary} CSS API
+
     #description
     All styles are validated at compile time, eliminating typos and runtime errors.
     :::
@@ -99,7 +106,7 @@ Built for Excellent Developer Experience
     ---
     #title
     Easily [Composable]{.text-primary}
-    
+
     #description
     Compose and reuse styles using functions, variables, arrays, or objects. Mix and match easily.
     :::
@@ -112,7 +119,7 @@ Built for Excellent Developer Experience
     ---
     #title
     Built-in [Theming]{.text-primary} Support
-    
+
     #description
     Easily create and manage light and dark themes for your design system.
     :::
@@ -125,7 +132,7 @@ Built for Excellent Developer Experience
     ---
     #title
     Framework [Agnostic]{.text-primary}
-    
+
     #description
     Works with any frontend stack (React, Vue, Solid, Svelte, Astro) and integrates seamlessly with Vite.
     :::
@@ -138,7 +145,7 @@ Built for Excellent Developer Experience
     ---
     #title
     Fully [Configurable]{.text-primary}
-    
+
     #description
     Build themes using composables, variables, selectors, variants, and utilities naturally.
     :::
@@ -151,45 +158,48 @@ Built for Excellent Developer Experience
     ---
     #title
     Intuitive [Developer Experience]{.text-primary}
-    
+
     #description
     Get auto-complete, in-editor documentation, and powerful static analysis for your CSS.
     :::
-:: 
 
-<!-- 
+::
+
+<!--
 Architecture Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-default"}
----
-orientation: horizontal
----
+## ::u-page-section{class="border-t border-default"}
 
-::browser-frame
----
-title: Output
----
+## orientation: horizontal
+
+## ::browser-frame
+
+## title: Output
 
 ```css
 /* Static CSS generated at build time */
 .button {
-    background-color: var(--color-primary);
-    padding: var(--spacing);
+	background-color: var(--color-primary);
+	padding: var(--spacing);
 }
 ```
 
 ```ts
 /* Optional runtime generated for Recipes */
-export const button = recipe('button', {
-    background: "primary",
-}, {
-    size: {
-        sm: { padding: 'sm' },
-        md: { padding: 'md' },
-        lg: { padding: 'lg' }
-    }
-});
+export const button = recipe(
+	"button",
+	{
+		background: "primary",
+	},
+	{
+		size: {
+			sm: { padding: "sm" },
+			md: { padding: "md" },
+			lg: { padding: "lg" },
+		},
+	},
+);
 ```
 
 ::
@@ -201,12 +211,14 @@ Zero-Runtime by Default, Dynamic When You Need It
 Styleframe generates CSS at build time for maximum performance. When you need prop-based styling, an optional runtime handles Recipes.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-zap
-    ---
-    #title
-    [Static]{.text-primary} Generation
+:::u-page-feature
+
+---
+
+## icon: i-lucide-zap
+
+#title
+[Static]{.text-primary} Generation
 
     #description
     CSS is generated at build time, resulting in zero runtime overhead for your base styles.
@@ -218,7 +230,7 @@ Styleframe generates CSS at build time for maximum performance. When you need pr
     to: /docs/api/instance#configuration-options
     ---
     #title
-    [Dual Output]{.text-primary} 
+    [Dual Output]{.text-primary}
 
     #description
     The transpiler outputs both CSS and TypeScript. Configure output on a per-token basis to control exactly what gets generated.
@@ -237,50 +249,55 @@ Styleframe generates CSS at build time for maximum performance. When you need pr
     :::
 
 #links
-    :::u-button
-    ---
-    color: neutral
-    icon: i-lucide-chef-hat
-    to: /docs/api/recipes
-    variant: outline
-    ---
-    Learn more about Recipes
-    :::
+:::u-button
+
+---
+
+color: neutral
+icon: i-lucide-chef-hat
+to: /docs/api/recipes
+variant: outline
+
+---
+
+Learn more about Recipes
+:::
 ::
 
-<!-- 
+<!--
 Composability Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section
----
+## ::u-page-section
+
 orientation: horizontal
 reverse: true
 links:
--   label: Explore the default theme
-    color: neutral
-    variant: outline
-    to: /docs/theme/design-tokens
-    icon: i-lucide-palette
+
+- label: Explore the default theme
+  color: neutral
+  variant: outline
+  to: /docs/theme/design-tokens
+  icon: i-lucide-palette
+
 ---
 
-::browser-frame
----
-title: styleframe.config.ts
----
+## ::browser-frame
+
+## title: styleframe.config.ts
 
 ```ts
-import { styleframe } from 'styleframe';
-import { useColorDesignTokens } from '@styleframe/theme';
-import { useSpacingDesignTokens, useTypography } from '@orgname/theme-minimal';
-import { useComponents } from './my-components';
+import { styleframe } from "styleframe";
+import { useColorDesignTokens } from "@styleframe/theme";
+import { useSpacingDesignTokens, useTypography } from "@orgname/theme-minimal";
+import { useComponents } from "./my-components";
 
 const s = styleframe();
 
 // Colors from the default theme
 const { colorPrimary, colorSecondary } = useColorDesignTokens(s, {
-    primary: '#318fa0',
-    secondary: '#ff6b6b'
+	primary: "#318fa0",
+	secondary: "#ff6b6b",
 });
 
 // Typography and spacing from another theme
@@ -302,12 +319,14 @@ Compose Design Systems in Minutes
 Use styleframe's native composability to construct your Design System out of existing parts. Plug and play composables, variables, selectors, variants, and utilities.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-infinity
-    ---
-    #title
-    Infinitely [Customizable]{.text-primary}
+:::u-page-feature
+
+---
+
+## icon: i-lucide-infinity
+
+#title
+Infinitely [Customizable]{.text-primary}
 
     #description
     Make your Design System your own. Use the default theme as a starting point and customize it to fit your needs.
@@ -323,37 +342,40 @@ Use styleframe's native composability to construct your Design System out of exi
     #description
     Colors from one theme, typography from another. Styleframe lets you combine different themes seamlessly.
     :::
+
 ::
 
-<!-- 
+<!--
 Theming Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section
----
+## ::u-page-section
+
 orientation: horizontal
 links:
--   label: Learn about themes
-    color: neutral
-    variant: outline
-    to: /docs/api/themes
-    icon: i-lucide-sun-moon
+
+- label: Learn about themes
+  color: neutral
+  variant: outline
+  to: /docs/api/themes
+  icon: i-lucide-sun-moon
+
 ---
 
-
 ::tabs
-    :::tabs-item{.my-5 icon="i-lucide-settings" label="Configuration"}
-        ::::browser-frame
-        ---
-        title: styleframe.config.ts
-        ---
+:::tabs-item{.my-5 icon="i-lucide-settings" label="Configuration"}
+::::browser-frame
+
+---
+
+## title: styleframe.config.ts
 
              ```ts
             import { merge } from 'styleframe';
 
             import lightTheme from './light.theme';
             import darkTheme from './dark.theme';
-            
+
             export default merge(lightTheme, darkTheme);
 
         ::::
@@ -363,17 +385,17 @@ links:
         ---
         title: light.theme.ts
         ---
-    
+
             ```ts
             import { styleframe } from 'styleframe';
-            
+
             const s = styleframe();
             const { variable } = s;
 
             export const colorPrimary = variable('color-primary', '#007bff');
 
             export default s;
-        
+
         ::::
     :::
     :::tabs-item{.my-5 icon="i-lucide-moon" label="Dark Theme"}
@@ -381,24 +403,24 @@ links:
         ---
         title: dark.theme.ts
         ---
-    
+
             ```ts
             import { styleframe } from 'styleframe';
             import { colorPrimary } from './light.theme';
-            
+
             const s = styleframe();
             const { theme } = s;
 
             theme('dark', ({ variable }) => {
                 variable(colorPrimary, '#0056b3');
             });
-            
+
             export default s;
-        
+
         ::::
     :::
-::
 
+::
 
 #title
 Dark and Light Themes
@@ -407,14 +429,18 @@ Dark and Light Themes
 Easily create and manage themes for your design system using styleframe's native theming capabilities.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-square-code
-    target: _blank
-    to: /
-    ---
-    #title
-    [Intuitive]{.text-primary} API
+:::u-page-feature
+
+---
+
+icon: i-lucide-square-code
+target: \_blank
+to: /
+
+---
+
+#title
+[Intuitive]{.text-primary} API
 
     #description
     Writing CSS for different themes is as easy as defining a variable. No need to remember complex syntax or class names.
@@ -432,28 +458,27 @@ Easily create and manage themes for your design system using styleframe's native
     #description
     Colors from one theme, typography from another. Styleframe lets you combine different themes seamlessly.
     :::
+
 ::
 
 <!--
 Scanner Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-default"}
----
-orientation: horizontal
----
+## ::u-page-section{class="border-t border-default"}
 
-::browser-frame
----
-title: Component
----
+## orientation: horizontal
+
+## ::browser-frame
+
+## title: Component
 
 ```html
 <!-- Write utility classes in your markup -->
 <div class="_padding:lg _display:flex _gap:[1rem]">
-    <button class="_background:primary _hover:background:secondary _padding:md">
-        Click me
-    </button>
+	<button class="_background:primary _hover:background:secondary _padding:md">
+		Click me
+	</button>
 </div>
 ```
 
@@ -466,12 +491,14 @@ Write Markup, [Skip the CSS]{.text-primary}
 Our Utility Scanner is like Tailwind JIT, but type-safe and built on your own design system. Write utility classes directly in your markup - the scanner detects them and generates only the CSS you actually use at build time. Zero waste.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-zap
-    ---
-    #title
-    [Automatic]{.text-primary} Detection & Generation
+:::u-page-feature
+
+---
+
+## icon: i-lucide-zap
+
+#title
+[Automatic]{.text-primary} Detection & Generation
 
     #description
     Use utility classes in your markup without pre-defining every value. The scanner matches class names against registered factories, resolves design tokens, and generates the CSS.
@@ -489,25 +516,30 @@ Our Utility Scanner is like Tailwind JIT, but type-safe and built on your own de
     :::
 
 #links
-    :::u-button
-    ---
-    color: neutral
-    icon: i-lucide-view
-    to: /scanner
-    variant: outline
-    ---
-    Learn more about the Scanner
-    :::
+:::u-button
+
+---
+
+color: neutral
+icon: i-lucide-view
+to: /scanner
+variant: outline
+
+---
+
+Learn more about the Scanner
+:::
 ::
 
 <!--
 Figma Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-default"}
----
+## ::u-page-section{class="border-t border-default"}
+
 orientation: horizontal
 reverse: true
+
 ---
 
 ![Styleframe - Import Design Tokens into Figma](/assets/images/figma-import.png)
@@ -519,12 +551,14 @@ Sync Design Tokens with [Figma]{.text-primary}
 Export your Styleframe design tokens to the W3C DTCG format and import them into Figma. Keep your code and design files in perfect sync with full multi-mode support for light and dark themes.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-arrow-left-right
-    ---
-    #title
-    [Bidirectional]{.text-primary} Sync
+:::u-page-feature
+
+---
+
+## icon: i-lucide-arrow-left-right
+
+#title
+[Bidirectional]{.text-primary} Sync
 
     #description
     Import tokens into Figma or export Figma Variables back to JSON. Both directions preserve structure, aliases, and semantics.
@@ -542,35 +576,41 @@ Export your Styleframe design tokens to the W3C DTCG format and import them into
     :::
 
 #links
-    :::u-button
-    ---
-    color: neutral
-    icon: i-lucide-figma
-    to: /figma
-    variant: outline
-    ---
-    Learn more about the Figma Plugin
-    :::
+:::u-button
+
+---
+
+color: neutral
+icon: i-lucide-figma
+to: /figma
+variant: outline
+
+---
+
+Learn more about the Figma Plugin
+:::
 ::
 
 <!--
 AI Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-b border-default"}
----
+## ::u-page-section{class="border-t border-b border-default"}
+
 headline: Coming Soon
 orientation: horizontal
+
 ---
 
+## ::video{ class="rounded" }
 
-::video{ class="rounded" }
----
 autoplay: true
 loop: true
 poster: /assets/images/styleframe-ai.webp
 src: /assets/video/styleframe-ai.mp4
+
 ---
+
 ::
 
 #title
@@ -580,19 +620,23 @@ AI that Writes Type-safe Composable CSS
 Use styleframe for Agents. Choose from a variety of AI agents and start delegating work, from code generation to other technical tasks.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-image-up
-    target: _blank
-    to: /
-    ---
-    #title
-    Styleframe [MCP]{.text-primary}
+:::u-page-feature
+
+---
+
+icon: i-lucide-image-up
+target: \_blank
+to: /
+
+---
+
+#title
+Styleframe [MCP]{.text-primary}
 
     #description
     Connect styleframe to your favorite tools including Cursor, Claude, ChatGPT, and more.
     :::
-    
+
     :::u-page-feature
     ---
     icon: i-lucide-bot
@@ -607,15 +651,18 @@ Use styleframe for Agents. Choose from a variety of AI agents and start delegati
     :::
 
 #links
-    ::subscribe-modal
-    ---
-    cta: Join waitlist for styleframe AI
-    title: Join waitlist for styleframe AI
-    group: ai
-    ---
-    ::
-::
+::subscribe-modal
 
+---
+
+cta: Join waitlist for styleframe AI
+title: Join waitlist for styleframe AI
+group: ai
+
+---
+
+::
+::
 
 ::FluidResponsiveDesignDemo
 ::

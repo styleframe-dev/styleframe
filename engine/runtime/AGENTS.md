@@ -25,68 +25,68 @@ src/
 Creates a recipe function that generates class name strings from variant props.
 
 ```ts
-import { createRecipe } from '@styleframe/runtime';
+import { createRecipe } from "@styleframe/runtime";
 
-const button = createRecipe('button', {
-    base: {
-        borderWidth: 'thin',
-        cursor: 'pointer',
-    },
-    variants: {
-        color: {
-            primary: { background: 'primary', color: 'white' },
-            secondary: { background: 'secondary', color: 'white' },
-        },
-        size: {
-            sm: { padding: '1' },
-            md: { padding: '2' },
-        },
-    },
-    defaultVariants: {
-        color: 'primary',
-        size: 'md',
-    },
+const button = createRecipe("button", {
+	base: {
+		borderWidth: "thin",
+		cursor: "pointer",
+	},
+	variants: {
+		color: {
+			primary: { background: "primary", color: "white" },
+			secondary: { background: "secondary", color: "white" },
+		},
+		size: {
+			sm: { padding: "1" },
+			md: { padding: "2" },
+		},
+	},
+	defaultVariants: {
+		color: "primary",
+		size: "md",
+	},
 } as const satisfies RecipeRuntime);
 
 button({});
 // => "button _border-width:thin _cursor:pointer _background:primary _color:white _padding:2"
 
-button({ color: 'secondary', size: 'sm' });
+button({ color: "secondary", size: "sm" });
 // => "button _border-width:thin _cursor:pointer _background:secondary _color:white _padding:1"
 ```
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `name` | `string` | Recipe name, used as the first class in the output |
+| Parameter | Type            | Description                                           |
+| --------- | --------------- | ----------------------------------------------------- |
+| `name`    | `string`        | Recipe name, used as the first class in the output    |
 | `runtime` | `RecipeRuntime` | Pre-computed recipe object with resolved token values |
 
 **Returns:** `(props?: RecipeVariantProps<R>) => string` — A function that accepts optional variant props and returns a space-separated class name string.
 
 ### Exported Types
 
-| Type | Description |
-|------|-------------|
-| `RecipeVariantProps<R>` | Extracts variant prop types from a `RecipeRuntime`. Each variant key maps to a union of its option names. |
-| `RecipeRuntime` | Pre-computed recipe structure (re-exported from `@styleframe/core`) |
-| `RuntimeVariantDeclarationsBlock` | Object mapping utility names to resolved values |
-| `RuntimeModifierDeclarationsBlock` | Object mapping utility names to values within a modifier context |
-| `RuntimeVariantDeclarationsValue` | Union of primitive values or modifier blocks |
-| `PrimitiveTokenValue` | `string \| number \| boolean \| null \| undefined` |
-| `TokenValue` | Token value type (re-exported from `@styleframe/core`) |
-| `RuntimeVariantOptions` | `Record<string, RuntimeVariantDeclarationsBlock \| undefined>` |
+| Type                               | Description                                                                                               |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `RecipeVariantProps<R>`            | Extracts variant prop types from a `RecipeRuntime`. Each variant key maps to a union of its option names. |
+| `RecipeRuntime`                    | Pre-computed recipe structure (re-exported from `@styleframe/core`)                                       |
+| `RuntimeVariantDeclarationsBlock`  | Object mapping utility names to resolved values                                                           |
+| `RuntimeModifierDeclarationsBlock` | Object mapping utility names to values within a modifier context                                          |
+| `RuntimeVariantDeclarationsValue`  | Union of primitive values or modifier blocks                                                              |
+| `PrimitiveTokenValue`              | `string \| number \| boolean \| null \| undefined`                                                        |
+| `TokenValue`                       | Token value type (re-exported from `@styleframe/core`)                                                    |
+| `RuntimeVariantOptions`            | `Record<string, RuntimeVariantDeclarationsBlock \| undefined>`                                            |
 
 ## Class Name Format
 
 The runtime generates class names following this pattern:
 
-| Pattern | Example | When Used |
-|---------|---------|-----------|
-| `_utility:value` | `_padding:2` | Standard utility |
-| `_utility` | `_display` | Boolean `true` value (no value suffix) |
-| `_modifier:utility:value` | `_hover:background:darkblue` | Single modifier |
-| `_mod1:mod2:utility:value` | `_hover:focus:box-shadow:lg` | Compound modifier |
+| Pattern                    | Example                      | When Used                              |
+| -------------------------- | ---------------------------- | -------------------------------------- |
+| `_utility:value`           | `_padding:2`                 | Standard utility                       |
+| `_utility`                 | `_display`                   | Boolean `true` value (no value suffix) |
+| `_modifier:utility:value`  | `_hover:background:darkblue` | Single modifier                        |
+| `_mod1:mod2:utility:value` | `_hover:focus:box-shadow:lg` | Compound modifier                      |
 
 - CamelCase property names are converted to kebab-case: `borderWidth` → `_border-width:thin`
 - Boolean `true` omits the value: `{ display: true }` → `_display`
@@ -101,17 +101,15 @@ Declarations are applied in this order. Later declarations override earlier ones
 
 ```ts
 const runtime = {
-    base: { padding: 'default' },
-    variants: {
-        size: { sm: { padding: 'variant' } },
-    },
-    compoundVariants: [
-        { match: { size: 'sm' }, css: { padding: 'compound' } },
-    ],
+	base: { padding: "default" },
+	variants: {
+		size: { sm: { padding: "variant" } },
+	},
+	compoundVariants: [{ match: { size: "sm" }, css: { padding: "compound" } }],
 } as const satisfies RecipeRuntime;
 
-const recipe = createRecipe('el', runtime);
-recipe({ size: 'sm' });
+const recipe = createRecipe("el", runtime);
+recipe({ size: "sm" });
 // => "el _padding:compound"
 // compound overrides variant, which overrides base
 ```
@@ -122,24 +120,24 @@ Modifier blocks represent pseudo-selector styles (`:hover`, `:focus`, etc.). The
 
 ```ts
 const runtime = {
-    base: {
-        background: 'blue',
-        // Single modifier
-        hover: {
-            background: 'darkblue',
-        },
-        // Multiple modifiers in same block
-        focus: {
-            outline: 'ring',
-        },
-        // Compound modifier (colon-separated key)
-        'hover:focus': {
-            boxShadow: 'lg',
-        },
-    },
+	base: {
+		background: "blue",
+		// Single modifier
+		hover: {
+			background: "darkblue",
+		},
+		// Multiple modifiers in same block
+		focus: {
+			outline: "ring",
+		},
+		// Compound modifier (colon-separated key)
+		"hover:focus": {
+			boxShadow: "lg",
+		},
+	},
 } as const satisfies RecipeRuntime;
 
-const button = createRecipe('button', runtime);
+const button = createRecipe("button", runtime);
 button({});
 // => "button _background:blue _hover:background:darkblue _focus:outline:ring _hover:focus:box-shadow:lg"
 ```

@@ -107,9 +107,7 @@ const displayError = (error: Error) => {
 				</p>
 				<p>
 					Don't have an account?
-					<UButton variant="link" class="p-0" to="/signup">
-						Sign up </UButton
-					>.
+					<UButton variant="link" class="p-0" to="/signup"> Sign up </UButton>.
 				</p>
 			</template>
 		</UAuthForm>

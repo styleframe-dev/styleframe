@@ -14,16 +14,16 @@ Code generation engine that converts a `Styleframe` instance (from `@styleframe/
 
 ```ts
 import {
-  transpile,
-  createFile,
-  consumeCSS,
-  consumeTS,
-  DEFAULT_INDENT,
-  STATEMENT_AT_RULES,
-  STATEMENT_OR_BLOCK_AT_RULES,
-  defaultThemeSelectorFn,
-  defaultVariableNameFn,
-  defaultUtilitySelectorFn,
+	transpile,
+	createFile,
+	consumeCSS,
+	consumeTS,
+	DEFAULT_INDENT,
+	STATEMENT_AT_RULES,
+	STATEMENT_OR_BLOCK_AT_RULES,
+	defaultThemeSelectorFn,
+	defaultVariableNameFn,
+	defaultUtilitySelectorFn,
 } from "@styleframe/transpiler";
 ```
 
@@ -36,11 +36,11 @@ import {
 
 The transpiler uses a **consumer pattern** with three independent pipelines:
 
-| Pipeline | Output File | Purpose |
-|----------|-------------|---------|
-| **CSS** | `index.css` | Full stylesheet with variables, selectors, utilities, themes, at-rules |
-| **TS** | `index.ts` | Runtime recipe functions and exported selector constants |
-| **DTS** | `styleframe.d.ts`, `shims.d.ts` | Type declarations for the virtual modules (`virtual:styleframe`, `virtual:styleframe.css`) |
+| Pipeline | Output File                     | Purpose                                                                                    |
+| -------- | ------------------------------- | ------------------------------------------------------------------------------------------ |
+| **CSS**  | `index.css`                     | Full stylesheet with variables, selectors, utilities, themes, at-rules                     |
+| **TS**   | `index.ts`                      | Runtime recipe functions and exported selector constants                                   |
+| **DTS**  | `styleframe.d.ts`, `shims.d.ts` | Type declarations for the virtual modules (`virtual:styleframe`, `virtual:styleframe.css`) |
 
 ### Consumer Pipeline Flow
 
@@ -102,28 +102,32 @@ bare-specifier ambient module imported inside a `.vue` SFC.
 Main transpilation function. Converts a `Styleframe` instance into output files.
 
 ```ts
-import { transpile } from '@styleframe/transpiler';
+import { transpile } from "@styleframe/transpiler";
 
 const output = await transpile(instance);
 // output.files: [{ name: "index.css", content: "..." }, { name: "index.ts", content: "..." }]
 // transpile(instance, { type: "dts" }) → [{ name: "styleframe.d.ts" }, { name: "shims.d.ts" }]
 
 // Generate only CSS
-const cssOnly = await transpile(instance, { type: 'css' });
+const cssOnly = await transpile(instance, { type: "css" });
 
 // Custom consumers
 const custom = await transpile(instance, {
-  consumers: { css: customCSSConsumer, ts: customTSConsumer, dts: customDTSConsumer },
+	consumers: {
+		css: customCSSConsumer,
+		ts: customTSConsumer,
+		dts: customDTSConsumer,
+	},
 });
 ```
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `instance` | `Styleframe` | Compiled Styleframe instance with root AST |
-| `options.type` | `"css" \| "ts" \| "dts" \| "all"` | Output type (default: `"all"`) |
-| `options.consumers` | `{ css, ts, dts }` | Override default consumer functions |
+| Parameter           | Type                              | Description                                |
+| ------------------- | --------------------------------- | ------------------------------------------ |
+| `instance`          | `Styleframe`                      | Compiled Styleframe instance with root AST |
+| `options.type`      | `"css" \| "ts" \| "dts" \| "all"` | Output type (default: `"all"`)             |
+| `options.consumers` | `{ css, ts, dts }`                | Override default consumer functions        |
 
 **Returns:** `Promise<Output>` — `{ files: OutputFile[] }` where each file has `name` and `content` strings.
 
@@ -136,10 +140,10 @@ const custom = await transpile(instance, {
 Factory for creating output file objects.
 
 ```ts
-const file = createFile('index.css', 'body { margin: 0; }');
+const file = createFile("index.css", "body { margin: 0; }");
 // { name: "index.css", content: "body { margin: 0; }" }
 
-const empty = createFile('index.css');
+const empty = createFile("index.css");
 // { name: "index.css", content: "" }
 ```
 
@@ -150,7 +154,7 @@ const empty = createFile('index.css');
 CSS consumer function. Converts a Styleframe instance into a CSS string.
 
 ```ts
-import { consumeCSS } from '@styleframe/transpiler';
+import { consumeCSS } from "@styleframe/transpiler";
 
 const css = consumeCSS(instance, instance.options);
 ```
@@ -164,7 +168,7 @@ Handles all token types: variables (as CSS custom properties in `:root`), select
 TypeScript consumer function. Generates runtime code for recipes and exported selectors.
 
 ```ts
-import { consumeTS } from '@styleframe/transpiler';
+import { consumeTS } from "@styleframe/transpiler";
 
 const ts = consumeTS(instance, instance.options);
 ```
@@ -177,63 +181,66 @@ Only processes tokens with `_exportName` metadata (set by `@styleframe/loader`'s
 
 Low-level CSS syntax generation helpers used by the consumers.
 
-| Function | Purpose | Example Output |
-|----------|---------|----------------|
-| `genSafeVariableName(name)` | Sanitize variable names for CSS | `--color-primary` |
-| `genSafePropertyName(name)` | Convert camelCase to kebab-case | `border-width` |
-| `genReferenceVariable(name, fallback?)` | Create CSS variable reference | `var(--color-primary, fallback)` |
-| `genDeclareVariable(name, value)` | Declare a CSS variable | `--color-primary: value;` |
-| `genDeclaration(property, value)` | Create a CSS declaration | `padding: 1rem;` |
-| `genDeclarationsBlock(declarations)` | Wrap declarations in `{ ... }` | `{\n\tdeclaration;\n}` |
-| `genSelector(query, declarations)` | Create a CSS rule | `.class { ... }` |
-| `genAtRuleQuery(identifier, rule)` | Create at-rule prefix | `@media (min-width: 768px)` |
-| `genInlineAtRule(identifier, rule)` | Create statement at-rule | `@charset "utf-8";` |
+| Function                                | Purpose                         | Example Output                   |
+| --------------------------------------- | ------------------------------- | -------------------------------- |
+| `genSafeVariableName(name)`             | Sanitize variable names for CSS | `--color-primary`                |
+| `genSafePropertyName(name)`             | Convert camelCase to kebab-case | `border-width`                   |
+| `genReferenceVariable(name, fallback?)` | Create CSS variable reference   | `var(--color-primary, fallback)` |
+| `genDeclareVariable(name, value)`       | Declare a CSS variable          | `--color-primary: value;`        |
+| `genDeclaration(property, value)`       | Create a CSS declaration        | `padding: 1rem;`                 |
+| `genDeclarationsBlock(declarations)`    | Wrap declarations in `{ ... }`  | `{\n\tdeclaration;\n}`           |
+| `genSelector(query, declarations)`      | Create a CSS rule               | `.class { ... }`                 |
+| `genAtRuleQuery(identifier, rule)`      | Create at-rule prefix           | `@media (min-width: 768px)`      |
+| `genInlineAtRule(identifier, rule)`     | Create statement at-rule        | `@charset "utf-8";`              |
 
 ---
 
 ### Utility Functions
 
-| Function | Description |
-|----------|-------------|
-| `addIndentToLine(line)` | Add default indent (tab) to a line |
-| `indentLines(lines)` | Indent each line in an array |
-| `toCamelCase(str)` | Convert string to camelCase (via `scule`) |
-| `toKebabCase(str)` | Convert string to kebab-case (via `scule`) |
-| `isUppercase(char)` | Check if a character is uppercase |
+| Function                | Description                                |
+| ----------------------- | ------------------------------------------ |
+| `addIndentToLine(line)` | Add default indent (tab) to a line         |
+| `indentLines(lines)`    | Indent each line in an array               |
+| `toCamelCase(str)`      | Convert string to camelCase (via `scule`)  |
+| `toKebabCase(str)`      | Convert string to kebab-case (via `scule`) |
+| `isUppercase(char)`     | Check if a character is uppercase          |
 
 ---
 
 ### Constants
 
-| Constant | Value | Description |
-|----------|-------|-------------|
-| `DEFAULT_INDENT` | `"\t"` | Default indentation character |
-| `STATEMENT_AT_RULES` | `["charset", "import", "namespace"]` | At-rules that output as statements (no block) |
-| `STATEMENT_OR_BLOCK_AT_RULES` | `["layer"]` | At-rules that can be statement or block |
+| Constant                      | Value                                | Description                                   |
+| ----------------------------- | ------------------------------------ | --------------------------------------------- |
+| `DEFAULT_INDENT`              | `"\t"`                               | Default indentation character                 |
+| `STATEMENT_AT_RULES`          | `["charset", "import", "namespace"]` | At-rules that output as statements (no block) |
+| `STATEMENT_OR_BLOCK_AT_RULES` | `["layer"]`                          | At-rules that can be statement or block       |
 
 ---
 
 ### Default Functions
 
-| Function | Description |
-|----------|-------------|
-| `defaultThemeSelectorFn` | Returns `[data-theme="name"]` for a given theme name |
-| `defaultVariableNameFn` | Converts dot-notation to double-dash: `color.primary` → `color--primary` |
-| `defaultUtilitySelectorFn` | Re-exported from `@styleframe/core` |
+| Function                   | Description                                                              |
+| -------------------------- | ------------------------------------------------------------------------ |
+| `defaultThemeSelectorFn`   | Returns `[data-theme="name"]` for a given theme name                     |
+| `defaultVariableNameFn`    | Converts dot-notation to double-dash: `color.primary` → `color--primary` |
+| `defaultUtilitySelectorFn` | Re-exported from `@styleframe/core`                                      |
 
 ## Types
 
 ```ts
 type OutputFile = { name: string; content: string };
 type Output = { files: OutputFile[] };
-type ConsumeFunction = (instance: unknown, options: StyleframeOptions) => string;
+type ConsumeFunction = (
+	instance: unknown,
+	options: StyleframeOptions,
+) => string;
 type TranspileOptions = {
-  type?: "css" | "ts" | "dts" | "all";
-  consumers?: {
-    css: ConsumeFunction;
-    ts: ConsumeFunction;
-    dts: ConsumeFunction;
-  };
+	type?: "css" | "ts" | "dts" | "all";
+	consumers?: {
+		css: ConsumeFunction;
+		ts: ConsumeFunction;
+		dts: ConsumeFunction;
+	};
 };
 ```
 
@@ -270,16 +277,16 @@ The CSS consumer categorizes at-rules into two groups:
 
 ## Source Files
 
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Re-exports all public API |
-| `src/transpile.ts` | Main `transpile()` function |
-| `src/types.ts` | Output and consumer types |
-| `src/constants.ts` | At-rule categorization constants |
-| `src/defaults.ts` | Default naming functions |
-| `src/utils.ts` | String manipulation helpers |
-| `src/license.ts` | License watermark injection |
-| `src/generator/*.ts` | CSS syntax generation (9 files) |
-| `src/consume/css/*.ts` | CSS output consumers (13 files) |
-| `src/consume/ts/*.ts` | TypeScript output consumers (4 files) |
+| File                   | Purpose                                    |
+| ---------------------- | ------------------------------------------ |
+| `src/index.ts`         | Re-exports all public API                  |
+| `src/transpile.ts`     | Main `transpile()` function                |
+| `src/types.ts`         | Output and consumer types                  |
+| `src/constants.ts`     | At-rule categorization constants           |
+| `src/defaults.ts`      | Default naming functions                   |
+| `src/utils.ts`         | String manipulation helpers                |
+| `src/license.ts`       | License watermark injection                |
+| `src/generator/*.ts`   | CSS syntax generation (9 files)            |
+| `src/consume/css/*.ts` | CSS output consumers (13 files)            |
+| `src/consume/ts/*.ts`  | TypeScript output consumers (4 files)      |
 | `src/consume/dts/*.ts` | TypeScript declaration consumers (4 files) |
