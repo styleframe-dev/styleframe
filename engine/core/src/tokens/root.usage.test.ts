@@ -149,9 +149,7 @@ describe("root._usage.variables collection", () => {
 		it("tracks a single @-reference in a static string", () => {
 			variable("color.primary", "#006cff");
 
-			css`
-				@color.primary;
-			`;
+			css`@color.primary`;
 
 			expect(trackedVariables(root)).toEqual(["color.primary"]);
 		});
@@ -167,9 +165,7 @@ describe("root._usage.variables collection", () => {
 		it("tracks Variable interpolations via ref()", () => {
 			const colorPrimary = variable("color.primary", "#006cff");
 
-			css`
-				color: ${colorPrimary};
-			`;
+			css`color: ${colorPrimary}`;
 
 			expect(trackedVariables(root)).toEqual(["color.primary"]);
 		});
@@ -178,9 +174,7 @@ describe("root._usage.variables collection", () => {
 			variable("color.primary", "#006cff");
 
 			const dynamic = "@color.primary";
-			css`
-				color: ${dynamic};
-			`;
+			css`color: ${dynamic}`;
 
 			expect(trackedVariables(root)).toEqual(["color.primary"]);
 		});

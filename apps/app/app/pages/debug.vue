@@ -105,7 +105,9 @@ const copyToClipboard = async () => {
 							⚠️ baseUrl is empty - OAuth will likely fail in production
 						</li>
 						<li
-							v-else-if="runtimeConfig.public.baseUrl.includes('localhost')"
+							v-else-if="
+								runtimeConfig.public.baseUrl.includes('localhost')
+							"
 							class="text-yellow-600 dark:text-yellow-400"
 						>
 							⚠️ baseUrl points to localhost

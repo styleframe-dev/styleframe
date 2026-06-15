@@ -29,9 +29,7 @@ const props = withDefaults(
 <template>
 	<button
 		type="button"
-		:class="
-			button({ color: props.color, variant: props.variant, size: props.size })
-		"
+		:class="button({ color: props.color, variant: props.variant, size: props.size })"
 		:disabled="props.disabled"
 	>
 		<slot>{{ props.label }}</slot>

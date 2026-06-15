@@ -25,9 +25,7 @@ const aligns = ["start", "center", "end"] as const;
 					</MediaFigure>
 					<MediaBody>
 						<MediaTitle
-							>{{
-								align.charAt(0).toUpperCase() + align.slice(1)
-							}}
+							>{{ align.charAt(0).toUpperCase() + align.slice(1) }}
 							aligned</MediaTitle
 						>
 						<p class="_margin:0">

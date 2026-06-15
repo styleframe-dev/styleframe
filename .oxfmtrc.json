@@ -11,5 +11,6 @@
 	"arrowParens": "always",
 	"bracketSameLine": false,
 	"bracketSpacing": true,
+	"embeddedLanguageFormatting": "off",
 	"ignorePatterns": ["testing/benchmark/src/tailwind/**"]
 }

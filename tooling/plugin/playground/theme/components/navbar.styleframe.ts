@@ -26,13 +26,9 @@ selector(".navbar", {
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "space-between",
-	padding: css`
-		${ref(spacingMd)} ${ref(spacingXl)}
-	`,
+	padding: css`${ref(spacingMd)} ${ref(spacingXl)}`,
 	backgroundColor: ref(colorBackground),
-	borderBottom: css`
-		${ref(borderWidthThin)} solid ${ref(colorBorder)}
-	`,
+	borderBottom: css`${ref(borderWidthThin)} solid ${ref(colorBorder)}`,
 	boxShadow: ref(boxShadowXs),
 });
 
@@ -54,9 +50,7 @@ selector(".navbar__link", {
 	fontWeight: ref(fontWeightMedium),
 	color: ref(colorTextMuted),
 	textDecoration: "none",
-	padding: css`
-		${ref(spacingXs)} ${ref(spacingSm)}
-	`,
+	padding: css`${ref(spacingXs)} ${ref(spacingSm)}`,
 	borderRadius: "4px",
 	transition: "color 150ms ease, background-color 150ms ease",
 	"&:hover": {

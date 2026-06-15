@@ -41,11 +41,6 @@ watch(
 		:srcdoc="srcdoc"
 		sandbox="allow-scripts allow-same-origin"
 		title="Styleframe preview"
-		:style="{
-			width: '100%',
-			height: '100%',
-			border: 'none',
-			background: 'transparent',
-		}"
+		:style="{ width: '100%', height: '100%', border: 'none', background: 'transparent' }"
 	/>
 </template>

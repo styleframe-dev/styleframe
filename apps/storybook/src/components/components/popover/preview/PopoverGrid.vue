@@ -25,9 +25,7 @@ const variants = ["solid", "soft", "subtle"] as const;
 						<PopoverHeader :color="color" :variant="variant">
 							<PopoverTitle
 								>{{ variant.charAt(0).toUpperCase() + variant.slice(1) }}
-								{{
-									color.charAt(0).toUpperCase() + color.slice(1)
-								}}</PopoverTitle
+								{{ color.charAt(0).toUpperCase() + color.slice(1) }}</PopoverTitle
 							>
 						</PopoverHeader>
 						<PopoverBody>

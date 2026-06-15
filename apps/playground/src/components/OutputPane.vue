@@ -58,23 +58,13 @@ const viewport = ref<"mobile" | "tablet" | "desktop">("desktop");
 			</div>
 			<div
 				v-show="active === 'css'"
-				style="
-					display: flex;
-					flex-direction: column;
-					height: 100%;
-					min-height: 0;
-				"
+				style="display: flex; flex-direction: column; height: 100%; min-height: 0"
 			>
 				<CodeOutput :value="props.css" language="css" />
 			</div>
 			<div
 				v-show="active === 'js'"
-				style="
-					display: flex;
-					flex-direction: column;
-					height: 100%;
-					min-height: 0;
-				"
+				style="display: flex; flex-direction: column; height: 100%; min-height: 0"
 			>
 				<CodeOutput :value="props.js" language="typescript" />
 			</div>

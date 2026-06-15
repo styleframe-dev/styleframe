@@ -78,9 +78,9 @@ const viewportLabel = computed(() => {
 			<main
 				class="h-[420px] pt-8 flex flex-col gap-8 max-sm:px-0"
 				:class="{
-					'px-0': screenWidth < 576,
-					'px-8': screenWidth >= 576,
-				}"
+          'px-0': screenWidth < 576,
+          'px-8': screenWidth >= 576,
+        }"
 				:style="fluidFontSizes"
 			>
 				<h1
@@ -170,9 +170,9 @@ const viewportLabel = computed(() => {
 
 <style scoped>
 .fluid-responsive-design-demo {
-	--fluid-h1-size: 24px;
-	--fluid-p-size: 16px;
-	--fluid-card-size: 14px;
-	--fluid-breakpoint: 0;
+  --fluid-h1-size: 24px;
+  --fluid-p-size: 16px;
+  --fluid-card-size: 14px;
+  --fluid-breakpoint: 0;
 }
 </style>

@@ -45,9 +45,10 @@ const classes = computed(() =>
 		</slot>
 		<CalloutContent>
 			<CalloutTitle v-if="props.title">{{ props.title }}</CalloutTitle>
-			<CalloutDescription v-if="props.description">{{
-				props.description
-			}}</CalloutDescription>
+			<CalloutDescription
+				v-if="props.description"
+				>{{ props.description }}</CalloutDescription
+			>
 			<slot />
 		</CalloutContent>
 		<slot v-if="dismissible" name="dismiss"> ✖ </slot>

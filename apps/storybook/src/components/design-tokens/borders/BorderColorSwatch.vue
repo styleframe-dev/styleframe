@@ -11,10 +11,7 @@ const props = defineProps<{
 <template>
 	<SwatchCard :name="name">
 		<div
-			:class="[
-				'border-color-swatch__preview',
-				borderColorSwatch({ variant: value }),
-			]"
+			:class="['border-color-swatch__preview', borderColorSwatch({ variant: value })]"
 		/>
 	</SwatchCard>
 </template>

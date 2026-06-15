@@ -19,9 +19,7 @@ const {
 selector(".border-radius-swatch__preview", {
 	width: "calc(@spacing * 6)",
 	height: "calc(@spacing * 6)",
-	background: css`
-		@color.surface;
-	`,
+	background: css`@color.surface`,
 	border: css`1px solid @color.primary`,
 });
 

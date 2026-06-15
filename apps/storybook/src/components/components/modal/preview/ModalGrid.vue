@@ -18,15 +18,7 @@ const variants = ["solid", "soft", "subtle"] as const;
 				<div
 					v-for="color in colors"
 					:key="`${variant}-${color}`"
-					style="
-						position: relative;
-						background: rgba(0, 0, 0, 0.75);
-						border-radius: 8px;
-						padding: 24px;
-						display: flex;
-						align-items: center;
-						justify-content: center;
-					"
+					style="position: relative; background: rgba(0, 0, 0, 0.75); border-radius: 8px; padding: 24px; display: flex; align-items: center; justify-content: center;"
 				>
 					<Modal :color="color" :variant="variant" style="max-width: 300px">
 						<ModalHeader :color="color" :variant="variant">

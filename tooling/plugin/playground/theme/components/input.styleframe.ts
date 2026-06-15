@@ -38,9 +38,7 @@ selector(".input-group__label", {
 
 selector(".input-group__input", {
 	width: "100%",
-	padding: css`
-		${ref(spacingSm)} ${ref(spacingMd)}
-	`,
+	padding: css`${ref(spacingSm)} ${ref(spacingMd)}`,
 	fontSize: ref(fontSizeMd),
 	lineHeight: ref(lineHeightNormal),
 	color: ref(colorText),
@@ -76,9 +74,7 @@ selector(".input-group__helper", {
 
 selector(".input-group__error", {
 	fontSize: ref(fontSizeXs),
-	color: css`
-		${ref(colorError)}
-	`,
+	color: css`${ref(colorError)}`,
 	margin: "0",
 });
 

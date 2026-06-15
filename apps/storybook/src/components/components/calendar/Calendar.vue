@@ -305,9 +305,7 @@ function weekNumber(row: Cell[]): number {
 									:today="!cell.outside && cell.iso === props.today"
 									:selected="!cell.outside && cell.iso === props.selected"
 									:booked="!cell.outside && props.booked.includes(cell.iso)"
-									:disabled="
-										!cell.outside && props.disabledDays.includes(cell.iso)
-									"
+									:disabled="!cell.outside && props.disabledDays.includes(cell.iso)"
 									:range="rangeOf(cell)"
 								>
 									{{ cell.day }}

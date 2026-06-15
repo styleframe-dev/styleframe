@@ -24,15 +24,7 @@ const sizeWidths: Record<string, string> = {
 		<div v-for="size in sizes" :key="size">
 			<div class="modal-label">{{ sizeTitles[size] }} ({{ size }})</div>
 			<div
-				style="
-					position: relative;
-					background: rgba(0, 0, 0, 0.75);
-					border-radius: 8px;
-					padding: 24px;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-				"
+				style="position: relative; background: rgba(0, 0, 0, 0.75); border-radius: 8px; padding: 24px; display: flex; align-items: center; justify-content: center;"
 			>
 				<Modal
 					:size="size"

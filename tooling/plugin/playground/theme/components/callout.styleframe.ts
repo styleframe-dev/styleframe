@@ -33,9 +33,7 @@ selector(".callout", {
 	borderStyle: "solid",
 	borderColor: "transparent",
 	lineHeight: ref(lineHeightNormal),
-	animation: css`
-		${fadeIn.name} 200ms ease-out
-	`,
+	animation: css`${fadeIn.name} 200ms ease-out`,
 	"@media (prefers-reduced-motion: reduce)": {
 		animation: "none",
 	},
