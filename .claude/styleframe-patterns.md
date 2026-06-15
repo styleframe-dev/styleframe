@@ -7,18 +7,20 @@
 ALWAYS use `{ default: true }` and return the variables:
 
 ```ts
-import type { Styleframe } from 'styleframe';
+import type { Styleframe } from "styleframe";
 
 export function useColorVariables(s: Styleframe) {
-    const { variable, ref } = s;
+	const { variable, ref } = s;
 
-    const colorPrimary = variable('color.primary', '#006cff', { default: true });
-    const colorSecondary = variable('color.secondary', '#6c757d', { default: true });
-    const colorSuccess = variable('color.success', '#28a745', { default: true });
-    const colorError = variable('color.error', '#dc3545', { default: true });
-    const colorWhite = variable('color.white', '#ffffff', { default: true });
+	const colorPrimary = variable("color.primary", "#006cff", { default: true });
+	const colorSecondary = variable("color.secondary", "#6c757d", {
+		default: true,
+	});
+	const colorSuccess = variable("color.success", "#28a745", { default: true });
+	const colorError = variable("color.error", "#dc3545", { default: true });
+	const colorWhite = variable("color.white", "#ffffff", { default: true });
 
-    return { colorPrimary, colorSecondary, colorSuccess, colorError, colorWhite };
+	return { colorPrimary, colorSecondary, colorSuccess, colorError, colorWhite };
 }
 ```
 
@@ -27,37 +29,39 @@ export function useColorVariables(s: Styleframe) {
 Import variable composables and use `ref()`:
 
 ```ts
-import type { Styleframe } from 'styleframe';
-import { useColorVariables } from './useColorVariables';
-import { useSpacingVariables } from './useSpacingVariables';
+import type { Styleframe } from "styleframe";
+import { useColorVariables } from "./useColorVariables";
+import { useSpacingVariables } from "./useSpacingVariables";
 
 export function useButtonSelectors(s: Styleframe) {
-    const { selector, ref, css } = s;
-    const { colorPrimary, colorWhite } = useColorVariables(s);
-    const { spacingMd, spacingLg } = useSpacingVariables(s);
+	const { selector, ref, css } = s;
+	const { colorPrimary, colorWhite } = useColorVariables(s);
+	const { spacingMd, spacingLg } = useSpacingVariables(s);
 
-    selector('.button', {
-        backgroundColor: ref(colorPrimary),
-        color: ref(colorWhite),
-        padding: css`${ref(spacingMd)} ${ref(spacingLg)}`,
-        border: 'none',
-        borderRadius: '4px',
-        cursor: 'pointer',
+	selector(".button", {
+		backgroundColor: ref(colorPrimary),
+		color: ref(colorWhite),
+		padding: css`
+			${ref(spacingMd)} ${ref(spacingLg)}
+		`,
+		border: "none",
+		borderRadius: "4px",
+		cursor: "pointer",
 
-        '&:hover': {
-            opacity: 0.9,
-        },
+		"&:hover": {
+			opacity: 0.9,
+		},
 
-        '&:focus': {
-            outline: '2px solid',
-            outlineOffset: '2px',
-        },
+		"&:focus": {
+			outline: "2px solid",
+			outlineOffset: "2px",
+		},
 
-        '&:disabled': {
-            opacity: 0.5,
-            cursor: 'not-allowed',
-        },
-    });
+		"&:disabled": {
+			opacity: 0.5,
+			cursor: "not-allowed",
+		},
+	});
 }
 ```
 
@@ -66,31 +70,32 @@ export function useButtonSelectors(s: Styleframe) {
 Create AND invoke the utility creator:
 
 ```ts
-import type { Styleframe } from 'styleframe';
-import { useSpacingVariables } from './useSpacingVariables';
+import type { Styleframe } from "styleframe";
+import { useSpacingVariables } from "./useSpacingVariables";
 
 export function useSpacingUtilities(s: Styleframe) {
-    const { utility, ref } = s;
-    const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl } = useSpacingVariables(s);
+	const { utility, ref } = s;
+	const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl } =
+		useSpacingVariables(s);
 
-    const spacingMap = {
-        xs: ref(spacingXs),
-        sm: ref(spacingSm),
-        md: ref(spacingMd),
-        lg: ref(spacingLg),
-        xl: ref(spacingXl),
-    };
+	const spacingMap = {
+		xs: ref(spacingXs),
+		sm: ref(spacingSm),
+		md: ref(spacingMd),
+		lg: ref(spacingLg),
+		xl: ref(spacingXl),
+	};
 
-    const createPadding = utility('padding', ({ value }) => ({ padding: value }));
-    const createMargin = utility('margin', ({ value }) => ({ margin: value }));
-    const createGap = utility('gap', ({ value }) => ({ gap: value }));
+	const createPadding = utility("padding", ({ value }) => ({ padding: value }));
+	const createMargin = utility("margin", ({ value }) => ({ margin: value }));
+	const createGap = utility("gap", ({ value }) => ({ gap: value }));
 
-    // IMPORTANT: Invoke the creators
-    createPadding(spacingMap);
-    createMargin(spacingMap);
-    createGap(spacingMap);
+	// IMPORTANT: Invoke the creators
+	createPadding(spacingMap);
+	createMargin(spacingMap);
+	createGap(spacingMap);
 
-    return { createPadding, createMargin, createGap };
+	return { createPadding, createMargin, createGap };
 }
 ```
 
@@ -99,33 +104,40 @@ export function useSpacingUtilities(s: Styleframe) {
 Use theme composables for spacing utilities with multiplier support:
 
 ```ts
-import type { Styleframe } from 'styleframe';
-import { useSpacingDesignTokens } from '@styleframe/theme';
-import { useMarginUtility, usePaddingUtility, useGapUtility } from '@styleframe/theme';
+import type { Styleframe } from "styleframe";
+import { useSpacingDesignTokens } from "@styleframe/theme";
+import {
+	useMarginUtility,
+	usePaddingUtility,
+	useGapUtility,
+} from "@styleframe/theme";
 
 export function useSpacingUtilities(s: Styleframe) {
-    const { ref } = s;
-    const { spacing, spacingSm, spacingMd, spacingLg } = useSpacingDesignTokens(s, {
-        default: '1rem',
-        sm: '0.5rem',
-        md: '1rem',
-        lg: '1.5rem',
-    });
+	const { ref } = s;
+	const { spacing, spacingSm, spacingMd, spacingLg } = useSpacingDesignTokens(
+		s,
+		{
+			default: "1rem",
+			sm: "0.5rem",
+			md: "1rem",
+			lg: "1.5rem",
+		},
+	);
 
-    // Create utilities with named values
-    const createMargin = useMarginUtility(s, {
-        sm: ref(spacingSm),
-        md: ref(spacingMd),
-        lg: ref(spacingLg),
-    });
+	// Create utilities with named values
+	const createMargin = useMarginUtility(s, {
+		sm: ref(spacingSm),
+		md: ref(spacingMd),
+		lg: ref(spacingLg),
+	});
 
-    // Add multiplier values for flexible spacing (with @ prefix)
-    createMargin(["@1.5", "@2", "@0.5", "@-1"]);
+	// Add multiplier values for flexible spacing (with @ prefix)
+	createMargin(["@1.5", "@2", "@0.5", "@-1"]);
 
-    // Generates: _margin:sm, _margin:md, _margin:lg (named)
-    //            _margin:1.5, _margin:2, etc. (multipliers with calc())
+	// Generates: _margin:sm, _margin:md, _margin:lg (named)
+	//            _margin:1.5, _margin:2, etc. (multipliers with calc())
 
-    return { createMargin };
+	return { createMargin };
 }
 ```
 
@@ -134,82 +146,117 @@ export function useSpacingUtilities(s: Styleframe) {
 ## Complete Design System Setup
 
 ```ts
-import { styleframe } from 'styleframe';
+import { styleframe } from "styleframe";
 import {
-    useColorDesignTokens, useColorLevelDesignTokens, useColorShadeDesignTokens,
-    useSpacingDesignTokens, useMultiplierDesignTokens,
-    useScaleDesignTokens, useScalePowersDesignTokens,
-    useFontFamilyDesignTokens, useFontSizeDesignTokens, useFontWeightDesignTokens, useLineHeightDesignTokens,
-    useBreakpointDesignTokens,
-    useBorderRadiusDesignTokens,
-    scaleValues, colorLevelValues
-} from '@styleframe/theme';
+	useColorDesignTokens,
+	useColorLevelDesignTokens,
+	useColorShadeDesignTokens,
+	useSpacingDesignTokens,
+	useMultiplierDesignTokens,
+	useScaleDesignTokens,
+	useScalePowersDesignTokens,
+	useFontFamilyDesignTokens,
+	useFontSizeDesignTokens,
+	useFontWeightDesignTokens,
+	useLineHeightDesignTokens,
+	useBreakpointDesignTokens,
+	useBorderRadiusDesignTokens,
+	scaleValues,
+	colorLevelValues,
+} from "@styleframe/theme";
 
 const s = styleframe();
 const { variable, ref, selector, utility, modifier, recipe, theme, css } = s;
 
 // 1. SCALES - Foundation for proportional sizing
-const { scale } = useScaleDesignTokens(s, { ...scaleValues, default: '@scale.minor-third' });
-const scalePowers = useScalePowersDesignTokens(s, scale, [-2, -1, 0, 1, 2, 3, 4, 5]);
+const { scale } = useScaleDesignTokens(s, {
+	...scaleValues,
+	default: "@scale.minor-third",
+});
+const scalePowers = useScalePowersDesignTokens(
+	s,
+	scale,
+	[-2, -1, 0, 1, 2, 3, 4, 5],
+);
 
 // 2. COLORS - Base colors with lightness variants
-const { colorPrimary, colorSecondary, colorSuccess, colorError } = useColorDesignTokens(s, {
-    primary: '#006cff',
-    secondary: '#6c757d',
-    success: '#28a745',
-    error: '#dc3545',
-});
+const { colorPrimary, colorSecondary, colorSuccess, colorError } =
+	useColorDesignTokens(s, {
+		primary: "#006cff",
+		secondary: "#6c757d",
+		success: "#28a745",
+		error: "#dc3545",
+	});
 
-const primaryLevels = useColorLevelDesignTokens(s, colorPrimary, colorLevelValues);
-const { colorPrimaryShade100, colorPrimaryShade200 } = useColorShadeDesignTokens(s, colorPrimary);
+const primaryLevels = useColorLevelDesignTokens(
+	s,
+	colorPrimary,
+	colorLevelValues,
+);
+const { colorPrimaryShade100, colorPrimaryShade200 } =
+	useColorShadeDesignTokens(s, colorPrimary);
 
 // 3. SPACING - Scale-based spacing
-const { spacing } = useSpacingDesignTokens(s, { default: '1rem' });
-const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl } = useMultiplierDesignTokens(s, spacing, {
-    xs: scalePowers[-2],
-    sm: scalePowers[-1],
-    md: scalePowers[0],
-    lg: scalePowers[1],
-    xl: scalePowers[2],
-});
+const { spacing } = useSpacingDesignTokens(s, { default: "1rem" });
+const { spacingXs, spacingSm, spacingMd, spacingLg, spacingXl } =
+	useMultiplierDesignTokens(s, spacing, {
+		xs: scalePowers[-2],
+		sm: scalePowers[-1],
+		md: scalePowers[0],
+		lg: scalePowers[1],
+		xl: scalePowers[2],
+	});
 
 // 4. TYPOGRAPHY - Scale-based font sizes
 const { fontFamily } = useFontFamilyDesignTokens(s);
-const { fontSize } = useFontSizeDesignTokens(s, { default: '1rem' });
-const { fontSizeSm, fontSizeMd, fontSizeLg, fontSizeXl } = useMultiplierDesignTokens(s, fontSize, {
-    sm: scalePowers[-1],
-    md: scalePowers[0],
-    lg: scalePowers[1],
-    xl: scalePowers[2],
-});
-const { fontWeightNormal, fontWeightSemibold, fontWeightBold } = useFontWeightDesignTokens(s);
+const { fontSize } = useFontSizeDesignTokens(s, { default: "1rem" });
+const { fontSizeSm, fontSizeMd, fontSizeLg, fontSizeXl } =
+	useMultiplierDesignTokens(s, fontSize, {
+		sm: scalePowers[-1],
+		md: scalePowers[0],
+		lg: scalePowers[1],
+		xl: scalePowers[2],
+	});
+const { fontWeightNormal, fontWeightSemibold, fontWeightBold } =
+	useFontWeightDesignTokens(s);
 const { lineHeightTight, lineHeightNormal } = useLineHeightDesignTokens(s);
 
 // 5. BREAKPOINTS
-const { breakpointSm, breakpointMd, breakpointLg } = useBreakpointDesignTokens(s);
+const { breakpointSm, breakpointMd, breakpointLg } =
+	useBreakpointDesignTokens(s);
 
 // 6. BORDERS
-const { borderRadiusSm, borderRadiusMd, borderRadiusLg } = useBorderRadiusDesignTokens(s, {
-    sm: '4px',
-    md: '8px',
-    lg: '12px',
-});
+const { borderRadiusSm, borderRadiusMd, borderRadiusLg } =
+	useBorderRadiusDesignTokens(s, {
+		sm: "4px",
+		md: "8px",
+		lg: "12px",
+	});
 
 // 7. MODIFIERS - For utilities
-const hover = modifier('hover', ({ declarations }) => ({ '&:hover': declarations }));
-const focus = modifier('focus', ({ declarations }) => ({ '&:focus': declarations }));
+const hover = modifier("hover", ({ declarations }) => ({
+	"&:hover": declarations,
+}));
+const focus = modifier("focus", ({ declarations }) => ({
+	"&:focus": declarations,
+}));
 
 // 8. UTILITIES
-const createBackground = utility('background', ({ value }) => ({ backgroundColor: value }));
-createBackground({
-    primary: ref(colorPrimary),
-    secondary: ref(colorSecondary),
-}, [hover]);
+const createBackground = utility("background", ({ value }) => ({
+	backgroundColor: value,
+}));
+createBackground(
+	{
+		primary: ref(colorPrimary),
+		secondary: ref(colorSecondary),
+	},
+	[hover],
+);
 
 // 9. DARK THEME
-theme('dark', (ctx) => {
-    ctx.variable(colorPrimary, '#60a5fa');
-    ctx.variable(colorSecondary, '#94a3b8');
+theme("dark", (ctx) => {
+	ctx.variable(colorPrimary, "#60a5fa");
+	ctx.variable(colorSecondary, "#94a3b8");
 });
 
 export default s;
@@ -222,16 +269,16 @@ export default s;
 ### Mobile-First Media Queries
 
 ```ts
-selector('.container', {
-    padding: ref(spacingSm),
+selector(".container", {
+	padding: ref(spacingSm),
 
-    '@media (min-width: 768px)': {
-        padding: ref(spacingMd),
-    },
+	"@media (min-width: 768px)": {
+		padding: ref(spacingMd),
+	},
 
-    '@media (min-width: 1024px)': {
-        padding: ref(spacingLg),
-    },
+	"@media (min-width: 1024px)": {
+		padding: ref(spacingLg),
+	},
 });
 ```
 
@@ -240,12 +287,9 @@ selector('.container', {
 ```ts
 const breakpointValues = { sm: 640, md: 768, lg: 1024 };
 
-const responsive = modifier(
-    ['sm', 'md', 'lg'],
-    ({ key, declarations }) => ({
-        [`@media (min-width: ${breakpointValues[key]}px)`]: declarations,
-    })
-);
+const responsive = modifier(["sm", "md", "lg"], ({ key, declarations }) => ({
+	[`@media (min-width: ${breakpointValues[key]}px)`]: declarations,
+}));
 
 // Usage: creates _sm:padding:md, _md:padding:md, _lg:padding:md
 createPadding({ md: ref(spacingMd) }, [responsive]);
@@ -258,17 +302,19 @@ createPadding({ md: ref(spacingMd) }, [responsive]);
 ### Respecting Reduced Motion
 
 ```ts
-const fadeIn = keyframes('fade-in', {
-    '0%': { opacity: 0, transform: 'translateY(10px)' },
-    '100%': { opacity: 1, transform: 'translateY(0)' },
+const fadeIn = keyframes("fade-in", {
+	"0%": { opacity: 0, transform: "translateY(10px)" },
+	"100%": { opacity: 1, transform: "translateY(0)" },
 });
 
-selector('.animated', {
-    animation: css`${fadeIn.rule} 0.3s ease-out`,
+selector(".animated", {
+	animation: css`
+		${fadeIn.rule} 0.3s ease-out
+	`,
 
-    '@media (prefers-reduced-motion: reduce)': {
-        animation: 'none',
-    },
+	"@media (prefers-reduced-motion: reduce)": {
+		animation: "none",
+	},
 });
 ```
 
@@ -278,15 +324,15 @@ ALWAYS animate only `transform` and `opacity` when possible:
 
 ```ts
 // GOOD - GPU accelerated
-const slideIn = keyframes('slide-in', {
-    '0%': { opacity: 0, transform: 'translateX(-100%)' },
-    '100%': { opacity: 1, transform: 'translateX(0)' },
+const slideIn = keyframes("slide-in", {
+	"0%": { opacity: 0, transform: "translateX(-100%)" },
+	"100%": { opacity: 1, transform: "translateX(0)" },
 });
 
 // AVOID - Causes layout/paint
-const badAnimation = keyframes('bad', {
-    '0%': { width: '0%', left: '0' },
-    '100%': { width: '100%', left: '100px' },
+const badAnimation = keyframes("bad", {
+	"0%": { width: "0%", left: "0" },
+	"100%": { width: "100%", left: "100px" },
 });
 ```
 
@@ -297,19 +343,21 @@ const badAnimation = keyframes('bad', {
 ### Complete Theme Override
 
 ```ts
-const colorBackground = variable('color.background', '#ffffff', { default: true });
-const colorText = variable('color.text', '#000000', { default: true });
-const colorBorder = variable('color.border', '#e5e7eb', { default: true });
+const colorBackground = variable("color.background", "#ffffff", {
+	default: true,
+});
+const colorText = variable("color.text", "#000000", { default: true });
+const colorBorder = variable("color.border", "#e5e7eb", { default: true });
 
-theme('dark', (ctx) => {
-    ctx.variable(colorBackground, '#18181b');
-    ctx.variable(colorText, '#ffffff');
-    ctx.variable(colorBorder, '#3f3f46');
+theme("dark", (ctx) => {
+	ctx.variable(colorBackground, "#18181b");
+	ctx.variable(colorText, "#ffffff");
+	ctx.variable(colorBorder, "#3f3f46");
 
-    // Selector overrides for specific components
-    ctx.selector('.card', {
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
-    });
+	// Selector overrides for specific components
+	ctx.selector(".card", {
+		boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
+	});
 });
 ```
 
@@ -317,12 +365,10 @@ theme('dark', (ctx) => {
 
 ```html
 <html data-theme="light">
-    <body>
-        <main>Light content</main>
-        <aside data-theme="dark">
-            Dark sidebar content
-        </aside>
-    </body>
+	<body>
+		<main>Light content</main>
+		<aside data-theme="dark">Dark sidebar content</aside>
+	</body>
 </html>
 ```
 
@@ -334,22 +380,22 @@ theme('dark', (ctx) => {
 
 ```ts
 // base.ts - Foundation tokens
-import { styleframe } from 'styleframe';
+import { styleframe } from "styleframe";
 const s = styleframe();
 // Define variables, scales, etc.
 export default s;
 
 // components.ts - Component styles
-import { styleframe } from 'styleframe';
+import { styleframe } from "styleframe";
 const s = styleframe();
 // Define selectors, recipes
 export default s;
 
 // main.ts - Combine everything
-import { merge } from 'styleframe';
-import base from './base';
-import components from './components';
-import themes from './themes';
+import { merge } from "styleframe";
+import base from "./base";
+import components from "./components";
+import themes from "./themes";
 
 export default merge(base, components, themes);
 ```
@@ -358,19 +404,19 @@ export default merge(base, components, themes);
 
 ```ts
 export function createDesignSystem(options: { primaryColor: string }) {
-    const s = styleframe();
-    const { variable } = s;
+	const s = styleframe();
+	const { variable } = s;
 
-    variable('color.primary', options.primaryColor);
+	variable("color.primary", options.primaryColor);
 
-    return s;
+	return s;
 }
 
 // Usage
-import { merge } from 'styleframe';
-import { createDesignSystem } from './factory';
+import { merge } from "styleframe";
+import { createDesignSystem } from "./factory";
 
-const custom = createDesignSystem({ primaryColor: '#8b5cf6' });
+const custom = createDesignSystem({ primaryColor: "#8b5cf6" });
 export default merge(base, custom);
 ```
 
@@ -381,41 +427,41 @@ export default merge(base, custom);
 ### Pseudo-Classes and Pseudo-Elements
 
 ```ts
-selector('.input', {
-    padding: ref(spacingMd),
-    border: '1px solid',
-    borderColor: ref(colorBorder),
+selector(".input", {
+	padding: ref(spacingMd),
+	border: "1px solid",
+	borderColor: ref(colorBorder),
 
-    // Pseudo-classes
-    '&:hover': { borderColor: ref(colorPrimary) },
-    '&:focus': { outline: 'none', boxShadow: '0 0 0 2px' },
-    '&:disabled': { opacity: 0.5 },
+	// Pseudo-classes
+	"&:hover": { borderColor: ref(colorPrimary) },
+	"&:focus": { outline: "none", boxShadow: "0 0 0 2px" },
+	"&:disabled": { opacity: 0.5 },
 
-    // Pseudo-elements
-    '&::placeholder': { color: ref(colorTextMuted) },
+	// Pseudo-elements
+	"&::placeholder": { color: ref(colorTextMuted) },
 });
 ```
 
 ### Child and Descendant Selectors
 
 ```ts
-selector('.card', {
-    padding: ref(spacingLg),
+selector(".card", {
+	padding: ref(spacingLg),
 
-    // Direct child
-    '> .card-header': {
-        marginBottom: ref(spacingMd),
-    },
+	// Direct child
+	"> .card-header": {
+		marginBottom: ref(spacingMd),
+	},
 
-    // Descendant
-    '.card-title': {
-        fontSize: ref(fontSizeLg),
-        fontWeight: ref(fontWeightBold),
-    },
+	// Descendant
+	".card-title": {
+		fontSize: ref(fontSizeLg),
+		fontWeight: ref(fontWeightBold),
+	},
 
-    // Adjacent sibling
-    '+ .card': {
-        marginTop: ref(spacingMd),
-    },
+	// Adjacent sibling
+	"+ .card": {
+		marginTop: ref(spacingMd),
+	},
 });
 ```

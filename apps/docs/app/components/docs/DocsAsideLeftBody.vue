@@ -29,11 +29,7 @@ const navigationKey = computed(() => {
 </script>
 
 <template>
-	<UContentNavigation
-		:key="navigationKey"
-		highlight
-		:navigation="navigation"
-	>
+	<UContentNavigation :key="navigationKey" highlight :navigation="navigation">
 		<template #link-title="{ link }">
 			{{ link.title }}
 			<ProIcon v-if="link.pro" />

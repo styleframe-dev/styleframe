@@ -202,6 +202,7 @@ export const Default: Story = {
 The generated story IDs follow: `theme-recipes-<category>-<component-name>--<story-name>` (story name is kebab-case). The `<category>` segment is derived from the `title` above &mdash; `<Category>` is the recipe's group (`Actions`, `Navigation`, `Feedback`, `Forms`, `Overlays`, `Layout`, `AI Chat`) and `<category>` is its lowercase-hyphenated slug (`actions`, `navigation`, `feedback`, `forms`, `overlays`, `layout`, `ai-chat`). Pick the category that matches the recipe's existing sibling stories and its `apps/docs/content/docs/05.components/<category>/` docs folder. Omitting the category produces an ID that no `::story-preview` can resolve.
 
 Examples:
+
 - `theme-recipes-<category>-<name>--default`
 - `theme-recipes-<category>-<name>--all-variants`
 - `theme-recipes-<category>-<name>--all-sizes`
@@ -325,6 +326,7 @@ Each sub-part follows the same `<script setup>` + `computed classes` + `template
 # Showcase: <Name>
 
 ## Files created
+
 - apps/storybook/stories/components/<name>.styleframe.ts
 - apps/storybook/stories/components/<name>.stories.ts
 - apps/storybook/src/components/components/<name>/<Name>.vue
@@ -333,20 +335,23 @@ Each sub-part follows the same `<script setup>` + `computed classes` + `template
 <!-- Multi-part: list every sub-part Vue file -->
 
 ## Story IDs (used by document-recipe for ::story-preview embeds)
+
 - theme-recipes-<category>-<name>--default
 - theme-recipes-<category>-<name>--all-variants
 - theme-recipes-<category>-<name>--all-sizes
-- theme-recipes-<category>-<name>--<color> × N   (one line per color)
+- theme-recipes-<category>-<name>--<color> × N (one line per color)
 - theme-recipes-<category>-<name>--<variant> × M (one line per variant)
-- theme-recipes-<category>-<name>--<size> × K    (one line per size)
+- theme-recipes-<category>-<name>--<size> × K (one line per size)
 
 ## Vue component props
+
 - color: <union type>
 - variant: <union type>
 - size: <union type>
 - <component-specific props>
 
 ## Notes for document-recipe
+
 - Default story args: color=..., variant=..., size=..., label=...
 - Multi-part render pattern: <yes/no — describe if yes>
 ```

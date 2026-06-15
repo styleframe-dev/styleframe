@@ -200,12 +200,12 @@ color: {
 
 Choose variant styles from the design. Typical values:
 
-| Component type | Variant styles |
-|----------------|----------------|
+| Component type                        | Variant styles                                        |
+| ------------------------------------- | ----------------------------------------------------- |
 | Interactive (button, link, menu item) | `solid`, `outline`, `soft`, `subtle`, `ghost`, `link` |
-| Static display (badge, tag, chip) | `solid`, `outline`, `soft`, `subtle` |
-| Container (card, modal, popover) | `solid`, `soft`, `subtle` |
-| Minimal (avatar, indicator) | `solid`, `soft` |
+| Static display (badge, tag, chip)     | `solid`, `outline`, `soft`, `subtle`                  |
+| Container (card, modal, popover)      | `solid`, `soft`, `subtle`                             |
+| Minimal (avatar, indicator)           | `solid`, `soft`                                       |
 
 Variant style base definitions (most have empty objects — compound variants do the styling):
 
@@ -286,7 +286,6 @@ Default to `"false"` in `defaultVariants`. **NEVER** use `selector()` with class
 - `readonly`'s subtle background is overridden only if `disabled` is also set.
 - `disabled`'s `opacity` + `pointer-events: none` wins last, correctly suppressing interaction regardless of the other two.
 
-
 ### Step 7: Compound variant CSS — semantic color templates
 
 These are the canonical templates for the 6 semantic colors. `color` is the iteration variable from `flatMap`/`map`.
@@ -294,6 +293,7 @@ These are the canonical templates for the 6 semantic colors. `color` is the iter
 #### SOLID (filled background, white text)
 
 Interactive:
+
 ```ts
 { match: { color, variant: "solid" as const }, css: {
 	background: `@color.${color}`, color: "@color.white", borderColor: `@color.${color}-shade-50`,
@@ -305,6 +305,7 @@ Interactive:
 ```
 
 Static:
+
 ```ts
 { match: { color, variant: "solid" as const }, css: {
 	background: `@color.${color}`, color: "@color.white", borderColor: `@color.${color}-shade-50`,
@@ -315,6 +316,7 @@ Static:
 #### OUTLINE (transparent background, colored border and text)
 
 Interactive:
+
 ```ts
 { match: { color, variant: "outline" as const }, css: {
 	color: `@color.${color}`, borderColor: `@color.${color}`,
@@ -328,6 +330,7 @@ Interactive:
 ```
 
 Static:
+
 ```ts
 { match: { color, variant: "outline" as const }, css: {
 	color: `@color.${color}`, borderColor: `@color.${color}`,
@@ -337,6 +340,7 @@ Static:
 #### SOFT (light background, dark text, no visible border)
 
 Interactive:
+
 ```ts
 { match: { color, variant: "soft" as const }, css: {
 	background: `@color.${color}-100`, color: `@color.${color}-700`,
@@ -351,6 +355,7 @@ Interactive:
 ```
 
 Static:
+
 ```ts
 { match: { color, variant: "soft" as const }, css: {
 	background: `@color.${color}-100`, color: `@color.${color}-700`,
@@ -361,6 +366,7 @@ Static:
 #### SUBTLE (light background, dark text, WITH colored border)
 
 Interactive:
+
 ```ts
 { match: { color, variant: "subtle" as const }, css: {
 	background: `@color.${color}-100`, color: `@color.${color}-700`, borderColor: `@color.${color}-300`,
@@ -375,6 +381,7 @@ Interactive:
 ```
 
 Static:
+
 ```ts
 { match: { color, variant: "subtle" as const }, css: {
 	background: `@color.${color}-100`, color: `@color.${color}-700`, borderColor: `@color.${color}-300`,
@@ -409,11 +416,11 @@ Static:
 
 ### Step 8: Non-semantic colors — `light` / `dark` / `neutral`
 
-| Color | Behavior |
-|-------|----------|
-| `light` | Always light, ignores dark mode. Uses `@color.white`, `@color.gray-*`, `@color.text`. Repeats all values in `"&:dark"` to stay fixed. |
-| `dark` | Always dark, ignores dark mode. Uses `@color.gray-900`, `@color.white`. Repeats all values in `"&:dark"` to stay fixed. |
-| `neutral` | Adaptive — light in light mode, dark in dark mode. Has genuinely different `"&:dark"` values. |
+| Color     | Behavior                                                                                                                              |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `light`   | Always light, ignores dark mode. Uses `@color.white`, `@color.gray-*`, `@color.text`. Repeats all values in `"&:dark"` to stay fixed. |
+| `dark`    | Always dark, ignores dark mode. Uses `@color.gray-900`, `@color.white`. Repeats all values in `"&:dark"` to stay fixed.               |
+| `neutral` | Adaptive — light in light mode, dark in dark mode. Has genuinely different `"&:dark"` values.                                         |
 
 **Light compound variants:**
 
@@ -491,17 +498,17 @@ Static:
 
 ### Step 9: Pseudo-selector reference
 
-| Selector | Usage | Notes |
-|----------|-------|-------|
-| `"&:hover"` | Mouse hover | **Always pair with `"&:focus"`** |
-| `"&:focus"` | Keyboard/programmatic focus | **Always pair with `"&:hover"`** |
-| `"&:active"` | Active/pressed state | |
-| `"&:focus-visible"` | Keyboard-only focus ring | Use in `base` only |
-| `"&:disabled"` | Disabled state | Use in `base` only |
-| `"&:dark"` | Dark mode | Reverses color scheme |
-| `"&:dark:hover"` | Dark mode + hover | Compound dark state |
-| `"&:dark:focus"` | Dark mode + focus | Compound dark state |
-| `"&:dark:active"` | Dark mode + active | Compound dark state |
+| Selector            | Usage                       | Notes                            |
+| ------------------- | --------------------------- | -------------------------------- |
+| `"&:hover"`         | Mouse hover                 | **Always pair with `"&:focus"`** |
+| `"&:focus"`         | Keyboard/programmatic focus | **Always pair with `"&:hover"`** |
+| `"&:active"`        | Active/pressed state        |                                  |
+| `"&:focus-visible"` | Keyboard-only focus ring    | Use in `base` only               |
+| `"&:disabled"`      | Disabled state              | Use in `base` only               |
+| `"&:dark"`          | Dark mode                   | Reverses color scheme            |
+| `"&:dark:hover"`    | Dark mode + hover           | Compound dark state              |
+| `"&:dark:focus"`    | Dark mode + focus           | Compound dark state              |
+| `"&:dark:active"`   | Dark mode + active          | Compound dark state              |
 
 **CRITICAL:** Always use the `"&:dark"` syntax with the `&:` prefix. Never use bare `dark:`.
 
@@ -536,9 +543,13 @@ If the design calls for a `setup(s)` callback (e.g., spinner registers `@keyfram
 ```ts
 export const useSpinnerRecipe = createUseRecipe(
 	"spinner",
-	{ /* config */ },
+	{
+		/* config */
+	},
 	(s) => {
-		s.keyframes("spin", { /* ... */ });
+		s.keyframes("spin", {
+			/* ... */
+		});
 	},
 );
 ```
@@ -594,65 +605,78 @@ Enumerate **every** CSS property used in the recipe's base, variants, and compou
 describe("use<ComponentName>Recipe", () => {
 	it("should create a recipe with correct metadata", () => {
 		const s = createInstance();
-		const recipe = use<ComponentName>Recipe(s);
+		const recipe = use < ComponentName > Recipe(s);
 		expect(recipe.type).toBe("recipe");
 		expect(recipe.name).toBe("<component-name>");
 	});
 
 	it("should have correct base styles", () => {
 		const s = createInstance();
-		const recipe = use<ComponentName>Recipe(s);
-		expect(recipe.base).toEqual({ /* full base object */ });
+		const recipe = use < ComponentName > Recipe(s);
+		expect(recipe.base).toEqual({
+			/* full base object */
+		});
 	});
 
 	describe("variants", () => {
 		it("should have all color variants", () => {
 			const s = createInstance();
-			const recipe = use<ComponentName>Recipe(s);
-			expect(Object.keys(recipe.variants!.color)).toEqual([/* color list */]);
+			const recipe = use < ComponentName > Recipe(s);
+			expect(Object.keys(recipe.variants!.color)).toEqual([
+				/* color list */
+			]);
 		});
 
 		it("should have all style variants", () => {
 			const s = createInstance();
-			const recipe = use<ComponentName>Recipe(s);
-			expect(Object.keys(recipe.variants!.variant)).toEqual([/* variant list */]);
+			const recipe = use < ComponentName > Recipe(s);
+			expect(Object.keys(recipe.variants!.variant)).toEqual([
+				/* variant list */
+			]);
 		});
 
 		it("should have size variants with correct styles", () => {
 			const s = createInstance();
-			const recipe = use<ComponentName>Recipe(s);
-			expect(Object.keys(recipe.variants!.size)).toEqual([/* size list */]);
+			const recipe = use < ComponentName > Recipe(s);
+			expect(Object.keys(recipe.variants!.size)).toEqual([
+				/* size list */
+			]);
 			// Test specific size values
 		});
 	});
 
 	it("should have correct default variants", () => {
 		const s = createInstance();
-		const recipe = use<ComponentName>Recipe(s);
-		expect(recipe.defaultVariants).toEqual({ /* defaults */ });
+		const recipe = use < ComponentName > Recipe(s);
+		expect(recipe.defaultVariants).toEqual({
+			/* defaults */
+		});
 	});
 
 	describe("compound variants", () => {
 		it("should have N compound variants", () => {
 			const s = createInstance();
-			const recipe = use<ComponentName>Recipe(s);
+			const recipe = use < ComponentName > Recipe(s);
 			expect(recipe.compoundVariants).toHaveLength(/* count */);
 		});
 
 		it("should have correct <color>/<variant> compound variant", () => {
 			const s = createInstance();
-			const recipe = use<ComponentName>Recipe(s);
+			const recipe = use < ComponentName > Recipe(s);
 			const cv = recipe.compoundVariants!.find(
 				(v) => v.match.color === "<color>" && v.match.variant === "<variant>",
 			);
-			expect(cv?.css).toEqual({ /* expected css */ });
+			expect(cv?.css).toEqual({
+				/* expected css */
+			});
 		});
 	});
 
 	describe("config overrides", () => {
 		it("should allow overriding base styles", () => {
 			const s = createInstance();
-			const recipe = use<ComponentName>Recipe(s, {
+			const recipe = use<ComponentName>;
+			Recipe(s, {
 				base: { display: "block" },
 			});
 			expect(recipe.base?.display).toBe("block");
@@ -662,7 +686,8 @@ describe("use<ComponentName>Recipe", () => {
 	describe("filter", () => {
 		it("should filter color variants", () => {
 			const s = createInstance();
-			const recipe = use<ComponentName>Recipe(s, {
+			const recipe = use<ComponentName>;
+			Recipe(s, {
 				filter: { color: ["primary"] },
 			});
 			expect(Object.keys(recipe.variants!.color)).toEqual(["primary"]);
@@ -670,15 +695,19 @@ describe("use<ComponentName>Recipe", () => {
 
 		it("should prune compound variants when filtering", () => {
 			const s = createInstance();
-			const recipe = use<ComponentName>Recipe(s, {
+			const recipe = use<ComponentName>;
+			Recipe(s, {
 				filter: { color: ["primary"], variant: ["solid"] },
 			});
-			expect(recipe.compoundVariants!.length).toBeLessThan(/* original count */);
+			expect(
+				recipe.compoundVariants!.length,
+			).toBeLessThan(/* original count */);
 		});
 
 		it("should adjust default variants when filtered out", () => {
 			const s = createInstance();
-			const recipe = use<ComponentName>Recipe(s, {
+			const recipe = use<ComponentName>;
+			Recipe(s, {
 				filter: { color: ["success"] },
 			});
 			expect(recipe.defaultVariants?.color).toBeUndefined();
@@ -697,15 +726,18 @@ For multi-recipe components, create one test file per sub-recipe with the same s
 # Implementation: <Name>
 
 ## Files created
+
 - theme/src/recipes/<name>/use<Name>Recipe.ts
 - theme/src/recipes/<name>/use<Name>Recipe.test.ts
 - theme/src/recipes/<name>/index.ts
 <!-- Multi-part: list every sub-recipe file + test file -->
 
 ## Root barrel updated
+
 theme/src/recipes/index.ts — added `export * from "./<name>";`
 
 ## Recipe shape summary
+
 - Colors: <list>
 - Variants: <list>
 - Sizes: <list>
@@ -715,9 +747,11 @@ theme/src/recipes/index.ts — added `export * from "./<name>";`
 - Setup callback: <yes/no — describe if yes>
 
 ## Sub-recipes (if multi-part)
+
 - <sub-name>: axes=[...], compound variants=<count>
 
 ## Known issues or follow-ups
+
 - <anything the user should be aware of before running verify-recipe>
 ```
 
@@ -726,6 +760,7 @@ theme/src/recipes/index.ts — added `export * from "./<name>";`
 ## Validation checklist
 
 ### Structure
+
 - [ ] File imports `createUseRecipe` from `"../../utils/createUseRecipe"`.
 - [ ] `colors` array contains exactly `"primary"`, `"secondary"`, `"success"`, `"info"`, `"warning"`, `"error"` (omit entirely for non-semantic-only components).
 - [ ] `colors` array has `as const` (when present).
@@ -736,34 +771,40 @@ theme/src/recipes/index.ts — added `export * from "./<name>";`
 - [ ] Sectioned containers include `overflow: "hidden"` and omit padding.
 
 ### Variants
+
 - [ ] `color` variant has empty objects `{}` for all colors.
 - [ ] `variant` has appropriate styles for the component type.
 - [ ] `size` has 3–5 entries.
 - [ ] `defaultVariants` specifies every axis.
 
 ### Compound variants
+
 - [ ] Every `match` object has `as const` on the variant style value.
 - [ ] Every color × variant-style combination has a compound variant entry.
 - [ ] Compound variants use template literals: `` `@color.${color}` ``.
 
 ### Non-semantic colors (when applicable)
+
 - [ ] `light`, `dark`, `neutral` compound variants are manually written.
 - [ ] Non-semantic colors use gray tokens.
 - [ ] `light` and `dark` repeat the same values in `"&:dark"` to stay fixed.
 - [ ] `neutral` has genuinely different `"&:dark"` values.
 
 ### Interactive states (when applicable)
+
 - [ ] Every `"&:hover"` is paired with `"&:focus"`.
 - [ ] `"&:active"` is included for pressed states.
 - [ ] Base includes `"&:focus-visible"` with outline styling.
 - [ ] Base includes `"&:disabled"` with cursor/opacity/pointerEvents.
 
 ### Dark mode
+
 - [ ] All compound variants with colored backgrounds include `"&:dark"` overrides.
 - [ ] Dark interactive states use `"&:dark:hover"`, `"&:dark:focus"`, `"&:dark:active"`.
 - [ ] `"&:dark"` always uses the `&:` prefix.
 
 ### Color token correctness
+
 - [ ] Solid: background = base color, text = white, border = shade-50.
 - [ ] Outline: text and border = base color.
 - [ ] Soft: background = -100 level, text = -700 level.
@@ -772,6 +813,7 @@ theme/src/recipes/index.ts — added `export * from "./<name>";`
 - [ ] Link: text = base color, hover = shade-50.
 
 ### Dark mode token correctness
+
 - [ ] Solid dark: borderColor switches from shade-50 to tint-50.
 - [ ] Soft dark: background -800, color -400.
 - [ ] Soft dark hover/focus: -750; dark active: -700.
@@ -779,6 +821,7 @@ theme/src/recipes/index.ts — added `export * from "./<name>";`
 - [ ] Ghost dark hover/focus: color -400, background -750; dark active: -700.
 
 ### Files
+
 - [ ] Recipe TS file(s) at `theme/src/recipes/<name>/`.
 - [ ] Barrel index at `theme/src/recipes/<name>/index.ts`.
 - [ ] Root barrel at `theme/src/recipes/index.ts` updated (alphabetical order).

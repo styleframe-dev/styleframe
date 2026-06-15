@@ -56,19 +56,19 @@ Registers the `useDocusI18n` composable as an auto-import via Nuxt's `imports:ex
 
 ### `utils/meta.ts`
 
-| Export | Signature | Description |
-|--------|-----------|-------------|
-| `inferSiteURL` | `() => string \| undefined` | Returns site URL from environment variables. Checks `NUXT_SITE_URL`, `NEXT_PUBLIC_VERCEL_URL`, `URL` (Netlify), `CI_PAGES_URL` (GitLab), `CF_PAGES_URL` (Cloudflare) in order. |
-| `getPackageJsonMetadata` | `(dir: string) => Promise<{ name: string; description?: string }>` | Reads `package.json` from `dir` and returns `name` and `description`. Falls back to `{ name: 'docs' }` on error. |
+| Export                   | Signature                                                          | Description                                                                                                                                                                    |
+| ------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `inferSiteURL`           | `() => string \| undefined`                                        | Returns site URL from environment variables. Checks `NUXT_SITE_URL`, `NEXT_PUBLIC_VERCEL_URL`, `URL` (Netlify), `CI_PAGES_URL` (GitLab), `CF_PAGES_URL` (Cloudflare) in order. |
+| `getPackageJsonMetadata` | `(dir: string) => Promise<{ name: string; description?: string }>` | Reads `package.json` from `dir` and returns `name` and `description`. Falls back to `{ name: 'docs' }` on error.                                                               |
 
 ### `utils/git.ts`
 
-| Export | Signature | Description |
-|--------|-----------|-------------|
-| `GitInfo` | `interface` | `{ name: string; owner: string; url: string }` |
-| `getGitBranch` | `() => string` | Returns current branch from CI env vars or `git rev-parse`. Falls back to `"main"`. |
+| Export            | Signature                                            | Description                                                                                                 |
+| ----------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `GitInfo`         | `interface`                                          | `{ name: string; owner: string; url: string }`                                                              |
+| `getGitBranch`    | `() => string`                                       | Returns current branch from CI env vars or `git rev-parse`. Falls back to `"main"`.                         |
 | `getLocalGitInfo` | `(rootDir: string) => Promise<GitInfo \| undefined>` | Parses git remote origin URL using `git-url-parse` and `pkg-types`. Returns `undefined` if no remote found. |
-| `getGitEnv` | `() => GitInfo` | Extracts repo info from CI/deployment environment variables (Vercel, GitHub, GitLab, Netlify). |
+| `getGitEnv`       | `() => GitInfo`                                      | Extracts repo info from CI/deployment environment variables (Vercel, GitHub, GitLab, Netlify).              |
 
 ---
 
@@ -76,16 +76,16 @@ Registers the `useDocusI18n` composable as an auto-import via Nuxt's `imports:ex
 
 Default configuration applied to all consuming apps. Apps can override any value via their own `app.config.ts` (merged with `defu`).
 
-| Section | Key Fields |
-|---------|-----------|
-| `seo` | `title`, `titleTemplate` (`%s - styleframe`), `description` |
-| `header` | `title`, `logo.light`, `logo.dark`, `logo.alt` |
-| `socials` | `x` (Twitter URL), `discord` (Discord invite URL) |
-| `github` | `url`, `branch` |
-| `footer` | `credits` (copyright with dynamic year) |
-| `toc` | `title` ("On this page"), `bottom.title` ("Community"), `bottom.edit`, `bottom.links` |
-| `ui.colors` | `primary: "teal"`, `neutral: "zinc"` |
-| `ui.*` | Slot customizations for `commandPalette`, `contentNavigation`, `pageLinks`, `pageCard`, `pricingTable` |
+| Section     | Key Fields                                                                                             |
+| ----------- | ------------------------------------------------------------------------------------------------------ |
+| `seo`       | `title`, `titleTemplate` (`%s - styleframe`), `description`                                            |
+| `header`    | `title`, `logo.light`, `logo.dark`, `logo.alt`                                                         |
+| `socials`   | `x` (Twitter URL), `discord` (Discord invite URL)                                                      |
+| `github`    | `url`, `branch`                                                                                        |
+| `footer`    | `credits` (copyright with dynamic year)                                                                |
+| `toc`       | `title` ("On this page"), `bottom.title` ("Community"), `bottom.edit`, `bottom.links`                  |
+| `ui.colors` | `primary: "teal"`, `neutral: "zinc"`                                                                   |
+| `ui.*`      | Slot customizations for `commandPalette`, `contentNavigation`, `pageLinks`, `pageCard`, `pricingTable` |
 
 ---
 
@@ -108,14 +108,14 @@ Animated gradient background with mouse-tracking interactive blob.
 
 **CSS custom properties** for theming (override on `.morphing-gradient-background`):
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `--color1` through `--color5` | RGB triplets | Gradient blob colors |
-| `--color-interactive` | `140, 100, 255` | Mouse-following blob color |
-| `--circle-size` | `80%` | Blob size |
-| `--blending` | `hard-light` | Mix blend mode |
-| `--intensity` | `0.2` | Gradient opacity |
-| `--color-bg1`, `--color-bg2` | `var(--ui-bg)` | Background gradient stops |
+| Variable                      | Default         | Description                |
+| ----------------------------- | --------------- | -------------------------- |
+| `--color1` through `--color5` | RGB triplets    | Gradient blob colors       |
+| `--color-interactive`         | `140, 100, 255` | Mouse-following blob color |
+| `--circle-size`               | `80%`           | Blob size                  |
+| `--blending`                  | `hard-light`    | Mix blend mode             |
+| `--intensity`                 | `0.2`           | Gradient opacity           |
+| `--color-bg1`, `--color-bg2`  | `var(--ui-bg)`  | Background gradient stops  |
 
 **Animations:** `moveInCircle` (360° rotation), `moveVertical` (Y oscillation), `moveHorizontal` (X oscillation) with 20–40s durations. Interactive blob follows the cursor with eased interpolation (divides delta by 20 each frame).
 
@@ -126,6 +126,7 @@ Animated gradient background with mouse-tracking interactive blob.
 ### `i18n.ts`
 
 Route middleware that redirects `/` to `/{locale}` based on:
+
 1. `i18n_redirected` cookie value
 2. i18n default locale from config
 3. Falls back to `"en"`

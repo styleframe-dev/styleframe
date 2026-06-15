@@ -1,10 +1,11 @@
 ::u-page-hero
 #title
+
 # Cookie Policy
+
 ::
 
 ::u-container{.prose-container}
-
 
 ## 1. Introduction
 

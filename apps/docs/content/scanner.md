@@ -16,15 +16,19 @@ Next Generation [Utility-First]{.text-primary} Integration
 If you've used Tailwind JIT, you already know the workflow. Write utility classes in your markup, and the utility scanner generates only the CSS you use at build time. The difference: your classes are backed by type-safe factories and your own design tokens — with complete control over syntax, naming, and generation behavior.
 
 #links
-    :::u-button
-    ---
-    color: primary
-    size: xl
-    to: /docs/getting-started/introduction
-    trailing-icon: i-lucide-arrow-right
-    ---
-    Get started
-    :::
+:::u-button
+
+---
+
+color: primary
+size: xl
+to: /docs/getting-started/introduction
+trailing-icon: i-lucide-arrow-right
+
+---
+
+Get started
+:::
 
     :::u-button
     ---
@@ -35,6 +39,7 @@ If you've used Tailwind JIT, you already know the workflow. Write utility classe
     ---
     Read utility scanner docs
     :::
+
 ::
 
 <!--
@@ -49,12 +54,14 @@ Write Classes. The Utility Scanner Handles the Rest
 Use utility classes directly in your templates — no need to pre-define every value. The scanner reads your source files, detects your classes, and generates only the CSS you actually use.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-pencil-off
-    ---
-    #title
-    [Zero]{.text-primary} Registration
+:::u-page-feature
+
+---
+
+## icon: i-lucide-pencil-off
+
+#title
+[Zero]{.text-primary} Registration
 
     #description
     Use utility classes directly in your markup without pre-defining every value. The scanner detects and registers them for you.
@@ -114,16 +121,16 @@ Use utility classes directly in your templates — no need to pre-define every v
     #description
     Template changes trigger incremental rescans during development. Only changed files are re-processed — your feedback loop stays instant.
     :::
+
 ::
 
 <!--
 Write Classes Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-default"}
----
-orientation: horizontal
----
+## ::u-page-section{class="border-t border-default"}
+
+## orientation: horizontal
 
     ::::browser-frame
     ---
@@ -132,17 +139,19 @@ orientation: horizontal
 
 ```html
 <template>
-    <div class="_display:flex _gap:1rem _padding:lg">
-        <button class="_background:primary
+	<div class="_display:flex _gap:1rem _padding:lg">
+		<button
+			class="_background:primary
                        _hover:background:secondary
                        _padding:md
-                       _font-weight:bold">
-            Click me
-        </button>
-        <span class="_color:muted _font-size:sm">
-            Detected and generated automatically.
-        </span>
-    </div>
+                       _font-weight:bold"
+		>
+			Click me
+		</button>
+		<span class="_color:muted _font-size:sm">
+			Detected and generated automatically.
+		</span>
+	</div>
 </template>
 ```
 
@@ -155,12 +164,14 @@ Write Classes in Your [Templates]{.text-primary}
 Use utility classes in your markup like you would with Tailwind. The scanner reads your source files, extracts every `_property:value` class, and generates the matching CSS at build time.
 
 #features
-    :::u-page-feature
-    ---
-    icon: i-lucide-file-code
-    ---
-    #title
-    [12+]{.text-primary} File Types
+:::u-page-feature
+
+---
+
+## icon: i-lucide-file-code
+
+#title
+[12+]{.text-primary} File Types
 
     #description
     Vue, React, Svelte, Astro, MDX, PHP, ERB, Twig, Blade, and plain HTML — each with a specialized extractor optimized for its syntax.
@@ -176,16 +187,18 @@ Use utility classes in your markup like you would with Tailwind. The scanner rea
     #description
     Working with an unsupported file type? Write a custom extractor function in a few lines and plug it in.
     :::
+
 ::
 
 <!--
 Generated CSS Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section
----
+## ::u-page-section
+
 orientation: horizontal
 reverse: true
+
 ---
 
     ::::browser-frame
@@ -197,20 +210,20 @@ reverse: true
 /* Only the utilities your templates reference */
 
 ._padding\:lg {
-        padding: var(--spacing-lg);
+	padding: var(--spacing-lg);
 }
 
 ._background\:primary {
-        background: var(--color-primary);
+	background: var(--color-primary);
 }
 
 ._hover\:background\:secondary:hover {
-        background: var(--color-secondary);
+	background: var(--color-secondary);
 }
 
 /* Arbitrary values generate literal CSS */
 ._padding\:\[2\.5rem\] {
-        padding: 2.5rem;
+	padding: 2.5rem;
 }
 ```
 
@@ -220,20 +233,18 @@ reverse: true
 See Exactly What [Gets Generated]{.text-primary}
 
 #description
-Design tokens resolve to CSS custom properties. Arbitrary bracket values produce literal CSS. Modifiers wrap declarations in the correct pseudo-selectors and media queries. 
+Design tokens resolve to CSS custom properties. Arbitrary bracket values produce literal CSS. Modifiers wrap declarations in the correct pseudo-selectors and media queries.
 
 What you write is what you get — predictable, readable output.
 ::
-
 
 <!--
 CTA Section ----------------------------------------------------------------------------------------------
 -->
 
-::u-page-section{class="border-t border-b border-default"}
----
-variant: primary
----
+## ::u-page-section{class="border-t border-b border-default"}
+
+## variant: primary
 
 #title
 Start Writing Utility Classes [Today]{.text-primary}
@@ -242,15 +253,19 @@ Start Writing Utility Classes [Today]{.text-primary}
 Enable the scanner, register your factories, and let your templates drive your CSS output. Type-safe, JIT, and built on your own design tokens.
 
 #links
-    :::u-button
-    ---
-    color: primary
-    size: xl
-    to: /docs/getting-started/introduction
-    trailing-icon: i-lucide-arrow-right
-    ---
-    Get started
-    :::
+:::u-button
+
+---
+
+color: primary
+size: xl
+to: /docs/getting-started/introduction
+trailing-icon: i-lucide-arrow-right
+
+---
+
+Get started
+:::
 
     :::u-button
     ---
@@ -261,4 +276,5 @@ Enable the scanner, register your factories, and let your templates drive your C
     ---
     Read utility scanner docs
     :::
+
 ::

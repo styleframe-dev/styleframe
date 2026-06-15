@@ -193,7 +193,10 @@ function weekNumber(row: Cell[]): number {
 							</button>
 						</div>
 
-						<div v-if="props.dropdownCaption" class="calendar-caption-dropdowns">
+						<div
+							v-if="props.dropdownCaption"
+							class="calendar-caption-dropdowns"
+						>
 							<select aria-label="Month">
 								<option
 									v-for="(name, i) in monthNames"
@@ -204,7 +207,11 @@ function weekNumber(row: Cell[]): number {
 								</option>
 							</select>
 							<select aria-label="Year">
-								<option v-for="y in [2025, 2026, 2027]" :key="y" :selected="y === m.year">
+								<option
+									v-for="y in [2025, 2026, 2027]"
+									:key="y"
+									:selected="y === m.year"
+								>
 									{{ y }}
 								</option>
 							</select>
@@ -222,7 +229,11 @@ function weekNumber(row: Cell[]): number {
 						</div>
 					</div>
 
-					<div v-if="props.type === 'month'" role="grid" class="calendar-grid -months">
+					<div
+						v-if="props.type === 'month'"
+						role="grid"
+						class="calendar-grid -months"
+					>
 						<CalendarDay
 							v-for="(label, i) in monthLabels"
 							:key="label"
@@ -235,7 +246,11 @@ function weekNumber(row: Cell[]): number {
 						</CalendarDay>
 					</div>
 
-					<div v-else-if="props.type === 'year'" role="grid" class="calendar-grid -years">
+					<div
+						v-else-if="props.type === 'year'"
+						role="grid"
+						class="calendar-grid -years"
+					>
 						<CalendarDay
 							v-for="y in years"
 							:key="y"
@@ -290,7 +305,9 @@ function weekNumber(row: Cell[]): number {
 									:today="!cell.outside && cell.iso === props.today"
 									:selected="!cell.outside && cell.iso === props.selected"
 									:booked="!cell.outside && props.booked.includes(cell.iso)"
-									:disabled="!cell.outside && props.disabledDays.includes(cell.iso)"
+									:disabled="
+										!cell.outside && props.disabledDays.includes(cell.iso)
+									"
 									:range="rangeOf(cell)"
 								>
 									{{ cell.day }}
@@ -305,7 +322,10 @@ function weekNumber(row: Cell[]): number {
 						</div>
 					</div>
 
-					<div v-if="props.time && mi === months.length - 1" class="calendar-footer">
+					<div
+						v-if="props.time && mi === months.length - 1"
+						class="calendar-footer"
+					>
 						<Input type="time" size="sm" model-value="09:00" />
 						<span>–</span>
 						<Input type="time" size="sm" model-value="17:00" />

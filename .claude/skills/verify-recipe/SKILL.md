@@ -43,6 +43,7 @@ pnpm typecheck
 ```
 
 Parse output. Capture:
+
 - Exit status (0 = pass).
 - For each error: file:line, error code, message.
 - Scope errors to files touched by this recipe when possible; note cross-package errors separately.
@@ -54,6 +55,7 @@ pnpm --filter @styleframe/theme test
 ```
 
 Parse output. Capture:
+
 - Total suites, total tests, passed, failed.
 - For each failed test: test name, expected vs actual, file:line.
 - If the recipe has no test file (rare, but valid — badge and button are exceptions), note that the recipe exists without tests.
@@ -65,6 +67,7 @@ pnpm lint
 ```
 
 Parse output. Capture:
+
 - Exit status.
 - For each issue: file:line, rule, message.
 
@@ -106,18 +109,22 @@ Do NOT attempt to fix issues automatically.
 # Verification: <Name>
 
 ## Typecheck: <pass | fail>
+
 <!-- If fail, list: file:line — error code — message — suggested sub-skill -->
 
 ## Test (theme): <pass | fail> (<passed>/<total>)
+
 <!-- If fail, list: test name — file:line — expected vs actual — suggested sub-skill -->
 <!-- If no tests exist: note "Recipe has no test file — confirmed intentional opt-out" -->
 
 ## Lint: <pass | fail>
+
 <!-- If fail, list: file:line — rule — message — suggested sub-skill -->
 
 ## Storybook spot-check: <pass | not run | manual-deferred>
 
 ## Summary
+
 - Total failures: <N>
 - Suggested next step: <e.g., re-run /implement-recipe after fixing use<Name>Recipe.ts:42>
 ```

@@ -30,7 +30,9 @@ describe("createCSSFunction", () => {
 
 	describe("basic CSS creation", () => {
 		it("should create a CSS object with strings only", () => {
-			const result = css`color: blue;`;
+			const result = css`
+				color: blue;
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -63,7 +65,9 @@ describe("createCSSFunction", () => {
 	describe("interpolation handling", () => {
 		it("should handle single string interpolation", () => {
 			const color = "blue";
-			const result = css`color: ${color};`;
+			const result = css`
+				color: ${color};
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -74,7 +78,10 @@ describe("createCSSFunction", () => {
 		it("should handle multiple string interpolations", () => {
 			const color = "blue";
 			const size = "16px";
-			const result = css`color: ${color}; font-size: ${size};`;
+			const result = css`
+				color: ${color};
+				font-size: ${size};
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -84,7 +91,9 @@ describe("createCSSFunction", () => {
 
 		it("should handle interpolation at the beginning", () => {
 			const property = "color";
-			const result = css`${property}: blue;`;
+			const result = css`
+				${property}: blue;
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -94,7 +103,9 @@ describe("createCSSFunction", () => {
 
 		it("should handle interpolation at the end", () => {
 			const value = "blue";
-			const result = css`color: ${value}`;
+			const result = css`
+				color: ${value};
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -105,7 +116,9 @@ describe("createCSSFunction", () => {
 		it("should handle consecutive interpolations", () => {
 			const value1 = "solid";
 			const value2 = "1px";
-			const result = css`border: ${value1} ${value2};`;
+			const result = css`
+				border: ${value1} ${value2};
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -117,7 +130,9 @@ describe("createCSSFunction", () => {
 	describe("variable reference interpolation", () => {
 		it("should handle variable reference interpolation", () => {
 			const colorPrimary = variable("color-primary", "#006cff");
-			const result = css`color: ${ref(colorPrimary)};`;
+			const result = css`
+				color: ${ref(colorPrimary)};
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -160,7 +175,9 @@ describe("createCSSFunction", () => {
 		});
 
 		it("should handle variable references with fallbacks", () => {
-			const result = css`color: ${ref("undefined-color", "#fallback")};`;
+			const result = css`
+				color: ${ref("undefined-color", "#fallback")};
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -206,11 +223,7 @@ describe("createCSSFunction", () => {
 			const opacity = "0.8";
 
 			const result = css`
-				background: linear-gradient(
-					to right,
-					${ref(primary)},
-					${secondary}
-				);
+				background: linear-gradient(to right, ${ref(primary)}, ${secondary});
 				opacity: ${opacity};
 			`;
 
@@ -269,7 +282,9 @@ describe("createCSSFunction", () => {
 	describe("TokenValue types handling", () => {
 		it("should handle number interpolations", () => {
 			const fontSize = 16;
-			const result = css`font-size: ${fontSize}px;`;
+			const result = css`
+				font-size: ${fontSize}px;
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -279,7 +294,9 @@ describe("createCSSFunction", () => {
 
 		it("should handle boolean interpolations", () => {
 			const isVisible = true;
-			const result = css`display: ${isVisible ? "block" : "none"};`;
+			const result = css`
+				display: ${isVisible ? "block" : "none"};
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -291,8 +308,12 @@ describe("createCSSFunction", () => {
 			const nullValue = null;
 			const undefinedValue = undefined;
 
-			const result1 = css`value: ${nullValue};`;
-			const result2 = css`value: ${undefinedValue};`;
+			const result1 = css`
+				value: ${nullValue};
+			`;
+			const result2 = css`
+				value: ${undefinedValue};
+			`;
 
 			expect(result1.value).toEqual(["value: ", null, ";"]);
 			expect(result2.value).toEqual(["value: ", undefined, ";"]);
@@ -385,7 +406,9 @@ describe("createCSSFunction", () => {
 	describe("auto-resolve interpolation", () => {
 		it("should auto-resolve a variable to a reference", () => {
 			const spacing = variable("spacing-md", "1rem");
-			const result = css`${spacing} calc(${spacing} * 2)`;
+			const result = css`
+				${spacing} calc(${spacing} * 2)
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -402,7 +425,9 @@ describe("createCSSFunction", () => {
 			const spacingSm = variable("spacing-sm", "0.5rem");
 			const spacingMd = variable("spacing-md", "1rem");
 
-			const result = css`${spacingSm} ${spacingMd}`;
+			const result = css`
+				${spacingSm} ${spacingMd}
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -421,7 +446,9 @@ describe("createCSSFunction", () => {
 				"100%": { opacity: 1 },
 			});
 
-			const result = css`${fadeIn} 300ms ease-in-out`;
+			const result = css`
+				${fadeIn} 300ms ease-in-out
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -433,7 +460,9 @@ describe("createCSSFunction", () => {
 			const atRule = createAtRuleFunction(selector, root);
 			const layer = atRule("layer", "utilities");
 
-			const result = css`${layer}`;
+			const result = css`
+				${layer}
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -449,7 +478,9 @@ describe("createCSSFunction", () => {
 				"100%": { opacity: 1 },
 			});
 
-			const result = css`${fadeIn} ${duration} ease-in-out`;
+			const result = css`
+				${fadeIn} ${duration} ease-in-out
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -465,7 +496,9 @@ describe("createCSSFunction", () => {
 
 	describe("@variable notation", () => {
 		it("should resolve @variablename to a reference", () => {
-			const result = css`@color.primary`;
+			const result = css`
+				@color.primary;
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -488,7 +521,9 @@ describe("createCSSFunction", () => {
 		});
 
 		it("should resolve deeply dotted @variablename", () => {
-			const result = css`@color.primary.500`;
+			const result = css`
+				@color.primary.500;
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -503,7 +538,9 @@ describe("createCSSFunction", () => {
 		});
 
 		it("should resolve multiple @variablenames in one string segment", () => {
-			const result = css`@spacing.x @spacing.y`;
+			const result = css`
+				@spacing.x @spacing.y;
+			`;
 
 			expect(result).toEqual({
 				type: "css",
@@ -517,7 +554,9 @@ describe("createCSSFunction", () => {
 
 		it("should resolve @variablename mixed with interpolations", () => {
 			const opacity = "0.8";
-			const result = css`@color.primary ${opacity}`;
+			const result = css`
+				@color.primary ${opacity};
+			`;
 
 			expect(result).toEqual({
 				type: "css",

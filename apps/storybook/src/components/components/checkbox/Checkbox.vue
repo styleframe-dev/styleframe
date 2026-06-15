@@ -42,6 +42,8 @@ watch(() => props.indeterminate, syncIndeterminate);
 			:checked="checked"
 			:disabled="disabled"
 		/>
-		<span v-if="$slots.default || label"><slot>{{ label }}</slot></span>
+		<span v-if="$slots.default || label"
+			><slot>{{ label }}</slot></span
+		>
 	</label>
 </template>

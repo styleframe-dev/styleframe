@@ -38,11 +38,11 @@ Application code              → Consumes compiled recipes and selectors
 
 ### Virtual Modules
 
-| Import | Resolves To | Returns |
-|--------|-------------|---------|
-| `virtual:styleframe` (from `*.styleframe.ts`) | Extension face | Global instance factory for extending the design system |
-| `virtual:styleframe` (from app code) | Consumer face | Compiled TypeScript with recipe functions and selector constants |
-| `virtual:styleframe.css` | CSS face | All compiled CSS styles |
+| Import                                        | Resolves To    | Returns                                                          |
+| --------------------------------------------- | -------------- | ---------------------------------------------------------------- |
+| `virtual:styleframe` (from `*.styleframe.ts`) | Extension face | Global instance factory for extending the design system          |
+| `virtual:styleframe` (from app code)          | Consumer face  | Compiled TypeScript with recipe functions and selector constants |
+| `virtual:styleframe.css`                      | CSS face       | All compiled CSS styles                                          |
 
 ### Initialization Sequence
 
@@ -60,14 +60,14 @@ Application code              → Consumes compiled recipes and selectors
 
 The plugin uses **importree** to build dependency graphs and perform selective cache invalidation:
 
-| File Changed | Action |
-|-------------|--------|
-| `styleframe.config.ts` | Reload all files, invalidate affected caches, rebuild dependency graph |
-| `*.styleframe.ts` | Reload all files with selective invalidation of changed + dependents |
-| Content file (HTML, JSX, etc.) | Incremental scan, register new utility values, update CSS only |
-| Tracked dependency (shared composable) | Identify affected files via BFS, reload with targeted invalidation |
-| New `*.styleframe.ts` detected | Load file, rebuild dependency graph, re-scan content |
-| `*.styleframe.ts` deleted | Reload remaining files, rebuild dependency graph |
+| File Changed                           | Action                                                                 |
+| -------------------------------------- | ---------------------------------------------------------------------- |
+| `styleframe.config.ts`                 | Reload all files, invalidate affected caches, rebuild dependency graph |
+| `*.styleframe.ts`                      | Reload all files with selective invalidation of changed + dependents   |
+| Content file (HTML, JSX, etc.)         | Incremental scan, register new utility values, update CSS only         |
+| Tracked dependency (shared composable) | Identify affected files via BFS, reload with targeted invalidation     |
+| New `*.styleframe.ts` detected         | Load file, rebuild dependency graph, re-scan content                   |
+| `*.styleframe.ts` deleted              | Reload remaining files, rebuild dependency graph                       |
 
 ---
 
@@ -76,20 +76,20 @@ The plugin uses **importree** to build dependency graphs and perform selective c
 Each adapter is a separate entry point:
 
 ```ts
-import Styleframe from '@styleframe/plugin/vite';      // Vite
-import Styleframe from '@styleframe/plugin/webpack';    // Webpack
-import Styleframe from '@styleframe/plugin/rollup';     // Rollup
-import Styleframe from '@styleframe/plugin/esbuild';    // esbuild
-import Styleframe from '@styleframe/plugin/rspack';     // Rspack
-import Styleframe from '@styleframe/plugin/farm';       // Farm
-import Styleframe from '@styleframe/plugin/nuxt';       // Nuxt module
-import Styleframe from '@styleframe/plugin/astro';      // Astro integration
+import Styleframe from "@styleframe/plugin/vite"; // Vite
+import Styleframe from "@styleframe/plugin/webpack"; // Webpack
+import Styleframe from "@styleframe/plugin/rollup"; // Rollup
+import Styleframe from "@styleframe/plugin/esbuild"; // esbuild
+import Styleframe from "@styleframe/plugin/rspack"; // Rspack
+import Styleframe from "@styleframe/plugin/farm"; // Farm
+import Styleframe from "@styleframe/plugin/nuxt"; // Nuxt module
+import Styleframe from "@styleframe/plugin/astro"; // Astro integration
 ```
 
 The `@styleframe/plugin` root export exposes the raw unplugin factory:
 
 ```ts
-import { unpluginFactory, unplugin } from '@styleframe/plugin';
+import { unpluginFactory, unplugin } from "@styleframe/plugin";
 ```
 
 ---
@@ -98,21 +98,21 @@ import { unpluginFactory, unplugin } from '@styleframe/plugin';
 
 ```ts
 interface Options {
-  entry?: string;                    // Config file path (default: './styleframe.config.ts')
-  silent?: boolean;                  // Suppress console output (default: false)
-  transpiler?: TranspileOptions;     // Transpiler options (type, consumers)
-  include?: string[];                // Glob patterns for *.styleframe.ts (default: ['**/*.styleframe.ts'])
-  exclude?: string[];                // Glob patterns to exclude
-  loadOrder?: 'alphabetical' | 'depth-first';  // File loading order (default: 'alphabetical')
-  dts?: {
-    enabled?: boolean;               // Generate type declarations (default: true)
-    outDir?: string;                 // Output directory (default: '.styleframe')
-  };
-  scanner?: {
-    content: string[];               // Glob patterns for content files to scan
-    extractors?: Extractor[];        // Custom file type extractors
-    utilities?: ScannerUtilitiesConfig; // Custom utility class syntax
-  };
+	entry?: string; // Config file path (default: './styleframe.config.ts')
+	silent?: boolean; // Suppress console output (default: false)
+	transpiler?: TranspileOptions; // Transpiler options (type, consumers)
+	include?: string[]; // Glob patterns for *.styleframe.ts (default: ['**/*.styleframe.ts'])
+	exclude?: string[]; // Glob patterns to exclude
+	loadOrder?: "alphabetical" | "depth-first"; // File loading order (default: 'alphabetical')
+	dts?: {
+		enabled?: boolean; // Generate type declarations (default: true)
+		outDir?: string; // Output directory (default: '.styleframe')
+	};
+	scanner?: {
+		content: string[]; // Glob patterns for content files to scan
+		extractors?: Extractor[]; // Custom file type extractors
+		utilities?: ScannerUtilitiesConfig; // Custom utility class syntax
+	};
 }
 ```
 
@@ -124,11 +124,11 @@ interface Options {
 
 ```ts
 // vite.config.ts
-import { defineConfig } from 'vite';
-import Styleframe from '@styleframe/plugin/vite';
+import { defineConfig } from "vite";
+import Styleframe from "@styleframe/plugin/vite";
 
 export default defineConfig({
-  plugins: [Styleframe()],
+	plugins: [Styleframe()],
 });
 ```
 
@@ -136,17 +136,17 @@ export default defineConfig({
 
 ```ts
 // vite.config.ts
-import { defineConfig } from 'vite';
-import Styleframe from '@styleframe/plugin/vite';
+import { defineConfig } from "vite";
+import Styleframe from "@styleframe/plugin/vite";
 
 export default defineConfig({
-  plugins: [
-    Styleframe({
-      scanner: {
-        content: ['./src/**/*.{html,jsx,tsx,vue}'],
-      },
-    }),
-  ],
+	plugins: [
+		Styleframe({
+			scanner: {
+				content: ["./src/**/*.{html,jsx,tsx,vue}"],
+			},
+		}),
+	],
 });
 ```
 
@@ -154,12 +154,12 @@ export default defineConfig({
 
 ```ts
 Styleframe({
-  entry: './src/styleframe.config.ts',
-  loadOrder: 'depth-first',
-  include: ['./src/**/*.styleframe.ts'],
-  exclude: ['./src/**/*.test.ts'],
-  dts: { enabled: true, outDir: '.styleframe' },
-})
+	entry: "./src/styleframe.config.ts",
+	loadOrder: "depth-first",
+	include: ["./src/**/*.styleframe.ts"],
+	exclude: ["./src/**/*.test.ts"],
+	dts: { enabled: true, outDir: ".styleframe" },
+});
 ```
 
 ### Nuxt
@@ -167,10 +167,10 @@ Styleframe({
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ['@styleframe/plugin/nuxt'],
-  styleframe: {
-    // Options passed to the plugin
-  },
+	modules: ["@styleframe/plugin/nuxt"],
+	styleframe: {
+		// Options passed to the plugin
+	},
 });
 ```
 
@@ -178,10 +178,10 @@ export default defineNuxtConfig({
 
 ```ts
 // astro.config.mjs
-import Styleframe from '@styleframe/plugin/astro';
+import Styleframe from "@styleframe/plugin/astro";
 
 export default {
-  integrations: [Styleframe({})],
+	integrations: [Styleframe({})],
 };
 ```
 
@@ -189,7 +189,7 @@ export default {
 
 ```ts
 // In *.styleframe.ts extension files
-import { styleframe } from 'virtual:styleframe';
+import { styleframe } from "virtual:styleframe";
 
 const s = styleframe(); // Returns the global Styleframe instance
 const { variable, ref, selector, recipe } = s;
@@ -200,11 +200,11 @@ export default s;
 
 ```ts
 // In application code
-import { buttonRecipe } from 'virtual:styleframe';
-import 'virtual:styleframe.css';
+import { buttonRecipe } from "virtual:styleframe";
+import "virtual:styleframe.css";
 
 // Use compiled recipe function
-const classes = buttonRecipe({ color: 'primary', size: 'md' });
+const classes = buttonRecipe({ color: "primary", size: "md" });
 ```
 
 ---
@@ -213,11 +213,11 @@ const classes = buttonRecipe({ color: 'primary', size: 'md' });
 
 The plugin defines three custom error classes in `src/plugin/errors.ts`:
 
-| Error | Condition |
-|-------|-----------|
-| `ExportCollisionError` | Two files export the same name |
+| Error                               | Condition                                                  |
+| ----------------------------------- | ---------------------------------------------------------- |
+| `ExportCollisionError`              | Two files export the same name                             |
 | `GlobalInstanceNotInitializedError` | Global instance not created before loading extension files |
-| `CircularDependencyError` | Circular import detected between styleframe files |
+| `CircularDependencyError`           | Circular import detected between styleframe files          |
 
 All errors extend `StyleframePluginError` and include `[styleframe]` prefix in messages.
 
@@ -229,18 +229,18 @@ All errors extend `StyleframePluginError` and include `[styleframe]` prefix in m
 
 ```ts
 interface PluginGlobalState {
-  globalInstance: Styleframe | null;       // From styleframe.config.ts
-  configFile: StyleframeFileInfo | null;   // Config file metadata
-  files: Map<string, StyleframeFileInfo>;  // All *.styleframe.ts files
-  loadingFiles: Set<string>;               // Circular dependency detection
-  initialized: boolean;
+	globalInstance: Styleframe | null; // From styleframe.config.ts
+	configFile: StyleframeFileInfo | null; // Config file metadata
+	files: Map<string, StyleframeFileInfo>; // All *.styleframe.ts files
+	loadingFiles: Set<string>; // Circular dependency detection
+	initialized: boolean;
 }
 
 interface StyleframeFileInfo {
-  path: string;
-  loadOrder: number;
-  exports: Map<string, ExportInfo>;
-  lastModified: number;
+	path: string;
+	loadOrder: number;
+	exports: Map<string, ExportInfo>;
+	lastModified: number;
 }
 ```
 
@@ -252,27 +252,27 @@ Built by importree, tracks forward and reverse dependency relationships between 
 
 ## Constants
 
-| Constant | Value |
-|----------|-------|
-| `PLUGIN_NAME` | `"styleframe"` |
-| `DEFAULT_ENTRY` | `"./styleframe.config.ts"` |
-| `VIRTUAL_CSS_MODULE_ID` | `"virtual:styleframe.css"` |
-| `VIRTUAL_TS_MODULE_ID` | `"virtual:styleframe"` |
-| `RESOLVED_VIRTUAL_EXTENSION_ID` | `"\0virtual:styleframe:extension"` |
-| `RESOLVED_VIRTUAL_CONSUMER_ID` | `"\0virtual:styleframe:consumer"` |
-| `RESOLVED_VIRTUAL_CSS_MODULE_ID` | `"\0virtual:styleframe.css"` |
-| `DEFAULT_IGNORE_PATTERNS` | `node_modules`, `.git`, `dist`, `build`, `.next`, `.nuxt`, `coverage` |
+| Constant                         | Value                                                                 |
+| -------------------------------- | --------------------------------------------------------------------- |
+| `PLUGIN_NAME`                    | `"styleframe"`                                                        |
+| `DEFAULT_ENTRY`                  | `"./styleframe.config.ts"`                                            |
+| `VIRTUAL_CSS_MODULE_ID`          | `"virtual:styleframe.css"`                                            |
+| `VIRTUAL_TS_MODULE_ID`           | `"virtual:styleframe"`                                                |
+| `RESOLVED_VIRTUAL_EXTENSION_ID`  | `"\0virtual:styleframe:extension"`                                    |
+| `RESOLVED_VIRTUAL_CONSUMER_ID`   | `"\0virtual:styleframe:consumer"`                                     |
+| `RESOLVED_VIRTUAL_CSS_MODULE_ID` | `"\0virtual:styleframe.css"`                                          |
+| `DEFAULT_IGNORE_PATTERNS`        | `node_modules`, `.git`, `dist`, `build`, `.next`, `.nuxt`, `coverage` |
 
 ---
 
 ## Generation Functions
 
-| Function | Location | Purpose |
-|----------|----------|---------|
-| `generateExtensionModule(configPath)` | `generate/extension-module.ts` | Generates module that imports config and re-exports the global instance |
-| `generateConsumerModule(state)` | `generate/consumer-module.ts` | Uses `@styleframe/transpiler` with `type: "ts"` to generate recipe functions and selectors |
-| `generateGlobalCSS(state, isBuild, options)` | `generate/global-css.ts` | Uses `@styleframe/transpiler` with `type: "css"` to generate all styles |
-| `generateTypeDeclarations(state, cwd, dtsOptions, silent)` | `generate/dts.ts` | Uses `@styleframe/transpiler` with `type: "dts"` to generate `.d.ts` files |
+| Function                                                   | Location                       | Purpose                                                                                    |
+| ---------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------ |
+| `generateExtensionModule(configPath)`                      | `generate/extension-module.ts` | Generates module that imports config and re-exports the global instance                    |
+| `generateConsumerModule(state)`                            | `generate/consumer-module.ts`  | Uses `@styleframe/transpiler` with `type: "ts"` to generate recipe functions and selectors |
+| `generateGlobalCSS(state, isBuild, options)`               | `generate/global-css.ts`       | Uses `@styleframe/transpiler` with `type: "css"` to generate all styles                    |
+| `generateTypeDeclarations(state, cwd, dtsOptions, silent)` | `generate/dts.ts`              | Uses `@styleframe/transpiler` with `type: "dts"` to generate `.d.ts` files                 |
 
 ---
 

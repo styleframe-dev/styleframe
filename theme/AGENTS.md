@@ -35,12 +35,17 @@ Each composable creates CSS custom properties and returns typed token objects. A
 ### Colors
 
 ```ts
-import { useColor, useColorLevel, useColorShade, useColorTint } from '@styleframe/theme';
+import {
+	useColor,
+	useColorLevel,
+	useColorShade,
+	useColorTint,
+} from "@styleframe/theme";
 
 // Base colors (converted to OKLCH internally)
 const { colorPrimary, colorSecondary } = useColor(s, {
-    primary: '#006cff',
-    secondary: '#6c757d',
+	primary: "#006cff",
+	secondary: "#6c757d",
 } as const);
 
 // Level variants (absolute L channel in OKLCH)
@@ -48,10 +53,14 @@ const { colorPrimary, colorSecondary } = useColor(s, {
 const primaryLevels = useColorLevel(s, colorPrimary, colorLevelValues);
 
 // Shade variants (relative: subtracts from L channel - darker)
-const { colorPrimaryShade100 } = useColorShade(s, colorPrimary, { 100: 10 } as const);
+const { colorPrimaryShade100 } = useColorShade(s, colorPrimary, {
+	100: 10,
+} as const);
 
 // Tint variants (relative: adds to L channel - lighter)
-const { colorPrimaryTint100 } = useColorTint(s, colorPrimary, { 100: 10 } as const);
+const { colorPrimaryTint100 } = useColorTint(s, colorPrimary, {
+	100: 10,
+} as const);
 ```
 
 Default colors: `primary`, `secondary`, `success`, `info`, `warning`, `error`, `neutral`, `white`, `black`.
@@ -59,11 +68,11 @@ Default colors: `primary`, `secondary`, `success`, `info`, `warning`, `error`, `
 ### Scales
 
 ```ts
-import { useScale, useScalePowers } from '@styleframe/theme';
+import { useScale, useScalePowers } from "@styleframe/theme";
 
 const { scale, scalePerfectFourth } = useScale(s, {
-    ...defaultScaleValues,
-    default: '@minor-third',
+	...defaultScaleValues,
+	default: "@minor-third",
 });
 
 // Generate multiplier powers: [-3, -2, -1, 0, 1, 2, 3, 4, 5]
@@ -75,14 +84,14 @@ Available ratios: `minor-second` (1.067), `major-second` (1.125), `minor-third` 
 ### Spacing
 
 ```ts
-import { useSpacing, useMultiplier } from '@styleframe/theme';
+import { useSpacing, useMultiplier } from "@styleframe/theme";
 
-const { spacing } = useSpacing(s, { default: '1rem' } as const);
+const { spacing } = useSpacing(s, { default: "1rem" } as const);
 
 const { spacingSm, spacingMd, spacingLg } = useMultiplier(s, spacing, {
-    sm: scalePowers[-1],
-    md: scalePowers[0],
-    lg: scalePowers[1],
+	sm: scalePowers[-1],
+	md: scalePowers[0],
+	lg: scalePowers[1],
 });
 ```
 
@@ -91,10 +100,17 @@ Default sizes: `2xs`, `xs`, `sm`, `md` (default), `lg`, `xl`, `2xl`, `3xl`.
 ### Typography
 
 ```ts
-import { useFontFamily, useFontSize, useFontWeight, useFontStyle, useLineHeight, useLetterSpacing } from '@styleframe/theme';
+import {
+	useFontFamily,
+	useFontSize,
+	useFontWeight,
+	useFontStyle,
+	useLineHeight,
+	useLetterSpacing,
+} from "@styleframe/theme";
 
 const { fontFamily, fontFamilyMono, fontFamilyPrint } = useFontFamily(s);
-const { fontSize } = useFontSize(s, { default: '1rem' } as const);
+const { fontSize } = useFontSize(s, { default: "1rem" } as const);
 const { fontWeightNormal, fontWeightBold } = useFontWeight(s);
 const { lineHeightTight, lineHeightNormal } = useLineHeight(s);
 const { letterSpacingTight, letterSpacingWide } = useLetterSpacing(s);
@@ -103,7 +119,13 @@ const { letterSpacingTight, letterSpacingWide } = useLetterSpacing(s);
 ### Borders and Effects
 
 ```ts
-import { useBorderWidth, useBorderRadius, useBorderStyle, useBorderColor, useBoxShadow } from '@styleframe/theme';
+import {
+	useBorderWidth,
+	useBorderRadius,
+	useBorderStyle,
+	useBorderColor,
+	useBoxShadow,
+} from "@styleframe/theme";
 
 const { borderWidthThin } = useBorderWidth(s);
 const { borderRadiusSm, borderRadiusMd } = useBorderRadius(s);
@@ -113,7 +135,7 @@ const { boxShadowSm, boxShadowMd } = useBoxShadow(s);
 ### Breakpoints and Easing
 
 ```ts
-import { useBreakpoint, useEasing } from '@styleframe/theme';
+import { useBreakpoint, useEasing } from "@styleframe/theme";
 
 const { breakpointSm, breakpointMd, breakpointLg } = useBreakpoint(s);
 const { easingEaseOut, easingSpring } = useEasing(s);
@@ -129,15 +151,15 @@ Modifier composables return factory objects used with utility classes.
 
 ```ts
 import {
-    usePseudoStateModifiers,    // hover, focus, focusWithin, focusVisible, active, visited, target
-    usePseudoElementModifiers,  // before, after, placeholder, selection, firstLetter, firstLine, marker, backdrop, file
-    useFormStateModifiers,      // disabled, enabled, checked, indeterminate, required, optional, valid, invalid, placeholderShown, autofill, readOnly
-    useAriaStateModifiers,      // ariaBusy, ariaChecked, ariaDisabled, ariaExpanded, ariaHidden, ariaPressed, ariaReadonly, ariaRequired, ariaSelected
-    useMediaPreferenceModifiers,// dark, motionSafe, motionReduce, contrastMore, contrastLess, portrait, landscape, print, forcedColors
-    useStructuralModifiers,     // first, last, only, odd, even, firstOfType, lastOfType, onlyOfType, empty
-    useDirectionalModifiers,    // rtl, ltr
-    useOtherStateModifiers,     // open, inert
-} from '@styleframe/theme';
+	usePseudoStateModifiers, // hover, focus, focusWithin, focusVisible, active, visited, target
+	usePseudoElementModifiers, // before, after, placeholder, selection, firstLetter, firstLine, marker, backdrop, file
+	useFormStateModifiers, // disabled, enabled, checked, indeterminate, required, optional, valid, invalid, placeholderShown, autofill, readOnly
+	useAriaStateModifiers, // ariaBusy, ariaChecked, ariaDisabled, ariaExpanded, ariaHidden, ariaPressed, ariaReadonly, ariaRequired, ariaSelected
+	useMediaPreferenceModifiers, // dark, motionSafe, motionReduce, contrastMore, contrastLess, portrait, landscape, print, forcedColors
+	useStructuralModifiers, // first, last, only, odd, even, firstOfType, lastOfType, onlyOfType, empty
+	useDirectionalModifiers, // rtl, ltr
+	useOtherStateModifiers, // open, inert
+} from "@styleframe/theme";
 
 const { hover, focus, active } = usePseudoStateModifiers(s);
 const { dark, motionReduce } = useMediaPreferenceModifiers(s);
@@ -152,9 +174,17 @@ Utility composables create CSS utility class generators. Each returns a creator 
 ### Spacing Utilities (with multiplier support)
 
 ```ts
-import { useMarginUtility, usePaddingUtility, useGapUtility, useSpaceUtility } from '@styleframe/theme';
+import {
+	useMarginUtility,
+	usePaddingUtility,
+	useGapUtility,
+	useSpaceUtility,
+} from "@styleframe/theme";
 
-const createMargin = useMarginUtility(s, { sm: ref(spacingSm), md: ref(spacingMd) });
+const createMargin = useMarginUtility(s, {
+	sm: ref(spacingSm),
+	md: ref(spacingMd),
+});
 
 // Multiplier values generate calc() expressions
 createMargin(["@1.5", "@2", "@0.5"]);
@@ -165,22 +195,22 @@ Directional variants: `useMarginTopUtility`, `useMarginInlineUtility`, `usePaddi
 
 ### All Utility Categories
 
-| Category | Composables |
-|----------|-------------|
-| **Typography** | `useColorUtility`, `useTextColorUtility`, `useFontFamilyUtility`, `useFontSizeUtility`, `useFontWeightUtility`, `useLineHeightUtility`, `useLetterSpacingUtility`, `useTextAlignUtility`, `useTextDecorationUtility`, `useTextTransformUtility`, `useTextOverflowUtility`, `useTextWrapUtility`, `useWhitespaceUtility`, `useWordBreakUtility`, `useFontStyleUtility`, `useLineClampUtility`, `useContentUtility`, `useVerticalAlignUtility` |
-| **Backgrounds** | `useBackgroundColorUtility`, `useBackgroundAttachmentUtility`, `useBackgroundClipUtility`, `useBackgroundImageUtility`, `useBackgroundPositionUtility`, `useBackgroundRepeatUtility`, `useBackgroundSizeUtility` |
-| **Borders** | `useBorderWidthUtility`, `useBorderColorUtility`, `useBorderStyleUtility`, `useBorderRadiusUtility`, `useRingUtility`, `useDivideUtility`, `useOutlineUtility` |
-| **Effects** | `useBoxShadowUtility`, `useOpacityUtility`, `useTextShadowUtility`, `useMixBlendModeUtility`, `useBackgroundBlendModeUtility` |
-| **Filters** | `useFilterUtility`, `useBackdropFilterUtility` |
-| **Flexbox & Grid** | `useFlexUtility`, `useFlexDirectionUtility`, `useFlexWrapUtility`, `useGapUtility`, `useAlignUtility`, `useJustifyUtility`, `useOrderUtility`, `usePlaceUtility`, `useGridUtility` |
-| **Layout** | `useDisplayUtility`, `usePositionUtility`, `useInsetUtility`, `useZIndexUtility`, `useFloatUtility`, `useOverflowUtility`, `useAspectRatioUtility`, `useBoxUtility`, `useColumnsUtility`, `useObjectFitUtility`, `useObjectPositionUtility` |
-| **Sizing** | `useWidthUtility`, `useHeightUtility`, `useSizeUtility` |
-| **Interactivity** | `useInteractivityUtility`, `useScrollUtility`, `useScrollSnapUtility` |
-| **Transforms** | `useTransformUtility` |
-| **Transitions** | `useTransitionUtility`, `useAnimationUtility` |
-| **Accessibility** | `useAccessibilityUtility` |
-| **SVG** | `useSvgUtility` |
-| **Tables** | `useTableUtility` |
+| Category           | Composables                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Typography**     | `useColorUtility`, `useTextColorUtility`, `useFontFamilyUtility`, `useFontSizeUtility`, `useFontWeightUtility`, `useLineHeightUtility`, `useLetterSpacingUtility`, `useTextAlignUtility`, `useTextDecorationUtility`, `useTextTransformUtility`, `useTextOverflowUtility`, `useTextWrapUtility`, `useWhitespaceUtility`, `useWordBreakUtility`, `useFontStyleUtility`, `useLineClampUtility`, `useContentUtility`, `useVerticalAlignUtility` |
+| **Backgrounds**    | `useBackgroundColorUtility`, `useBackgroundAttachmentUtility`, `useBackgroundClipUtility`, `useBackgroundImageUtility`, `useBackgroundPositionUtility`, `useBackgroundRepeatUtility`, `useBackgroundSizeUtility`                                                                                                                                                                                                                             |
+| **Borders**        | `useBorderWidthUtility`, `useBorderColorUtility`, `useBorderStyleUtility`, `useBorderRadiusUtility`, `useRingUtility`, `useDivideUtility`, `useOutlineUtility`                                                                                                                                                                                                                                                                               |
+| **Effects**        | `useBoxShadowUtility`, `useOpacityUtility`, `useTextShadowUtility`, `useMixBlendModeUtility`, `useBackgroundBlendModeUtility`                                                                                                                                                                                                                                                                                                                |
+| **Filters**        | `useFilterUtility`, `useBackdropFilterUtility`                                                                                                                                                                                                                                                                                                                                                                                               |
+| **Flexbox & Grid** | `useFlexUtility`, `useFlexDirectionUtility`, `useFlexWrapUtility`, `useGapUtility`, `useAlignUtility`, `useJustifyUtility`, `useOrderUtility`, `usePlaceUtility`, `useGridUtility`                                                                                                                                                                                                                                                           |
+| **Layout**         | `useDisplayUtility`, `usePositionUtility`, `useInsetUtility`, `useZIndexUtility`, `useFloatUtility`, `useOverflowUtility`, `useAspectRatioUtility`, `useBoxUtility`, `useColumnsUtility`, `useObjectFitUtility`, `useObjectPositionUtility`                                                                                                                                                                                                  |
+| **Sizing**         | `useWidthUtility`, `useHeightUtility`, `useSizeUtility`                                                                                                                                                                                                                                                                                                                                                                                      |
+| **Interactivity**  | `useInteractivityUtility`, `useScrollUtility`, `useScrollSnapUtility`                                                                                                                                                                                                                                                                                                                                                                        |
+| **Transforms**     | `useTransformUtility`                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| **Transitions**    | `useTransitionUtility`, `useAnimationUtility`                                                                                                                                                                                                                                                                                                                                                                                                |
+| **Accessibility**  | `useAccessibilityUtility`                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| **SVG**            | `useSvgUtility`                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| **Tables**         | `useTableUtility`                                                                                                                                                                                                                                                                                                                                                                                                                            |
 
 ---
 
@@ -189,7 +219,7 @@ Directional variants: `useMarginTopUtility`, `useMarginInlineUtility`, `usePaddi
 Pre-built component recipes with color, variant, and size support.
 
 ```ts
-import { useButtonRecipe, useBadgeRecipe } from '@styleframe/theme';
+import { useButtonRecipe, useBadgeRecipe } from "@styleframe/theme";
 
 useButtonRecipe(s);
 // Colors: primary, secondary, success, info, warning, error
@@ -217,16 +247,16 @@ Presets compose multiple composables into a single call for rapid setup.
 Creates all design token variables at once. Returns a flat object — all variables are directly destructurable.
 
 ```ts
-import { useDesignTokensPreset } from '@styleframe/theme';
+import { useDesignTokensPreset } from "@styleframe/theme";
 
 const { colorPrimary, spacingMd, borderRadiusMd } = useDesignTokensPreset(s);
 
 // With custom config
 const { colorPrimary, spacingMd } = useDesignTokensPreset(s, {
-    colors: { primary: '#006cff', secondary: '#6c757d' },
-    spacing: { default: '1rem' },
-    fontSize: { default: '1rem' },
-    easing: false, // Set false to disable a category
+	colors: { primary: "#006cff", secondary: "#6c757d" },
+	spacing: { default: "1rem" },
+	fontSize: { default: "1rem" },
+	easing: false, // Set false to disable a category
 });
 ```
 
@@ -236,36 +266,36 @@ Theme overrides:
 
 ```ts
 useDesignTokensPreset(s, {
-    themes: {
-        dark: { colors: { primary: '#60a5fa' } },
-    },
+	themes: {
+		dark: { colors: { primary: "#60a5fa" } },
+	},
 });
 ```
 
 ### useModifiersPreset
 
 ```ts
-import { useModifiersPreset } from '@styleframe/theme';
+import { useModifiersPreset } from "@styleframe/theme";
 
 const modifiers = useModifiersPreset(s, {
-    pseudoStates: true,     // hover, focus, active, etc.
-    formStates: true,       // disabled, checked, valid, etc.
-    structural: true,       // first, last, odd, even, etc.
-    pseudoElements: true,   // before, after, placeholder, etc.
-    mediaPreferences: true, // dark, motionReduce, etc.
-    ariaStates: true,       // ariaExpanded, ariaSelected, etc.
-    directional: true,      // rtl, ltr
-    otherStates: true,      // open, inert
+	pseudoStates: true, // hover, focus, active, etc.
+	formStates: true, // disabled, checked, valid, etc.
+	structural: true, // first, last, odd, even, etc.
+	pseudoElements: true, // before, after, placeholder, etc.
+	mediaPreferences: true, // dark, motionReduce, etc.
+	ariaStates: true, // ariaExpanded, ariaSelected, etc.
+	directional: true, // rtl, ltr
+	otherStates: true, // open, inert
 });
 ```
 
 ### useUtilitiesPreset
 
 ```ts
-import { useUtilitiesPreset } from '@styleframe/theme';
+import { useUtilitiesPreset } from "@styleframe/theme";
 
 const utilities = useUtilitiesPreset(s, {
-    // Enable/disable by category, pass custom values
+	// Enable/disable by category, pass custom values
 });
 ```
 
@@ -274,7 +304,7 @@ const utilities = useUtilitiesPreset(s, {
 Wraps `useUtilitiesPreset` with Tailwind-style shorthand names (`m` for margin, `p` for padding, `w` for width, `text` for font-size, etc.).
 
 ```ts
-import { useShorthandUtilitiesPreset } from '@styleframe/theme';
+import { useShorthandUtilitiesPreset } from "@styleframe/theme";
 
 useShorthandUtilitiesPreset(s);
 ```
@@ -287,24 +317,24 @@ All default token values are exported as constants for reference or customizatio
 
 ```ts
 import {
-    defaultColorValues,
-    colorLevelValues,
-    defaultColorShadeValues,
-    defaultColorTintValues,
-    defaultSpacingValues,
-    defaultFontFamilyValues,
-    defaultFontSizeValues,
-    defaultFontWeightValues,
-    defaultLineHeightValues,
-    defaultLetterSpacingValues,
-    defaultBorderWidthValues,
-    defaultBorderRadiusValues,
-    defaultBorderStyleValues,
-    defaultBoxShadowValues,
-    defaultBreakpointValues,
-    defaultEasingValues,
-    defaultScaleValues,
-} from '@styleframe/theme';
+	defaultColorValues,
+	colorLevelValues,
+	defaultColorShadeValues,
+	defaultColorTintValues,
+	defaultSpacingValues,
+	defaultFontFamilyValues,
+	defaultFontSizeValues,
+	defaultFontWeightValues,
+	defaultLineHeightValues,
+	defaultLetterSpacingValues,
+	defaultBorderWidthValues,
+	defaultBorderRadiusValues,
+	defaultBorderStyleValues,
+	defaultBoxShadowValues,
+	defaultBreakpointValues,
+	defaultEasingValues,
+	defaultScaleValues,
+} from "@styleframe/theme";
 ```
 
 ---
@@ -313,14 +343,14 @@ import {
 
 For building custom composables:
 
-| Factory | Purpose |
-|---------|---------|
-| `createUseVariable(name, options)` | Create a custom variable composable |
-| `createUseUtility(name, factory, options)` | Create a custom utility composable |
-| `createUseSpacingUtility(name, factory, options)` | Create a utility with multiplier support |
-| `createUseDerivedVariable(options)` | Create derived variables from a parent |
-| `createUseRecipe(name, defaults)` | Create a custom recipe composable |
-| `createMultiplierAutogenerate(options)` | Add `@`-prefix multiplier support to utilities |
+| Factory                                           | Purpose                                        |
+| ------------------------------------------------- | ---------------------------------------------- |
+| `createUseVariable(name, options)`                | Create a custom variable composable            |
+| `createUseUtility(name, factory, options)`        | Create a custom utility composable             |
+| `createUseSpacingUtility(name, factory, options)` | Create a utility with multiplier support       |
+| `createUseDerivedVariable(options)`               | Create derived variables from a parent         |
+| `createUseRecipe(name, defaults)`                 | Create a custom recipe composable              |
+| `createMultiplierAutogenerate(options)`           | Add `@`-prefix multiplier support to utilities |
 
 ---
 
@@ -342,8 +372,12 @@ For building custom composables:
 ### Quick Start with Presets
 
 ```ts
-import { styleframe } from 'styleframe';
-import { useDesignTokensPreset, useModifiersPreset, useUtilitiesPreset } from '@styleframe/theme';
+import { styleframe } from "styleframe";
+import {
+	useDesignTokensPreset,
+	useModifiersPreset,
+	useUtilitiesPreset,
+} from "@styleframe/theme";
 
 const s = styleframe();
 
@@ -357,26 +391,32 @@ export default s;
 ### Manual Token Setup
 
 ```ts
-import { styleframe } from 'styleframe';
-import { useColor, useSpacing, useMultiplier, useScale, useScalePowers } from '@styleframe/theme';
+import { styleframe } from "styleframe";
+import {
+	useColor,
+	useSpacing,
+	useMultiplier,
+	useScale,
+	useScalePowers,
+} from "@styleframe/theme";
 
 const s = styleframe();
 const { ref, selector } = s;
 
-const { scale } = useScale(s, { default: '@minor-third' });
+const { scale } = useScale(s, { default: "@minor-third" });
 const scalePowers = useScalePowers(s, scale);
 
-const { colorPrimary } = useColor(s, { primary: '#006cff' } as const);
-const { spacing } = useSpacing(s, { default: '1rem' } as const);
+const { colorPrimary } = useColor(s, { primary: "#006cff" } as const);
+const { spacing } = useSpacing(s, { default: "1rem" } as const);
 const { spacingSm, spacingMd, spacingLg } = useMultiplier(s, spacing, {
-    sm: scalePowers[-1],
-    md: scalePowers[0],
-    lg: scalePowers[1],
+	sm: scalePowers[-1],
+	md: scalePowers[0],
+	lg: scalePowers[1],
 });
 
-selector('.card', {
-    padding: ref(spacingLg),
-    backgroundColor: ref(colorPrimary),
+selector(".card", {
+	padding: ref(spacingLg),
+	backgroundColor: ref(colorPrimary),
 });
 
 export default s;
@@ -385,17 +425,17 @@ export default s;
 ### Custom Composable
 
 ```ts
-import type { Styleframe } from 'styleframe';
-import { useColor, useColorLevel, colorLevelValues } from '@styleframe/theme';
+import type { Styleframe } from "styleframe";
+import { useColor, useColorLevel, colorLevelValues } from "@styleframe/theme";
 
 export function useThemeColors(s: Styleframe) {
-    const { colorPrimary, colorSecondary } = useColor(s, {
-        primary: '#006cff',
-        secondary: '#6c757d',
-    } as const);
+	const { colorPrimary, colorSecondary } = useColor(s, {
+		primary: "#006cff",
+		secondary: "#6c757d",
+	} as const);
 
-    const primaryLevels = useColorLevel(s, colorPrimary, colorLevelValues);
+	const primaryLevels = useColorLevel(s, colorPrimary, colorLevelValues);
 
-    return { colorPrimary, colorSecondary, ...primaryLevels };
+	return { colorPrimary, colorSecondary, ...primaryLevels };
 }
 ```

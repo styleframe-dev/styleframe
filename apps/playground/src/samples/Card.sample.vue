@@ -16,7 +16,11 @@ const props = withDefaults(
 </script>
 
 <template>
-	<article :class="card({ color: props.color, variant: props.variant, size: props.size })">
+	<article
+		:class="
+			card({ color: props.color, variant: props.variant, size: props.size })
+		"
+	>
 		<header :class="cardHeader()">
 			<slot name="header" />
 		</header>

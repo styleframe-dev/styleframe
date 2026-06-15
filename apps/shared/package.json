@@ -1,7 +1,7 @@
 {
 	"name": "@styleframe/app-shared",
-	"type": "module",
 	"version": "2.0.3",
+	"type": "module",
 	"scripts": {
 		"postinstall": "nuxt prepare"
 	},
@@ -13,10 +13,10 @@
 		"@nuxtjs/i18n": "catalog:nuxt",
 		"@nuxtjs/mdc": "catalog:nuxt",
 		"@nuxtjs/robots": "catalog:nuxt",
+		"defu": "catalog:nuxt",
 		"nuxt": "catalog:nuxt",
 		"nuxt-llms": "catalog:nuxt",
 		"nuxt-og-image": "catalog:nuxt",
-		"defu": "catalog:nuxt",
 		"posthog-js": "catalog:nuxt",
 		"tailwindcss": "catalog:nuxt",
 		"zod": "catalog:"

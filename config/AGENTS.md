@@ -22,38 +22,38 @@ Extend from this package in any workspace `tsconfig.json`:
 
 ```json
 {
-    "extends": "@styleframe/config-typescript",
-    "compilerOptions": {
-        "rootDir": "src",
-        "outDir": "dist"
-    },
-    "include": ["src"]
+	"extends": "@styleframe/config-typescript",
+	"compilerOptions": {
+		"rootDir": "src",
+		"outDir": "dist"
+	},
+	"include": ["src"]
 }
 ```
 
 ### Compiler Options
 
-| Option | Value | Purpose |
-|--------|-------|---------|
-| `target` | `es2022` | Modern JavaScript output |
-| `module` | `esnext` | ESM module system |
-| `moduleResolution` | `bundler` | Bundler-compatible resolution |
-| `strict` | `true` | Full strict mode |
-| `noUncheckedIndexedAccess` | `true` | Prevents unsafe indexed access |
-| `noImplicitOverride` | `true` | Requires explicit `override` keyword |
-| `verbatimModuleSyntax` | `true` | Enforces `import type` for type-only imports |
-| `isolatedModules` | `true` | Ensures compatibility with single-file transpilers |
-| `moduleDetection` | `force` | Treats all files as modules |
-| `declaration` | `true` | Generates `.d.ts` files |
-| `declarationMap` | `true` | Generates declaration source maps |
-| `sourceMap` | `true` | Generates source maps |
-| `composite` | `true` | Enables project references |
-| `esModuleInterop` | `true` | CommonJS interop support |
-| `skipLibCheck` | `true` | Skips type checking of declaration files |
-| `allowJs` | `true` | Allows JavaScript files |
-| `resolveJsonModule` | `true` | Allows importing JSON files |
-| `outDir` | `dist` | Default output directory |
-| `lib` | `es2022, dom, dom.iterable` | Available type libraries |
+| Option                     | Value                       | Purpose                                            |
+| -------------------------- | --------------------------- | -------------------------------------------------- |
+| `target`                   | `es2022`                    | Modern JavaScript output                           |
+| `module`                   | `esnext`                    | ESM module system                                  |
+| `moduleResolution`         | `bundler`                   | Bundler-compatible resolution                      |
+| `strict`                   | `true`                      | Full strict mode                                   |
+| `noUncheckedIndexedAccess` | `true`                      | Prevents unsafe indexed access                     |
+| `noImplicitOverride`       | `true`                      | Requires explicit `override` keyword               |
+| `verbatimModuleSyntax`     | `true`                      | Enforces `import type` for type-only imports       |
+| `isolatedModules`          | `true`                      | Ensures compatibility with single-file transpilers |
+| `moduleDetection`          | `force`                     | Treats all files as modules                        |
+| `declaration`              | `true`                      | Generates `.d.ts` files                            |
+| `declarationMap`           | `true`                      | Generates declaration source maps                  |
+| `sourceMap`                | `true`                      | Generates source maps                              |
+| `composite`                | `true`                      | Enables project references                         |
+| `esModuleInterop`          | `true`                      | CommonJS interop support                           |
+| `skipLibCheck`             | `true`                      | Skips type checking of declaration files           |
+| `allowJs`                  | `true`                      | Allows JavaScript files                            |
+| `resolveJsonModule`        | `true`                      | Allows importing JSON files                        |
+| `outDir`                   | `dist`                      | Default output directory                           |
+| `lib`                      | `es2022, dom, dom.iterable` | Available type libraries                           |
 
 ### Best Practices
 
@@ -76,23 +76,23 @@ Shared Vite build configuration and Vitest test setup for all Styleframe library
 Use in a package's `vite.config.ts`:
 
 ```ts
-import { createViteConfig } from '@styleframe/config-vite';
+import { createViteConfig } from "@styleframe/config-vite";
 
-export default createViteConfig('package-name', import.meta.dirname);
+export default createViteConfig("package-name", import.meta.dirname);
 ```
 
 With custom overrides:
 
 ```ts
-import { createViteConfig } from '@styleframe/config-vite';
+import { createViteConfig } from "@styleframe/config-vite";
 
-export default createViteConfig('package-name', import.meta.dirname, {
-    plugins: [customPlugin()],
-    build: {
-        lib: {
-            entry: resolve(import.meta.dirname, 'src/main.ts'),
-        },
-    },
+export default createViteConfig("package-name", import.meta.dirname, {
+	plugins: [customPlugin()],
+	build: {
+		lib: {
+			entry: resolve(import.meta.dirname, "src/main.ts"),
+		},
+	},
 });
 ```
 
@@ -102,27 +102,28 @@ Creates a Vite configuration object with library build mode and Vitest test sett
 
 **Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `name` | `string` | Yes | Library name used for build output file naming |
-| `cwd` | `string` | Yes | Package root directory (use `import.meta.dirname`) |
-| `options` | `UserConfig` | No | Vite config overrides merged into the base config |
+| Parameter | Type         | Required | Description                                        |
+| --------- | ------------ | -------- | -------------------------------------------------- |
+| `name`    | `string`     | Yes      | Library name used for build output file naming     |
+| `cwd`     | `string`     | Yes      | Package root directory (use `import.meta.dirname`) |
+| `options` | `UserConfig` | No       | Vite config overrides merged into the base config  |
 
 **Returns:** `UserConfig` — a Vite configuration object via `defineConfig()`.
 
 **Default configuration:**
 
-| Setting | Value |
-|---------|-------|
-| Build entry | `src/index.ts` (relative to `cwd`) |
-| Build output name | Uses `name` parameter |
-| Plugins | `vite-plugin-dts` with `rollupTypes: true` (bundles `.d.ts` output) |
-| Test file pattern | `src/**/*.test.{ts,tsx}` |
-| Test reporter | `verbose` |
-| Coverage provider | `v8` |
-| Test globals | `true` (no need to import `describe`, `it`, `expect`) |
+| Setting           | Value                                                               |
+| ----------------- | ------------------------------------------------------------------- |
+| Build entry       | `src/index.ts` (relative to `cwd`)                                  |
+| Build output name | Uses `name` parameter                                               |
+| Plugins           | `vite-plugin-dts` with `rollupTypes: true` (bundles `.d.ts` output) |
+| Test file pattern | `src/**/*.test.{ts,tsx}`                                            |
+| Test reporter     | `verbose`                                                           |
+| Coverage provider | `v8`                                                                |
+| Test globals      | `true` (no need to import `describe`, `it`, `expect`)               |
 
 **Override behavior:**
+
 - `options.plugins` are appended to the default plugins array (dts plugin is always included).
 - `options.build` and `options.build.lib` are shallow-merged with defaults.
 - All other Vite config options are spread at the top level.

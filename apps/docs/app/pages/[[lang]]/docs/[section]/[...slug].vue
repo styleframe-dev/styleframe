@@ -148,10 +148,7 @@ const editLink = computed(() => {
 			<ContentRenderer v-if="page" :value="page" />
 
 			<USeparator>
-				<div
-					v-if="github"
-					class="flex items-center gap-2 text-sm text-muted"
-				>
+				<div v-if="github" class="flex items-center gap-2 text-sm text-muted">
 					<UButton
 						variant="link"
 						color="neutral"

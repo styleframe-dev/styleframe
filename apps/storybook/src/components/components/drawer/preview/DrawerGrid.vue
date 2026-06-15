@@ -28,7 +28,9 @@ function titleCase(value: string) {
 					<DrawerOverlay>
 						<Drawer :color="color" :variant="variant" size="sm">
 							<DrawerHeader :color="color" :variant="variant">
-								<DrawerTitle>{{ titleCase(variant) }} {{ titleCase(color) }}</DrawerTitle>
+								<DrawerTitle
+									>{{ titleCase(variant) }} {{ titleCase(color) }}</DrawerTitle
+								>
 							</DrawerHeader>
 							<DrawerBody :color="color" :variant="variant">
 								<DrawerDescription>

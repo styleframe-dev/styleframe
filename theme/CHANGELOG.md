@@ -126,7 +126,7 @@
 
   ```ts
   useDesignTokensPreset(s, {
-    colors: { brand: "#ff6600" },
+  	colors: { brand: "#ff6600" },
   });
   // Old behavior: only `colorBrand` exists; default colors and border colors were dropped.
   ```
@@ -135,13 +135,13 @@
 
   ```ts
   useDesignTokensPreset(s, {
-    colors: { brand: "#ff6600" },
+  	colors: { brand: "#ff6600" },
   });
   // New behavior: all default colors plus `colorBrand`; border colors keep working.
 
   useDesignTokensPreset(s, {
-    meta: { merge: false },
-    colors: { brand: "#ff6600" },
+  	meta: { merge: false },
+  	colors: { brand: "#ff6600" },
   });
   // Restores the previous replace behavior.
   ```
@@ -154,10 +154,10 @@
 
   ```ts
   useFontSizeDesignTokens(s, {
-    default: "@font-size.md",
-    md: [16, 18], // fluid
-    sm: "0.8rem", // fixed
-    lg: { min: 18, max: 24 }, // fluid (object form)
+  	default: "@font-size.md",
+  	md: [16, 18], // fluid
+  	sm: "0.8rem", // fixed
+  	lg: { min: 18, max: 24 }, // fluid (object form)
   });
   ```
 
@@ -560,9 +560,9 @@ false` or `scale: false` while leaving `fluidFontSize` enabled throws a
 
   ```ts
   const utilities = useUtilitiesPreset(s, {
-    meta: { merge: true },
-    display: { flex: "flex", block: "block" },
-    position: false, // Disable position utilities
+  	meta: { merge: true },
+  	display: { flex: "flex", block: "block" },
+  	position: false, // Disable position utilities
   });
   ```
 

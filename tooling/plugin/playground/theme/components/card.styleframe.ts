@@ -28,7 +28,9 @@ export const cardSelector = selector(".card", {
 	flexDirection: "column",
 	backgroundColor: ref(colorBackground),
 	borderRadius: ref(borderRadiusLg),
-	border: css`${ref(borderWidthThin)} solid ${ref(colorBorder)}`,
+	border: css`
+		${ref(borderWidthThin)} solid ${ref(colorBorder)}
+	`,
 	boxShadow: ref(boxShadowSm),
 	overflow: "hidden",
 });
@@ -37,13 +39,19 @@ selector(".card__header", {
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "space-between",
-	padding: css`${ref(spacingMd)} ${ref(spacingLg)}`,
-	borderBottom: css`${ref(borderWidthThin)} solid ${ref(colorBorder)}`,
+	padding: css`
+		${ref(spacingMd)} ${ref(spacingLg)}
+	`,
+	borderBottom: css`
+		${ref(borderWidthThin)} solid ${ref(colorBorder)}
+	`,
 });
 
 selector(".card__body", {
 	flex: "1",
-	padding: css`${ref(spacingMd)} ${ref(spacingLg)}`,
+	padding: css`
+		${ref(spacingMd)} ${ref(spacingLg)}
+	`,
 });
 
 selector(".card__footer", {
@@ -51,8 +59,12 @@ selector(".card__footer", {
 	alignItems: "center",
 	justifyContent: "flex-end",
 	gap: ref(spacingSm),
-	padding: css`${ref(spacingMd)} ${ref(spacingLg)}`,
-	borderTop: css`${ref(borderWidthThin)} solid ${ref(colorBorder)}`,
+	padding: css`
+		${ref(spacingMd)} ${ref(spacingLg)}
+	`,
+	borderTop: css`
+		${ref(borderWidthThin)} solid ${ref(colorBorder)}
+	`,
 });
 
 selector(".card__title", {

@@ -15,40 +15,40 @@ Figma plugin and converter library for syncing Styleframe design tokens with Fig
 
 ```ts
 import {
-  // Converters
-  generateStyleframeCode,
-  // Name mapping
-  styleframeToFigmaName,
-  figmaToStyleframeName,
-  extractCategory,
-  extractKey,
-  toVariableIdentifier,
-  cssVariableToStyleframeName,
-  styleframeToCssVariable,
-  // Value parsing
-  cssColorToFigma,
-  figmaColorToCss,
-  parseDimension,
-  dimensionToPixels,
-  pixelsToDimension,
-  isColorValue,
-  isDimensionValue,
-  detectFigmaType,
-  styleframeValueToFigma,
-  figmaValueToStyleframe,
-  // DTCG format
-  toDTCG,
-  fromDTCG,
-  figmaTypeToDTCG,
-  dtcgTypeToFigma,
-  detectDTCGType,
-  parseAlias,
-  createAlias,
-  figmaPathToDTCG,
-  dtcgPathToFigma,
-  resolveAliasForFigma,
-  getPathSegments,
-  joinPath,
+	// Converters
+	generateStyleframeCode,
+	// Name mapping
+	styleframeToFigmaName,
+	figmaToStyleframeName,
+	extractCategory,
+	extractKey,
+	toVariableIdentifier,
+	cssVariableToStyleframeName,
+	styleframeToCssVariable,
+	// Value parsing
+	cssColorToFigma,
+	figmaColorToCss,
+	parseDimension,
+	dimensionToPixels,
+	pixelsToDimension,
+	isColorValue,
+	isDimensionValue,
+	detectFigmaType,
+	styleframeValueToFigma,
+	figmaValueToStyleframe,
+	// DTCG format
+	toDTCG,
+	fromDTCG,
+	figmaTypeToDTCG,
+	dtcgTypeToFigma,
+	detectDTCGType,
+	parseAlias,
+	createAlias,
+	figmaPathToDTCG,
+	dtcgPathToFigma,
+	resolveAliasForFigma,
+	getPathSegments,
+	joinPath,
 } from "@styleframe/figma";
 ```
 
@@ -76,18 +76,18 @@ All conversions pass through `FigmaExportFormat`, the internal interchange forma
 
 ```ts
 interface FigmaExportFormat {
-  collection: string;      // Collection name (e.g., "Design Tokens")
-  modes: string[];         // Mode names, first is default (e.g., ["Default", "Dark"])
-  variables: FigmaExportVariable[];
+	collection: string; // Collection name (e.g., "Design Tokens")
+	modes: string[]; // Mode names, first is default (e.g., ["Default", "Dark"])
+	variables: FigmaExportVariable[];
 }
 
 interface FigmaExportVariable {
-  name: string;            // Figma name, slash notation (e.g., "color/primary")
-  styleframeName?: string; // Dot notation (e.g., "color.primary")
-  type: FigmaVariableType; // "COLOR" | "FLOAT" | "STRING" | "BOOLEAN"
-  values: Record<string, FigmaVariableValue>; // Values by mode name
-  aliasTo?: string;        // Target variable name if alias
-  description?: string;
+	name: string; // Figma name, slash notation (e.g., "color/primary")
+	styleframeName?: string; // Dot notation (e.g., "color.primary")
+	type: FigmaVariableType; // "COLOR" | "FLOAT" | "STRING" | "BOOLEAN"
+	values: Record<string, FigmaVariableValue>; // Values by mode name
+	aliasTo?: string; // Target variable name if alias
+	description?: string;
 }
 ```
 
@@ -99,15 +99,15 @@ interface FigmaExportVariable {
 
 Convert between naming conventions used by Styleframe, Figma, and CSS.
 
-| Function | Conversion | Example |
-|----------|-----------|---------|
-| `styleframeToFigmaName(name)` | Dot → slash | `"color.primary"` → `"color/primary"` |
-| `figmaToStyleframeName(name)` | Slash → dot | `"color/primary"` → `"color.primary"` |
-| `extractCategory(name)` | First segment | `"color.primary.500"` → `"color"` |
-| `extractKey(name)` | Last segment | `"color.primary.500"` → `"500"` |
-| `toVariableIdentifier(name)` | To camelCase | `"color.primary"` → `"colorPrimary"` |
+| Function                            | Conversion    | Example                                  |
+| ----------------------------------- | ------------- | ---------------------------------------- |
+| `styleframeToFigmaName(name)`       | Dot → slash   | `"color.primary"` → `"color/primary"`    |
+| `figmaToStyleframeName(name)`       | Slash → dot   | `"color/primary"` → `"color.primary"`    |
+| `extractCategory(name)`             | First segment | `"color.primary.500"` → `"color"`        |
+| `extractKey(name)`                  | Last segment  | `"color.primary.500"` → `"500"`          |
+| `toVariableIdentifier(name)`        | To camelCase  | `"color.primary"` → `"colorPrimary"`     |
 | `cssVariableToStyleframeName(name)` | CSS var → dot | `"--color--primary"` → `"color.primary"` |
-| `styleframeToCssVariable(name)` | Dot → CSS var | `"color.primary"` → `"--color--primary"` |
+| `styleframeToCssVariable(name)`     | Dot → CSS var | `"color.primary"` → `"--color--primary"` |
 
 ---
 
@@ -140,9 +140,9 @@ figmaColorToCss({ r: 0, g: 0.424, b: 1, a: 1 });
 Convert a CSS dimension string to pixel number. Default `baseFontSize` is 16.
 
 ```ts
-dimensionToPixels("1.5rem");   // 24
-dimensionToPixels("16px");     // 16
-dimensionToPixels("2em", 20);  // 40
+dimensionToPixels("1.5rem"); // 24
+dimensionToPixels("16px"); // 16
+dimensionToPixels("2em", 20); // 40
 ```
 
 Returns `null` for unsupported units (vh, vw, etc.).
@@ -152,8 +152,8 @@ Returns `null` for unsupported units (vh, vw, etc.).
 Convert a pixel number to a CSS dimension string.
 
 ```ts
-pixelsToDimension(24, "rem");  // "1.5rem"
-pixelsToDimension(16, "px");   // "16px"
+pixelsToDimension(24, "rem"); // "1.5rem"
+pixelsToDimension(16, "px"); // "16px"
 ```
 
 #### `detectFigmaType(value)`
@@ -161,10 +161,10 @@ pixelsToDimension(16, "px");   // "16px"
 Detect the Figma variable type from a value.
 
 ```ts
-detectFigmaType("#ff0000");  // "COLOR"
-detectFigmaType("16px");     // "FLOAT"
-detectFigmaType(true);       // "BOOLEAN"
-detectFigmaType("hello");    // "STRING"
+detectFigmaType("#ff0000"); // "COLOR"
+detectFigmaType("16px"); // "FLOAT"
+detectFigmaType(true); // "BOOLEAN"
+detectFigmaType("hello"); // "STRING"
 ```
 
 #### `styleframeValueToFigma(value, type, baseFontSize?)`
@@ -187,13 +187,14 @@ Convert `FigmaExportFormat` to a DTCG document. Multi-mode values are stored in 
 
 ```ts
 const dtcg = toDTCG(figmaData, {
-  includeSchema: true,    // Add $schema field (default: true)
-  useModifiers: true,     // Use $modifiers for multi-mode values (default: true)
-  themeNames: ["Dark"],   // Only these modes become modifier contexts
+	includeSchema: true, // Add $schema field (default: true)
+	useModifiers: true, // Use $modifiers for multi-mode values (default: true)
+	themeNames: ["Dark"], // Only these modes become modifier contexts
 });
 ```
 
 **Output structure:**
+
 - Tokens nested by path: `color/primary` → `{ color: { primary: { $value, $type } } }`
 - Collection and modes stored in `$extensions["dev.styleframe"]`
 - Theme overrides in `$modifiers.theme.contexts`
@@ -205,37 +206,38 @@ Convert a DTCG document to `FigmaExportFormat`. Reads modifier contexts and lega
 
 ```ts
 const figmaData = fromDTCG(dtcgDocument, {
-  defaultModeName: "Default",   // Default mode name (default: "Default")
-  collectionName: "My Tokens",  // Override collection name
-  preferredModifier: "theme",   // Which modifier to read for modes (default: "theme")
+	defaultModeName: "Default", // Default mode name (default: "Default")
+	collectionName: "My Tokens", // Override collection name
+	preferredModifier: "theme", // Which modifier to read for modes (default: "theme")
 });
 ```
 
 **Mode detection priority:**
+
 1. `$modifiers[preferredModifier].contexts` keys
 2. `$extensions["dev.styleframe"].modes`
 3. Falls back to `[defaultModeName]`
 
 #### Type Mapping
 
-| Figma Type | DTCG Type |
-|-----------|-----------|
-| `COLOR` | `color` |
-| `FLOAT` | `dimension` |
-| `STRING` | `string` |
-| `BOOLEAN` | `string` (DTCG has no boolean type) |
+| Figma Type | DTCG Type                           |
+| ---------- | ----------------------------------- |
+| `COLOR`    | `color`                             |
+| `FLOAT`    | `dimension`                         |
+| `STRING`   | `string`                            |
+| `BOOLEAN`  | `string` (DTCG has no boolean type) |
 
 Reverse mapping also handles `number`, `fontWeight`, `duration` → `FLOAT` and `fontFamily` → `STRING`.
 
 #### Alias Handling
 
-| Function | Purpose | Example |
-|----------|---------|---------|
-| `parseAlias(alias)` | Extract path from DTCG alias | `"{color.primary}"` → `"color.primary"` |
-| `createAlias(path)` | Create DTCG alias string | `"color.primary"` → `"{color.primary}"` |
-| `figmaPathToDTCG(path)` | Slash to dot notation | `"color/primary"` → `"color.primary"` |
-| `dtcgPathToFigma(path)` | Dot to slash notation | `"color.primary"` → `"color/primary"` |
-| `resolveAliasForFigma(value)` | Check if alias and resolve | Returns `{ isAlias, target? }` |
+| Function                      | Purpose                      | Example                                 |
+| ----------------------------- | ---------------------------- | --------------------------------------- |
+| `parseAlias(alias)`           | Extract path from DTCG alias | `"{color.primary}"` → `"color.primary"` |
+| `createAlias(path)`           | Create DTCG alias string     | `"color.primary"` → `"{color.primary}"` |
+| `figmaPathToDTCG(path)`       | Slash to dot notation        | `"color/primary"` → `"color.primary"`   |
+| `dtcgPathToFigma(path)`       | Dot to slash notation        | `"color.primary"` → `"color/primary"`   |
+| `resolveAliasForFigma(value)` | Check if alias and resolve   | Returns `{ isAlias, target? }`          |
 
 ---
 
@@ -247,11 +249,11 @@ Generate Styleframe TypeScript code from `FigmaExportFormat`. Groups variables b
 
 ```ts
 const result = generateStyleframeCode(figmaData, {
-  useComposables: true,        // Use useColor, useSpacing, etc. (default: true)
-  useRem: false,               // Convert dimensions to rem (default: false)
-  baseFontSize: 16,            // Base font size for rem conversion (default: 16)
-  instanceName: "s",           // Styleframe instance name (default: "s")
-  defaultModeName: "Default",  // Which mode is the base (default: first mode)
+	useComposables: true, // Use useColor, useSpacing, etc. (default: true)
+	useRem: false, // Convert dimensions to rem (default: false)
+	baseFontSize: 16, // Base font size for rem conversion (default: 16)
+	instanceName: "s", // Styleframe instance name (default: "s")
+	defaultModeName: "Default", // Which mode is the base (default: first mode)
 });
 ```
 
@@ -259,27 +261,27 @@ const result = generateStyleframeCode(figmaData, {
 
 ```ts
 interface CodegenResult {
-  code: string;              // Generated TypeScript code
-  variables: ParsedVariable[];
-  themes: ParsedTheme[];
-  imports: string[];         // Required import paths
+	code: string; // Generated TypeScript code
+	variables: ParsedVariable[];
+	themes: ParsedTheme[];
+	imports: string[]; // Required import paths
 }
 ```
 
 **Composable mapping:** When `useComposables: true`, variables are grouped by category and generated using theme composables:
 
-| Category | Composable |
-|----------|-----------|
-| `color` | `useColor` |
-| `spacing` | `useSpacing` |
-| `fontSize` | `useFontSize` |
-| `fontWeight` | `useFontWeight` |
-| `fontFamily` | `useFontFamily` |
-| `lineHeight` | `useLineHeight` |
+| Category        | Composable         |
+| --------------- | ------------------ |
+| `color`         | `useColor`         |
+| `spacing`       | `useSpacing`       |
+| `fontSize`      | `useFontSize`      |
+| `fontWeight`    | `useFontWeight`    |
+| `fontFamily`    | `useFontFamily`    |
+| `lineHeight`    | `useLineHeight`    |
 | `letterSpacing` | `useLetterSpacing` |
-| `borderWidth` | `useBorderWidth` |
-| `borderRadius` | `useBorderRadius` |
-| `boxShadow` | `useBoxShadow` |
+| `borderWidth`   | `useBorderWidth`   |
+| `borderRadius`  | `useBorderRadius`  |
+| `boxShadow`     | `useBoxShadow`     |
 
 Variables that don't match a composable category, or that are alias references, are generated as standalone `variable()` calls.
 
@@ -296,17 +298,17 @@ The plugin (`src/plugin/`) is a Figma plugin with an import/export UI. It is bui
 
 ### Plugin Message Types
 
-| Message | Direction | Purpose |
-|---------|-----------|---------|
-| `import` | UI → Plugin | Import JSON data as Figma variables |
-| `export` | UI → Plugin | Export a collection to JSON |
+| Message           | Direction   | Purpose                             |
+| ----------------- | ----------- | ----------------------------------- |
+| `import`          | UI → Plugin | Import JSON data as Figma variables |
+| `export`          | UI → Plugin | Export a collection to JSON         |
 | `get-collections` | UI → Plugin | List available variable collections |
-| `close` | UI → Plugin | Close the plugin |
-| `set-mode` | Plugin → UI | Switch to import or export tab |
-| `collections` | Plugin → UI | Send collection list |
-| `import-complete` | Plugin → UI | Import succeeded with count |
-| `export-complete` | Plugin → UI | Export data ready |
-| `error` | Plugin → UI | Error message |
+| `close`           | UI → Plugin | Close the plugin                    |
+| `set-mode`        | Plugin → UI | Switch to import or export tab      |
+| `collections`     | Plugin → UI | Send collection list                |
+| `import-complete` | Plugin → UI | Import succeeded with count         |
+| `export-complete` | Plugin → UI | Export data ready                   |
+| `error`           | Plugin → UI | Error message                       |
 
 ---
 
@@ -318,17 +320,22 @@ The plugin (`src/plugin/`) is a Figma plugin with an import/export UI. It is bui
 type FigmaVariableType = "COLOR" | "FLOAT" | "STRING" | "BOOLEAN";
 
 interface FigmaRGBA {
-  r: number;  // 0-1 range
-  g: number;
-  b: number;
-  a?: number; // defaults to 1
+	r: number; // 0-1 range
+	g: number;
+	b: number;
+	a?: number; // defaults to 1
 }
 
-type FigmaVariableValue = FigmaRGBA | number | string | boolean | FigmaVariableAlias;
+type FigmaVariableValue =
+	| FigmaRGBA
+	| number
+	| string
+	| boolean
+	| FigmaVariableAlias;
 
 interface FigmaVariableAlias {
-  type: "VARIABLE_ALIAS";
-  id: string;
+	type: "VARIABLE_ALIAS";
+	id: string;
 }
 ```
 
@@ -336,17 +343,17 @@ interface FigmaVariableAlias {
 
 ```ts
 interface StyleframeToFigmaOptions {
-  collectionName?: string;   // Default: "Design Tokens"
-  defaultModeName?: string;  // Default: "Default"
-  baseFontSize?: number;     // Default: 16
+	collectionName?: string; // Default: "Design Tokens"
+	defaultModeName?: string; // Default: "Default"
+	baseFontSize?: number; // Default: 16
 }
 
 interface FigmaToStyleframeOptions {
-  useComposables?: boolean;  // Default: true
-  useRem?: boolean;          // Default: false
-  baseFontSize?: number;     // Default: 16
-  instanceName?: string;     // Default: "s"
-  defaultModeName?: string;  // Default: first mode
+	useComposables?: boolean; // Default: true
+	useRem?: boolean; // Default: false
+	baseFontSize?: number; // Default: 16
+	instanceName?: string; // Default: "s"
+	defaultModeName?: string; // Default: first mode
 }
 ```
 
@@ -379,36 +386,36 @@ Type guards: `isDTCGToken(value)`, `isDTCGGroup(value)`, `isDTCGAlias(value)`.
 
 ## Build Scripts
 
-| Script | Purpose |
-|--------|---------|
-| `pnpm build` | Build library (tsdown) + plugin (Vite) |
-| `pnpm build:lib` | Build only the npm library |
-| `pnpm build:plugin` | Build only the Figma plugin |
-| `pnpm dev` | Watch mode for library |
-| `pnpm test` | Run tests |
-| `pnpm typecheck` | TypeScript type checking |
+| Script              | Purpose                                |
+| ------------------- | -------------------------------------- |
+| `pnpm build`        | Build library (tsdown) + plugin (Vite) |
+| `pnpm build:lib`    | Build only the npm library             |
+| `pnpm build:plugin` | Build only the Figma plugin            |
+| `pnpm dev`          | Watch mode for library                 |
+| `pnpm test`         | Run tests                              |
+| `pnpm typecheck`    | TypeScript type checking               |
 
 ---
 
 ## Source Files
 
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Barrel re-exports (types + converters) |
-| `src/types.ts` | Core TypeScript interfaces |
-| `src/converters/index.ts` | Re-exports all converter modules |
-| `src/converters/name-mapping.ts` | Name format conversions (dot/slash/camelCase/CSS) |
-| `src/converters/value-parsing.ts` | Color, dimension, and type value conversions |
-| `src/converters/codegen.ts` | Styleframe TypeScript code generation |
-| `src/converters/dtcg/index.ts` | DTCG module re-exports |
-| `src/converters/dtcg/types.ts` | DTCG format type definitions and type guards |
-| `src/converters/dtcg/to-dtcg.ts` | FigmaExportFormat → DTCG conversion |
-| `src/converters/dtcg/from-dtcg.ts` | DTCG → FigmaExportFormat conversion |
-| `src/converters/dtcg/type-mapping.ts` | Figma ↔ DTCG type mapping |
-| `src/converters/dtcg/alias-parsing.ts` | DTCG alias string parsing and creation |
-| `src/plugin/code.ts` | Figma plugin backend (variable CRUD) |
-| `src/plugin/shared.ts` | Shared utilities (format detection, preview extraction) |
-| `src/plugin/ui/main.ts` | Plugin UI logic (import/export tabs) |
+| File                                   | Purpose                                                 |
+| -------------------------------------- | ------------------------------------------------------- |
+| `src/index.ts`                         | Barrel re-exports (types + converters)                  |
+| `src/types.ts`                         | Core TypeScript interfaces                              |
+| `src/converters/index.ts`              | Re-exports all converter modules                        |
+| `src/converters/name-mapping.ts`       | Name format conversions (dot/slash/camelCase/CSS)       |
+| `src/converters/value-parsing.ts`      | Color, dimension, and type value conversions            |
+| `src/converters/codegen.ts`            | Styleframe TypeScript code generation                   |
+| `src/converters/dtcg/index.ts`         | DTCG module re-exports                                  |
+| `src/converters/dtcg/types.ts`         | DTCG format type definitions and type guards            |
+| `src/converters/dtcg/to-dtcg.ts`       | FigmaExportFormat → DTCG conversion                     |
+| `src/converters/dtcg/from-dtcg.ts`     | DTCG → FigmaExportFormat conversion                     |
+| `src/converters/dtcg/type-mapping.ts`  | Figma ↔ DTCG type mapping                               |
+| `src/converters/dtcg/alias-parsing.ts` | DTCG alias string parsing and creation                  |
+| `src/plugin/code.ts`                   | Figma plugin backend (variable CRUD)                    |
+| `src/plugin/shared.ts`                 | Shared utilities (format detection, preview extraction) |
+| `src/plugin/ui/main.ts`                | Plugin UI logic (import/export tabs)                    |
 
 ---
 

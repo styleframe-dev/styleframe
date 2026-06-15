@@ -14,17 +14,17 @@ Content scanning and utility class extraction for the Styleframe CSS-in-TypeScri
 
 ```ts
 import {
-  quickScan,
-  createContentScanner,
-  parseUtilityClass,
-  extractUtilityClasses,
-  generateUtilityClassName,
-  matchUtilities,
-  filterUtilities,
-  createCache,
-  hashContent,
-  createChangeHandler,
-  debounce,
+	quickScan,
+	createContentScanner,
+	parseUtilityClass,
+	extractUtilityClasses,
+	generateUtilityClassName,
+	matchUtilities,
+	filterUtilities,
+	createCache,
+	hashContent,
+	createChangeHandler,
+	debounce,
 } from "@styleframe/scanner";
 
 // Node-only (uses fast-glob + node:fs/promises):
@@ -42,13 +42,13 @@ The main entry is browser-safe. `createScanner` is published under the `/node` s
 
 Styleframe utility classes follow the pattern: `_[modifiers:]name[:value]`
 
-| Example | Name | Value | Modifiers |
-|---------|------|-------|-----------|
-| `_margin:sm` | `margin` | `sm` | `[]` |
-| `_hover:margin:sm` | `margin` | `sm` | `["hover"]` |
+| Example                          | Name         | Value     | Modifiers           |
+| -------------------------------- | ------------ | --------- | ------------------- |
+| `_margin:sm`                     | `margin`     | `sm`      | `[]`                |
+| `_hover:margin:sm`               | `margin`     | `sm`      | `["hover"]`         |
 | `_dark:hover:background:primary` | `background` | `primary` | `["dark", "hover"]` |
-| `_margin:[16px]` | `margin` | `[16px]` | `[]` (arbitrary) |
-| `_hidden` | `hidden` | `default` | `[]` |
+| `_margin:[16px]`                 | `margin`     | `[16px]`  | `[]` (arbitrary)    |
+| `_hidden`                        | `hidden`     | `default` | `[]`                |
 
 ### Scanning Pipeline
 
@@ -61,16 +61,16 @@ Styleframe utility classes follow the pattern: `_[modifiers:]name[:value]`
 
 ### Supported File Formats
 
-| Format | Extraction Patterns |
-|--------|-------------------|
-| HTML/HTM | `class="..."` attributes |
-| JSX/TSX | `className="..."` strings, `className={...}` expressions |
-| Vue SFC | Template `class`, `:class` bindings, script sections |
-| Svelte | `class="..."`, `class={...}`, `class:directive`, script sections |
-| Astro | HTML and JSX patterns, frontmatter scripts |
-| MDX | HTML and JSX patterns |
-| JS/TS | String literals (single, double, template) |
-| PHP/ERB/Twig/Blade | HTML-like patterns |
+| Format             | Extraction Patterns                                              |
+| ------------------ | ---------------------------------------------------------------- |
+| HTML/HTM           | `class="..."` attributes                                         |
+| JSX/TSX            | `className="..."` strings, `className={...}` expressions         |
+| Vue SFC            | Template `class`, `:class` bindings, script sections             |
+| Svelte             | `class="..."`, `class={...}`, `class:directive`, script sections |
+| Astro              | HTML and JSX patterns, frontmatter scripts                       |
+| MDX                | HTML and JSX patterns                                            |
+| JS/TS              | String literals (single, double, template)                       |
+| PHP/ERB/Twig/Blade | HTML-like patterns                                               |
 
 ## API Reference
 
@@ -82,14 +82,18 @@ Create a scanner instance for file-based scanning with caching and watching supp
 import { createScanner } from "@styleframe/scanner/node";
 
 const scanner = createScanner({
-  content: ["./src/**/*.{tsx,jsx,html,vue}"],
-  cwd: process.cwd(),
-  extractors: [/* custom extractors */],
-  utilities: {
-    pattern: /custom-regex/g,
-    parse: (className) => ({ /* ParsedUtility */ }),
-    selector: (name, value, modifiers) => ".custom-selector",
-  },
+	content: ["./src/**/*.{tsx,jsx,html,vue}"],
+	cwd: process.cwd(),
+	extractors: [
+		/* custom extractors */
+	],
+	utilities: {
+		pattern: /custom-regex/g,
+		parse: (className) => ({
+			/* ParsedUtility */
+		}),
+		selector: (name, value, modifiers) => ".custom-selector",
+	},
 });
 
 // Scan all matching files
@@ -99,17 +103,22 @@ const results = await scanner.scan();
 const fileResult = await scanner.scanFile("/path/to/file.tsx");
 
 // Scan raw content directly
-const parsed = scanner.scanContent('<div class="_margin:sm _padding:lg">', "file.html");
+const parsed = scanner.scanContent(
+	'<div class="_margin:sm _padding:lg">',
+	"file.html",
+);
 
 // Match parsed utilities against a Styleframe root
 const matches = scanner.match(parsed, root);
 
 // Watch for changes (returns cleanup function)
-const cleanup = scanner.watch((result) => { /* handle changes */ });
+const cleanup = scanner.watch((result) => {
+	/* handle changes */
+});
 
 // Invalidate cache
 scanner.invalidate("/path/to/file.tsx"); // Single file
-scanner.invalidate();                     // All files
+scanner.invalidate(); // All files
 ```
 
 ### quickScan(content, filePath?, utilities?)
@@ -117,7 +126,10 @@ scanner.invalidate();                     // All files
 One-off content scan without creating a full scanner instance. Returns parsed utilities directly.
 
 ```ts
-const parsed = quickScan('<div class="_margin:sm _hover:background:primary">', "file.html");
+const parsed = quickScan(
+	'<div class="_margin:sm _hover:background:primary">',
+	"file.html",
+);
 // [{ raw: "_margin:sm", name: "margin", value: "sm", ... }, ...]
 ```
 
@@ -182,6 +194,7 @@ const matches = matchUtilities(parsedUtilities, styleframeRoot);
 ```
 
 Each match contains:
+
 - `parsed` — The original `ParsedUtility`
 - `factory` — The `UtilityFactory` from the root (or `null` if not found)
 - `modifierFactories` — Array of resolved `ModifierFactory` objects
@@ -228,11 +241,11 @@ Create a debounced change handler that accumulates file paths before invoking th
 
 ```ts
 const { onChange, flush } = createChangeHandler(
-  (changedFiles) => {
-    // changedFiles: Set<string>
-    // Re-scan changed files
-  },
-  { debounce: 100 } // Default: 100ms
+	(changedFiles) => {
+		// changedFiles: Set<string>
+		// Re-scan changed files
+	},
+	{ debounce: 100 }, // Default: 100ms
 );
 
 // Call onChange when files change (e.g., from a file watcher)
@@ -247,80 +260,87 @@ flush();
 General-purpose debounce utility.
 
 ```ts
-const debouncedFn = debounce(() => { /* ... */ }, 200);
+const debouncedFn = debounce(() => {
+	/* ... */
+}, 200);
 ```
 
 ## Types
 
 ```ts
 interface ScannerConfig {
-  content: string[];                     // Glob patterns for files to scan
-  extractors?: Extractor[];             // Custom content extractors
-  cwd?: string;                         // Base directory (default: process.cwd())
-  utilities?: ScannerUtilitiesConfig;   // Custom utility syntax
+	content: string[]; // Glob patterns for files to scan
+	extractors?: Extractor[]; // Custom content extractors
+	cwd?: string; // Base directory (default: process.cwd())
+	utilities?: ScannerUtilitiesConfig; // Custom utility syntax
 }
 
 interface ScannerUtilitiesConfig {
-  pattern?: RegExp;                     // Custom extraction regex
-  parse?: UtilityClassParseFn;          // Custom parser function
-  selector?: UtilitySelectorFn;         // Custom selector generator
+	pattern?: RegExp; // Custom extraction regex
+	parse?: UtilityClassParseFn; // Custom parser function
+	selector?: UtilitySelectorFn; // Custom selector generator
 }
 
 interface ScanResult {
-  files: Map<string, FileScanResult>;   // Per-file results
-  allClasses: Set<string>;              // All unique class names
-  allParsed: ParsedUtility[];           // All parsed utilities
+	files: Map<string, FileScanResult>; // Per-file results
+	allClasses: Set<string>; // All unique class names
+	allParsed: ParsedUtility[]; // All parsed utilities
 }
 
 interface FileScanResult {
-  path: string;
-  classes: Set<string>;                 // Raw class names found
-  parsed: ParsedUtility[];              // Parsed utilities
-  lastScanned: number;                  // Timestamp
+	path: string;
+	classes: Set<string>; // Raw class names found
+	parsed: ParsedUtility[]; // Parsed utilities
+	lastScanned: number; // Timestamp
 }
 
 interface ParsedUtility {
-  raw: string;                          // Original class string
-  name: string;                         // Utility name
-  value: string;                        // Value key or "[...]"
-  modifiers: string[];                  // Modifier names (sorted)
-  isArbitrary: boolean;                 // Whether value is in brackets
-  arbitraryValue?: string;              // Extracted bracket content
+	raw: string; // Original class string
+	name: string; // Utility name
+	value: string; // Value key or "[...]"
+	modifiers: string[]; // Modifier names (sorted)
+	isArbitrary: boolean; // Whether value is in brackets
+	arbitraryValue?: string; // Extracted bracket content
 }
 
 interface UtilityMatch {
-  parsed: ParsedUtility;
-  factory: UtilityFactory | null;       // From @styleframe/core
-  modifierFactories: ModifierFactory[]; // Resolved modifier factories
-  exists: boolean;                      // Value exists in factory
+	parsed: ParsedUtility;
+	factory: UtilityFactory | null; // From @styleframe/core
+	modifierFactories: ModifierFactory[]; // Resolved modifier factories
+	exists: boolean; // Value exists in factory
 }
 
 interface ScannerCache {
-  get(filePath: string): FileScanResult | null;
-  set(filePath: string, result: FileScanResult, hash: string): void;
-  isValid(filePath: string, hash: string): boolean;
-  getIfValid(filePath: string, hash: string): FileScanResult | null;
-  invalidate(filePath: string): void;
-  clear(): void;
+	get(filePath: string): FileScanResult | null;
+	set(filePath: string, result: FileScanResult, hash: string): void;
+	isValid(filePath: string, hash: string): boolean;
+	getIfValid(filePath: string, hash: string): FileScanResult | null;
+	invalidate(filePath: string): void;
+	clear(): void;
 }
 
 interface Extractor {
-  extensions: string[];
-  extract: (content: string) => string[];
+	extensions: string[];
+	extract: (content: string) => string[];
 }
 ```
 
 ## Constants
 
 ```ts
-import { UTILITY_CLASS_PATTERN, ARBITRARY_VALUE_PATTERN, DEFAULT_EXTENSIONS, DEFAULT_IGNORE_PATTERNS } from "@styleframe/scanner";
+import {
+	UTILITY_CLASS_PATTERN,
+	ARBITRARY_VALUE_PATTERN,
+	DEFAULT_EXTENSIONS,
+	DEFAULT_IGNORE_PATTERNS,
+} from "@styleframe/scanner";
 ```
 
-| Constant | Value |
-|----------|-------|
-| `UTILITY_CLASS_PATTERN` | `/_[a-zA-Z][a-zA-Z0-9-]*(?::[a-zA-Z0-9._-]+\|:\[[^\]]+\])*/g` |
-| `ARBITRARY_VALUE_PATTERN` | `/^\[(.+)\]$/` |
-| `DEFAULT_EXTENSIONS` | html, htm, vue, svelte, jsx, tsx, js, ts, astro, mdx, php, erb, twig, blade.php |
+| Constant                  | Value                                                                                                           |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `UTILITY_CLASS_PATTERN`   | `/_[a-zA-Z][a-zA-Z0-9-]*(?::[a-zA-Z0-9._-]+\|:\[[^\]]+\])*/g`                                                   |
+| `ARBITRARY_VALUE_PATTERN` | `/^\[(.+)\]$/`                                                                                                  |
+| `DEFAULT_EXTENSIONS`      | html, htm, vue, svelte, jsx, tsx, js, ts, astro, mdx, php, erb, twig, blade.php                                 |
 | `DEFAULT_IGNORE_PATTERNS` | `**/node_modules/**`, `**/.git/**`, `**/dist/**`, `**/build/**`, `**/.next/**`, `**/.nuxt/**`, `**/coverage/**` |
 
 ## Best Practices
@@ -341,15 +361,15 @@ import { UTILITY_CLASS_PATTERN, ARBITRARY_VALUE_PATTERN, DEFAULT_EXTENSIONS, DEF
 
 ## Source Files
 
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Browser-safe public API barrel |
-| `src/scanner.ts` | Browser-safe scan helpers (`quickScan`, `createContentScanner`) |
-| `src/node.ts` | Node-only scanner (`createScanner`) — entry for `@styleframe/scanner/node` |
-| `src/parser.ts` | Utility class parsing (`parseUtilityClass`, `extractUtilityClasses`, `generateUtilityClassName`) |
-| `src/extractor.ts` | Format-specific content extractors for all supported file types |
-| `src/matcher.ts` | Utility matching against Styleframe root (`matchUtilities`, `filterUtilities`) |
-| `src/cache.ts` | Content-hash caching (`createCache`, `hashContent`) |
-| `src/watcher.ts` | File watching utilities (`createChangeHandler`, `debounce`, glob matching) |
-| `src/constants.ts` | Regex patterns and default configurations |
-| `src/types.ts` | TypeScript type definitions |
+| File               | Purpose                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| `src/index.ts`     | Browser-safe public API barrel                                                                   |
+| `src/scanner.ts`   | Browser-safe scan helpers (`quickScan`, `createContentScanner`)                                  |
+| `src/node.ts`      | Node-only scanner (`createScanner`) — entry for `@styleframe/scanner/node`                       |
+| `src/parser.ts`    | Utility class parsing (`parseUtilityClass`, `extractUtilityClasses`, `generateUtilityClassName`) |
+| `src/extractor.ts` | Format-specific content extractors for all supported file types                                  |
+| `src/matcher.ts`   | Utility matching against Styleframe root (`matchUtilities`, `filterUtilities`)                   |
+| `src/cache.ts`     | Content-hash caching (`createCache`, `hashContent`)                                              |
+| `src/watcher.ts`   | File watching utilities (`createChangeHandler`, `debounce`, glob matching)                       |
+| `src/constants.ts` | Regex patterns and default configurations                                                        |
+| `src/types.ts`     | TypeScript type definitions                                                                      |

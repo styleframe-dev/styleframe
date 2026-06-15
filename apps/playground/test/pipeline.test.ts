@@ -28,9 +28,8 @@ const input = {
 async function loadMocks() {
 	const { transformTs } = await import("@/pipeline/transformTs");
 	const { evalUserConfig } = await import("@/pipeline/evalUserConfig");
-	const { transpileStyleframe } = await import(
-		"@/pipeline/transpileStyleframe"
-	);
+	const { transpileStyleframe } =
+		await import("@/pipeline/transpileStyleframe");
 	const { compileVueSfc } = await import("@/pipeline/compileVueSfc");
 	const { buildSrcdoc } = await import("@/pipeline/buildSrcdoc");
 	return {

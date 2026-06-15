@@ -19,98 +19,98 @@ recipe({
 ## Complete Button Recipe Example
 
 ```ts
-import { styleframe } from 'styleframe';
+import { styleframe } from "styleframe";
 
 const s = styleframe();
 const { variable, ref, utility, recipe } = s;
 
 // 1. Define tokens
-const colorPrimary = variable('color.primary', '#006cff');
-const colorSecondary = variable('color.secondary', '#6c757d');
-const colorWhite = variable('color.white', '#ffffff');
-const colorDisabled = variable('color.disabled', '#9ca3af');
-const borderWidthThin = variable('border-width.thin', '1px');
-const spacingXs = variable('spacing.xs', '0.5rem');
-const spacingSm = variable('spacing.sm', '0.75rem');
-const spacingMd = variable('spacing.md', '1rem');
-const spacingLg = variable('spacing.lg', '1.25rem');
+const colorPrimary = variable("color.primary", "#006cff");
+const colorSecondary = variable("color.secondary", "#6c757d");
+const colorWhite = variable("color.white", "#ffffff");
+const colorDisabled = variable("color.disabled", "#9ca3af");
+const borderWidthThin = variable("border-width.thin", "1px");
+const spacingXs = variable("spacing.xs", "0.5rem");
+const spacingSm = variable("spacing.sm", "0.75rem");
+const spacingMd = variable("spacing.md", "1rem");
+const spacingLg = variable("spacing.lg", "1.25rem");
 
 // 2. Define utilities that the recipe will use
-utility('background', ({ value }) => ({ backgroundColor: value }));
-utility('color', ({ value }) => ({ color: value }));
-utility('padding', ({ value }) => ({ padding: value }));
-utility('border-width', ({ value }) => ({ borderWidth: value }));
-utility('border-style', ({ value }) => ({ borderStyle: value }));
-utility('border-color', ({ value }) => ({ borderColor: value }));
-utility('opacity', ({ value }) => ({ opacity: value }));
-utility('cursor', ({ value }) => ({ cursor: value }));
+utility("background", ({ value }) => ({ backgroundColor: value }));
+utility("color", ({ value }) => ({ color: value }));
+utility("padding", ({ value }) => ({ padding: value }));
+utility("border-width", ({ value }) => ({ borderWidth: value }));
+utility("border-style", ({ value }) => ({ borderStyle: value }));
+utility("border-color", ({ value }) => ({ borderColor: value }));
+utility("opacity", ({ value }) => ({ opacity: value }));
+utility("cursor", ({ value }) => ({ cursor: value }));
 
 // 3. Define the recipe
 recipe({
-    name: 'button',
-    base: {
-        borderWidth: ref(borderWidthThin),
-        borderStyle: 'solid',
-        borderColor: 'transparent',
-        cursor: 'pointer',
-    },
-    variants: {
-        color: {
-            primary: {
-                background: ref(colorPrimary),
-                color: ref(colorWhite),
-                borderColor: ref(colorPrimary),
-            },
-            secondary: {
-                background: ref(colorSecondary),
-                color: ref(colorWhite),
-                borderColor: ref(colorSecondary),
-            },
-            ghost: {
-                background: 'transparent',
-                color: ref(colorPrimary),
-                borderColor: ref(colorPrimary),
-            },
-        },
-        size: {
-            xs: { padding: ref(spacingXs) },
-            sm: { padding: ref(spacingSm) },
-            md: { padding: ref(spacingMd) },
-            lg: { padding: ref(spacingLg) },
-        },
-        disabled: {
-            false: {},
-            true: {
-                opacity: '0.5',
-                cursor: 'not-allowed',
-            },
-        },
-    },
-    defaultVariants: {
-        color: 'primary',
-        size: 'md',
-        disabled: false,
-    },
-    compoundVariants: [
-        {
-            match: { color: 'primary', disabled: false },
-            css: {
-                hover: { background: '@color.primary-dark' },
-            },
-        },
-        {
-            match: { color: 'secondary', disabled: false },
-            css: {
-                hover: { background: '@color.secondary-dark' },
-            },
-        },
-        {
-            match: { color: 'ghost', disabled: false },
-            css: {
-                hover: { background: '@color.primary-light' },
-            },
-        },
-    ],
+	name: "button",
+	base: {
+		borderWidth: ref(borderWidthThin),
+		borderStyle: "solid",
+		borderColor: "transparent",
+		cursor: "pointer",
+	},
+	variants: {
+		color: {
+			primary: {
+				background: ref(colorPrimary),
+				color: ref(colorWhite),
+				borderColor: ref(colorPrimary),
+			},
+			secondary: {
+				background: ref(colorSecondary),
+				color: ref(colorWhite),
+				borderColor: ref(colorSecondary),
+			},
+			ghost: {
+				background: "transparent",
+				color: ref(colorPrimary),
+				borderColor: ref(colorPrimary),
+			},
+		},
+		size: {
+			xs: { padding: ref(spacingXs) },
+			sm: { padding: ref(spacingSm) },
+			md: { padding: ref(spacingMd) },
+			lg: { padding: ref(spacingLg) },
+		},
+		disabled: {
+			false: {},
+			true: {
+				opacity: "0.5",
+				cursor: "not-allowed",
+			},
+		},
+	},
+	defaultVariants: {
+		color: "primary",
+		size: "md",
+		disabled: false,
+	},
+	compoundVariants: [
+		{
+			match: { color: "primary", disabled: false },
+			css: {
+				hover: { background: "@color.primary-dark" },
+			},
+		},
+		{
+			match: { color: "secondary", disabled: false },
+			css: {
+				hover: { background: "@color.secondary-dark" },
+			},
+		},
+		{
+			match: { color: "ghost", disabled: false },
+			css: {
+				hover: { background: "@color.primary-light" },
+			},
+		},
+	],
 });
 
 export default s;
@@ -143,12 +143,12 @@ button({ disabled: true })
 
 ## Recipe Value Formats
 
-| Config Value | Runtime Output | Class Generated |
-|--------------|----------------|-----------------|
-| `ref(variable)` | Token path | `_property:token.path` |
-| `"@token.path"` | Token path | `_property:token.path` |
-| `"@1.5"` (auto-generated) | Multiplier value | `_property:1.5` |
-| `"literal"` | Wrapped value | `_property:[literal]` |
+| Config Value              | Runtime Output   | Class Generated        |
+| ------------------------- | ---------------- | ---------------------- |
+| `ref(variable)`           | Token path       | `_property:token.path` |
+| `"@token.path"`           | Token path       | `_property:token.path` |
+| `"@1.5"` (auto-generated) | Multiplier value | `_property:1.5`        |
+| `"literal"`               | Wrapped value    | `_property:[literal]`  |
 
 ### Auto-generated Values in Recipes
 
@@ -156,23 +156,24 @@ Spacing properties (`padding`, `margin`, `gap`) support numeric multiplier value
 
 ```ts
 recipe({
-    name: 'card',
-    base: {
-        padding: '@1.5',    // → _padding:1.5 → calc(var(--spacing) * 1.5)
-        margin: '@2',       // → _margin:2 → calc(var(--spacing) * 2)
-        gap: '@0.5',        // → _gap:0.5 → calc(var(--spacing) * 0.5)
-    },
-    variants: {
-        spacing: {
-            compact: { padding: '@0.5' },
-            normal: { padding: '@1' },
-            relaxed: { padding: '@2' },
-        },
-    },
+	name: "card",
+	base: {
+		padding: "@1.5", // → _padding:1.5 → calc(var(--spacing) * 1.5)
+		margin: "@2", // → _margin:2 → calc(var(--spacing) * 2)
+		gap: "@0.5", // → _gap:0.5 → calc(var(--spacing) * 0.5)
+	},
+	variants: {
+		spacing: {
+			compact: { padding: "@0.5" },
+			normal: { padding: "@1" },
+			relaxed: { padding: "@2" },
+		},
+	},
 });
 ```
 
 **Supported formats:**
+
 - Integers: `@1`, `@2`, `@3`
 - Decimals: `@0.5`, `@1.5`, `@2.25`
 - Negative: `@-1`, `@-0.5` (useful for negative margins)
@@ -185,26 +186,26 @@ Variants define multiple styling options for each design dimension:
 
 ```ts
 recipe({
-    name: 'button',
-    variants: {
-        // "color" variant group
-        color: {
-            primary: { background: ref(colorPrimary) },
-            secondary: { background: ref(colorSecondary) },
-            error: { background: ref(colorError) },
-        },
-        // "size" variant group
-        size: {
-            sm: { padding: ref(spacingSm) },
-            md: { padding: ref(spacingMd) },
-            lg: { padding: ref(spacingLg) },
-        },
-        // Boolean variant
-        rounded: {
-            false: { borderRadius: '0' },
-            true: { borderRadius: ref(borderRadiusFull) },
-        },
-    },
+	name: "button",
+	variants: {
+		// "color" variant group
+		color: {
+			primary: { background: ref(colorPrimary) },
+			secondary: { background: ref(colorSecondary) },
+			error: { background: ref(colorError) },
+		},
+		// "size" variant group
+		size: {
+			sm: { padding: ref(spacingSm) },
+			md: { padding: ref(spacingMd) },
+			lg: { padding: ref(spacingLg) },
+		},
+		// Boolean variant
+		rounded: {
+			false: { borderRadius: "0" },
+			true: { borderRadius: ref(borderRadiusFull) },
+		},
+	},
 });
 ```
 
@@ -216,13 +217,15 @@ Specify which variant is applied when no explicit variant is chosen:
 
 ```ts
 recipe({
-    name: 'button',
-    variants: { /* ... */ },
-    defaultVariants: {
-        color: 'primary',
-        size: 'md',
-        rounded: false,
-    },
+	name: "button",
+	variants: {
+		/* ... */
+	},
+	defaultVariants: {
+		color: "primary",
+		size: "md",
+		rounded: false,
+	},
 });
 
 // button({}) uses color: 'primary', size: 'md', rounded: false
@@ -237,43 +240,48 @@ Define special styling for specific variant combinations:
 
 ```ts
 recipe({
-    name: 'button',
-    variants: {
-        color: {
-            primary: { /* ... */ },
-            secondary: { /* ... */ },
-        },
-        disabled: {
-            false: {},
-            true: { opacity: '0.5', cursor: 'not-allowed' },
-        },
-    },
-    compoundVariants: [
-        {
-            // When color is primary AND disabled is false
-            match: {
-                color: 'primary',
-                disabled: false,
-            },
-            css: {
-                hover: { background: '@color.primary-dark' },
-            },
-        },
-        {
-            // When color is secondary AND disabled is false
-            match: {
-                color: 'secondary',
-                disabled: false,
-            },
-            css: {
-                hover: { background: '@color.secondary-dark' },
-            },
-        },
-    ],
+	name: "button",
+	variants: {
+		color: {
+			primary: {
+				/* ... */
+			},
+			secondary: {
+				/* ... */
+			},
+		},
+		disabled: {
+			false: {},
+			true: { opacity: "0.5", cursor: "not-allowed" },
+		},
+	},
+	compoundVariants: [
+		{
+			// When color is primary AND disabled is false
+			match: {
+				color: "primary",
+				disabled: false,
+			},
+			css: {
+				hover: { background: "@color.primary-dark" },
+			},
+		},
+		{
+			// When color is secondary AND disabled is false
+			match: {
+				color: "secondary",
+				disabled: false,
+			},
+			css: {
+				hover: { background: "@color.secondary-dark" },
+			},
+		},
+	],
 });
 ```
 
 **How Compound Variants Work:**
+
 1. After base and variant classes are resolved, runtime checks each compound variant
 2. For each compound variant, it compares current selections against `match`
 3. If ALL match conditions are satisfied, `css` declarations are added
@@ -288,36 +296,36 @@ Extract common variants for reuse:
 ```ts
 // Shared variants
 const sizeVariants = {
-    sm: { padding: ref(spacingSm) },
-    md: { padding: ref(spacingMd) },
-    lg: { padding: ref(spacingLg) },
+	sm: { padding: ref(spacingSm) },
+	md: { padding: ref(spacingMd) },
+	lg: { padding: ref(spacingLg) },
 };
 
 const disabledVariant = {
-    false: {},
-    true: {
-        opacity: '0.5',
-        cursor: 'not-allowed',
-    },
+	false: {},
+	true: {
+		opacity: "0.5",
+		cursor: "not-allowed",
+	},
 };
 
 // Reuse in multiple recipes
 recipe({
-    name: 'button',
-    variants: {
-        size: sizeVariants,
-        disabled: disabledVariant,
-        /* ... */
-    },
+	name: "button",
+	variants: {
+		size: sizeVariants,
+		disabled: disabledVariant,
+		/* ... */
+	},
 });
 
 recipe({
-    name: 'input',
-    variants: {
-        size: sizeVariants,
-        disabled: disabledVariant,
-        /* ... */
-    },
+	name: "input",
+	variants: {
+		size: sizeVariants,
+		disabled: disabledVariant,
+		/* ... */
+	},
 });
 ```
 
@@ -337,12 +345,12 @@ recipe({
 
 ## Recipe vs Utilities Comparison
 
-| Feature | Utilities | Recipes |
-|---------|-----------|---------|
-| Output | Single CSS class | Multiple combined classes |
-| Usage | Direct class application | Function call with props |
-| Variants | No built-in variants | Full variant system |
-| Runtime | No runtime needed | Requires `@styleframe/runtime` |
+| Feature  | Utilities                | Recipes                        |
+| -------- | ------------------------ | ------------------------------ |
+| Output   | Single CSS class         | Multiple combined classes      |
+| Usage    | Direct class application | Function call with props       |
+| Variants | No built-in variants     | Full variant system            |
+| Runtime  | No runtime needed        | Requires `@styleframe/runtime` |
 
 Use **recipes** for component-level styling with variant selection.
 Use **utilities** for one-off styling or building custom abstractions.

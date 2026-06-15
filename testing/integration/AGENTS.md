@@ -62,14 +62,14 @@ tests/
 
 ## Scripts Reference
 
-| Script | Purpose |
-|--------|---------|
-| `pnpm run start` | Full CI pipeline: setup in temp dir → test → cleanup |
-| `pnpm run setup` | One-time local `.app/` setup |
-| `pnpm run update` | Re-copy fixtures and rebuild `.app/` |
-| `pnpm run dev` | Watch mode Vite build |
-| `pnpm run build` | Typecheck and build |
-| `pnpm run test:e2e` | Run Playwright tests against built `.app/` |
+| Script              | Purpose                                              |
+| ------------------- | ---------------------------------------------------- |
+| `pnpm run start`    | Full CI pipeline: setup in temp dir → test → cleanup |
+| `pnpm run setup`    | One-time local `.app/` setup                         |
+| `pnpm run update`   | Re-copy fixtures and rebuild `.app/`                 |
+| `pnpm run dev`      | Watch mode Vite build                                |
+| `pnpm run build`    | Typecheck and build                                  |
+| `pnpm run test:e2e` | Run Playwright tests against built `.app/`           |
 
 ---
 
@@ -99,17 +99,17 @@ pnpm run start
 
 ## Pipeline Commands (`src/commands.ts`)
 
-| Function | Description |
-|----------|-------------|
-| `buildPackages()` | Runs `pnpm run build:nodocs` from monorepo root |
-| `createPackageTarballs()` | Creates `.tgz` files from engine, tooling, and theme packages |
-| `mapTarballsToPackages()` | Maps tarball paths to scoped package names for `pnpm` overrides |
-| `createStarterVitePackage()` | Scaffolds a fresh Vite Vue + TypeScript project |
-| `installStyleframeUsingCLI()` | Installs Styleframe from tarballs, configures vite, runs `styleframe init` |
-| `addStyleframeConfig()` | Copies fixture files (`styleframe.config.ts`, `vite.config.ts`, `src/`) into the app |
-| `buildVite()` | Runs `npx vite build` |
-| `runPlaywright()` | Executes Playwright tests |
-| `cleanup()` | Removes temporary directories |
+| Function                      | Description                                                                          |
+| ----------------------------- | ------------------------------------------------------------------------------------ |
+| `buildPackages()`             | Runs `pnpm run build:nodocs` from monorepo root                                      |
+| `createPackageTarballs()`     | Creates `.tgz` files from engine, tooling, and theme packages                        |
+| `mapTarballsToPackages()`     | Maps tarball paths to scoped package names for `pnpm` overrides                      |
+| `createStarterVitePackage()`  | Scaffolds a fresh Vite Vue + TypeScript project                                      |
+| `installStyleframeUsingCLI()` | Installs Styleframe from tarballs, configures vite, runs `styleframe init`           |
+| `addStyleframeConfig()`       | Copies fixture files (`styleframe.config.ts`, `vite.config.ts`, `src/`) into the app |
+| `buildVite()`                 | Runs `npx vite build`                                                                |
+| `runPlaywright()`             | Executes Playwright tests                                                            |
+| `cleanup()`                   | Removes temporary directories                                                        |
 
 ---
 
@@ -133,19 +133,19 @@ The fixture config exercises all major Styleframe features:
 
 Each Vue component in `src/fixtures/src/pages/` exercises a specific Styleframe feature:
 
-| Page | Route | Tests |
-|------|-------|-------|
-| `HomePage.vue` | `/` | Navigation hub with links to all pages |
-| `SelectorsPage.vue` | `/selectors` | `.h1` selector with design token refs |
-| `UtilitiesPage.vue` | `/utilities` | Margin, padding, background, text utility classes |
-| `VariablesPage.vue` | `/variables` | Custom variables and `@`-prefixed string refs |
-| `SelectorsAdvancedPage.vue` | `/selectors-advanced` | Nested selectors, media queries |
-| `ThemesPage.vue` | `/themes` | Theme switching via `data-theme` attribute |
-| `RecipesPage.vue` | `/recipes` | Badge recipe with color/variant combinations |
-| `UtilitiesAutogeneratePage.vue` | `/utilities-autogenerate` | Scanner-resolved and array-syntax utilities |
-| `LayoutFlexboxPage.vue` | `/layout-flexbox` | Flexbox, position, overflow utilities |
-| `BordersEffectsPage.vue` | `/borders-effects` | Border-radius, display utilities |
-| `KeyframesPage.vue` | `/keyframes` | CSS animation keyframes |
+| Page                            | Route                     | Tests                                             |
+| ------------------------------- | ------------------------- | ------------------------------------------------- |
+| `HomePage.vue`                  | `/`                       | Navigation hub with links to all pages            |
+| `SelectorsPage.vue`             | `/selectors`              | `.h1` selector with design token refs             |
+| `UtilitiesPage.vue`             | `/utilities`              | Margin, padding, background, text utility classes |
+| `VariablesPage.vue`             | `/variables`              | Custom variables and `@`-prefixed string refs     |
+| `SelectorsAdvancedPage.vue`     | `/selectors-advanced`     | Nested selectors, media queries                   |
+| `ThemesPage.vue`                | `/themes`                 | Theme switching via `data-theme` attribute        |
+| `RecipesPage.vue`               | `/recipes`                | Badge recipe with color/variant combinations      |
+| `UtilitiesAutogeneratePage.vue` | `/utilities-autogenerate` | Scanner-resolved and array-syntax utilities       |
+| `LayoutFlexboxPage.vue`         | `/layout-flexbox`         | Flexbox, position, overflow utilities             |
+| `BordersEffectsPage.vue`        | `/borders-effects`        | Border-radius, display utilities                  |
+| `KeyframesPage.vue`             | `/keyframes`              | CSS animation keyframes                           |
 
 ---
 
@@ -156,27 +156,27 @@ Each Vue component in `src/fixtures/src/pages/` exercises a specific Styleframe 
 All tests follow the same pattern: navigate to a page, locate elements, and assert computed CSS styles.
 
 ```ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Feature Name', () => {
-    test.beforeEach(async ({ page }) => {
-        await page.goto('/route-name');
-    });
+test.describe("Feature Name", () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto("/route-name");
+	});
 
-    test('should apply expected styles', async ({ page }) => {
-        const element = page.locator('#element-id');
+	test("should apply expected styles", async ({ page }) => {
+		const element = page.locator("#element-id");
 
-        const styles = await element.evaluate((el) => {
-            const computed = window.getComputedStyle(el);
-            return {
-                color: computed.color,
-                padding: computed.padding,
-            };
-        });
+		const styles = await element.evaluate((el) => {
+			const computed = window.getComputedStyle(el);
+			return {
+				color: computed.color,
+				padding: computed.padding,
+			};
+		});
 
-        expect(styles.color).toBe('expected-value');
-        expect(styles.padding).toBe('expected-value');
-    });
+		expect(styles.color).toBe("expected-value");
+		expect(styles.padding).toBe("expected-value");
+	});
 });
 ```
 
@@ -196,7 +196,7 @@ Browsers resolve colors to their computed format. Expect OKLCH values:
 
 ```ts
 const color = await element.evaluate((el) => window.getComputedStyle(el).color);
-expect(color).toBe('oklch(0.546 0.245 264)');
+expect(color).toBe("oklch(0.546 0.245 264)");
 ```
 
 ### Asserting Responsive Styles
@@ -205,8 +205,10 @@ Use `page.setViewportSize()` to test media query breakpoints:
 
 ```ts
 await page.setViewportSize({ width: 1024, height: 768 });
-const padding = await element.evaluate((el) => window.getComputedStyle(el).padding);
-expect(padding).toBe('32px');
+const padding = await element.evaluate(
+	(el) => window.getComputedStyle(el).padding,
+);
+expect(padding).toBe("32px");
 ```
 
 ### Asserting Keyframes
@@ -215,17 +217,20 @@ Check both animation properties and the existence of `@keyframes` rules:
 
 ```ts
 // Check animation property
-const animation = await element.evaluate((el) => window.getComputedStyle(el).animationName);
-expect(animation).toBe('fade-in');
+const animation = await element.evaluate(
+	(el) => window.getComputedStyle(el).animationName,
+);
+expect(animation).toBe("fade-in");
 
 // Check @keyframes rule exists in stylesheets
 const hasKeyframes = await page.evaluate(() => {
-    for (const sheet of document.styleSheets) {
-        for (const rule of sheet.cssRules) {
-            if (rule instanceof CSSKeyframesRule && rule.name === 'fade-in') return true;
-        }
-    }
-    return false;
+	for (const sheet of document.styleSheets) {
+		for (const rule of sheet.cssRules) {
+			if (rule instanceof CSSKeyframesRule && rule.name === "fade-in")
+				return true;
+		}
+	}
+	return false;
 });
 expect(hasKeyframes).toBe(true);
 ```

@@ -50,9 +50,7 @@ export function rfdc<T = any>(opts?: RfdcOptions): CloneFunction<T> {
 	}
 
 	const constructorHandlers = new Map<
-		new (
-			...args: any[]
-		) => any,
+		new (...args: any[]) => any,
 		ConstructorHandler
 	>();
 	constructorHandlers.set(Date, (o: Date) => new Date(o));
@@ -172,9 +170,7 @@ function rfdcCircular<T = any>(opts: RfdcOptions): CloneFunction<T> {
 	const refsNew: any[] = [];
 
 	const constructorHandlers = new Map<
-		new (
-			...args: any[]
-		) => any,
+		new (...args: any[]) => any,
 		ConstructorHandler
 	>();
 	constructorHandlers.set(Date, (o: Date) => new Date(o));

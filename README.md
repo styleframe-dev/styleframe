@@ -58,41 +58,41 @@ Then import the generated CSS in your entry file:
 
 ```ts
 // main.ts
-import 'virtual:styleframe.css';
+import "virtual:styleframe.css";
 ```
 
 ## Usage
 
 ```typescript
-import { styleframe } from 'styleframe';
-import { useColor } from '@styleframe/theme';
+import { styleframe } from "styleframe";
+import { useColor } from "@styleframe/theme";
 
 const s = styleframe();
 const { variable, ref, selector, theme } = s;
 
 // Use design token composables
 const { colorPrimary } = useColor(s, {
-    primary: '#318fa0',
+	primary: "#318fa0",
 });
 
 // Define custom tokens
-const spacing = variable('spacing', '1rem');
+const spacing = variable("spacing", "1rem");
 
 // Create type-safe selectors
-selector('.button', {
-    backgroundColor: ref(colorPrimary),
-    padding: ref(spacing),
-    borderRadius: '4px',
-    color: 'white',
+selector(".button", {
+	backgroundColor: ref(colorPrimary),
+	padding: ref(spacing),
+	borderRadius: "4px",
+	color: "white",
 
-    '&:hover': {
-        opacity: 0.9,
-    },
+	"&:hover": {
+		opacity: 0.9,
+	},
 });
 
 // Add a dark theme
-theme('dark', (ctx) => {
-    ctx.variable(colorPrimary, '#60a5fa');
+theme("dark", (ctx) => {
+	ctx.variable(colorPrimary, "#60a5fa");
 });
 
 export default s;
@@ -113,16 +113,16 @@ Styleframe works with any modern frontend framework and build tool.
 
 **Build tools** (via native plugin or [unplugin](https://github.com/unjs/unplugin)):
 
-| Tool | Integration |
-|------|------------|
-| Vite | Native plugin |
-| Nuxt | Native module |
-| Webpack | Via unplugin |
-| Rollup | Via unplugin |
-| esbuild | Via unplugin |
-| Rspack | Via unplugin |
-| Farm | Via unplugin |
-| Astro | Via unplugin |
+| Tool    | Integration   |
+| ------- | ------------- |
+| Vite    | Native plugin |
+| Nuxt    | Native module |
+| Webpack | Via unplugin  |
+| Rollup  | Via unplugin  |
+| esbuild | Via unplugin  |
+| Rspack  | Via unplugin  |
+| Farm    | Via unplugin  |
+| Astro   | Via unplugin  |
 
 **Frameworks**: React, Vue, Svelte, Solid, Astro — any framework that consumes CSS.
 
