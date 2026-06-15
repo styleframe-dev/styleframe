@@ -42,7 +42,7 @@
 	},
 	"dependencies": {
 		"fast-glob": "^3.3.3",
-		"importree": "^2.0.1"
+		"importree": "catalog:"
 	},
 	"peerDependencies": {
 		"@styleframe/core": "workspace:^3.6.1",

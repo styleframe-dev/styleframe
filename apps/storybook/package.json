@@ -29,7 +29,7 @@
 		"@vitest/browser-playwright": "^4.1.8",
 		"@vitest/coverage-v8": "catalog:",
 		"@vue/tsconfig": "catalog:nuxt",
-		"playwright": "^1.60.0",
+		"playwright": "catalog:",
 		"storybook": "^10.4.4",
 		"@vueless/storybook-dark-mode": "^10.0.8",
 		"typescript": "catalog:",

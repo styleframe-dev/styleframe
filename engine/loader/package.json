@@ -34,8 +34,8 @@
 		"playground:watch": "tsx playground/watch.ts"
 	},
 	"dependencies": {
-		"chokidar": "^4.0.3",
-		"jiti": "^2.7.0"
+		"chokidar": "catalog:",
+		"jiti": "catalog:"
 	},
 	"peerDependencies": {
 		"@styleframe/core": "workspace:^3.6.1",

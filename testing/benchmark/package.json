@@ -13,7 +13,7 @@
 		"test": "vitest run --passWithNoTests"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.60.0",
+		"@playwright/test": "catalog:",
 		"@styleframe/config-typescript": "workspace:^",
 		"@styleframe/runtime": "workspace:^",
 		"@styleframe/scanner": "workspace:^",
@@ -22,7 +22,7 @@
 		"@tailwindcss/node": "4.3.1",
 		"@types/node": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
-		"playwright": "^1.60.0",
+		"playwright": "catalog:",
 		"styleframe": "workspace:^",
 		"tailwindcss": "catalog:nuxt",
 		"tsx": "catalog:",

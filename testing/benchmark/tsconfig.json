@@ -1,7 +1,8 @@
 {
 	"extends": "@styleframe/config-typescript",
 	"compilerOptions": {
-		"tsBuildInfoFile": ".tsbuildinfo"
+		"tsBuildInfoFile": ".tsbuildinfo",
+		"types": ["node"]
 	},
 	"include": ["src/**/*.ts", "tests/**/*.ts", "playwright.config.ts"]
 }

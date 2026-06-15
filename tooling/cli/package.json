@@ -37,7 +37,7 @@
 		"@styleframe/dtcg": "workspace:^",
 		"@styleframe/figma": "workspace:^",
 		"citty": "^0.2.2",
-		"consola": "^3.4.2",
+		"consola": "catalog:",
 		"magicast": "^0.5.3"
 	},
 	"peerDependencies": {

@@ -38,14 +38,14 @@
 	"dependencies": {
 		"@styleframe/core": "workspace:^",
 		"@styleframe/dtcg": "workspace:^",
-		"culori": "^4.0.2"
+		"culori": "catalog:"
 	},
 	"devDependencies": {
 		"@figma/plugin-typings": "^1.128.0",
 		"@styleframe/config-typescript": "workspace:^",
 		"@vitest/coverage-v8": "catalog:",
-		"tsdown": "^0.12.9",
-		"typescript": "^5.9.3",
+		"tsdown": "catalog:",
+		"typescript": "catalog:",
 		"vite": "catalog:",
 		"vite-plugin-singlefile": "^2.3.3",
 		"vitest": "catalog:"
