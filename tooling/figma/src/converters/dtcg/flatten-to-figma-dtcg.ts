@@ -19,7 +19,6 @@ import {
 	applyInheritance,
 	color as dtcgColor,
 	dimension as dtcgDimension,
-	duration as dtcgDuration,
 	isAlias,
 	lookupToken,
 	parseAlias,
@@ -385,7 +384,7 @@ function flattenDuration(value: unknown): FlattenedToken {
 		const dur = value as DTCGDuration;
 		return {
 			type: "number",
-			value: dtcgDuration.format ? durationToMs(dur) : durationToMs(dur),
+			value: durationToMs(dur),
 		};
 	}
 	return { type: "number", value: typeof value === "number" ? value : 0 };

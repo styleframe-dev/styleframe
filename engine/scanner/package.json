@@ -41,8 +41,8 @@
 		"test:dev": "vitest --watch"
 	},
 	"dependencies": {
-		"fast-glob": "^3.3.2",
-		"importree": "^2.0.1"
+		"fast-glob": "^3.3.3",
+		"importree": "catalog:"
 	},
 	"peerDependencies": {
 		"@styleframe/core": "workspace:^3.6.1",
