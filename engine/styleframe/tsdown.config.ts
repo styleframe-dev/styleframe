@@ -30,12 +30,15 @@ async function emitEsmDeclarations() {
 
 const hooks = { "build:done": emitEsmDeclarations };
 
+// tsdown 0.22+ defaults output to `.mjs`/`.d.mts` (notably for `platform: "node"`
+// entries); keep `.js`/`.d.ts` so the package.json `bin`/`exports`/`types` paths resolve.
 export default defineConfig([
 	{
 		entry: ["./src/index.ts"],
 		platform: "neutral",
 		dts: true,
 		format: ["esm", "cjs"],
+		fixedExtension: false,
 		hooks,
 	},
 	{
@@ -43,6 +46,7 @@ export default defineConfig([
 		platform: "node",
 		dts: true,
 		format: ["esm", "cjs"],
+		fixedExtension: false,
 		hooks,
 	},
 	{
@@ -50,6 +54,7 @@ export default defineConfig([
 		platform: "node",
 		dts: true,
 		format: ["esm", "cjs"],
+		fixedExtension: false,
 		hooks,
 	},
 	{
@@ -57,6 +62,7 @@ export default defineConfig([
 		platform: "neutral",
 		dts: true,
 		format: ["esm", "cjs"],
+		fixedExtension: false,
 		hooks,
 	},
 	{
@@ -65,6 +71,7 @@ export default defineConfig([
 		platform: "node",
 		dts: true,
 		format: ["esm", "cjs"],
+		fixedExtension: false,
 		hooks,
 	},
 ]);

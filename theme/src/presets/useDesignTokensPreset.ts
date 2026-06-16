@@ -567,14 +567,12 @@ type AllColorVariations<TColors extends Record<string, string>> =
 /**
  * Resolves which color record to use based on config and merge flag.
  */
-type ResolvedColors<
-	TColors,
-	TMerge extends boolean = true,
-> = TColors extends Record<string, string>
-	? [TMerge] extends [true]
-		? Omit<DefaultColors, keyof TColors> & TColors
-		: TColors
-	: DefaultColors;
+type ResolvedColors<TColors, TMerge extends boolean = true> =
+	TColors extends Record<string, string>
+		? [TMerge] extends [true]
+			? Omit<DefaultColors, keyof TColors> & TColors
+			: TColors
+		: DefaultColors;
 
 /**
  * Color result type that strongly types base colors and all variations.
@@ -789,24 +787,25 @@ type FluidViewportResultKeys = {
 	fluidBreakpoint: Variable<"fluid.breakpoint">;
 };
 
-type FluidViewportResult<TConfig> = IsFluidViewportEnabled<TConfig> extends true
-	? FluidViewportResultKeys
-	: {};
+type FluidViewportResult<TConfig> =
+	IsFluidViewportEnabled<TConfig> extends true ? FluidViewportResultKeys : {};
 
-type FluidFontSizeResult<TConfig> = IsFluidFontSizeEnabled<TConfig> extends true
-	? ExportKeys<"font-size", FontSizeFluidDefaults>
-	: {};
+type FluidFontSizeResult<TConfig> =
+	IsFluidFontSizeEnabled<TConfig> extends true
+		? ExportKeys<"font-size", FontSizeFluidDefaults>
+		: {};
 
 /**
  * Variables produced by the `fluid-scale` domain when fluid font size is
  * enabled and viewport is not disabled.
  */
-type FluidScaleResult<TConfig> = IsFluidFontSizeEnabled<TConfig> extends true
-	? {
-			scaleMin: Variable<"scale.min">;
-			scaleMax: Variable<"scale.max">;
-		}
-	: {};
+type FluidScaleResult<TConfig> =
+	IsFluidFontSizeEnabled<TConfig> extends true
+		? {
+				scaleMin: Variable<"scale.min">;
+				scaleMax: Variable<"scale.max">;
+			}
+		: {};
 
 /**
  * Flat result structure for the design tokens preset.
