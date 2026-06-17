@@ -10,10 +10,7 @@ const props = withDefaults(
 </script>
 
 <template>
-	<span
-		:class="paginationEllipsis({ size: props.size })"
-		aria-hidden="true"
-	>
+	<span :class="paginationEllipsis({ size: props.size })" aria-hidden="true">
 		<slot>…</slot>
 	</span>
 </template>

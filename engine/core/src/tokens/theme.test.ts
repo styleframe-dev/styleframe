@@ -169,7 +169,6 @@ describe("createThemeFunction", () => {
 
 	describe("when callback is not provided", () => {
 		it("should create theme without calling any callback", () => {
-			// biome-ignore lint/suspicious/noExplicitAny: Required for test
 			const result = theme("light", undefined as any);
 
 			expect(result).toEqual({
@@ -186,7 +185,6 @@ describe("createThemeFunction", () => {
 		});
 
 		it("should handle null callback gracefully", () => {
-			// biome-ignore lint/suspicious/noExplicitAny: Required for test
 			const result = theme("light", null as any);
 
 			expect(result).toEqual({

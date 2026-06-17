@@ -59,7 +59,9 @@ const copyToClipboard = async () => {
 			</div>
 
 			<div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-6 overflow-auto">
-				<pre class="text-xs"><code>{{ JSON.stringify(configData, null, 2) }}</code></pre>
+				<pre
+					class="text-xs"
+				><code>{{ JSON.stringify(configData, null, 2) }}</code></pre>
 			</div>
 
 			<div class="space-y-4">
@@ -73,17 +75,13 @@ const copyToClipboard = async () => {
 							</dd>
 						</div>
 						<div class="flex gap-4">
-							<dt class="font-medium min-w-[200px]">
-								Window Origin:
-							</dt>
+							<dt class="font-medium min-w-[200px]">Window Origin:</dt>
 							<dd class="text-gray-600 dark:text-gray-400 break-all">
 								{{ configData.window.origin }}
 							</dd>
 						</div>
 						<div class="flex gap-4">
-							<dt class="font-medium min-w-[200px]">
-								OAuth Redirect URL:
-							</dt>
+							<dt class="font-medium min-w-[200px]">OAuth Redirect URL:</dt>
 							<dd class="text-gray-600 dark:text-gray-400 break-all">
 								{{ configData.computed.effectiveRedirectUrl }}
 							</dd>
@@ -104,8 +102,7 @@ const copyToClipboard = async () => {
 							v-if="!runtimeConfig.public.baseUrl"
 							class="text-red-600 dark:text-red-400"
 						>
-							⚠️ baseUrl is empty - OAuth will likely fail in
-							production
+							⚠️ baseUrl is empty - OAuth will likely fail in production
 						</li>
 						<li
 							v-else-if="
@@ -125,12 +122,9 @@ const copyToClipboard = async () => {
 					<h2 class="text-lg font-semibold mb-2">Recommended Fix</h2>
 					<div class="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg">
 						<p class="mb-2">
-							Set this environment variable in your deployment
-							platform:
+							Set this environment variable in your deployment platform:
 						</p>
-						<code
-							class="block bg-white dark:bg-gray-800 p-3 rounded text-sm"
-						>
+						<code class="block bg-white dark:bg-gray-800 p-3 rounded text-sm">
 							NUXT_PUBLIC_BASE_URL={{ configData.window.origin }}
 						</code>
 					</div>
@@ -138,9 +132,7 @@ const copyToClipboard = async () => {
 			</div>
 
 			<div class="text-center pt-4">
-				<UButton to="/login" variant="soft">
-					Back to Login
-				</UButton>
+				<UButton to="/login" variant="soft"> Back to Login </UButton>
 			</div>
 		</div>
 	</UPageCard>

@@ -35,10 +35,18 @@ const disabledAttr = computed(() => (props.disabled ? "" : undefined));
 		aria-label="Color picker"
 	>
 		<div :class="selectorClasses">
-			<div :class="thumbClasses" :data-disabled="disabledAttr" aria-hidden="true" />
+			<div
+				:class="thumbClasses"
+				:data-disabled="disabledAttr"
+				aria-hidden="true"
+			/>
 		</div>
 		<div :class="trackClasses">
-			<div :class="thumbClasses" :data-disabled="disabledAttr" aria-hidden="true" />
+			<div
+				:class="thumbClasses"
+				:data-disabled="disabledAttr"
+				aria-hidden="true"
+			/>
 		</div>
 	</div>
 </template>

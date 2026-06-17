@@ -13,7 +13,9 @@ const sampleText =
 
 <template>
 	<SwatchCard :name="name">
-		<span :class="['line-height-swatch__preview', lineHeightSwatch({ variant: value })]">
+		<span
+			:class="['line-height-swatch__preview', lineHeightSwatch({ variant: value })]"
+		>
 			{{ sampleText }}
 		</span>
 	</SwatchCard>

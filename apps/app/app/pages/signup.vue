@@ -133,8 +133,8 @@ const displayError = (error: Error) => {
 				<strong>{{ userEmail }}</strong>
 			</p>
 			<p class="text-md mb-6">
-				Please click the link in the email to verify your account and
-				complete your registration.
+				Please click the link in the email to verify your account and complete
+				your registration.
 			</p>
 			<div class="space-y-3">
 				<p class="text-md text-gray-500">
@@ -160,9 +160,7 @@ const displayError = (error: Error) => {
 		>
 			<template #footer>
 				Already have an account?
-				<UButton variant="link" class="p-0" to="/login">
-					Sign in </UButton
-				>.
+				<UButton variant="link" class="p-0" to="/login"> Sign in </UButton>.
 			</template>
 		</UAuthForm>
 	</UPageCard>

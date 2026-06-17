@@ -219,7 +219,7 @@ jobs:
                       apps/app/.output
                   retention-days: 7
 
-    # Lint job - runs oxlint and biome format check
+    # Lint job - runs oxlint and oxfmt format check
     lint:
         name: Lint
         runs-on: ubuntu-latest
@@ -251,7 +251,7 @@ jobs:
             - name: Run oxlint
               run: pnpm lint
 
-            - name: Check formatting with Biome
+            - name: Check formatting with oxfmt
               run: pnpm run format:check
 
     # Type checking job

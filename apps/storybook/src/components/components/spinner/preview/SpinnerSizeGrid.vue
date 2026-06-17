@@ -9,10 +9,7 @@ const sizes = ["auto", "sm", "md", "lg"] as const;
 		<div v-for="size in sizes" :key="size">
 			<div class="spinner-label">{{ size }}</div>
 			<div class="spinner-row">
-				<div
-					v-if="size === 'auto'"
-					class="_width:[100px] _height:[100px]"
-				>
+				<div v-if="size === 'auto'" class="_width:[100px] _height:[100px]">
 					<Spinner :size="size" />
 				</div>
 				<Spinner v-else :size="size" />

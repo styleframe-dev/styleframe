@@ -1036,9 +1036,8 @@ export const matrix = createRecipe("matrix", matrixRecipe);
 
 		const result = consumeRecipe(instance, options);
 
-		expect(
-			result,
-		).toEqual(`const noRuntimeRecipe = {} as const satisfies RecipeRuntime;
+		expect(result)
+			.toEqual(`const noRuntimeRecipe = {} as const satisfies RecipeRuntime;
 
 export type NoRuntimeProps = RecipeVariantProps<typeof noRuntimeRecipe>;
 export const noRuntime = createRecipe("noRuntime", noRuntimeRecipe);

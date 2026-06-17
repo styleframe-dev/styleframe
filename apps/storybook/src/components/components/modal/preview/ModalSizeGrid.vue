@@ -34,11 +34,13 @@ const sizeWidths: Record<string, string> = {
 						<ModalTitle>{{ sizeTitles[size] }} Modal</ModalTitle>
 					</ModalHeader>
 					<ModalBody :size="size">
-						<ModalDescription>This is a {{ size }} modal showing the {{ sizeTitles[size].toLowerCase() }} size variant.</ModalDescription>
+						<ModalDescription
+							>This is a {{ size }} modal showing the
+							{{ sizeTitles[size].toLowerCase() }} size
+							variant.</ModalDescription
+						>
 					</ModalBody>
-					<ModalFooter :size="size">
-						Footer content
-					</ModalFooter>
+					<ModalFooter :size="size"> Footer content </ModalFooter>
 				</Modal>
 			</div>
 		</div>

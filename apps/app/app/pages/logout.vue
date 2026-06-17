@@ -35,10 +35,7 @@ onMounted(async () => {
 	<UPageCard class="max-w-sm w-full h-full mx-auto my-auto">
 		<div v-if="error" class="text-center">
 			<div class="text-red-500 mb-4">
-				<Icon
-					name="i-lucide-alert-circle"
-					class="w-12 h-12 mx-auto mb-2"
-				/>
+				<Icon name="i-lucide-alert-circle" class="w-12 h-12 mx-auto mb-2" />
 				<p class="font-semibold">Sign Out Error</p>
 			</div>
 			<p class="text-sm text-gray-500 mb-4">{{ error }}</p>
@@ -52,9 +49,7 @@ onMounted(async () => {
 				/>
 			</div>
 			<p class="font-semibold mb-2">Signing you out...</p>
-			<p class="text-sm text-gray-500">
-				Please wait while we log you out.
-			</p>
+			<p class="text-sm text-gray-500">Please wait while we log you out.</p>
 		</div>
 	</UPageCard>
 </template>

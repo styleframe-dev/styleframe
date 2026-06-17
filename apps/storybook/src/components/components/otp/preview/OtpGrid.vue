@@ -12,12 +12,7 @@ const colors = ["neutral", "light", "dark"] as const;
 			<div class="otp-row">
 				<div v-for="color in colors" :key="`${variant}-${color}`">
 					<div class="otp-caption">{{ color }}</div>
-					<Otp
-						:color="color"
-						:variant="variant"
-						:length="4"
-						value="12"
-					/>
+					<Otp :color="color" :variant="variant" :length="4" value="12" />
 				</div>
 			</div>
 		</div>
