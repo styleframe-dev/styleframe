@@ -20,16 +20,17 @@ const variants = ["solid", "soft", "subtle"] as const;
 					:key="`${variant}-${color}`"
 					style="position: relative; background: rgba(0, 0, 0, 0.75); border-radius: 8px; padding: 24px; display: flex; align-items: center; justify-content: center;"
 				>
-					<Modal
-						:color="color"
-						:variant="variant"
-						style="max-width: 300px"
-					>
+					<Modal :color="color" :variant="variant" style="max-width: 300px">
 						<ModalHeader :color="color" :variant="variant">
-							<ModalTitle>{{ variant.charAt(0).toUpperCase() + variant.slice(1) }} {{ color.charAt(0).toUpperCase() + color.slice(1) }}</ModalTitle>
+							<ModalTitle
+								>{{ variant.charAt(0).toUpperCase() + variant.slice(1) }}
+								{{ color.charAt(0).toUpperCase() + color.slice(1) }}</ModalTitle
+							>
 						</ModalHeader>
 						<ModalBody>
-							<ModalDescription>This is a {{ variant }} {{ color }} modal.</ModalDescription>
+							<ModalDescription
+								>This is a {{ variant }} {{ color }} modal.</ModalDescription
+							>
 						</ModalBody>
 						<ModalFooter :color="color" :variant="variant">
 							Footer content

@@ -24,6 +24,7 @@ catalog:
   lint-staged: ^17.0.7
   npm-run-all2: ^9.0.2
   nuxt: ^3.17.5
+  oxfmt: ^0.55.0
   oxlint: ^1.69.0
   playwright: ^1.60.0
   scule: ^1.3.0

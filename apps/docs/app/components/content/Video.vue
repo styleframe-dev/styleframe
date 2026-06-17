@@ -101,11 +101,6 @@ const onLoaded = () => {
 		@pause="onPause"
 		@loadeddata="onLoaded"
 	>
-		<source
-			v-for="source in allSources"
-			:src="source"
-			:key="source"
-		/>
+		<source v-for="source in allSources" :src="source" :key="source" />
 	</video>
 </template>
-

@@ -23,12 +23,22 @@ const variants = ["solid", "soft", "subtle"] as const;
 						<DropdownLabel :color="color">
 							{{ variant }} {{ color }}
 						</DropdownLabel>
-						<DropdownItem :color="color" :variant="variant">Profile</DropdownItem>
-						<DropdownItem :color="color" :variant="variant">Settings</DropdownItem>
+						<DropdownItem :color="color" :variant="variant"
+							>Profile</DropdownItem
+						>
+						<DropdownItem :color="color" :variant="variant"
+							>Settings</DropdownItem
+						>
 						<DropdownSeparator :color="color" />
-						<DropdownItem :color="color" :variant="variant">Sign out</DropdownItem>
+						<DropdownItem :color="color" :variant="variant"
+							>Sign out</DropdownItem
+						>
 					</Dropdown>
-					<DropdownArrow :color="color" :variant="variant" class="dropdown-arrow-position" />
+					<DropdownArrow
+						:color="color"
+						:variant="variant"
+						class="dropdown-arrow-position"
+					/>
 				</div>
 			</div>
 		</div>

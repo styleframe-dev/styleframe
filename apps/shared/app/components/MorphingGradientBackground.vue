@@ -39,25 +39,25 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="morphing-gradient-background">
-    <svg xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="goo">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-          <feBlend in="SourceGraphic" in2="goo" />
-        </filter>
-      </defs>
-    </svg>
-    <div class="gradients-container">
-      <div class="g1"></div>
-      <div class="g2"></div>
-      <div class="g3"></div>
-      <div class="g4"></div>
-      <div class="g5"></div>
-      <div class="interactive" :style="interactiveBubbleStyle"></div>
-    </div>
-    <slot :onMousemove="handleMouseMove" />
-  </div>
+	<div class="morphing-gradient-background">
+		<svg xmlns="http://www.w3.org/2000/svg">
+			<defs>
+				<filter id="goo">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+					<feBlend in="SourceGraphic" in2="goo" />
+				</filter>
+			</defs>
+		</svg>
+		<div class="gradients-container">
+			<div class="g1"></div>
+			<div class="g2"></div>
+			<div class="g3"></div>
+			<div class="g4"></div>
+			<div class="g5"></div>
+			<div class="interactive" :style="interactiveBubbleStyle"></div>
+		</div>
+		<slot :onMousemove="handleMouseMove" />
+	</div>
 </template>
 
 <style scoped>

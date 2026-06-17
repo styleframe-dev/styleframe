@@ -6,10 +6,8 @@ import type {
 import { defu } from "defu";
 
 export type RecipeConfig<
-	Variants extends Record<
-		string,
-		Record<string, VariantDeclarationsBlock>
-	> = Record<string, Record<string, VariantDeclarationsBlock>>,
+	Variants extends Record<string, Record<string, VariantDeclarationsBlock>> =
+		Record<string, Record<string, VariantDeclarationsBlock>>,
 > = {
 	base?: VariantDeclarationsBlock;
 	variants?: Variants;

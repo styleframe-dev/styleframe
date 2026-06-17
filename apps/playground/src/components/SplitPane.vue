@@ -36,10 +36,7 @@ function onPointerMove(event: PointerEvent) {
 
 <template>
 	<div ref="container" :class="pgSplitPane()">
-		<div
-			:class="pgSplitPanePane()"
-			:style="{ flexBasis: `${ratio}%` }"
-		>
+		<div :class="pgSplitPanePane()" :style="{ flexBasis: `${ratio}%` }">
 			<slot name="left" />
 		</div>
 		<div
@@ -49,10 +46,7 @@ function onPointerMove(event: PointerEvent) {
 			@pointerdown="onPointerDown"
 			@pointermove="onPointerMove"
 		/>
-		<div
-			:class="pgSplitPanePane()"
-			:style="{ flexBasis: `${100 - ratio}%` }"
-		>
+		<div :class="pgSplitPanePane()" :style="{ flexBasis: `${100 - ratio}%` }">
 			<slot name="right" />
 		</div>
 	</div>

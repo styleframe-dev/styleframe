@@ -98,9 +98,7 @@ const requestResetPassword = async (payload: { data: { email: string } }) => {
 		>
 			<template #footer>
 				Remember your password?
-				<UButton variant="link" class="p-0" to="/login">
-					Sign in </UButton
-				>.
+				<UButton variant="link" class="p-0" to="/login"> Sign in </UButton>.
 			</template>
 		</UAuthForm>
 	</UPageCard>

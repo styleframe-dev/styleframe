@@ -33,6 +33,8 @@ const classes = computed(() =>
 		:class="classes"
 	>
 		<slot />
-		<span class="context-menu-sub-trigger-icon" aria-hidden="true">&rsaquo;</span>
+		<span class="context-menu-sub-trigger-icon" aria-hidden="true"
+			>&rsaquo;</span
+		>
 	</button>
 </template>
