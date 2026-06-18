@@ -1,6 +1,6 @@
 import { buildSrcdoc, type BuildSrcdocResult } from "./buildSrcdoc";
-import { compileVueSfc } from "./compileVueSfc";
-import { evalUserConfig } from "./evalUserConfig";
+import { bundlePreview } from "./bundlePreview";
+import { evalStyleframeFile, evalUserConfig } from "./evalUserConfig";
 import {
 	scanAndRegisterUtilities,
 	type ScanResult,
@@ -8,23 +8,21 @@ import {
 import { transformTs } from "./transformTs";
 import { transpileStyleframe } from "./transpileStyleframe";
 
+/** `*.styleframe.ts` extension files are evaluated, not bundled or scanned. */
+export function isStyleframeFile(path: string): boolean {
+	return path.endsWith(".styleframe.ts");
+}
+
 export interface PipelineInput {
-	config: string;
-	app: string;
-	card: string;
-	button: string;
-	vueUrl: string;
-	runtimeUrl: string;
+	files: Record<string, string>;
+	configPath: string;
+	entryPath: string;
 }
 
 export interface PipelineSuccess {
 	ok: true;
 	css: string;
 	runtimeTs: string;
-	configCode: string;
-	appCode: string;
-	cardCode: string;
-	buttonCode: string;
 	srcdoc: string;
 	scan: ScanResult;
 	revoke: () => void;
@@ -35,10 +33,10 @@ export interface PipelineFailure {
 	stage:
 		| "config-transform"
 		| "config-eval"
+		| "styleframe"
 		| "scan"
 		| "transpile"
-		| "config-compile"
-		| "vue"
+		| "bundle"
 		| "assemble";
 	error: Error;
 }
@@ -53,9 +51,11 @@ function toError(value: unknown): Error {
 export async function runPipeline(
 	input: PipelineInput,
 ): Promise<PipelineResult> {
+	const configSource = input.files[input.configPath] ?? "";
+
 	let compiledConfig: string;
 	try {
-		compiledConfig = await transformTs(input.config);
+		compiledConfig = await transformTs(configSource);
 	} catch (error) {
 		return { ok: false, stage: "config-transform", error: toError(error) };
 	}
@@ -67,13 +67,25 @@ export async function runPipeline(
 		return { ok: false, stage: "config-eval", error: toError(error) };
 	}
 
+	// Auto-include every *.styleframe.ts file: each extends the shared instance.
+	try {
+		const styleframePaths = Object.keys(input.files)
+			.filter((path) => path !== input.configPath && isStyleframeFile(path))
+			.sort();
+		for (const path of styleframePaths) {
+			const compiled = await transformTs(input.files[path] ?? "");
+			evalStyleframeFile(compiled, instance);
+		}
+	} catch (error) {
+		return { ok: false, stage: "styleframe", error: toError(error) };
+	}
+
 	let scan: ScanResult;
 	try {
-		scan = scanAndRegisterUtilities(instance, [
-			{ content: input.app, filePath: "App.vue" },
-			{ content: input.card, filePath: "Card.vue" },
-			{ content: input.button, filePath: "Button.vue" },
-		]);
+		const sources = Object.entries(input.files)
+			.filter(([path]) => path !== input.configPath && !isStyleframeFile(path))
+			.map(([filePath, content]) => ({ content, filePath }));
+		scan = scanAndRegisterUtilities(instance, sources);
 	} catch (error) {
 		return { ok: false, stage: "scan", error: toError(error) };
 	}
@@ -85,36 +97,24 @@ export async function runPipeline(
 		return { ok: false, stage: "transpile", error: toError(error) };
 	}
 
-	let configCode: string;
+	let bundled: Awaited<ReturnType<typeof bundlePreview>>;
 	try {
-		configCode = await transformTs(transpiled.ts);
+		bundled = await bundlePreview({
+			files: input.files,
+			entryPath: input.entryPath,
+			configPath: input.configPath,
+			runtimeTs: transpiled.ts,
+		});
 	} catch (error) {
-		return { ok: false, stage: "config-compile", error: toError(error) };
-	}
-
-	let appCompiled: { code: string };
-	let cardCompiled: { code: string };
-	let buttonCompiled: { code: string };
-	try {
-		[appCompiled, cardCompiled, buttonCompiled] = await Promise.all([
-			compileVueSfc(input.app, "App.vue"),
-			compileVueSfc(input.card, "Card.vue"),
-			compileVueSfc(input.button, "Button.vue"),
-		]);
-	} catch (error) {
-		return { ok: false, stage: "vue", error: toError(error) };
+		return { ok: false, stage: "bundle", error: toError(error) };
 	}
 
 	let built: BuildSrcdocResult;
 	try {
 		built = buildSrcdoc({
-			css: transpiled.css,
-			configCode,
-			appCode: appCompiled.code,
-			cardCode: cardCompiled.code,
-			buttonCode: buttonCompiled.code,
-			vueUrl: input.vueUrl,
-			runtimeUrl: input.runtimeUrl,
+			css: transpiled.css + bundled.css,
+			bundleJs: bundled.bundleJs,
+			reactIife: bundled.reactIife,
 		});
 	} catch (error) {
 		return { ok: false, stage: "assemble", error: toError(error) };
@@ -124,10 +124,6 @@ export async function runPipeline(
 		ok: true,
 		css: transpiled.css,
 		runtimeTs: transpiled.ts,
-		configCode,
-		appCode: appCompiled.code,
-		cardCode: cardCompiled.code,
-		buttonCode: buttonCompiled.code,
 		srcdoc: built.srcdoc,
 		scan,
 		revoke: built.revoke,

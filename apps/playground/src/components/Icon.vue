@@ -4,6 +4,7 @@ import { computed } from "vue";
 type IconName =
 	| "sun"
 	| "moon"
+	| "contrast"
 	| "monitor"
 	| "close"
 	| "reload"
@@ -11,7 +12,10 @@ type IconName =
 	| "play"
 	| "spinner"
 	| "smartphone"
-	| "tablet";
+	| "tablet"
+	| "plus"
+	| "folder-plus"
+	| "ellipsis";
 
 const props = withDefaults(
 	defineProps<{
@@ -30,6 +34,8 @@ const sizeValue = computed(() =>
 const paths: Record<IconName, string> = {
 	sun: '<circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>',
 	moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>',
+	contrast:
+		'<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor"/>',
 	monitor:
 		'<rect x="3" y="4" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>',
 	close:
@@ -45,6 +51,11 @@ const paths: Record<IconName, string> = {
 		'<rect x="7" y="2" width="10" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M11 18h2" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>',
 	tablet:
 		'<rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M11 18h2" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>',
+	plus: '<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>',
+	"folder-plus":
+		'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/><path d="M12 11v5M9.5 13.5h5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>',
+	ellipsis:
+		'<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>',
 };
 
 const svg = computed(() => paths[props.name]);

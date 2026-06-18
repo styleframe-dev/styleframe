@@ -94,3 +94,27 @@ export async function evalUserConfig(compiledJs: string): Promise<Styleframe> {
 	}
 	return candidate;
 }
+
+/**
+ * Evaluate a `*.styleframe.ts` extension file against the shared global
+ * instance. `import { styleframe } from "virtual:styleframe"` returns the same
+ * instance the config created, so the extension's recipe registrations mutate
+ * it — exactly how `@styleframe/plugin` loads extension files.
+ */
+export function evalStyleframeFile(
+	compiledJs: string,
+	instance: Styleframe,
+): void {
+	const rewritten = rewriteImports(compiledJs);
+	const wrapped = `"use strict";\nconst __pgOutput = {};\n${rewritten}\nreturn __pgOutput;`;
+	const fn = new Function("__pgModules", wrapped) as (
+		modules: Record<string, ModuleShape>,
+	) => unknown;
+	fn({
+		...moduleShims,
+		"virtual:styleframe": {
+			styleframe: () => instance,
+			default: instance,
+		},
+	});
+}

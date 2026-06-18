@@ -9,6 +9,16 @@ export const useBrandMarkRecipe = createUseRecipe("pg-brand-mark", {
 	},
 });
 
+export const useBrandLinkRecipe = createUseRecipe("pg-brand-link", {
+	base: {
+		display: "inline-flex",
+		alignItems: "center",
+		color: "inherit",
+		textDecoration: "none",
+		cursor: "pointer",
+	},
+});
+
 export const useBrandLogotypeRecipe = createUseRecipe("pg-brand-logotype", {
 	base: {
 		display: "block",

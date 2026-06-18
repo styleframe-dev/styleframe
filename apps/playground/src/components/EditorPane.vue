@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { pgEditorShell, pgEditorSurface } from "virtual:styleframe";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import {
+	pgEditorEmpty,
+	pgEditorShell,
+	pgEditorSurface,
+} from "virtual:styleframe";
 import {
 	createEditor,
-	type EditorLanguage,
 	type EditorSelectionState,
 	getEditorSelection,
+	languageForPath,
 	setEditorTheme,
 	setEditorValue,
 } from "@/editor/codemirror";
@@ -13,81 +17,80 @@ import { useTheme } from "@/state/theme";
 import type { EditorView } from "@codemirror/view";
 import FileTabList, { type FileTabEntry } from "./FileTabList.vue";
 
-type FileId = "config" | "app" | "card" | "button";
-
-interface FileEntry extends FileTabEntry<FileId> {
-	language: EditorLanguage;
-}
-
 const props = defineProps<{
-	files: Record<FileId, string>;
-	active: FileId;
-	dirty?: Partial<Record<FileId, boolean>>;
+	files: Record<string, string>;
+	/** Paths of the open tabs, in order. */
+	open: string[];
+	active: string;
+	dirty?: Record<string, boolean>;
 }>();
 
 const emit = defineEmits<{
-	"update:active": [value: FileId];
-	change: [payload: { id: FileId; value: string }];
+	"update:active": [value: string];
+	close: [value: string];
+	change: [payload: { id: string; value: string }];
 	"selection-change": [state: EditorSelectionState];
 }>();
 
-const tabs: FileEntry[] = [
-	{
-		id: "config",
-		label: "styleframe.config.ts",
-		language: "typescript",
-	},
-	{ id: "app", label: "App.vue", language: "vue" },
-	{ id: "card", label: "Card.vue", language: "vue" },
-	{ id: "button", label: "Button.vue", language: "vue" },
-];
-
 const host = ref<HTMLDivElement | null>(null);
-const views = new Map<FileId, EditorView>();
+const views = new Map<string, EditorView>();
 const { resolved } = useTheme();
 
-function mountEditor(entry: FileEntry) {
-	if (!host.value) return;
+function basename(path: string): string {
+	return path.split("/").pop() ?? path;
+}
+
+const tabs = computed<FileTabEntry<string>[]>(() =>
+	props.open.map((path) => ({ id: path, label: basename(path) })),
+);
+
+function mountEditor(path: string) {
+	if (!host.value || !path || views.has(path)) return;
 	const container = document.createElement("div");
 	container.style.height = "100%";
-	container.style.display = entry.id === props.active ? "block" : "none";
-	container.dataset.editorFor = entry.id;
+	container.style.display = path === props.active ? "block" : "none";
+	container.dataset.editorFor = path;
 	host.value.appendChild(container);
 	const view = createEditor({
 		parent: container,
-		doc: props.files[entry.id],
-		language: entry.language,
+		doc: props.files[path] ?? "",
+		language: languageForPath(path),
 		theme: resolved.value,
 		onChange(value) {
-			emit("change", { id: entry.id, value });
+			emit("change", { id: path, value });
 		},
 		onSelectionChange(state) {
-			if (props.active === entry.id) emit("selection-change", state);
+			if (props.active === path) emit("selection-change", state);
 		},
 	});
-	views.set(entry.id, view);
+	views.set(path, view);
 }
 
-function setActive(id: FileId) {
+function destroyEditor(path: string) {
+	const view = views.get(path);
+	if (!view) return;
+	const container = view.dom.parentElement;
+	view.destroy();
+	container?.remove();
+	views.delete(path);
+}
+
+function showActive(path: string) {
 	if (!host.value) return;
 	for (const child of Array.from(host.value.children)) {
-		const editorFor = (child as HTMLElement).dataset.editorFor as
-			| FileId
-			| undefined;
+		const editorFor = (child as HTMLElement).dataset.editorFor;
 		if (!editorFor) continue;
-		(child as HTMLElement).style.display = editorFor === id ? "block" : "none";
+		(child as HTMLElement).style.display =
+			editorFor === path ? "block" : "none";
 	}
-	const view = views.get(id);
+	const view = views.get(path);
 	view?.focus();
 	if (view) emit("selection-change", getEditorSelection(view));
 }
 
 onMounted(() => {
-	for (const entry of tabs) {
-		mountEditor(entry);
-	}
-	const view = views.get(props.active);
-	if (view) emit("selection-change", getEditorSelection(view));
+	mountEditor(props.active);
+	showActive(props.active);
 });
 
 onBeforeUnmount(() => {
@@ -95,17 +98,32 @@ onBeforeUnmount(() => {
 	views.clear();
 });
 
+// Lazily mount the active file's editor the first time it is focused.
 watch(
 	() => props.active,
-	(next) => setActive(next),
+	(next) => {
+		mountEditor(next);
+		showActive(next);
+	},
 );
 
+// Tear down editors for files that were deleted from the project.
+watch(
+	() => Object.keys(props.files).join(" "),
+	() => {
+		// Snapshot keys — destroyEditor() mutates `views` during iteration.
+		for (const path of Array.from(views.keys())) {
+			if (!(path in props.files)) destroyEditor(path);
+		}
+	},
+);
+
+// Keep editor contents in sync with external state changes (e.g. resets).
 watch(
 	() => props.files,
 	(next) => {
-		for (const entry of tabs) {
-			const view = views.get(entry.id);
-			if (view) setEditorValue(view, next[entry.id]);
+		for (const [path, view] of views) {
+			if (path in next) setEditorValue(view, next[path] ?? "");
 		}
 	},
 	{ deep: true },
@@ -123,7 +141,13 @@ watch(resolved, (next) => {
 			:model-value="active"
 			:dirty="dirty"
 			@update:model-value="(value) => emit('update:active', value)"
+			@close="(value) => emit('close', value)"
 		/>
-		<div ref="host" :class="pgEditorSurface()" />
+		<div :class="pgEditorSurface()">
+			<div ref="host" style="height: 100%" />
+			<div v-if="!active" :class="pgEditorEmpty()">
+				No file open — pick one from the tree on the right.
+			</div>
+		</div>
 	</div>
 </template>

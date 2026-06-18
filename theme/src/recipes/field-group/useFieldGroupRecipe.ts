@@ -62,6 +62,8 @@ export const useFieldGroupRecipe = createUseRecipe(
 	(s) => {
 		const { selector } = s;
 
+		const inputSelectors = [".input", ".select", ".textarea"] as const;
+
 		// Horizontal: join controls side-by-side and let fields take the slack.
 		selector(".field-group.-horizontal", {
 			"& > *:not(:last-child)": {
@@ -73,15 +75,7 @@ export const useFieldGroupRecipe = createUseRecipe(
 				borderTopLeftRadius: "0",
 				borderBottomLeftRadius: "0",
 			},
-			"& > .input": {
-				flexGrow: "1",
-				minWidth: "0",
-			},
-			"& > .select": {
-				flexGrow: "1",
-				minWidth: "0",
-			},
-			"& > .textarea": {
+			[`& > ${inputSelectors.join(", & > ")}`]: {
 				flexGrow: "1",
 				minWidth: "0",
 			},

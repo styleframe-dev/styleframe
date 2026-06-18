@@ -1,6 +1,5 @@
 import { css } from "@codemirror/lang-css";
 import { javascript } from "@codemirror/lang-javascript";
-import { vue } from "@codemirror/lang-vue";
 import { Compartment, EditorState, type Extension } from "@codemirror/state";
 import {
 	EditorView,
@@ -18,7 +17,14 @@ import {
 import { bracketMatching, indentOnInput } from "@codemirror/language";
 import { type PlaygroundEditorTheme, playgroundTheme } from "./theme";
 
-export type EditorLanguage = "typescript" | "vue" | "css";
+export type EditorLanguage = "typescript" | "tsx" | "css";
+
+/** Map a file path to its editor language by extension. */
+export function languageForPath(path: string): EditorLanguage {
+	if (path.endsWith(".css")) return "css";
+	if (path.endsWith(".tsx") || path.endsWith(".jsx")) return "tsx";
+	return "typescript";
+}
 
 export interface EditorSelectionState {
 	line: number;
@@ -45,11 +51,11 @@ export function getEditorSelection(view: EditorView): EditorSelectionState {
 }
 
 function languageExtension(language: EditorLanguage): Extension {
-	if (language === "vue") {
-		return vue();
-	}
 	if (language === "css") {
 		return css();
+	}
+	if (language === "tsx") {
+		return javascript({ typescript: true, jsx: true });
 	}
 	return javascript({ typescript: true, jsx: false });
 }

@@ -63,13 +63,13 @@ describe("createEditor", () => {
 		expect(locked.state.readOnly).toBe(true);
 	});
 
-	it("selects different language extensions for vue and typescript", () => {
+	it("selects different language extensions for tsx and typescript", () => {
 		const ts = mount({ language: "typescript" });
-		const vue = mount({ language: "vue" });
+		const tsx = mount({ language: "tsx" });
 
-		expect(ts.state).not.toBe(vue.state);
+		expect(ts.state).not.toBe(tsx.state);
 		expect(ts.state.doc.toString()).toBe("const x = 1;");
-		expect(vue.state.doc.toString()).toBe("const x = 1;");
+		expect(tsx.state.doc.toString()).toBe("const x = 1;");
 	});
 });
 
