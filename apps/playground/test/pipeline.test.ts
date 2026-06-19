@@ -33,15 +33,12 @@ const input = {
 
 async function loadMocks() {
 	const { transformTs } = await import("@/pipeline/transformTs");
-	const { evalUserConfig, evalStyleframeFile } = await import(
-		"@/pipeline/evalUserConfig"
-	);
-	const { transpileStyleframe } = await import(
-		"@/pipeline/transpileStyleframe"
-	);
-	const { scanAndRegisterUtilities } = await import(
-		"@/pipeline/scanAndRegisterUtilities"
-	);
+	const { evalUserConfig, evalStyleframeFile } =
+		await import("@/pipeline/evalUserConfig");
+	const { transpileStyleframe } =
+		await import("@/pipeline/transpileStyleframe");
+	const { scanAndRegisterUtilities } =
+		await import("@/pipeline/scanAndRegisterUtilities");
 	const { bundlePreview } = await import("@/pipeline/bundlePreview");
 	const { buildSrcdoc } = await import("@/pipeline/buildSrcdoc");
 	return {
