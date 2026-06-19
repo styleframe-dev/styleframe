@@ -1,11 +1,15 @@
 export interface BuildSrcdocInput {
+	/** Generated styleframe CSS plus any CSS emitted by user imports. */
 	css: string;
-	configCode: string;
-	appCode: string;
-	cardCode: string;
-	buttonCode: string;
-	vueUrl: string;
-	runtimeUrl: string;
+	/** The compiled preview module. */
+	bundleJs: string;
+	/** IIFE that publishes React on `globalThis.PGReactVendor`. */
+	reactIife: string;
+}
+
+export interface BuildSrcdocResult {
+	srcdoc: string;
+	revoke: () => void;
 }
 
 function makeBlobUrl(code: string): string {
@@ -14,92 +18,38 @@ function makeBlobUrl(code: string): string {
 	);
 }
 
-const configSpecifierRe = /from\s*["']\.\/styleframe\.config(?:\.ts)?["']/g;
-const cardSpecifierRe = /from\s*["']\.\/Card\.vue["']/g;
-const buttonSpecifierRe = /from\s*["']\.\/Button\.vue["']/g;
-
-export interface BuildSrcdocResult {
-	srcdoc: string;
-	revoke: () => void;
-}
-
+/**
+ * Assemble the preview document: the React vendor runs first as a classic
+ * script (publishing `globalThis.PGReactVendor`), then the bundled preview
+ * module reads React off that global. No importmap is needed — everything
+ * except React is already inlined into the bundle.
+ */
 export function buildSrcdoc(input: BuildSrcdocInput): BuildSrcdocResult {
-	const { css, configCode, appCode, cardCode, buttonCode, vueUrl, runtimeUrl } =
-		input;
+	const { css, bundleJs, reactIife } = input;
 
-	const configUrl = makeBlobUrl(configCode);
-
-	const cardCodeRewritten = cardCode.replace(
-		configSpecifierRe,
-		`from ${JSON.stringify(configUrl)}`,
-	);
-	const cardUrl = makeBlobUrl(cardCodeRewritten);
-
-	const buttonCodeRewritten = buttonCode.replace(
-		configSpecifierRe,
-		`from ${JSON.stringify(configUrl)}`,
-	);
-	const buttonUrl = makeBlobUrl(buttonCodeRewritten);
-
-	const appCodeRewritten = appCode
-		.replace(cardSpecifierRe, `from ${JSON.stringify(cardUrl)}`)
-		.replace(buttonSpecifierRe, `from ${JSON.stringify(buttonUrl)}`)
-		.replace(configSpecifierRe, `from ${JSON.stringify(configUrl)}`);
-	const appUrl = makeBlobUrl(appCodeRewritten);
-
-	const bootScript = `
-import { createApp } from "vue";
-import App from ${JSON.stringify(appUrl)};
-const notify = (type, detail) => parent.postMessage({ type: "pg:error", detail }, "*");
-window.addEventListener("error", (event) => {
-  notify("error", { message: event.message, stack: event.error && event.error.stack });
-});
-window.addEventListener("unhandledrejection", (event) => {
-  const reason = event.reason;
-  notify("error", {
-    message: reason && reason.message ? reason.message : String(reason),
-    stack: reason && reason.stack,
-  });
-});
-try {
-  createApp(App).mount("#app");
-} catch (error) {
-  notify("error", { message: error && error.message ? error.message : String(error), stack: error && error.stack });
-}
-`;
-
-	const bootUrl = makeBlobUrl(bootScript);
+	const reactUrl = makeBlobUrl(reactIife);
+	const bundleUrl = makeBlobUrl(bundleJs);
 
 	const srcdoc = `<!doctype html>
 <html>
 <head>
 <meta charset="utf-8" />
-<script type="importmap">
-{
-  "imports": {
-    "vue": ${JSON.stringify(vueUrl)},
-    "@styleframe/runtime": ${JSON.stringify(runtimeUrl)}
-  }
-}
-</script>
 <style>
   html, body { margin: 0; padding: 0; height: 100%; }
-  #app { min-height: 100%; }
+  #root { min-height: 100%; }
 </style>
 <style id="pg-user-styles">${css}</style>
 </head>
 <body>
-<div id="app"></div>
-<script type="module" src=${JSON.stringify(bootUrl)}></script>
+<div id="root"></div>
+<script src=${JSON.stringify(reactUrl)}></script>
+<script type="module" src=${JSON.stringify(bundleUrl)}></script>
 </body>
 </html>`;
 
 	const revoke = () => {
-		URL.revokeObjectURL(configUrl);
-		URL.revokeObjectURL(cardUrl);
-		URL.revokeObjectURL(buttonUrl);
-		URL.revokeObjectURL(appUrl);
-		URL.revokeObjectURL(bootUrl);
+		URL.revokeObjectURL(reactUrl);
+		URL.revokeObjectURL(bundleUrl);
 	};
 
 	return { srcdoc, revoke };

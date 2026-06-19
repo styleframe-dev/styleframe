@@ -23,5 +23,6 @@
 		"src/**/*.raw",
 		"test/**/*.ts",
 		".styleframe/**/*.d.ts"
-	]
+	],
+	"exclude": ["src/samples"]
 }

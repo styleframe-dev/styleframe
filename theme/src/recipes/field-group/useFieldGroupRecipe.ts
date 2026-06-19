@@ -73,18 +73,9 @@ export const useFieldGroupRecipe = createUseRecipe(
 				borderTopLeftRadius: "0",
 				borderBottomLeftRadius: "0",
 			},
-			"& > .input": {
-				flexGrow: "1",
-				minWidth: "0",
-			},
-			"& > .select": {
-				flexGrow: "1",
-				minWidth: "0",
-			},
-			"& > .textarea": {
-				flexGrow: "1",
-				minWidth: "0",
-			},
+			"& > .input": { flexGrow: "1", minWidth: "0" },
+			"& > .select": { flexGrow: "1", minWidth: "0" },
+			"& > .textarea": { flexGrow: "1", minWidth: "0" },
 		});
 
 		// Vertical: join controls top-to-bottom.

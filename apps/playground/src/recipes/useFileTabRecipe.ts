@@ -91,3 +91,32 @@ export const useFileTabDotRecipe = createUseRecipe("pg-file-tab-dot", {
 		},
 	},
 });
+
+export const useFileTabCloseRecipe = createUseRecipe("pg-file-tab-close", {
+	base: {
+		display: "inline-flex",
+		alignItems: "center",
+		justifyContent: "center",
+		flex: "0 0 auto",
+		width: "16px",
+		height: "16px",
+		marginLeft: "@0.25",
+		padding: "0",
+		color: "@color.gray-400",
+		background: "transparent",
+		borderWidth: "@border-width.none",
+		borderRadius: "@border-radius.sm",
+		cursor: "pointer",
+		"&:hover": {
+			background: "@color.gray-200",
+			color: "@color.gray-900",
+		},
+		"&:dark": {
+			color: "@color.gray-500",
+		},
+		"&:dark:hover": {
+			background: "@color.gray-700",
+			color: "@color.white",
+		},
+	},
+});

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evalUserConfig } from "@/pipeline/evalUserConfig";
+import { evalStyleframeFile, evalUserConfig } from "@/pipeline/evalUserConfig";
 
 describe("evalUserConfig", () => {
 	it("returns the default-exported Styleframe instance", async () => {
@@ -38,5 +38,33 @@ describe("evalUserConfig", () => {
 		await expect(evalUserConfig(compiled)).rejects.toThrow(
 			/must export a Styleframe instance/i,
 		);
+	});
+});
+
+describe("evalStyleframeFile", () => {
+	it("extends the shared instance through virtual:styleframe", async () => {
+		const base = await evalUserConfig(`
+			import { styleframe } from "styleframe";
+			import { useDesignTokensPreset, useUtilitiesPreset, useModifiersPreset } from "@styleframe/theme";
+			const s = styleframe();
+			useDesignTokensPreset(s);
+			useUtilitiesPreset(s);
+			useModifiersPreset(s);
+			export default s;
+		`);
+		const before = base.root.recipes.length;
+
+		evalStyleframeFile(
+			`
+			import { styleframe } from "virtual:styleframe";
+			import { useCardRecipe } from "@styleframe/theme";
+			const s = styleframe();
+			export const cardRecipe = useCardRecipe(s);
+		`,
+			base,
+		);
+
+		expect(base.root.recipes.length).toBeGreaterThan(before);
+		expect(base.root.recipes.some((r) => r.name === "card")).toBe(true);
 	});
 });

@@ -5,38 +5,49 @@ vi.mock("@/pipeline/transformTs", () => ({
 }));
 vi.mock("@/pipeline/evalUserConfig", () => ({
 	evalUserConfig: vi.fn(),
+	evalStyleframeFile: vi.fn(),
 }));
 vi.mock("@/pipeline/transpileStyleframe", () => ({
 	transpileStyleframe: vi.fn(),
 }));
-vi.mock("@/pipeline/compileVueSfc", () => ({
-	compileVueSfc: vi.fn(),
+vi.mock("@/pipeline/scanAndRegisterUtilities", () => ({
+	scanAndRegisterUtilities: vi.fn(),
+}));
+vi.mock("@/pipeline/bundlePreview", () => ({
+	bundlePreview: vi.fn(),
 }));
 vi.mock("@/pipeline/buildSrcdoc", () => ({
 	buildSrcdoc: vi.fn(),
 }));
 
 const input = {
-	config: "user-config-source",
-	app: "<template/>",
-	card: "<template/>",
-	button: "<template/>",
-	vueUrl: "/vue",
-	runtimeUrl: "/runtime",
+	files: {
+		"styleframe.config.ts": "user-config-source",
+		"src/App.tsx": "export default () => null;",
+		"src/components/Button/Button.tsx": "export default () => null;",
+		"src/components/Button/Button.styleframe.ts": "export default s;",
+	},
+	configPath: "styleframe.config.ts",
+	entryPath: "src/App.tsx",
 };
 
 async function loadMocks() {
 	const { transformTs } = await import("@/pipeline/transformTs");
-	const { evalUserConfig } = await import("@/pipeline/evalUserConfig");
+	const { evalUserConfig, evalStyleframeFile } =
+		await import("@/pipeline/evalUserConfig");
 	const { transpileStyleframe } =
 		await import("@/pipeline/transpileStyleframe");
-	const { compileVueSfc } = await import("@/pipeline/compileVueSfc");
+	const { scanAndRegisterUtilities } =
+		await import("@/pipeline/scanAndRegisterUtilities");
+	const { bundlePreview } = await import("@/pipeline/bundlePreview");
 	const { buildSrcdoc } = await import("@/pipeline/buildSrcdoc");
 	return {
 		transformTs: vi.mocked(transformTs),
 		evalUserConfig: vi.mocked(evalUserConfig),
+		evalStyleframeFile: vi.mocked(evalStyleframeFile),
 		transpileStyleframe: vi.mocked(transpileStyleframe),
-		compileVueSfc: vi.mocked(compileVueSfc),
+		scanAndRegisterUtilities: vi.mocked(scanAndRegisterUtilities),
+		bundlePreview: vi.mocked(bundlePreview),
 		buildSrcdoc: vi.mocked(buildSrcdoc),
 	};
 }
@@ -44,13 +55,21 @@ async function loadMocks() {
 function wireHappyPath(mocks: Awaited<ReturnType<typeof loadMocks>>) {
 	mocks.transformTs.mockImplementation(async (source) => `js:${source}`);
 	mocks.evalUserConfig.mockResolvedValue({} as never);
+	mocks.evalStyleframeFile.mockReturnValue(undefined);
+	mocks.scanAndRegisterUtilities.mockReturnValue({
+		count: 0,
+		registered: [],
+		diagnostics: [],
+	});
 	mocks.transpileStyleframe.mockResolvedValue({
 		css: ".cls{color:red}",
 		ts: "export const cls = () => 'cls';",
 	});
-	mocks.compileVueSfc.mockImplementation(async (_source, filename) => ({
-		code: `// ${filename}`,
-	}));
+	mocks.bundlePreview.mockResolvedValue({
+		bundleJs: "PREVIEW_BUNDLE",
+		css: "",
+		reactIife: "REACT_IIFE",
+	});
 	const revoke = vi.fn();
 	mocks.buildSrcdoc.mockReturnValue({ srcdoc: "<html></html>", revoke });
 	return { revoke };
@@ -72,16 +91,47 @@ describe("runPipeline", () => {
 		if (!result.ok) return;
 		expect(result.css).toBe(".cls{color:red}");
 		expect(result.runtimeTs).toBe("export const cls = () => 'cls';");
-		expect(result.configCode).toBe("js:export const cls = () => 'cls';");
-		expect(result.appCode).toBe("// App.vue");
-		expect(result.cardCode).toBe("// Card.vue");
-		expect(result.buttonCode).toBe("// Button.vue");
 		expect(result.srcdoc).toBe("<html></html>");
 		expect(result.scan).toEqual({ count: 0, registered: [], diagnostics: [] });
 		expect(result.revoke).toBe(revoke);
+
+		expect(mocks.transformTs).toHaveBeenCalledWith("user-config-source");
+		expect(mocks.bundlePreview).toHaveBeenCalledWith({
+			files: input.files,
+			entryPath: "src/App.tsx",
+			configPath: "styleframe.config.ts",
+			runtimeTs: "export const cls = () => 'cls';",
+		});
 	});
 
-	it("returns stage 'config-transform' when the first TS transform rejects", async () => {
+	it("evaluates every *.styleframe.ts file against the instance", async () => {
+		const mocks = await loadMocks();
+		wireHappyPath(mocks);
+		const { runPipeline } = await import("@/pipeline/pipeline");
+
+		await runPipeline(input);
+
+		expect(mocks.evalStyleframeFile).toHaveBeenCalledTimes(1);
+		// The compiled extension source is evaluated against the config instance.
+		expect(mocks.evalStyleframeFile).toHaveBeenCalledWith(
+			"js:export default s;",
+			{},
+		);
+	});
+
+	it("scans component files but not the config or *.styleframe.ts files", async () => {
+		const mocks = await loadMocks();
+		wireHappyPath(mocks);
+		const { runPipeline } = await import("@/pipeline/pipeline");
+
+		await runPipeline(input);
+
+		const sources = mocks.scanAndRegisterUtilities.mock.calls[0]![1];
+		const paths = sources.map((s) => s.filePath).sort();
+		expect(paths).toEqual(["src/App.tsx", "src/components/Button/Button.tsx"]);
+	});
+
+	it("returns stage 'config-transform' when the TS transform rejects", async () => {
 		const mocks = await loadMocks();
 		wireHappyPath(mocks);
 		mocks.transformTs.mockRejectedValueOnce(new Error("bad config"));
@@ -89,10 +139,7 @@ describe("runPipeline", () => {
 
 		const result = await runPipeline(input);
 
-		expect(result).toMatchObject({
-			ok: false,
-			stage: "config-transform",
-		});
+		expect(result).toMatchObject({ ok: false, stage: "config-transform" });
 		if (result.ok) return;
 		expect(result.error.message).toBe("bad config");
 	});
@@ -108,7 +155,37 @@ describe("runPipeline", () => {
 		expect(result.ok).toBe(false);
 		if (result.ok) return;
 		expect(result.stage).toBe("config-eval");
-		expect(result.error.message).toBe("no default export");
+	});
+
+	it("returns stage 'styleframe' when an extension file throws", async () => {
+		const mocks = await loadMocks();
+		wireHappyPath(mocks);
+		mocks.evalStyleframeFile.mockImplementationOnce(() => {
+			throw new Error("bad extension");
+		});
+		const { runPipeline } = await import("@/pipeline/pipeline");
+
+		const result = await runPipeline(input);
+
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.stage).toBe("styleframe");
+		expect(result.error.message).toBe("bad extension");
+	});
+
+	it("returns stage 'scan' when scanning throws", async () => {
+		const mocks = await loadMocks();
+		wireHappyPath(mocks);
+		mocks.scanAndRegisterUtilities.mockImplementationOnce(() => {
+			throw new Error("scan boom");
+		});
+		const { runPipeline } = await import("@/pipeline/pipeline");
+
+		const result = await runPipeline(input);
+
+		expect(result.ok).toBe(false);
+		if (result.ok) return;
+		expect(result.stage).toBe("scan");
 	});
 
 	it("returns stage 'transpile' when transpileStyleframe rejects", async () => {
@@ -124,33 +201,18 @@ describe("runPipeline", () => {
 		expect(result.stage).toBe("transpile");
 	});
 
-	it("returns stage 'config-compile' when the second transformTs call rejects", async () => {
+	it("returns stage 'bundle' when bundlePreview rejects", async () => {
 		const mocks = await loadMocks();
 		wireHappyPath(mocks);
-		mocks.transformTs
-			.mockResolvedValueOnce("first-call-ok")
-			.mockRejectedValueOnce(new Error("second-call-bad"));
+		mocks.bundlePreview.mockRejectedValueOnce(new Error("esbuild failed"));
 		const { runPipeline } = await import("@/pipeline/pipeline");
 
 		const result = await runPipeline(input);
 
 		expect(result.ok).toBe(false);
 		if (result.ok) return;
-		expect(result.stage).toBe("config-compile");
-		expect(result.error.message).toBe("second-call-bad");
-	});
-
-	it("returns stage 'vue' when compileVueSfc rejects", async () => {
-		const mocks = await loadMocks();
-		wireHappyPath(mocks);
-		mocks.compileVueSfc.mockRejectedValueOnce(new Error("sfc"));
-		const { runPipeline } = await import("@/pipeline/pipeline");
-
-		const result = await runPipeline(input);
-
-		expect(result.ok).toBe(false);
-		if (result.ok) return;
-		expect(result.stage).toBe("vue");
+		expect(result.stage).toBe("bundle");
+		expect(result.error.message).toBe("esbuild failed");
 	});
 
 	it("returns stage 'assemble' when buildSrcdoc throws", async () => {

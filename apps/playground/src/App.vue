@@ -8,17 +8,23 @@ import {
 } from "virtual:styleframe";
 import { version as styleframeVersion } from "styleframe/package.json";
 import { useTheme } from "@/state/theme";
-import vueUrl from "virtual:pg-vue-url";
-import runtimeUrl from "virtual:pg-runtime-url";
 import BrandMark from "@/components/BrandMark.vue";
 import EditorPane from "@/components/EditorPane.vue";
+import FileTree from "@/components/FileTree.vue";
 import Icon from "@/components/Icon.vue";
 import OutputPane from "@/components/OutputPane.vue";
 import SplitPane from "@/components/SplitPane.vue";
 import StatusBar from "@/components/StatusBar.vue";
 import type { EditorSelectionState } from "@/editor/codemirror";
 import { runPipeline, type PipelineResult } from "@/pipeline/pipeline";
-import { usePlaygroundState, type FileId } from "@/state/playground";
+import {
+	closeFile,
+	CONFIG_PATH,
+	ENTRY_PATH,
+	openFile,
+	setActivePath,
+	usePlaygroundState,
+} from "@/state/playground";
 
 const state = usePlaygroundState();
 const { mode, toggle } = useTheme();
@@ -26,7 +32,7 @@ const { mode, toggle } = useTheme();
 const themeIcon = computed(() => {
 	if (mode.value === "light") return "sun";
 	if (mode.value === "dark") return "moon";
-	return "monitor";
+	return "contrast";
 });
 
 const themeLabel = computed(() => {
@@ -35,31 +41,34 @@ const themeLabel = computed(() => {
 	return "Theme: Auto";
 });
 
-const fileLanguage: Record<FileId, string> = {
-	config: "TypeScript",
-	app: "Vue",
-	card: "Vue",
-	button: "Vue",
-};
+const languageLabel = computed(() => {
+	const path = state.activePath;
+	if (!path) return "—";
+	if (path.endsWith(".css")) return "CSS";
+	if (path.endsWith(".tsx") || path.endsWith(".jsx")) return "TSX";
+	if (path.endsWith(".ts")) return "TypeScript";
+	return "Plain Text";
+});
 
 const selection = ref<EditorSelectionState>({ line: 1, column: 1 });
 const running = ref(false);
 
-const dirty = computed<Record<FileId, boolean>>(() => ({
-	config: state.files.config !== state.lastBuiltFiles.config,
-	app: state.files.app !== state.lastBuiltFiles.app,
-	card: state.files.card !== state.lastBuiltFiles.card,
-	button: state.files.button !== state.lastBuiltFiles.button,
-}));
+const dirty = computed<Record<string, boolean>>(() => {
+	const result: Record<string, boolean> = {};
+	for (const path of Object.keys(state.files)) {
+		result[path] = state.files[path] !== state.lastBuiltFiles[path];
+	}
+	return result;
+});
 
-const canRun = computed(
-	() =>
-		dirty.value.config ||
-		dirty.value.app ||
-		dirty.value.card ||
-		dirty.value.button ||
-		!!state.error,
-);
+const canRun = computed(() => {
+	if (state.error) return true;
+	const current = state.files;
+	const built = state.lastBuiltFiles;
+	const currentKeys = Object.keys(current);
+	if (currentKeys.length !== Object.keys(built).length) return true;
+	return currentKeys.some((key) => current[key] !== built[key]);
+});
 
 const scanSummary = computed(() => {
 	const scan = state.scan;
@@ -81,13 +90,11 @@ function onSelectionChange(next: EditorSelectionState) {
 let revokePrevious: (() => void) | null = null;
 
 async function rebuild() {
+	const built = { ...state.files };
 	const result: PipelineResult = await runPipeline({
-		config: state.files.config,
-		app: state.files.app,
-		card: state.files.card,
-		button: state.files.button,
-		vueUrl,
-		runtimeUrl,
+		files: built,
+		configPath: CONFIG_PATH,
+		entryPath: ENTRY_PATH,
 	});
 	if (!result.ok) {
 		state.error = `[${result.stage}] ${result.error.message}`;
@@ -100,7 +107,7 @@ async function rebuild() {
 	state.output.srcdoc = result.srcdoc;
 	state.scan = result.scan;
 	state.error = null;
-	state.lastBuiltFiles = { ...state.files };
+	state.lastBuiltFiles = built;
 }
 
 async function run() {
@@ -114,7 +121,7 @@ async function run() {
 	}
 }
 
-function onChange(payload: { id: FileId; value: string }) {
+function onChange(payload: { id: string; value: string }) {
 	state.files[payload.id] = payload.value;
 }
 
@@ -169,36 +176,47 @@ onBeforeUnmount(() => {
 			</button>
 		</div>
 	</header>
-	<div style="flex: 1 1 auto; min-height: 0">
-		<SplitPane :initial="50" :min="25" :max="75">
-			<template #left>
-				<EditorPane
-					:files="state.files"
-					:active="state.activeFile"
-					:dirty="dirty"
-					@update:active="(value) => (state.activeFile = value)"
-					@change="onChange"
-					@selection-change="onSelectionChange"
-				/>
-			</template>
-			<template #right>
-				<OutputPane
-					:active="state.activeOutput"
-					:srcdoc="state.output.srcdoc"
-					:css="state.output.css"
-					:js="state.output.runtimeTs"
-					:error="state.error"
-					@update:active="(value) => (state.activeOutput = value)"
-					@runtime-error="(message) => (state.error = message)"
-					@dismiss-error="() => (state.error = null)"
-				/>
-			</template>
-		</SplitPane>
+	<div style="flex: 1 1 auto; min-height: 0; display: flex">
+		<div style="flex: 1 1 auto; min-width: 0">
+			<SplitPane :initial="60" :min="25" :max="80" :initial-right-width="860">
+				<template #left>
+					<EditorPane
+						:files="state.files"
+						:open="state.openPaths"
+						:active="state.activePath"
+						:dirty="dirty"
+						@update:active="(value) => setActivePath(value)"
+						@close="(value) => closeFile(value)"
+						@change="onChange"
+						@selection-change="onSelectionChange"
+					/>
+				</template>
+				<template #right>
+					<OutputPane
+						:active="state.activeOutput"
+						:srcdoc="state.output.srcdoc"
+						:css="state.output.css"
+						:js="state.output.runtimeTs"
+						:error="state.error"
+						@update:active="(value) => (state.activeOutput = value)"
+						@runtime-error="(message) => (state.error = message)"
+						@dismiss-error="() => (state.error = null)"
+					/>
+				</template>
+			</SplitPane>
+		</div>
+		<FileTree
+			:files="state.files"
+			:folders="state.folders"
+			:active="state.activePath"
+			:dirty="dirty"
+			@select="(value) => openFile(value)"
+		/>
 	</div>
 	<StatusBar
 		:line="selection.line"
 		:column="selection.column"
-		:language="fileLanguage[state.activeFile]"
+		:language="languageLabel"
 		indent="Spaces: 2"
 		encoding="UTF-8"
 		eol="LF"
