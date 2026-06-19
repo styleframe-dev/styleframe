@@ -7,10 +7,6 @@
  * @source https://github.com/davidmarkclements/rfdc
  */
 
-// biome-ignore-all lint/suspicious/noAssignInExpressions: required in rfdc
-// biome-ignore-all lint/suspicious/noExplicitAny: required in rfdc
-// biome-ignore-all lint/suspicious/noPrototypeBuiltins: required in rfdc
-
 type CloneFunction<T = any> = (obj: T) => T;
 type ConstructorHandler<T = any> = (obj: T, fn: CloneFunction) => T;
 type ConstructorHandlerTuple<T = any> = [
@@ -50,9 +46,7 @@ export function rfdc<T = any>(opts?: RfdcOptions): CloneFunction<T> {
 	}
 
 	const constructorHandlers = new Map<
-		new (
-			...args: any[]
-		) => any,
+		new (...args: any[]) => any,
 		ConstructorHandler
 	>();
 	constructorHandlers.set(Date, (o: Date) => new Date(o));
@@ -172,9 +166,7 @@ function rfdcCircular<T = any>(opts: RfdcOptions): CloneFunction<T> {
 	const refsNew: any[] = [];
 
 	const constructorHandlers = new Map<
-		new (
-			...args: any[]
-		) => any,
+		new (...args: any[]) => any,
 		ConstructorHandler
 	>();
 	constructorHandlers.set(Date, (o: Date) => new Date(o));

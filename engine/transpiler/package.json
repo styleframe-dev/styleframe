@@ -31,7 +31,7 @@
 		"test:dev": "vitest --watch"
 	},
 	"dependencies": {
-		"scule": "^1.3.0"
+		"scule": "catalog:"
 	},
 	"peerDependencies": {
 		"@styleframe/core": "workspace:^3.6.1",

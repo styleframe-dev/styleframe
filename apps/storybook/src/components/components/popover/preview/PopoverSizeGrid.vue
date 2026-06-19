@@ -28,10 +28,15 @@ const sizeTitles: Record<string, string> = {
 					style="max-width: 300px"
 				>
 					<PopoverHeader :color="color" :size="size">
-						<PopoverTitle>{{ sizeTitles[size] }} {{ color.charAt(0).toUpperCase() + color.slice(1) }}</PopoverTitle>
+						<PopoverTitle
+							>{{ sizeTitles[size] }}
+							{{ color.charAt(0).toUpperCase() + color.slice(1) }}</PopoverTitle
+						>
 					</PopoverHeader>
 					<PopoverBody :size="size">
-						<PopoverDescription>This is a {{ size }} {{ color }} popover.</PopoverDescription>
+						<PopoverDescription
+							>This is a {{ size }} {{ color }} popover.</PopoverDescription
+						>
 					</PopoverBody>
 					<PopoverFooter :color="color" :size="size">
 						Footer content

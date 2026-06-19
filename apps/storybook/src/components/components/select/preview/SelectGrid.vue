@@ -25,13 +25,40 @@ const panelVariant = (v: string) => (v === "ghost" ? "subtle" : v);
 						<SelectChip :color="color" size="md">Apple</SelectChip>
 						<SelectChip :color="color" size="md">Banana</SelectChip>
 					</Select>
-					<SelectPanel :color="color" :variant="panelVariant(variant)" size="md">
+					<SelectPanel
+						:color="color"
+						:variant="panelVariant(variant)"
+						size="md"
+					>
 						<SelectLabel :color="color" size="md">Fruits</SelectLabel>
-						<SelectOption :color="color" :variant="panelVariant(variant)" size="md" :selected="true">Apple</SelectOption>
-						<SelectOption :color="color" :variant="panelVariant(variant)" size="md" :selected="true">Banana</SelectOption>
-						<SelectOption :color="color" :variant="panelVariant(variant)" size="md">Cherry</SelectOption>
+						<SelectOption
+							:color="color"
+							:variant="panelVariant(variant)"
+							size="md"
+							:selected="true"
+							>Apple</SelectOption
+						>
+						<SelectOption
+							:color="color"
+							:variant="panelVariant(variant)"
+							size="md"
+							:selected="true"
+							>Banana</SelectOption
+						>
+						<SelectOption
+							:color="color"
+							:variant="panelVariant(variant)"
+							size="md"
+							>Cherry</SelectOption
+						>
 						<SelectSeparator :color="color" />
-						<SelectOption :color="color" :variant="panelVariant(variant)" size="md" :disabled="true">Durian (out of stock)</SelectOption>
+						<SelectOption
+							:color="color"
+							:variant="panelVariant(variant)"
+							size="md"
+							:disabled="true"
+							>Durian (out of stock)</SelectOption
+						>
 					</SelectPanel>
 				</div>
 			</div>

@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: License field is not supposed to be accessible */
 import { describe, expect, it, beforeEach } from "vitest";
 import { styleframe } from "../styleframe";
 import type { Styleframe } from "../styleframe";

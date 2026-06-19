@@ -10,7 +10,9 @@ const props = defineProps<{
 
 <template>
 	<SwatchCard :name="name">
-		<span :class="['font-family-swatch__preview', fontFamilySwatch({ variant: value })]">
+		<span
+			:class="['font-family-swatch__preview', fontFamilySwatch({ variant: value })]"
+		>
 			The quick brown fox jumps over the lazy dog. 0123456789
 		</span>
 	</SwatchCard>

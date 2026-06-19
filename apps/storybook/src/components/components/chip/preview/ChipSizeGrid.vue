@@ -18,10 +18,7 @@ const sizes = ["xs", "sm", "md", "lg", "xl"] as const;
 		<div v-for="size in sizes" :key="size">
 			<div class="chip-label">{{ size }}</div>
 			<div class="chip-row">
-				<Chip
-					v-for="color in colors"
-					:key="`${size}-${color}`"
-				>
+				<Chip v-for="color in colors" :key="`${size}-${color}`">
 					<div class="chip-target" />
 					<ChipIndicator :color="color" :size="size" />
 				</Chip>

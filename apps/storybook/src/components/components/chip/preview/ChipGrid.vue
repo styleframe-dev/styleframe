@@ -21,10 +21,7 @@ const variants = ["solid", "soft"] as const;
 		<div v-for="variant in variants" :key="variant">
 			<div class="chip-label">{{ variant }}</div>
 			<div class="chip-row">
-				<Chip
-					v-for="color in colors"
-					:key="`${variant}-${color}`"
-				>
+				<Chip v-for="color in colors" :key="`${variant}-${color}`">
 					<div class="chip-target" />
 					<ChipIndicator :color="color" :variant="variant" />
 				</Chip>

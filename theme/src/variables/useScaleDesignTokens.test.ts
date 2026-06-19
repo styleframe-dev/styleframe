@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noApproximativeNumericConstant: scales are magic numbers */
 import type { Variable } from "@styleframe/core";
 import { styleframe } from "@styleframe/core";
 import { consumeCSS } from "@styleframe/transpiler";

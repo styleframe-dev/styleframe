@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noConfusingVoidType: Returning declarations in callback is optional */
 import { isTokenValue } from "../typeGuards";
 import type {
 	Container,

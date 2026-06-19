@@ -1,0 +1,9 @@
+{
+	"useTabs": true,
+	"singleQuote": false,
+	"bracketSpacing": true,
+	"printWidth": 80,
+	"embeddedLanguageFormatting": "off",
+	"sortPackageJson": false,
+	"ignorePatterns": ["testing/benchmark/src/tailwind/**"]
+}

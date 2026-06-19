@@ -14,9 +14,7 @@ const orientations = ["vertical", "horizontal"] as const;
 <template>
 	<div class="page-hero-section">
 		<div v-for="orientation in orientations" :key="orientation">
-			<div class="page-hero-label">
-				orientation: {{ orientation }}
-			</div>
+			<div class="page-hero-label">orientation: {{ orientation }}</div>
 			<div class="page-hero-row">
 				<PageHero
 					v-for="color in colors"

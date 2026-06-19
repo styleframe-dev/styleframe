@@ -21,22 +21,28 @@ const variants = ["solid", "soft", "subtle"] as const;
 					:key="`${variant}-${color}`"
 					class="popover-wrapper"
 				>
-					<Popover
-						:color="color"
-						:variant="variant"
-						style="max-width: 300px"
-					>
+					<Popover :color="color" :variant="variant" style="max-width: 300px">
 						<PopoverHeader :color="color" :variant="variant">
-							<PopoverTitle>{{ variant.charAt(0).toUpperCase() + variant.slice(1) }} {{ color.charAt(0).toUpperCase() + color.slice(1) }}</PopoverTitle>
+							<PopoverTitle
+								>{{ variant.charAt(0).toUpperCase() + variant.slice(1) }}
+								{{ color.charAt(0).toUpperCase() + color.slice(1) }}</PopoverTitle
+							>
 						</PopoverHeader>
 						<PopoverBody>
-							<PopoverDescription>This is a {{ variant }} {{ color }} popover.</PopoverDescription>
+							<PopoverDescription
+								>This is a {{ variant }}
+								{{ color }} popover.</PopoverDescription
+							>
 						</PopoverBody>
 						<PopoverFooter :color="color" :variant="variant">
 							Footer content
 						</PopoverFooter>
 					</Popover>
-					<PopoverArrow :color="color" :variant="variant" class="popover-arrow-position" />
+					<PopoverArrow
+						:color="color"
+						:variant="variant"
+						class="popover-arrow-position"
+					/>
 				</div>
 			</div>
 		</div>

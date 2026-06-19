@@ -172,7 +172,7 @@ Adhere to the linting guidelines and the conventions documented in [AGENTS.md](A
 
 ### Formatting
 
-Formatting is handled automatically by [Biome](https://biomejs.dev).
+Formatting is handled automatically by [Oxfmt](https://oxc.rs/docs/guide/usage/formatter).
 
 - Tabs for indentation
 - Double quotes for strings

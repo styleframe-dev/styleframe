@@ -49,12 +49,12 @@
 			"formatter": null,
 			"format_on_save": "off"
 		},
-		"JavaScript": { "formatter": { "language_server": { "name": "biome" } } },
-		"TypeScript": { "formatter": { "language_server": { "name": "biome" } } },
-		"TSX": { "formatter": { "language_server": { "name": "biome" } } },
-		"Vue.js": { "formatter": { "language_server": { "name": "biome" } } },
-		"JSON": { "formatter": { "language_server": { "name": "biome" } } },
-		"JSONC": { "formatter": { "language_server": { "name": "biome" } } },
-		"CSS": { "formatter": { "language_server": { "name": "biome" } } }
+		"JavaScript": { "formatter": { "language_server": { "name": "oxfmt" } } },
+		"TypeScript": { "formatter": { "language_server": { "name": "oxfmt" } } },
+		"TSX": { "formatter": { "language_server": { "name": "oxfmt" } } },
+		"Vue.js": { "formatter": { "language_server": { "name": "oxfmt" } } },
+		"JSON": { "formatter": { "language_server": { "name": "oxfmt" } } },
+		"JSONC": { "formatter": { "language_server": { "name": "oxfmt" } } },
+		"CSS": { "formatter": { "language_server": { "name": "oxfmt" } } }
 	}
 }
