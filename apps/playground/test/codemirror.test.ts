@@ -1,7 +1,12 @@
 // @vitest-environment jsdom
 import type { EditorView } from "@codemirror/view";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { createEditor, setEditorValue } from "@/editor/codemirror";
+import {
+	createEditor,
+	getEditorSelection,
+	languageForPath,
+	setEditorValue,
+} from "@/editor/codemirror";
 
 const openEditors: EditorView[] = [];
 
@@ -70,6 +75,37 @@ describe("createEditor", () => {
 		expect(ts.state).not.toBe(tsx.state);
 		expect(ts.state.doc.toString()).toBe("const x = 1;");
 		expect(tsx.state.doc.toString()).toBe("const x = 1;");
+	});
+});
+
+describe("languageForPath", () => {
+	it("maps file extensions to editor languages", () => {
+		expect(languageForPath("styles.css")).toBe("css");
+		expect(languageForPath("App.tsx")).toBe("tsx");
+		expect(languageForPath("Widget.jsx")).toBe("tsx");
+		expect(languageForPath("config.ts")).toBe("typescript");
+		// Extensionless paths fall back to TypeScript.
+		expect(languageForPath("README")).toBe("typescript");
+	});
+});
+
+describe("getEditorSelection", () => {
+	it("reports the 1-based line and column of the cursor", () => {
+		const view = mount({ doc: "ab\ncd" });
+		// Position 4 is the second column of the second line ("c|d").
+		view.dispatch({ selection: { anchor: 4 } });
+
+		expect(getEditorSelection(view)).toEqual({ line: 2, column: 2 });
+	});
+
+	it("invokes onSelectionChange when the selection moves", () => {
+		const onSelectionChange = vi.fn();
+		const view = mount({ doc: "hello", onSelectionChange });
+		onSelectionChange.mockClear();
+
+		view.dispatch({ selection: { anchor: 3 } });
+
+		expect(onSelectionChange).toHaveBeenCalledWith({ line: 1, column: 4 });
 	});
 });
 

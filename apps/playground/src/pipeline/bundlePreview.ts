@@ -198,6 +198,9 @@ try {
 		},
 		bundle: true,
 		write: false,
+		// An out dir is required for esbuild to emit CSS from user
+		// `import './styles.css'`; without it such imports fail to build.
+		outdir: "/",
 		format: "esm",
 		jsx: "automatic",
 		jsxDev: false,
@@ -205,8 +208,8 @@ try {
 		plugins: [createVirtualFsPlugin(input, reactVendor, runtimeSrc)],
 	});
 
-	// esbuild names the stdin JS output `<stdout>`; CSS from user imports lands
-	// in a sibling `.css` file.
+	// The JS bundle and any CSS from user imports are emitted as sibling
+	// outputs; the CSS file is the one whose path ends in `.css`.
 	const bundleJs =
 		result.outputFiles.find((file) => !file.path.endsWith(".css"))?.text ?? "";
 	const css = result.outputFiles

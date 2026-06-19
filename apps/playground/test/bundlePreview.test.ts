@@ -47,6 +47,56 @@ describe("bundlePreview", () => {
 		expect(result.reactIife).toBe("globalThis.PGReactVendor = {};");
 	});
 
+	it("loads every source extension and extracts user CSS", async () => {
+		const { bundlePreview } = await import("@/pipeline/bundlePreview");
+
+		const result = await bundlePreview({
+			files: {
+				"styleframe.config.ts": "export default {};",
+				"App.tsx": [
+					'import "./styles.css";',
+					'import "virtual:styleframe.css";',
+					'import { tsHelper } from "./helper";',
+					'import { jsUtil } from "./util";',
+					'import Widget from "./widget";',
+					"export default function App(){ return <div>{tsHelper}{jsUtil}<Widget/></div>; }",
+				].join("\n"),
+				"helper.ts": 'export const tsHelper = "PG_TS_VALUE";',
+				"util.js": 'export const jsUtil = "PG_JS_VALUE";',
+				"widget.jsx":
+					"export default function Widget(){ return <span>w</span>; }",
+				"styles.css": ".pg-user { color: red; }",
+			},
+			entryPath: "App.tsx",
+			configPath: "styleframe.config.ts",
+			runtimeTs: "",
+		});
+
+		// The .ts, .js and .jsx modules are each loaded and inlined.
+		expect(result.bundleJs).toContain("PG_TS_VALUE");
+		expect(result.bundleJs).toContain("PG_JS_VALUE");
+		expect(result.bundleJs).toContain("function Widget");
+		// The imported .css file is extracted into the css output, while
+		// virtual:styleframe.css resolves to an empty module.
+		expect(result.css).toContain(".pg-user");
+	});
+
+	it("rejects an unknown bare import", async () => {
+		const { bundlePreview } = await import("@/pipeline/bundlePreview");
+
+		await expect(
+			bundlePreview({
+				files: {
+					"App.tsx":
+						'import _ from "lodash";\nexport default function App(){ return <div>{String(_)}</div>; }',
+				},
+				entryPath: "App.tsx",
+				configPath: "styleframe.config.ts",
+				runtimeTs: "",
+			}),
+		).rejects.toThrow();
+	});
+
 	it("rejects when a relative import cannot be resolved", async () => {
 		const { bundlePreview } = await import("@/pipeline/bundlePreview");
 

@@ -10,6 +10,7 @@ import {
 	normalizePath,
 	openFile,
 	renameFile,
+	setActivePath,
 	usePlaygroundSnapshot,
 	usePlaygroundState,
 } from "@/state/playground";
@@ -133,9 +134,39 @@ describe("createFile", () => {
 		deleteFile("Widget.tsx");
 	});
 
+	it("seeds non-template files with empty content", () => {
+		const s = usePlaygroundState();
+		// A plain `.ts` (non-`.styleframe.ts`) file gets no template.
+		expect(createFile("src/helpers/format.ts")).toBe(true);
+		expect(s.files["src/helpers/format.ts"]).toBe("");
+		// `.css` files are likewise empty.
+		expect(createFile("src/helpers/reset.css")).toBe(true);
+		expect(s.files["src/helpers/reset.css"]).toBe("");
+		deleteFile("src/helpers/format.ts");
+		deleteFile("src/helpers/reset.css");
+	});
+
+	it("prefixes a component name that does not start with a letter", () => {
+		const s = usePlaygroundState();
+		expect(createFile("9lives.tsx")).toBe(true);
+		expect(s.files["9lives.tsx"]).toContain("function Component9lives");
+		deleteFile("9lives.tsx");
+	});
+
 	function state() {
 		return usePlaygroundState();
 	}
+});
+
+describe("setActivePath", () => {
+	it("activates an existing file and ignores unknown paths", () => {
+		const s = usePlaygroundState();
+		setActivePath("src/App.tsx");
+		expect(s.activePath).toBe("src/App.tsx");
+
+		setActivePath("does/not/exist.tsx");
+		expect(s.activePath).toBe("src/App.tsx");
+	});
 });
 
 describe("renameFile", () => {
@@ -208,6 +239,20 @@ describe("deleteFolder", () => {
 		// The entry file lives under src/, so that folder is protected.
 		expect(deleteFolder("src")).toBe(false);
 		expect(s.files[ENTRY_PATH]).toBeDefined();
+	});
+
+	it("prunes explicit folders nested under the deleted folder", () => {
+		const s = usePlaygroundState();
+		createFile("src/blocks/Hero/Hero.tsx");
+		createFolder("src/blocks/empty");
+
+		expect(deleteFolder("src/blocks")).toBe(true);
+		expect(s.files["src/blocks/Hero/Hero.tsx"]).toBeUndefined();
+		expect(s.folders).not.toContain("src/blocks/empty");
+	});
+
+	it("rejects a blank folder path", () => {
+		expect(deleteFolder("   ")).toBe(false);
 	});
 });
 
