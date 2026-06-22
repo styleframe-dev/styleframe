@@ -144,6 +144,9 @@ describe("useFieldGroupRecipe", () => {
 	});
 
 	describe("seam selectors", () => {
+		const C = `:where(.input, .textarea, .select, .button, .dropdown)`;
+		const K = `:is(.input, .textarea, .select, .button, .dropdown)`;
+
 		it("flattens horizontal seams and grows fields", () => {
 			const s = createInstance();
 			useFieldGroupRecipe(s);
@@ -152,10 +155,10 @@ describe("useFieldGroupRecipe", () => {
 			expect(horizontal).toBeDefined();
 
 			expect(
-				findChildRule(horizontal, "& > *:not(:last-child)")?.declarations,
+				findChildRule(horizontal, `& > ${C}:has(~ ${K})`)?.declarations,
 			).toMatchObject({ borderRightWidth: "0" });
 			expect(
-				findChildRule(horizontal, "& > *:not(:first-child)")?.declarations,
+				findChildRule(horizontal, `& > ${C} ~ ${K}`)?.declarations,
 			).toMatchObject({ borderTopLeftRadius: "0" });
 
 			for (const query of ["& > .input", "& > .select", "& > .textarea"]) {
@@ -174,10 +177,10 @@ describe("useFieldGroupRecipe", () => {
 			expect(vertical).toBeDefined();
 
 			expect(
-				findChildRule(vertical, "& > *:not(:last-child)")?.declarations,
+				findChildRule(vertical, `& > ${C}:has(~ ${K})`)?.declarations,
 			).toMatchObject({ borderBottomWidth: "0" });
 			expect(
-				findChildRule(vertical, "& > *:not(:first-child)")?.declarations,
+				findChildRule(vertical, `& > ${C} ~ ${K}`)?.declarations,
 			).toMatchObject({ borderTopLeftRadius: "0" });
 		});
 
