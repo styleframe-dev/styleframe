@@ -62,14 +62,26 @@ export const useFieldGroupRecipe = createUseRecipe(
 	(s) => {
 		const { selector } = s;
 
+		const fieldGroupChildren = [
+			".input",
+			".textarea",
+			".select",
+			".button",
+			".dropdown",
+		];
+		const C = `:where(${fieldGroupChildren.join(", ")})`; // subject anchor, 0 specificity
+		const K = `:is(${fieldGroupChildren.join(", ")})`; // adjacency key, (0,1,0) specificity
+
 		// Horizontal: join controls side-by-side and let fields take the slack.
 		selector(".field-group.-horizontal", {
-			"& > *:not(:last-child)": {
+			// non-last control (has a following control) → merge right edge into the next
+			[`& > ${C}:has(~ ${K})`]: {
 				borderTopRightRadius: "0",
 				borderBottomRightRadius: "0",
 				borderRightWidth: "0",
 			},
-			"& > *:not(:first-child)": {
+			// non-first control (preceded by a control) → square the left edge
+			[`& > ${C} ~ ${K}`]: {
 				borderTopLeftRadius: "0",
 				borderBottomLeftRadius: "0",
 			},
@@ -80,12 +92,12 @@ export const useFieldGroupRecipe = createUseRecipe(
 
 		// Vertical: join controls top-to-bottom.
 		selector(".field-group.-vertical", {
-			"& > *:not(:last-child)": {
+			[`& > ${C}:has(~ ${K})`]: {
 				borderBottomLeftRadius: "0",
 				borderBottomRightRadius: "0",
 				borderBottomWidth: "0",
 			},
-			"& > *:not(:first-child)": {
+			[`& > ${C} ~ ${K}`]: {
 				borderTopLeftRadius: "0",
 				borderTopRightRadius: "0",
 			},
