@@ -1,5 +1,15 @@
 # @styleframe/theme
 
+## 3.8.1
+
+### Patch Changes
+
+- [#268](https://github.com/styleframe-dev/styleframe/pull/268) [`778bfc9`](https://github.com/styleframe-dev/styleframe/commit/778bfc96e56fcf4bfb03ea485de0bc716b9b98b8) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Upgrade runtime and dev dependencies across all packages (jiti, csstype, citty, rollup, vitest, turbo, oxlint, biome, changesets, and Nuxt ecosystem packages).
+
+- [#274](https://github.com/styleframe-dev/styleframe/pull/274) [`2092696`](https://github.com/styleframe-dev/styleframe/commit/20926963037477f2b4278d3cdf71cec5adab1597) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix field-group horizontal/vertical border joining to target known control classes (`.input`, `.textarea`, `.select`, `.button`, `.dropdown`) instead of all children (`*`), using `:where`/`:is` for correct specificity.
+
+- [#272](https://github.com/styleframe-dev/styleframe/pull/272) [`414e2fe`](https://github.com/styleframe-dev/styleframe/commit/414e2feb1dc7817e8e8318a7ee02cc5b5b60e833) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Simplify field-group recipe selector: consolidate `.input`, `.select`, `.textarea` flex-grow rules into a single joined selector.
+
 ## 3.8.0
 
 ### Minor Changes
