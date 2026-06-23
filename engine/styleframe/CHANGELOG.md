@@ -1,5 +1,14 @@
 # styleframe
 
+## 3.9.1
+
+### Patch Changes
+
+- [#268](https://github.com/styleframe-dev/styleframe/pull/268) [`778bfc9`](https://github.com/styleframe-dev/styleframe/commit/778bfc96e56fcf4bfb03ea485de0bc716b9b98b8) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Upgrade runtime and dev dependencies across all packages (jiti, csstype, citty, rollup, vitest, turbo, oxlint, biome, changesets, and Nuxt ecosystem packages).
+
+- Updated dependencies [[`778bfc9`](https://github.com/styleframe-dev/styleframe/commit/778bfc96e56fcf4bfb03ea485de0bc716b9b98b8)]:
+  - @styleframe/cli@4.1.2
+
 ## 3.9.0
 
 ### Minor Changes
