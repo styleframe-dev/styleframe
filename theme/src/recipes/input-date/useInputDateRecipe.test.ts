@@ -49,7 +49,7 @@ function createInstance() {
 	s.variable("color.text-weakest", "#64748B", { default: true });
 	s.variable("color.text-weak", "#475569", { default: true });
 	s.variable("color.gray-400", "#94A3B8", { default: true });
-	s.variable("0.125", "0.125rem", { default: true });
+	s.variable("spacing", "1rem", { default: true });
 	useDarkModifier(s);
 	useHoverModifier(s);
 	useFocusWithinModifier(s);
