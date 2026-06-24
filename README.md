@@ -173,9 +173,17 @@ Looking for advanced features? Check out [Styleframe Pro](https://styleframe.dev
 
 ## Development
 
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) v22.0.0 or higher
+- [pnpm](https://pnpm.io/) v10.7.1 or higher
+
+### Getting Started
+
 ```bash
 # Clone the repository
 git clone https://github.com/styleframe-dev/styleframe.git
+cd styleframe
 
 # Install dependencies
 pnpm install
@@ -183,9 +191,14 @@ pnpm install
 # Run tests
 pnpm test
 
-# Build
+# Build all packages
 pnpm build
+
+# Start development server (docs + storybook)
+pnpm dev:docs
 ```
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 
 ## License
 
