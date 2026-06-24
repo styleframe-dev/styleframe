@@ -543,6 +543,40 @@ export const useSpinnerRecipe = createUseRecipe(
 );
 ```
 
+#### Spacing multipliers inside a `setup` callback — use `calc(@token * N)`
+
+Bare numeric spacing refs like `@0.125` / `@0.25` are **multiplier tokens** that
+resolve to a variable *named* `"0.125"`. In a recipe's `base` / `variants` these are
+auto-declared on the fly (e.g. spinner/badge size variants use `@0.25`, `@0.5`). But
+raw `selector(...)` calls inside a `setup` callback only **reference** — they do NOT
+auto-declare. Referencing `@0.125` in a setup selector throws at Storybook build init:
+`Variable "0.125" is not defined` (typecheck + theme tests do NOT catch this).
+
+To scale a token by a fraction inside a setup selector, use an **embedded reference
+expression wrapped in `calc()`** as a plain string:
+
+```ts
+(s) => {
+	const { selector } = s;
+	selector(".input-date-field", {
+		gap: "calc(@spacing * 0.125)", // → gap: calc(var(--spacing) * .125)
+	});
+}
+```
+
+Styleframe's resolver (`engine/core/src/tokens/resolve.ts`) treats an *exact* `@name`
+match as a validated reference (throws if undefined) but parses an *embedded* expression
+like `@spacing * 0.125` without validation — it resolves `@spacing` and keeps the rest
+literal. This is the same pattern used by dropdown/tooltip/popover (`"calc(@tooltip.arrow.size * -1)"`).
+
+- **Keep the arithmetic inside `calc(...)`.** Bare `"@spacing * 0.125"` parses but emits
+  invalid CSS `gap:var(--spacing) * .125` (no `calc` → the browser drops the declaration).
+- **Test gotcha:** in the recipe test instance, declare `s.variable("spacing", "1rem")` and
+  let the calc resolve — do NOT hand-declare a fake `s.variable("0.125", ...)`, which masks
+  the real build failure.
+- **Always run `pnpm --filter @styleframe/storybook build` during verification** — it is the
+  only check that exercises real token resolution in a fresh instance.
+
 ---
 
 ### Deliverable 2: Barrel index
