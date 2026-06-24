@@ -26,27 +26,25 @@ export const useInputDateRecipe = createFieldRecipe(
 		},
 	},
 	(s) => {
-		const { selector, css, ref } = s;
-
-		// 0.125 of the base spacing step. Inlined as a calc rather than referenced
-		// as "@0.125" because raw selectors don't auto-declare numeric multiplier
-		// variables (same pattern as the calendar recipe).
-		const spacingHalfQuarter = css`calc(${ref("spacing")} * 0.125)`;
+		const { selector } = s;
 
 		// Lay the segments + separators out as a horizontal row inside the
-		// shared transparent field container.
+		// shared transparent field container. "calc(@spacing * 0.125)" is an
+		// embedded reference expression: Styleframe parses the "@spacing" ref and
+		// keeps the surrounding calc arithmetic, so a raw selector can scale a
+		// token inline without a pre-declared "0.125" multiplier variable.
 		selector(".input-date-field", {
 			display: "flex",
 			alignItems: "center",
-			gap: spacingHalfQuarter,
+			gap: "calc(@spacing * 0.125)",
 		});
 
 		// Muted, non-selectable date/range separator glyph (e.g. "/" or "–").
 		selector(".input-date-separator", {
 			color: "@color.text-weak",
 			userSelect: "none",
-			paddingLeft: spacingHalfQuarter,
-			paddingRight: spacingHalfQuarter,
+			paddingLeft: "calc(@spacing * 0.125)",
+			paddingRight: "calc(@spacing * 0.125)",
 			"&:dark": {
 				color: "@color.gray-400",
 			},

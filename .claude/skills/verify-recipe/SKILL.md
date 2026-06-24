@@ -68,15 +68,25 @@ Parse output. Capture:
 - Exit status.
 - For each issue: file:line, rule, message.
 
-### Step 3: (Optional) Storybook spot-check
-
-If the user wants, offer to start Storybook briefly to verify the story renders:
+### Step 3: Storybook build (required)
 
 ```bash
-pnpm storybook
+pnpm --filter @styleframe/storybook build
 ```
 
-This is a manual check — the assistant cannot verify rendering automatically. Prompt the user to open the component story in the browser and confirm it looks correct.
+Run the **production build**, not just the dev server. This is the **only** check that
+exercises real token resolution in a fresh Styleframe instance — typecheck and theme
+tests pass even when a recipe references an undefined variable. A `setup` callback that
+references an undeclared spacing multiplier (e.g. a raw `selector` using `@0.125`) throws
+here with `Variable "0.125" is not defined`; the fix lives in `/implement-recipe` (use
+`calc(@spacing * 0.125)` instead — see that skill's Step 12). Capture exit status and any
+`Variable "..." is not defined` errors with the originating recipe file.
+
+#### (Optional) Storybook render spot-check
+
+If the user wants a visual check, offer to start Storybook (`pnpm storybook`) — but this is
+manual; the assistant cannot verify rendering automatically. Prompt the user to open the
+story and confirm it looks correct.
 
 ### Step 4: Write `verification.md`
 
@@ -115,7 +125,10 @@ Do NOT attempt to fix issues automatically.
 ## Lint: <pass | fail>
 <!-- If fail, list: file:line — rule — message — suggested sub-skill -->
 
-## Storybook spot-check: <pass | not run | manual-deferred>
+## Storybook build: <pass | fail>
+<!-- If fail, list: recipe file — "Variable ... is not defined" — suggested sub-skill (/implement-recipe) -->
+
+## Storybook render spot-check: <pass | not run | manual-deferred>
 
 ## Summary
 - Total failures: <N>
@@ -129,6 +142,7 @@ Do NOT attempt to fix issues automatically.
 - [ ] `pnpm typecheck` was run from the project root.
 - [ ] `pnpm --filter @styleframe/theme test` was run.
 - [ ] `pnpm lint` was run.
+- [ ] `pnpm --filter @styleframe/storybook build` was run (catches token-resolution errors).
 - [ ] Each failure is reported with file:line and a suggested sub-skill.
 - [ ] `verification.md` is written to `.context/recipe-<name>/`.
 - [ ] User received a short pass/fail summary.
