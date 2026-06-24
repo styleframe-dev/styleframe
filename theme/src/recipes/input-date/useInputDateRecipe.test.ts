@@ -1,0 +1,304 @@
+import { styleframe } from "@styleframe/core";
+import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
+import {
+	useFocusWithinModifier,
+	useHoverModifier,
+} from "../../modifiers/usePseudoStateModifiers";
+import { useInputDateRecipe } from "./useInputDateRecipe";
+
+function createInstance() {
+	const s = styleframe();
+	for (const name of [
+		"display",
+		"alignItems",
+		"gap",
+		"flexGrow",
+		"minWidth",
+		"width",
+		"fontFamily",
+		"fontSize",
+		"fontWeight",
+		"lineHeight",
+		"border",
+		"borderWidth",
+		"borderStyle",
+		"borderColor",
+		"borderRadius",
+		"padding",
+		"paddingTop",
+		"paddingBottom",
+		"paddingLeft",
+		"paddingRight",
+		"background",
+		"color",
+		"userSelect",
+		"outline",
+		"outlineWidth",
+		"outlineStyle",
+		"outlineColor",
+		"outlineOffset",
+		"cursor",
+		"opacity",
+		"pointerEvents",
+		"transitionProperty",
+		"transitionTimingFunction",
+		"transitionDuration",
+	]) {
+		s.utility(name, ({ value }) => ({ [name]: value }));
+	}
+	s.variable("color.text-weakest", "#64748B", { default: true });
+	s.variable("color.text-weak", "#475569", { default: true });
+	s.variable("color.gray-400", "#94A3B8", { default: true });
+	s.variable("0.125", "0.125rem", { default: true });
+	useDarkModifier(s);
+	useHoverModifier(s);
+	useFocusWithinModifier(s);
+	return s;
+}
+
+describe("useInputDateRecipe", () => {
+	it("should create a recipe with correct metadata", () => {
+		const s = createInstance();
+		const recipe = useInputDateRecipe(s);
+
+		expect(recipe.type).toBe("recipe");
+		expect(recipe.name).toBe("input-date");
+	});
+
+	it("should have correct base styles with a focus-within ring", () => {
+		const s = createInstance();
+		const recipe = useInputDateRecipe(s);
+
+		expect(recipe.base).toEqual({
+			display: "inline-flex",
+			alignItems: "center",
+			fontFamily: "inherit",
+			fontSize: "@font-size.sm",
+			fontWeight: "@font-weight.normal",
+			lineHeight: "@line-height.normal",
+			borderWidth: "@border-width.thin",
+			borderStyle: "@border-style.solid",
+			borderColor: "transparent",
+			borderRadius: "@border-radius.md",
+			paddingTop: "@0.5",
+			paddingBottom: "@0.5",
+			paddingLeft: "@0.75",
+			paddingRight: "@0.75",
+			background: "transparent",
+			color: "@color.text",
+			outline: "none",
+			transitionProperty: "color, background-color, border-color",
+			transitionTimingFunction: "@easing.ease-in-out",
+			transitionDuration: "150ms",
+			"&:focus-within": {
+				outlineWidth: "2px",
+				outlineStyle: "solid",
+				outlineColor: "@color.primary",
+				outlineOffset: "2px",
+			},
+		});
+	});
+
+	describe("variants", () => {
+		it("should have all color variants", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			expect(Object.keys(recipe.variants!.color)).toEqual([
+				"light",
+				"dark",
+				"neutral",
+			]);
+		});
+
+		it("should have all style variants", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			expect(Object.keys(recipe.variants!.variant)).toEqual([
+				"default",
+				"soft",
+				"ghost",
+			]);
+		});
+
+		it("should have size variants matching the field family", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			expect(Object.keys(recipe.variants!.size)).toEqual(["sm", "md", "lg"]);
+		});
+
+		it("should have invalid boolean variants", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			expect(recipe.variants!.invalid).toEqual({ true: {}, false: {} });
+		});
+
+		it("should have disabled boolean variants", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			expect(recipe.variants!.disabled).toEqual({ true: {}, false: {} });
+		});
+
+		it("should have readonly boolean variants", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			expect(recipe.variants!.readonly).toEqual({ true: {}, false: {} });
+		});
+	});
+
+	it("should have correct default variants", () => {
+		const s = createInstance();
+		const recipe = useInputDateRecipe(s);
+
+		expect(recipe.defaultVariants).toEqual({
+			color: "neutral",
+			variant: "default",
+			size: "md",
+			invalid: "false",
+			disabled: "false",
+			readonly: "false",
+		});
+	});
+
+	describe("compound variants", () => {
+		it("should have 12 compound variants total (9 color×variant + invalid + readonly + disabled)", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			expect(recipe.compoundVariants).toHaveLength(12);
+		});
+
+		it("should share the neutral default surface with the input recipe", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			const cv = recipe.compoundVariants!.find(
+				(v) => v.match.color === "neutral" && v.match.variant === "default",
+			);
+
+			expect(cv).toEqual({
+				match: { color: "neutral", variant: "default" },
+				css: {
+					background: "@color.white",
+					borderColor: "@color.gray-200",
+					color: "@color.text",
+					"&:hover": {
+						borderColor: "@color.gray-300",
+					},
+					"&:dark": {
+						background: "@color.gray-900",
+						borderColor: "@color.gray-700",
+						color: "@color.white",
+					},
+					"&:dark:hover": {
+						borderColor: "@color.gray-600",
+					},
+				},
+			});
+		});
+
+		it("should override the focus-within ring when invalid", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			const cv = recipe.compoundVariants!.find(
+				(v) => v.match.invalid === "true",
+			);
+
+			expect(cv).toEqual({
+				match: { invalid: "true" },
+				css: {
+					borderColor: "@color.error",
+					"&:hover": {
+						borderColor: "@color.error",
+					},
+					"&:focus-within": {
+						outlineColor: "@color.error",
+					},
+					"&:dark": {
+						borderColor: "@color.error",
+					},
+					"&:dark:hover": {
+						borderColor: "@color.error",
+					},
+				},
+			});
+		});
+
+		it("should dim and block interaction when disabled", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s);
+
+			const cv = recipe.compoundVariants!.find(
+				(v) => v.match.disabled === "true",
+			);
+
+			expect(cv).toEqual({
+				match: { disabled: "true" },
+				css: {
+					opacity: "0.5",
+					cursor: "not-allowed",
+					pointerEvents: "none",
+				},
+			});
+		});
+	});
+
+	describe("setup callback", () => {
+		it("should register a .input-date-field selector", () => {
+			const s = createInstance();
+			useInputDateRecipe(s);
+
+			const found = s.root.children.find(
+				(child) =>
+					child.type === "selector" &&
+					(child as { query: string }).query === ".input-date-field",
+			);
+
+			expect(found).toBeDefined();
+		});
+
+		it("should register a .input-date-separator selector", () => {
+			const s = createInstance();
+			useInputDateRecipe(s);
+
+			const found = s.root.children.find(
+				(child) =>
+					child.type === "selector" &&
+					(child as { query: string }).query === ".input-date-separator",
+			);
+
+			expect(found).toBeDefined();
+		});
+	});
+
+	describe("filter", () => {
+		it("should filter color variants", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s, {
+				filter: { color: ["neutral"] },
+			});
+
+			expect(Object.keys(recipe.variants!.color)).toEqual(["neutral"]);
+		});
+
+		it("should prune color-scoped compound variants when filtering colors", () => {
+			const s = createInstance();
+			const recipe = useInputDateRecipe(s, {
+				filter: { color: ["neutral"] },
+			});
+
+			expect(
+				recipe.compoundVariants!.every(
+					(cv) => cv.match.color === undefined || cv.match.color === "neutral",
+				),
+			).toBe(true);
+			expect(recipe.compoundVariants!.length).toBeLessThan(12);
+		});
+	});
+});
