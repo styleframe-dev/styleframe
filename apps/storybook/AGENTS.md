@@ -1,374 +1,71 @@
 # @styleframe/storybook
 
-Interactive design system showcase and testing environment for Styleframe. Uses Storybook 10 with Vue 3 to visualize design tokens, component recipes, and utility classes through interactive stories.
+The showcase app for [`@styleframe/theme`](../../theme/) — Storybook 10 on Vue 3 (`@storybook/vue3-vite`). Private, never published. Every theme recipe, element preset, and design-token group gets stories here, and the deployed build (storybook.styleframe.dev) doubles as the live-demo backend that [`apps/docs/`](../docs/) embeds via `::story-preview` iframes.
 
-## Package Info
-
-- **Name:** `@styleframe/storybook` (private)
-- **Type:** ES Module
-- **Framework:** Storybook 10 + Vue 3 + Vite
-- **Dev server:** `storybook dev -p 6006`
-- **Build:** `storybook build` (outputs to `storybook-static/`)
-- **Dependencies:** `styleframe`, `@styleframe/core`, `@styleframe/runtime`, `@styleframe/theme`, `@styleframe/plugin`, `vue`
-
----
-
-## Source Structure
+## Layout
 
 ```
 apps/storybook/
-├── styleframe.config.ts          # Global Styleframe instance with presets
-├── vite.config.ts                # Vite config with Styleframe plugin + Vitest
+├── styleframe.config.ts        # global instance: design-tokens, sanitize, global, utilities, modifiers presets
+├── vite.config.ts              # @styleframe/plugin/vite + vue; aliases @styleframe/theme → ../../theme/src;
+│                               #   vitest "storybook" browser project (Playwright chromium)
 ├── .storybook/
-│   ├── main.ts                   # Storybook config: story globs, addons, framework
-│   ├── preview.ts                # Global preview settings, dark mode, a11y, CSS import
-│   ├── theme.ts                  # Custom Storybook UI themes (light/dark)
-│   └── vitest.setup.ts           # Vitest + Storybook portable stories setup
-├── .styleframe/
-│   └── styleframe.d.ts           # Auto-generated types for virtual:styleframe
+│   ├── main.ts                 # story glob ../stories/**/*.stories.*; addons; vue3-vite framework
+│   ├── preview.ts              # imports virtual:styleframe.css; dark-mode classes; reports preview height
+│   ├── manager.ts / theme.ts   # custom UI themes; docs-embed postMessage relay
+│   └── vitest.setup.ts         # portable-stories setup for the vitest addon
+├── stories/
+│   ├── components/             # <name>.stories.ts + <name>.styleframe.ts — one pair per recipe
+│   ├── design-tokens/          # <token>.stories.ts (swatch grids)
+│   ├── elements/               # plain-template stories styled by the global preset (no .styleframe.ts)
+│   └── states/                 # focus, selection
 └── src/
-    ├── theme/
-    │   ├── index.ts              # Barrel export for global styles
-    │   └── useGlobalStyles.ts    # Body reset, font smoothing, box-sizing
-    ├── button.stories.ts         # Button recipe stories (colors, variants, sizes)
-    ├── button.styleframe.ts      # Button recipe + layout selectors
-    ├── badge.stories.ts          # Badge recipe stories
-    ├── badge.styleframe.ts       # Badge recipe + layout selectors
-    ├── design-tokens/            # 16 story files for each token category
-    │   ├── color.stories.ts
-    │   ├── color-shade.stories.ts
-    │   ├── color-tint.stories.ts
-    │   ├── color-level.stories.ts
-    │   ├── font-size.stories.ts
-    │   ├── font-weight.stories.ts
-    │   ├── font-family.stories.ts
-    │   ├── line-height.stories.ts
-    │   ├── letter-spacing.stories.ts
-    │   ├── spacing.stories.ts
-    │   ├── border-radius.stories.ts
-    │   ├── border-width.stories.ts
-    │   ├── border-style.stories.ts
-    │   ├── box-shadow.stories.ts
-    │   ├── breakpoint.stories.ts
-    │   └── scale.stories.ts
     ├── components/
-    │   ├── Button.vue             # Button component using recipe
-    │   ├── ButtonGrid.vue         # Grid of all button color/variant combos
-    │   ├── ButtonSizeGrid.vue     # Grid of all button sizes
-    │   ├── Badge.vue              # Badge component using recipe
-    │   ├── BadgeGrid.vue          # Grid of all badge color/variant combos
-    │   ├── BadgeSizeGrid.vue      # Grid of all badge sizes
-    │   ├── StoryGrid.vue          # Reusable grid/list layout for items
-    │   ├── StoryGrid.styleframe.ts
-    │   ├── ColorSwatch.vue        # Color token visualization with contrast ratio
-    │   ├── ColorShadeSwatch.vue   # Color shade variant swatch
-    │   ├── ColorTintSwatch.vue    # Color tint variant swatch
-    │   ├── ColorLevelSwatch.vue
-    │   ├── FontSizeSwatch.vue
-    │   ├── FontWeightSwatch.vue
-    │   ├── FontFamilySwatch.vue
-    │   ├── LineHeightSwatch.vue
-    │   ├── LetterSpacingSwatch.vue
-    │   ├── SpacingSwatch.vue
-    │   ├── BorderRadiusSwatch.vue
-    │   ├── BorderWidthSwatch.vue
-    │   ├── BorderStyleSwatch.vue
-    │   ├── BoxShadowSwatch.vue
-    │   ├── ScaleSwatch.vue
-    │   └── primitives/
-    │       ├── SwatchCard.vue     # Card wrapper with preview/name/label slots
-    │       ├── SwatchRow.vue      # Horizontal name/value display
-    │       ├── ProgressBar.vue    # Visual bar component
-    │       ├── BarChart.vue       # Chart visualization
-    │       ├── tokens.styleframe.ts  # Shared swatch design tokens
-    │       └── index.ts           # Barrel export
-    └── assets/                    # Static images (SVG, PNG, AVIF)
+    │   ├── components/<name>/  # <Name>.vue (+ sub-part .vue files for multi-part recipes)
+    │   │   └── preview/        # <Name>Grid.vue, <Name>SizeGrid.vue
+    │   ├── design-tokens/<group>/  # <Token>Swatch.vue + .styleframe.ts
+    │   └── primitives/         # StoryGrid, SwatchCard, SwatchRow, BarChart (+ .styleframe.ts, index.ts)
+    └── utils/                  # theme event buses
 ```
 
----
+`index.html` and `README.md` at the package root are leftovers from the Vite template (`src/main.ts` doesn't exist); Storybook ignores them.
 
-## Configuration
+## Anatomy of a recipe showcase
 
-### styleframe.config.ts
+Badge is the canonical example — four pieces:
 
-The global Styleframe instance applies three presets and global styles:
+1. [`stories/components/badge.styleframe.ts`](./stories/components/badge.styleframe.ts) — registers `useBadgeRecipe(s)` on the shared instance (imported from `virtual:styleframe`), adds `.badge-grid`-style layout selectors, exports `s` as default.
+2. [`src/components/components/badge/Badge.vue`](./src/components/components/badge/Badge.vue) — imports the compiled `badge` recipe function from `virtual:styleframe`, exposes `color`/`variant`/`size`/`label` props, applies `badge({...})` as class. Multi-part recipes add sibling sub-part components (see [`card/`](./src/components/components/card/): `CardHeader.vue`, `CardBody.vue`, …).
+3. [`src/components/components/badge/preview/`](./src/components/components/badge/preview/) — `BadgeGrid.vue` (all color × variant combos) and `BadgeSizeGrid.vue` (all sizes).
+4. [`stories/components/badge.stories.ts`](./stories/components/badge.stories.ts) — CSF3: `title: "Theme/Recipes/Feedback/Badge"`, `tags: ["autodocs"]`, `satisfies Meta<typeof Badge>`, a `Default` story with args, `AllVariants`/`AllSizes` rendering the grids, and one story per color/variant/size.
 
-```ts
-import { useDesignTokensPreset, useModifiersPreset, useUtilitiesPreset } from '@styleframe/theme';
-import { styleframe } from 'styleframe';
-import { useGlobalStyles } from './src/theme';
+Title conventions: `Theme/Recipes/<Category>/<Name>` (Category matches the docs nav — Actions, Feedback, Forms, …), `Theme/Elements/<Element>`, `Theme/States/<State>`, `Design Tokens/<Group>/<Token>`.
 
-const s = styleframe();
+## The docs-embed contract
 
-useDesignTokensPreset(s);
-useUtilitiesPreset(s);
-useModifiersPreset(s);
-useGlobalStyles(s);
+Docs pages reference stories by id — `title` "Theme/Recipes/Feedback/Badge" + export `Default` → `theme-recipes-feedback-badge--default`. [`preview.ts`](./.storybook/preview.ts) and [`manager.ts`](./.storybook/manager.ts) implement a postMessage handshake with the embedding docs page: incoming `styleframe:theme` toggles the `dark-theme`/`default-theme` body classes and the manager UI; preview height is relayed out as `styleframe:height` so the docs iframe auto-sizes. Don't rename these message types or the body classes without updating [`apps/docs/app/components/content/StoryPreview.vue`](../docs/app/components/content/StoryPreview.vue).
 
-export default s;
+## Build & test
+
+```bash
+pnpm storybook                # from repo root: turbo dev --filter @styleframe/storybook
+pnpm dev                      # from this dir: storybook dev -p 6006
+pnpm build                    # storybook build → storybook-static/
+pnpm typecheck                # vue-tsc --noEmit
+pnpm exec vitest              # run every story as a browser test (addon-vitest + Playwright chromium)
 ```
 
-### Storybook Addons
+There is no `test` script, so `turbo run test` skips this package; the vitest project in [`vite.config.ts`](./vite.config.ts) is opt-in and needs Playwright browsers installed. The a11y addon runs with `test: "todo"` — violations show in the test UI but don't fail anything.
 
-Seven addons configured in `.storybook/main.ts`:
+## Pitfalls
 
-| Addon | Purpose |
-|-------|---------|
-| `@chromatic-com/storybook` | Visual regression testing |
-| `@storybook/addon-vitest` | Vitest integration for story testing |
-| `@storybook/addon-a11y` | Accessibility violation detection |
-| `@storybook/addon-docs` | Auto-generated documentation |
-| `@storybook/addon-onboarding` | Onboarding UI |
-| `@storybook/addon-themes` | Theme switching |
-| `@vueless/storybook-dark-mode` | Dark mode toggle |
+- **Story titles are public API.** 63 docs pages embed story ids derived from them; renaming a title or a story export silently breaks those iframes. Grep `apps/docs/content/docs` for the old id first.
+- **A recipe function only exists on `virtual:styleframe` after a `*.styleframe.ts` file registers it.** Importing `badge` in a Vue component without the matching `stories/components/badge.styleframe.ts` gives you an undefined export at runtime.
+- **`@styleframe/theme` is aliased to `../../theme/src`** (in both the plugin config and Vite `resolve.alias`), so you're always previewing theme *source*, not its built `dist/` — theme edits hot-reload here, but a passing Storybook doesn't prove the built package works.
+- **The plugin's scanner globs** (`./stories/**/*.stories.{ts,tsx}`, `./src/**/*.{vue,ts,tsx}`) decide which utility classes are emitted; utility classes used outside those paths produce no CSS.
 
-### Preview Settings
+## See also
 
-- **Layout:** centered
-- **A11y:** `test: "todo"` (shows violations in test UI, does not fail CI)
-- **Dark mode:** `darkClass: "dark-theme"`, `lightClass: "default-theme"`
-- **CSS:** Imports `virtual:styleframe.css` for all design tokens
-
-### Vite Config
-
-- **Plugins:** `@styleframe/plugin` (Styleframe Vite integration), `@vitejs/plugin-vue`
-- **Alias:** `@styleframe/theme` resolves to `../../theme/src` (local development)
-- **Vitest:** Browser testing with Playwright (Chromium, headless)
-
----
-
-## Story Conventions
-
-### Story File Pattern
-
-Stories live in `src/**/*.stories.ts` and follow Storybook's CSF (Component Story Format):
-
-```ts
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import Component from './components/Component.vue';
-
-const meta = {
-    title: 'Category/Subcategory/Name',
-    component: Component,
-    tags: ['autodocs'],
-    argTypes: { /* control definitions */ },
-} satisfies Meta<typeof Component>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
-    args: { /* default prop values */ },
-};
-```
-
-### Story Organization
-
-| Category | Path Pattern | Description |
-|----------|-------------|-------------|
-| `Theme/Recipes/Button` | `src/button.stories.ts` | Button recipe variants |
-| `Theme/Recipes/Badge` | `src/badge.stories.ts` | Badge recipe variants |
-| `Design Tokens/Colors/*` | `src/design-tokens/color*.stories.ts` | Color token visualization |
-| `Design Tokens/Typography/*` | `src/design-tokens/font*.stories.ts` | Typography tokens |
-| `Design Tokens/Spacing` | `src/design-tokens/spacing.stories.ts` | Spacing tokens |
-| `Design Tokens/Borders/*` | `src/design-tokens/border*.stories.ts` | Border tokens |
-| `Design Tokens/Effects/*` | `src/design-tokens/box-shadow.stories.ts` | Effect tokens |
-
-### Design Token Story Pattern
-
-Each design token story imports values from `@styleframe/theme`, renders a grid of swatch components:
-
-```ts
-import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { colorValues } from '@styleframe/theme';
-import ColorSwatch from '../components/ColorSwatch.vue';
-import StoryGrid from '../components/StoryGrid.vue';
-
-const meta = {
-    title: 'Design Tokens/Colors/Color',
-    component: ColorSwatch,
-    tags: ['autodocs'],
-    argTypes: {
-        value: { control: 'select', options: Object.keys(colorValues) },
-    },
-} satisfies Meta<typeof ColorSwatch>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const AllColors: StoryObj = {
-    render: () => ({
-        components: { ColorSwatch, StoryGrid },
-        setup() {
-            return { items: Object.keys(colorValues) };
-        },
-        template: `
-            <StoryGrid :items="items">
-                <template #default="{ item }">
-                    <ColorSwatch :name="item" :value="item" :label="item" />
-                </template>
-            </StoryGrid>
-        `,
-    }),
-};
-
-export const Primary: Story = {
-    args: { name: 'primary', value: 'primary' },
-};
-```
-
----
-
-## Component Patterns
-
-### Recipe Components
-
-Components import recipe functions from `virtual:styleframe` and apply them via `:class`:
-
-```vue
-<script setup lang="ts">
-import { button } from 'virtual:styleframe';
-
-const props = withDefaults(defineProps<{
-    color?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'error';
-    variant?: 'solid' | 'outline' | 'soft' | 'subtle' | 'ghost' | 'link';
-    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-    label?: string;
-    disabled?: boolean;
-}>(), {
-    color: 'primary',
-    variant: 'solid',
-    size: 'md',
-    label: 'Button',
-    disabled: false,
-});
-</script>
-
-<template>
-    <button
-        :class="button({ color: props.color, variant: props.variant, size: props.size })"
-        :disabled="props.disabled"
-    >
-        {{ props.label }}
-    </button>
-</template>
-```
-
-### Styleframe Files (`.styleframe.ts`)
-
-Each component's styles live in a co-located `.styleframe.ts` file:
-
-```ts
-import { useButtonRecipe } from '@styleframe/theme';
-import { styleframe } from 'virtual:styleframe';
-
-const s = styleframe();
-const { selector } = s;
-
-export const button = useButtonRecipe(s);
-
-selector('.button-grid', {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '@spacing.md',
-    padding: '@spacing.md',
-    alignItems: 'center',
-});
-
-export default s;
-```
-
-### Swatch Components
-
-Swatch components visualize individual design token values. Each follows this pattern:
-
-1. Accept `name` and `value` props
-2. Import a recipe from `virtual:styleframe`
-3. Wrap content in `SwatchCard` primitive
-4. Display the token value visually (color preview, font rendering, spacing bars, etc.)
-
-### Primitive Components
-
-Reusable building blocks in `src/components/primitives/`:
-
-| Component | Purpose |
-|-----------|---------|
-| `SwatchCard` | Card with slots: default (preview), `#name`, `#label` |
-| `SwatchRow` | Horizontal row with name and value display |
-| `ProgressBar` | Visual bar for proportional values |
-| `BarChart` | Chart for comparative values |
-
-Shared tokens for primitives are in `primitives/tokens.styleframe.ts` (colors, spacing, typography, dimensions used across all swatch components).
-
----
-
-## Virtual Module
-
-The `virtual:styleframe` module is auto-generated by `@styleframe/plugin`. It provides:
-
-- `styleframe()` — Returns the configured Styleframe instance
-- Recipe functions: `button()`, `badge()`
-- Swatch recipes: `colorSwatch()`, `fontSizeSwatch()`, `spacingSwatch()`, etc.
-- CSS import: `virtual:styleframe.css`
-
-Type definitions are in `.styleframe/styleframe.d.ts`.
-
----
-
-## Testing
-
-### Vitest + Storybook
-
-Stories are testable via Vitest with Storybook's portable stories:
-
-- **Setup:** `.storybook/vitest.setup.ts` applies annotations and a11y config
-- **Browser:** Playwright (Chromium, headless)
-- **A11y:** Addon checks accessibility violations per story
-
-### Running Tests
-
-```sh
-pnpm vitest          # Run story tests
-pnpm storybook dev   # Start dev server on port 6006
-pnpm storybook build # Build static site
-```
-
----
-
-## Key Conventions
-
-1. **Co-locate styles with components** — every Vue component has a matching `.styleframe.ts` file.
-2. **Import from `virtual:styleframe`** in `.styleframe.ts` files, not from `styleframe` directly.
-3. **Import from `styleframe`** only in `styleframe.config.ts` (the global config).
-4. **Use `@`-prefixed string refs** for token references in selectors: `'@spacing.md'`, `'@color.primary'`.
-5. **Use `satisfies Meta<typeof Component>`** on story meta objects for type safety.
-6. **Tag stories with `['autodocs']`** to auto-generate documentation pages.
-7. **Export `default` for meta** and **named exports for individual stories** in story files.
-8. **Use `StoryGrid` component** for rendering collections of token swatches.
-9. **Use `as const`** on value arrays/objects for TypeScript inference.
-10. **Always export the Styleframe instance as default** from `.styleframe.ts` files.
-
----
-
-## Adding New Content
-
-### New Design Token Story
-
-1. Create swatch component: `src/components/<Token>Swatch.vue` + `.styleframe.ts`
-2. Create story: `src/design-tokens/<token>.stories.ts`
-3. Import token values from `@styleframe/theme` (e.g., `<token>Values`)
-4. Use `StoryGrid` for the "All" story, individual stories with `args`
-
-### New Recipe Story
-
-1. Create component: `src/components/<Name>.vue`
-2. Create styles: `src/<name>.styleframe.ts` (import recipe from `@styleframe/theme`)
-3. Create story: `src/<name>.stories.ts` with meta, default story, and variant stories
-4. Optionally add grid components for showcasing all combinations
-
-### New Primitive
-
-1. Add to `src/components/primitives/`
-2. Create both `.vue` and `.styleframe.ts` files
-3. Use shared tokens from `primitives/tokens.styleframe.ts`
-4. Export from `primitives/index.ts`
+- [`theme/AGENTS.md`](../../theme/AGENTS.md) — where the recipes being showcased live.
+- [`tooling/plugin/AGENTS.md`](../../tooling/plugin/AGENTS.md) — the virtual modules and `*.styleframe.ts` discovery.
+- [`apps/docs/AGENTS.md`](../docs/AGENTS.md) — how docs pages embed these stories.

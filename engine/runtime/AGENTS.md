@@ -1,195 +1,47 @@
 # @styleframe/runtime
 
-Lightweight runtime for executing pre-computed Styleframe recipes. Generates utility class name strings from `RecipeRuntime` objects based on variant props.
+The piece of Styleframe that ships to the browser. One export matters: `createRecipe(name, runtime, shortMap?)` in [`src/runtime.ts`](./src/runtime.ts) takes a pre-computed `RecipeRuntime` object (token values already resolved at build time) and returns `(props?) => string`, producing a space-separated utility class string like `button _border-width:thin _background:primary`. Published to npm. You rarely call it by hand — the transpiler emits `import { createRecipe } from '@styleframe/runtime'` into the generated `virtual:styleframe` module (see [`engine/transpiler/src/consume/ts/root.ts`](../transpiler/src/consume/ts/root.ts)), so this bundle ends up in end-user apps.
 
-## What This Package Does
+**Keep it dependency-free.** `@styleframe/core` is a peer dependency used for types only; `src/runtime.ts` imports nothing at runtime. Adding a runtime import here adds bytes to every consumer's client bundle.
 
-This package provides a single core function — `createRecipe` — that takes a recipe name and a pre-computed `RecipeRuntime` object, and returns a function. That function accepts variant props and produces a space-separated CSS utility class string.
-
-The runtime is designed to be small (~1.4KB ES module) and dependency-free (peer depends on `@styleframe/core` for types only). It runs in the browser or server, converting resolved design token values into deterministic class name strings.
-
-## Package Structure
+## Layout
 
 ```
 src/
-├── index.ts          # Re-exports from runtime.ts and types.ts
-├── runtime.ts        # Core createRecipe function and helpers
-├── types.ts          # TypeScript type definitions
-└── runtime.test.ts   # Test suite (vitest)
+├── index.ts         # Barrel: re-exports runtime.ts + types.ts
+├── runtime.ts       # createRecipe + class-name assembly — the whole implementation
+├── types.ts         # RecipeVariantProps inference; re-exports runtime types from core
+└── runtime.test.ts  # Colocated Vitest suite
 ```
 
-## Public API
+## How class strings are assembled
 
-### `createRecipe(name, runtime)`
+All in [`src/runtime.ts`](./src/runtime.ts) (`toClassName`, `processDeclarationsBlock`):
 
-Creates a recipe function that generates class name strings from variant props.
+- Declarations map to `_<name>:<value>` classes; camelCase names are kebab-cased (`borderWidth: "thin"` → `_border-width:thin`). A literal `true` value drops the suffix (`{ hidden: true }` → `_hidden`).
+- Object values one level deep are modifier blocks: `hover: { background: "x" }` → `_hover:background:x`. Compound keys split on `:` (`"hover:focus"` → `_hover:focus:…`).
+- Override order per utility+modifier key: `base` → `variants` (props, falling back to `defaultVariants`; boolean props are coerced with `String()` so `disabled: true` selects the `"true"` option) → `compoundVariants` whose `match` conditions all hold. Later wins.
+- A matched compound variant may also contribute a raw `className`, appended after the utility classes.
+- The optional third argument is a `ShorteningMap` (`{ p, v, m }` from `@styleframe/core`) that remaps property, value, and modifier names for minified class output. The transpiler passes it when class shortening is enabled.
 
-```ts
-import { createRecipe } from '@styleframe/runtime';
+`RecipeVariantProps<R>` in [`src/types.ts`](./src/types.ts) infers the props type from a runtime object: each variant key becomes a union of its option names, and variants declaring both `"true"` and `"false"` options additionally accept a plain `boolean`. Runtime objects should be written `as const satisfies RecipeRuntime` so the inference sees literal keys.
 
-const button = createRecipe('button', {
-    base: {
-        borderWidth: 'thin',
-        cursor: 'pointer',
-    },
-    variants: {
-        color: {
-            primary: { background: 'primary', color: 'white' },
-            secondary: { background: 'secondary', color: 'white' },
-        },
-        size: {
-            sm: { padding: '1' },
-            md: { padding: '2' },
-        },
-    },
-    defaultVariants: {
-        color: 'primary',
-        size: 'md',
-    },
-} as const satisfies RecipeRuntime);
-
-button({});
-// => "button _border-width:thin _cursor:pointer _background:primary _color:white _padding:2"
-
-button({ color: 'secondary', size: 'sm' });
-// => "button _border-width:thin _cursor:pointer _background:secondary _color:white _padding:1"
-```
-
-**Parameters:**
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `name` | `string` | Recipe name, used as the first class in the output |
-| `runtime` | `RecipeRuntime` | Pre-computed recipe object with resolved token values |
-
-**Returns:** `(props?: RecipeVariantProps<R>) => string` — A function that accepts optional variant props and returns a space-separated class name string.
-
-### Exported Types
-
-| Type | Description |
-|------|-------------|
-| `RecipeVariantProps<R>` | Extracts variant prop types from a `RecipeRuntime`. Each variant key maps to a union of its option names. |
-| `RecipeRuntime` | Pre-computed recipe structure (re-exported from `@styleframe/core`) |
-| `RuntimeVariantDeclarationsBlock` | Object mapping utility names to resolved values |
-| `RuntimeModifierDeclarationsBlock` | Object mapping utility names to values within a modifier context |
-| `RuntimeVariantDeclarationsValue` | Union of primitive values or modifier blocks |
-| `PrimitiveTokenValue` | `string \| number \| boolean \| null \| undefined` |
-| `TokenValue` | Token value type (re-exported from `@styleframe/core`) |
-| `RuntimeVariantOptions` | `Record<string, RuntimeVariantDeclarationsBlock \| undefined>` |
-
-## Class Name Format
-
-The runtime generates class names following this pattern:
-
-| Pattern | Example | When Used |
-|---------|---------|-----------|
-| `_utility:value` | `_padding:2` | Standard utility |
-| `_utility` | `_display` | Boolean `true` value (no value suffix) |
-| `_modifier:utility:value` | `_hover:background:darkblue` | Single modifier |
-| `_mod1:mod2:utility:value` | `_hover:focus:box-shadow:lg` | Compound modifier |
-
-- CamelCase property names are converted to kebab-case: `borderWidth` → `_border-width:thin`
-- Boolean `true` omits the value: `{ display: true }` → `_display`
-
-## Declaration Priority
-
-Declarations are applied in this order. Later declarations override earlier ones for the same utility:
-
-1. **Base** — Always applied first
-2. **Variants** — Applied based on props (falls back to `defaultVariants`)
-3. **Compound Variants** — Applied when all `match` conditions are satisfied
-
-```ts
-const runtime = {
-    base: { padding: 'default' },
-    variants: {
-        size: { sm: { padding: 'variant' } },
-    },
-    compoundVariants: [
-        { match: { size: 'sm' }, css: { padding: 'compound' } },
-    ],
-} as const satisfies RecipeRuntime;
-
-const recipe = createRecipe('el', runtime);
-recipe({ size: 'sm' });
-// => "el _padding:compound"
-// compound overrides variant, which overrides base
-```
-
-## Modifier Blocks
-
-Modifier blocks represent pseudo-selector styles (`:hover`, `:focus`, etc.). They are objects nested one level deep inside declarations.
-
-```ts
-const runtime = {
-    base: {
-        background: 'blue',
-        // Single modifier
-        hover: {
-            background: 'darkblue',
-        },
-        // Multiple modifiers in same block
-        focus: {
-            outline: 'ring',
-        },
-        // Compound modifier (colon-separated key)
-        'hover:focus': {
-            boxShadow: 'lg',
-        },
-    },
-} as const satisfies RecipeRuntime;
-
-const button = createRecipe('button', runtime);
-button({});
-// => "button _background:blue _hover:background:darkblue _focus:outline:ring _hover:focus:box-shadow:lg"
-```
-
-Modifier blocks work in `base`, `variants`, and `compoundVariants.css`. Override rules apply within the same modifier scope — a variant's `hover.background` overrides the base `hover.background`.
-
-## Compound Variants
-
-Compound variants apply additional declarations when multiple variant conditions match simultaneously.
-
-```ts
-compoundVariants: [
-    {
-        match: { color: 'primary', disabled: 'false' },
-        css: {
-            hover: {
-                background: 'primary-shade-50',
-            },
-        },
-    },
-],
-```
-
-- All keys in `match` must match the current props (or `defaultVariants` fallback)
-- Multiple compound variants can match and apply in order
-- Compound variant `css` supports modifier blocks
-
-## Edge Cases
-
-- **Empty runtime:** `createRecipe('name', {})` returns a function that always returns just `"name"`
-- **No base:** Variants and compound variants still work without a `base` property
-- **Undefined variant option:** If a variant option maps to `undefined`, it is skipped and base declarations are preserved
-- **No defaultVariants:** Variant declarations are only applied if the prop is explicitly passed
-- **Props override defaults:** Passing a prop always overrides `defaultVariants` for that key
-
-## Best Practices
-
-- Always use `as const satisfies RecipeRuntime` when defining runtime objects for full type inference
-- Use `RecipeVariantProps<typeof runtime>` to extract the props type for component interfaces
-- The runtime object should contain pre-resolved token values (not raw CSS values) — resolution happens at build time in `@styleframe/core`
-- Keep runtime objects serializable — they are designed to be generated at build time and consumed at runtime
-- The recipe name (first argument) should match the recipe name used at build time for CSS class matching
-
-## Development
+## Build & test
 
 ```bash
-pnpm test        # Run tests
-pnpm test:dev    # Run tests in watch mode
-pnpm build       # Type-check and build
-pnpm typecheck   # Type-check only
+pnpm --filter @styleframe/runtime test     # vitest run (src/runtime.test.ts)
+pnpm --filter @styleframe/runtime build    # tsc --noEmit && vite build
 ```
 
-Peer dependency: `@styleframe/core@^3.0.0`
+The Vite config comes from [`@styleframe/config-vite`](../../config/vite) via [`vite.config.ts`](./vite.config.ts); output is ESM + UMD in `dist/`.
+
+## Pitfalls
+
+- **The class-name format is a cross-package contract.** The strings emitted here must match, byte for byte, the class names the scanner extracts ([`engine/scanner/src/constants.ts`](../scanner/src/constants.ts) `UTILITY_CLASS_PATTERN`) and the selectors core generates (`defaultUtilitySelectorFn` in [`engine/core/src/defaults.ts`](../core/src/defaults.ts)). Change the format in one place only and elements silently render unstyled.
+- **Values must arrive pre-resolved.** `createRecipe` does no token resolution — that happened in the transpiler. Passing raw token references produces class names that no generated CSS rule matches.
+
+## See also
+
+- [`engine/transpiler/AGENTS.md`](../transpiler/AGENTS.md) — generates the code that calls `createRecipe`.
+- [`engine/scanner/AGENTS.md`](../scanner/AGENTS.md) — extracts the class names this package emits.
+- [`engine/core/AGENTS.md`](../core/AGENTS.md) — owns `RecipeRuntime`, `ShorteningMap`, and the selector functions.

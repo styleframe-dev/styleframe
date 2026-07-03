@@ -1,30 +1,17 @@
-# Engine Packages Rules
+# Engine Rules
 
 **Scope:** `engine/**/*`
 
-## Core Principles
+- All exports carry explicit TypeScript types. Never `any` — use `unknown` narrowed by the
+  type guards in `engine/core/src/typeGuards.ts` (`isVariable`, `isSelector`, …); add a new
+  guard there when you add a token type.
+- Tokens are plain typed objects created by factory functions — no classes. Token factories
+  live in `engine/core/src/tokens/`, their types in `engine/core/src/types/`.
+- Functional style, immutable data. A factory never mutates its inputs.
+- Tests are colocated as `<file>.test.ts` next to the source. Every exported function gets one.
+- Changes to token shapes ripple: transpiler, runtime, and the `.claude/styleframe-*.md`
+  reference guides must be updated in the same change.
 
-- All exports must be typed with explicit TypeScript types
-- Never use `any` - use `unknown` with type guards instead
-- Factory functions must return typed tokens (Variable, Selector, AtRule, etc.)
-- All AST nodes extend `BaseToken` interface
-
-## Testing
-
-- Every exported function needs a unit test in the same package
-- Use Vitest for unit tests: `test/` directory
-- Test fixtures should be minimal and focused
-
-## Code Style
-
-- Use functional programming patterns - avoid classes except for core AST types
-- Prefer immutable data structures
-- Use type predicates for type guards: `function isVariable(token: Token): token is Variable`
-
-## Package-Specific Guides
-
-- **core** (`engine/core/src/`): Token AST definitions in `engine/core/src/types.ts`, factory methods in `engine/core/src/factory.ts`. Entry: `engine/core/src/index.ts`. Tests: `engine/core/test/`. See `engine/core/AGENTS.md`
-- **loader** (`engine/loader/src/`): Config loading in `engine/loader/src/config.ts`, HMR in `engine/loader/src/hmr.ts`. Entry: `engine/loader/src/index.ts`. See `engine/loader/AGENTS.md`
-- **transpiler** (`engine/transpiler/src/`): CSS generation in `engine/transpiler/src/css.ts`, TypeScript in `engine/transpiler/src/typescript.ts`, DTS in `engine/transpiler/src/dts.ts`. Entry: `engine/transpiler/src/index.ts`. Tests: `engine/transpiler/test/`. See `engine/transpiler/AGENTS.md`
-- **runtime** (`engine/runtime/src/`): Browser recipe runtime (~1.4KB) in `engine/runtime/src/index.ts`. See `engine/runtime/AGENTS.md`
-- **scanner** (`engine/scanner/src/`): Content scanning in `engine/scanner/src/scanner.ts`. Entry: `engine/scanner/src/index.ts`. See `engine/scanner/AGENTS.md`
+Package layout, invariants, and how-tos: see the `AGENTS.md` in each engine package
+(`engine/core`, `engine/loader`, `engine/transpiler`, `engine/runtime`, `engine/scanner`,
+`engine/styleframe`).

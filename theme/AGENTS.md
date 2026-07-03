@@ -1,401 +1,99 @@
 # @styleframe/theme
 
-Design token composables and presets for Styleframe. Provides type-safe functions that create CSS custom properties, utility classes, modifiers, and component recipes for building design systems.
+The design-system layer of Styleframe, published to npm. Everything here is a composable: a `use*` function that takes a `Styleframe` instance as its first argument, registers tokens/selectors/utilities/recipes on that instance, and returns typed token objects. `@styleframe/core` is a peer dependency; runtime deps are `culori` (OKLCH color math), `defu` (option merging), and `scule` (name casing).
 
-## Package Overview
+Alongside the engine, this is one of the two central packages of the repo: the 38 component recipes defined here are what the Storybook showcase and the docs site render.
 
-`@styleframe/theme` is the token layer of Styleframe. It exports composable functions (`use*`) that register design tokens (CSS custom properties), utility classes, modifiers, and recipes on a Styleframe instance. Every composable takes a Styleframe instance `s` as its first argument and returns typed token objects.
-
-**Peer dependency:** `@styleframe/core` (v3.0.1+)
-**Dependencies:** `culori` (color conversion), `defu` (object defaults), `scule` (string casing)
-
----
-
-## Source Structure
+## Layout
 
 ```
 src/
-├── index.ts          # Barrel re-exports (export * from each subdirectory)
-├── types.ts          # ExportKeys<Prefix, T, Separator> helper type
-├── values/           # Default value constants for all token categories
-├── variables/        # use* composables that create CSS custom properties
-├── modifiers/        # Pseudo-class, pseudo-element, and state modifiers
-├── utilities/        # use*Utility composables that create utility classes
-├── recipes/          # useButtonRecipe, useBadgeRecipe
-├── presets/          # useDesignTokensPreset, useModifiersPreset, useUtilitiesPreset, useShorthandUtilitiesPreset
-└── utils/            # Factory functions (createUseVariable, createUseUtility, etc.)
+├── index.ts        # export * from every subdirectory
+├── types.ts        # ExportKeys / WithThemes helper types
+├── values/         # <category>Values constants (spacingValues, colorValues, darkModeColorValues, …)
+├── variables/      # use<X>DesignTokens — CSS custom properties; fluid/ adds useFluidClamp + fluid viewport tokens
+├── elements/       # use<X>Element — base HTML element styling (body, headings, links, code, hr, kbd, …)
+├── states/         # useFocusState, useSelectionState — global focus-ring and ::selection tokens
+├── sanitize/       # sanitize.css-style reset selectors (base, forms, typography, reduced-motion)
+├── modifiers/      # use<X>Modifiers — pseudo-state/element, form, ARIA, media, structural, directional
+├── utilities/      # use<X>Utility — utility-class creators, one directory per CSS category (spacing, layout, …)
+├── recipes/        # use<Name>Recipe — one directory per component (38; see below)
+├── presets/        # use<X>Preset — batteries-included bundles of the above
+└── utils/          # the create* factories every composable above is built from
 ```
 
----
+## The composable contract
 
-## Design Token Variables
+Every public composable follows the same shape, produced by a factory in [`src/utils/`](./src/utils/):
 
-Each composable creates CSS custom properties and returns typed token objects. All accept optional custom values and `{ default: true }` for composable-safe registration.
+| Kind      | Naming                | Factory                                            | Returns                                                        |
+| --------- | --------------------- | -------------------------------------------------- | -------------------------------------------------------------- |
+| Variables | `use<X>DesignTokens`  | `createUseVariable(property, opts)`                | Flat object of typed `Variable`s (`{ spacing, spacingSm, … }`) |
+| Utilities | `use<X>Utility`       | `createUseUtility` / `createUseSpacingUtility`     | A `UtilityCreatorFn` — call it to emit more classes            |
+| Recipes   | `use<Name>Recipe`     | `createUseRecipe(name, defaults, setup?)`          | The registered `Recipe` token                                  |
+| Modifiers | `use<X>Modifiers`     | hand-written                                       | Modifier factories to pass to utility creators                 |
+| Presets   | `use<X>Preset`        | hand-written                                       | Aggregated token objects                                       |
 
-### Colors
+Conventions enforced by the factories — keep them when writing composables by hand:
 
-```ts
-import { useColor, useColorLevel, useColorShade, useColorTint } from '@styleframe/theme';
-
-// Base colors (converted to OKLCH internally)
-const { colorPrimary, colorSecondary } = useColor(s, {
-    primary: '#006cff',
-    secondary: '#6c757d',
-} as const);
-
-// Level variants (absolute L channel in OKLCH)
-// Returns: colorPrimary50, colorPrimary100, ..., colorPrimary950
-const primaryLevels = useColorLevel(s, colorPrimary, colorLevelValues);
-
-// Shade variants (relative: subtracts from L channel - darker)
-const { colorPrimaryShade100 } = useColorShade(s, colorPrimary, { 100: 10 } as const);
-
-// Tint variants (relative: adds to L channel - lighter)
-const { colorPrimaryTint100 } = useColorTint(s, colorPrimary, { 100: 10 } as const);
-```
-
-Default colors: `primary`, `secondary`, `success`, `info`, `warning`, `error`, `neutral`, `white`, `black`.
-
-### Scales
-
-```ts
-import { useScale, useScalePowers } from '@styleframe/theme';
-
-const { scale, scalePerfectFourth } = useScale(s, {
-    ...defaultScaleValues,
-    default: '@minor-third',
-});
-
-// Generate multiplier powers: [-3, -2, -1, 0, 1, 2, 3, 4, 5]
-const scalePowers = useScalePowers(s, scale, [-3, -2, -1, 0, 1, 2, 3, 4, 5]);
-```
-
-Available ratios: `minor-second` (1.067), `major-second` (1.125), `minor-third` (1.2), `major-third` (1.25), `perfect-fourth` (1.333), `augmented-fourth` (1.414), `perfect-fifth` (1.5), `golden` (1.618).
-
-### Spacing
-
-```ts
-import { useSpacing, useMultiplier } from '@styleframe/theme';
-
-const { spacing } = useSpacing(s, { default: '1rem' } as const);
-
-const { spacingSm, spacingMd, spacingLg } = useMultiplier(s, spacing, {
-    sm: scalePowers[-1],
-    md: scalePowers[0],
-    lg: scalePowers[1],
-});
-```
-
-Default sizes: `2xs`, `xs`, `sm`, `md` (default), `lg`, `xl`, `2xl`, `3xl`.
-
-### Typography
-
-```ts
-import { useFontFamily, useFontSize, useFontWeight, useFontStyle, useLineHeight, useLetterSpacing } from '@styleframe/theme';
-
-const { fontFamily, fontFamilyMono, fontFamilyPrint } = useFontFamily(s);
-const { fontSize } = useFontSize(s, { default: '1rem' } as const);
-const { fontWeightNormal, fontWeightBold } = useFontWeight(s);
-const { lineHeightTight, lineHeightNormal } = useLineHeight(s);
-const { letterSpacingTight, letterSpacingWide } = useLetterSpacing(s);
-```
-
-### Borders and Effects
-
-```ts
-import { useBorderWidth, useBorderRadius, useBorderStyle, useBorderColor, useBoxShadow } from '@styleframe/theme';
-
-const { borderWidthThin } = useBorderWidth(s);
-const { borderRadiusSm, borderRadiusMd } = useBorderRadius(s);
-const { boxShadowSm, boxShadowMd } = useBoxShadow(s);
-```
-
-### Breakpoints and Easing
-
-```ts
-import { useBreakpoint, useEasing } from '@styleframe/theme';
-
-const { breakpointSm, breakpointMd, breakpointLg } = useBreakpoint(s);
-const { easingEaseOut, easingSpring } = useEasing(s);
-```
-
-Default breakpoints: `xs` (0), `sm` (576), `md` (768), `lg` (992), `xl` (1200), `2xl` (1440).
-
----
-
-## Modifiers
-
-Modifier composables return factory objects used with utility classes.
-
-```ts
-import {
-    usePseudoStateModifiers,    // hover, focus, focusWithin, focusVisible, active, visited, target
-    usePseudoElementModifiers,  // before, after, placeholder, selection, firstLetter, firstLine, marker, backdrop, file
-    useFormStateModifiers,      // disabled, enabled, checked, indeterminate, required, optional, valid, invalid, placeholderShown, autofill, readOnly
-    useAriaStateModifiers,      // ariaBusy, ariaChecked, ariaDisabled, ariaExpanded, ariaHidden, ariaPressed, ariaReadonly, ariaRequired, ariaSelected
-    useMediaPreferenceModifiers,// dark, motionSafe, motionReduce, contrastMore, contrastLess, portrait, landscape, print, forcedColors
-    useStructuralModifiers,     // first, last, only, odd, even, firstOfType, lastOfType, onlyOfType, empty
-    useDirectionalModifiers,    // rtl, ltr
-    useOtherStateModifiers,     // open, inert
-} from '@styleframe/theme';
-
-const { hover, focus, active } = usePseudoStateModifiers(s);
-const { dark, motionReduce } = useMediaPreferenceModifiers(s);
-```
-
----
-
-## Utilities
-
-Utility composables create CSS utility class generators. Each returns a creator function that must be invoked with values.
-
-### Spacing Utilities (with multiplier support)
-
-```ts
-import { useMarginUtility, usePaddingUtility, useGapUtility, useSpaceUtility } from '@styleframe/theme';
-
-const createMargin = useMarginUtility(s, { sm: ref(spacingSm), md: ref(spacingMd) });
-
-// Multiplier values generate calc() expressions
-createMargin(["@1.5", "@2", "@0.5"]);
-// Produces: calc(var(--spacing) * 1.5), etc.
-```
-
-Directional variants: `useMarginTopUtility`, `useMarginInlineUtility`, `usePaddingBlockUtility`, etc.
-
-### All Utility Categories
-
-| Category | Composables |
-|----------|-------------|
-| **Typography** | `useColorUtility`, `useTextColorUtility`, `useFontFamilyUtility`, `useFontSizeUtility`, `useFontWeightUtility`, `useLineHeightUtility`, `useLetterSpacingUtility`, `useTextAlignUtility`, `useTextDecorationUtility`, `useTextTransformUtility`, `useTextOverflowUtility`, `useTextWrapUtility`, `useWhitespaceUtility`, `useWordBreakUtility`, `useFontStyleUtility`, `useLineClampUtility`, `useContentUtility`, `useVerticalAlignUtility` |
-| **Backgrounds** | `useBackgroundColorUtility`, `useBackgroundAttachmentUtility`, `useBackgroundClipUtility`, `useBackgroundImageUtility`, `useBackgroundPositionUtility`, `useBackgroundRepeatUtility`, `useBackgroundSizeUtility` |
-| **Borders** | `useBorderWidthUtility`, `useBorderColorUtility`, `useBorderStyleUtility`, `useBorderRadiusUtility`, `useRingUtility`, `useDivideUtility`, `useOutlineUtility` |
-| **Effects** | `useBoxShadowUtility`, `useOpacityUtility`, `useTextShadowUtility`, `useMixBlendModeUtility`, `useBackgroundBlendModeUtility` |
-| **Filters** | `useFilterUtility`, `useBackdropFilterUtility` |
-| **Flexbox & Grid** | `useFlexUtility`, `useFlexDirectionUtility`, `useFlexWrapUtility`, `useGapUtility`, `useAlignUtility`, `useJustifyUtility`, `useOrderUtility`, `usePlaceUtility`, `useGridUtility` |
-| **Layout** | `useDisplayUtility`, `usePositionUtility`, `useInsetUtility`, `useZIndexUtility`, `useFloatUtility`, `useOverflowUtility`, `useAspectRatioUtility`, `useBoxUtility`, `useColumnsUtility`, `useObjectFitUtility`, `useObjectPositionUtility` |
-| **Sizing** | `useWidthUtility`, `useHeightUtility`, `useSizeUtility` |
-| **Interactivity** | `useInteractivityUtility`, `useScrollUtility`, `useScrollSnapUtility` |
-| **Transforms** | `useTransformUtility` |
-| **Transitions** | `useTransitionUtility`, `useAnimationUtility` |
-| **Accessibility** | `useAccessibilityUtility` |
-| **SVG** | `useSvgUtility` |
-| **Tables** | `useTableUtility` |
-
----
+- Variables register with `{ default: true }` (see [`createUseVariable.ts`](./src/utils/createUseVariable.ts)), so composable-provided values act as defaults that a user's own `variable()` call overrides. Callers can opt out via the `{ default: false }` option.
+- The `default` key in a value map produces the unsuffixed variable: `useSpacingDesignTokens(s, { default: "1rem" })` returns `{ spacing }`, not `{ spacingDefault }`.
+- Reference other tokens with `ref(token)` or the `"@token.name"` string shorthand; never hardcode a value that exists as a token.
+- Spacing-style utilities accept `"@<number>"` multipliers (`"@1.5"` → `calc(var(--spacing) * 1.5)`), wired via [`createMultiplierAutogenerate.ts`](./src/utils/createMultiplierAutogenerate.ts).
+- Default value constants live in [`src/values/`](./src/values/) and are named `<category>Values` (plus `darkMode<Category>Values` for dark-theme overrides).
+- Index files use `export *` only; [`src/index.ts`](./src/index.ts) re-exports every subdirectory.
 
 ## Recipes
 
-Pre-built component recipes with color, variant, and size support.
+One directory per component at `src/recipes/<name>/`, containing `use<Name>Recipe.ts`, a colocated `use<Name>Recipe.test.ts`, and an `index.ts` barrel. Multi-part components get one file per part in the same directory (e.g. [`card/`](./src/recipes/card/) has `useCardRecipe`, `useCardHeaderRecipe`, `useCardBodyRecipe`, `useCardFooterRecipe`; [`sidebar/`](./src/recipes/sidebar/) has 15 parts). The root barrel [`src/recipes/index.ts`](./src/recipes/index.ts) lists each directory alphabetically.
 
-```ts
-import { useButtonRecipe, useBadgeRecipe } from '@styleframe/theme';
+Recipes are declared with `createUseRecipe(name, defaults, setup?)`:
 
-useButtonRecipe(s);
-// Colors: primary, secondary, success, info, warning, error
-// Variants: solid, outline, soft, subtle, ghost, link
-// Sizes: xs, sm, md, lg, xl
-// Defaults: color=primary, variant=solid, size=md
+- `defaults` is a `{ base, variants, defaultVariants, compoundVariants }` config using `@`-string token references.
+- The returned `use<Name>Recipe(s, options?)` deep-merges option overrides over the defaults (via `defu`) and supports `{ filter }` to prune variant axes down to an allowed subset — filtering also drops now-unreachable compound variants and defaults.
+- The optional `setup` callback runs before registration, for recipes that need side effects like `@keyframes` (see [`spinner/`](./src/recipes/spinner/)).
+- Color/variant axes are often empty declaration blocks with the real styling supplied by `compoundVariants` (see [`badge/useBadgeRecipe.ts`](./src/recipes/badge/useBadgeRecipe.ts)).
 
-useBadgeRecipe(s);
-// Colors: primary, secondary, success, info, warning, error
-// Variants: solid, outline, soft, subtle
-// Sizes: xs, sm, md, lg, xl
-// Defaults: color=primary, variant=solid, size=sm
-```
+**Adding a recipe: use the skill chain, don't wing it.** `/create-recipe` orchestrates six sub-skills (`/research-component` → `/design-recipe` → `/implement-recipe` → `/showcase-recipe` → `/document-recipe` → `/verify-recipe`), defined under [`.claude/skills/`](../.claude/skills/). Intermediate artifacts land in `.context/recipe-<name>/` (gitignored); each sub-skill is standalone-invokable to resume or re-run a step. A finished recipe spans three places:
 
-Both accept an optional config object for overriding defaults and a `{ filter }` option to include specific variants.
-
----
+1. Source + tests: `theme/src/recipes/<name>/`
+2. Storybook showcase: `apps/storybook/src/components/components/<name>/`
+3. Docs page: `apps/docs/content/docs/05.components/<category>/<nn>.<name>.md`
 
 ## Presets
 
-Presets compose multiple composables into a single call for rapid setup.
+[`src/presets/`](./src/presets/) bundles the individual composables for one-call setup:
 
-### useDesignTokensPreset
+| Preset                        | What it registers                                                                                              |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `useDesignTokensPreset`       | Every token category; returns one flat destructurable object. Per-category config, `false` to skip a category, `themes` for per-theme overrides (dark-mode values are built in). |
+| `useGlobalPreset`             | Element defaults ([`src/elements/`](./src/elements/)) + focus/selection states ([`src/states/`](./src/states/)) |
+| `useSanitizePreset`           | The reset selectors from [`src/sanitize/`](./src/sanitize/), each category toggleable                           |
+| `useModifiersPreset`          | All modifier categories, each toggleable                                                                        |
+| `useUtilitiesPreset`          | All utility categories                                                                                          |
+| `useShorthandUtilitiesPreset` | `useUtilitiesPreset` with Tailwind-style names (`m`, `p`, `w`, `text`, …)                                       |
 
-Creates all design token variables at once. Returns a flat object — all variables are directly destructurable.
+## Build & test
 
-```ts
-import { useDesignTokensPreset } from '@styleframe/theme';
-
-const { colorPrimary, spacingMd, borderRadiusMd } = useDesignTokensPreset(s);
-
-// With custom config
-const { colorPrimary, spacingMd } = useDesignTokensPreset(s, {
-    colors: { primary: '#006cff', secondary: '#6c757d' },
-    spacing: { default: '1rem' },
-    fontSize: { default: '1rem' },
-    easing: false, // Set false to disable a category
-});
+```bash
+pnpm build      # tsc --noEmit && vite build (config from @styleframe/config-vite)
+pnpm test       # vitest run
+pnpm test:dev   # vitest --watch
+pnpm dev        # vite build --watch
 ```
 
-Config keys: `spacing`, `borderWidth`, `borderRadius`, `borderStyle`, `boxShadow`, `colors`, `fontFamily`, `fontSize`, `fontStyle`, `fontWeight`, `lineHeight`, `letterSpacing`, `scale`, `scalePowers`, `breakpoint`, `easing`. Each can be `undefined` (defaults), `false` (skip), or a custom `Record`.
+Tests are colocated as `<file>.test.ts` next to their source (~286 files) — there is no `theme/test/` directory. Recipe tests assert the registered recipe's structure and CSS output; `/verify-recipe` runs typecheck + this package's tests + lint as the final gate.
 
-Theme overrides:
+## Pitfalls
 
-```ts
-useDesignTokensPreset(s, {
-    themes: {
-        dark: { colors: { primary: '#60a5fa' } },
-    },
-});
-```
+- **`@styleframe/theme` is not part of the `styleframe` barrel.** The barrel's `exports` map has no `./theme` subpath, so `import … from "styleframe/theme"` (which some older TSDoc examples show) does not resolve. Import from `@styleframe/theme` directly — that is the repo-wide exception to the "import from the barrel" rule.
+- **Utility composables emit CSS only for the values you give them.** `use<X>Utility(s, values)` registers the utility and emits classes for `values` (or its defaults), then returns a creator — a utility invoked with no values and whose creator is never called produces no CSS, silently.
+- **Dropping `{ default: true }` breaks user overrides.** A composable variable registered without it clobbers same-name variables the user defined in their own config instead of yielding to them.
+- **Old names linger in other docs.** Variable composables are `use<X>DesignTokens` (not `useColor`/`useSpacing`), value constants are `<category>Values` (not `default<Category>Values`), and recipes are directories (`recipes/button/useButtonRecipe.ts`), not flat files. Trust this file and the source over stale references elsewhere.
 
-### useModifiersPreset
+## See also
 
-```ts
-import { useModifiersPreset } from '@styleframe/theme';
-
-const modifiers = useModifiersPreset(s, {
-    pseudoStates: true,     // hover, focus, active, etc.
-    formStates: true,       // disabled, checked, valid, etc.
-    structural: true,       // first, last, odd, even, etc.
-    pseudoElements: true,   // before, after, placeholder, etc.
-    mediaPreferences: true, // dark, motionReduce, etc.
-    ariaStates: true,       // ariaExpanded, ariaSelected, etc.
-    directional: true,      // rtl, ltr
-    otherStates: true,      // open, inert
-});
-```
-
-### useUtilitiesPreset
-
-```ts
-import { useUtilitiesPreset } from '@styleframe/theme';
-
-const utilities = useUtilitiesPreset(s, {
-    // Enable/disable by category, pass custom values
-});
-```
-
-### useShorthandUtilitiesPreset
-
-Wraps `useUtilitiesPreset` with Tailwind-style shorthand names (`m` for margin, `p` for padding, `w` for width, `text` for font-size, etc.).
-
-```ts
-import { useShorthandUtilitiesPreset } from '@styleframe/theme';
-
-useShorthandUtilitiesPreset(s);
-```
-
----
-
-## Default Value Exports
-
-All default token values are exported as constants for reference or customization:
-
-```ts
-import {
-    defaultColorValues,
-    colorLevelValues,
-    defaultColorShadeValues,
-    defaultColorTintValues,
-    defaultSpacingValues,
-    defaultFontFamilyValues,
-    defaultFontSizeValues,
-    defaultFontWeightValues,
-    defaultLineHeightValues,
-    defaultLetterSpacingValues,
-    defaultBorderWidthValues,
-    defaultBorderRadiusValues,
-    defaultBorderStyleValues,
-    defaultBoxShadowValues,
-    defaultBreakpointValues,
-    defaultEasingValues,
-    defaultScaleValues,
-} from '@styleframe/theme';
-```
-
----
-
-## Factory Functions (Advanced)
-
-For building custom composables:
-
-| Factory | Purpose |
-|---------|---------|
-| `createUseVariable(name, options)` | Create a custom variable composable |
-| `createUseUtility(name, factory, options)` | Create a custom utility composable |
-| `createUseSpacingUtility(name, factory, options)` | Create a utility with multiplier support |
-| `createUseDerivedVariable(options)` | Create derived variables from a parent |
-| `createUseRecipe(name, defaults)` | Create a custom recipe composable |
-| `createMultiplierAutogenerate(options)` | Add `@`-prefix multiplier support to utilities |
-
----
-
-## Key Conventions
-
-1. **All composables take `s` (Styleframe instance) as first argument.**
-2. **Use `as const` on value objects** for proper TypeScript inference.
-3. **The `default` key generates the base variable name** without a suffix (e.g., `useSpacing(s, { default: '1rem' })` returns `{ spacing }`, not `{ spacingDefault }`).
-4. **Use `ref()` to reference variables in declarations.** Use `"@token.name"` shorthand for string references.
-5. **Utility creators must be invoked.** `useMarginUtility(s, values)` returns a creator function; call it to generate CSS.
-6. **Multiplier values use `@` prefix:** `"@1.5"` becomes `calc(var(--spacing) * 1.5)`.
-7. **Use semantic names** (`color.primary`, not `color.blue`).
-8. **Use `export *` in index files** for re-exports, not named exports.
-
----
-
-## Common Patterns
-
-### Quick Start with Presets
-
-```ts
-import { styleframe } from 'styleframe';
-import { useDesignTokensPreset, useModifiersPreset, useUtilitiesPreset } from '@styleframe/theme';
-
-const s = styleframe();
-
-const { colorPrimary, spacingMd, scalePowers } = useDesignTokensPreset(s);
-const modifiers = useModifiersPreset(s);
-useUtilitiesPreset(s);
-
-export default s;
-```
-
-### Manual Token Setup
-
-```ts
-import { styleframe } from 'styleframe';
-import { useColor, useSpacing, useMultiplier, useScale, useScalePowers } from '@styleframe/theme';
-
-const s = styleframe();
-const { ref, selector } = s;
-
-const { scale } = useScale(s, { default: '@minor-third' });
-const scalePowers = useScalePowers(s, scale);
-
-const { colorPrimary } = useColor(s, { primary: '#006cff' } as const);
-const { spacing } = useSpacing(s, { default: '1rem' } as const);
-const { spacingSm, spacingMd, spacingLg } = useMultiplier(s, spacing, {
-    sm: scalePowers[-1],
-    md: scalePowers[0],
-    lg: scalePowers[1],
-});
-
-selector('.card', {
-    padding: ref(spacingLg),
-    backgroundColor: ref(colorPrimary),
-});
-
-export default s;
-```
-
-### Custom Composable
-
-```ts
-import type { Styleframe } from 'styleframe';
-import { useColor, useColorLevel, colorLevelValues } from '@styleframe/theme';
-
-export function useThemeColors(s: Styleframe) {
-    const { colorPrimary, colorSecondary } = useColor(s, {
-        primary: '#006cff',
-        secondary: '#6c757d',
-    } as const);
-
-    const primaryLevels = useColorLevel(s, colorPrimary, colorLevelValues);
-
-    return { colorPrimary, colorSecondary, ...primaryLevels };
-}
-```
+- [`.claude/skills/create-recipe/SKILL.md`](../.claude/skills/create-recipe/SKILL.md) — the recipe-creation chain and its five sub-skills.
+- [`engine/core/AGENTS.md`](../engine/core/AGENTS.md) — the `variable`/`utility`/`recipe`/`theme` primitives this package builds on.
+- [`apps/storybook/AGENTS.md`](../apps/storybook/AGENTS.md) and [`apps/docs/AGENTS.md`](../apps/docs/AGENTS.md) — where recipes are showcased and documented.
+- Root `AGENTS.md` — instance model, `@`-reference syntax, utility class format.

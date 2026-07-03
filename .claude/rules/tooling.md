@@ -1,35 +1,19 @@
-# Tooling Packages Rules
+# Tooling Rules
 
 **Scope:** `tooling/**/*`
 
-## Build Plugin (`tooling/plugin/`)
+- The plugin (`tooling/plugin`) is built on unplugin; every bundler adapter (9 of them,
+  including Bun) is a thin entry over the shared factory. New plugin behavior must work
+  across all adapters, and the virtual-module contract (`virtual:styleframe`,
+  `virtual:styleframe.css`) is public API — changing it breaks every consumer.
+- Plugin changes touching resolution, HMR, or output need the Playwright e2e suite in
+  `testing/integration/` (`pnpm test:integration` — builds and drives a real Vite consumer
+  app) on top of the unit tests in `tooling/plugin/test/`.
+- CLI (`tooling/cli`) errors must tell the user how to recover, not just what failed.
+- Figma sync (`tooling/figma`) and `tooling/dtcg` speak DTCG (Design Token Community
+  Group) JSON; keep import/export round-trip safe — a token exported then imported must
+  survive unchanged.
+- Tests: `tooling/plugin` and `tooling/dtcg` use a `test/` directory; `tooling/cli` and
+  `tooling/figma` colocate `<file>.test.ts` next to source.
 
-- Entry: `tooling/plugin/src/index.ts`
-- Virtual module resolution: `tooling/plugin/src/virtual-modules.ts`
-- Plugin factory: `tooling/plugin/src/plugin.ts`
-- Bundler adapters: `tooling/plugin/src/vite.ts`, `tooling/plugin/src/webpack.ts`, etc.
-- Use unplugin for cross-bundler compatibility
-- Virtual modules: `virtual:styleframe` and `virtual:styleframe.css`
-- HMR must preserve component state when possible
-- Tests: `testing/integration/` (integration tests with real bundlers)
-- See `tooling/plugin/AGENTS.md` for plugin API
-
-## CLI (`tooling/cli/`)
-
-- Use commander for CLI interface
-- Commands: `init`, `build`, `dtcg export`, `dtcg import`
-- Always provide helpful error messages with recovery suggestions
-- See `tooling/cli/AGENTS.md` for CLI architecture
-
-## Figma Plugin (`tooling/figma/`)
-
-- DTCG format for variable sync (Design Token Community Group)
-- Bidirectional sync: Figma ↔ Styleframe
-- Preserve token relationships during sync
-- See `tooling/figma/AGENTS.md` for sync flow
-
-## Testing
-
-- Integration tests for build output verification
-- Test across multiple bundlers (Vite, Webpack, Nuxt, Astro)
-- Verify virtual module resolution works correctly
+Layout and how-tos: see the `AGENTS.md` in each tooling package.

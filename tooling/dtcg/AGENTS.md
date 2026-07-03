@@ -1,155 +1,68 @@
 # @styleframe/dtcg
 
-Spec-conformant parser, validator, and serializer for the W3C Design Tokens Community Group format.
+Spec-conformant parser, validator, and resolver for the W3C Design Tokens Community Group format — Format, Color, and Resolver modules, all at the 2025.10 report level. Published to npm; sole runtime dependency is `culori` (color math). It is deliberately Styleframe-agnostic: no filesystem, no DOM, no `@styleframe/core` import. Bridging DTCG documents to and from the Styleframe AST is the consumer's job — [`@styleframe/figma`](../figma/AGENTS.md) and the CLI's `styleframe dtcg` commands ([`tooling/cli/src/commands/dtcg/`](../cli/src/commands/dtcg/)) do that.
 
-## When to use
+User-facing overview: [`README.md`](./README.md).
 
-- Importing `.tokens.json` documents from third-party tools (Tokens Studio, Style Dictionary v4+, Specify, Figma plugins)
-- Exporting Styleframe tokens to a portable, spec-conformant format
-- Resolving multi-mode token bundles using the Resolver Module's `sets`/`modifiers`/`resolutionOrder`
-- Validating DTCG JSON before consuming it
+## Layout
 
-## Architecture
-
-The package is organised by spec concern, not by direction. Each module handles one slice of the spec:
+Modules are organised by spec concern, not by conversion direction. Everything public is re-exported from [`src/index.ts`](./src/index.ts) — read it first; it is the authoritative API list.
 
 ```
 src/
-  types/         — type definitions for the entire DTCG schema
-  guards/        — runtime type guards for tokens, groups, values
-  parse/         — JSON → typed AST + iteration helpers
-  alias/         — {a.b} parsing, transitive resolution, cycle detection
-  inheritance/   — propagate $type and $deprecated through groups
-  color/         — 14 color spaces + parse/format/convert via culori
-  dimension/     — {value, unit} ↔ "16px"
-  duration/      — {value, unit} ↔ "100ms"
-  composite/     — border, strokeStyle, transition, shadow, gradient, typography
-  extensions/    — reverse-DNS namespace validation
-  resolver/      — Resolver Module: parse, validate, resolve
-  validate/      — full document validation
+├── index.ts        # Public API barrel
+├── types/          # The full DTCG schema as TypeScript types
+├── guards/         # Runtime type guards (isToken, isGroup, isColorValue, …)
+├── parse/          # parse() (string|unknown → DTCGDocument), walk() iterator, error classes
+├── validate/       # validate() / validateResolver() → ValidationError[]
+├── alias/          # {a.b} parse/format, path helpers, resolveAliases(), lookupToken()
+├── inheritance/    # applyInheritance() — propagate $type/$deprecated through groups
+├── classify/       # classifyValue(): raw value + path hint → DTCG type
+├── color/          # 14 color spaces; parse/format/convert via culori
+├── dimension/      # {value, unit} ↔ "16px"
+├── duration/       # {value, unit} ↔ "100ms"
+├── composite/      # border, gradient, shadow, strokeStyle, transition, typography
+├── extensions/     # isValidNamespace() — reverse-DNS $extensions keys
+└── resolver/       # Resolver Module: parseResolver(), resolve(), mergeDocuments()
+test/               # Vitest tests mirroring src/, plus test/fixtures/ (spec-example
+                    # .tokens.json / .resolver.json exercised by spec-fixtures.test.ts)
 ```
 
-Bridging into a Styleframe AST is the consumer's responsibility (see `@styleframe/figma`).
+## Concepts
 
-## Public API
+**Parse, validate, and resolve are separate steps.** `parse()` throws `ParseError` on invalid JSON or a non-object root; it does not enforce the spec. `validate()` returns a `ValidationError[]` (it never throws). `resolveAliases()` and `applyInheritance()` return new documents — inputs are never mutated.
 
-### Document parsing
+**`classifyValue()` is the single source of truth for type inference.** Given a raw value and an optional `path` hint, it returns `{ type, value }` or `undefined` (caller decides). Value-shape detection runs first; the path disambiguates ambiguous cases (a bare `700` could be a fontWeight, number, or duration — only a path like `font-weight.bold` can decide). Both the CLI's DTCG export ([`build-dtcg.ts`](../cli/src/commands/dtcg/build-dtcg.ts)) and the Figma bridge ([`figma-bridge.ts`](../figma/src/converters/dtcg/figma-bridge.ts)) route through it — if you change classification behavior, you change both export paths.
 
-```ts
-import { parse, parseResolver } from "@styleframe/dtcg";
+**The resolver never touches the filesystem.** `resolve(resolverDoc, inputs, fileLoader)` takes a caller-supplied async `fileLoader(ref)` to satisfy `$ref`s, which is what lets the same code run in Node (CLI) and inside the Figma plugin sandbox.
 
-const tokenDoc = parse(jsonString);            // throws ParseError on invalid JSON / shape
-const resolverDoc = parseResolver(jsonString); // for .resolver.json files
+**Typed errors** (all in [`src/parse/errors.ts`](./src/parse/errors.ts)): `ParseError`, `ValidationError` (carries `path`, `expected`, `received`), `CircularReferenceError` (carries `cycle`), `UnknownReferenceError` (carries `path`, `target`).
+
+## How to add support for a new token type
+
+1. Add the value type in [`src/types/`](./src/types/) and re-export from [`src/types/index.ts`](./src/types/index.ts).
+2. Add a guard in [`src/guards/values.ts`](./src/guards/values.ts) and wire it into [`src/validate/document.ts`](./src/validate/document.ts).
+3. If the value is inferable from raw JSON, teach [`src/classify/classify.ts`](./src/classify/classify.ts) about it.
+4. Mirror each new file with a test under `test/`, and add a spec-example fixture in [`test/fixtures/`](./test/fixtures/) if the spec provides one.
+
+## Build & test
+
+```bash
+pnpm build       # tsdown → dist/index.js + dist/index.d.ts (ESM only)
+pnpm test        # vitest run — tests live in test/, NOT colocated with src
+pnpm typecheck   # tsc --noEmit
 ```
 
-### Validation
+[`tsdown.config.ts`](./tsdown.config.ts) pins `fixedExtension: false` so output stays `.js`/`.d.ts` matching the `exports` map — don't remove it. Coverage ([`vitest.config.ts`](./vitest.config.ts)) excludes barrel `index.ts` files and `types/`.
 
-```ts
-import { validate, validateResolver } from "@styleframe/dtcg";
+## Pitfalls
 
-const errors = validate(tokenDoc); // ValidationError[]
-```
+- **`resolveAliases()` is lenient by default.** Missing alias targets are left as-is unless you pass `{ strict: true }`, which upgrades them to `UnknownReferenceError`. Cycles always throw `CircularReferenceError`.
+- **`parse()` succeeding does not mean the document is valid.** Consumers that skip `validate()` will happily walk spec-violating documents.
+- **Aliases have no inherent type.** `classifyValue("{color.primary}")` returns `undefined` by design; the consumer must stamp the type from the target token.
 
-### Aliases
+## See also
 
-```ts
-import { isAlias, parseAlias, formatAlias, resolveAliases } from "@styleframe/dtcg";
-
-isAlias("{color.primary}");        // → true
-parseAlias("{color.primary}");     // → "color.primary"
-formatAlias("color.primary");      // → "{color.primary}"
-
-// Transitive — A → B → C all flattened. Throws CircularReferenceError on cycles.
-const resolved = resolveAliases(tokenDoc);
-```
-
-### Inheritance
-
-```ts
-import { applyInheritance } from "@styleframe/dtcg";
-
-// Returns a new document where every token has its effective $type and $deprecated.
-const inherited = applyInheritance(tokenDoc);
-```
-
-### Resolver Module
-
-```ts
-import { resolveResolver } from "@styleframe/dtcg";
-
-const resolved = await resolveResolver(resolverDoc, { theme: "dark" }, async (ref) => {
-  // user-supplied loader: ref → JSON
-  return JSON.parse(await fs.readFile(ref, "utf8"));
-});
-```
-
-### Per-type helpers
-
-```ts
-import { color, dimension, duration, composite } from "@styleframe/dtcg";
-
-color.parse("#ff0000");                              // → DTCGColor
-color.format({ colorSpace: "srgb", components: [1, 0, 0] }); // → "#ff0000"
-color.convert(myColor, "oklch");
-
-dimension.parse("16px");                             // → { value: 16, unit: "px" }
-dimension.format({ value: 16, unit: "px" });        // → "16px"
-
-duration.parse("100ms");
-composite.border.parse(...);
-```
-
-### Classification (value + path → DTCG type)
-
-```ts
-import { classifyValue, easingKeywordToBezier, parseCubicBezier } from "@styleframe/dtcg";
-
-classifyValue("#ff0000");
-// → { type: "color", value: { colorSpace: "srgb", components: [1, 0, 0] } }
-
-classifyValue(200, { path: "duration.fast" });
-// → { type: "duration", value: 200 }   // path tiebreaker decides
-
-classifyValue("ease-in", { path: "easing.ease-in" });
-// → { type: "cubicBezier", value: [0.42, 0, 1, 1] }
-
-classifyValue("Inter", { path: "font-family.body" });
-// → { type: "fontFamily", value: "Inter" }
-
-classifyValue("frosted");                      // → undefined (caller decides)
-classifyValue("{color.primary}");              // → undefined (alias has no inherent type)
-```
-
-`classifyValue` is the single source of truth for "what DTCG type does this value have?" used by both the Styleframe CLI and the Figma plugin's export path. Value detection runs first; the optional `path` hint disambiguates ambiguous cases (e.g. a numeric `700` could be a fontWeight, a unitless number, or a duration in ms — only the path can decide).
-
-## Round-trip lossiness contract
-
-DTCG sits between richer source models (Styleframe AST) and simpler consumer models (Figma's flat variable system). Conversions in either direction lose information at well-defined points. Tools should make these losses explicit to users.
-
-| Direction | Survives | Lost or transformed |
-|---|---|---|
-| **Styleframe → DTCG** (via `@styleframe/cli`) | Primitives, `ref()` calls (as DTCG aliases), pure-arithmetic computed expressions (resolved to concrete values), themes (as resolver modifier contexts) | Computed expressions involving CSS-only constructs (`clamp()`, `vw`, `calc()` with non-numeric refs) emit a `dev.styleframe.expression` extension instead of a typed token; booleans skipped (DTCG has no boolean) |
-| **DTCG → Figma** (via `@styleframe/figma` plugin import) | color, dimension, duration (FLOAT), cubicBezier (STRING), fontFamily (STRING), fontWeight (FLOAT), strokeStyle (STRING), aliases | Composite types (border, shadow, gradient, typography) skipped — Figma has no native equivalent; wide-gamut colors converted to sRGB |
-| **Figma → DTCG** (via plugin export) | Path-disambiguated types: `duration/*` → duration, `font-weight/*` → fontWeight, `easing/*` → cubicBezier, `font-family/*` → fontFamily, `border-style/*` → strokeStyle | Booleans skipped; STRING values whose name gives no hint are emitted with a `dev.styleframe.unknownType` extension and no `$type` |
-| **Round-trip** Styleframe → Figma → Styleframe | color, dimension, duration, fontFamily, fontWeight, strokeStyle | Computed expressions are pre-evaluated and become primitives (one-way); composite types vanish on the Figma leg |
-
-## Errors
-
-All errors are typed:
-
-- `ParseError` — invalid JSON or shape
-- `ValidationError` — spec violation (carries `path`, `message`, `expected`/`received`)
-- `CircularReferenceError` — alias cycle (carries `cycle: string[]`)
-- `UnknownReferenceError` — alias points at non-existent token (carries `path`, `target`)
-
-## What this package does NOT do
-
-- It does not bridge to or from any framework AST. Styleframe-specific bridging lives in `@styleframe/figma` and (future) `@styleframe/cli`.
-- It does not read files. The Resolver Module's `resolve` takes a `fileLoader` callback so the package stays runtime-agnostic.
-- It does not perform CSS color gamut mapping unless explicitly requested via `color.convert`.
-
-## Spec references
-
-- Format Module 2025.10 — file structure, token types, aliases, inheritance, extensions
-- Color Module 2025.10 — `colorSpace`, `components`, `alpha`, `hex`, `none` keyword
-- Resolver Module 2025.10 — sets, modifiers, resolution algorithm
+- [`README.md`](./README.md) — features, install, usage.
+- [`../figma/AGENTS.md`](../figma/AGENTS.md) — the main consumer; DTCG ↔ Figma bridging and its lossiness rules.
+- [`../cli/src/commands/dtcg/`](../cli/src/commands/dtcg/) — `styleframe dtcg export|import`, built on this package.

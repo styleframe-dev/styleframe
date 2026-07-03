@@ -138,7 +138,7 @@ included in the project:
 
    The CLI will prompt you to select which packages are affected, the semver bump type (patch, minor, or major), and a short summary of the change. This creates a `.changeset/<random-name>.md` file that should be committed with your PR.
 
-   You can skip this step if your change only affects non-publishable packages (docs, storybook, app, playground, or integration tests).
+   You can skip this step if your change only affects non-publishable packages (docs, storybook, app, playground, benchmarks, or integration tests).
 
 6. Locally rebase the upstream main branch into your topic branch:
 
@@ -156,7 +156,7 @@ included in the project:
     with a clear title and description against the `main` branch.
 
 **Important!** By submitting a patch, you agree to allow the project owners to
-license your work under the terms of the [MIT License](LICENSE).
+license your work under the terms of the [MIT License](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE).
 
 ## Code guidelines
 
@@ -167,7 +167,7 @@ Adhere to the linting guidelines and the conventions documented in [AGENTS.md](A
 - Use strict TypeScript — no `any`, use `unknown` with type guards instead
 - Prefer functional programming patterns over classes in engine packages
 - Use `ref()` for variable references, never hardcode token values
-- Import from `'styleframe'` barrel package, not `@styleframe/*` sub-packages
+- Import from the `'styleframe'` barrel package where possible (theme composables are the exception — they come from `@styleframe/theme`)
 - All exports must have explicit TypeScript types
 
 ### Formatting
@@ -190,7 +190,7 @@ Linting is handled by [Oxlint](https://oxc.rs/docs/guide/usage/linter).
 
 1. First, fork the repository and create a branch as specified in the [Pull Request Guidelines](#pull-requests) above.
 
-2. You'll find a well-structured [pnpm](https://pnpm.io) monorepo powered by [Turbo](https://turbo.build). The project requires **Node.js >= 22.0.0** and **pnpm 10.20.0+**. Enable pnpm via Corepack:
+2. You'll find a well-structured [pnpm](https://pnpm.io) monorepo powered by [Turbo](https://turbo.build). The project requires **Node.js >= 22.0.0** and **pnpm >= 10.7.1** (pnpm 10.20.0 is pinned via the `packageManager` field). Enable pnpm via Corepack:
 
    ```bash
    corepack enable && corepack prepare
@@ -211,9 +211,13 @@ Linting is handled by [Oxlint](https://oxc.rs/docs/guide/usage/linter).
    | `tooling/cli` | `@styleframe/cli` | CLI for init, build, and DTCG sync |
    | `tooling/figma` | `@styleframe/figma` | Figma variable sync |
    | `tooling/dtcg` | `@styleframe/dtcg` | W3C DTCG format support |
-   | `testing/integration` | — | Playwright end-to-end tests |
+   | `testing/integration` | — | Playwright e2e tests against a real Vite consumer app |
+   | `testing/benchmark` | — | Performance benchmarks |
    | `apps/docs` | — | Documentation site (Nuxt Content) |
    | `apps/storybook` | — | Storybook design system showcase |
+   | `apps/playground` | — | Development playground |
+   | `apps/app` | — | Customer dashboard |
+   | `apps/shared` | `@styleframe/app-shared` | Shared Nuxt layer for the apps |
 
    For detailed architecture and per-package conventions, see [`AGENTS.md`](AGENTS.md).
 
@@ -232,6 +236,7 @@ Linting is handled by [Oxlint](https://oxc.rs/docs/guide/usage/linter).
    pnpm dev             # Watch mode for all packages
    pnpm dev:docs        # Documentation + Storybook only
    pnpm dev:playground  # Playground only
+   pnpm storybook       # Storybook only
    ```
 
 7. To test, run `pnpm test` to run all unit tests. You can also run tests for a specific package:
@@ -239,7 +244,7 @@ Linting is handled by [Oxlint](https://oxc.rs/docs/guide/usage/linter).
    ```bash
    pnpm test                              # All unit tests
    pnpm --filter @styleframe/core test    # Single package
-   pnpm test:integration                  # Playwright end-to-end tests
+   pnpm test:integration                  # Playwright e2e tests (real Vite consumer app)
    pnpm typecheck                         # TypeScript type checking
    ```
 
@@ -247,4 +252,4 @@ Linting is handled by [Oxlint](https://oxc.rs/docs/guide/usage/linter).
 
 ## License
 
-By contributing your code, you agree to license your contribution under the [MIT License](https://github.com/styleframe-dev/styleframe/tree/main/LICENSE).
+By contributing your code, you agree to license your contribution under the [MIT License](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE).

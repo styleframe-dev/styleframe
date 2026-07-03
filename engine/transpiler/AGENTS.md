@@ -1,285 +1,69 @@
 # @styleframe/transpiler
 
-Code generation engine that converts a `Styleframe` instance (from `@styleframe/core`) into compiled output files: CSS stylesheets, TypeScript runtime code, and TypeScript declaration files. It transforms the token-based AST into consumable string output using three independent consumer pipelines.
+The codegen stage of the Styleframe engine. Takes a compiled `Styleframe` instance (the token AST from [`@styleframe/core`](../core/AGENTS.md)) and emits strings: a CSS stylesheet, TypeScript runtime code for recipes and exported selectors, and `.d.ts` declarations for the virtual modules. It is pure string generation — no file I/O, no caching. Writing to disk is [`@styleframe/loader`](../loader/AGENTS.md)'s `build()`; the main callers are the build plugin ([`tooling/plugin`](../../tooling/plugin/AGENTS.md)), the CLI, and the loader. Published to npm; end users reach it via the `styleframe/transpiler` barrel subpath.
 
-## When to Use This Package
-
-- Transpile a `Styleframe` instance into CSS, TypeScript, and/or `.d.ts` output
-- Generate CSS from variables, selectors, utilities, themes, at-rules, and keyframes
-- Generate TypeScript runtime code for recipes and exported selectors
-- Generate TypeScript declaration files for virtual module type support
-- Customize output with custom consumer functions or naming conventions
-
-## Installation
-
-```ts
-import {
-  transpile,
-  createFile,
-  consumeCSS,
-  consumeTS,
-  DEFAULT_INDENT,
-  STATEMENT_AT_RULES,
-  STATEMENT_OR_BLOCK_AT_RULES,
-  defaultThemeSelectorFn,
-  defaultVariableNameFn,
-  defaultUtilitySelectorFn,
-} from "@styleframe/transpiler";
-```
-
-**Peer dependencies:** `@styleframe/core`, `@styleframe/license`
-**Dependencies:** `scule` (case conversion utilities)
-
-## Architecture
-
-### Three Output Pipelines
-
-The transpiler uses a **consumer pattern** with three independent pipelines:
-
-| Pipeline | Output File | Purpose |
-|----------|-------------|---------|
-| **CSS** | `index.css` | Full stylesheet with variables, selectors, utilities, themes, at-rules |
-| **TS** | `index.ts` | Runtime recipe functions and exported selector constants |
-| **DTS** | `styleframe.d.ts`, `shims.d.ts` | Type declarations for the virtual modules (`virtual:styleframe`, `virtual:styleframe.css`) |
-
-### Consumer Pipeline Flow
-
-Each pipeline uses factory functions that create consumers for specific AST token types:
-
-1. **Root consumer** — Entry point, dispatches to child consumers
-2. **Token consumers** — Handle specific types (Variable, Selector, Utility, Theme, AtRule, Recipe)
-3. **Generator functions** — Construct raw CSS/TS syntax strings
-
-### CSS Generation Flow
+## Layout
 
 ```
-Styleframe root
-  → Root consumer (variables, selectors, utilities, themes, at-rules)
-    → :root { variables }
-    → selector rules
-    → utility classes
-    → @keyframes, @media, @supports blocks
-    → [data-theme="name"] { overrides }
+src/
+├── index.ts        # Barrel — re-exports constants, defaults, consumeCSS/consumeTS,
+│                   # DTS filenames, minify, transpile, types, utils
+├── transpile.ts    # transpile(instance, options) + createFile — the entry point
+├── types.ts        # Output, OutputFile, ConsumeFunction, TranspileContext, TranspileOptions
+├── constants.ts    # DEFAULT_INDENT ("\t"), STATEMENT_AT_RULES, STATEMENT_OR_BLOCK_AT_RULES
+├── defaults.ts     # defaultThemeSelectorFn, defaultVariableNameFn (dot → "--")
+├── license.ts      # addLicenseWatermark — injects a watermark selector into the AST
+├── utils.ts        # Indent helpers + scule-backed case conversion
+├── generator/      # Raw CSS syntax builders: genSelector, genDeclaration, genDeclareVariable, …
+├── consume/
+│   ├── css/        # Token → CSS. consume.ts is the dispatcher; one consumer per token type
+│   ├── ts/         # Token → runtime TS (createRecipe calls + exported selector consts)
+│   └── dts/        # Token → styleframe.d.ts + shims.d.ts (constants + rationale in constants.ts)
+└── minify/         # Utility class-name shortening (generateShorteningMap, shortenUtilityOptions)
 ```
 
-### TS Generation Flow
+## The consumer pattern
 
-```
-Styleframe root
-  → Root consumer (recipes, selectors)
-    → import { createRecipe } from '@styleframe/runtime'
-    → const recipeRuntime = { base, variants, ... } as const satisfies RecipeRuntime
-    → export const recipe = createRecipe("name", recipeRuntime)
-    → export const selectorName = ".query"
-```
+Every pipeline is a `ConsumeFunction`: `(instance, options, context?) => string` ([`src/types.ts`](./src/types.ts)). For CSS, [`consume/css/consume.ts`](./src/consume/css/consume.ts) is the dispatcher — a type-guard switch routing each token to a consumer built by a factory (`createSelectorConsumer(consume)`, …). Factories receive the top-level `consume` back, so consumers recurse into children. If core gains a new token type, you must add a consumer and a dispatcher case here — unhandled tokens fall through to the primitive consumer and produce silently wrong CSS instead of an error.
 
-### DTS Generation Flow
+## What `transpile()` emits
 
-The `dts` mode emits the same typed exports in two complementary forms:
+[`transpile(instance, options)`](./src/transpile.ts), by `options.type`:
 
-```
-styleframe.d.ts  (Root consumer — top-level exports)
-  → export function styleframe(): Styleframe
-  → Recipe function types with variant props
-  → Selector string types
+| `type`          | Files                                                    |
+| --------------- | -------------------------------------------------------- |
+| `"css"`         | `index.css`                                              |
+| `"ts"`          | `index.ts`                                               |
+| `"dts"`         | `styleframe.d.ts` + `shims.d.ts`                         |
+| `"all"` (default) | `index.css` + `index.ts` — **dts is not part of `"all"`** |
 
-shims.d.ts  (generateShims — self-contained ambient declarations)
-  → declare module "virtual:styleframe" { …full typed exports… }
-  → declare module "virtual:styleframe.css" { const css: string; export default css }
-```
+Other options: `treeshake` (drop variables absent from `instance._usage.variables`; combined with `scanner: true` also drops unused utilities), and `minify`/`minifyOptions` (build a `ShorteningMap` via [`src/minify/`](./src/minify/), shorten utility class names in the CSS, and embed the map in the TS output so the runtime shortens the same way).
 
-Non-Vue consumers resolve both virtual modules from `shims.d.ts` alone (picked
-up via `.styleframe/**/*.d.ts` includes) with zero `paths` configuration. Vue
-consumers additionally map `virtual:styleframe` to `styleframe.d.ts` via a
-`compilerOptions.paths` entry (`styleframe init` writes it for Vue projects; the
-Nuxt module injects it via `prepare:types`), because `vue-tsc` won't resolve a
-bare-specifier ambient module imported inside a `.vue` SFC.
+**TS/DTS emission is driven by loader metadata.** Recipes come from `instance.recipes` (filtered to `_usage.recipes` when non-empty). Selectors are emitted only when `_exportName` is set — which the loader's `trackExports` does at load time. An instance that wasn't loaded through `@styleframe/loader` produces no selector exports.
 
-## API Reference
+**The two DTS files describe the same exports in two forms** — `styleframe.d.ts` (top-level exports, mapped to `virtual:styleframe` via `compilerOptions.paths` for Vue/`vue-tsc`) and `shims.d.ts` (self-contained `declare module` ambient shims that non-Vue consumers pick up with zero config). The full rationale lives in [`src/consume/dts/constants.ts`](./src/consume/dts/constants.ts).
 
-### `transpile(instance, options?)`
+**License watermark:** if `isInstanceLicenseRequired(instance)` and validation fails, `addLicenseWatermark` ([`src/license.ts`](./src/license.ts)) pushes a fixed-position "Development Mode" selector into the AST before CSS emission.
 
-Main transpilation function. Converts a `Styleframe` instance into output files.
+## Build & test
 
-```ts
-import { transpile } from '@styleframe/transpiler';
-
-const output = await transpile(instance);
-// output.files: [{ name: "index.css", content: "..." }, { name: "index.ts", content: "..." }]
-// transpile(instance, { type: "dts" }) → [{ name: "styleframe.d.ts" }, { name: "shims.d.ts" }]
-
-// Generate only CSS
-const cssOnly = await transpile(instance, { type: 'css' });
-
-// Custom consumers
-const custom = await transpile(instance, {
-  consumers: { css: customCSSConsumer, ts: customTSConsumer, dts: customDTSConsumer },
-});
+```bash
+pnpm --filter @styleframe/transpiler build   # tsc --noEmit && vite build
+pnpm --filter @styleframe/transpiler test    # vitest run
 ```
 
-**Parameters:**
+Tests are colocated as `<file>.test.ts` next to source under `src/` — there is no separate `test/` directory in this package.
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `instance` | `Styleframe` | Compiled Styleframe instance with root AST |
-| `options.type` | `"css" \| "ts" \| "dts" \| "all"` | Output type (default: `"all"`) |
-| `options.consumers` | `{ css, ts, dts }` | Override default consumer functions |
+## Pitfalls
 
-**Returns:** `Promise<Output>` — `{ files: OutputFile[] }` where each file has `name` and `content` strings.
+- **`type: "all"` does not emit declaration files.** The plugin makes a separate `transpile(instance, { type: "dts" })` call ([`tooling/plugin/src/plugin/generate/dts.ts`](../../tooling/plugin/src/plugin/generate/dts.ts)). If you add output to one mode, check whether the other callers need it.
+- **`defaultThemeSelectorFn` emits `.name-theme, [data-theme="name"]`** — both a class and an attribute selector ([`src/defaults.ts`](./src/defaults.ts)). Tests or docs asserting only `[data-theme]` are out of date.
+- **New token types fail silently.** See "The consumer pattern" — the primitive fallback means missing dispatcher cases don't throw.
+- **`ConsumeFunction` takes a third `context` argument** (`TranspileContext`: treeshake/scanner/shortMap). Custom consumers passed via `options.consumers` that ignore it will break treeshaking and minification.
 
-**License validation:** Checks if the instance requires a license. If invalid, injects a watermark pseudo-element into the CSS output.
+## See also
 
----
-
-### `createFile(name, content?)`
-
-Factory for creating output file objects.
-
-```ts
-const file = createFile('index.css', 'body { margin: 0; }');
-// { name: "index.css", content: "body { margin: 0; }" }
-
-const empty = createFile('index.css');
-// { name: "index.css", content: "" }
-```
-
----
-
-### `consumeCSS(instance, options)`
-
-CSS consumer function. Converts a Styleframe instance into a CSS string.
-
-```ts
-import { consumeCSS } from '@styleframe/transpiler';
-
-const css = consumeCSS(instance, instance.options);
-```
-
-Handles all token types: variables (as CSS custom properties in `:root`), selectors, utilities, themes (scoped to `[data-theme="name"]`), at-rules, and keyframes.
-
----
-
-### `consumeTS(instance, options)`
-
-TypeScript consumer function. Generates runtime code for recipes and exported selectors.
-
-```ts
-import { consumeTS } from '@styleframe/transpiler';
-
-const ts = consumeTS(instance, instance.options);
-```
-
-Only processes tokens with `_exportName` metadata (set by `@styleframe/loader`'s `trackExports`).
-
----
-
-### Generator Functions
-
-Low-level CSS syntax generation helpers used by the consumers.
-
-| Function | Purpose | Example Output |
-|----------|---------|----------------|
-| `genSafeVariableName(name)` | Sanitize variable names for CSS | `--color-primary` |
-| `genSafePropertyName(name)` | Convert camelCase to kebab-case | `border-width` |
-| `genReferenceVariable(name, fallback?)` | Create CSS variable reference | `var(--color-primary, fallback)` |
-| `genDeclareVariable(name, value)` | Declare a CSS variable | `--color-primary: value;` |
-| `genDeclaration(property, value)` | Create a CSS declaration | `padding: 1rem;` |
-| `genDeclarationsBlock(declarations)` | Wrap declarations in `{ ... }` | `{\n\tdeclaration;\n}` |
-| `genSelector(query, declarations)` | Create a CSS rule | `.class { ... }` |
-| `genAtRuleQuery(identifier, rule)` | Create at-rule prefix | `@media (min-width: 768px)` |
-| `genInlineAtRule(identifier, rule)` | Create statement at-rule | `@charset "utf-8";` |
-
----
-
-### Utility Functions
-
-| Function | Description |
-|----------|-------------|
-| `addIndentToLine(line)` | Add default indent (tab) to a line |
-| `indentLines(lines)` | Indent each line in an array |
-| `toCamelCase(str)` | Convert string to camelCase (via `scule`) |
-| `toKebabCase(str)` | Convert string to kebab-case (via `scule`) |
-| `isUppercase(char)` | Check if a character is uppercase |
-
----
-
-### Constants
-
-| Constant | Value | Description |
-|----------|-------|-------------|
-| `DEFAULT_INDENT` | `"\t"` | Default indentation character |
-| `STATEMENT_AT_RULES` | `["charset", "import", "namespace"]` | At-rules that output as statements (no block) |
-| `STATEMENT_OR_BLOCK_AT_RULES` | `["layer"]` | At-rules that can be statement or block |
-
----
-
-### Default Functions
-
-| Function | Description |
-|----------|-------------|
-| `defaultThemeSelectorFn` | Returns `[data-theme="name"]` for a given theme name |
-| `defaultVariableNameFn` | Converts dot-notation to double-dash: `color.primary` → `color--primary` |
-| `defaultUtilitySelectorFn` | Re-exported from `@styleframe/core` |
-
-## Types
-
-```ts
-type OutputFile = { name: string; content: string };
-type Output = { files: OutputFile[] };
-type ConsumeFunction = (instance: unknown, options: StyleframeOptions) => string;
-type TranspileOptions = {
-  type?: "css" | "ts" | "dts" | "all";
-  consumers?: {
-    css: ConsumeFunction;
-    ts: ConsumeFunction;
-    dts: ConsumeFunction;
-  };
-};
-```
-
-## At-Rule Handling
-
-The CSS consumer categorizes at-rules into two groups:
-
-- **Statement at-rules** (`@charset`, `@import`, `@namespace`) — Output as `@rule value;` with no block
-- **Block at-rules** (`@media`, `@supports`, `@layer`, `@container`, `@font-face`, `@keyframes`, `@property`) — Output as `@rule { children }` with nested declarations
-
-`@layer` can be either statement or block depending on whether it has children.
-
-## Edge Cases
-
-- **Empty instance:** Produces minimal output with empty `:root {}` or empty files
-- **License watermark:** Invalid license injects a fixed-position pseudo-element via `html:nth-of-type(random)::after` displaying a development mode notice
-- **Recipes in CSS:** Recipes are not output in CSS — they only generate TS and DTS output
-- **Export metadata:** Only tokens with `_exportName` metadata (set by `@styleframe/loader`) appear in TS/DTS output
-- **Nested selectors:** The CSS consumer handles `&:hover`, `.child`, nested `@media`, and nested `@supports` via declaration object keys
-
-## Best Practices
-
-1. **Use `transpile()` as the primary entry point** — It handles license validation, file creation, and consumer dispatch. Use individual consumers only for custom pipelines.
-
-2. **Use `type` option to generate only what you need** — Pass `"css"` for stylesheet-only builds. Generating all three types when you only need CSS wastes computation.
-
-3. **Custom consumers must return strings** — If overriding consumers via options, each must accept `(instance, options)` and return a CSS/TS/DTS string.
-
-4. **Generator functions are composable** — Use `genSelector`, `genDeclaration`, etc. to build custom CSS output if extending the consumer pipeline.
-
-5. **The transpiler is pure string generation** — No file I/O, no caching. The `@styleframe/loader` package handles persistence to disk via its `build()` function.
-
-6. **Default indent is tab** — All generated output uses `\t` indentation. Override via instance options if needed.
-
-## Source Files
-
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Re-exports all public API |
-| `src/transpile.ts` | Main `transpile()` function |
-| `src/types.ts` | Output and consumer types |
-| `src/constants.ts` | At-rule categorization constants |
-| `src/defaults.ts` | Default naming functions |
-| `src/utils.ts` | String manipulation helpers |
-| `src/license.ts` | License watermark injection |
-| `src/generator/*.ts` | CSS syntax generation (9 files) |
-| `src/consume/css/*.ts` | CSS output consumers (13 files) |
-| `src/consume/ts/*.ts` | TypeScript output consumers (4 files) |
-| `src/consume/dts/*.ts` | TypeScript declaration consumers (4 files) |
+- [`engine/core/AGENTS.md`](../core/AGENTS.md) — the token AST this package consumes.
+- [`engine/loader/AGENTS.md`](../loader/AGENTS.md) — sets `_exportName`, calls `transpile()` from `build()`.
+- [`engine/runtime/AGENTS.md`](../runtime/AGENTS.md) — `createRecipe`, imported by the generated TS.
+- [`tooling/plugin/AGENTS.md`](../../tooling/plugin/AGENTS.md) — how CSS/TS/DTS outputs back the virtual modules.

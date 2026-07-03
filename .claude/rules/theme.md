@@ -1,33 +1,21 @@
-# Theme Package Rules
+# Theme Rules
 
 **Scope:** `theme/**/*`
 
-## Composable Conventions
+- Composables take the `Styleframe` instance as first parameter and are named
+  `use<Context>DesignTokens` / `use<Context>Modifiers` / `use<Context>Utilities` /
+  `use<Context>Recipe`. They return an object of typed tokens.
+- Every variable created inside a composable passes `{ default: true }` so user-supplied
+  values override preset defaults.
+- Semantic token names, never appearance names: `color.primary`, not `color.blue`.
+  Reference tokens with `ref(token)` or the `"@color.primary"` string shorthand — never
+  hardcode a value that should be a token.
+- Recipes live one-directory-per-recipe at `theme/src/recipes/<name>/` with a barrel
+  `index.ts`, re-exported from `theme/src/recipes/index.ts`. Always define `base`,
+  `variants`, and `defaultVariants`. Tests are colocated in the recipe's directory.
+- A new or changed recipe also needs: a Storybook showcase (`apps/storybook`), a docs page
+  (`apps/docs/content/docs/`), and a changeset. The `/create-recipe` skill chain automates
+  the full flow — prefer it for new recipes.
 
-- All composables must accept `Styleframe` instance as first parameter
-- All variables in composables must use `{ default: true }` option
-- Return destructured objects with typed token exports
-- Naming: `use<Context>Variables`, `use<Context>Utilities`, `use<Context>Recipe`
-
-## Design Tokens
-
-- Use semantic names, not appearance-based: `color.primary` not `color.blue`
-- Reference tokens with `ref()` or `@` prefix: `ref(colorPrimary)` or `"@color.primary"`
-- Scale-based spacing: use `useScalePowersDesignTokens` for consistent spacing
-- All token values should be customizable via composable parameters
-
-## Recipes
-
-- Recipe implementations: `theme/src/recipes/` (e.g., `theme/src/recipes/button.ts`, `theme/src/recipes/badge.ts`)
-- Recipe entry point: `theme/src/recipes/index.ts`
-- Always include base styles, variants, and defaultVariants
-- Use compound variants for complex interactions
-- Test recipes: `theme/test/recipes/`
-- Document recipes: `apps/docs/content/docs/recipes/`
-- Showcase in Storybook: `apps/storybook/src/stories/recipes/` (e.g., `apps/storybook/src/stories/recipes/Button.stories.ts`)
-
-## Testing
-
-- Test composables return correct token structure
-- Verify CSS output matches expectations
-- Test token references resolve correctly
+Layout, the composable catalog, and how-tos: see `theme/AGENTS.md` and
+`.claude/styleframe-tokens.md` / `.claude/styleframe-recipes.md`.

@@ -1,143 +1,52 @@
 # styleframe
 
-The unified entry point for Styleframe — a type-safe, composable CSS-in-TypeScript framework for building design systems. This package re-exports all core APIs, plugins, CLI, loader, and transpiler from their respective `@styleframe/*` packages under a single `styleframe` import.
+The published entry point users install. A pure barrel: every source file is a one-line re-export of an `@styleframe/*` engine package, plus the `styleframe` bin. No implementation lives here — if you came to change behavior, go to the sub-package and come back only to wire up a new entry point.
 
-## When to Use This Package
+This package is why the repo-wide import rule exists: consumers write `import { styleframe } from 'styleframe'` and `import styleframe from 'styleframe/plugin/vite'`, never `@styleframe/core` or `@styleframe/plugin/*` directly.
 
-- Import the core API (`styleframe`, `merge`, type guards, utilities) from `'styleframe'`
-- Import build tool plugins from `'styleframe/plugin/vite'`, `'styleframe/plugin/webpack'`, etc.
-- Import the loader API from `'styleframe/loader'`
-- Import the transpiler API from `'styleframe/transpiler'`
-- Run the CLI via `npx styleframe` or the `styleframe` bin command
+## Layout & entry points
 
-Use this package instead of importing from `@styleframe/core`, `@styleframe/loader`, etc. directly. It provides a single dependency that bundles all engine functionality.
-
-## Package Info
-
-- **Name:** `styleframe`
-- **Version:** `3.1.0`
-- **Type:** ES module (with CJS fallback)
-- **License:** MIT
-- **Dependencies:** `@styleframe/cli`, `@styleframe/license`
-- **Peer dependencies:** `@styleframe/core`, `@styleframe/loader`, `@styleframe/transpiler`, `@styleframe/plugin`
-
-## Architecture
-
-This package is a **barrel package** — it contains no implementation of its own. Every source file is a re-export from the corresponding `@styleframe/*` sub-package:
-
-| Entry Point | Re-exports From | Purpose |
-|-------------|----------------|---------|
-| `styleframe` | `@styleframe/core` | Core API: `styleframe()`, `merge()`, token factories, type guards, utilities |
-| `styleframe/loader` | `@styleframe/loader` | Config loading, module loading, build, jiti cache management |
-| `styleframe/transpiler` | `@styleframe/transpiler` | AST-to-CSS transpilation |
-| `styleframe/cli` | `@styleframe/cli` | CLI entry point (`#!/usr/bin/env node`) |
-| `styleframe/plugin/vite` | `@styleframe/plugin/vite` | Vite/Rolldown plugin |
-| `styleframe/plugin/webpack` | `@styleframe/plugin/webpack` | Webpack plugin |
-| `styleframe/plugin/rspack` | `@styleframe/plugin/rspack` | Rspack plugin |
-| `styleframe/plugin/rollup` | `@styleframe/plugin/rollup` | Rollup plugin |
-| `styleframe/plugin/esbuild` | `@styleframe/plugin/esbuild` | esbuild plugin |
-| `styleframe/plugin/astro` | `@styleframe/plugin/astro` | Astro integration |
-| `styleframe/plugin/nuxt` | `@styleframe/plugin/nuxt` | Nuxt module |
-| `styleframe/plugin/farm` | `@styleframe/plugin/farm` | Farm plugin |
-
-## Usage
-
-### Core API
-
-```ts
-import { styleframe, merge } from 'styleframe';
-
-const s = styleframe();
-const { variable, ref, selector, utility, modifier, recipe, theme, atRule, keyframes, media, css } = s;
-
-export default s;
+```
+src/
+├── index.ts         # export * from "@styleframe/core"
+├── loader.ts        # export * from "@styleframe/loader"
+├── transpiler.ts    # export * from "@styleframe/transpiler"
+├── cli.ts           # #!/usr/bin/env node — runs @styleframe/cli's default export
+└── plugin/          # one file per bundler, each `export default` from
+                     #   @styleframe/plugin/<bundler>
+tsdown.config.ts     # per-entry build config + .d.mts emission hook
 ```
 
-All core token creation methods, type guards (`isVariable`, `isSelector`, `isRecipe`, etc.), and utility functions (`hashValue`, `deepClone`, `getVariable`, etc.) are available from the main `'styleframe'` import. See `@styleframe/core` AGENTS.md for the full API reference.
+| Subpath | Re-exports | Form |
+| --- | --- | --- |
+| `styleframe` | `@styleframe/core` | named (`export *`) |
+| `styleframe/loader` | `@styleframe/loader` | named (`export *`) |
+| `styleframe/transpiler` | `@styleframe/transpiler` | named (`export *`) |
+| `styleframe/plugin/{vite,webpack,rspack,rollup,esbuild,astro,nuxt,farm}` | `@styleframe/plugin/<bundler>` | **default export only** |
+| `styleframe/cli` + `bin.styleframe` (`dist/cli.js`) | `@styleframe/cli` | executable |
 
-### Build Tool Plugins
+Dependency shape in [`package.json`](./package.json): `@styleframe/cli` and `@styleframe/license` are real dependencies; `@styleframe/core`, `@styleframe/loader`, `@styleframe/transpiler`, and `@styleframe/plugin` are **peerDependencies** — the re-exported code resolves from the consumer's install, not from a bundled copy.
 
-Each plugin is a default export:
+## Adding an entry point
 
-```ts
-// vite.config.ts
-import styleframe from 'styleframe/plugin/vite';
+1. Create the one-line re-export in `src/` (or `src/plugin/` — the `./src/plugin/*.ts` glob in [`tsdown.config.ts`](./tsdown.config.ts) picks up new adapter files automatically; other entries need their own config block, with `platform: "node"` or `"neutral"` chosen to match the sub-package).
+2. Add the subpath to the `exports` map in [`package.json`](./package.json) with all four `import`/`require` × `types`/`default` conditions — copy an existing block.
+3. If it re-exports a package not already listed, add it to `peerDependencies` (and `devDependencies` for local builds).
 
-export default defineConfig({
-    plugins: [styleframe()],
-});
-```
-
-```ts
-// webpack.config.js
-import styleframe from 'styleframe/plugin/webpack';
-
-module.exports = {
-    plugins: [styleframe()],
-};
-```
-
-```ts
-// astro.config.mjs
-import styleframe from 'styleframe/plugin/astro';
-
-export default defineConfig({
-    integrations: [styleframe()],
-});
-```
-
-```ts
-// nuxt.config.ts
-export default defineNuxtConfig({
-    modules: ['styleframe/plugin/nuxt'],
-});
-```
-
-### Loader
-
-```ts
-import { loadConfiguration, loadModule, build, createSharedJiti } from 'styleframe/loader';
-
-const instance = await loadConfiguration({ cwd: process.cwd() });
-await build(instance, { outputDir: './styleframe' });
-```
-
-See `@styleframe/loader` AGENTS.md for the full loader API reference.
-
-### Transpiler
-
-```ts
-import { transpile } from 'styleframe/transpiler';
-```
-
-### CLI
+## Build & test
 
 ```bash
-npx styleframe
+pnpm build   # tsdown — dual ESM/CJS per entry into dist/
+pnpm test    # vitest run --passWithNoTests (there are currently no tests)
 ```
 
-The CLI binary is at `./dist/cli.cjs` and invokes the main function from `@styleframe/cli`.
+## Pitfalls
 
-## Source Files
+- **The `emitEsmDeclarations` hook in [`tsdown.config.ts`](./tsdown.config.ts) is load-bearing.** It copies each `dist/**/*.d.ts` to `.d.mts` so the `exports` map's `import.types` condition resolves a real ESM declaration. Remove it and TypeScript consumers on `require` see the ESM types masquerading as CJS.
+- **`fixedExtension: false` is deliberate.** tsdown ≥0.22 otherwise emits `.mjs`/`.d.mts` for node-platform entries, which would break every `dist/*.js` path in `bin`, `types`, and `exports`.
+- **[`src/cli.ts`](./src/cli.ts) must keep its `#!/usr/bin/env node` shebang** — `bin.styleframe` points at the built `dist/cli.js`.
 
-| File | Purpose |
-|------|---------|
-| `src/index.ts` | Re-exports all of `@styleframe/core` |
-| `src/cli.ts` | CLI entry point — imports and runs `@styleframe/cli` |
-| `src/loader.ts` | Re-exports all of `@styleframe/loader` |
-| `src/transpiler.ts` | Re-exports all of `@styleframe/transpiler` |
-| `src/plugin/vite.ts` | Default export from `@styleframe/plugin/vite` |
-| `src/plugin/webpack.ts` | Default export from `@styleframe/plugin/webpack` |
-| `src/plugin/rspack.ts` | Default export from `@styleframe/plugin/rspack` |
-| `src/plugin/rollup.ts` | Default export from `@styleframe/plugin/rollup` |
-| `src/plugin/esbuild.ts` | Default export from `@styleframe/plugin/esbuild` |
-| `src/plugin/astro.ts` | Default export from `@styleframe/plugin/astro` |
-| `src/plugin/nuxt.ts` | Default export from `@styleframe/plugin/nuxt` |
-| `src/plugin/farm.ts` | Default export from `@styleframe/plugin/farm` |
+## See also
 
-## Best Practices
-
-1. **Import from `styleframe` rather than `@styleframe/*` sub-packages** — This is the public-facing package. Sub-packages are implementation details.
-2. **Use the correct entry point for each concern** — Core API from `'styleframe'`, plugins from `'styleframe/plugin/*'`, loader from `'styleframe/loader'`.
-3. **Plugin imports use default exports** — Always `import plugin from 'styleframe/plugin/vite'`, not named imports.
-4. **Refer to sub-package AGENTS.md for detailed API docs** — Since this package re-exports, the authoritative API documentation lives in `@styleframe/core`, `@styleframe/loader`, and `@styleframe/transpiler`.
+- [`engine/core/AGENTS.md`](../core/AGENTS.md), [`engine/loader/AGENTS.md`](../loader/AGENTS.md), [`engine/transpiler/AGENTS.md`](../transpiler/AGENTS.md), [`tooling/plugin/AGENTS.md`](../../tooling/plugin/AGENTS.md), [`tooling/cli/AGENTS.md`](../../tooling/cli/AGENTS.md) — where the actual APIs live.
+- [`README.md`](./README.md) — the npm-facing product page.

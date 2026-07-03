@@ -1,113 +1,55 @@
-# Styleframe Playground
+# @styleframe/playground
 
-Interactive client-side playground for Styleframe. Users edit an arbitrary set of files (React `tsx` components + a `styleframe.config.ts`) in CodeMirror; an iframe renders the live result.
+The interactive, fully client-side Styleframe playground. Users edit a multi-file project (React 19 `.tsx` components, `*.styleframe.ts` extension files, and a `styleframe.config.ts`) in CodeMirror 6, manage files/folders in a project tree, and see the compiled preview, CSS, and generated runtime JS live. The shell itself is a Vite + Vue 3 app; the user's code is bundled in-browser with `esbuild-wasm` and rendered in a sandboxed iframe. `private: true`, but versioned via changesets (it is not in the ignore list). [`README.md`](./README.md) covers the why and the user-facing behavior.
 
-## Package
-
-- **Name:** `@styleframe/playground`
-- **Shell:** Vite + Vue 3 (the playground UI is a Vue app; it is invisible to users)
-- **Preview:** React 19 + `tsx`, bundled in the browser with `esbuild-wasm`
-- **Runs:** fully client-side — no server, no auth, no persistence.
-- **Not published to npm.**
-
-## Source Layout
+## Layout
 
 ```
 apps/playground/
-├── styleframe.config.ts         # shell: theme presets + #app / html selectors
-├── vite.config.ts               # Styleframe Vite plugin (minify:false) + vue() + React vendoring
-├── index.html
+├── styleframe.config.ts     # shell design tokens: theme presets + #app selectors
+├── vite.config.ts           # styleframe plugin (minify:false) + vue() + React vendor/runtime virtual modules
 ├── src/
-│   ├── App.vue                  # playground shell root (Editor │ Output │ Tree)
-│   ├── main.ts                  # imports virtual:styleframe.css, mounts App
-│   ├── recipes/                 # playground-local recipes (pg-*), incl. useFileTreeRecipe
-│   │   └── playground.styleframe.ts  # registers recipes into the shell instance
-│   ├── components/
-│   │   ├── SplitPane.vue        # Editor │ Output split
-│   │   ├── FileTree.vue         # project tree (far right): create / rename / delete
-│   │   ├── EditorPane.vue       # dynamic, path-keyed CodeMirror editors + tabs
-│   │   ├── OutputPane.vue       # Preview / CSS / JS tabs
-│   │   ├── PreviewFrame.vue     # iframe + postMessage listener
-│   │   └── ErrorBanner.vue
-│   ├── editor/
-│   │   ├── codemirror.ts        # createEditor(...) + languageForPath() (ts / tsx / css)
-│   │   └── theme.ts
-│   ├── pipeline/
-│   │   ├── esbuild.ts           # lazy esbuild-wasm init (single instance)
-│   │   ├── transformTs.ts       # strips TS from the config before eval
-│   │   ├── evalUserConfig.ts    # rewrites imports, runs config via new Function
-│   │   ├── scanAndRegisterUtilities.ts
-│   │   ├── transpileStyleframe.ts
-│   │   ├── bundlePreview.ts     # esbuild-wasm bundle of all user files → one ESM module
-│   │   ├── buildSrcdoc.ts       # CSS + React vendor + bundle → srcdoc
-│   │   └── pipeline.ts          # orchestrator + debounce + PipelineResult
-│   ├── samples/                 # default file contents (.tsx + config), imported as ?raw
-│   └── state/
-│       └── playground.ts        # reactive { files, output, error, active* } + file actions
-└── test/                        # Vitest specs for pipeline units
+│   ├── App.vue              # shell root: toolbar │ Editor │ Output │ Tree │ status bar
+│   ├── components/          # SplitPane, EditorPane, FileTree, FileTabList, OutputPane,
+│   │                        # PreviewFrame, CodeOutput, BrowserChrome, StatusBar, ErrorBanner, …
+│   ├── editor/codemirror.ts # createEditor + languageForPath (ts / tsx / css)
+│   ├── pipeline/            # the compile pipeline (see below)
+│   ├── recipes/             # shell-only pg-* recipes; registered in playground.styleframe.ts
+│   ├── samples/             # default project contents, imported as ?raw
+│   └── state/               # playground.ts (files/tabs/output), theme.ts (auto|light|dark toggle)
+└── test/                    # Vitest specs for the pipeline + state (jsdom)
 ```
 
-## Architecture
+## Two Styleframe worlds, isolated by an iframe
 
-**Two Styleframe contexts, isolated by an iframe.**
+The **shell** is compiled by `@styleframe/plugin/vite` at build time and dogfoods Styleframe for all chrome (recipes in [`src/recipes/`](./src/recipes/), registered via [`playground.styleframe.ts`](./src/recipes/playground.styleframe.ts); no inline styles beyond a few layout resets in `App.vue`). The **user's project** is compiled at runtime by `@styleframe/transpiler` + `esbuild-wasm` and rendered inside `<iframe sandbox="allow-scripts allow-same-origin">` via `srcdoc`, with its own `<style>` and its own React — the two worlds never share a document, so class names and CSS variables cannot collide.
 
-| Context | Compiled by | Where CSS lives | Runtime |
-|---|---|---|---|
-| Shell UI | `@styleframe/plugin/vite` at dev/build time | `<style>` in parent document | `@styleframe/runtime` bundled into parent |
-| User-edited preview | `esbuild-wasm` + `@styleframe/transpiler` at runtime | `<style>` inside iframe `srcdoc` | React + `@styleframe/runtime` inlined into the preview bundle |
+React is vendored once as an IIFE ([`vite.config.ts`](./vite.config.ts) `buildReactVendor`) publishing `globalThis.PGReactVendor`; the preview bundle reads it through shims. Everything else resolves through an in-memory virtual-FS esbuild plugin in [`bundlePreview.ts`](./src/pipeline/bundlePreview.ts) — relative imports against the files map, `virtual:styleframe` → the generated runtime TS, `@styleframe/runtime` → vendored source. No importmap, no network.
 
-The iframe has `sandbox="allow-scripts allow-same-origin"`. There is **no importmap**: `bundlePreview` resolves everything through an in-memory virtual-FS esbuild plugin and inlines it. React is the one exception — it is vendored once as an IIFE (`vite.config.ts` → `buildReactVendor`) that publishes `globalThis.PGReactVendor`, runs first as a classic `<script>`, and is read by thin shims in the bundle. This keeps a single React instance and the whole preview offline.
+## Pipeline
 
-The virtual-FS plugin resolves:
-- relative imports (`./Card`, `../foo/Bar`) against the in-memory `files` map (trying `.tsx/.ts/.jsx/.js/.css` + `index.*`);
-- `virtual:styleframe` → the generated runtime TS module (recipe functions like `card`, `button`);
-- `virtual:styleframe.css` → empty (the CSS is injected separately);
-- `react` / `react-dom/client` / `react/jsx-runtime` / `@styleframe/runtime` → vendored shims/sources.
+[`pipeline.ts`](./src/pipeline/pipeline.ts) `runPipeline({ files, configPath, entryPath })` runs stages sequentially and returns `{ ok: false, stage, error }` on the first failure: `config-transform` → `config-eval` (config runs via `new Function`; the only code the parent evaluates) → `styleframe` (each `*.styleframe.ts` mutates the shared instance, mirroring how `@styleframe/plugin` loads them) → `scan` (utility classes) → `transpile` → `bundle` → `assemble` (srcdoc). `transpileStyleframe` sets `treeshake: false` — the scanner can't see runtime recipe calls, so tree-shaking would drop CSS the preview needs. On failure the last good preview stays on screen.
 
-## Pipeline Stages
+## Conventions that will bite you if ignored
 
-`runPipeline(input)` runs these sequentially, and returns `{ ok: false, stage, error }` if any step throws. `input` is `{ files, configPath, entryPath }`.
+- **Default project = the UI Kit samples.** [`src/state/playground.ts`](./src/state/playground.ts) seeds `files` from [`src/samples/`](./src/samples/): `styleframe.config.ts`, `src/App.tsx` (entry; default export is the preview root), and one `src/components/<Name>/` folder per block (Avatar, Badge, Button, Callout, Card, Checkbox, Input, Spinner), each `.tsx` paired with a `.styleframe.ts`. Config and entry (and their folders) are protected from rename/delete.
+- **Sample files use `.sample.tsx` / `.styleframe.sample.ts` suffixes** and are excluded in [`tsconfig.app.json`](./tsconfig.app.json) — they type-check against the *user's* `virtual:styleframe`, not the shell's, and the suffix keeps them out of the shell plugin's `**/*.styleframe.ts` glob. New sample = new `?raw` import + entry in `initialFiles`.
+- **`*.styleframe.ts` files are evaluated, never bundled or scanned** (`isStyleframeFile` in `pipeline.ts`).
+- Shell theme toggle lives in [`src/state/theme.ts`](./src/state/theme.ts): `auto|light|dark`, persisted under `sf-playground-theme`, applied as `data-theme`.
 
-| Stage | Input | Output |
-|---|---|---|
-| `config-transform` | the `configPath` file's source | compiled JS |
-| `config-eval` | compiled JS | `Styleframe` instance |
-| `styleframe` | every `*.styleframe.ts` file (sorted) | recipes registered on the shared instance |
-| `scan` | every file except the config and `*.styleframe.ts` | utility classes registered on the instance |
-| `transpile` | `Styleframe` instance | `{ css, ts }` from `@styleframe/transpiler` |
-| `bundle` | all files + `entryPath` + generated runtime TS | one ESM preview module |
-| `assemble` | CSS + preview bundle + React vendor IIFE | `srcdoc` string |
+## Build & test
 
-`*.styleframe.ts` extension files are evaluated like `@styleframe/plugin` loads them: `import { styleframe } from "virtual:styleframe"` returns the same instance the config created (`evalStyleframeFile` shims `styleframe()` to return it), so each file's recipe registrations mutate the shared instance. They are authoring-only — never scanned or bundled into the preview.
-
-`transpileStyleframe` runs with `treeshake: false` so the preview shows the **complete** generated CSS — the scanner cannot see runtime recipe calls, so tree-shaking would drop recipe/utility CSS the rendered components depend on.
-
-On success, the parent assigns `iframe.srcdoc = srcdoc` and revokes the previous run's blob URLs.
-
-## Key Conventions
-
-1. **Shell styling is via Styleframe only.** No inline styles except a handful of layout-critical resets in `App.vue` (`flex: 1`, `min-height: 0`). All chrome comes from the recipes in `src/recipes/`.
-2. **User code mirrors a real Styleframe app.** The default project lives under `src/`, with each component in `src/components/<Name>/` paired with a `<Name>.styleframe.ts` extension file that registers its recipe(s). Components import the compiled recipes from `"virtual:styleframe"`; `styleframe.config.ts` (root) holds presets only and exports the instance as default. `src/App.tsx` is the entry — its default export is the preview root.
-3. **Dynamic files and folders.** `state/playground.ts` keys files by path and exposes `createFile` / `createFolder` / `renameFile` / `deleteFile` / `deleteFolder` (the config and entry files, and any folder containing them, are protected). Empty folders are tracked in `state.folders`. `FileTree.vue` drives them.
-4. **Sample files are in `src/samples/`** (`.tsx`, `.styleframe.sample.ts`, config), imported via `?raw`, and excluded from the shell `tsconfig` (they target the user's `virtual:styleframe`, not the shell's). The `.styleframe.sample.ts` suffix keeps them from matching the shell plugin's `**/*.styleframe.ts` glob.
-5. **CodeMirror 6 used directly.** Language per file via `languageForPath` (`@codemirror/lang-javascript` with `jsx` for `.tsx`, plain `ts`, or `@codemirror/lang-css`).
-6. **Parent never evaluates untrusted code.** Only the config runs in `new Function(...)`; components run only inside the iframe.
-7. **The last valid preview stays on screen.** Blob URLs from the previous successful run are revoked only when the next run succeeds.
-
-## Testing
-
-```sh
-pnpm test --filter @styleframe/playground     # Vitest unit tests (jsdom)
-pnpm typecheck --filter @styleframe/playground
+```bash
+pnpm dev:playground                              # from repo root (turbo filter); http://localhost:5173
+pnpm build:playground                            # static bundle
+pnpm test --filter @styleframe/playground        # Vitest (jsdom), specs in test/
+pnpm typecheck --filter @styleframe/playground   # vue-tsc
 ```
 
-> Adding a `pg-*` recipe requires running `pnpm dev:playground` (or `build`) once so the plugin regenerates `.styleframe/styleframe.d.ts` before `typecheck` passes.
+Adding a `pg-*` shell recipe requires one `pnpm dev:playground` (or build) run so the plugin regenerates `.styleframe/styleframe.d.ts` before `typecheck` passes. Manual smoke test: create a file from the tree, import it into `App.tsx`, Ctrl/Cmd+S, confirm the Preview / CSS Output / JS Output tabs update.
 
-Manual verification: run `pnpm dev:playground`, create a file from the tree, import it into `App.tsx`, press Ctrl/Cmd+S, and confirm the preview, CSS, and JS tabs update.
+## See also
 
-## Related
-
-- `theme/src/recipes/card/`, `theme/src/recipes/button/` — recipes used by the default samples.
-- `engine/transpiler/src/transpile.ts` — `transpile(instance)` consumed by `src/pipeline/transpileStyleframe.ts`.
-- `engine/runtime/src/runtime.ts` — `createRecipe` consumed by the preview's generated runtime module.
-- `apps/storybook/` — mirror setup for Vite + Vue + `@styleframe/plugin`.
+- [`README.md`](./README.md) — user-facing behavior, layout diagram, deeper pipeline notes.
+- [`../../theme/AGENTS.md`](../../theme/AGENTS.md) — the presets and recipes the samples and shell consume.
+- [`../../engine/transpiler/AGENTS.md`](../../engine/transpiler/AGENTS.md) — `transpile(instance)` used by the runtime pipeline.
