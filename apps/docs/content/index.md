@@ -43,7 +43,7 @@ export default s;
 Type-safe Composable CSS 
 
 #description
-From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API.
+From simple UI styles to full Design Systems, write code using Styleframe’s powerful TypeScript CSS API — AI-ready by design.
 
 #links
     :::u-button
