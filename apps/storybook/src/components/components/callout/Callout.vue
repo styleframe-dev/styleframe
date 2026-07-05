@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { callout } from "virtual:styleframe";
+import { callout, calloutDismiss, calloutIcon } from "virtual:styleframe";
 import CalloutContent from "./CalloutContent.vue";
 import CalloutTitle from "./CalloutTitle.vue";
 import CalloutDescription from "./CalloutDescription.vue";
@@ -28,6 +28,10 @@ const props = withDefaults(
 	{},
 );
 
+defineEmits<{
+	dismiss: [];
+}>();
+
 const classes = computed(() =>
 	callout({
 		color: props.color,
@@ -36,13 +40,16 @@ const classes = computed(() =>
 		orientation: props.orientation,
 	}),
 );
+
+const iconClasses = computed(() => calloutIcon());
+const dismissClasses = computed(() => calloutDismiss());
 </script>
 
 <template>
 	<div :class="classes">
-		<slot v-if="icon" name="icon">
-			{{ props.icon }}
-		</slot>
+		<span v-if="icon" :class="iconClasses" aria-hidden="true">
+			<slot name="icon">{{ props.icon }}</slot>
+		</span>
 		<CalloutContent>
 			<CalloutTitle v-if="props.title">{{ props.title }}</CalloutTitle>
 			<CalloutDescription
@@ -51,6 +58,14 @@ const classes = computed(() =>
 			>
 			<slot />
 		</CalloutContent>
-		<slot v-if="dismissible" name="dismiss"> ✖ </slot>
+		<button
+			v-if="dismissible"
+			type="button"
+			:class="dismissClasses"
+			aria-label="Dismiss"
+			@click="$emit('dismiss')"
+		>
+			<slot name="dismiss">&times;</slot>
+		</button>
 	</div>
 </template>

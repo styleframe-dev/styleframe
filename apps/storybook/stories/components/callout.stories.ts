@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { ref } from "vue";
 
+import Button from "../../src/components/components/button/Button.vue";
 import Callout from "../../src/components/components/callout/Callout.vue";
 import CalloutGrid from "../../src/components/components/callout/preview/CalloutGrid.vue";
 import CalloutSizeGrid from "../../src/components/components/callout/preview/CalloutSizeGrid.vue";
@@ -99,6 +101,26 @@ export const AllOrientations: StoryObj = {
 	render: () => ({
 		components: { CalloutOrientationGrid },
 		template: "<CalloutOrientationGrid />",
+	}),
+};
+
+export const Dismissible: Story = {
+	args: {
+		color: "info",
+		dismissible: true,
+		title: "Dismissible Callout",
+		description: "Click the dismiss button to hide this callout.",
+	},
+	render: (args) => ({
+		components: { Callout, Button },
+		setup() {
+			const dismissed = ref(false);
+			return { args, dismissed };
+		},
+		template: `
+			<Callout v-bind="args" :hidden="dismissed" @dismiss="dismissed = true" />
+			<Button v-if="dismissed" label="Reset" @click="dismissed = false" />
+		`,
 	}),
 };
 
