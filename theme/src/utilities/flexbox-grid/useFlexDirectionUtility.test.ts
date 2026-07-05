@@ -39,6 +39,14 @@ describe("useFlexDirectionUtility", () => {
 		expect(utility.declarations).toEqual({ flexDirection: "column-reverse" });
 	});
 
+	it("should support the full-word column alias", () => {
+		const s = styleframe();
+		useFlexDirectionUtility(s, { column: "column" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({ flexDirection: "column" });
+	});
+
 	it("should handle empty values object", () => {
 		const s = styleframe();
 		useFlexDirectionUtility(s, {});

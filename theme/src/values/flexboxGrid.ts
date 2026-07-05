@@ -1,21 +1,16 @@
 /**
- * Default flex utility values matching Tailwind CSS.
- */
-export const flexValues = {
-	"1": "1 1 0%",
-	auto: "1 1 auto",
-	initial: "0 1 auto",
-	none: "none",
-} as const;
-
-/**
  * Default flex-direction utility values matching Tailwind CSS.
+ *
+ * Both the Tailwind abbreviation (`col`) and the full CSS word (`column`) are
+ * exposed as keys so `_flex-direction:col` and `_flex-direction:column` both work.
  */
 export const flexDirectionValues = {
 	row: "row",
 	"row-reverse": "row-reverse",
 	col: "column",
 	"col-reverse": "column-reverse",
+	column: "column",
+	"column-reverse": "column-reverse",
 } as const;
 
 /**
@@ -25,6 +20,23 @@ export const flexWrapValues = {
 	wrap: "wrap",
 	"wrap-reverse": "wrap-reverse",
 	nowrap: "nowrap",
+} as const;
+
+/**
+ * Default flex utility values matching Tailwind CSS.
+ *
+ * The `_flex:` namespace mirrors Tailwind's `flex-*` family: shorthand values
+ * (`1`/`auto`/`initial`/`none`) map to `flex`, direction values map to
+ * `flex-direction`, and wrap values map to `flex-wrap`. The routing happens in
+ * `useFlexUtility`.
+ */
+export const flexValues = {
+	"1": "1 1 0%",
+	auto: "1 1 auto",
+	initial: "0 1 auto",
+	none: "none",
+	...flexDirectionValues,
+	...flexWrapValues,
 } as const;
 
 /**
@@ -142,7 +154,9 @@ export const placeSelfValues = {
 export const gridAutoFlowValues = {
 	row: "row",
 	col: "column",
+	column: "column",
 	dense: "dense",
 	"row-dense": "row dense",
 	"col-dense": "column dense",
+	"column-dense": "column dense",
 } as const;

@@ -36,6 +36,43 @@ describe("useFlexUtility", () => {
 		expect(css).toContain("flex: none;");
 	});
 
+	it("should route direction keywords to flex-direction", () => {
+		const s = styleframe();
+		useFlexUtility(s, { column: "column" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({ flexDirection: "column" });
+	});
+
+	it("should route the col alias to the same flex-direction value", () => {
+		const s = styleframe();
+		useFlexUtility(s, { col: "column" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({ flexDirection: "column" });
+	});
+
+	it("should route wrap keywords to flex-wrap", () => {
+		const s = styleframe();
+		useFlexUtility(s, { wrap: "wrap", nowrap: "nowrap" });
+
+		const wrap = s.root.children[0] as Utility;
+		const nowrap = s.root.children[1] as Utility;
+		expect(wrap.declarations).toEqual({ flexWrap: "wrap" });
+		expect(nowrap.declarations).toEqual({ flexWrap: "nowrap" });
+	});
+
+	it("should compile routed classes to correct CSS output", () => {
+		const s = styleframe();
+		useFlexUtility(s, { column: "column", wrap: "wrap" });
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("._flex\\:column {");
+		expect(css).toContain("flex-direction: column;");
+		expect(css).toContain("._flex\\:wrap {");
+		expect(css).toContain("flex-wrap: wrap;");
+	});
+
 	it("should handle empty values object", () => {
 		const s = styleframe();
 		useFlexUtility(s, {});
