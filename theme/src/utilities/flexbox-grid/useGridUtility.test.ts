@@ -216,6 +216,14 @@ describe("useGridAutoFlowUtility", () => {
 		const utility = s.root.children[0] as Utility;
 		expect(utility.declarations).toEqual({ gridAutoFlow: "row dense" });
 	});
+
+	it("should support the full-word column alias", () => {
+		const s = styleframe();
+		useGridAutoFlowUtility(s, { column: "column" });
+
+		const utility = s.root.children[0] as Utility;
+		expect(utility.declarations).toEqual({ gridAutoFlow: "column" });
+	});
 });
 
 describe("useGridAutoColumnsUtility", () => {
