@@ -1,11 +1,19 @@
-import { useCalloutRecipe } from "@styleframe/theme";
+import {
+	useCalloutContentRecipe,
+	useCalloutDismissRecipe,
+	useCalloutIconRecipe,
+	useCalloutRecipe,
+} from "@styleframe/theme";
 import { styleframe } from "virtual:styleframe";
 
 const s = styleframe();
 const { selector } = s;
 
-// Initialize callout recipe
+// Initialize callout recipes
 export const callout = useCalloutRecipe(s);
+export const calloutIcon = useCalloutIconRecipe(s);
+export const calloutContent = useCalloutContentRecipe(s);
+export const calloutDismiss = useCalloutDismissRecipe(s);
 
 // Container styles for story layout
 selector(".callout-grid", {

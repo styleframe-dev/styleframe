@@ -130,7 +130,7 @@ describe("useCalloutRecipe", () => {
 			const recipe = useCalloutRecipe(s);
 
 			expect(recipe.variants!.orientation).toEqual({
-				horizontal: { flexDirection: "row" },
+				horizontal: { flexDirection: "row", alignItems: "center" },
 				vertical: { flexDirection: "column" },
 			});
 		});
@@ -306,6 +306,21 @@ describe("useCalloutRecipe", () => {
 					},
 				},
 			});
+		});
+	});
+
+	describe("setup callback", () => {
+		it("should collapse the callout when hidden", () => {
+			const s = createInstance();
+			useCalloutRecipe(s);
+
+			const hiddenSelector = s.root.children.find(
+				(child) =>
+					child.type === "selector" &&
+					(child as { query: string }).query === ".callout[hidden]",
+			);
+
+			expect(hiddenSelector).toBeDefined();
 		});
 	});
 
