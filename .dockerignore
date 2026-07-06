@@ -1,0 +1,34 @@
+# VCS & local tooling
+.git
+.github
+.husky
+.claude
+.context
+.zed
+.changeset
+
+# Dependencies
+node_modules
+**/node_modules
+
+# Build outputs & caches
+**/.output
+**/.nuxt
+**/.nitro
+**/.cache
+**/.turbo
+**/.data
+**/.styleframe
+**/dist
+**/storybook-static
+**/coverage
+
+# Docker
+**/Dockerfile
+.dockerignore
+
+# Local env & OS files
+**/.env
+**/.env.*
+**/*.log
+**/.DS_Store
