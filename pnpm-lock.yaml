@@ -1077,7 +1077,7 @@ importers:
         specifier: workspace:^3.1.1
         version: link:../../config/vite
       '@styleframe/theme':
-        specifier: workspace:^3.8.1
+        specifier: workspace:^3.9.0
         version: link:../../theme
       '@types/node':
         specifier: 'catalog:'
@@ -1364,7 +1364,7 @@ importers:
         specifier: workspace:^3.2.2
         version: link:../../../engine/runtime
       '@styleframe/theme':
-        specifier: workspace:^3.8.1
+        specifier: workspace:^3.9.0
         version: link:../../../theme
       '@vitejs/plugin-vue':
         specifier: catalog:nuxt
