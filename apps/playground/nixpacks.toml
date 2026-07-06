@@ -1,0 +1,25 @@
+# Nixpacks build config for @styleframe/playground (Vite static build, served by Caddy).
+#
+# Build from the monorepo root so pnpm can resolve the workspace and the single
+# root lockfile, and turbo can build the @styleframe/* packages the playground imports.
+# Point the platform at this file with NIXPACKS_CONFIG_FILE:
+#   Dokploy/Railway: Build Type "Nixpacks", root / context ".",
+#   env NIXPACKS_CONFIG_FILE=apps/playground/nixpacks.toml, container port 80.
+#
+# Node + pnpm (pinned via the root packageManager field) are provided
+# automatically by the Node provider through Corepack.
+
+# Add Caddy alongside the auto-detected Node + pnpm toolchain to serve the build.
+[phases.setup]
+nixPkgs = ['...', 'caddy']
+
+[phases.install]
+cmds = ['pnpm install --frozen-lockfile']
+
+[phases.build]
+dependsOn = ['install']
+# turbo builds the workspace deps (core, runtime, scanner, theme, transpiler) first.
+cmds = ['pnpm turbo run build --filter=@styleframe/playground']
+
+[start]
+cmd = 'caddy file-server --root apps/playground/dist --listen :80'
