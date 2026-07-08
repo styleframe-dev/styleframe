@@ -9,7 +9,7 @@ From simple UI styles to full Design Systems, write code using Styleframe's powe
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE)
 [![Discord](https://img.shields.io/discord/1395724958919032943?label=Discord&logo=discord)](https://discord.gg/KCVwuGz44M)
 
-[Homepage](https://styleframe.dev) · [Documentation](https://styleframe.dev/docs) · [Discord](https://discord.gg/KCVwuGz44M)
+[Homepage](https://styleframe.dev) · [Documentation](https://styleframe.dev/docs) · [Discord](https://discord.gg/KCVwuGz44M) · [GitHub](https://github.com/styleframe-dev/styleframe)
 
 </div>
 
