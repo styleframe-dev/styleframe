@@ -204,6 +204,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 
 Styleframe is [MIT licensed](https://github.com/styleframe-dev/styleframe/blob/main/LICENSE).
 
+<!-- dummy change -->
+
 ---
 
 <div align="center">
