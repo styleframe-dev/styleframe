@@ -1,11 +1,13 @@
 ---
-name: research-component
+name: research-recipe
 description: Step 1 of the create-recipe chain. Gather component metadata (name, type, multi-part status, color pattern, HTML element) via AskUserQuestion, then WebFetch one or more UI library component pages (Nuxt UI, Shadcn, Radix, Chakra, Mantine) to extract variant axes, styles, sub-parts, states, and accessibility patterns. Writes .context/recipe-<name>/research.md so the next step (design-recipe) has a classified summary to work from. Run this first when creating a new Styleframe recipe.
 ---
 
-# Research Component
+# Research Recipe
 
 Step 1 of the Styleframe recipe creation chain. Classify the component and study existing UI-library implementations to ground the design in proven patterns.
+
+> **Brigade note (Multica):** gather the metadata below from the issue body first; use questions only for gaps you cannot resolve yourself, and record every assumption in `research.md`. When the issue does not name libraries to study, default to the component's pages on Nuxt UI, shadcn/ui, Radix, Chakra, and Mantine.
 
 ## Persona
 
