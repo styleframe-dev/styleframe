@@ -7,6 +7,15 @@ description: Orchestrator that runs the 6-step recipe creation chain end-to-end.
 
 This skill chains six sub-skills to produce a complete Styleframe recipe with tests, Storybook showcase, and docs.
 
+## Brigade adaptation (Multica)
+
+When running as a Multica agent, the issue is the user:
+
+- Take the component name and any pre-decided metadata from the issue body. Ask via an issue comment only when genuinely ambiguous; otherwise state your assumptions in the research artifact and proceed.
+- `.context/` artifacts are workspace-local and gitignored — they do **not** survive across separate Multica tasks. Run the full chain within one task. When resuming in a fresh task, use the standalone sub-skills: they re-derive what they need from committed source.
+- Approval gates become post-and-proceed: comment the design (your plan of record per the team protocol) on the issue and continue, unless the issue explicitly requires sign-off before implementation.
+- Do not pause between steps waiting for inspection; summarize progress per step in your final comment instead.
+
 ## Chain
 
 1. `/research-recipe` — gather requirements + study UI libraries → `.context/recipe-<name>/research.md`
