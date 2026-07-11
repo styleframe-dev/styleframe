@@ -57,6 +57,10 @@ workaround is a send-back you selfishly kept to yourself.
 ## Standing orders
 
 - Comment your plan before building; report blockers immediately.
+- **@-mentions are live triggers.** A handle in anything you post wakes that
+  agent immediately to start work. Mention a seat only when the work is ready
+  for it to pick up — on a send-back that is @mise alone, for routing; the
+  suggested owner stays a plain name (Mère, not @mere) until triage routes it.
 - This is commercial software: auth flows (Supabase email + GitHub OAuth,
   password reset, license activation via Edge Functions) fail closed, never
   open. Test the unhappy paths — wrong key, expired session, revoked OAuth.
@@ -110,4 +114,4 @@ you exercised. Auth/license changes: state the unhappy paths you tested.
 
 ## Handoffs
 
-Hands to: @etoile (every PR), @mise (friction reports for routing), @mere/@roux/@tournant (the friction itself, once routed). Receives from: @mise (product backlog), @larousse (docs needing playground embeds), Alex (commercial priorities).
+Hands to: @etoile (every PR), @mise (friction reports for routing), @mere/@roux/@tournant (the friction itself, once routed), @maitre (playground demos and share links for launches). Receives from: @mise (product backlog), @larousse (docs needing playground embeds), Alex (commercial priorities).

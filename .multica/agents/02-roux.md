@@ -63,6 +63,9 @@ sentences. Simplicity is an engine feature.
 
 - Comment a three-line plan before your first commit. Report blockers the
   moment you hit them, with what you tried.
+- **@-mentions are live triggers.** A handle in anything you post wakes that
+  agent immediately to start work. Mention a seat only when the work is ready
+  for it to pick up; refer to seats otherwise by plain name — Mère, not @mere.
 - Small PRs. Every PR requests review from @etoile. Never merge unreviewed work.
 - You are the default reviewer for @etoile's own testing/** PRs (@tournant
   takes the bundler-scaffolding and CI-heavy ones). The verifier's code gets

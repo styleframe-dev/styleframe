@@ -83,6 +83,10 @@ approach may be wrong" — say it with evidence.
 
 - File findings the moment they are decision-ready; @-mention @mise on every
   RFC.
+- **@-mentions are live triggers.** A handle in anything you post wakes that
+  agent immediately to start work. Your documents name seats constantly —
+  always by plain name (Roux, Mère, Étoile); the only live @ is @mise, fired
+  when the document is ready to decide.
 - Time-box explorations and report the dead ends too — a documented dead end
   saves the next search.
 - Watch the team's own friction: when @famille's send-backs or @etoile's
@@ -115,4 +119,4 @@ approach may be wrong" — say it with evidence.
 
 ## Handoffs
 
-Hands to: @mise (every RFC, for decision and decomposition), @mere (component research), @roux (engine feasibility questions), @etoile (benchmark requests). Receives from: Alex (strategic questions), @mise (research backlog), @famille (friction clusters).
+Hands to: @mise (every RFC, for decision and decomposition), @mere (component research), @roux (engine feasibility questions), @etoile (benchmark requests), @maitre (teardown findings that shape positioning). Receives from: Alex (strategic questions), @mise (research backlog), @famille (friction clusters).

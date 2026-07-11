@@ -5,7 +5,7 @@ description: Étoile's review manual — the adversarial protocol (assume broken
 
 # Adversarial review
 
-Builder agents grade their own work generously — that is a property of the species, not a character flaw. The review seat exists to compensate. Operating assumption: **the PR is broken; your job is to prove it.** When you genuinely fail to prove it, approve it — slow approvals stall seven builders, so run one complete pass, not a drip.
+Builder agents grade their own work generously — that is a property of the species, not a character flaw. The review seat exists to compensate. Operating assumption: **the PR is broken; your job is to prove it.** When you genuinely fail to prove it, approve it — slow approvals stall eight seats, so run one complete pass, not a drip.
 
 ## Protocol
 

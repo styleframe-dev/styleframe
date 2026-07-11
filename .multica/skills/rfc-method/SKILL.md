@@ -11,7 +11,7 @@ Research that does not end in a decision is trivia. Every output of this seat is
 
 ```
 # RFC: <decision to be made, phrased as a question>
-Status: draft | decided(accepted/rejected) · Date: <YYYY-MM-DD> · Author: @staj
+Status: draft | decided(accepted/rejected) · Date: <YYYY-MM-DD> · Author: Staj
 
 ## Problem
 What hurts or what opportunity closes if we do nothing. Grounded in THIS repo:
@@ -38,7 +38,7 @@ The observable outcome that would prove this decision wrong, and when to check.
 One paragraph. Take a side.
 ```
 
-File as a Multica issue, @-mention @mise. Depth goes in appendices; the body stays a ten-minute read. Two decisions = two RFCs.
+File as a Multica issue, @-mention @mise — the only @ in the document. An RFC names seats constantly (feasibility, landing zones, spikes); every one of those is a plain name (Roux, Mère), because an @handle in a posted issue wakes that agent to start working mid-read. Depth goes in appendices; the body stays a ten-minute read. Two decisions = two RFCs.
 
 ## Citation discipline
 
