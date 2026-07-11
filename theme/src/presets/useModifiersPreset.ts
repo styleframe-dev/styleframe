@@ -2,6 +2,7 @@ import type { Styleframe } from "@styleframe/core";
 
 import {
 	type AriaStateModifiers,
+	type ContainerQueryModifiers,
 	type DirectionalModifiers,
 	type FormStateModifiers,
 	type MediaPreferenceModifiers,
@@ -10,6 +11,7 @@ import {
 	type PseudoStateModifiers,
 	type StructuralModifiers,
 	useAriaStateModifiers,
+	useContainerQueryModifiers,
 	useDirectionalModifiers,
 	useFormStateModifiers,
 	useMediaPreferenceModifiers,
@@ -36,6 +38,8 @@ export interface ModifiersConfig {
 	pseudoElements?: boolean;
 	/** Media/preference query modifiers (dark, motion-safe, print, etc.) */
 	mediaPreferences?: boolean;
+	/** Container-query modifiers (container-sm, container-md, etc.) */
+	containerQueries?: boolean;
 	/** ARIA state modifiers (aria-expanded, aria-disabled, etc.) */
 	ariaStates?: boolean;
 	/** Directional modifiers (rtl, ltr) */
@@ -54,6 +58,7 @@ export type ModifierInstances = Partial<
 		StructuralModifiers &
 		PseudoElementModifiers &
 		MediaPreferenceModifiers &
+		ContainerQueryModifiers &
 		AriaStateModifiers &
 		DirectionalModifiers &
 		OtherStateModifiers
@@ -82,6 +87,9 @@ export function useModifiersPreset(
 			: undefined),
 		...(config.mediaPreferences !== false
 			? useMediaPreferenceModifiers(s)
+			: undefined),
+		...(config.containerQueries !== false
+			? useContainerQueryModifiers(s)
 			: undefined),
 		...(config.ariaStates !== false ? useAriaStateModifiers(s) : undefined),
 		...(config.directional !== false ? useDirectionalModifiers(s) : undefined),

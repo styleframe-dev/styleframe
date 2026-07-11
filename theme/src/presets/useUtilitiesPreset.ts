@@ -58,6 +58,7 @@ import {
 	breakBeforeValues,
 	breakInsideValues,
 	clearValues,
+	containerTypeValues,
 	displayValues,
 	floatValues,
 	isolationValues,
@@ -307,6 +308,8 @@ import {
 	useBreakInsideUtility,
 	useClearUtility,
 	useColumnsUtility,
+	useContainerNameUtility,
+	useContainerTypeUtility,
 	useDisplayUtility,
 	useFloatUtility,
 	useInsetEndUtility,
@@ -568,6 +571,8 @@ export interface UtilitiesPresetConfig {
 	breakBefore?: Record<string, string> | false;
 	breakInside?: Record<string, string> | false;
 	clear?: Record<string, string> | false;
+	containerType?: Record<string, string> | false;
+	containerName?: Record<string, string> | false;
 	display?: Record<string, string> | false;
 	float?: Record<string, string> | false;
 	isolation?: Record<string, string> | false;
@@ -805,6 +810,11 @@ export function useUtilitiesPreset(
 	const breakBefore = resolveValues(config.breakBefore, breakBeforeValues);
 	const breakInside = resolveValues(config.breakInside, breakInsideValues);
 	const clear = resolveValues(config.clear, clearValues);
+	const containerType = resolveValues(
+		config.containerType,
+		containerTypeValues,
+	);
+	const containerName = resolveValues(config.containerName, {});
 	const display = resolveValues(config.display, displayValues);
 	const float = resolveValues(config.float, floatValues);
 	const isolation = resolveValues(config.isolation, isolationValues);
@@ -1278,6 +1288,22 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("clear"),
 	);
 	if (clear) createClearUtility(clear);
+
+	const createContainerTypeUtility = useContainerTypeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("container-type"),
+	);
+	if (containerType) createContainerTypeUtility(containerType);
+
+	const createContainerNameUtility = useContainerNameUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("container-name"),
+	);
+	if (containerName) createContainerNameUtility(containerName);
 
 	const createDisplayUtility = useDisplayUtility(
 		s,
@@ -2521,6 +2547,8 @@ export function useUtilitiesPreset(
 			undefined,
 			resolveUtilityOptions("columns"),
 		),
+		createContainerTypeUtility,
+		createContainerNameUtility,
 		createDisplayUtility,
 		createFloatUtility,
 		createInsetEndUtility: useInsetEndUtility(
