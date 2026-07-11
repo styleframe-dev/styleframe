@@ -79,9 +79,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+	// No explicit `variant` — renders the recipe default (`solid`).
 	args: {
 		color: "neutral",
-		variant: "subtle",
 		size: "md",
 		orientation: "horizontal",
 		title: "Toast",

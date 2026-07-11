@@ -39,10 +39,10 @@ describe("useToastProgressRecipe", () => {
 
 		expect(recipe.base).toEqual({
 			position: "absolute",
-			bottom: "@0.5",
-			left: "@0.5",
-			right: "@0.5",
-			height: "@0.25",
+			bottom: "@spacing.xs",
+			left: "@spacing.xs",
+			right: "@spacing.xs",
+			height: "@spacing.2xs",
 			transformOrigin: "left center",
 			background: "currentColor",
 			borderRadius: "@border-radius.full",

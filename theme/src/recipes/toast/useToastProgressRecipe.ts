@@ -10,7 +10,11 @@ import { toastAccentColorVariants } from "./toastAccentColors";
  * and driftless.
  *
  * The bar is a rounded pill inset from the toast's rounded corners rather than
- * bleeding edge-to-edge. It is the second part (with the icon) that carries the
+ * bleeding edge-to-edge. The inset uses named spacing tokens (`@spacing.xs` /
+ * `@spacing.2xs`) rather than the numeric scale (`@0.5`), because the inset
+ * utilities (top/right/bottom/left) don't map the numeric spacing scale — a
+ * numeric ref there resolves to an undefined var and collapses the bar.
+ * It is the second part (with the icon) that carries the
  * toast's `color` — the body stays neutral, so the accent lands here. `color`
  * sets the bar's foreground from the shared accent map, and `background:
  * currentColor` paints the pill in that accent at full opacity.
@@ -20,10 +24,10 @@ export const useToastProgressRecipe = createUseRecipe(
 	{
 		base: {
 			position: "absolute",
-			bottom: "@0.5",
-			left: "@0.5",
-			right: "@0.5",
-			height: "@0.25",
+			bottom: "@spacing.xs",
+			left: "@spacing.xs",
+			right: "@spacing.xs",
+			height: "@spacing.2xs",
 			transformOrigin: "left center",
 			background: "currentColor",
 			borderRadius: "@border-radius.full",

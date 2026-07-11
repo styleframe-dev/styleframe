@@ -196,7 +196,7 @@ describe("useToastRecipe", () => {
 		const recipe = useToastRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
-			variant: "subtle",
+			variant: "solid",
 			size: "md",
 			orientation: "horizontal",
 		});
@@ -258,7 +258,7 @@ describe("useToastRecipe", () => {
 		it("should clear the default variant when it is filtered out", () => {
 			const s = createInstance();
 			const recipe = useToastRecipe(s, {
-				filter: { variant: ["solid"] },
+				filter: { variant: ["subtle"] },
 			});
 
 			expect(recipe.defaultVariants?.variant).toBeUndefined();

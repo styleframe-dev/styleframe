@@ -106,7 +106,7 @@ export const useToastRecipe = createUseRecipe(
 			},
 		},
 		defaultVariants: {
-			variant: "subtle",
+			variant: "solid",
 			size: "md",
 			orientation: "horizontal",
 		},
