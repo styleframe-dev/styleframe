@@ -53,16 +53,16 @@ describe("useToastRecipe", () => {
 			borderWidth: "@border-width.thin",
 			borderStyle: "@border-style.solid",
 			borderColor: "transparent",
-			boxShadow: "@box-shadow.md",
+			boxShadow: "@box-shadow.lg",
 			fontWeight: "@font-weight.medium",
 			fontSize: "@font-size.sm",
 			lineHeight: "@line-height.normal",
-			paddingTop: "@0.75",
-			paddingBottom: "@0.75",
-			paddingLeft: "@1",
-			paddingRight: "@1",
-			gap: "@0.75",
-			borderRadius: "@border-radius.md",
+			paddingTop: "@1",
+			paddingBottom: "@1",
+			paddingLeft: "@1.25",
+			paddingRight: "@1.25",
+			gap: "@1",
+			borderRadius: "@border-radius.lg",
 		});
 	});
 
@@ -110,19 +110,19 @@ describe("useToastRecipe", () => {
 				},
 				md: {
 					fontSize: "@font-size.sm",
-					paddingTop: "@0.75",
-					paddingBottom: "@0.75",
-					paddingLeft: "@1",
-					paddingRight: "@1",
-					gap: "@0.75",
-				},
-				lg: {
-					fontSize: "@font-size.md",
 					paddingTop: "@1",
 					paddingBottom: "@1",
 					paddingLeft: "@1.25",
 					paddingRight: "@1.25",
 					gap: "@1",
+				},
+				lg: {
+					fontSize: "@font-size.md",
+					paddingTop: "@1.25",
+					paddingBottom: "@1.25",
+					paddingLeft: "@1.5",
+					paddingRight: "@1.5",
+					gap: "@1.25",
 				},
 			});
 		});

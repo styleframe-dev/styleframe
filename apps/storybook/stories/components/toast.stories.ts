@@ -131,17 +131,19 @@ export const Dismissible: Story = {
 
 export const WithProgress: Story = {
 	args: {
-		color: "info",
+		color: "success",
+		icon: "✓",
 		progress: true,
-		title: "Uploading files",
-		description: "The progress line tracks the auto-dismiss countdown.",
+		title: "Changes saved",
+		description:
+			"Your edits are live. The bar tracks the auto-dismiss countdown.",
 	},
 	render: (args) => ({
 		components: { Toast },
 		setup() {
 			return { args };
 		},
-		// `.toast-progress-demo` loops the line so the countdown stays visible on
+		// `.toast-progress-demo` loops the bar so the countdown stays visible on
 		// the static canvas; real usage runs it once over `--toast-duration`.
 		template: `
 			<div class="toast-progress-demo">

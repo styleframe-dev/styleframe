@@ -1,9 +1,11 @@
 import {
 	useToastContentRecipe,
+	useToastDescriptionRecipe,
 	useToastDismissRecipe,
 	useToastIconRecipe,
 	useToastProgressRecipe,
 	useToastRecipe,
+	useToastTitleRecipe,
 } from "@styleframe/theme";
 import { styleframe } from "virtual:styleframe";
 
@@ -14,6 +16,8 @@ const { selector } = s;
 export const toast = useToastRecipe(s);
 export const toastIcon = useToastIconRecipe(s);
 export const toastContent = useToastContentRecipe(s);
+export const toastTitle = useToastTitleRecipe(s);
+export const toastDescription = useToastDescriptionRecipe(s);
 export const toastProgress = useToastProgressRecipe(s);
 export const toastDismiss = useToastDismissRecipe(s);
 
@@ -46,10 +50,10 @@ selector(".toast-label", {
 	minWidth: "80px",
 });
 
-// Showcase-only: the real progress line runs once over `--toast-duration`
-// (animation-fill-mode: forwards), which reads as an already-collapsed line in
-// a static story. Loop it here — inside the demo wrapper only, never the recipe
-// — so the countdown stays visible on the Storybook canvas.
+// Showcase-only: the real progress bar runs once over `--toast-duration`, which
+// reads as a static bar on a still story canvas. Loop it here — inside the demo
+// wrapper only, never the recipe — so the countdown stays visibly animating in
+// Storybook.
 selector(".toast-progress-demo .toast-progress", {
 	animationIterationCount: "infinite",
 	animationDuration: "3s",
