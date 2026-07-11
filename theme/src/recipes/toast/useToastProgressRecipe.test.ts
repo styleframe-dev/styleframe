@@ -1,4 +1,5 @@
 import { styleframe } from "@styleframe/core";
+import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
 import { useToastProgressRecipe } from "./useToastProgressRecipe";
 
 function createInstance() {
@@ -15,9 +16,11 @@ function createInstance() {
 		"animationName",
 		"animationDuration",
 		"animationTimingFunction",
+		"color",
 	]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
+	useDarkModifier(s);
 	return s;
 }
 
@@ -56,10 +59,32 @@ describe("useToastProgressRecipe", () => {
 		expect(recipe.base?.animationDuration).toBe("var(--toast-duration, 5s)");
 	});
 
-	it("should have no variants", () => {
-		const s = createInstance();
-		const recipe = useToastProgressRecipe(s);
+	describe("color", () => {
+		it("should carry the toast's accent so background: currentColor paints it", () => {
+			const s = createInstance();
+			const recipe = useToastProgressRecipe(s);
 
-		expect(recipe.variants).toBeUndefined();
+			expect(Object.keys(recipe.variants!.color)).toEqual([
+				"primary",
+				"secondary",
+				"success",
+				"info",
+				"warning",
+				"error",
+				"light",
+				"dark",
+				"neutral",
+			]);
+			expect(recipe.variants!.color.success).toEqual({
+				color: "@color.success",
+			});
+		});
+
+		it("should default to the neutral accent", () => {
+			const s = createInstance();
+			const recipe = useToastProgressRecipe(s);
+
+			expect(recipe.defaultVariants).toEqual({ color: "neutral" });
+		});
 	});
 });

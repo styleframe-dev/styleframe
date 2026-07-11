@@ -67,24 +67,14 @@ describe("useToastRecipe", () => {
 	});
 
 	describe("variants", () => {
-		it("should have all color variants", () => {
+		it("should not key off a color axis — color lives on the icon and progress bar", () => {
 			const s = createInstance();
 			const recipe = useToastRecipe(s);
 
-			expect(Object.keys(recipe.variants!.color)).toEqual([
-				"primary",
-				"secondary",
-				"success",
-				"info",
-				"warning",
-				"error",
-				"light",
-				"dark",
-				"neutral",
-			]);
+			expect(recipe.variants).not.toHaveProperty("color");
 		});
 
-		it("should have all style variants", () => {
+		it("should carry the neutral surface on the variant axis", () => {
 			const s = createInstance();
 			const recipe = useToastRecipe(s);
 
@@ -93,6 +83,69 @@ describe("useToastRecipe", () => {
 				"soft",
 				"subtle",
 			]);
+		});
+
+		it("should render solid as an opaque neutral card in both modes", () => {
+			const s = createInstance();
+			const recipe = useToastRecipe(s);
+
+			expect(recipe.variants!.variant.solid).toEqual({
+				background: "@color.white",
+				color: "@color.text",
+				borderColor: "@color.gray-200",
+				"&:dark": {
+					background: "@color.gray-900",
+					color: "@color.white",
+					borderColor: "@color.gray-800",
+				},
+			});
+		});
+
+		it("should render soft as a faint borderless fill in both modes", () => {
+			const s = createInstance();
+			const recipe = useToastRecipe(s);
+
+			expect(recipe.variants!.variant.soft).toEqual({
+				background: "@color.gray-50",
+				color: "@color.gray-700",
+				"&:dark": {
+					background: "@color.gray-800",
+					color: "@color.gray-300",
+				},
+			});
+		});
+
+		it("should render subtle as a faint fill with a hairline border", () => {
+			const s = createInstance();
+			const recipe = useToastRecipe(s);
+
+			expect(recipe.variants!.variant.subtle).toEqual({
+				background: "@color.gray-50",
+				color: "@color.gray-700",
+				borderColor: "@color.gray-300",
+				"&:dark": {
+					background: "@color.gray-800",
+					color: "@color.gray-300",
+					borderColor: "@color.gray-600",
+				},
+			});
+		});
+
+		it("should keep every variant surface neutral — no semantic color token in any variant", () => {
+			const s = createInstance();
+			const recipe = useToastRecipe(s);
+
+			const serialized = JSON.stringify(recipe.variants!.variant);
+			for (const color of [
+				"primary",
+				"secondary",
+				"success",
+				"info",
+				"warning",
+				"error",
+			]) {
+				expect(serialized).not.toContain(`@color.${color}`);
+			}
 		});
 
 		it("should have size variants with correct styles", () => {
@@ -143,167 +196,26 @@ describe("useToastRecipe", () => {
 		const recipe = useToastRecipe(s);
 
 		expect(recipe.defaultVariants).toEqual({
-			color: "neutral",
 			variant: "subtle",
 			size: "md",
 			orientation: "horizontal",
 		});
 	});
 
-	describe("compound variants", () => {
-		it("should have 27 compound variants total", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s);
+	it("should not declare any compound variants", () => {
+		const s = createInstance();
+		const recipe = useToastRecipe(s);
 
-			// 6 standard colors × 3 variants + 3 special colors × 3 variants = 27
-			expect(recipe.compoundVariants).toHaveLength(27);
-		});
+		// The color axis moved to the icon and progress bar, so the surface has
+		// no color × variant interactions left to compound.
+		expect(recipe.compoundVariants ?? []).toHaveLength(0);
+	});
 
-		it("should have correct solid compound variant for standard colors", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s);
+	it("should not have an outline variant", () => {
+		const s = createInstance();
+		const recipe = useToastRecipe(s);
 
-			const primarySolid = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "primary" && cv.match.variant === "solid",
-			);
-
-			expect(primarySolid).toEqual({
-				match: { color: "primary", variant: "solid" },
-				css: {
-					background: "@color.primary",
-					color: "@color.white",
-					borderColor: "@color.primary-shade-50",
-					"&:dark": {
-						borderColor: "@color.primary-tint-50",
-					},
-				},
-			});
-		});
-
-		it("should not have an outline variant", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s);
-
-			expect(recipe.variants!.variant).not.toHaveProperty("outline");
-			expect(
-				recipe.compoundVariants!.some(
-					(cv) => (cv.match.variant as string) === "outline",
-				),
-			).toBe(false);
-		});
-
-		it("should have correct soft compound variant with dark mode", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s);
-
-			const successSoft = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "success" && cv.match.variant === "soft",
-			);
-
-			expect(successSoft).toEqual({
-				match: { color: "success", variant: "soft" },
-				css: {
-					background: "@color.success-100",
-					color: "@color.success-700",
-					"&:dark": {
-						background: "@color.success-800",
-						color: "@color.success-400",
-					},
-				},
-			});
-		});
-
-		it("should have correct subtle compound variant with dark mode", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s);
-
-			const errorSubtle = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "error" && cv.match.variant === "subtle",
-			);
-
-			expect(errorSubtle).toEqual({
-				match: { color: "error", variant: "subtle" },
-				css: {
-					background: "@color.error-100",
-					color: "@color.error-700",
-					borderColor: "@color.error-300",
-					"&:dark": {
-						background: "@color.error-800",
-						color: "@color.error-400",
-						borderColor: "@color.error-600",
-					},
-				},
-			});
-		});
-
-		it("should have correct light color compound variants", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s);
-
-			const lightSolid = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "light" && cv.match.variant === "solid",
-			);
-
-			expect(lightSolid).toEqual({
-				match: { color: "light", variant: "solid" },
-				css: {
-					background: "@color.white",
-					color: "@color.text",
-					borderColor: "@color.gray-200",
-					"&:dark": {
-						background: "@color.white",
-						color: "@color.text-inverted",
-						borderColor: "@color.gray-200",
-					},
-				},
-			});
-		});
-
-		it("should have correct dark color compound variants", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s);
-
-			const darkSolid = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "dark" && cv.match.variant === "solid",
-			);
-
-			expect(darkSolid).toEqual({
-				match: { color: "dark", variant: "solid" },
-				css: {
-					background: "@color.gray-900",
-					color: "@color.text-inverted",
-					borderColor: "@color.gray-800",
-					"&:dark": {
-						background: "@color.gray-900",
-						color: "@color.text",
-						borderColor: "@color.gray-800",
-					},
-				},
-			});
-		});
-
-		it("should have correct neutral color compound variants with adaptive dark mode", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s);
-
-			const neutralSolid = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "neutral" && cv.match.variant === "solid",
-			);
-
-			expect(neutralSolid).toEqual({
-				match: { color: "neutral", variant: "solid" },
-				css: {
-					background: "@color.white",
-					color: "@color.text",
-					borderColor: "@color.gray-200",
-					"&:dark": {
-						background: "@color.gray-900",
-						color: "@color.white",
-						borderColor: "@color.gray-800",
-					},
-				},
-			});
-		});
+		expect(recipe.variants!.variant).not.toHaveProperty("outline");
 	});
 
 	describe("setup callback", () => {
@@ -334,49 +246,22 @@ describe("useToastRecipe", () => {
 	});
 
 	describe("filter", () => {
-		it("should filter color variants", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s, {
-				filter: { color: ["info", "success"] },
-			});
-
-			expect(Object.keys(recipe.variants!.color)).toEqual(["success", "info"]);
-		});
-
-		it("should prune compound variants when filtering colors", () => {
-			const s = createInstance();
-			const recipe = useToastRecipe(s, {
-				filter: { color: ["primary"] },
-			});
-
-			expect(
-				recipe.compoundVariants!.every((cv) => cv.match.color === "primary"),
-			).toBe(true);
-			expect(recipe.compoundVariants).toHaveLength(3);
-		});
-
-		it("should filter variant axis", () => {
+		it("should filter the variant axis", () => {
 			const s = createInstance();
 			const recipe = useToastRecipe(s, {
 				filter: { variant: ["solid", "soft"] },
 			});
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual(["solid", "soft"]);
-			expect(
-				recipe.compoundVariants!.every(
-					(cv) => cv.match.variant === "solid" || cv.match.variant === "soft",
-				),
-			).toBe(true);
 		});
 
-		it("should adjust default variants when filtered out", () => {
+		it("should clear the default variant when it is filtered out", () => {
 			const s = createInstance();
 			const recipe = useToastRecipe(s, {
-				filter: { color: ["primary"] },
+				filter: { variant: ["solid"] },
 			});
 
-			expect(recipe.defaultVariants?.color).toBeUndefined();
-			expect(recipe.defaultVariants?.variant).toBe("subtle");
+			expect(recipe.defaultVariants?.variant).toBeUndefined();
 			expect(recipe.defaultVariants?.size).toBe("md");
 			expect(recipe.defaultVariants?.orientation).toBe("horizontal");
 		});

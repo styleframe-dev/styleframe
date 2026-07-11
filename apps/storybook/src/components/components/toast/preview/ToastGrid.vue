@@ -25,6 +25,7 @@ const variants = ["solid", "soft", "subtle"] as const;
 					:key="`${variant}-${color}`"
 					:color="color"
 					:variant="variant"
+					icon="●"
 					:title="`${variant.charAt(0).toUpperCase() + variant.slice(1)} ${color.charAt(0).toUpperCase() + color.slice(1)}`"
 					:description="`This is a ${variant} ${color} toast.`"
 				/>

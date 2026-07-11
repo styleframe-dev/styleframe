@@ -1,4 +1,5 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
+import { toastAccentColorVariants } from "./toastAccentColors";
 
 /**
  * Toast progress recipe — a prominent duration indicator that reads as a
@@ -9,9 +10,10 @@ import { createUseRecipe } from "../../utils/createUseRecipe";
  * and driftless.
  *
  * The bar is a rounded pill inset from the toast's rounded corners rather than
- * bleeding edge-to-edge, and uses `currentColor` at full opacity so it inherits
- * each toast color/variant's foreground accent automatically across all 27
- * combinations.
+ * bleeding edge-to-edge. It is the second part (with the icon) that carries the
+ * toast's `color` — the body stays neutral, so the accent lands here. `color`
+ * sets the bar's foreground from the shared accent map, and `background:
+ * currentColor` paints the pill in that accent at full opacity.
  */
 export const useToastProgressRecipe = createUseRecipe(
 	"toast-progress",
@@ -28,6 +30,12 @@ export const useToastProgressRecipe = createUseRecipe(
 			animationName: "toast-progress",
 			animationDuration: "var(--toast-duration, 5s)",
 			animationTimingFunction: "linear",
+		},
+		variants: {
+			color: toastAccentColorVariants,
+		},
+		defaultVariants: {
+			color: "neutral",
 		},
 	},
 	(s) => {

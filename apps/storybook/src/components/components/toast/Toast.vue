@@ -38,18 +38,19 @@ defineEmits<{
 	dismiss: [];
 }>();
 
+// The `color` axis is scoped to the icon and the progress bar (Nuxt UI's
+// model) — the body stays neutral, keyed only by `variant`.
 const classes = computed(() =>
 	toast({
-		color: props.color,
 		variant: props.variant,
 		size: props.size,
 		orientation: props.orientation,
 	}),
 );
 
-const iconClasses = computed(() => toastIcon());
+const iconClasses = computed(() => toastIcon({ color: props.color }));
 const dismissClasses = computed(() => toastDismiss());
-const progressClasses = computed(() => toastProgress());
+const progressClasses = computed(() => toastProgress({ color: props.color }));
 </script>
 
 <template>

@@ -33,12 +33,13 @@ const meta = {
 		color: {
 			control: "select",
 			options: colors,
-			description: "The color variant of the toast",
+			description:
+				"The semantic accent. Scoped to the icon and progress bar — the body stays neutral for every color.",
 		},
 		variant: {
 			control: "select",
 			options: variants,
-			description: "The visual style variant",
+			description: "The neutral surface treatment (solid / soft / subtle)",
 		},
 		size: {
 			control: "select",
@@ -153,10 +154,12 @@ export const WithProgress: Story = {
 	}),
 };
 
-// Individual color stories
+// Individual color stories. Each shows an icon so the color axis is visible —
+// the accent lands on the icon (and progress bar), never the neutral body.
 export const Neutral: Story = {
 	args: {
 		color: "neutral",
+		icon: "●",
 		title: "Neutral Toast",
 		description: "This is a neutral toast.",
 	},
@@ -165,6 +168,7 @@ export const Neutral: Story = {
 export const Primary: Story = {
 	args: {
 		color: "primary",
+		icon: "●",
 		title: "Primary Toast",
 		description: "This is a primary toast.",
 	},
@@ -173,6 +177,7 @@ export const Primary: Story = {
 export const Secondary: Story = {
 	args: {
 		color: "secondary",
+		icon: "●",
 		title: "Secondary Toast",
 		description: "This is a secondary toast.",
 	},
@@ -181,6 +186,7 @@ export const Secondary: Story = {
 export const Success: Story = {
 	args: {
 		color: "success",
+		icon: "●",
 		title: "Success Toast",
 		description: "This is a success toast.",
 	},
@@ -189,6 +195,7 @@ export const Success: Story = {
 export const Info: Story = {
 	args: {
 		color: "info",
+		icon: "●",
 		title: "Info Toast",
 		description: "This is an info toast.",
 	},
@@ -197,6 +204,7 @@ export const Info: Story = {
 export const Warning: Story = {
 	args: {
 		color: "warning",
+		icon: "●",
 		title: "Warning Toast",
 		description: "This is a warning toast.",
 	},
@@ -205,6 +213,7 @@ export const Warning: Story = {
 export const Error: Story = {
 	args: {
 		color: "error",
+		icon: "●",
 		title: "Error Toast",
 		description: "This is an error toast.",
 	},
@@ -213,6 +222,7 @@ export const Error: Story = {
 export const Light: Story = {
 	args: {
 		color: "light",
+		icon: "●",
 		title: "Light Toast",
 		description: "This is a light toast.",
 	},
@@ -221,6 +231,7 @@ export const Light: Story = {
 export const Dark: Story = {
 	args: {
 		color: "dark",
+		icon: "●",
 		title: "Dark Toast",
 		description: "This is a dark toast.",
 	},

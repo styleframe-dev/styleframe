@@ -30,6 +30,7 @@ const sizeTitles: Record<string, string> = {
 					:key="`${size}-${color}`"
 					:color="color"
 					:size="size"
+					icon="●"
 					:title="`${sizeTitles[size]} ${color.charAt(0).toUpperCase() + color.slice(1)}`"
 					:description="`This is a ${size} ${color} toast.`"
 				/>

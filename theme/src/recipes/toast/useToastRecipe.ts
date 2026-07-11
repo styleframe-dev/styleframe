@@ -1,22 +1,20 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
-const colors = [
-	"primary",
-	"secondary",
-	"success",
-	"info",
-	"warning",
-	"error",
-] as const;
-
 /**
  * Toast recipe for transient, floating feedback notifications.
- * Shares callout's color/size/orientation vocabulary; departs in two ways.
- * Its base floats (box-shadow elevation) and is sized to its content (no
- * flex-basis), where a callout is an inline, full-width surface. And its
- * variant axis drops callout's `outline` — an outline toast has a transparent
- * background, which is illegible for a surface that floats over arbitrary page
- * content. Toasts keep the three filled variants: `solid`, `soft`, `subtle`.
+ *
+ * Unlike its callout sibling, the toast body is *neutral for every color*.
+ * Following Nuxt UI's model, the `color` axis does not tint the surface — it
+ * lives on the icon and the progress bar (see `toastAccentColors`), which carry
+ * the semantic accent while the card itself stays a clean white/dark surface.
+ * So this recipe has no `color` axis and no color compound variants at all; the
+ * only surface axis is `variant`, which sets the neutral treatment:
+ *   - `solid`  — opaque white card (dark: near-black), the highest-contrast
+ *     surface, matching Nuxt UI's default toast.
+ *   - `soft`   — a faint gray fill, borderless.
+ *   - `subtle` — the same faint fill with a hairline border.
+ * The base still floats (box-shadow elevation) and is sized to its content,
+ * where a callout is an inline, full-width surface.
  */
 export const useToastRecipe = createUseRecipe(
 	"toast",
@@ -41,21 +39,35 @@ export const useToastRecipe = createUseRecipe(
 			borderRadius: "@border-radius.lg",
 		},
 		variants: {
-			color: {
-				primary: {},
-				secondary: {},
-				success: {},
-				info: {},
-				warning: {},
-				error: {},
-				light: {},
-				dark: {},
-				neutral: {},
-			},
 			variant: {
-				solid: {},
-				soft: {},
-				subtle: {},
+				solid: {
+					background: "@color.white",
+					color: "@color.text",
+					borderColor: "@color.gray-200",
+					"&:dark": {
+						background: "@color.gray-900",
+						color: "@color.white",
+						borderColor: "@color.gray-800",
+					},
+				},
+				soft: {
+					background: "@color.gray-50",
+					color: "@color.gray-700",
+					"&:dark": {
+						background: "@color.gray-800",
+						color: "@color.gray-300",
+					},
+				},
+				subtle: {
+					background: "@color.gray-50",
+					color: "@color.gray-700",
+					borderColor: "@color.gray-300",
+					"&:dark": {
+						background: "@color.gray-800",
+						color: "@color.gray-300",
+						borderColor: "@color.gray-600",
+					},
+				},
 			},
 			size: {
 				sm: {
@@ -93,165 +105,7 @@ export const useToastRecipe = createUseRecipe(
 				},
 			},
 		},
-		compoundVariants: [
-			// Standard colors
-			...colors.flatMap((color) => [
-				{
-					match: { color, variant: "solid" as const },
-					css: {
-						background: `@color.${color}`,
-						color: "@color.white",
-						borderColor: `@color.${color}-shade-50`,
-						"&:dark": {
-							borderColor: `@color.${color}-tint-50`,
-						},
-					},
-				},
-				{
-					match: { color, variant: "soft" as const },
-					css: {
-						background: `@color.${color}-100`,
-						color: `@color.${color}-700`,
-						"&:dark": {
-							background: `@color.${color}-800`,
-							color: `@color.${color}-400`,
-						},
-					},
-				},
-				{
-					match: { color, variant: "subtle" as const },
-					css: {
-						background: `@color.${color}-100`,
-						color: `@color.${color}-700`,
-						borderColor: `@color.${color}-300`,
-						"&:dark": {
-							background: `@color.${color}-800`,
-							color: `@color.${color}-400`,
-							borderColor: `@color.${color}-600`,
-						},
-					},
-				},
-			]),
-
-			// Light color (neutral light-mode values, fixed across themes)
-			{
-				match: { color: "light" as const, variant: "solid" as const },
-				css: {
-					background: "@color.white",
-					color: "@color.text",
-					borderColor: "@color.gray-200",
-					"&:dark": {
-						background: "@color.white",
-						color: "@color.text-inverted",
-						borderColor: "@color.gray-200",
-					},
-				},
-			},
-			{
-				match: { color: "light" as const, variant: "soft" as const },
-				css: {
-					background: "@color.gray-50",
-					color: "@color.gray-700",
-					"&:dark": {
-						background: "@color.gray-50",
-						color: "@color.gray-700",
-					},
-				},
-			},
-			{
-				match: { color: "light" as const, variant: "subtle" as const },
-				css: {
-					background: "@color.gray-50",
-					color: "@color.gray-700",
-					borderColor: "@color.gray-300",
-					"&:dark": {
-						background: "@color.gray-50",
-						color: "@color.gray-700",
-						borderColor: "@color.gray-300",
-					},
-				},
-			},
-
-			// Dark color (neutral dark-mode values, fixed across themes)
-			{
-				match: { color: "dark" as const, variant: "solid" as const },
-				css: {
-					background: "@color.gray-900",
-					color: "@color.text-inverted",
-					borderColor: "@color.gray-800",
-					"&:dark": {
-						background: "@color.gray-900",
-						color: "@color.text",
-						borderColor: "@color.gray-800",
-					},
-				},
-			},
-			{
-				match: { color: "dark" as const, variant: "soft" as const },
-				css: {
-					background: "@color.gray-800",
-					color: "@color.gray-300",
-					"&:dark": {
-						background: "@color.gray-800",
-						color: "@color.gray-300",
-					},
-				},
-			},
-			{
-				match: { color: "dark" as const, variant: "subtle" as const },
-				css: {
-					background: "@color.gray-800",
-					color: "@color.gray-300",
-					borderColor: "@color.gray-600",
-					"&:dark": {
-						background: "@color.gray-800",
-						color: "@color.gray-300",
-						borderColor: "@color.gray-600",
-					},
-				},
-			},
-
-			// Neutral color (light in light mode, dark in dark mode)
-			{
-				match: { color: "neutral" as const, variant: "solid" as const },
-				css: {
-					background: "@color.white",
-					color: "@color.text",
-					borderColor: "@color.gray-200",
-					"&:dark": {
-						background: "@color.gray-900",
-						color: "@color.white",
-						borderColor: "@color.gray-800",
-					},
-				},
-			},
-			{
-				match: { color: "neutral" as const, variant: "soft" as const },
-				css: {
-					background: "@color.gray-50",
-					color: "@color.gray-700",
-					"&:dark": {
-						background: "@color.gray-800",
-						color: "@color.gray-300",
-					},
-				},
-			},
-			{
-				match: { color: "neutral" as const, variant: "subtle" as const },
-				css: {
-					background: "@color.gray-50",
-					color: "@color.gray-700",
-					borderColor: "@color.gray-300",
-					"&:dark": {
-						background: "@color.gray-800",
-						color: "@color.gray-300",
-						borderColor: "@color.gray-600",
-					},
-				},
-			},
-		],
 		defaultVariants: {
-			color: "neutral",
 			variant: "subtle",
 			size: "md",
 			orientation: "horizontal",
