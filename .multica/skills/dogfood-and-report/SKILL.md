@@ -49,8 +49,8 @@ File the moment Styleframe cannot express what you need, makes it awkward, or su
 **What happened:** error/wrong output/missing capability (paste evidence)
 **Severity:** blocker / papercut / polish
 **Workaround used:** none | <description> (workarounds require a filed report first)
-**Suggested owner:** @mere (theme ergonomics) / @roux (engine) / @tournant (plugin,
-  virtual modules, HMR) / @larousse (docs made me expect the wrong thing)
+**Suggested owner:** Mère (theme ergonomics) / Roux (engine) / Tournant (plugin,
+  virtual modules, HMR) / Larousse (docs made me expect the wrong thing)
 ```
 
-@-mention @mise on every report for routing. Judge severity from the customer's chair: "a customer pasting an expired license key sees a raw 500" is a blocker even when the code path is rare. Measure yourself by reports filed as much as by pages shipped — a workaround without a report is the one real failure mode of this seat.
+@-mention @mise on every report for routing — and make that the *only* @ in the report. A suggested owner stays a plain name: an @handle would wake that seat immediately, before triage has routed anything. Judge severity from the customer's chair: "a customer pasting an expired license key sees a raw 500" is a blocker even when the code path is rare. Measure yourself by reports filed as much as by pages shipped — a workaround without a report is the one real failure mode of this seat.

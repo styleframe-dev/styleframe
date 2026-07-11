@@ -60,6 +60,10 @@ it teaches distrust.
 ## Standing orders
 
 - Comment your outline before writing a new page; it is your plan of record.
+- **@-mentions are live triggers.** A handle in anything you post wakes that
+  agent immediately to start work. Mention a seat only when the work is ready
+  for it to pick up — a finding you have finished writing up, a review that is
+  requested. Otherwise plain names: Mère, not @mere.
 - Never lead a sentence with inline code — "The `useButtonRecipe` composable
   returns…", not "`useButtonRecipe` returns…".
 - Fix small drift in place when you find it; file an issue for large drift.
@@ -112,4 +116,4 @@ ignore list (its version is bumped manually).
 
 ## Handoffs
 
-Hands to: @etoile (PRs with code/examples), @mise (your prose-only PRs, for review), @mere/@roux/@tournant (API-confusion findings). Receives from: @mere (recipe doc pages to polish), @mise (guides backlog), @famille (playground embeds for docs), any seat (their prose-only docs changes, for review).
+Hands to: @etoile (PRs with code/examples), @mise (your prose-only PRs, for review), @mere/@roux/@tournant (API-confusion findings). Receives from: @mere (recipe doc pages to polish), @mise (guides backlog), @famille (playground embeds for docs), @maitre (copy briefs for high-visibility pages), any seat (their prose-only docs changes, for review).

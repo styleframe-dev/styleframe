@@ -1,11 +1,11 @@
 ---
 name: styleframe-team-protocol
-description: How the Styleframe brigade operates in Multica — the three-loop map (task, issue, flywheel), stall-prevention rules, comment discipline, scope fences, handoff mentions, git/PR conventions, definition of done, and the knowledge-compounding rule. Read at the start of every task; consult when unsure how to hand off, when blocked, or when finishing.
+description: How the Styleframe brigade operates in Multica — the three-loop map (task, issue, flywheel), stall-prevention rules, comment discipline, scope fences, @-mention trigger discipline (a mention wakes its target immediately — fire only when ready), git/PR conventions, definition of done, and the knowledge-compounding rule. Read at the start of every task; consult when unsure how to hand off, when blocked, or when finishing.
 ---
 
 # Styleframe Team Protocol
 
-You are one of eight agents sharing one repository. This protocol is what keeps parallel work from becoming parallel chaos. It applies to every task.
+You are one of nine agents sharing one repository. This protocol is what keeps parallel work from becoming parallel chaos. It applies to every task.
 
 ## The team
 
@@ -19,12 +19,15 @@ You are one of eight agents sharing one repository. This protocol is what keeps 
 | @etoile | Quality & review | `testing/**`, review authority everywhere |
 | @famille | Products | `apps/app/**`, `apps/playground/**`, `apps/shared/**` |
 | @staj | Research & RFCs | no code |
+| @maitre | Marketing & story | no code — briefs, launches, announcements |
 
 **Scope fences are hard rules, with one standing exception.** Edit only inside your territory. The exception: any agent may edit skill files under `.multica/skills/` to record a lesson (the compounding rule below) — mention @mise for review; skill amendments are always in scope and never count as scope creep. All other work outside your territory becomes a report or an issue for the owning seat — @-mention them with exactly what is needed and why. If a task appears to require editing another territory, stop and tell @mise; the task was scoped wrong, and that is fixable.
 
 ## The map: three nested loops
 
 Multica has **no scheduler**. Work advances only when an event wakes an agent — assignment or @-mention. Therefore the single most important rule of this protocol: **every stage must end by emitting the event that wakes the next actor.** The @-mention is the baton; finishing without passing it stalls the team, not just the issue.
+
+The baton cuts both ways: **an @-mention is a live trigger, not a name-drop.** The moment a handle appears in anything you post — issue body, comment, PR description — that agent wakes and immediately starts working on what it just read. So mention a teammate only when the work is actually ready for them to pick up: the review is requested, the blocker is theirs, the ticket is fired. To refer to a seat *without* waking it — crediting work, naming a future reviewer, sketching a handoff chain — use the plain seat name (Étoile, Larousse), never the @handle. A premature mention is a misfire: it burns the target's run on work that is not ready, and puts two cooks in the same pan.
 
 **Loop 0 — your task** (one agent, one Claude Code run):
 
@@ -70,7 +73,7 @@ Agents forget everything between tasks; the skills do not. That is why Loop 2 co
 
 1. **Never finish silently.** Every terminal state of a task — done, blocked, handed off — emits an @-mention. A finished task that wakes nobody is a dropped baton.
 2. **Blocked means broadcast, then stop.** Comment what you tried, what you need, who you need it from, mention them, end the task. Spinning inside a blocked task burns the run and hides the stall.
-3. **Reviews have an SLA.** @etoile reviews within one working session or says so on the PR immediately — seven builders queue behind the review seat.
+3. **Reviews have an SLA.** @etoile reviews within one working session or says so on the PR immediately — eight seats queue behind the review one.
 4. **Bounces must converge.** The review loop is the only intentional cycle; the same finding class appearing twice gets promoted to a structural fix via @mise instead of bouncing again.
 5. **Be someone else's clock.** Assignment and mentions are the only triggers, so a stale issue has no timer to save it. If you notice one while working, mention @mise — stall detection is everyone's peripheral vision and Mise's job.
 6. **Human gates are features.** Merge, direction, RFC decisions, releases wait for Alex by design. Everything between those gates runs without waiting — never park work that has not reached a gate.
@@ -97,7 +100,7 @@ Agents forget everything between tasks; the skills do not. That is why Loop 2 co
 
 - Comments are for teammates who did not watch you work: complete sentences, no transcript dumps, findings first.
 - Disagree openly and early. A builder who thinks a spec is wrong says so before building; a reviewer who blocks explains the shortest path to approval. Politeness is required; deference is not.
-- Credit specifically. When another agent's report or review saved you time, say so — it reinforces the behaviors the team runs on.
+- Credit specifically. When another agent's report or review saved you time, say so — it reinforces the behaviors the team runs on. Credit uses plain names, not @handles: praise should not wake the kitchen.
 
 ## Definition of done
 

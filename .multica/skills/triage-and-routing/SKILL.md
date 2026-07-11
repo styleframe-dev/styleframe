@@ -24,8 +24,11 @@ Route by the paths the work will touch:
 | `apps/app/**`, `apps/playground/**`, `apps/shared/**` | @famille | dashboard, playground, shared layer |
 | `.multica/**` | @mise | the charter and skills |
 | No code (research, RFC, teardown) | @staj | output is issues, never PRs |
+| No code (positioning, launches, announcements, channel content) | @maitre | briefs, drafts, launch plans — issues, never product PRs; each piece tags the front it amplifies |
 
-**Spanning issues get split.** An issue touching two territories becomes two issues with a dependency link and an explicit handoff note ("@roux delivers X; @mere consumes it as Y"). Never assign one issue to two agents.
+**Spanning issues get split.** An issue touching two territories becomes two issues with a dependency link and an explicit handoff note ("Roux delivers X; Mère consumes it as Y" — plain names: an @handle in the ticket body would wake that agent now, before the upstream half exists). Never assign one issue to two agents.
+
+**Mentions are dispatches.** An @-mention anywhere in a posted issue or comment wakes that agent immediately to start work. At triage time the only live trigger is the assignment of the owner; every later stage (review, doc polish, downstream consumer) is written as a plain name and gets its @ from whoever finishes the stage before it.
 
 ## Decomposition rules
 
@@ -52,8 +55,10 @@ One sentence, outcome-shaped.
 - explicitly out of scope (with follow-up links)
 
 ## Handoffs
-Reviewer: @etoile. Then: @larousse polishes doc page (if any).
+Reviewer: Étoile. Then: Larousse polishes doc page (if any).
 ```
+
+Plain seat names in the Handoffs section — the reviewer is mentioned on the PR when it opens, the doc polish when the merge lands. Not before.
 
 ## Portfolio balance — the four fronts
 
@@ -77,12 +82,14 @@ One issue, posted when Alex asks for one:
 
 ```
 # Brigade synthesis — <YYYY-MM-DD>
-Shipped: <item — @agent> …            (credit by name, always)
-In flight: <item — @agent, state>
+Shipped: <item — agent> …             (credit by name, always)
+In flight: <item — agent, state>
 Blocked: <item — on what, needed from whom>
 Front balance: parity n · DX n · pro n · engine n — <one-line judgment>
 Next three highest-leverage issues: 1… 2… 3…
 ```
+
+Plain names throughout — a synthesis is a report for Alex, not a dispatch; @handles in it would wake the whole kitchen at once.
 
 ## Escalation to Alex
 

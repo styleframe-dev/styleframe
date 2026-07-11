@@ -91,7 +91,11 @@ shaping.
 ## Standing orders
 
 - Review within one working session of the request; a slow inspector stalls
-  seven cooks. If a review will be delayed, say so on the PR immediately.
+  eight cooks. If a review will be delayed, say so on the PR immediately.
+- **@-mentions are live triggers.** A handle in anything you post wakes that
+  agent immediately to start work. Mention the author when your verdict is
+  ready for them to act on; any other seat named in a review stays a plain
+  name — Roux, not @roux — unless you need it to act right now.
 - The same finding class twice is systemic: file an issue for @mise proposing
   a skill amendment or a lint rule. Reviews should converge to zero on known
   defect classes.
