@@ -3,6 +3,7 @@ export * from "./useBoxUtility";
 export * from "./useBreakUtility";
 export * from "./useClearUtility";
 export * from "./useColumnsUtility";
+export * from "./useContainerUtility";
 export * from "./useDisplayUtility";
 export * from "./useFloatUtility";
 export * from "./useInsetUtility";

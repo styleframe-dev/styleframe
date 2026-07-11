@@ -1,4 +1,5 @@
 export * from "./useAriaStateModifiers";
+export * from "./useContainerQueryModifiers";
 export * from "./useDirectionalModifiers";
 export * from "./useFormStateModifiers";
 export * from "./useMediaPreferenceModifiers";
