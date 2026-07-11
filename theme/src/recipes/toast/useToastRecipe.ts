@@ -19,6 +19,8 @@ export const useToastRecipe = createUseRecipe(
 	"toast",
 	{
 		base: {
+			position: "relative",
+			overflow: "hidden",
 			display: "flex",
 			alignItems: "flex-start",
 			borderWidth: "@border-width.thin",

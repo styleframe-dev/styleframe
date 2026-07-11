@@ -5,6 +5,8 @@ import { useToastRecipe } from "./useToastRecipe";
 function createInstance() {
 	const s = styleframe();
 	for (const name of [
+		"position",
+		"overflow",
 		"display",
 		"alignItems",
 		"borderWidth",
@@ -44,6 +46,8 @@ describe("useToastRecipe", () => {
 		const recipe = useToastRecipe(s);
 
 		expect(recipe.base).toEqual({
+			position: "relative",
+			overflow: "hidden",
 			display: "flex",
 			alignItems: "flex-start",
 			borderWidth: "@border-width.thin",

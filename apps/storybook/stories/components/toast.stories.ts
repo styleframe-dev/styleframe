@@ -66,6 +66,11 @@ const meta = {
 			control: "boolean",
 			description: "Whether the toast can be dismissed",
 		},
+		progress: {
+			control: "boolean",
+			description:
+				"Whether to show the duration progress line pinned to the bottom edge",
+		},
 	},
 } satisfies Meta<typeof Toast>;
 
@@ -120,6 +125,28 @@ export const Dismissible: Story = {
 		template: `
 			<Toast v-bind="args" :hidden="dismissed" @dismiss="dismissed = true" />
 			<Button v-if="dismissed" label="Reset" @click="dismissed = false" />
+		`,
+	}),
+};
+
+export const WithProgress: Story = {
+	args: {
+		color: "info",
+		progress: true,
+		title: "Uploading files",
+		description: "The progress line tracks the auto-dismiss countdown.",
+	},
+	render: (args) => ({
+		components: { Toast },
+		setup() {
+			return { args };
+		},
+		// `.toast-progress-demo` loops the line so the countdown stays visible on
+		// the static canvas; real usage runs it once over `--toast-duration`.
+		template: `
+			<div class="toast-progress-demo">
+				<Toast v-bind="args" />
+			</div>
 		`,
 	}),
 };

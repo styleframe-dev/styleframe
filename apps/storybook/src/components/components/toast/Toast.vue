@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { toast, toastDismiss, toastIcon } from "virtual:styleframe";
+import {
+	toast,
+	toastDismiss,
+	toastIcon,
+	toastProgress,
+} from "virtual:styleframe";
 import ToastContent from "./ToastContent.vue";
 import ToastTitle from "./ToastTitle.vue";
 import ToastDescription from "./ToastDescription.vue";
@@ -24,6 +29,7 @@ const props = withDefaults(
 		description?: string;
 		dismissible?: boolean;
 		icon?: string;
+		progress?: boolean;
 	}>(),
 	{},
 );
@@ -43,6 +49,7 @@ const classes = computed(() =>
 
 const iconClasses = computed(() => toastIcon());
 const dismissClasses = computed(() => toastDismiss());
+const progressClasses = computed(() => toastProgress());
 </script>
 
 <template>
@@ -67,5 +74,6 @@ const dismissClasses = computed(() => toastDismiss());
 		>
 			<slot name="dismiss">&times;</slot>
 		</button>
+		<div v-if="progress" :class="progressClasses" aria-hidden="true" />
 	</div>
 </template>
