@@ -11,9 +11,12 @@ const colors = [
 
 /**
  * Toast recipe for transient, floating feedback notifications.
- * Shares the callout color/variant/size/orientation vocabulary; departs only in
- * its base — a toast floats (box-shadow elevation) and is sized to its content
- * (no flex-basis), where a callout is an inline, full-width surface.
+ * Shares callout's color/size/orientation vocabulary; departs in two ways.
+ * Its base floats (box-shadow elevation) and is sized to its content (no
+ * flex-basis), where a callout is an inline, full-width surface. And its
+ * variant axis drops callout's `outline` — an outline toast has a transparent
+ * background, which is illegible for a surface that floats over arbitrary page
+ * content. Toasts keep the three filled variants: `solid`, `soft`, `subtle`.
  */
 export const useToastRecipe = createUseRecipe(
 	"toast",
@@ -51,7 +54,6 @@ export const useToastRecipe = createUseRecipe(
 			},
 			variant: {
 				solid: {},
-				outline: {},
 				soft: {},
 				subtle: {},
 			},
@@ -106,13 +108,6 @@ export const useToastRecipe = createUseRecipe(
 					},
 				},
 				{
-					match: { color, variant: "outline" as const },
-					css: {
-						color: `@color.${color}`,
-						borderColor: `@color.${color}`,
-					},
-				},
-				{
 					match: { color, variant: "soft" as const },
 					css: {
 						background: `@color.${color}-100`,
@@ -148,17 +143,6 @@ export const useToastRecipe = createUseRecipe(
 					"&:dark": {
 						background: "@color.white",
 						color: "@color.text-inverted",
-						borderColor: "@color.gray-200",
-					},
-				},
-			},
-			{
-				match: { color: "light" as const, variant: "outline" as const },
-				css: {
-					color: "@color.text-inverted",
-					borderColor: "@color.gray-200",
-					"&:dark": {
-						color: "@color.text",
 						borderColor: "@color.gray-200",
 					},
 				},
@@ -203,17 +187,6 @@ export const useToastRecipe = createUseRecipe(
 				},
 			},
 			{
-				match: { color: "dark" as const, variant: "outline" as const },
-				css: {
-					color: "@color.text",
-					borderColor: "@color.gray-600",
-					"&:dark": {
-						color: "@color.text-inverted",
-						borderColor: "@color.gray-600",
-					},
-				},
-			},
-			{
 				match: { color: "dark" as const, variant: "soft" as const },
 				css: {
 					background: "@color.gray-800",
@@ -249,17 +222,6 @@ export const useToastRecipe = createUseRecipe(
 						background: "@color.gray-900",
 						color: "@color.white",
 						borderColor: "@color.gray-800",
-					},
-				},
-			},
-			{
-				match: { color: "neutral" as const, variant: "outline" as const },
-				css: {
-					color: "@color.text",
-					borderColor: "@color.gray-200",
-					"&:dark": {
-						color: "@color.gray-200",
-						borderColor: "@color.gray-600",
 					},
 				},
 			},

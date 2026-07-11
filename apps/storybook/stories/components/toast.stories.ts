@@ -18,7 +18,7 @@ const colors = [
 	"light",
 	"dark",
 ] as const;
-const variants = ["solid", "outline", "soft", "subtle"] as const;
+const variants = ["solid", "soft", "subtle"] as const;
 const sizes = ["sm", "md", "lg"] as const;
 const orientations = ["horizontal", "vertical"] as const;
 
@@ -230,14 +230,6 @@ export const Solid: Story = {
 		variant: "solid",
 		title: "Solid Toast",
 		description: "This is a solid toast.",
-	},
-};
-
-export const Outline: Story = {
-	args: {
-		variant: "outline",
-		title: "Outline Toast",
-		description: "This is an outline toast.",
 	},
 };
 

@@ -12,7 +12,7 @@ const colors = [
 	"light",
 	"dark",
 ] as const;
-const variants = ["solid", "outline", "soft", "subtle"] as const;
+const variants = ["solid", "soft", "subtle"] as const;
 </script>
 
 <template>

@@ -8,7 +8,7 @@ import { createUseRecipe } from "../../utils/createUseRecipe";
  * has to flip a data-attribute at runtime — declarative and driftless.
  *
  * The line uses `currentColor`, so it inherits each toast color/variant's
- * foreground automatically across all 36 combinations.
+ * foreground automatically across all 27 combinations.
  */
 export const useToastProgressRecipe = createUseRecipe(
 	"toast-progress",

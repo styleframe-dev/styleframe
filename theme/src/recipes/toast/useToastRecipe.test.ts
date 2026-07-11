@@ -90,7 +90,6 @@ describe("useToastRecipe", () => {
 
 			expect(Object.keys(recipe.variants!.variant)).toEqual([
 				"solid",
-				"outline",
 				"soft",
 				"subtle",
 			]);
@@ -152,12 +151,12 @@ describe("useToastRecipe", () => {
 	});
 
 	describe("compound variants", () => {
-		it("should have 36 compound variants total", () => {
+		it("should have 27 compound variants total", () => {
 			const s = createInstance();
 			const recipe = useToastRecipe(s);
 
-			// 6 standard colors × 4 variants + 3 special colors × 4 variants = 36
-			expect(recipe.compoundVariants).toHaveLength(36);
+			// 6 standard colors × 3 variants + 3 special colors × 3 variants = 27
+			expect(recipe.compoundVariants).toHaveLength(27);
 		});
 
 		it("should have correct solid compound variant for standard colors", () => {
@@ -181,21 +180,16 @@ describe("useToastRecipe", () => {
 			});
 		});
 
-		it("should have correct outline compound variant for standard colors", () => {
+		it("should not have an outline variant", () => {
 			const s = createInstance();
 			const recipe = useToastRecipe(s);
 
-			const infoOutline = recipe.compoundVariants!.find(
-				(cv) => cv.match.color === "info" && cv.match.variant === "outline",
-			);
-
-			expect(infoOutline).toEqual({
-				match: { color: "info", variant: "outline" },
-				css: {
-					color: "@color.info",
-					borderColor: "@color.info",
-				},
-			});
+			expect(recipe.variants!.variant).not.toHaveProperty("outline");
+			expect(
+				recipe.compoundVariants!.some(
+					(cv) => (cv.match.variant as string) === "outline",
+				),
+			).toBe(false);
 		});
 
 		it("should have correct soft compound variant with dark mode", () => {
@@ -358,7 +352,7 @@ describe("useToastRecipe", () => {
 			expect(
 				recipe.compoundVariants!.every((cv) => cv.match.color === "primary"),
 			).toBe(true);
-			expect(recipe.compoundVariants).toHaveLength(4);
+			expect(recipe.compoundVariants).toHaveLength(3);
 		});
 
 		it("should filter variant axis", () => {

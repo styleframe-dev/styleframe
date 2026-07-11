@@ -22,7 +22,7 @@ const props = withDefaults(
 			| "light"
 			| "dark"
 			| "neutral";
-		variant?: "solid" | "outline" | "soft" | "subtle";
+		variant?: "solid" | "soft" | "subtle";
 		size?: "sm" | "md" | "lg";
 		orientation?: "horizontal" | "vertical";
 		title?: string;
