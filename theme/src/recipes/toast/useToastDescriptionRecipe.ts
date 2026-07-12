@@ -1,17 +1,16 @@
 import { createUseRecipe } from "../../utils/createUseRecipe";
 
 /**
- * Toast description recipe — the supporting line below the title. A step down
- * in weight from the title, with a small top margin to separate the two lines.
- * Colour is inherited (`currentColor`) — the neutral foreground of the toast
- * body, never the `color` accent. The lower-contrast reading relative to the
- * title comes from the weight step alone, which is colour-agnostic and
- * driftless.
+ * Toast description recipe — the supporting line below the title. A step down in
+ * both size and weight from the title, with a small top margin to separate the
+ * two lines. Colour is inherited (`currentColor`) — the neutral foreground of
+ * the toast body, never the `color` accent. The lower-contrast reading relative
+ * to the title is colour-agnostic and driftless.
  *
- * Font size follows the `size` axis on the literal token — sm → sm, md → md,
- * lg → lg — matching `useToastTitleRecipe` exactly, so title and description
- * are equal in size at every step and the hierarchy is carried by weight
- * (semibold title vs normal description). Defaults to `md` to match the toast.
+ * Font size follows the `size` axis one token below `useToastTitleRecipe` at
+ * every step — the title is sm → sm, md → md, lg → lg, so the description is
+ * sm → xs, md → sm, lg → md — keeping the description one step under the title
+ * at each size. Defaults to `md` to match the toast.
  */
 export const useToastDescriptionRecipe = createUseRecipe("toast-description", {
 	base: {
@@ -22,9 +21,9 @@ export const useToastDescriptionRecipe = createUseRecipe("toast-description", {
 	},
 	variants: {
 		size: {
-			sm: { fontSize: "@font-size.sm" },
-			md: { fontSize: "@font-size.md" },
-			lg: { fontSize: "@font-size.lg" },
+			sm: { fontSize: "@font-size.xs" },
+			md: { fontSize: "@font-size.sm" },
+			lg: { fontSize: "@font-size.md" },
 		},
 	},
 	defaultVariants: {
