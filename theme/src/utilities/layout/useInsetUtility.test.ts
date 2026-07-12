@@ -216,3 +216,41 @@ describe("useLeftUtility", () => {
 		expect(css).toContain("left: auto;");
 	});
 });
+
+describe("inset multiplier support", () => {
+	it("should resolve numeric multiplier refs to calc(), not undefined vars", () => {
+		const s = styleframe();
+		s.variable("spacing", "1rem");
+
+		const createInset = useInsetUtility(s);
+		createInset(["@0.5"]);
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("top: calc(var(--spacing, 1rem) * 0.5);");
+		expect(css).toContain("bottom: calc(var(--spacing, 1rem) * 0.5);");
+		expect(css).not.toContain("var(--0--5)");
+	});
+
+	it("should resolve numeric multiplier refs on single-side insets", () => {
+		const s = styleframe();
+		s.variable("spacing", "1rem");
+
+		const createBottom = useBottomUtility(s);
+		createBottom(["@0.25"]);
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("bottom: calc(var(--spacing, 1rem) * 0.25);");
+		expect(css).not.toContain("var(--0--25)");
+	});
+
+	it("should support negative multiplier refs on insets", () => {
+		const s = styleframe();
+		s.variable("spacing", "1rem");
+
+		const createTop = useTopUtility(s);
+		createTop(["@-1"]);
+
+		const css = consumeCSS(s.root, s.options);
+		expect(css).toContain("top: calc(var(--spacing, 1rem) * -1);");
+	});
+});
