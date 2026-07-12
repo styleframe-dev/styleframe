@@ -2,6 +2,7 @@ export * from "./css";
 export * from "./declarations";
 export * from "./atRule";
 export * from "./modifier";
+export * from "./property";
 export * from "./ref";
 export * from "./root";
 export * from "./selector";
