@@ -77,7 +77,7 @@ export default defineNuxtConfig({
 	},
 	site: {
 		url: "https://www.styleframe.dev",
-		name: "Styleframe - Type-safe, Composable CSS in TypeScript",
+		name: "Styleframe — The Design Systems Styling Engine",
 	},
 	llms: {
 		domain: "https://styleframe.dev",
