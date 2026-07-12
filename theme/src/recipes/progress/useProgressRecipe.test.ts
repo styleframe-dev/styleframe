@@ -1,6 +1,6 @@
 import { styleframe } from "@styleframe/core";
 import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
-import { expectKeyframesRegistered } from "../../testing/expectKeyframesRegistered";
+import { expectKeyframesRegistered } from "../../__tests__/expectKeyframesRegistered";
 import { useProgressBarRecipe, useProgressRecipe } from "./useProgressRecipe";
 
 function createInstance() {

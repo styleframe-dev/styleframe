@@ -1,5 +1,5 @@
 import { styleframe } from "@styleframe/core";
-import { expectKeyframesRegistered } from "../../testing/expectKeyframesRegistered";
+import { expectKeyframesRegistered } from "../../__tests__/expectKeyframesRegistered";
 import { useSpinnerCircleRecipe } from "./useSpinnerCircleRecipe";
 
 function createInstance() {
