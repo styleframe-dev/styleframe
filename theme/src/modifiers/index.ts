@@ -6,4 +6,5 @@ export * from "./useMediaPreferenceModifiers";
 export * from "./useOtherStateModifiers";
 export * from "./usePseudoElementModifiers";
 export * from "./usePseudoStateModifiers";
+export * from "./useResponsiveModifiers";
 export * from "./useStructuralModifiers";
