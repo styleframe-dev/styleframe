@@ -1,5 +1,6 @@
 import { styleframe } from "@styleframe/core";
 import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
+import { expectKeyframesRegistered } from "../../__tests__/expectKeyframesRegistered";
 import { useSkeletonRecipe } from "./useSkeletonRecipe";
 
 function createInstance() {
@@ -108,6 +109,13 @@ describe("useSkeletonRecipe", () => {
 		const recipe = useSkeletonRecipe(s);
 
 		expect(recipe.compoundVariants).toEqual(undefined);
+	});
+
+	it("should register the keyframes referenced by animationName", () => {
+		const s = createInstance();
+		useSkeletonRecipe(s);
+
+		expectKeyframesRegistered(s, "skeleton-pulse");
 	});
 
 	it("should support config overrides", () => {
