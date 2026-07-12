@@ -51,5 +51,5 @@ Internal doc routes are rewritten at build time: theme-related docs keep the `/d
 ## Process notes
 
 - Docs-only changes ship no changeset — `@styleframe/docs` is in the changesets ignore list; its version is bumped manually.
-- Verify with `pnpm --filter @styleframe/docs typecheck` plus a dev-server or build check of the touched pages; paste outcomes in the final comment.
+- Verify with `pnpm --filter @styleframe/docs build` (Nuxt build type-checks the app) plus a dev-server check of the touched pages; paste outcomes in the final comment.
 - An API that resists clear explanation is a product finding — file it for the owning seat (@mere, @roux, @tournant) rather than writing around it. Prose cannot fix a confusing API, only hide it until support finds it.
