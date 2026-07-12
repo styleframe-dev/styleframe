@@ -55,6 +55,7 @@ A new family member extends the builder with a name + extras. If the builder can
 - Standard axes vocabulary: `color` (primary/secondary/success/info/warning/error), `variant` (solid/outline/soft/subtle/ghost/link where applicable), `size` (xs/sm/md/lg/xl). Read three sibling recipes before adding any axis — same concept, same name, same values.
 - Always: `base` styles, `variants`, `defaultVariants`; compound variants for interactions between axes.
 - Tests are **colocated** in `theme/src/recipes/<name>/` next to the source (not a separate test root). Every recipe and sub-part has one.
+- Any recipe that registers `@keyframes` in its `setup()` callback MUST assert each registration in its colocated test via the shared `expectKeyframesRegistered(s, name)` helper (`theme/src/testing/expectKeyframesRegistered.ts`). An `animationName` is an opaque string to the base/variant object assertions, so a deleted `s.keyframes(...)` call silently makes the animation inert and nothing red catches it — the registration assertion is the only thing that does.
 
 ## Storybook conventions
 

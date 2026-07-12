@@ -1,5 +1,6 @@
 import { styleframe } from "@styleframe/core";
 import { useDarkModifier } from "../../modifiers/useMediaPreferenceModifiers";
+import { expectKeyframesRegistered } from "../../testing/expectKeyframesRegistered";
 import { useProgressBarRecipe, useProgressRecipe } from "./useProgressRecipe";
 
 function createInstance() {
@@ -362,6 +363,24 @@ describe("useProgressBarRecipe", () => {
 			animation: "none",
 			size: "md",
 		});
+	});
+
+	it("should register every keyframes referenced by an animationName", () => {
+		const s = createInstance();
+		useProgressBarRecipe(s);
+
+		for (const name of [
+			"progress-carousel",
+			"progress-carousel-inverse",
+			"progress-swing",
+			"progress-elastic",
+			"progress-carousel-vertical",
+			"progress-carousel-inverse-vertical",
+			"progress-swing-vertical",
+			"progress-elastic-vertical",
+		]) {
+			expectKeyframesRegistered(s, name);
+		}
 	});
 
 	describe("compound variants", () => {
