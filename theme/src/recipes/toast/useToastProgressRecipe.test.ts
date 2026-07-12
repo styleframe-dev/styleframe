@@ -33,15 +33,15 @@ describe("useToastProgressRecipe", () => {
 		expect(recipe.name).toBe("toast-progress");
 	});
 
-	it("should pin a prominent rounded bar inset from the toast's corners", () => {
+	it("should pin the bar flush to the bottom edge, spanning the full width", () => {
 		const s = createInstance();
 		const recipe = useToastProgressRecipe(s);
 
 		expect(recipe.base).toEqual({
 			position: "absolute",
-			bottom: "@spacing.xs",
-			left: "@spacing.xs",
-			right: "@spacing.xs",
+			bottom: "0",
+			left: "0",
+			right: "0",
 			height: "@spacing.2xs",
 			transformOrigin: "left center",
 			background: "currentColor",

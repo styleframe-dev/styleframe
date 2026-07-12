@@ -24,14 +24,13 @@ describe("useToastDescriptionRecipe", () => {
 		expect(recipe.name).toBe("toast-description");
 	});
 
-	it("should step down from the title in size and weight", () => {
+	it("should step down from the title in weight, with the size on the axis", () => {
 		const s = createInstance();
 		const recipe = useToastDescriptionRecipe(s);
 
 		expect(recipe.base).toEqual({
 			display: "block",
 			marginTop: "@0.25",
-			fontSize: "@font-size.xs",
 			fontWeight: "@font-weight.normal",
 			lineHeight: "@line-height.normal",
 		});
@@ -42,5 +41,28 @@ describe("useToastDescriptionRecipe", () => {
 		const recipe = useToastDescriptionRecipe(s);
 
 		expect(recipe.base).not.toHaveProperty("color");
+	});
+
+	describe("size", () => {
+		it("should track the size axis one token below the inherited title size", () => {
+			const s = createInstance();
+			const recipe = useToastDescriptionRecipe(s);
+
+			// Toast root font-size per size is sm → xs, md → sm, lg → md; the
+			// title inherits it, so the description sits one token down to keep
+			// the hierarchy at every size.
+			expect(recipe.variants!.size).toEqual({
+				sm: { fontSize: "@font-size.2xs" },
+				md: { fontSize: "@font-size.xs" },
+				lg: { fontSize: "@font-size.sm" },
+			});
+		});
+
+		it("should default to the md size", () => {
+			const s = createInstance();
+			const recipe = useToastDescriptionRecipe(s);
+
+			expect(recipe.defaultVariants).toEqual({ size: "md" });
+		});
 	});
 });

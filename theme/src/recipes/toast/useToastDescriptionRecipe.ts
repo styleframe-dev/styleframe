@@ -7,13 +7,28 @@ import { createUseRecipe } from "../../utils/createUseRecipe";
  * the toast body, never the `color` accent. The lower-contrast reading relative
  * to the title comes from the weight/size step, which is colour-agnostic and
  * driftless.
+ *
+ * The title has no explicit font-size, so it inherits the toast root, which
+ * scales with the `size` axis (sm → xs, md → sm, lg → md). The description must
+ * track that axis too, always one step below the title so the hierarchy holds
+ * at every size — hence a `size` axis here that mirrors the root, offset one
+ * token down: sm → 2xs, md → xs, lg → sm. Defaults to `md` to match the toast.
  */
 export const useToastDescriptionRecipe = createUseRecipe("toast-description", {
 	base: {
 		display: "block",
 		marginTop: "@0.25",
-		fontSize: "@font-size.xs",
 		fontWeight: "@font-weight.normal",
 		lineHeight: "@line-height.normal",
+	},
+	variants: {
+		size: {
+			sm: { fontSize: "@font-size.2xs" },
+			md: { fontSize: "@font-size.xs" },
+			lg: { fontSize: "@font-size.sm" },
+		},
+	},
+	defaultVariants: {
+		size: "md",
 	},
 });

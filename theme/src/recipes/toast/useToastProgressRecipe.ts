@@ -9,24 +9,23 @@ import { toastAccentColorVariants } from "./toastAccentColors";
  * property, so nothing has to flip a data-attribute at runtime — declarative
  * and driftless.
  *
- * The bar is a rounded pill inset from the toast's rounded corners rather than
- * bleeding edge-to-edge. The inset uses named spacing tokens (`@spacing.xs` /
- * `@spacing.2xs`) rather than the numeric scale (`@0.5`), because the inset
- * utilities (top/right/bottom/left) don't map the numeric spacing scale — a
- * numeric ref there resolves to an undefined var and collapses the bar.
- * It is the second part (with the icon) that carries the
+ * The bar is pinned flush to the bottom edge and spans the full toast width —
+ * `bottom`/`left`/`right: "0"` (the literal zero, the one non-token value the
+ * inset utilities accept), edge-to-edge, no gutter. Its thickness stays a named
+ * spacing token (`@spacing.2xs`) since `height` — unlike the inset utilities —
+ * maps the scale cleanly. It is the second part (with the icon) that carries the
  * toast's `color` — the body stays neutral, so the accent lands here. `color`
  * sets the bar's foreground from the shared accent map, and `background:
- * currentColor` paints the pill in that accent at full opacity.
+ * currentColor` paints the bar in that accent at full opacity.
  */
 export const useToastProgressRecipe = createUseRecipe(
 	"toast-progress",
 	{
 		base: {
 			position: "absolute",
-			bottom: "@spacing.xs",
-			left: "@spacing.xs",
-			right: "@spacing.xs",
+			bottom: "0",
+			left: "0",
+			right: "0",
 			height: "@spacing.2xs",
 			transformOrigin: "left center",
 			background: "currentColor",

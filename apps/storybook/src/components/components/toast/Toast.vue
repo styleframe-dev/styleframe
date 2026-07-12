@@ -62,6 +62,7 @@ const progressClasses = computed(() => toastProgress({ color: props.color }));
 			<ToastTitle v-if="props.title">{{ props.title }}</ToastTitle>
 			<ToastDescription
 				v-if="props.description"
+				:size="props.size"
 				>{{ props.description }}</ToastDescription
 			>
 			<slot />
