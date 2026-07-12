@@ -714,13 +714,14 @@ describe("createDeclarationsCallbackContext", () => {
 	});
 
 	describe("context object properties", () => {
-		it("should return object with exactly four properties", () => {
+		it("should return object with the expected properties", () => {
 			const context = createDeclarationsCallbackContext(root, root);
 			const keys = Object.keys(context);
 
-			expect(keys).toHaveLength(7);
+			expect(keys).toHaveLength(8);
 			expect(keys).toContain("atRule");
 			expect(keys).toContain("variable");
+			expect(keys).toContain("property");
 			expect(keys).toContain("selector");
 			expect(keys).toContain("keyframes");
 			expect(keys).toContain("media");

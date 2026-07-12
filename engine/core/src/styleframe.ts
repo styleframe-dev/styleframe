@@ -3,6 +3,7 @@ import type {
 	createCssFunction,
 	createKeyframesFunction,
 	createMediaFunction,
+	createPropertyFunction,
 	createRefFunction,
 	createSelectorFunction,
 	createVariableFunction,
@@ -22,6 +23,7 @@ export interface Styleframe {
 	id: string;
 	root: Root;
 	variable: ReturnType<typeof createVariableFunction>;
+	property: ReturnType<typeof createPropertyFunction>;
 	selector: ReturnType<typeof createSelectorFunction>;
 	utility: ReturnType<typeof createUtilityFunction>;
 	modifier: ReturnType<typeof createModifierFunction>;
@@ -46,13 +48,14 @@ export function styleframe(userOptions?: StyleframeOptions): Styleframe {
 	const recipe = createRecipeFunction(root, root);
 	const theme = createThemeFunction(root, root);
 
-	const { variable, selector, atRule, keyframes, media, ref, css } =
+	const { variable, property, selector, atRule, keyframes, media, ref, css } =
 		createDeclarationsCallbackContext(root, root);
 
 	return {
 		id,
 		root,
 		variable,
+		property,
 		selector,
 		utility,
 		modifier,
