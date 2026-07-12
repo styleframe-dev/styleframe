@@ -92,7 +92,7 @@ Agents forget everything between tasks; the skills do not. That is why Loop 2 co
 - Branches: `<agent>/<short-slug>` (e.g. `mere/toast-recipe`). Never work on `main` directly.
 - Commits: conventional commits with package scope, matching repo history — `feat(theme): add toast recipe`, `fix(plugin): resolve virtual module on windows`, `docs:`, `chore:`, `build(deploy):`.
 - PRs target `main`, stay small, and describe: what, why, how verified. Link the issue.
-- **Changesets:** any behavior change in a publishable package (`engine/*`, `theme`, `tooling/*`) ships a changeset in the same PR (`pnpm ci:changeset`). Docs and apps (`docs`, `app`, `playground`, `storybook`) are in the changesets ignore list — no changesets there (the docs version is bumped manually).
+- **Changesets:** any behavior change in a publishable package (`engine/*`, `theme`, `tooling/*`) ships a changeset in the same PR. Write the `.changeset/<area>-<topic>.md` file directly as part of the work — format, bump selection, and examples are in the styleframe-verification skill; do **not** use the interactive `pnpm ci:changeset`, which cannot be driven headlessly. Docs and apps (`docs`, `app`, `playground`, `storybook`) are in the changesets ignore list — no changesets there (the docs version is bumped manually).
 - Root workspace files (`package.json`, `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `turbo.json`) belong to @tournant — with one shared exception: any PR may update `pnpm-lock.yaml` as a side effect of its own dependency change. On a lockfile conflict, rebase on latest `main`, take main's lockfile, and re-run `pnpm install` to regenerate; the PR author rebases when their PR falls behind.
 - Never edit `dist/` or `.styleframe/` directories — they are generated.
 
