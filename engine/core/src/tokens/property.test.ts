@@ -1,6 +1,7 @@
 import type { AtRule, Root } from "../types";
 import { createPropertyFunction } from "./property";
 import { createRoot } from "./root";
+import { createSelectorFunction } from "./selector";
 
 function findPropertyRule(root: Root, name: string): AtRule | undefined {
 	return root.children.find(
@@ -89,5 +90,25 @@ describe("createPropertyFunction", () => {
 		expect(findPropertyRule(root, "--z")?.declarations["initial-value"]).toBe(
 			10,
 		);
+	});
+
+	it("should keep the value declaration local while hoisting @property to root", () => {
+		const selector = createSelectorFunction(root, root);
+		const card = selector(".card", ({ property }) => {
+			property("card-space", "4px", { syntax: "<length>" });
+			return {};
+		});
+
+		// The value declaration lives in the calling container.
+		expect(card.variables).toHaveLength(1);
+		expect(card.variables[0]?.name).toBe("card-space");
+
+		// The @property registration hoists to root, not the child container.
+		expect(findPropertyRule(root, "--card-space")).toBeDefined();
+		expect(
+			card.children.some(
+				(child) => child.type === "at-rule" && child.identifier === "property",
+			),
+		).toBe(false);
 	});
 });

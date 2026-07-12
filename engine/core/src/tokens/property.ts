@@ -40,7 +40,9 @@ export function createPropertyFunction(parent: Container, root: Root) {
 
 		const registrationName = `--${instance.name}`;
 
-		// One `@property` block per custom property name.
+		// One `@property` block per custom property name. A later call with a
+		// different value updates the variable declaration but keeps the first
+		// `initial-value` — the cascade lands on the latest value regardless.
 		const alreadyRegistered = root.children.some(
 			(child): child is AtRule =>
 				child.type === "at-rule" &&
