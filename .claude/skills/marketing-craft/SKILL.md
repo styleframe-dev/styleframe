@@ -11,7 +11,7 @@ Developers are marketed at all day and punish it. The only marketing that works 
 
 Every outbound piece derives from this section. A piece that needs a claim the canon lacks means the canon changes first (PR, @mise review), then the piece. **Canon v0, drafted from the repo survey of 2026-07-11 — the cold-start issue refines it with Alex. Category line locked 2026-07-12 (SF-14, Alex sign-off): "The Design Systems Styling Engine."**
 
-- **Category line:** Styleframe — the Design Systems Styling Engine. This is the standing one-liner; every piece derives its framing from it.
+- **Category line:** Styleframe — The Design Systems Styling Engine. This is the standing one-liner; every piece derives its framing from it.
 - **What:** Styleframe is **the Design Systems Styling Engine** — the single source of truth that compiles a design system's tokens, themes, utilities, and component recipes into CSS and typed declarations. *Mechanism, the proof underneath the category:* a type-safe, composable CSS-in-TypeScript framework — you author the system in TypeScript, and the transpiler emits CSS, TypeScript, and type declarations.
 - **For whom:** teams building a design system — who want utility-class speed with a type system behind it, or CSS-in-JS ergonomics without the runtime.
 - **Lead claims, each with its proof:**
