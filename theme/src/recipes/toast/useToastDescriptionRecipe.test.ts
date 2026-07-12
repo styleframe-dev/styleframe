@@ -44,17 +44,17 @@ describe("useToastDescriptionRecipe", () => {
 	});
 
 	describe("size", () => {
-		it("should track the size axis one token below the inherited title size", () => {
+		it("should track the size axis on the literal token, matching the title", () => {
 			const s = createInstance();
 			const recipe = useToastDescriptionRecipe(s);
 
-			// Toast root font-size per size is sm → xs, md → sm, lg → md; the
-			// title inherits it, so the description sits one token down to keep
-			// the hierarchy at every size.
+			// Title and description share the same literal size token at every
+			// step — sm → sm, md → md, lg → lg — so they render equal in size;
+			// the title stays dominant through weight alone.
 			expect(recipe.variants!.size).toEqual({
-				sm: { fontSize: "@font-size.2xs" },
-				md: { fontSize: "@font-size.xs" },
-				lg: { fontSize: "@font-size.sm" },
+				sm: { fontSize: "@font-size.sm" },
+				md: { fontSize: "@font-size.md" },
+				lg: { fontSize: "@font-size.lg" },
 			});
 		});
 

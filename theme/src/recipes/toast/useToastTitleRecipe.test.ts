@@ -3,7 +3,7 @@ import { useToastTitleRecipe } from "./useToastTitleRecipe";
 
 function createInstance() {
 	const s = styleframe();
-	for (const name of ["display", "fontWeight", "lineHeight"]) {
+	for (const name of ["display", "fontWeight", "lineHeight", "fontSize"]) {
 		s.utility(name, ({ value }) => ({ [name]: value }));
 	}
 	return s;
@@ -34,5 +34,28 @@ describe("useToastTitleRecipe", () => {
 		const recipe = useToastTitleRecipe(s);
 
 		expect(recipe.base).not.toHaveProperty("color");
+	});
+
+	describe("size", () => {
+		it("should track the size axis on the literal token", () => {
+			const s = createInstance();
+			const recipe = useToastTitleRecipe(s);
+
+			// Title and description share the same literal size token at every
+			// step — sm → sm, md → md, lg → lg — so they render equal in size;
+			// the title stays dominant through weight alone.
+			expect(recipe.variants!.size).toEqual({
+				sm: { fontSize: "@font-size.sm" },
+				md: { fontSize: "@font-size.md" },
+				lg: { fontSize: "@font-size.lg" },
+			});
+		});
+
+		it("should default to the md size", () => {
+			const s = createInstance();
+			const recipe = useToastTitleRecipe(s);
+
+			expect(recipe.defaultVariants).toEqual({ size: "md" });
+		});
 	});
 });
