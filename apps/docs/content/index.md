@@ -42,7 +42,7 @@ export default s;
 ::
 
 #title
-Type-safe<br/> Styling Engine for <span class="text-primary">Design Systems</span>
+Type-safe<br/> Styling Engine for [Design Systems]{.text-primary}
 
 #description
 Author design tokens, themes, utilities, and component recipes in TypeScript and compile them to zero-runtime CSS and type declarations. Catch a renamed token before your users do.
