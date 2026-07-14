@@ -1,4 +1,4 @@
-import { copyFile, readdir } from "node:fs/promises";
+import { copyFile, readdir, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 import dts from "unplugin-dts/vite";
@@ -9,18 +9,29 @@ import { configDefaults as vitestConfig } from "vitest/config";
  */
 
 /**
- * Emit `.d.mts` and `.d.cts` copies of every emitted `.d.ts` so that
- * `import` (ESM) and `require` (CJS) consumers each resolve a correctly
- * flavored declaration instead of a single `.d.ts` that — under
- * `"type": "module"` — masquerades as ESM for CJS consumers (attw "FalseESM").
- * Per-file declarations use relative `export *` re-exports, and the sibling
- * `.d.mts`/`.d.cts` copies exist alongside them, so each flavor resolves its
- * own siblings — the copy is safe.
+ * Post-process the emitted declarations. Two jobs, both keyed off a single
+ * recursive walk of `outDir`:
+ *
+ * 1. Drop the build-config declarations. `vite.config.ts`/`tsdown.config.ts`
+ *    stay in the dts program (see the `dts()` note below — they anchor
+ *    `@types/node`, so `Buffer`/`process`/`node:*` resolve program-wide and the
+ *    declaration pass stays free of non-fatal TS2591), but they are not public.
+ *    Delete their emitted `*.config.d.ts` (and `.d.ts.map`) here so the
+ *    published `dist/` — every package ships `files: ["dist"]` — carries only
+ *    the consumer-facing set.
+ * 2. Emit `.d.mts`/`.d.cts` copies of every remaining `.d.ts` so that `import`
+ *    (ESM) and `require` (CJS) consumers each resolve a correctly flavored
+ *    declaration instead of a single `.d.ts` that — under `"type": "module"` —
+ *    masquerades as ESM for CJS consumers (attw "FalseESM"). Per-file
+ *    declarations use relative `export *` re-exports, and the sibling
+ *    `.d.mts`/`.d.cts` copies exist alongside them, so each flavor resolves its
+ *    own siblings — the copy is safe.
  *
  * @returns {import('vite').Plugin}
  */
 function dualDeclarations() {
 	let outDir;
+	const isConfigDeclaration = (name) => /\.config\.d\.ts(\.map)?$/.test(name);
 	return {
 		name: "styleframe:dual-declarations",
 		apply: "build",
@@ -32,16 +43,31 @@ function dualDeclarations() {
 				recursive: true,
 				withFileTypes: true,
 			});
+			const files = entries
+				.filter((entry) => entry.isFile())
+				.map((entry) => ({
+					name: entry.name,
+					path: resolve(entry.parentPath ?? entry.path, entry.name),
+				}));
+
 			await Promise.all(
-				entries
-					.filter((entry) => entry.isFile() && entry.name.endsWith(".d.ts"))
-					.map((entry) => {
-						const dtsPath = resolve(entry.parentPath ?? entry.path, entry.name);
-						return Promise.all([
-							copyFile(dtsPath, dtsPath.replace(/\.d\.ts$/, ".d.mts")),
-							copyFile(dtsPath, dtsPath.replace(/\.d\.ts$/, ".d.cts")),
-						]);
-					}),
+				files
+					.filter((file) => isConfigDeclaration(file.name))
+					.map((file) => unlink(file.path)),
+			);
+
+			await Promise.all(
+				files
+					.filter(
+						(file) =>
+							file.name.endsWith(".d.ts") && !isConfigDeclaration(file.name),
+					)
+					.map((file) =>
+						Promise.all([
+							copyFile(file.path, file.path.replace(/\.d\.ts$/, ".d.mts")),
+							copyFile(file.path, file.path.replace(/\.d\.ts$/, ".d.cts")),
+						]),
+					),
 			);
 		},
 	};
@@ -63,10 +89,18 @@ export const createViteConfig = (name, cwd, options = {}) =>
 			// `*.test.ts`, the `*.config.ts` build files, and (in the CLI) the
 			// `playground/**` scaffolding templates. None are reachable through
 			// any package's `exports` entry, but every package ships
-			// `files: ["dist"]` wholesale — so without excluding them, their
+			// `files: ["dist"]` wholesale — so without pruning them, their
 			// declarations balloon the published tarball. api-extractor dropped
 			// them for free by following only the entry; per-file emission must
-			// exclude them explicitly.
+			// prune them.
+			//
+			// Tests and the CLI `playground/**` templates are excluded from the
+			// program outright. The `*.config.ts` build files are NOT — they are
+			// the only files that import the toolchain (`vite`, `@styleframe/*`),
+			// so they anchor `@types/node` into the program; drop them from the
+			// program and `Buffer`/`process`/`node:*` lose their types and the
+			// declaration pass emits non-fatal TS2591. Keep them in, then delete
+			// their emitted `*.config.d.ts` in `dualDeclarations()` below.
 			dts({
 				entryRoot: resolve(cwd, "src"),
 				exclude: [
@@ -74,7 +108,6 @@ export const createViteConfig = (name, cwd, options = {}) =>
 					"**/*.test.ts",
 					"**/*.test.tsx",
 					"**/__tests__/**",
-					"**/*.config.ts",
 					"**/playground/**",
 				],
 			}),
