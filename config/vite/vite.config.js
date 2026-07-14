@@ -1,7 +1,7 @@
 import { copyFile, readdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
-import dts from "vite-plugin-dts";
+import dts from "unplugin-dts/vite";
 import { configDefaults as vitestConfig } from "vitest/config";
 
 /**
@@ -49,25 +49,15 @@ export const createViteConfig = (name, cwd, options = {}) =>
 	defineConfig({
 		...options,
 		plugins: [
-			// Roll all declarations up into a single .d.ts per entry via
-			// @microsoft/api-extractor. `unplugin-dts` only forwards a
-			// tsconfig's own compilerOptions to api-extractor and drops
-			// `extends`-inherited ones, so the inherited `lib` is lost and
-			// the rollup can't resolve globals like `Map`. Re-supply a
-			// superset `lib` so every modern global resolves.
+			// Emit per-file `.d.ts` via unplugin-dts (Volar-based). We do NOT
+			// roll declarations up through @microsoft/api-extractor: its
+			// rollup relies on the TypeScript JavaScript Compiler API, which
+			// TypeScript 7 (the native compiler) no longer ships, so the
+			// extractor throws "Unable to follow symbol". Per-file emission
+			// keeps the entry `index.d.ts` re-exporting its siblings and
+			// resolves `extends`-inherited `lib` correctly from the tsconfig.
 			dts({
 				entryRoot: resolve(cwd, "src"),
-				bundleTypes: {
-					extractorConfig: {
-						compiler: {
-							overrideTsconfig: {
-								compilerOptions: {
-									lib: ["ESNext", "DOM", "DOM.Iterable"],
-								},
-							},
-						},
-					},
-				},
 			}),
 			dualDeclarations(),
 			...(options.plugins ?? []),
