@@ -23,6 +23,7 @@ export default defineNuxtConfig({
 						"json",
 						"js",
 						"ts",
+						"tsx",
 						"html",
 						"css",
 						"vue",
