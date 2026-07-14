@@ -9,6 +9,7 @@ import {
 	type OtherStateModifiers,
 	type PseudoElementModifiers,
 	type PseudoStateModifiers,
+	type ResponsiveModifiers,
 	type StructuralModifiers,
 	useAriaStateModifiers,
 	useContainerQueryModifiers,
@@ -18,6 +19,7 @@ import {
 	useOtherStateModifiers,
 	usePseudoElementModifiers,
 	usePseudoStateModifiers,
+	useResponsiveModifiers,
 	useStructuralModifiers,
 } from "../modifiers";
 
@@ -40,6 +42,8 @@ export interface ModifiersConfig {
 	mediaPreferences?: boolean;
 	/** Container-query modifiers (container-sm, container-md, etc.) */
 	containerQueries?: boolean;
+	/** Responsive breakpoint modifiers (sm, md, lg, xl, 2xl) */
+	responsive?: boolean;
 	/** ARIA state modifiers (aria-expanded, aria-disabled, etc.) */
 	ariaStates?: boolean;
 	/** Directional modifiers (rtl, ltr) */
@@ -59,6 +63,7 @@ export type ModifierInstances = Partial<
 		PseudoElementModifiers &
 		MediaPreferenceModifiers &
 		ContainerQueryModifiers &
+		ResponsiveModifiers &
 		AriaStateModifiers &
 		DirectionalModifiers &
 		OtherStateModifiers
@@ -91,6 +96,7 @@ export function useModifiersPreset(
 		...(config.containerQueries !== false
 			? useContainerQueryModifiers(s)
 			: undefined),
+		...(config.responsive !== false ? useResponsiveModifiers(s) : undefined),
 		...(config.ariaStates !== false ? useAriaStateModifiers(s) : undefined),
 		...(config.directional !== false ? useDirectionalModifiers(s) : undefined),
 		...(config.otherStates !== false ? useOtherStateModifiers(s) : undefined),
