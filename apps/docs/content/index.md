@@ -19,20 +19,22 @@ title: styleframe.config.ts
 
 ```ts
 import { styleframe } from 'styleframe';
-import { useColorDesignTokens } from '@styleframe/theme';
+import { useDesignTokensPreset, useGlobalPreset, useModifiersPreset, useSanitizePreset, useUtilitiesPreset, useButtonRecipe } from '@styleframe/theme';
 
 const s = styleframe();
-const { variable, ref, selector } = s;
 
-const spacing = variable('spacing', '1rem');
-const { colorPrimary } = useColorDesignTokens(s, {
-    primary: '#318fa0',
+useDesignTokensPreset(s, {
+  colors: {
+    primary: '#0066ff',
+    secondary: '#7c3aed'
+  }
 });
+useSanitizePreset(s);
+useGlobalPreset(s);
+useUtilitiesPreset(s);
+useModifiersPreset(s);
 
-selector('.button', {
-    backgroundColor: ref(colorPrimary),
-    padding: ref(spacing),
-});
+useButtonRecipe(s);
 
 export default s;
 ```
@@ -40,10 +42,10 @@ export default s;
 ::
 
 #title
-The styling engine for your design system
+Type-safe<br/> Styling Engine for <span class="text-primary">Design Systems</span>
 
 #description
-Author your tokens, themes, utilities, and component recipes once in TypeScript. Styleframe compiles them to zero-runtime CSS and typed declarations — so the compiler catches a renamed token before your users do.
+Author design tokens, themes, utilities, and component recipes in TypeScript and compile them to zero-runtime CSS and type declarations. Catch a renamed token before your users do.
 
 #links
     :::u-button
