@@ -14,8 +14,12 @@ export default defineNuxtModule({
 		const url = inferSiteURL();
 		const meta = await getPackageJsonMetadata(dir);
 		const gitInfo = (await getLocalGitInfo(dir)) || getGitEnv();
+		const site = nuxt.options.site;
 		const siteName =
-			nuxt.options?.site?.name || meta.name || gitInfo?.name || "";
+			(typeof site === "object" ? site.name : undefined) ||
+			meta.name ||
+			gitInfo?.name ||
+			"";
 
 		nuxt.options.llms = defu(nuxt.options.llms, {
 			domain: url,
@@ -31,7 +35,7 @@ export default defineNuxtModule({
 			url,
 			name: siteName,
 			debug: false,
-		});
+		}) as typeof nuxt.options.site;
 
 		nuxt.options.appConfig.header = defu(nuxt.options.appConfig.header, {
 			title: siteName,
