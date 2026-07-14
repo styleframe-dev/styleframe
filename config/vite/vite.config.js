@@ -9,12 +9,13 @@ import { configDefaults as vitestConfig } from "vitest/config";
  */
 
 /**
- * Emit `.d.mts` and `.d.cts` copies of every rolled-up `.d.ts` so that
+ * Emit `.d.mts` and `.d.cts` copies of every emitted `.d.ts` so that
  * `import` (ESM) and `require` (CJS) consumers each resolve a correctly
  * flavored declaration instead of a single `.d.ts` that — under
  * `"type": "module"` — masquerades as ESM for CJS consumers (attw "FalseESM").
- * The api-extractor rollup is self-contained, so the three flavors are
- * byte-identical and a copy is safe.
+ * Per-file declarations use relative `export *` re-exports, and the sibling
+ * `.d.mts`/`.d.cts` copies exist alongside them, so each flavor resolves its
+ * own siblings — the copy is safe.
  *
  * @returns {import('vite').Plugin}
  */
@@ -53,11 +54,29 @@ export const createViteConfig = (name, cwd, options = {}) =>
 			// roll declarations up through @microsoft/api-extractor: its
 			// rollup relies on the TypeScript JavaScript Compiler API, which
 			// TypeScript 7 (the native compiler) no longer ships, so the
-			// extractor throws "Unable to follow symbol". Per-file emission
-			// keeps the entry `index.d.ts` re-exporting its siblings and
-			// resolves `extends`-inherited `lib` correctly from the tsconfig.
+			// extractor throws "Unable to follow symbol". The entry
+			// `index.d.ts` becomes a re-export barrel over its siblings; the
+			// resolved public type surface is unchanged, only the on-disk
+			// layout differs from the old single-file rollup.
+			//
+			// Per-file emission follows the tsconfig `include`, which carries
+			// `*.test.ts`, the `*.config.ts` build files, and (in the CLI) the
+			// `playground/**` scaffolding templates. None are reachable through
+			// any package's `exports` entry, but every package ships
+			// `files: ["dist"]` wholesale — so without excluding them, their
+			// declarations balloon the published tarball. api-extractor dropped
+			// them for free by following only the entry; per-file emission must
+			// exclude them explicitly.
 			dts({
 				entryRoot: resolve(cwd, "src"),
+				exclude: [
+					"**/node_modules/**",
+					"**/*.test.ts",
+					"**/*.test.tsx",
+					"**/__tests__/**",
+					"**/*.config.ts",
+					"**/playground/**",
+				],
 			}),
 			dualDeclarations(),
 			...(options.plugins ?? []),
