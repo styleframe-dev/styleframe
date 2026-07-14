@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev": "storybook dev -p 6006",
 		"build": "storybook build",
-		"typecheck": "echo 'skipped: vue-tsc has no TS7 build — require.resolve(typescript/lib/tsc) throws ERR_PACKAGE_PATH_NOT_EXPORTED under TS7. Re-enable when vue-tsc ships TS7 support (SF-24). Original: vue-tsc --noEmit -p tsconfig.json'"
+		"typecheck": "vue-tsc --noEmit -p tsconfig.json"
 	},
 	"dependencies": {
 		"@styleframe/core": "workspace:*",
@@ -32,7 +32,7 @@
 		"playwright": "catalog:",
 		"storybook": "^10.4.4",
 		"@vueless/storybook-dark-mode": "^10.0.8",
-		"typescript": "catalog:",
+		"typescript": "catalog:nuxt",
 		"vite": "catalog:nuxt",
 		"vitest": "catalog:",
 		"vue-tsc": "catalog:nuxt"

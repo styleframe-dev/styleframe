@@ -50,7 +50,7 @@
 		"minimark": "catalog:nuxt",
 		"pkg-types": "catalog:nuxt",
 		"tailwindcss": "catalog:nuxt",
-		"typescript": "catalog:",
+		"typescript": "catalog:nuxt",
 		"unist-util-visit": "catalog:nuxt"
 	},
 	"files": [
