@@ -4,6 +4,7 @@ import type {
 	createCssFunction,
 	createKeyframesFunction,
 	createMediaFunction,
+	createPropertyFunction,
 	createRefFunction,
 	createSelectorFunction,
 	createVariableFunction,
@@ -31,6 +32,7 @@ export type DeclarationsBlock = {
 
 export type DeclarationsCallbackContext = {
 	variable: ReturnType<typeof createVariableFunction>;
+	property: ReturnType<typeof createPropertyFunction>;
 	selector: ReturnType<typeof createSelectorFunction>;
 	atRule: ReturnType<typeof createAtRuleFunction>;
 	keyframes: ReturnType<typeof createKeyframesFunction>;

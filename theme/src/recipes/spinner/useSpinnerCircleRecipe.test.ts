@@ -1,4 +1,5 @@
 import { styleframe } from "@styleframe/core";
+import { expectKeyframesRegistered } from "../../__tests__/expectKeyframesRegistered";
 import { useSpinnerCircleRecipe } from "./useSpinnerCircleRecipe";
 
 function createInstance() {
@@ -79,6 +80,14 @@ describe("useSpinnerCircleRecipe", () => {
 		const recipe = useSpinnerCircleRecipe(s);
 
 		expect(recipe.compoundVariants).toEqual(undefined);
+	});
+
+	it("should register the keyframes referenced by animationName", () => {
+		const s = createInstance();
+		useSpinnerCircleRecipe(s);
+
+		expectKeyframesRegistered(s, "spinner-rotate");
+		expectKeyframesRegistered(s, "spinner-dash");
 	});
 
 	describe("config overrides", () => {

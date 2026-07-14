@@ -58,6 +58,7 @@ import {
 	breakBeforeValues,
 	breakInsideValues,
 	clearValues,
+	containerTypeValues,
 	displayValues,
 	floatValues,
 	isolationValues,
@@ -298,6 +299,7 @@ import {
 
 // Layout
 import {
+	useAnchorNameUtility,
 	useAspectRatioUtility,
 	useBottomUtility,
 	useBoxDecorationBreakUtility,
@@ -307,6 +309,8 @@ import {
 	useBreakInsideUtility,
 	useClearUtility,
 	useColumnsUtility,
+	useContainerNameUtility,
+	useContainerTypeUtility,
 	useDisplayUtility,
 	useFloatUtility,
 	useInsetEndUtility,
@@ -324,6 +328,8 @@ import {
 	useOverscrollUtility,
 	useOverscrollXUtility,
 	useOverscrollYUtility,
+	usePositionAnchorUtility,
+	usePositionAreaUtility,
 	usePositionUtility,
 	useRightUtility,
 	useTopUtility,
@@ -424,6 +430,7 @@ import {
 	useTransitionPropertyUtility,
 	useTransitionTimingFunctionUtility,
 	useTransitionUtility,
+	useViewTransitionNameUtility,
 } from "../utilities/transitions-animation";
 
 // Typography
@@ -561,6 +568,7 @@ export interface UtilitiesPresetConfig {
 	willChange?: Record<string, string> | false;
 
 	// Layout
+	anchorName?: Record<string, string> | false;
 	aspectRatio?: Record<string, string> | false;
 	boxDecorationBreak?: Record<string, string> | false;
 	boxSizing?: Record<string, string> | false;
@@ -568,6 +576,8 @@ export interface UtilitiesPresetConfig {
 	breakBefore?: Record<string, string> | false;
 	breakInside?: Record<string, string> | false;
 	clear?: Record<string, string> | false;
+	containerType?: Record<string, string> | false;
+	containerName?: Record<string, string> | false;
 	display?: Record<string, string> | false;
 	float?: Record<string, string> | false;
 	isolation?: Record<string, string> | false;
@@ -576,6 +586,8 @@ export interface UtilitiesPresetConfig {
 	overflow?: Record<string, string> | false;
 	overscroll?: Record<string, string> | false;
 	position?: Record<string, string> | false;
+	positionAnchor?: Record<string, string> | false;
+	positionArea?: Record<string, string> | false;
 	visibility?: Record<string, string> | false;
 	zIndex?: Record<string, string> | false;
 
@@ -611,6 +623,7 @@ export interface UtilitiesPresetConfig {
 	animationIterationCount?: Record<string, string> | false;
 	transitionBehavior?: Record<string, string> | false;
 	transitionProperty?: Record<string, string> | false;
+	viewTransitionName?: Record<string, string> | false;
 
 	// Typography utility
 	fontSmoothing?: Record<string, string> | false;
@@ -795,6 +808,7 @@ export function useUtilitiesPreset(
 	const touchAction = resolveValues(config.touchAction, touchActionValues);
 	const userSelect = resolveValues(config.userSelect, userSelectValues);
 	const willChange = resolveValues(config.willChange, willChangeValues);
+	const anchorName = resolveValues(config.anchorName, {});
 	const aspectRatio = resolveValues(config.aspectRatio, aspectRatioValues);
 	const boxDecorationBreak = resolveValues(
 		config.boxDecorationBreak,
@@ -805,6 +819,11 @@ export function useUtilitiesPreset(
 	const breakBefore = resolveValues(config.breakBefore, breakBeforeValues);
 	const breakInside = resolveValues(config.breakInside, breakInsideValues);
 	const clear = resolveValues(config.clear, clearValues);
+	const containerType = resolveValues(
+		config.containerType,
+		containerTypeValues,
+	);
+	const containerName = resolveValues(config.containerName, {});
 	const display = resolveValues(config.display, displayValues);
 	const float = resolveValues(config.float, floatValues);
 	const isolation = resolveValues(config.isolation, isolationValues);
@@ -816,6 +835,8 @@ export function useUtilitiesPreset(
 	const overflow = resolveValues(config.overflow, overflowValues);
 	const overscroll = resolveValues(config.overscroll, overscrollValues);
 	const position = resolveValues(config.position, positionValues);
+	const positionAnchor = resolveValues(config.positionAnchor, {});
+	const positionArea = resolveValues(config.positionArea, {});
 	const visibility = resolveValues(config.visibility, visibilityValues);
 	const zIndex = resolveValues(config.zIndex, zIndexValues);
 	const width = resolveValues(config.width, widthValues);
@@ -868,6 +889,7 @@ export function useUtilitiesPreset(
 		config.transitionProperty,
 		transitionPropertyValues,
 	);
+	const viewTransitionName = resolveValues(config.viewTransitionName, {});
 	const fontSmoothing = resolveValues(
 		config.fontSmoothing,
 		fontSmoothingValues,
@@ -1223,6 +1245,14 @@ export function useUtilitiesPreset(
 	);
 	if (willChange) createWillChangeUtility(willChange);
 
+	const createAnchorNameUtility = useAnchorNameUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("anchor-name"),
+	);
+	if (anchorName) createAnchorNameUtility(anchorName);
+
 	const createAspectRatioUtility = useAspectRatioUtility(
 		s,
 		undefined,
@@ -1278,6 +1308,22 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("clear"),
 	);
 	if (clear) createClearUtility(clear);
+
+	const createContainerTypeUtility = useContainerTypeUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("container-type"),
+	);
+	if (containerType) createContainerTypeUtility(containerType);
+
+	const createContainerNameUtility = useContainerNameUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("container-name"),
+	);
+	if (containerName) createContainerNameUtility(containerName);
 
 	const createDisplayUtility = useDisplayUtility(
 		s,
@@ -1342,6 +1388,22 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("position"),
 	);
 	if (position) createPositionUtility(position);
+
+	const createPositionAnchorUtility = usePositionAnchorUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("position-anchor"),
+	);
+	if (positionAnchor) createPositionAnchorUtility(positionAnchor);
+
+	const createPositionAreaUtility = usePositionAreaUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("position-area"),
+	);
+	if (positionArea) createPositionAreaUtility(positionArea);
 
 	const createVisibilityUtility = useVisibilityUtility(
 		s,
@@ -1616,6 +1678,14 @@ export function useUtilitiesPreset(
 		resolveUtilityOptions("transition-property"),
 	);
 	if (transitionProperty) createTransitionPropertyUtility(transitionProperty);
+
+	const createViewTransitionNameUtility = useViewTransitionNameUtility(
+		s,
+		undefined,
+		undefined,
+		resolveUtilityOptions("view-transition-name"),
+	);
+	if (viewTransitionName) createViewTransitionNameUtility(viewTransitionName);
 
 	const createFontSmoothingUtility = useFontSmoothingUtility(
 		s,
@@ -2511,6 +2581,7 @@ export function useUtilitiesPreset(
 		),
 		createBoxDecorationBreakUtility,
 		createBoxSizingUtility,
+		createAnchorNameUtility,
 		createBreakAfterUtility,
 		createBreakBeforeUtility,
 		createBreakInsideUtility,
@@ -2521,6 +2592,8 @@ export function useUtilitiesPreset(
 			undefined,
 			resolveUtilityOptions("columns"),
 		),
+		createContainerTypeUtility,
+		createContainerNameUtility,
 		createDisplayUtility,
 		createFloatUtility,
 		createInsetEndUtility: useInsetEndUtility(
@@ -2589,6 +2662,8 @@ export function useUtilitiesPreset(
 			resolveUtilityOptions("overscroll-y"),
 		),
 		createPositionUtility,
+		createPositionAnchorUtility,
+		createPositionAreaUtility,
 		createRightUtility: useRightUtility(
 			s,
 			undefined,
@@ -2936,6 +3011,7 @@ export function useUtilitiesPreset(
 			undefined,
 			resolveUtilityOptions("transition-timing-function"),
 		),
+		createViewTransitionNameUtility,
 
 		// Typography
 		createColorUtility: useColorUtility(

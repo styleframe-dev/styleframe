@@ -132,6 +132,15 @@ export const aspectRatioValues = {
 } as const;
 
 /**
+ * Default container-type utility values matching the CSS container-query spec.
+ */
+export const containerTypeValues = {
+	normal: "normal",
+	size: "size",
+	"inline-size": "inline-size",
+} as const;
+
+/**
  * Default box-sizing utility values matching Tailwind CSS.
  */
 export const boxSizingValues = {

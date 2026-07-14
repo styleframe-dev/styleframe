@@ -11,6 +11,7 @@ import {
 	createMediaFunction,
 } from "./atRule";
 import { createCssFunction } from "./css";
+import { createPropertyFunction } from "./property";
 import { createRefFunction } from "./ref";
 import { createPropertyValueResolver } from "./resolve";
 import { createSelectorFunction } from "./selector";
@@ -21,6 +22,7 @@ export function createDeclarationsCallbackContext(
 	root: Root,
 ): DeclarationsCallbackContext {
 	const variable = createVariableFunction(parent, root);
+	const property = createPropertyFunction(parent, root);
 	const selector = createSelectorFunction(parent, root);
 	const atRule = createAtRuleFunction(parent, root);
 	const keyframes = createKeyframesFunction(root, root);
@@ -30,6 +32,7 @@ export function createDeclarationsCallbackContext(
 
 	return {
 		variable,
+		property,
 		selector,
 		keyframes,
 		atRule,

@@ -137,17 +137,24 @@ createPadding({ sm: ref(spacingSm) }, [hover, focus]);
 
 Creates a reusable modifier that wraps utility declarations.
 
-- **`name`** (`string | string[]`) — Modifier name(s). Arrays create multi-key modifiers (e.g., breakpoints).
-- **`factory`** (`(ctx) => DeclarationsBlock | void`) — Receives `{ declarations, variables, children, key?, selector }`.
+- **`name`** (`string | string[]`) — Modifier name(s). An array registers the same factory under several keys; the factory receives **no** key argument, so every key produces identical output. Use it only for aliases, not for per-key output like breakpoints.
+- **`factory`** (`(ctx) => DeclarationsBlock | void`) — Receives `{ declarations, variables, children }` plus the standard declarations context (`variable`, `selector`, `atRule`, `keyframes`, `media`, `ref`, `css`).
 
 ```ts
 const hover = modifier('hover', ({ declarations }) => ({
     '&:hover': declarations,
 }));
 
-// Multi-key modifier (for breakpoints)
-const responsive = modifier(['sm', 'md', 'lg'], ({ key, declarations }) => ({
-    [`@media (min-width: ${breakpoints[key]}px)`]: declarations,
+// Breakpoints: one modifier per value, each closing over its own width.
+// (There is no `key` param — a single array-key modifier cannot tell sm/md/lg apart.)
+const smUp = modifier('sm', ({ declarations }) => ({
+    [`@media (min-width: ${breakpoints.sm})`]: declarations,
+}));
+const mdUp = modifier('md', ({ declarations }) => ({
+    [`@media (min-width: ${breakpoints.md})`]: declarations,
+}));
+const lgUp = modifier('lg', ({ declarations }) => ({
+    [`@media (min-width: ${breakpoints.lg})`]: declarations,
 }));
 ```
 
