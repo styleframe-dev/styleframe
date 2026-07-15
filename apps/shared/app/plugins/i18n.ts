@@ -1,4 +1,9 @@
 export default defineNuxtPlugin(() => {
+	// Consumers opt out via `app.config` (`i18nRedirect.enabled: false`).
+	if (!useAppConfig().i18nRedirect?.enabled) {
+		return;
+	}
+
 	const nuxtApp = useNuxtApp();
 
 	const i18nConfig = nuxtApp.$config.public.i18n as

@@ -35,6 +35,12 @@ declare module "nuxt/schema" {
 					rootDir?: string;
 			  }
 			| false;
+		analytics: {
+			enabled: boolean;
+		};
+		i18nRedirect: {
+			enabled: boolean;
+		};
 	}
 }
 
