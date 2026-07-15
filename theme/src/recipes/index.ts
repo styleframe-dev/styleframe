@@ -35,5 +35,6 @@ export * from "./spinner";
 export * from "./switch";
 export * from "./tabs";
 export * from "./textarea";
+export * from "./toast";
 export * from "./toggle";
 export * from "./tooltip";
