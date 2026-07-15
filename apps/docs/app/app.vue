@@ -142,22 +142,6 @@ const { data: navigation } = await useAsyncData(
 	},
 );
 
-const { data: files } = useLazyAsyncData(
-	`search_${locale.value}`,
-	async () => {
-		const perSection = await Promise.all(
-			DOCS_SECTIONS.map((section) =>
-				queryCollectionSearchSections(getCollectionName(section.key)),
-			),
-		);
-		return perSection.flat();
-	},
-	{
-		server: false,
-		watch: [locale],
-	},
-);
-
 const flatNavigation = computed(() =>
 	navigation.value ? Object.values(navigation.value).flat() : [],
 );
@@ -174,7 +158,7 @@ provide("navigation", navigation);
 		</NuxtLayout>
 
 		<ClientOnly>
-			<LazyUContentSearch :files="files" :navigation="flatNavigation" />
+			<AppSearch :navigation="flatNavigation" />
 		</ClientOnly>
 	</UApp>
 </template>
