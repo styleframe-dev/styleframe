@@ -668,7 +668,7 @@ describe("createMediaFunction", () => {
 			const result = media(
 				"(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)",
 				{
-					backgroundImage: 'url("image@2x.png")',
+					backgroundImage: 'url("image-2x.png")',
 				},
 			);
 

@@ -378,6 +378,13 @@ describe("parseDeclarationsBlock", () => {
 		});
 
 		it("should resolve embedded @references to a CSS object", () => {
+			root.variables.push({
+				type: "variable",
+				id: "color-primary",
+				name: "color.primary",
+				value: "#006cff",
+			});
+
 			const declarations: any = {
 				border: "1px solid @color.primary",
 			};
@@ -391,6 +398,21 @@ describe("parseDeclarationsBlock", () => {
 		});
 
 		it("should resolve multiple embedded @references to a CSS object", () => {
+			root.variables.push(
+				{
+					type: "variable",
+					id: "spacing-sm",
+					name: "spacing.sm",
+					value: "0.5rem",
+				},
+				{
+					type: "variable",
+					id: "spacing-md",
+					name: "spacing.md",
+					value: "1rem",
+				},
+			);
+
 			const declarations: any = {
 				padding: "@spacing.sm @spacing.md",
 			};

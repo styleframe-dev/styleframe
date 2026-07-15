@@ -618,6 +618,13 @@ describe("createCSSFunction", () => {
 		});
 
 		it("should resolve embedded @reference to a CSS object", () => {
+			root.variables.push({
+				type: "variable",
+				id: "color-primary",
+				name: "color.primary",
+				value: "#006cff",
+			});
+
 			const result = resolvePropertyValue("1px solid @color.primary");
 
 			expect(result).toEqual({
@@ -630,6 +637,21 @@ describe("createCSSFunction", () => {
 		});
 
 		it("should resolve multiple embedded @references to a CSS object", () => {
+			root.variables.push(
+				{
+					type: "variable",
+					id: "spacing-sm",
+					name: "spacing.sm",
+					value: "0.5rem",
+				},
+				{
+					type: "variable",
+					id: "spacing-md",
+					name: "spacing.md",
+					value: "1rem",
+				},
+			);
+
 			const result = resolvePropertyValue("@spacing.sm @spacing.md");
 
 			expect(result).toEqual({
