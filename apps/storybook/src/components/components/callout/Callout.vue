@@ -51,9 +51,12 @@ const dismissClasses = computed(() => calloutDismiss());
 			<slot name="icon">{{ props.icon }}</slot>
 		</span>
 		<CalloutContent>
-			<CalloutTitle v-if="props.title">{{ props.title }}</CalloutTitle>
+			<CalloutTitle v-if="props.title" :size="props.size">{{
+				props.title
+			}}</CalloutTitle>
 			<CalloutDescription
 				v-if="props.description"
+				:size="props.size"
 				>{{ props.description }}</CalloutDescription
 			>
 			<slot />
