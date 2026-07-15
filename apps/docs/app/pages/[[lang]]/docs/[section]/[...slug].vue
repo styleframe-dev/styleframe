@@ -100,6 +100,8 @@ watch(
 
 defineOgImage("Docs", {
 	headline: headline.value,
+	title,
+	description,
 });
 
 const github = computed(() => (appConfig.github ? appConfig.github : null));

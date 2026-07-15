@@ -2,7 +2,12 @@ export const DOCS_SECTIONS = [
 	{
 		key: "gettingStarted",
 		slug: "getting-started",
-		folder: ["01.getting-started", "08.tooling", "09.integrations"],
+		folder: [
+			"01.getting-started",
+			"08.tooling",
+			"09.integrations",
+			"10.migration",
+		],
 		rootFolder: 0,
 		label: "Getting Started",
 		icon: "i-lucide-rocket",

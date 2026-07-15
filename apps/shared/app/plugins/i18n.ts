@@ -1,7 +1,9 @@
 export default defineNuxtPlugin(() => {
 	const nuxtApp = useNuxtApp();
 
-	const i18nConfig = nuxtApp.$config.public.i18n;
+	const i18nConfig = nuxtApp.$config.public.i18n as
+		| { defaultLocale?: string }
+		| undefined;
 	if (!i18nConfig) {
 		return;
 	}

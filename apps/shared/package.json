@@ -13,12 +13,15 @@
 		"@nuxtjs/i18n": "catalog:nuxt",
 		"@nuxtjs/mdc": "catalog:nuxt",
 		"@nuxtjs/robots": "catalog:nuxt",
+		"git-url-parse": "catalog:nuxt",
 		"nuxt": "catalog:nuxt",
 		"nuxt-llms": "catalog:nuxt",
 		"nuxt-og-image": "catalog:nuxt",
 		"defu": "catalog:",
+		"pkg-types": "catalog:nuxt",
 		"posthog-js": "catalog:nuxt",
 		"tailwindcss": "catalog:nuxt",
+		"vue": "catalog:nuxt",
 		"zod": "catalog:"
 	},
 	"devDependencies": {
