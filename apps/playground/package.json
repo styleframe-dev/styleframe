@@ -41,7 +41,7 @@
 		"@vue/tsconfig": "catalog:nuxt",
 		"esbuild": "^0.24.0",
 		"jsdom": "catalog:",
-		"typescript": "catalog:",
+		"typescript": "catalog:nuxt",
 		"vite": "catalog:nuxt",
 		"vitest": "catalog:",
 		"vue-tsc": "catalog:nuxt"

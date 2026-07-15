@@ -32,7 +32,7 @@
 		"playwright": "catalog:",
 		"storybook": "^10.4.4",
 		"@vueless/storybook-dark-mode": "^10.0.8",
-		"typescript": "catalog:",
+		"typescript": "catalog:nuxt",
 		"vite": "catalog:nuxt",
 		"vitest": "catalog:",
 		"vue-tsc": "catalog:nuxt"

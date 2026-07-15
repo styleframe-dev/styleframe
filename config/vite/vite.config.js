@@ -1,7 +1,7 @@
-import { copyFile, readdir } from "node:fs/promises";
+import { copyFile, readdir, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
-import dts from "vite-plugin-dts";
+import dts from "unplugin-dts/vite";
 import { configDefaults as vitestConfig } from "vitest/config";
 
 /**
@@ -9,17 +9,29 @@ import { configDefaults as vitestConfig } from "vitest/config";
  */
 
 /**
- * Emit `.d.mts` and `.d.cts` copies of every rolled-up `.d.ts` so that
- * `import` (ESM) and `require` (CJS) consumers each resolve a correctly
- * flavored declaration instead of a single `.d.ts` that — under
- * `"type": "module"` — masquerades as ESM for CJS consumers (attw "FalseESM").
- * The api-extractor rollup is self-contained, so the three flavors are
- * byte-identical and a copy is safe.
+ * Post-process the emitted declarations. Two jobs, both keyed off a single
+ * recursive walk of `outDir`:
+ *
+ * 1. Drop the build-config declarations. `vite.config.ts`/`tsdown.config.ts`
+ *    stay in the dts program (see the `dts()` note below — they anchor
+ *    `@types/node`, so `Buffer`/`process`/`node:*` resolve program-wide and the
+ *    declaration pass stays free of non-fatal TS2591), but they are not public.
+ *    Delete their emitted `*.config.d.ts` (and `.d.ts.map`) here so the
+ *    published `dist/` — every package ships `files: ["dist"]` — carries only
+ *    the consumer-facing set.
+ * 2. Emit `.d.mts`/`.d.cts` copies of every remaining `.d.ts` so that `import`
+ *    (ESM) and `require` (CJS) consumers each resolve a correctly flavored
+ *    declaration instead of a single `.d.ts` that — under `"type": "module"` —
+ *    masquerades as ESM for CJS consumers (attw "FalseESM"). Per-file
+ *    declarations use relative `export *` re-exports, and the sibling
+ *    `.d.mts`/`.d.cts` copies exist alongside them, so each flavor resolves its
+ *    own siblings — the copy is safe.
  *
  * @returns {import('vite').Plugin}
  */
 function dualDeclarations() {
 	let outDir;
+	const isConfigDeclaration = (name) => /\.config\.d\.ts(\.map)?$/.test(name);
 	return {
 		name: "styleframe:dual-declarations",
 		apply: "build",
@@ -31,16 +43,31 @@ function dualDeclarations() {
 				recursive: true,
 				withFileTypes: true,
 			});
+			const files = entries
+				.filter((entry) => entry.isFile())
+				.map((entry) => ({
+					name: entry.name,
+					path: resolve(entry.parentPath ?? entry.path, entry.name),
+				}));
+
 			await Promise.all(
-				entries
-					.filter((entry) => entry.isFile() && entry.name.endsWith(".d.ts"))
-					.map((entry) => {
-						const dtsPath = resolve(entry.parentPath ?? entry.path, entry.name);
-						return Promise.all([
-							copyFile(dtsPath, dtsPath.replace(/\.d\.ts$/, ".d.mts")),
-							copyFile(dtsPath, dtsPath.replace(/\.d\.ts$/, ".d.cts")),
-						]);
-					}),
+				files
+					.filter((file) => isConfigDeclaration(file.name))
+					.map((file) => unlink(file.path)),
+			);
+
+			await Promise.all(
+				files
+					.filter(
+						(file) =>
+							file.name.endsWith(".d.ts") && !isConfigDeclaration(file.name),
+					)
+					.map((file) =>
+						Promise.all([
+							copyFile(file.path, file.path.replace(/\.d\.ts$/, ".d.mts")),
+							copyFile(file.path, file.path.replace(/\.d\.ts$/, ".d.cts")),
+						]),
+					),
 			);
 		},
 	};
@@ -49,25 +76,40 @@ export const createViteConfig = (name, cwd, options = {}) =>
 	defineConfig({
 		...options,
 		plugins: [
-			// Roll all declarations up into a single .d.ts per entry via
-			// @microsoft/api-extractor. `unplugin-dts` only forwards a
-			// tsconfig's own compilerOptions to api-extractor and drops
-			// `extends`-inherited ones, so the inherited `lib` is lost and
-			// the rollup can't resolve globals like `Map`. Re-supply a
-			// superset `lib` so every modern global resolves.
+			// Emit per-file `.d.ts` via unplugin-dts (Volar-based). We do NOT
+			// roll declarations up through @microsoft/api-extractor: its
+			// rollup relies on the TypeScript JavaScript Compiler API, which
+			// TypeScript 7 (the native compiler) no longer ships, so the
+			// extractor throws "Unable to follow symbol". The entry
+			// `index.d.ts` becomes a re-export barrel over its siblings; the
+			// resolved public type surface is unchanged, only the on-disk
+			// layout differs from the old single-file rollup.
+			//
+			// Per-file emission follows the tsconfig `include`, which carries
+			// `*.test.ts`, the `*.config.ts` build files, and (in the CLI) the
+			// `playground/**` scaffolding templates. None are reachable through
+			// any package's `exports` entry, but every package ships
+			// `files: ["dist"]` wholesale — so without pruning them, their
+			// declarations balloon the published tarball. api-extractor dropped
+			// them for free by following only the entry; per-file emission must
+			// prune them.
+			//
+			// Tests and the CLI `playground/**` templates are excluded from the
+			// program outright. The `*.config.ts` build files are NOT — they are
+			// the only files that import the toolchain (`vite`, `@styleframe/*`),
+			// so they anchor `@types/node` into the program; drop them from the
+			// program and `Buffer`/`process`/`node:*` lose their types and the
+			// declaration pass emits non-fatal TS2591. Keep them in, then delete
+			// their emitted `*.config.d.ts` in `dualDeclarations()` below.
 			dts({
 				entryRoot: resolve(cwd, "src"),
-				bundleTypes: {
-					extractorConfig: {
-						compiler: {
-							overrideTsconfig: {
-								compilerOptions: {
-									lib: ["ESNext", "DOM", "DOM.Iterable"],
-								},
-							},
-						},
-					},
-				},
+				exclude: [
+					"**/node_modules/**",
+					"**/*.test.ts",
+					"**/*.test.tsx",
+					"**/__tests__/**",
+					"**/playground/**",
+				],
 			}),
 			dualDeclarations(),
 			...(options.plugins ?? []),
