@@ -313,6 +313,13 @@ describe("createPropertyValueResolver", () => {
 
 	describe("embedded @ references", () => {
 		it("should resolve embedded @variable to a CSS object", () => {
+			root.variables.push({
+				type: "variable",
+				id: "color-primary",
+				name: "color.primary",
+				value: "#006cff",
+			});
+
 			const result = resolvePropertyValue("1px solid @color.primary");
 
 			expect(result).toEqual({
@@ -329,6 +336,21 @@ describe("createPropertyValueResolver", () => {
 		});
 
 		it("should resolve multiple embedded @variables to a CSS object", () => {
+			root.variables.push(
+				{
+					type: "variable",
+					id: "border-width",
+					name: "border.width",
+					value: "1px",
+				},
+				{
+					type: "variable",
+					id: "color-primary",
+					name: "color.primary",
+					value: "#006cff",
+				},
+			);
+
 			const result = resolvePropertyValue("@border.width solid @color.primary");
 
 			expect(result).toEqual({
@@ -343,6 +365,61 @@ describe("createPropertyValueResolver", () => {
 					{
 						type: "reference",
 						name: "color.primary",
+						fallback: undefined,
+					},
+				],
+			});
+		});
+
+		it("should throw when an embedded @variable is not defined", () => {
+			expect(() => resolvePropertyValue("@0.25 @0.5")).toThrow(
+				'Variable "0.25" is not defined',
+			);
+		});
+
+		it("should throw when only one of several embedded refs is undefined", () => {
+			root.variables.push({
+				type: "variable",
+				id: "border-width",
+				name: "border.width",
+				value: "1px",
+			});
+
+			expect(() =>
+				resolvePropertyValue("@border.width solid @color.primary"),
+			).toThrow('Variable "color.primary" is not defined');
+		});
+
+		it("should still compile embedded refs when every variable is defined", () => {
+			root.variables.push(
+				{
+					type: "variable",
+					id: "spacing-sm",
+					name: "spacing.sm",
+					value: "0.5rem",
+				},
+				{
+					type: "variable",
+					id: "spacing-md",
+					name: "spacing.md",
+					value: "1rem",
+				},
+			);
+
+			const result = resolvePropertyValue("@spacing.sm @spacing.md");
+
+			expect(result).toEqual({
+				type: "css",
+				value: [
+					{
+						type: "reference",
+						name: "spacing.sm",
+						fallback: undefined,
+					},
+					" ",
+					{
+						type: "reference",
+						name: "spacing.md",
 						fallback: undefined,
 					},
 				],

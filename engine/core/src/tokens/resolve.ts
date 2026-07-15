@@ -111,6 +111,7 @@ export function createPropertyValueResolver(parent: Container, root: Root) {
 		if (hasReferences) {
 			for (const part of parts) {
 				if (isRef(part)) {
+					validateReference(part.name, parent, root);
 					root._usage.variables.add(part.name);
 				}
 			}
