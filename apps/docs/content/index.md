@@ -186,19 +186,19 @@ title: styleframe.config.ts
 ```ts
 import { styleframe } from 'styleframe';
 import { useColorDesignTokens } from '@styleframe/theme';
-import { useSpacingDesignTokens, useTypography } from '@orgname/theme-minimal';
+import { useTypographyDesignTokens, useSpacingDesignTokens } from '@orgname/theme-minimal';
 import { useComponents } from './my-components';
 
 const s = styleframe();
 
 // Colors from the default theme
-const { colorPrimary, colorSecondary } = useColorDesignTokens(s, {
+useColorDesignTokens(s, {
     primary: '#318fa0',
     secondary: '#ff6b6b'
 });
 
 // Typography and spacing from another theme
-useTypography(s);
+useTypographyDesignTokens(s);
 useSpacingDesignTokens(s);
 
 // Plus your custom components
@@ -255,62 +255,34 @@ links:
 ---
 
 
-::tabs
-    :::tabs-item{.my-5 icon="i-lucide-settings" label="Configuration"}
-        ::::browser-frame
-        ---
-        title: styleframe.config.ts
-        ---
+::browser-frame
+---
+title: styleframe.config.ts
+---
 
-             ```ts
-            import { merge } from 'styleframe';
+```ts
+import { styleframe } from 'styleframe';
 
-            import lightTheme from './light.theme';
-            import darkTheme from './dark.theme';
+const s = styleframe();
+const { variable, ref, selector, theme } = s;
 
-            export default merge(lightTheme, darkTheme);
+const surface = variable('color.surface', '#ffffff');
+const text = variable('color.text', '#18181b');
 
-        ::::
-    :::
-    :::tabs-item{.my-5 icon="i-lucide-sun" label="Light Theme"}
-        ::::browser-frame
-        ---
-        title: light.theme.ts
-        ---
+selector('.card', {
+    background: ref(surface),
+    color: ref(text),
+});
 
-            ```ts
-            import { styleframe } from 'styleframe';
+// Every theme reuses the same tokens — just override their values
+theme('dark', (ctx) => {
+    ctx.variable(surface, '#18181b');
+    ctx.variable(text, '#ffffff');
+});
 
-            const s = styleframe();
-            const { variable } = s;
+export default s;
+```
 
-            export const colorPrimary = variable('color-primary', '#007bff');
-
-            export default s;
-
-        ::::
-    :::
-    :::tabs-item{.my-5 icon="i-lucide-moon" label="Dark Theme"}
-        ::::browser-frame
-        ---
-        title: dark.theme.ts
-        ---
-
-            ```ts
-            import { styleframe } from 'styleframe';
-            import { colorPrimary } from './light.theme';
-
-            const s = styleframe();
-            const { theme } = s;
-
-            theme('dark', ({ variable }) => {
-                variable(colorPrimary, '#0056b3');
-            });
-
-            export default s;
-
-        ::::
-    :::
 ::
 
 
@@ -365,21 +337,24 @@ title: Output
 ```css
 /* Static CSS generated at build time */
 .button {
-    background-color: var(--color-primary);
+    background-color: var(--color--primary);
     padding: var(--spacing);
 }
 ```
 
 ```ts
-/* Optional runtime generated for Recipes */
-export const button = recipe('button', {
-    background: "primary",
-}, {
-    size: {
-        sm: { padding: 'sm' },
-        md: { padding: 'md' },
-        lg: { padding: 'lg' }
-    }
+/* Optional runtime for prop-based Recipes */
+recipe({
+    name: 'button',
+    base: { background: '@color.primary' },
+    variants: {
+        size: {
+            sm: { padding: '@spacing.sm' },
+            md: { padding: '@spacing.md' },
+            lg: { padding: '@spacing.lg' },
+        },
+    },
+    defaultVariants: { size: 'md' },
 });
 ```
 
