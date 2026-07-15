@@ -54,7 +54,7 @@ selector(".chat-message-action-button", {
 	display: "inline-flex",
 	alignItems: "center",
 	gap: "@spacing.xs",
-	padding: "@0.25 @0.5",
+	padding: "@spacing.2xs @spacing.xs",
 	fontSize: "@font-size.xs",
 	color: "@color.text-weak",
 	background: "transparent",
