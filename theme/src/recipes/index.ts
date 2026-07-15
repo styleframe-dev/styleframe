@@ -17,6 +17,7 @@ export * from "./dropdown";
 export * from "./field-group";
 export * from "./hamburger-menu";
 export * from "./input";
+export * from "./input-date";
 export * from "./media";
 export * from "./modal";
 export * from "./nav";
