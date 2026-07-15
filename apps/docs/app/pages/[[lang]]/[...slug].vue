@@ -43,7 +43,7 @@ if (page.value?.seo?.ogImage) {
 		twitterImage: page.value.seo.ogImage,
 	});
 } else {
-	defineOgImage("Docs", {
+	defineOgImage("DocsSatori", {
 		headline: "styleframe",
 		title,
 		description,

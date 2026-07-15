@@ -40,7 +40,9 @@ useSeoMeta({
 
 if (isEnabled.value) {
 	const route = useRoute();
-	const defaultLocale = useRuntimeConfig().public.i18n.defaultLocale!;
+	const defaultLocale = (
+		useRuntimeConfig().public.i18n as { defaultLocale: string }
+	).defaultLocale;
 	onMounted(() => {
 		const currentLocale = route.path.split("/")[1];
 		if (!locales.some((locale) => locale.code === currentLocale)) {
@@ -71,7 +73,7 @@ const { data: navigation } = await useAsyncData(
 					const rootIdx =
 						"rootFolder" in section ? (section.rootFolder as number) : -1;
 					const rootWrapper =
-						localeResult.length === 1 && localeResult[0].path === sectionPath
+						localeResult.length === 1 && localeResult[0]?.path === sectionPath
 							? localeResult[0]
 							: null;
 					const allItems = rootWrapper
@@ -99,7 +101,7 @@ const { data: navigation } = await useAsyncData(
 								const found = allItems.find(
 									(item) =>
 										item.path ===
-										`${sectionPath}/${section.folder[i].replace(/^\d+\./, "")}`,
+										`${sectionPath}/${section.folder[i]?.replace(/^\d+\./, "")}`,
 								);
 								if (found) items.push(found);
 							}

@@ -98,7 +98,7 @@ watch(
 	},
 );
 
-defineOgImage("Docs", {
+defineOgImage("DocsSatori", {
 	headline: headline.value,
 	title,
 	description,

@@ -14,7 +14,7 @@ const current = computed(
 		:items="[...frameworks]"
 		variant="ghost"
 		color="neutral"
-		:icon="current.icon"
+		:icon="current?.icon"
 		class="w-full"
 	/>
 </template>
