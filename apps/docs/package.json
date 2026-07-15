@@ -7,6 +7,7 @@
 		"dev": "nuxt dev",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
+		"typecheck": "nuxt typecheck",
 		"postinstall": "nuxt prepare"
 	},
 	"dependencies": {
@@ -51,7 +52,8 @@
 		"pkg-types": "catalog:nuxt",
 		"tailwindcss": "catalog:nuxt",
 		"typescript": "catalog:nuxt",
-		"unist-util-visit": "catalog:nuxt"
+		"unist-util-visit": "catalog:nuxt",
+		"vue-tsc": "catalog:nuxt"
 	},
 	"files": [
 		"LICENSE",

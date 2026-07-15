@@ -10,7 +10,7 @@ export function flattenNavigation(
 	items: ContentNavigationItem[],
 ): ContentNavigationItem[] {
 	return items.map((item) => {
-		if (item.children?.length === 1 && item.children[0].path === item.path) {
+		if (item.children?.length === 1 && item.children[0]?.path === item.path) {
 			const { children: _, ...parent } = item;
 			return { ...parent, ...item.children[0], children: undefined };
 		}

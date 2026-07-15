@@ -27,7 +27,7 @@ function folderToStemPrefix(folder: string): string | undefined {
 		const folders = Array.isArray(section.folder)
 			? section.folder
 			: [section.folder];
-		const idx = folders.indexOf(folder);
+		const idx = (folders as readonly string[]).indexOf(folder);
 		if (idx === -1) continue;
 		const rootIdx = (section as { rootFolder?: number }).rootFolder ?? -1;
 		const base = `docs/${section.slug}`;

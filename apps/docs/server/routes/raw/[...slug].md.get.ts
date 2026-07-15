@@ -21,17 +21,20 @@ export default eventHandler(async (event) => {
 	let localeSegment: string | undefined;
 	let sectionIndex = 1; // expect /docs/<section>/...
 
-	if (config.i18n?.locales) {
-		const availableLocales = config.i18n.locales.map(
-			(locale: string | { code: string }) =>
-				typeof locale === "string" ? locale : locale.code,
+	const i18n = config.i18n as
+		| { locales?: (string | { code: string })[]; defaultLocale?: string }
+		| undefined;
+
+	if (i18n?.locales) {
+		const availableLocales = i18n.locales.map((locale) =>
+			typeof locale === "string" ? locale : locale.code,
 		);
 		const firstSegment = pathSegments[0];
 		if (firstSegment && availableLocales.includes(firstSegment)) {
 			localeSegment = firstSegment;
 			sectionIndex = 2;
-		} else if (config.i18n.defaultLocale) {
-			localeSegment = config.i18n.defaultLocale;
+		} else if (i18n.defaultLocale) {
+			localeSegment = i18n.defaultLocale;
 		}
 	}
 

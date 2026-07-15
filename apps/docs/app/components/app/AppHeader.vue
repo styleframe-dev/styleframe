@@ -17,7 +17,7 @@ onMounted(() => {
 });
 
 useResizeObserver(headerEl, ([entry]) => {
-	if (!isDocs.value) return;
+	if (!isDocs.value || !entry) return;
 	const height = entry.contentRect.height;
 	if (height > 0) {
 		document.documentElement.style.setProperty(
