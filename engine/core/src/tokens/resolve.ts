@@ -23,7 +23,10 @@ export function trackReferenceUsage(root: Root, value: TokenValue): void {
 
 export type RefFunction = (variable: string, fallback?: string) => Reference;
 
-const AT_VARIABLE_REGEX = /@([\w.-]+)/g;
+// `@` only starts a reference at a non-word boundary. Guarding with `(?<!\w)`
+// keeps mid-token literals like a retina URL `url("image@2x.png")` intact
+// instead of parsing `@2x.png` as a variable reference (SF-33).
+const AT_VARIABLE_REGEX = /(?<!\w)@([\w.-]+)/g;
 
 export function parseAtReferences(str: string): TokenValue[] {
 	const parts: TokenValue[] = [];
