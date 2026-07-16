@@ -10,9 +10,10 @@ import { createUseRecipe } from "../../utils/createUseRecipe";
  *
  * Font size follows the `size` axis on the literal token — sm → sm, md → md,
  * lg → lg — rather than inheriting the toast root. The description carries the
- * same axis with the same tokens, so title and description are equal in size at
- * every step; the title stays dominant through weight (semibold vs normal)
- * alone. Defaults to `md` to match the toast.
+ * same axis one token below (sm → xs, md → sm, lg → md), so it sits a step
+ * under the title at every size; the title stays dominant through weight
+ * (semibold vs normal) reinforced by that size step. Defaults to `md` to match
+ * the toast.
  */
 export const useToastTitleRecipe = createUseRecipe("toast-title", {
 	base: {
