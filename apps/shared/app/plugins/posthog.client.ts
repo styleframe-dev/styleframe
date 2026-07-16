@@ -7,6 +7,11 @@ export default defineNuxtPlugin(() => {
 		return;
 	}
 
+	// Consumers opt out via `app.config` (`analytics.enabled: false`).
+	if (!useAppConfig().analytics?.enabled) {
+		return;
+	}
+
 	const runtimeConfig = useRuntimeConfig();
 
 	const posthogClient = posthog.init(runtimeConfig.public.posthog.key, {

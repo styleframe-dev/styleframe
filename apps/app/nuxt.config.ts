@@ -3,7 +3,7 @@ export default defineNuxtConfig({
 	extends: ["../shared"],
 	compatibilityDate: "2025-07-22",
 	modules: ["@nuxtjs/supabase"],
-	css: ["../shared/app/assets/css/main.css"],
+	css: ["./app/assets/css/main.css"],
 	llms: {
 		domain: "https://app.styleframe.dev",
 		title: "Styleframe",

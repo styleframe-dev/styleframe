@@ -74,18 +74,32 @@ Registers the `useDocusI18n` composable as an auto-import via Nuxt's `imports:ex
 
 ## App Configuration (`app/app.config.ts`)
 
-Default configuration applied to all consuming apps. Apps can override any value via their own `app.config.ts` (merged with `defu`).
+**Neutral defaults only — this layer ships NO product branding.** Consuming apps
+supply branding (title, logos, socials, GitHub, footer, TOC links, palette) via
+their own `app.config.ts`, merged over these defaults by `defu` (consumer wins).
+`modules/config.ts` also fills `seo`/`header`/`github` from the consumer's
+`package.json` + git as fallbacks.
 
 | Section | Key Fields |
 |---------|-----------|
-| `seo` | `title`, `titleTemplate` (`%s - styleframe`), `description` |
-| `header` | `title`, `logo.light`, `logo.dark`, `logo.alt` |
-| `socials` | `x` (Twitter URL), `discord` (Discord invite URL) |
-| `github` | `url`, `branch` |
-| `footer` | `credits` (copyright with dynamic year) |
-| `toc` | `title` ("On this page"), `bottom.title` ("Community"), `bottom.edit`, `bottom.links` |
-| `ui.colors` | `primary: "teal"`, `neutral: "zinc"` |
-| `ui.*` | Slot customizations for `commandPalette`, `contentNavigation`, `pageLinks`, `pageCard`, `pricingTable` |
+| `toc` | `title` ("On this page") — neutral default; consumers add `bottom.*` links |
+| `analytics` | `enabled` (default `true`) — opt-out flag for the PostHog plugin |
+| `i18nRedirect` | `enabled` (default `true`) — opt-out flag for the locale-redirect plugin |
+| `ui` | Neutral Nuxt UI Pro slot overrides (`commandPalette`, `contentNavigation`, `pageLinks`, `pageCard`, `pricingTable`) — reusable shell polish every consumer inherits |
+
+**The `ui.colors: {}` discriminant.** The layer's `ui` block keeps an *empty*
+`colors: {}`. It bakes in **no palette** — it exists purely as a type
+discriminant. Nuxt UI's wide `AppConfigUI` type (the one that permits the slot
+overrides above) only applies to `ui` when a `colors` key is present; strip it
+and the narrow `nuxt.schema.ts` Studio type (`{ colors, icons }`) wins, so the
+slot overrides fail excess-property checks. Each consumer supplies the real
+palette via its own `ui.colors` (`primary`/`neutral`), merged over the empty
+object by Nuxt's `defu` layer merge.
+
+Branding the layer no longer bakes in (supplied per consumer): `seo.title`/
+`description`, `header.title`/`logo`, `socials`, `github.url`/`branch`,
+`footer.credits`, `toc.bottom.links`, and the palette (`ui.colors` values —
+the layer keeps only an empty `colors: {}` discriminant).
 
 ---
 
@@ -130,11 +144,14 @@ Route middleware that redirects `/` to `/{locale}` based on:
 2. i18n default locale from config
 3. Falls back to `"en"`
 
-Only activates when `$config.public.i18n` is present.
+Only activates when `$config.public.i18n` is present **and** `app.config`
+`i18nRedirect.enabled` is truthy (default `true`; set `false` to opt out).
 
 ### `posthog.client.ts` (Client-only)
 
-Initializes PostHog analytics in production. Skipped entirely in dev mode (`import.meta.dev`).
+Initializes PostHog analytics in production. Skipped entirely in dev mode
+(`import.meta.dev`) and when `app.config` `analytics.enabled` is falsy (default
+`true`; set `false` to opt out).
 
 - Reads config from `runtimeConfig.public.posthog` (`key`, `host`, `defaults`)
 - Sets `person_profiles: "identified_only"`
@@ -146,9 +163,11 @@ Initializes PostHog analytics in production. Skipped entirely in dev mode (`impo
 
 - Imports Tailwind CSS and `@nuxt/ui`
 - Scans content, layers, and app config for Tailwind classes
-- Defines a custom teal color palette (50–950 shades) using relative HSL
-- Sets `--ui-primary` to teal
 - Defines `.prose-container` with `--ui-container: 760px`
+- **Palette-free.** The brand color scale and `--ui-primary` mapping are
+  consumer-supplied: each app's own css entrypoint (`apps/docs/app/assets/css/main.css`,
+  `apps/app/app/assets/css/main.css`) `@import`s this base and layers its
+  `@theme` on top.
 
 ---
 
