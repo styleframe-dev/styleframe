@@ -85,18 +85,21 @@ their own `app.config.ts`, merged over these defaults by `defu` (consumer wins).
 | `toc` | `title` ("On this page") — neutral default; consumers add `bottom.*` links |
 | `analytics` | `enabled` (default `true`) — opt-out flag for the PostHog plugin |
 | `i18nRedirect` | `enabled` (default `true`) — opt-out flag for the locale-redirect plugin |
+| `ui` | Neutral Nuxt UI Pro slot overrides (`commandPalette`, `contentNavigation`, `pageLinks`, `pageCard`, `pricingTable`) — reusable shell polish every consumer inherits |
 
-The layer intentionally ships **no `ui` block**. Nuxt UI's `AppConfigUI`
-(component slot overrides) only type-checks when a config also declares
-`ui.colors`; since the palette is consumer-supplied, the `ui` block — colors
-**and** the Nuxt UI Pro slot overrides (`commandPalette`, `contentNavigation`,
-`pageLinks`, `pageCard`, `pricingTable`) — lives entirely in each consumer's
-`app.config.ts`.
+**The `ui.colors: {}` discriminant.** The layer's `ui` block keeps an *empty*
+`colors: {}`. It bakes in **no palette** — it exists purely as a type
+discriminant. Nuxt UI's wide `AppConfigUI` type (the one that permits the slot
+overrides above) only applies to `ui` when a `colors` key is present; strip it
+and the narrow `nuxt.schema.ts` Studio type (`{ colors, icons }`) wins, so the
+slot overrides fail excess-property checks. Each consumer supplies the real
+palette via its own `ui.colors` (`primary`/`neutral`), merged over the empty
+object by Nuxt's `defu` layer merge.
 
 Branding the layer no longer bakes in (supplied per consumer): `seo.title`/
 `description`, `header.title`/`logo`, `socials`, `github.url`/`branch`,
-`footer.credits`, `toc.bottom.links`, the `ui` block (`ui.colors` +
-component slot overrides).
+`footer.credits`, `toc.bottom.links`, and the palette (`ui.colors` values —
+the layer keeps only an empty `colors: {}` discriminant).
 
 ---
 

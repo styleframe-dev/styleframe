@@ -82,54 +82,12 @@ export default defineAppConfig({
 		},
 	},
 
+	// Palette only — the Nuxt UI Pro component slot overrides are neutral shell
+	// defaults inherited from the `apps/shared` layer (merged under this by defu).
 	ui: {
 		colors: {
 			primary: "teal",
 			neutral: "zinc",
-		},
-		commandPalette: {
-			slots: {
-				input: "[&_.iconify]:size-4 [&_.iconify]:mx-0.5",
-				itemLeadingIcon: "size-4 mx-0.5",
-			},
-		},
-		contentNavigation: {
-			slots: {
-				trigger:
-					"font-normal text-muted data-[state=open]:text-muted cursor-pointer",
-				linkLeadingIcon: "size-4 mr-1",
-				linkTrailing: "hidden",
-			},
-			compoundVariants: [
-				{
-					variant: "link",
-					active: false,
-					disabled: false,
-					class: {
-						linkLeadingIcon: "group-data-[state=open]:text-dimmed",
-					},
-				},
-			],
-			defaultVariants: {
-				variant: "link",
-			},
-		},
-		pageLinks: {
-			slots: {
-				linkLeadingIcon: "size-4",
-				linkLabelExternalIcon: "size-2.5",
-			},
-		},
-		pageCard: {
-			slots: {
-				root: "rounded-xl",
-			},
-		},
-		pricingTable: {
-			slots: {
-				tierTitle:
-					"text-highlighted text-2xl sm:text-3xl text-pretty font-semibold",
-			},
 		},
 	},
 });
