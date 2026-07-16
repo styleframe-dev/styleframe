@@ -668,13 +668,16 @@ describe("createMediaFunction", () => {
 			const result = media(
 				"(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)",
 				{
-					backgroundImage: 'url("image-2x.png")',
+					backgroundImage: 'url("image@2x.png")',
 				},
 			);
 
 			expect(result.rule).toBe(
 				"(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)",
 			);
+			// A retina URL's mid-token @ must stay a literal string, not parse as
+			// a reference (no throw, no dead var(--2x--png)). See SF-33.
+			expect(result.declarations.backgroundImage).toBe('url("image@2x.png")');
 		});
 
 		it("should handle empty query string", () => {

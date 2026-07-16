@@ -63,6 +63,27 @@ describe("parseAtReferences", () => {
 
 		expect(result).toEqual([]);
 	});
+
+	it("should not treat a mid-token @ as a reference (retina URL)", () => {
+		const result = parseAtReferences('url("image@2x.png")');
+
+		expect(result).toEqual(['url("image@2x.png")']);
+	});
+
+	it("should not treat a @ preceded by a word character as a reference", () => {
+		const result = parseAtReferences("foo@bar");
+
+		expect(result).toEqual(["foo@bar"]);
+	});
+
+	it("should still parse a leading @ reference after a non-word boundary", () => {
+		const result = parseAtReferences('url("image@2x.png") @color.primary');
+
+		expect(result).toEqual([
+			'url("image@2x.png") ',
+			{ type: "reference", name: "color.primary", fallback: undefined },
+		]);
+	});
 });
 
 describe("findVariableInScope", () => {
@@ -283,6 +304,16 @@ describe("createPropertyValueResolver", () => {
 
 		it("should return empty strings unchanged", () => {
 			expect(resolvePropertyValue("")).toBe("");
+		});
+
+		it("should return a retina URL literal unchanged (no throw, no ref)", () => {
+			expect(resolvePropertyValue('url("image@2x.png")')).toBe(
+				'url("image@2x.png")',
+			);
+		});
+
+		it("should return a bare mid-token @ literal unchanged", () => {
+			expect(resolvePropertyValue("foo@bar")).toBe("foo@bar");
 		});
 	});
 
