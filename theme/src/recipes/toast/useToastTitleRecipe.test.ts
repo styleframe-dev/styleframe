@@ -41,9 +41,11 @@ describe("useToastTitleRecipe", () => {
 			const s = createInstance();
 			const recipe = useToastTitleRecipe(s);
 
-			// Title and description share the same literal size token at every
-			// step — sm → sm, md → md, lg → lg — so they render equal in size;
-			// the title stays dominant through weight alone.
+			// Title tracks the size axis on the literal token — sm → sm,
+			// md → md, lg → lg. The description carries the same axis one token
+			// below (sm → xs, md → sm, lg → md), so it sits a step under the
+			// title at every size; the title stays dominant through weight
+			// (semibold vs normal) reinforced by that size step.
 			expect(recipe.variants!.size).toEqual({
 				sm: { fontSize: "@font-size.sm" },
 				md: { fontSize: "@font-size.md" },
