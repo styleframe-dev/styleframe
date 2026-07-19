@@ -1,30 +1,47 @@
 import type { NavigationMenuItem } from "@nuxt/ui";
 
 /**
- * Declare the brand-supplied header navigation links on `AppConfig` so the
- * `@uxfront/docs-theme` component that reads them (`AppHeaderCTA` →
- * `header.links`) type-checks.
+ * Declare the brand `header` / `footer` config surface that the
+ * `@uxfront/docs-theme@0.1.0` components read but the package itself does not
+ * type.
  *
- * Why this is needed: the theme's `config` module seeds
- * `nuxt.options.appConfig.header = { title }`, so the generated
- * `ResolvedAppConfig` computes `header` as `Defu<{ title }, [{ title, logo,
- * links }, ...]>`. defu's *type* merge drops the array-typed `links` key from
- * that result (it keeps the object-typed `logo`), so `header.links` is missing
- * from the resolved type even though it exists at runtime.
+ * Why this shim exists: the theme's components read `appConfig.header.links`,
+ * `appConfig.header.logo`, `appConfig.footer.credits` and
+ * `appConfig.footer.links`, but the package declares none of them in its
+ * `CustomAppConfig`. Those keys live only in this app's `app.config.ts`, and
+ * neither Nuxt's `defu` layer-merge type nor the resolved `AppConfig` recovers
+ * the array-typed keys (`links`) — so `header.links` / `footer.*` are missing
+ * from the resolved type and the theme's `.vue` files fail `nuxt typecheck`
+ * (TS2339). `main` is green only because it still consumes the locally-typed
+ * `apps/shared` layer; the re-point onto the published package exposes the gap.
  *
- * `MergedAppConfig` deep-merges a key only when the `CustomAppConfig` side is a
- * non-optional object (`Custom[K] extends Record<string, any>`); an optional
- * (`| undefined`) property fails that check and replaces the resolved value
- * wholesale. So `header` must be declared non-optional here — that triggers the
- * recursive merge, preserving the resolved `title`/`logo` while adding `links`.
+ * How it works: keys are declared **optional** so they do not become required
+ * on `AppConfigInput` (which `extends CustomAppConfig`) — a non-optional key
+ * would force every `defineAppConfig` that omits it, including the package's
+ * own, to fail (TS2345). The generated `MergedAppConfig<Resolved, Custom>`
+ * type replaces an optional custom key wholesale (an optional property fails
+ * its `extends Record<string, any>` deep-merge guard), so declaring the full
+ * shape here surfaces every field the theme reads.
  *
- * `footer.links` needs no augmentation: `footer` isn't seeded by the config
- * module, so its resolved type already carries both `credits` and `links`.
+ * Remove once `@uxfront/docs-theme` ships a release that declares these keys in
+ * its own `CustomAppConfig` (tracked with the `i18n/` packaging fix for 0.1.1).
  */
+type HeaderLink = NavigationMenuItem & { activeMatch?: string };
+
 declare module "@nuxt/schema" {
 	interface CustomAppConfig {
-		header: {
-			links?: Array<NavigationMenuItem & { activeMatch?: string }>;
+		header?: {
+			title?: string;
+			logo?: {
+				light?: string;
+				dark?: string;
+				alt?: string;
+			};
+			links?: HeaderLink[];
+		};
+		footer?: {
+			credits?: string;
+			links?: NavigationMenuItem[];
 		};
 	}
 }
