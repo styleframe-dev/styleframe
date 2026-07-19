@@ -12,7 +12,7 @@ const route = useRoute();
 const slug = computed(() => String(route.params.slug));
 
 const { data: entry } = await useAsyncData(
-	() => `changelog-${slug.value}`,
+	`changelog-${slug.value}`,
 	() =>
 		queryCollection("changelog").path(`/changelog/${slug.value}`).first(),
 );
