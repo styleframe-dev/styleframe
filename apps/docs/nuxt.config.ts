@@ -5,13 +5,18 @@ const { resolve } = createResolver(import.meta.url);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-	extends: ["../shared"],
+	extends: ["@uxfront/docs-theme"],
 	compatibilityDate: "2025-07-22",
 	modules: [
 		resolve("./modules/optimizeDeps"),
 		"@nuxtjs/sitemap",
 		"@nuxt/content",
+		// The shared layer used to ship OG image support; the theme package
+		// does not, so styleframe registers it locally (see ogImage below).
+		"nuxt-og-image",
 		resolve("./modules/nonRouteCategories"),
+		// Must run after the theme's `routing` module — see module docblock.
+		resolve("./modules/useDocusI18nOverride"),
 	],
 	content: {
 		build: {

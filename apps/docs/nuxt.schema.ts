@@ -160,6 +160,13 @@ export default defineNuxtSchema({
 						}),
 					},
 				}),
+				links: field({
+					type: "array",
+					title: "Links",
+					description: "Navigation links to display in the header.",
+					icon: "i-lucide-link",
+					default: [],
+				}),
 			},
 		}),
 		socials: field({

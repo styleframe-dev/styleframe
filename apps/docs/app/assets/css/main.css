@@ -1,9 +1,8 @@
-@import "../../../../shared/app/assets/css/main.css";
-
 /*
- * Styleframe brand palette. The shared layer ships neutral (palette-free)
- * styling; this consumer supplies the teal scale and maps it onto Nuxt UI's
- * `--ui-primary`. Pairs with `ui.colors.primary: "teal"` in app.config.ts.
+ * Styleframe brand palette. The @uxfront/docs-theme layer injects the neutral
+ * (palette-free) base CSS first; this consumer supplies the teal scale and
+ * maps it onto Nuxt UI's `--ui-primary`. Pairs with `ui.colors.primary: "teal"`
+ * in app.config.ts.
  */
 @theme static {
 	--color-teal: hsl(189, 53%, 41%);

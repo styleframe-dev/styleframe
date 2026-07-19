@@ -1,8 +1,8 @@
 export default defineAppConfig({
 	/**
-	 * Styleframe branding for the docs site. The `apps/shared` layer ships
-	 * neutral defaults; these values are merged over them by Nuxt's `defu`
-	 * layer merge (consumer wins).
+	 * Styleframe branding for the docs site. The `@uxfront/docs-theme` layer
+	 * ships neutral defaults; these values are merged over them by Nuxt's
+	 * `defu` layer merge (consumer wins).
 	 *
 	 * @docs https://www.docus.dev/concepts/configuration#global-configuration
 	 */
@@ -22,6 +22,23 @@ export default defineAppConfig({
 			light: "/logotype-light.svg",
 			dark: "/logotype-dark.svg",
 		},
+		// Header CTA nav — brand data read by the theme's AppHeaderCTA.
+		links: [
+			{
+				label: "Docs",
+				to: "/docs/getting-started/introduction",
+				activeMatch: "/docs",
+			},
+			{
+				label: "Releases",
+				target: "_blank",
+				to: "https://github.com/styleframe-dev/styleframe/releases",
+			},
+			{
+				label: "Log in",
+				to: "https://app.styleframe.dev",
+			},
+		],
 	},
 	/**
 	 * @docs https://www.docus.dev/concepts/configuration#socials-links
@@ -39,6 +56,21 @@ export default defineAppConfig({
 	},
 	footer: {
 		credits: `Copyright © ${new Date().getFullYear()} styleframe`,
+		// Footer legal links read by the theme's AppFooterCenter.
+		links: [
+			{
+				label: "Privacy",
+				to: "/privacy",
+			},
+			{
+				label: "Terms",
+				to: "/terms",
+			},
+			{
+				label: "License",
+				to: "/license",
+			},
+		],
 	},
 	toc: {
 		// Title of the main table of contents
@@ -83,7 +115,7 @@ export default defineAppConfig({
 	},
 
 	// Palette only — the Nuxt UI Pro component slot overrides are neutral shell
-	// defaults inherited from the `apps/shared` layer (merged under this by defu).
+	// defaults inherited from the `@uxfront/docs-theme` layer (merged under this by defu).
 	ui: {
 		colors: {
 			primary: "teal",
