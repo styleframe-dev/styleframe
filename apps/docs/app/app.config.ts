@@ -30,9 +30,9 @@ export default defineAppConfig({
 				activeMatch: "/docs",
 			},
 			{
-				label: "Releases",
-				target: "_blank",
-				to: "https://github.com/styleframe-dev/styleframe/releases",
+				label: "Changelog",
+				to: "/changelog",
+				activeMatch: "/changelog",
 			},
 			{
 				label: "Log in",

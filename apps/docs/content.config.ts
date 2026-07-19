@@ -97,4 +97,17 @@ if (locales && Array.isArray(locales)) {
 	}
 }
 
+// The changelog is a single, locale-independent collection. Each entry is one
+// released version; the `/changelog` page queries it directly and renders the
+// bodies incrementally on scroll, so entries are intentionally left out of the
+// sitemap and are not individually routed.
+collections.changelog = defineCollection({
+	type: "page",
+	source: { include: "changelog/*.md" },
+	schema: z.object({
+		version: z.string(),
+		date: z.string(),
+	}),
+});
+
 export default defineContentConfig({ collections });
