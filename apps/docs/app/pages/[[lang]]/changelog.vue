@@ -1,35 +1,23 @@
 <script setup lang="ts">
-import { useIntersectionObserver } from "@vueuse/core";
-
 definePageMeta({
 	layout: "default",
 });
 
-// The list itself is cheap: one query for every entry's metadata, no bodies.
-// Bodies are pulled per entry, only once an entry enters the visible window
-// (see ChangelogEntry), so the page never ships one giant payload.
-const { data: index } = await useAsyncData("changelog-index", () =>
-	queryCollection("changelog")
-		.order("date", "DESC")
-		.select("path", "version", "date", "title")
-		.all(),
+// One static page. Every entry — metadata and body — is fetched up front and
+// prerendered into the HTML, so in-page search (Ctrl-F), SEO crawlers, and
+// no-JS readers all see the full changelog. At 17 short entries the DOM weight
+// is trivial; if it ever bites at hundreds of entries, reach for CSS
+// `content-visibility: auto` before any JS windowing — it keeps Ctrl-F working.
+const { data: entries } = await useAsyncData("changelog", () =>
+	queryCollection("changelog").order("date", "DESC").all(),
 );
 
-const entries = computed(() => index.value ?? []);
-
-// Reveal a few entries at a time as the reader scrolls, so bodies stream in
-// incrementally rather than all mounting at once.
-const STEP = 5;
-const visibleCount = ref(STEP);
-const visibleEntries = computed(() => entries.value.slice(0, visibleCount.value));
-const done = computed(() => visibleCount.value >= entries.value.length);
-
-const sentinel = ref<HTMLElement | null>(null);
-useIntersectionObserver(sentinel, ([entry]) => {
-	if (entry?.isIntersecting && !done.value) {
-		visibleCount.value = Math.min(visibleCount.value + STEP, entries.value.length);
-	}
-});
+const formatDate = (date: string) =>
+	new Intl.DateTimeFormat("en-US", {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+	}).format(new Date(date));
 
 const title = "Changelog";
 const description =
@@ -59,20 +47,35 @@ defineOgImage("DocsSatori", {
 		</div>
 
 		<div>
-			<ChangelogEntry
-				v-for="entry in visibleEntries"
+			<article
+				v-for="entry in entries"
 				:key="entry.path"
-				:path="entry.path"
-				:version="entry.version"
-				:date="entry.date"
-				:title="entry.title"
-			/>
+				class="flex flex-col gap-4 border-t border-default py-12 lg:flex-row lg:gap-12"
+			>
+				<div class="lg:w-48 lg:shrink-0">
+					<div class="lg:sticky lg:top-24">
+						<UBadge
+							:label="`v${entry.version}`"
+							color="primary"
+							variant="subtle"
+							size="lg"
+						/>
+						<time :datetime="entry.date" class="mt-2 block text-sm text-muted">
+							{{ formatDate(entry.date) }}
+						</time>
+					</div>
+				</div>
+
+				<div class="min-w-0 flex-1">
+					<h2 class="mb-4 text-2xl font-semibold text-highlighted">
+						{{ entry.title }}
+					</h2>
+					<ContentRenderer
+						:value="entry"
+						class="prose prose-primary max-w-none"
+					/>
+				</div>
+			</article>
 		</div>
-
-		<div ref="sentinel" class="h-px w-full" />
-
-		<p v-if="done" class="py-8 text-center text-sm text-muted">
-			You've reached the beginning.
-		</p>
 	</UContainer>
 </template>
