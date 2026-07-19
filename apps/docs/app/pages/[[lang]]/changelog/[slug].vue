@@ -25,6 +25,8 @@ if (!entry.value) {
 	});
 }
 
+const releaseUrl = useChangelogReleaseUrl();
+
 const formatDate = (date: string) =>
 	new Intl.DateTimeFormat("en-US", {
 		year: "numeric",
@@ -80,6 +82,17 @@ defineOgImage("DocsSatori", {
 				:value="entry"
 				class="prose prose-primary mt-8 max-w-none"
 			/>
+
+			<NuxtLink
+				:to="releaseUrl(entry)"
+				target="_blank"
+				rel="noopener"
+				class="mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+			>
+				<UIcon name="i-simple-icons-github" class="size-4" />
+				View the v{{ entry.version }} release on GitHub
+				<UIcon name="i-lucide-arrow-up-right" class="size-3.5" />
+			</NuxtLink>
 		</div>
 	</UContainer>
 </template>

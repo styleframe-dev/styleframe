@@ -108,6 +108,10 @@ collections.changelog = defineCollection({
 	schema: z.object({
 		version: z.string(),
 		date: z.string(),
+		// Optional override for the GitHub release URL. Releases are tagged
+		// `styleframe@<version>` and the link is derived from that; the two
+		// earliest releases predate that tag convention and set this instead.
+		releaseUrl: z.string().url().optional(),
 	}),
 });
 
