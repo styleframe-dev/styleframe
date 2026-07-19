@@ -1,7 +1,16 @@
+import { readdirSync } from "node:fs";
 import type { NuxtI18nOptions } from "@nuxtjs/i18n";
 import { createResolver, useNuxt } from "@nuxt/kit";
 
 const { resolve } = createResolver(import.meta.url);
+
+// One prerendered detail route per changelog entry. The version-numbered slugs
+// (e.g. /changelog/1.0.0) end in what the Nitro crawler reads as a file
+// extension, so it skips them when following links — we list them explicitly so
+// every release page lands in the static output, readable with no JS.
+const changelogRoutes = readdirSync(resolve("./content/changelog"))
+	.filter((file) => file.endsWith(".md"))
+	.map((file) => `/changelog/${file.replace(/\.md$/, "")}`);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -74,6 +83,7 @@ export default defineNuxtConfig({
 			nitroConfig.prerender = nitroConfig.prerender || {};
 			nitroConfig.prerender.routes = nitroConfig.prerender.routes || [];
 			nitroConfig.prerender.routes.push(...(routes || []));
+			nitroConfig.prerender.routes.push(...changelogRoutes);
 		},
 	},
 	site: {

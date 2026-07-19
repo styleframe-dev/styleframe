@@ -12,6 +12,8 @@ const { data: entries } = await useAsyncData("changelog", () =>
 	queryCollection("changelog").order("date", "DESC").all(),
 );
 
+const releaseUrl = useChangelogReleaseUrl();
+
 const formatDate = (date: string) =>
 	new Intl.DateTimeFormat("en-US", {
 		year: "numeric",
@@ -39,42 +41,56 @@ defineOgImage("DocsSatori", {
 
 <template>
 	<UContainer class="py-12 lg:py-16">
-		<div class="mb-8 max-w-2xl">
-			<h1 class="text-3xl font-bold text-highlighted sm:text-4xl">Changelog</h1>
-			<p class="mt-3 text-base text-muted">
-				{{ description }}
-			</p>
-		</div>
+		<div class="mx-auto max-w-2xl">
+			<div class="mb-8">
+				<h1 class="text-3xl font-bold text-highlighted sm:text-4xl">
+					Changelog
+				</h1>
+				<p class="mt-3 text-base text-muted">
+					{{ description }}
+				</p>
+			</div>
 
-		<div>
 			<article
 				v-for="entry in entries"
 				:key="entry.path"
-				class="flex flex-col gap-4 border-t border-default py-12 lg:flex-row lg:gap-12"
+				class="border-t border-default py-12"
 			>
-				<div class="lg:w-48 lg:shrink-0">
-					<div class="lg:sticky lg:top-24">
+				<div class="flex items-center gap-3">
+					<NuxtLink :to="entry.path">
 						<UBadge
 							:label="`v${entry.version}`"
 							color="primary"
 							variant="subtle"
 							size="lg"
 						/>
-						<time :datetime="entry.date" class="mt-2 block text-sm text-muted">
-							{{ formatDate(entry.date) }}
-						</time>
-					</div>
+					</NuxtLink>
+					<time :datetime="entry.date" class="text-sm text-muted">
+						{{ formatDate(entry.date) }}
+					</time>
 				</div>
 
-				<div class="min-w-0 flex-1">
-					<h2 class="mb-4 text-2xl font-semibold text-highlighted">
+				<h2 class="mt-4 text-2xl font-semibold text-highlighted">
+					<NuxtLink :to="entry.path" class="hover:text-primary">
 						{{ entry.title }}
-					</h2>
-					<ContentRenderer
-						:value="entry"
-						class="prose prose-primary max-w-none"
-					/>
-				</div>
+					</NuxtLink>
+				</h2>
+
+				<ContentRenderer
+					:value="entry"
+					class="prose prose-primary mt-4 max-w-none"
+				/>
+
+				<NuxtLink
+					:to="releaseUrl(entry)"
+					target="_blank"
+					rel="noopener"
+					class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+				>
+					<UIcon name="i-simple-icons-github" class="size-4" />
+					View the v{{ entry.version }} release on GitHub
+					<UIcon name="i-lucide-arrow-up-right" class="size-3.5" />
+				</NuxtLink>
 			</article>
 		</div>
 	</UContainer>

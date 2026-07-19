@@ -98,15 +98,20 @@ if (locales && Array.isArray(locales)) {
 }
 
 // The changelog is a single, locale-independent collection. Each entry is one
-// released version; the `/changelog` page queries it directly and renders the
-// bodies incrementally on scroll, so entries are intentionally left out of the
-// sitemap and are not individually routed.
+// released version. The `/changelog` index queries it directly and renders every
+// body inline; each entry also has a deep-linkable detail route at
+// `/changelog/<version>` (app/pages/[[lang]]/changelog/[slug].vue). Both read
+// from this same collection — no content duplication — and both are prerendered.
 collections.changelog = defineCollection({
 	type: "page",
 	source: { include: "changelog/*.md" },
 	schema: z.object({
 		version: z.string(),
 		date: z.string(),
+		// Optional override for the GitHub release URL. Releases are tagged
+		// `styleframe@<version>` and the link is derived from that; the two
+		// earliest releases predate that tag convention and set this instead.
+		releaseUrl: z.string().url().optional(),
 	}),
 });
 
