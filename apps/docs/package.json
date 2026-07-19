@@ -8,6 +8,7 @@
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
 		"typecheck": "nuxt typecheck",
+		"test": "vitest run",
 		"postinstall": "nuxt prepare"
 	},
 	"dependencies": {
@@ -54,6 +55,7 @@
 		"tailwindcss": "catalog:nuxt",
 		"typescript": "catalog:nuxt",
 		"unist-util-visit": "catalog:nuxt",
+		"vitest": "catalog:",
 		"vue-tsc": "catalog:nuxt"
 	},
 	"files": [
