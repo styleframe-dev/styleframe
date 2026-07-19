@@ -1,8 +1,25 @@
+@import "tailwindcss";
+
 /*
- * Styleframe brand palette. The @uxfront/docs-theme layer injects the neutral
- * (palette-free) base CSS first; this consumer supplies the teal scale and
- * maps it onto Nuxt UI's `--ui-primary`. Pairs with `ui.colors.primary: "teal"`
- * in app.config.ts.
+ * This file MUST import Tailwind. The `@uxfront/docs-theme` layer registers its
+ * own neutral base entry (Tailwind + Nuxt UI), but a `@theme` block is only
+ * compiled into real `:root` custom properties by the Tailwind plugin when it
+ * lives in a file that is itself a Tailwind entry. Without the import above,
+ * the `@theme static { … }` below is emitted verbatim and browsers discard the
+ * unknown at-rule, so `--color-teal` / `--ui-primary` resolve to nothing and
+ * every `*-primary` utility falls back to black/transparent site-wide.
+ *
+ * `@source` re-scans this app's own content + config for utility classes: the
+ * theme package's `@source` paths are package-relative (they resolve inside
+ * node_modules), so they never see the consumer's markdown or app.config.
+ */
+@source "../../../content/**/*";
+@source "../../app.config.ts";
+
+/*
+ * Styleframe brand palette. This consumer supplies the teal scale and maps it
+ * onto Nuxt UI's `--ui-primary`. Pairs with `ui.colors.primary: "teal"` in
+ * app.config.ts.
  */
 @theme static {
 	--color-teal: hsl(189, 53%, 41%);
