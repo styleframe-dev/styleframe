@@ -54,12 +54,14 @@ defineOgImage("DocsSatori", {
 			>
 				<div class="lg:w-48 lg:shrink-0">
 					<div class="lg:sticky lg:top-24">
-						<UBadge
-							:label="`v${entry.version}`"
-							color="primary"
-							variant="subtle"
-							size="lg"
-						/>
+						<NuxtLink :to="entry.path">
+							<UBadge
+								:label="`v${entry.version}`"
+								color="primary"
+								variant="subtle"
+								size="lg"
+							/>
+						</NuxtLink>
 						<time :datetime="entry.date" class="mt-2 block text-sm text-muted">
 							{{ formatDate(entry.date) }}
 						</time>
@@ -68,7 +70,9 @@ defineOgImage("DocsSatori", {
 
 				<div class="min-w-0 flex-1">
 					<h2 class="mb-4 text-2xl font-semibold text-highlighted">
-						{{ entry.title }}
+						<NuxtLink :to="entry.path" class="hover:text-primary">
+							{{ entry.title }}
+						</NuxtLink>
 					</h2>
 					<ContentRenderer
 						:value="entry"
