@@ -1,16 +1,26 @@
-@import "tailwindcss";
+/*
+ * Single Tailwind entry for the docs app.
+ *
+ * The styleframe brand `@theme` below (the teal scale + `--ui-primary` mapping)
+ * is only compiled into real `:root` custom properties and utilities when it
+ * lives inside a Tailwind pass. Rather than starting a second pass with its own
+ * `@import "tailwindcss"`, this file imports the layer's neutral base — which
+ * owns the single `@import "tailwindcss"` / `@import "@nuxt/ui"` — so the brand
+ * theme compiles in that SAME pass.
+ *
+ * The layer also registers its `main.css` as a standalone CSS entry; that
+ * registration is stripped in `nuxt.config.ts` (see the `modules:done` hook).
+ * Two Tailwind entries would each re-emit every base utility, and the second
+ * copy — landing after the first pass's responsive rules at equal specificity —
+ * wins by source order and silently kills every `sm:`/`lg:` variant (h1 renders
+ * 48px instead of 72px, layouts collapse). One entry, one emission, correct
+ * cascade.
+ */
+@import "@uxfront/layer-docs/app/assets/css/main.css";
 
 /*
- * This file MUST import Tailwind. The `@uxfront/layer-docs` layer registers its
- * own neutral base entry (Tailwind + Nuxt UI), but a `@theme` block is only
- * compiled into real `:root` custom properties by the Tailwind plugin when it
- * lives in a file that is itself a Tailwind entry. Without the import above,
- * the `@theme static { … }` below is emitted verbatim and browsers discard the
- * unknown at-rule, so `--color-teal` / `--ui-primary` resolve to nothing and
- * every `*-primary` utility falls back to black/transparent site-wide.
- *
  * `@source` re-scans this app's own content + config for utility classes: the
- * theme package's `@source` paths are package-relative (they resolve inside
+ * layer's `@source` paths are package-relative (they resolve inside
  * node_modules), so they never see the consumer's markdown or app.config.
  */
 @source "../../../content/**/*";

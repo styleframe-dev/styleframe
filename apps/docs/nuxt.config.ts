@@ -60,6 +60,22 @@ export default defineNuxtConfig({
 		},
 	},
 	hooks: {
+		/**
+		 * Collapse to a single Tailwind pass. The layer registers its own
+		 * `main.css` as a standalone CSS entry; this app re-imports that same
+		 * base from its own `main.css` so the brand `@theme` compiles in the
+		 * layer's Tailwind pass. Drop the layer's standalone registration here —
+		 * two Tailwind entries each re-emit every base utility, and the later
+		 * copy wins by source order at equal specificity, clobbering every
+		 * `sm:`/`lg:` responsive variant (see `app/assets/css/main.css`).
+		 */
+		"modules:done": () => {
+			const nuxt = useNuxt();
+			nuxt.options.css = nuxt.options.css.filter(
+				(entry) =>
+					typeof entry !== "string" || !entry.includes("@uxfront/layer-docs"),
+			);
+		},
 		"nitro:config"(nitroConfig) {
 			const nuxt = useNuxt();
 
