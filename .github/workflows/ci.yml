@@ -92,6 +92,9 @@ jobs:
               env:
                   NODE_ENV: production
 
+            - name: Check compiled CSS (duplicate-utility guard)
+              run: pnpm --filter '@styleframe/docs' test:build
+
             - name: Upload docs build
               uses: actions/upload-artifact@v4
               with:

@@ -14,13 +14,18 @@ const changelogRoutes = readdirSync(resolve("./content/changelog"))
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-	extends: ["../shared"],
+	extends: ["@uxfront/layer-docs"],
 	compatibilityDate: "2025-07-22",
 	modules: [
 		resolve("./modules/optimizeDeps"),
 		"@nuxtjs/sitemap",
 		"@nuxt/content",
+		// The shared layer used to ship OG image support; the theme package
+		// does not, so styleframe registers it locally (see ogImage below).
+		"nuxt-og-image",
 		resolve("./modules/nonRouteCategories"),
+		// Must run after the theme's `routing` module — see module docblock.
+		resolve("./modules/useDocusI18nOverride"),
 	],
 	content: {
 		build: {
@@ -64,6 +69,22 @@ export default defineNuxtConfig({
 		},
 	},
 	hooks: {
+		/**
+		 * Collapse to a single Tailwind pass. The layer registers its own
+		 * `main.css` as a standalone CSS entry; this app re-imports that same
+		 * base from its own `main.css` so the brand `@theme` compiles in the
+		 * layer's Tailwind pass. Drop the layer's standalone registration here —
+		 * two Tailwind entries each re-emit every base utility, and the later
+		 * copy wins by source order at equal specificity, clobbering every
+		 * `sm:`/`lg:` responsive variant (see `app/assets/css/main.css`).
+		 */
+		"modules:done": () => {
+			const nuxt = useNuxt();
+			nuxt.options.css = nuxt.options.css.filter(
+				(entry) =>
+					typeof entry !== "string" || !entry.includes("@uxfront/layer-docs"),
+			);
+		},
 		"nitro:config"(nitroConfig) {
 			const nuxt = useNuxt();
 

@@ -8,6 +8,8 @@
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
 		"typecheck": "nuxt typecheck",
+		"test": "vitest run",
+		"test:build": "vitest run --config vitest.build.config.ts",
 		"postinstall": "nuxt prepare"
 	},
 	"dependencies": {
@@ -21,6 +23,7 @@
 		"@nuxtjs/robots": "catalog:nuxt",
 		"@nuxtjs/sitemap": "catalog:nuxt",
 		"@unhead/vue": "catalog:nuxt",
+		"@uxfront/layer-docs": "^0.1.0",
 		"@vueuse/core": "catalog:nuxt",
 		"defu": "catalog:",
 		"motion-v": "catalog:nuxt",
@@ -53,6 +56,7 @@
 		"tailwindcss": "catalog:nuxt",
 		"typescript": "catalog:nuxt",
 		"unist-util-visit": "catalog:nuxt",
+		"vitest": "catalog:",
 		"vue-tsc": "catalog:nuxt"
 	},
 	"files": [
