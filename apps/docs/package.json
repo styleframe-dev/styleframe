@@ -9,6 +9,7 @@
 		"preview": "nuxt preview",
 		"typecheck": "nuxt typecheck",
 		"test": "vitest run",
+		"test:build": "vitest run --config vitest.build.config.ts",
 		"postinstall": "nuxt prepare"
 	},
 	"dependencies": {
