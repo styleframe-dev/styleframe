@@ -1,6 +1,6 @@
 export default defineAppConfig({
 	/**
-	 * Styleframe branding for the docs site. The `@uxfront/docs-theme` layer
+	 * Styleframe branding for the docs site. The `@uxfront/layer-docs` layer
 	 * ships neutral defaults; these values are merged over them by Nuxt's
 	 * `defu` layer merge (consumer wins).
 	 *
@@ -115,7 +115,7 @@ export default defineAppConfig({
 	},
 
 	// Palette only — the Nuxt UI Pro component slot overrides are neutral shell
-	// defaults inherited from the `@uxfront/docs-theme` layer (merged under this by defu).
+	// defaults inherited from the `@uxfront/layer-docs` layer (merged under this by defu).
 	ui: {
 		colors: {
 			primary: "teal",

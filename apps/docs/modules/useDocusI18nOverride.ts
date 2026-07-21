@@ -3,7 +3,7 @@ import { defineNuxtModule, createResolver } from "@nuxt/kit";
 /**
  * Pin the `useDocusI18n` auto-import to this app's local composable.
  *
- * The `@uxfront/docs-theme` layer's `routing` module registers `useDocusI18n`
+ * The `@uxfront/layer-docs` layer's `routing` module registers `useDocusI18n`
  * from the package itself, whose copy statically imports
  * `../../i18n/locales/en.json`. That locale file is not shipped in the
  * published package (its `files` array omits `i18n/`), so bundling the package

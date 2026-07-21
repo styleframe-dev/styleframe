@@ -5,7 +5,7 @@ const { resolve } = createResolver(import.meta.url);
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-	extends: ["@uxfront/docs-theme"],
+	extends: ["@uxfront/layer-docs"],
 	compatibilityDate: "2025-07-22",
 	modules: [
 		resolve("./modules/optimizeDeps"),

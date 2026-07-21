@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 /**
- * Regression guard for the P1 introduced by the `@uxfront/docs-theme` re-point
+ * Regression guard for the P1 introduced by the `@uxfront/layer-docs` re-point
  * (PR #327) and fixed in 56b8d7d.
  *
  * Root cause: a Tailwind `@theme` block is only compiled into real `:root`

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * This file MUST import Tailwind. The `@uxfront/docs-theme` layer registers its
+ * This file MUST import Tailwind. The `@uxfront/layer-docs` layer registers its
  * own neutral base entry (Tailwind + Nuxt UI), but a `@theme` block is only
  * compiled into real `:root` custom properties by the Tailwind plugin when it
  * lives in a file that is itself a Tailwind entry. Without the import above,
