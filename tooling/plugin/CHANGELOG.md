@@ -1,5 +1,11 @@
 # @styleframe/plugin
 
+## 3.4.2
+
+### Patch Changes
+
+- [#273](https://github.com/styleframe-dev/styleframe/pull/273) [`04dcb53`](https://github.com/styleframe-dev/styleframe/commit/04dcb53c6ae7e2bfdb3785231c02cd0863fcda61) Thanks [@jaasieldelgado131](https://github.com/jaasieldelgado131)! - Publish the `@styleframe/plugin/types` entry point.
+
 ## 3.4.1
 
 ### Patch Changes
