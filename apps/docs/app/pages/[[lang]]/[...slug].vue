@@ -1,4 +1,12 @@
 <script setup lang="ts">
+/**
+ * Local override of the `@uxfront/layer-docs` landing page.
+ *
+ * The ONLY delta against the layer copy is the `defineOgImage` fallback below:
+ * `nuxt-og-image` and the `DocsSatori` template are registered by this app, not
+ * by the theme package. Everything else is the layer's file verbatim — keep it
+ * that way, and delete this override once OG image support lands in the layer.
+ */
 import type { Collections } from "@nuxt/content";
 import { kebabCase } from "scule";
 

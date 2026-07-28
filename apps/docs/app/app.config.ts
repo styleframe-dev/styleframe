@@ -41,6 +41,20 @@ export default defineAppConfig({
 		],
 	},
 	/**
+	 * Frameworks offered by the sidebar select and the in-content
+	 * `FrameworkSwitcher`, in display order. `value` is the MDC slot name used
+	 * in content (`#react`, `#other`, `#vue`) and the persisted preference
+	 * token. The layer ships no default list — which frameworks styleframe
+	 * documents is a styleframe fact — so this array is the only source.
+	 */
+	docsTheme: {
+		frameworks: [
+			{ value: "react", label: "React", icon: "i-mdi-react" },
+			{ value: "other", label: "Vanilla", icon: "i-mdi-language-typescript" },
+			{ value: "vue", label: "Vue", icon: "i-mdi-vuejs" },
+		],
+	},
+	/**
 	 * @docs https://www.docus.dev/concepts/configuration#socials-links
 	 */
 	socials: {

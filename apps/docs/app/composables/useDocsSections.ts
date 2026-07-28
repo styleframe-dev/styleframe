@@ -22,6 +22,15 @@ function findFirstLeafPath(
 	return items[0]?.path;
 }
 
+/**
+ * Local override of the layer's `useDocsSections`.
+ *
+ * The delta is the `theme` branch: styleframe splits one content collection into
+ * four sub-header tabs via `THEME_SUBSECTIONS`, which is a styleframe content
+ * shape, not a theme feature. The rest of the shape — including
+ * `hasSectionSwitcher` — must stay identical to the layer copy, since the
+ * layer's `AppSubHeader` consumes it.
+ */
 export function useDocsSections() {
 	const route = useRoute();
 	const navigation =
@@ -67,5 +76,12 @@ export function useDocsSections() {
 		sections.value.find((section) => section.active),
 	);
 
-	return { sections, activeSection };
+	/**
+	 * Whether the section switcher is worth rendering. A single section (or none)
+	 * gives the reader nothing to switch between, so the sub-header is suppressed
+	 * entirely rather than rendering an empty bar.
+	 */
+	const hasSectionSwitcher = computed(() => sections.value.length > 1);
+
+	return { sections, activeSection, hasSectionSwitcher };
 }
