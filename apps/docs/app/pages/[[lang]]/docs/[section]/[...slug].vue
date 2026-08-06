@@ -1,4 +1,12 @@
 <script setup lang="ts">
+/**
+ * Local override of the `@uxfront/layer-docs` docs page.
+ *
+ * The ONLY delta against the layer copy is the `defineOgImage` call below:
+ * `nuxt-og-image` and the `DocsSatori` template are registered by this app, not
+ * by the theme package. Everything else is the layer's file verbatim — keep it
+ * that way, and delete this override once OG image support lands in the layer.
+ */
 import { kebabCase } from "scule";
 import type {
 	ContentNavigationItem,
@@ -16,7 +24,6 @@ type DocsPageItem = PageCollectionItemBase & {
 	seo?: { title?: string; description?: string };
 };
 import { findPageHeadline } from "@nuxt/content/utils";
-import { addPrerenderPath } from "../../../../../utils/prerender";
 
 definePageMeta({
 	layout: "default",
@@ -149,7 +156,10 @@ const editLink = computed(() => {
 		<UPageBody>
 			<ContentRenderer v-if="page" :value="page" />
 
-			<USeparator>
+			<!-- `decorative` drops the `separator` role: the rule is decoration around
+			     the edit/report actions, and a separator with focusable descendants is
+			     a `nested-interactive` violation. -->
+			<USeparator decorative>
 				<div v-if="github" class="flex items-center gap-2 text-sm text-muted">
 					<UButton
 						variant="link"

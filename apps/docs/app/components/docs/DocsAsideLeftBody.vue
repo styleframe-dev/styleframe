@@ -1,4 +1,11 @@
 <script setup lang="ts">
+/**
+ * Local override of the layer's sidebar navigation body.
+ *
+ * Two styleframe-only deltas, both content facts rather than theme features:
+ * the `theme` section's tree is sliced per `THEME_SUBSECTIONS` tab, and Pro-only
+ * pages get a `<ProIcon>` badge. Everything else tracks the layer copy.
+ */
 import type { ContentNavigationItem } from "@nuxt/content";
 
 const route = useRoute();
