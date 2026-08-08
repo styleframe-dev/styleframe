@@ -23,7 +23,7 @@
 		"@nuxtjs/robots": "catalog:nuxt",
 		"@nuxtjs/sitemap": "catalog:nuxt",
 		"@unhead/vue": "catalog:nuxt",
-		"@uxfront/layer-docs": "^0.2.0",
+		"@uxfront/layer-docs": "^0.3.0",
 		"@vueuse/core": "catalog:nuxt",
 		"defu": "catalog:",
 		"motion-v": "catalog:nuxt",
