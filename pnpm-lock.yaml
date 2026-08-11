@@ -422,8 +422,8 @@ importers:
         specifier: catalog:nuxt
         version: 2.0.19(vue@3.5.38(typescript@6.0.3))
       '@uxfront/layer-docs':
-        specifier: ^0.2.0
-        version: 0.2.0(85e3e4239b7356efe0ee0e8a759b4dba)
+        specifier: ^0.3.0
+        version: 0.3.0(25877dc4bbe5ce95f60820be2d242ac6)
       '@vueuse/core':
         specifier: catalog:nuxt
         version: 14.3.0(vue@3.5.38(typescript@6.0.3))
@@ -6289,8 +6289,8 @@ packages:
   '@unocss/core@66.7.0':
     resolution: {integrity: sha512-j6MFMx5C3iIwW4T4hVbh+30fKWgSGkmS3bCcdjlfqM88lRT+dHFBN9nkfNOBJT6e6IHN9415nexuzcQvTjJXxw==}
 
-  '@uxfront/layer-docs@0.2.0':
-    resolution: {integrity: sha512-AW2yNCaxGrQ9OGG2W2IlVocCZtOmzYg/f/sFahOA3Gju5VKh6SaNEcBrgEHv+JSWRj2jD397w3LtCrmiM+Ij8Q==}
+  '@uxfront/layer-docs@0.3.0':
+    resolution: {integrity: sha512-5LdPCxbzeVEVcYCoSmGFuuZRp524ifiCTALhgfES5bOLuEFNMWaYOUrb0OZUnR32eOIHiGyZMqNwHMOZ/Ebtgg==}
     peerDependencies:
       '@nuxt/content': ^3.14.0
       '@nuxt/image': ^1.11.0
@@ -6306,6 +6306,7 @@ packages:
       posthog-js: ^1.386.6
       tailwindcss: ^4.3.1
       typescript: ^6.0.3
+      vitest: ^4.1.10
       vue: ^3.5.38
     peerDependenciesMeta:
       '@nuxtjs/i18n':
@@ -6315,6 +6316,8 @@ packages:
       posthog-js:
         optional: true
       typescript:
+        optional: true
+      vitest:
         optional: true
 
   '@valibot/to-json-schema@1.7.0':
@@ -18571,7 +18574,7 @@ snapshots:
 
   '@unocss/core@66.7.0': {}
 
-  '@uxfront/layer-docs@0.2.0(85e3e4239b7356efe0ee0e8a759b4dba)':
+  '@uxfront/layer-docs@0.3.0(25877dc4bbe5ce95f60820be2d242ac6)':
     dependencies:
       '@nuxt/content': 3.14.0(@valibot/to-json-schema@1.7.0(valibot@1.4.1(typescript@6.0.3)))(better-sqlite3@12.10.1)(magicast@0.3.5)(valibot@1.4.1(typescript@6.0.3))
       '@nuxt/image': 1.11.0(@netlify/blobs@9.1.2)(db0@0.3.4(better-sqlite3@12.10.1))(ioredis@5.10.1)(magicast@0.3.5)
@@ -18597,6 +18600,7 @@ snapshots:
       '@nuxtjs/mdc': 0.22.0(magicast@0.3.5)
       posthog-js: 1.386.6
       typescript: 6.0.3
+      vitest: 4.1.8(@opentelemetry/api@1.9.0)(@types/node@24.10.4)(@vitest/browser-playwright@4.1.8)(@vitest/coverage-v8@4.1.8)(jsdom@25.0.1)(vite@8.0.16(@types/node@24.10.4)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.44.0)(tsx@4.22.4)(yaml@2.9.0))
     transitivePeerDependencies:
       - '@emotion/is-prop-valid'
       - react
