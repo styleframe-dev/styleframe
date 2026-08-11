@@ -67,6 +67,12 @@ export default defineAppConfig({
 	github: {
 		url: "https://github.com/styleframe-dev/styleframe",
 		branch: "main",
+		// Path from the repository root to this Nuxt app. The layer builds the
+		// "Edit this page" href as
+		// `{url}/edit/{branch}/{rootDir}/content/{stem}.{extension}`; with
+		// `rootDir` unset the segment is dropped and every link 404s, because the
+		// content lives at `apps/docs/content/`, not `content/`.
+		rootDir: "apps/docs",
 	},
 	footer: {
 		credits: `Copyright © ${new Date().getFullYear()} styleframe`,
