@@ -1,5 +1,15 @@
 # styleframe
 
+## 3.9.2
+
+### Patch Changes
+
+- [#323](https://github.com/styleframe-dev/styleframe/pull/323) [`a03a29b`](https://github.com/styleframe-dev/styleframe/commit/a03a29b4e44e29f3ffe7acf94f493bed7d82cb02) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Boundary-guard `@`-reference parsing so a `@` mid-token is a literal, not a reference. `AT_VARIABLE_REGEX` matched `@` anywhere in a string, so a retina URL like `url("image@2x.png")` parsed `@2x.png` as a variable reference — silently emitting a dead `var(--2x--png)` before SF-13, and _throwing_ `Variable "2x.png" is not defined` after SF-13 tightened ref validation. The regex now requires a non-word boundary before `@` (`(?<!\w)`), so `@` only starts a reference when not preceded by a word character. Genuine leading-`@` refs (`@color.primary`, `1px solid @spacing.sm`, `@border.width solid @color.primary`) are unchanged, byte for byte; only `@`-mid-token literals change — from broken/throwing to passthrough.
+
+- [#316](https://github.com/styleframe-dev/styleframe/pull/316) [`dc08e92`](https://github.com/styleframe-dev/styleframe/commit/dc08e92a22db0ec29c2837504d84e3401b0ae9e2) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Validate variable references inside compound `@`-shorthand values. `resolvePropertyValue` already threw `Variable "X" is not defined` for a single exact ref (`padding: "@0.5"`), but the embedded/compound path (`padding: "@0.25 @0.5"`, `border: "1px solid @undefined"`) only recorded usage and skipped `validateReference`, so a compound ref to an undefined variable silently emitted a dead `var(--…)`. The embedded branch now calls `validateReference` for each ref part, matching the single-ref path. Compound refs whose variables are all defined are unchanged (byte-for-byte identical output); only compound refs to undefined variables change — from a silent dead `var(--…)` to a thrown error.
+
+- [#299](https://github.com/styleframe-dev/styleframe/pull/299) [`a22a813`](https://github.com/styleframe-dev/styleframe/commit/a22a813a35742992212351f0d2b11eaac3360401) Thanks [@alexgrozav](https://github.com/alexgrozav)! - Fix inset utilities dropping the spacing multiplier scale. The nine inset composables (`inset`, `inset-x`, `inset-y`, `inset-inline-start`, `inset-inline-end`, `top`, `right`, `bottom`, `left`) were plain `createUseUtility`, so a numeric ref like `@0.5` fell through to a bare lookup for a non-existent `0.5` variable and silently emitted an undefined `var(--0--5)`. They now use `createUseSpacingUtility(..., { namespace: "spacing" })` like `margin`/`padding`/`height`, so `@0.5` resolves to `calc(var(--spacing) * 0.5)`. Object-syntax literals and preset `undefined` calls are unchanged — purely a fix for numeric-multiplier insets. Note: existing `@spacing.xs` inset usages shorten the utility class key `spacing.xs` → `xs` (resolved var identical), matching margin.
+
 ## 3.9.1
 
 ### Patch Changes
