@@ -8,13 +8,23 @@
  * owns the single `@import "tailwindcss"` / `@import "@nuxt/ui"` — so the brand
  * theme compiles in that SAME pass.
  *
- * The layer also registers its `main.css` as a standalone CSS entry; that
- * registration is stripped in `nuxt.config.ts` (see the `modules:done` hook).
- * Two Tailwind entries would each re-emit every base utility, and the second
- * copy — landing after the first pass's responsive rules at equal specificity —
- * wins by source order and silently kills every `sm:`/`lg:` variant (h1 renders
- * 48px instead of 72px, layouts collapse). One entry, one emission, correct
- * cascade.
+ * This must stay the ONLY registered CSS entry. A second one — a bare
+ * `@import "tailwindcss"` here, or a layer registering its own base in `css:`
+ * alongside this file — opens a second Tailwind pass that re-emits every base
+ * utility a second time. What that costs is payload, not layout: measured at
+ * +212 KB raw / +26.7 KB gzip on a consumer's render-blocking `entry.css`, on
+ * every page for every visitor (UXF-118). It does not, on the evidence
+ * gathered there, break the cascade — the duplicate pass was a complete
+ * superset of the first and emitted wholly after it, so the last `sm:`/`lg:`
+ * variant still landed after the last conflicting base and won by source
+ * order; computed-style A/B across 4 pages x 4 viewports found zero rendering
+ * difference. That rescue is incidental, not designed.
+ *
+ * The layer used to register its own `main.css` too, and this app stripped it
+ * back off with a `modules:done` hook. `@uxfront/layer-docs` >= 0.3.0 no longer
+ * registers it, so the hook is gone (UXF-121). Both halves — this file being a
+ * Tailwind entry, and there being exactly one of them — are asserted by
+ * `test/brand-palette-*.test.ts` against the layer's shared preset.
  */
 @import "@uxfront/layer-docs/app/assets/css/main.css";
 
