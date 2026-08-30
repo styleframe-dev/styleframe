@@ -55,6 +55,18 @@ export default defineAppConfig({
 		],
 	},
 	/**
+	 * Changelog surface, rendered by the layer from the `changelog` collection.
+	 * Styleframe is released by changesets, which tags `styleframe@<version>`;
+	 * the layer's default is the plain `v<version>` tag, so the template is
+	 * stated here. Entries predating that convention (1.0.0, 2.0.0) override the
+	 * whole link from their `releaseUrl` frontmatter.
+	 */
+	changelog: {
+		releaseUrlTemplate: "{repo}/releases/tag/styleframe@{version}",
+		description:
+			"Everything new in Styleframe — recipes, engine improvements, and tooling, release by release.",
+	},
+	/**
 	 * @docs https://www.docus.dev/concepts/configuration#socials-links
 	 */
 	socials: {
