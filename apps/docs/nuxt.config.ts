@@ -19,9 +19,6 @@ export default defineNuxtConfig({
 	modules: [
 		"@nuxtjs/sitemap",
 		"@nuxt/content",
-		// The shared layer used to ship OG image support; the theme package
-		// does not, so styleframe registers it locally (see ogImage below).
-		"nuxt-og-image",
 		resolve("./modules/nonRouteCategories"),
 	],
 	content: {
@@ -110,14 +107,6 @@ export default defineNuxtConfig({
 				defaults: "",
 			},
 		},
-	},
-	/**
-	 * Prerendering bakes every OG image at build time, so no runtime
-	 * generation endpoint is needed (or exposed unsigned).
-	 * @docs https://nuxtseo.com/og-image/guides/zero-runtime
-	 */
-	ogImage: {
-		zeroRuntime: true,
 	},
 	/**
 	 * @docs https://nuxt.com/modules/sitemap
