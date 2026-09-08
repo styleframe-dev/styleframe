@@ -10,6 +10,7 @@ import {
 	useDarkMode,
 } from "@vueless/storybook-dark-mode";
 import { DocsContainer } from "@storybook/addon-docs/blocks";
+import { installDocsEmbedPreviewBridge } from "@uxfront/layer-docs/storybook";
 
 const channel = addons.getChannel();
 
@@ -25,12 +26,11 @@ channel.on(DARK_MODE_EVENT_NAME, (isDark: boolean) => {
 	}
 });
 
-window.addEventListener("message", (event: MessageEvent) => {
-	if (event.data?.type === "styleframe:theme") {
-		const mode = event.data.theme === "dark" ? "dark" : "light";
-
-		channel.emit(DARK_MODE_EVENT_NAME, mode === "dark");
-	}
+installDocsEmbedPreviewBridge({
+	// The docs site still speaks `styleframe:*` until it deploys the layer
+	// embed. Drop this once both sides are on the neutral names.
+	legacyNamespace: "styleframe",
+	onTheme: (theme) => channel.emit(DARK_MODE_EVENT_NAME, theme === "dark"),
 });
 
 const ThemedDocsContainer: typeof DocsContainer = (props) => {
@@ -77,42 +77,5 @@ const preview: Preview = {
 		},
 	},
 };
-
-// Auto-size: report story content height to the manager frame
-if (window !== window.parent) {
-	let lastHeight = 0;
-
-	const sendHeight = () => {
-		const root = document.getElementById("storybook-root");
-		if (!root) return;
-		const height = root.offsetHeight;
-		if (height !== lastHeight) {
-			lastHeight = height;
-			window.parent.postMessage(
-				{ type: "styleframe:preview-height", height },
-				"*",
-			);
-		}
-	};
-
-	const waitForRoot = () => {
-		const root = document.getElementById("storybook-root");
-		if (root) {
-			const ro = new ResizeObserver(sendHeight);
-			ro.observe(root);
-			const mo = new MutationObserver(sendHeight);
-			mo.observe(root, { childList: true, subtree: true });
-			sendHeight();
-		} else {
-			requestAnimationFrame(waitForRoot);
-		}
-	};
-
-	if (document.readyState === "complete") {
-		waitForRoot();
-	} else {
-		window.addEventListener("load", waitForRoot);
-	}
-}
 
 export default preview;
