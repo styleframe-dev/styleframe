@@ -106,6 +106,12 @@ export default defineNuxtConfig({
 				key: "",
 				defaults: "",
 			},
+			storybookBaseUrl: "https://storybook.styleframe.dev",
+			// Migration-only: apps/storybook still emits and accepts the
+			// `styleframe:*` message names alongside the neutral ones, so the two
+			// apps deploy in either order. Drop this once both sides are on
+			// `@uxfront/layer-docs/storybook` in production.
+			storybookLegacyMessageNamespace: "styleframe",
 		},
 	},
 	/**

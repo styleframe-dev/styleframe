@@ -154,13 +154,17 @@ More content.
 ::
 ```
 
-### Story Previews (Component demos)
+### Storybook Embeds (Component demos)
+
+`mode` picks the Storybook surface: `full` for the story with its toolbar,
+`panel` when the demo is read through the controls or actions panel, `preview`
+for a bare canvas.
 
 ```markdown
-::story-preview
+::storybook-embed
 ---
 story: theme-recipes-feedback-badge--default
-panel: true
+mode: panel
 ---
 ::
 ```
