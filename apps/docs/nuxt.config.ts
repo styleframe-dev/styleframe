@@ -56,6 +56,24 @@ export default defineNuxtConfig({
 		dirs: ["constants"],
 	},
 	nitro: {
+		// `@uxfront/layer-docs` ships a `request`-hook plugin that 302s the site
+		// root to `/llms.txt` when the client sends `Accept: text/markdown` or a
+		// `curl/*` user agent. Two reasons it is off here (UXF-286):
+		//
+		// 1. It never runs on our production deploy. Vercel serves the
+		//    prerendered `index.html` from the CDN, so Nitro never sees `/`.
+		//    Leaving it on makes the node-server output — what a self-hosted
+		//    deploy and every local production check run — disagree with the
+		//    live site on the one route that matters most.
+		// 2. The `curl/*` sniff is not content negotiation. `curl` is what
+		//    humans, health checks, and smoke tests speak HTTP with, and
+		//    `curl -I https://styleframe.dev/` returning a redirect to a text
+		//    file is how this was reported as a broken home page.
+		//
+		// `/llms.txt` and `/llms-full.txt` are still built and served; agents
+		// reach them through the `llms.txt` convention, not through a redirect.
+		// Remove this once the layer drops the user-agent branch upstream.
+		ignore: ["plugins/llms-redirect.ts"],
 		prerender: {
 			crawlLinks: true,
 			failOnError: false,
